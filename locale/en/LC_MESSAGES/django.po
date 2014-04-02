@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-27 17:41+0100\n"
+"POT-Creation-Date: 2014-04-02 10:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,7 +30,7 @@ msgstr "Welcome as members!"
 #: templates/common/user/login/util/login_form.html:6
 #: templates/common/user/login/util/login_form.html:11
 msgid "Feil e-postadresse eller passord"
-msgstr "Wrong e-mail address or password"
+msgstr "Wrong E-mail address or password"
 
 #: templates/common/user/login/util/login_form.html:7
 msgid "Har du ikke Min side-konto?"
@@ -45,12 +45,12 @@ msgid ""
 "Du logget på med din gamle bruker! Du må bruke ditt nye passord eller din "
 "nye e-postadresse."
 msgstr ""
-"You logged on with your old user! You need to enter your new password or "
-"your new e-mail address."
+"You logged on with an old username! Plese enter your new password or new E-"
+"mail address."
 
 #: templates/common/user/login/util/login_form.html:13
 msgid "Hvis du har glemt passordet, klikk på \"Glemt passord\"-lenken under."
-msgstr "If you forgot your password, click the \"Forgot password\"-link below."
+msgstr "Forgot your password?, click the \"Forgot password\"-link below."
 
 #: templates/common/user/login/util/login_form.html:22
 #: templates/main/enrollment/registration.html:137
@@ -79,7 +79,7 @@ msgstr "I forgot my password!"
 
 #: templates/common/user/login/util/login_form.html:46
 msgid "Fyll ut din e-post adresse..."
-msgstr "Enter your e-mail address..."
+msgstr "Enter your E-mail address..."
 
 #: templates/common/user/login/util/login_form.html:48
 msgid "Gjenopprett passord"
@@ -87,14 +87,14 @@ msgstr "Restore password"
 
 #: templates/common/user/login/util/login_form.html:49
 msgid "Sender e-post, vennligst vent..."
-msgstr "Sending e-mail, please wait..."
+msgstr "Sending E-mail, please wait..."
 
 #: templates/common/user/login/util/login_form.html:52
 msgid ""
 "En e-post har blitt sendt til adressen du oppgav med ytterligere "
 "instruksjoner for å få gjenopprettet passordet."
 msgstr ""
-"An e-mail has been sent to your provided address with further instructions "
+"An E-mail with further instructions has been sent to the address provided  "
 "for restoring your password."
 
 #: templates/common/user/login/util/login_form.html:55
@@ -103,8 +103,8 @@ msgid ""
 "denne adressen du er registrert med? Sjekk også at du har skrevet adressen "
 "riktig."
 msgstr ""
-"This e-mail address isn't registered on any of our users. Are you sure that "
-"this is your registered address? Please check your spelling too."
+"This E-mail address isn't registered for any of our users. Are you sure that "
+"this is your registered address? Please check spelling."
 
 #: templates/common/user/login/util/login_form.html:58
 msgid "Du har ikke opprettet brukerkonto ennå. Du kan"
@@ -112,7 +112,7 @@ msgstr "You haven't created a user account yet. You can"
 
 #: templates/common/user/login/util/login_form.html:58
 msgid "opprette din bruker her"
-msgstr "create your user here"
+msgstr "create a user here"
 
 #: templates/common/user/login/util/login_form.html:58
 msgid "det er kjapt, enkelt og gratis!"
@@ -125,7 +125,7 @@ msgid ""
 "kontakt medlemsservice dersom feilen vedvarer."
 msgstr ""
 "We're sorry, we experienced a technical error! The error has been logged, "
-"and we'll check it out as soon as possible. Please try again, or contect "
+"and we'll check it out as soon as possible. Please try again, or contact "
 "memberservice if the error persists."
 
 #: templates/common/user/login/util/registration_form.html:8
@@ -153,7 +153,7 @@ msgstr "Rest of world"
 
 #: templates/common/user/login/util/registration_form.html:37
 msgid "Postnummer:"
-msgstr "Zipcode:"
+msgstr "Postcode:"
 
 #: templates/common/user/login/util/registration_form.html:41
 #: templates/main/enrollment/household.html:91
@@ -182,8 +182,7 @@ msgid ""
 "Nå trenger vi bare e-postadressen din og et passord, så er du ferdig "
 "registrert."
 msgstr ""
-"Now we just need your e-mail address and a password to complete the "
-"registration."
+"Now we only need your E-mail address and a password to complete registration."
 
 #: templates/common/user/login/util/registration_form.html:59
 #: templates/main/connect/layouts/dntoslo.html:126
@@ -192,7 +191,7 @@ msgstr "E-mail:"
 
 #: templates/common/user/login/util/registration_form.html:63
 msgid "Er din e-postadresse"
-msgstr "Is your e-mail address"
+msgstr "Is your E-mail address"
 
 #: templates/common/user/login/util/registration_form.html:63
 msgid "Hvis ikke kan du endre den i feltet over."
@@ -200,7 +199,7 @@ msgstr "If not, correct it in the field above."
 
 #: templates/common/user/login/util/registration_form.html:66
 msgid "Her må du oppgi e-postadressen din."
-msgstr "Please provide your e-mail address here."
+msgstr "Please enter your E-mail address here."
 
 #: templates/common/user/login/util/registration_form.html:76
 #, python-format
@@ -213,8 +212,8 @@ msgstr ""
 #, python-format
 msgid "Passordet er for kort, det må være minst %(user_password_length)s tegn."
 msgstr ""
-"Your password is too short, it needs to have at least "
-"%(user_password_length)s characters."
+"Your password is too short, it must have at least %(user_password_length)s "
+"characters."
 
 #: templates/common/user/login/util/registration_form.html:82
 #: templates/common/user/login/util/registration_form_nonmember.html:62
@@ -255,7 +254,7 @@ msgstr "If you forgot your password, you'll be able to restore it there."
 #: templates/common/user/login/util/registration_form.html:110
 #: templates/common/user/login/util/registration_form.html:148
 msgid "Du har allerede en bruker, men den er markert som inaktiv!"
-msgstr "You already have a user, but it's marked as expired!"
+msgstr "You already have a user, but your account has expired!"
 
 #: templates/common/user/login/util/registration_form.html:111
 #: templates/common/user/login/util/registration_form.html:149
@@ -283,18 +282,18 @@ msgid ""
 "Beklager, vi har ingen medlemmer med disse opplysningene. Vennligst prøv "
 "igjen, eller kontakt"
 msgstr ""
-"Sorry, we have no members with these credentials. Please try again, or "
+"Sorry, we have no members with these personal data. Please try again, or "
 "contact"
 
 #: templates/common/user/login/util/registration_form.html:116
 #: templates/common/user/login/util/registration_form.html:129
 msgid "hvis du mener at dette skal være rett."
-msgstr "if you think this should be correct."
+msgstr "if you think this is correct."
 
 #: templates/common/user/login/util/registration_form.html:120
 #: templates/common/user/login/util/registration_form.html:133
 msgid "Du kan ikke gjøre flere oppslag på medlemsnummer!"
-msgstr "You can't perform any more member ID lookups!"
+msgstr "No more member ID lookups allowed!"
 
 #: templates/common/user/login/util/registration_form.html:121
 #: templates/common/user/login/util/registration_form.html:134
@@ -304,21 +303,20 @@ msgid ""
 "du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva "
 "ditt medlemsnummer eller postnummer er, må du kontakte"
 msgstr ""
-"You already made %(memberid_lookups_limit)s memberID lookups! Are you trying "
-"to guyss someones zipcode? If you're unsure about your registered member ID "
-"or zipcode, please contact"
+"You already looked up %(memberid_lookups_limit)s memberIDs! Are you trying "
+"to guess someones Postcode? If you're unsure about your registered member ID "
+"or Postcode, please contact"
 
 #: templates/common/user/login/util/registration_form.html:121
 #: templates/common/user/login/util/registration_form.html:134
 msgid "Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen."
 msgstr ""
-"We can't let you make any more lookups right now, but you can try again "
-"tomorrow."
+"We can't allow any more lookups right now, but you can try again tomorrow."
 
 #: templates/common/user/login/util/registration_form.html:138
 #: templates/common/user/login/util/registration_form_nonmember.html:28
 msgid "For kort passord"
-msgstr "Too short password"
+msgstr "Passoword too short"
 
 #: templates/common/user/login/util/registration_form.html:139
 #: templates/common/user/login/util/registration_form_nonmember.html:29
@@ -327,39 +325,38 @@ msgid ""
 "Du må ha minst %(user_password_length)s tegn i passordet ditt. Vennligst "
 "velg et lengre passord."
 msgstr ""
-"Your password needs at least %(user_password_length)s characters. Please "
+"Your password must have at least %(user_password_length)s characters. Please "
 "select a longer password."
 
 #: templates/common/user/login/util/registration_form.html:153
 #: templates/common/user/login/util/registration_form_nonmember.html:18
 msgid "E-postadressen din er ikke gyldig!"
-msgstr "Your e-mail address is invalid!"
+msgstr "Your E-mail address is invalid!"
 
 #: templates/common/user/login/util/registration_form.html:154
 #: templates/common/user/login/util/registration_form_nonmember.html:19
 msgid "Vennligst oppgi en gyldig e-postadresse."
-msgstr "Please provide a valid e-mail address."
+msgstr "Please provide a valid E-mail address."
 
 #: templates/common/user/login/util/registration_form_nonmember.html:7
 msgid ""
 "Vi trenger foreløpig ikke mer enn navn og e-postadresse. Du må velge et "
 "passord som du bruker sammen med e-postadressen til å logge inn."
 msgstr ""
-"You only need to provide your name and an e-mail address for now. You'll "
-"also need to select a password, which you'll use to login, together with "
-"your e-mail address."
+"You only only have to enter your name and an E-mail address now. You'll also "
+"need a password, which to log in, together with your E-mail address."
 
 #: templates/common/user/login/util/registration_form_nonmember.html:13
 msgid "Du har ikke oppgitt fullt navn!"
-msgstr "You haven't provided your full name!"
+msgstr "You haven't entered your full name!"
 
 #: templates/common/user/login/util/registration_form_nonmember.html:14
 msgid "Vennligst oppgi navnet ditt, både fornavn og etternavn."
-msgstr "Please provide your full name, both first name and surname."
+msgstr "Please enter your full name, both first name and surname."
 
 #: templates/common/user/login/util/registration_form_nonmember.html:23
 msgid "E-postadressen din er allerede i bruk!"
-msgstr "Your e-mail address is already registered!"
+msgstr "Your E-mail address is already registered!"
 
 #: templates/common/user/login/util/registration_form_nonmember.html:24
 msgid ""
@@ -371,7 +368,7 @@ msgstr ""
 
 #: templates/common/user/login/util/registration_form_nonmember.html:24
 msgid "innloggingssiden"
-msgstr "the login page"
+msgstr "the log in page"
 
 #: templates/common/user/login/util/registration_form_nonmember.html:37
 msgid "Fullt navn:"
@@ -383,7 +380,7 @@ msgstr "E-mail address:"
 
 #: templates/main/connect/signon.html:40
 msgid "Du er nå kommet til neste steg i bestillingen"
-msgstr "You have reached the next step in the booking process"
+msgstr "Next step in e booking"
 
 #: templates/main/connect/signon.html:43
 #: templates/main/connect/signon.html:112
@@ -391,8 +388,8 @@ msgid ""
 "For å gå videre med bestillingen og se antall ledige plasser på turen må du "
 "logge deg på Min side."
 msgstr ""
-"To proceed with your booking and to get an overview of available places you "
-"have to log on to the User Page."
+"To continue booking and to get an overview of available places you have to "
+"log on to the User Page."
 
 #: templates/main/connect/signon.html:44
 msgid ""
@@ -412,7 +409,7 @@ msgstr "I'm already a member of DNT"
 
 #: templates/main/connect/signon.html:88
 msgid "Jeg vil melde meg inn i DNT først"
-msgstr "I want to become a DNT member first"
+msgstr "I want to become a DNT member now"
 
 #: templates/main/connect/signon.html:89
 msgid "(må betales på nett)"
@@ -432,7 +429,7 @@ msgid ""
 "gjerne på: 22 82 28 22"
 msgstr ""
 "If you should have any difficulties with log on or enquiries about booking, "
-"feel welcome to call us on: +47 22 82 28 22"
+"feel welcome to call us at: (+47) 22 82 28 22"
 
 #: templates/main/connect/signon.html:134
 msgid ""
@@ -444,7 +441,7 @@ msgstr ""
 
 #: templates/main/connect/signon.html:136
 msgid "Illustrasjonsfoto av medlemsnummer-plassering på medlemskortet"
-msgstr "Illustration of the member ID's placement on the membership card"
+msgstr "Illustration of the member ID's location on the membership card"
 
 #: templates/main/connect/signon.html:139
 #: templates/main/enrollment/registration.html:176
@@ -461,8 +458,8 @@ msgid ""
 "Vi avslutter medlemsåret og kan dessverre ikke motta kortbetalinger akkurat "
 "nå."
 msgstr ""
-"We are in the process of ending our membership year and can unfortunately "
-"not receive online payments at this moment."
+"We are now closing our membership year and can unfortunately not receive "
+"online payments at this moment."
 
 #: templates/main/connect/signon_enrollment_card_deactivated.html:24
 msgid ""
@@ -470,9 +467,9 @@ msgid ""
 "av DNT, kan du ikke velge å betale med faktura &mdash; da kan vi ikke gi deg "
 "en eventuell rabatt, siden vi ikke får bekreftet innbetalingen."
 msgstr ""
-"Since you are enrolling in conjunction with signing up for a tour or "
-"activity arranged by DNT, invoice payment is not possible as we need to "
-"verify the payment in order to offer any discounts."
+"You are enrolling together with signing up for a tour or activity arranged "
+"by DNT, so payment by invoice is not possible until we verify the payment "
+"and offer any discounts."
 
 #: templates/main/connect/signon_enrollment_card_deactivated.html:28
 msgid ""
@@ -480,8 +477,8 @@ msgid ""
 "sterkeste ulempene dette medfører. Om du har noen spørsmål, kan disse rettes "
 "til"
 msgstr ""
-"This means that enrollment is not possible right now. We sincerely apologize "
-"for this inconvenience. If you have any questions, please contact"
+"This means that you cannot enrollment just now. We apologize for this "
+"inconvenience. If you have any questions, please contact"
 
 #: templates/main/connect/signon_enrollment_card_deactivated.html:32
 msgid "Gå tilbake til forrige side"
@@ -506,7 +503,7 @@ msgid ""
 "vedlikehold."
 msgstr ""
 "This service is unfortunately not available due to temporary maintenance, "
-"for the following duration (in Norwegian): \"%(period)s\"."
+"(in Norwegian): \"%(period)s\"."
 
 #: templates/main/connect/signon_unavailable.html:25
 #, python-format
@@ -519,9 +516,9 @@ msgid ""
 "      "
 msgstr ""
 "\n"
-"We sincerely apologize for this inconvenience. Please be patient, and come "
-"back when the maintenance period is over. Meanwhile, we'll have to send you "
-"<a href=\"%(previous_url)s\">back where you came from</a>."
+"We apologize for this inconvenience. Please be patient, and come back when "
+"the maintenance period is over. Meanwhile, we'll return you <a href="
+"\"%(previous_url)s\">to where you started</a>."
 
 #: templates/main/connect/layouts/dntoslo.html:51
 msgid "Avbryt og gå tilbake"
@@ -549,7 +546,7 @@ msgstr "Opening hours"
 
 #: templates/main/connect/layouts/dntoslo.html:132
 msgid "Mandag-fredag"
-msgstr "Monday-friday"
+msgstr "Monday-Friday"
 
 #: templates/main/connect/layouts/dntoslo.html:133
 msgid "Torsdag"
@@ -561,7 +558,7 @@ msgstr "Saturday"
 
 #: templates/main/enrollment/household.html:31
 msgid "Dette postnummeret er ikke tilknyttet noen forening"
-msgstr "This zipcode doesn't belong to any of our local member organizations"
+msgstr "This Postcode doesn't belong to any of our local member organizations"
 
 #: templates/main/enrollment/household.html:32
 msgid ""
@@ -569,8 +566,8 @@ msgid ""
 "medlemsforeningene våre, men det ser dessverre ut til at vi ikke har fått "
 "registrert ditt postnummer ennå."
 msgstr ""
-"We're working continuously to connect every zipcode to one of our "
-"organizations, however it seems we haven't registered yours yet."
+"We're working continually to assign Postcodes to one of our organizations, "
+"however it seems we haven't registered yours yet."
 
 #: templates/main/enrollment/household.html:33
 #, python-format
@@ -581,7 +578,7 @@ msgid ""
 "          "
 msgstr ""
 "\n"
-"We've logged the error, and we'll register the zipcode <strong>%(zipcode)s</"
+"We've logged the error, and we'll assign the Postcode <strong>%(zipcode)s</"
 "strong> to the correct local organization as soon as possible."
 
 #: templates/main/enrollment/household.html:36
@@ -590,7 +587,7 @@ msgid ""
 "eldre postnummer i nærheten midlertidig."
 msgstr ""
 "Meanwhile, please contact DNTs memberservice, or use an older registered "
-"zipcode nearby temporarily."
+"Postcode nearby temporarily."
 
 #: templates/main/enrollment/household.html:43
 msgid "Ugyldig medlemsnummer"
@@ -610,14 +607,14 @@ msgstr "Some of your provided data is invalid."
 
 #: templates/main/enrollment/household.html:51
 msgid "Vennligst se gjennom skjemaet, og rett alle felter som er markert røde."
-msgstr "Please review the form, and correct any fields marked red."
+msgstr "Please review the form, and correct all fields marked red."
 
 #: templates/main/enrollment/household.html:55
 msgid ""
 "Har du glemt å fylle ut gateadressen?&#10;&#10;Hvis du ikke har gateadresse, "
 "klikker du bare OK for å gå videre."
 msgstr ""
-"Did you forget to fill out your address?&#10;&#10;If you don't have a street "
+"Did you forget to fill in your address?&#10;&#10;If you don't have a street "
 "address, click OK to continue."
 
 #: templates/main/enrollment/household.html:60
@@ -648,7 +645,7 @@ msgstr "Address"
 
 #: templates/main/enrollment/household.html:88
 msgid "Postnummer / Poststed"
-msgstr "Zipcode / Area"
+msgstr "Postcode / Area"
 
 #: templates/main/enrollment/household.html:96
 msgid "Adresse 2"
@@ -687,7 +684,7 @@ msgid_plural ""
 "          "
 msgstr[0] ""
 "\n"
-"You can get a cheaper membership price if you live with an <strong>existing</"
+"Your membership fee will be less if you live with an <strong>existing</"
 "strong> main member."
 msgstr[1] ""
 "\n"
@@ -712,7 +709,7 @@ msgstr "Main member:"
 
 #: templates/main/enrollment/household.html:135
 msgid "Du må oppgi riktig postnummer før du søker."
-msgstr "You should enter your zipcode before searching."
+msgstr "Enter your Postcode before searching."
 
 #: templates/main/enrollment/household.html:136
 msgid "Ugyldig medlemsnummer oppgitt."
@@ -720,7 +717,7 @@ msgstr "Invalid member ID."
 
 #: templates/main/enrollment/household.html:137
 msgid "Fant ingen medlemmer med dette medlemsnummeret."
-msgstr "Couldn't find any members with this member ID."
+msgstr "No members found with this member ID."
 
 #: templates/main/enrollment/household.html:139
 msgid ""
@@ -737,9 +734,7 @@ msgstr ""
 msgid ""
 "Det angitte medlemmet er selv et husstandsmedlem. Dere kan kun knytte dere "
 "til et hovedmedlem."
-msgstr ""
-"This member is a household member. You can only provide an existing main "
-"member."
+msgstr "This member is a household member. You can only have one main member."
 
 #: templates/main/enrollment/household.html:147
 msgid "Det angitte medlemmet bor ikke på samme adresse som dere."
@@ -751,9 +746,9 @@ msgid ""
 "Feilen har blitt logget i våre systemer. Vennligst prøv igjen, eller kontakt "
 "medlemsservice dersom feilen vedvarer."
 msgstr ""
-"We're sorry, we experienced a technical error when searching our "
-"memberregister. The error has been logged in our systems. Please try again, "
-"or contect memberservice if the error persists."
+"We're sorry, we experienced a technical error when searching our member "
+"register. The error has been logged in our systems. Please try again, or "
+"contect member service if the error persists."
 
 #: templates/main/enrollment/household.html:156
 #: templates/main/enrollment/payment.html:74
@@ -788,14 +783,14 @@ msgid ""
 "            "
 msgstr ""
 "\n"
-"We are preparing for the new membership year and can unfortunately not "
-"receive online payments at this moment. Online payments will be available "
-"%(date)s. Invoice orders will be sent in mid-%(month)s and also be valid for "
-"the rest of %(year)s.<br><br>In urgent cases, please contact your local "
-"member association which may still be accepting new memberships. We are "
-"truly sory for any inconvenience this may cause, and thank you for your "
-"continued patience. Please direct any questions to membership service, se "
-"contact information below."
+"We are commencing a new membership year and cannot yetreceive online "
+"payments at this moment. Online payments will be available %(date)s. Invoice "
+"orders will be sent in mid-%(month)s and also be valid for the rest of "
+"%(year)s.<br><br>In urgent cases, please contact your local member "
+"association which may still be accepting new memberships. We apologize for "
+"any inconvenience this may cause, and thank you for your continued patience. "
+"Please direct any questions to membership service, see contact information "
+"below."
 
 #: templates/main/enrollment/payment-process-error.html:18
 #: templates/main/enrollment/payment.html:27
@@ -821,8 +816,8 @@ msgid ""
 "den kanskje har det! Hvis du forlater siden uten å bekrefte betalingen, blir "
 "ikke medlemskapet ditt registrert som betalt i vårt system."
 msgstr ""
-"We have <em>not</em> confirmed that the payment was successful, even though "
-"it might be! If you leave this page without confirming the payment, your "
+"We have <em>not</em> confirmed successful payment, even though it might have "
+"been successful! If you leave this page without confirming the payment, your "
 "membership will not be marked as paid in our systems."
 
 #: templates/main/enrollment/payment-process-error.html:25
@@ -831,7 +826,7 @@ msgstr "Retry confirming the payment by pressing F5 or this button!"
 
 #: templates/main/enrollment/payment-process-error.html:30
 msgid "Hva gjør jeg hvis feilen ikke går bort?"
-msgstr "What do I do if this error doesn't disappear?"
+msgstr "What should I do if this error doesn't disappear?"
 
 #: templates/main/enrollment/payment-process-error.html:35
 msgid ""
@@ -840,8 +835,8 @@ msgid ""
 "medlemsservice - se boksen til høyre."
 msgstr ""
 "You should try pressing the above button at least 3-4 times, preferably a "
-"few minutes apart. If that does not help, you'll need to contact "
-"memberservice - see the box to the right."
+"few minutes apart. If that does not help, please contact memberservice - see "
+"the box to the right."
 
 #: templates/main/enrollment/payment-process-error.html:37
 msgid ""
@@ -850,8 +845,8 @@ msgid ""
 "betalingen manuelt."
 msgstr ""
 "Please provide your name and tell us what happened, and we'll straighten "
-"things out. We've logged the details for this error in our systems, and "
-"we'll be able to trace and confirm the payment manually."
+"things out. We've logged the details of this error in our systems, and we'll "
+"be able to trace and confirm the payment manually."
 
 #: templates/main/enrollment/payment-process-error.html:42
 msgid "Mer informasjon om hva som har skjedd"
@@ -865,23 +860,23 @@ msgid ""
 "system, i løsningen til vår betalingsleverandør, eller i eventuelle "
 "tredjepartssystemer."
 msgstr ""
-"When you've processed the online payment on your banks web pages, we need to "
-"contact our payment provider to confirm that the payment was successful. "
-"When we tried to do that, we experienced a connection error. It could be a "
-"problem with our systems, with our payment provider systems, or a number of "
-"third party systems in between."
+"When you've processed the online bank payment, we need to contact our "
+"payment provider to confirm that the payment was successful. When we tried "
+"to do that, we experienced a connection error. It could be a problem with "
+"our systems, with our payment provider systems, or a number of third party "
+"systems in-between."
 
 #: templates/main/enrollment/payment-process-error.html:49
 msgid ""
 "Vanligvis er dette en feil som plutselig kan oppstå uten noen klar årsak, "
 "men går bort av seg selv etter kort tid."
 msgstr ""
-"This is usually an error that may suddenly occur without any clear reason, "
-"and resolves itself after a short while."
+"This type of error may occur suddenly with no apparent reason, and resolve "
+"itself shortly thereafter."
 
 #: templates/main/enrollment/payment-process-error.html:52
 msgid "Vi beklager virkelig dette, og ulempene det medfører!"
-msgstr "We really do apologize this inconvenience!"
+msgstr "We apologize for this inconvenience!"
 
 #: templates/main/enrollment/payment-terminal.html:7
 msgid "Medlemskap i Den Norske Turistforening"
@@ -898,7 +893,7 @@ msgstr "Invalid payment method"
 #: templates/main/enrollment/payment.html:22
 msgid ""
 "Du må velge hvilken betalingsmetode du ønsker å bruke før du går videre."
-msgstr "You need to select a payment method before continuing."
+msgstr "Select a payment method before continuing."
 
 #: templates/main/enrollment/payment.html:28
 msgid ""
@@ -907,7 +902,7 @@ msgid ""
 "stedet."
 msgstr ""
 "We're sorry, an error occurred when we tried connecting to our payment "
-"provider. You can try again, or choose invoice as payment method instead."
+"provider. You can try again, or instead choose invoice as payment method"
 
 #: templates/main/enrollment/payment.html:34
 msgid ""
@@ -916,7 +911,10 @@ msgid ""
 "betalingsleverandør. Vennligst prøv igjen, eller kontakt medlemsservice "
 "dersom du mener at du nå egentlig skal ha betalt."
 msgstr ""
-"We're sorry, the reply from your bank gave us a transaction ID we don't recognize. There may have been a communication error while communicating our payment provider. Please try again, or contact membership service if you believe that your payment has been correctly processed."
+"We're sorry, the reply from your bank gave us a transaction ID we don't "
+"recognize. There may have been a communication error while communicating our "
+"payment provider. Please try again, or contact membership service if you "
+"believe that your payment has been correctly processed."
 
 #: templates/main/enrollment/payment.html:42
 msgid ""
@@ -929,7 +927,7 @@ msgid ""
 msgstr ""
 "\n"
 "We're sorry, online payment is temporarily unavailable. Please try again "
-"later, or choose to receive an invoice.<br>We sincerely apologize for this "
+"later, or choose to receive an invoice.<br>We apologize for this "
 "inconvenience and thank you for your patience. Please direct any questions "
 "to our membership service - see contact information in the box on the right."
 
@@ -943,9 +941,9 @@ msgid ""
 "i regi av DNT, må du betale på nett slik at vi kan bekrefte innbetalingen og "
 "eventuelt tilby rabatt."
 msgstr ""
-"Since you are enrolling in conjunction with signing up for a tour/activity "
-"arranged by DNT, you have to complete payment online so that we can verify "
-"the payment and offer any discounts."
+"Because you are enrolling in conjunction with signing up for a tour/activity "
+"arranged by DNT, you must complete payment online so that we can verify it "
+"before offering any discounts."
 
 #: templates/main/enrollment/payment.html:59
 msgid "Velg betalingsmåte:"
@@ -998,7 +996,7 @@ msgid ""
 "videresendt til påmelding for turen."
 msgstr ""
 "You're becoming a member of DNT in conjunction with signing up for a tour or "
-"activity. When enrollment is completed, you'll be forwarded to signup for "
+"activity. When enrollment is completed, you'll be forwarded to sign up for "
 "the activity."
 
 #: templates/main/enrollment/registration.html:47
@@ -1016,16 +1014,16 @@ msgid ""
 msgstr ""
 "\n"
 "You've registered %(count)s members, however none of these are old enough to "
-"be main member. Due to technical limitations, only 3 of these can register "
-"at a time."
+"be main member. Due to technical limitations, only three of these can "
+"register at a time."
 
 #: templates/main/enrollment/registration.html:53
 msgid ""
 "Vi beklager ulempene dette medfører og vi arbeider med å unngå en slik "
 "begrensning."
 msgstr ""
-"We really do apologize for the inconvenience, and we're working to avoid "
-"this arbitrary and unnecessary limitation."
+"We apologize for the inconvenience and are working to avoid such a "
+"limitation."
 
 #: templates/main/enrollment/registration.html:57
 msgid "Kontaktinformasjon mangler."
@@ -1037,7 +1035,7 @@ msgid ""
 "og e-post)."
 msgstr ""
 "At least one member of your household should have valid contact information "
-"(both phone and e-mail)."
+"(both phone and E-mail)."
 
 #: templates/main/enrollment/registration.html:63
 msgid "Vi klarte ikke å lagre opplysningene."
@@ -1048,7 +1046,7 @@ msgid ""
 "Er alt riktig fylt ut? Vennligst sjekk felter som er markert røde og prøv på "
 "nytt."
 msgstr ""
-"Did you fill out the form correctly? Please verify any fields marked red and "
+"Did you fill in the form correctly? Please verify any fields marked red and "
 "try again."
 
 #: templates/main/enrollment/registration.html:71
@@ -1113,7 +1111,7 @@ msgstr "Male"
 
 #: templates/main/enrollment/registration.html:133
 msgid "Mobiltelefon"
-msgstr "Cell phone"
+msgstr "Mobile"
 
 #: templates/main/enrollment/registration.html:140
 msgid "Lagre endringer"
@@ -1149,7 +1147,7 @@ msgstr "The membership is personal."
 
 #: templates/main/enrollment/registration.html:163
 msgid "Det er ingen angrerett på betalt medlemskap."
-msgstr "There is no right to cancel a paid membership."
+msgstr ""
 
 #: templates/main/enrollment/registration.html:164
 #, python-format
@@ -1158,7 +1156,7 @@ msgid ""
 "til honnørmedlemskap."
 msgstr ""
 "The membership categories are determined by age; however, disabled (at least "
-"50%%) have the right to a senior membership."
+"50%%) are entitled to senior membership."
 
 #: templates/main/enrollment/registration.html:165
 msgid ""
@@ -1166,7 +1164,7 @@ msgid ""
 "med stempel eller oblat fra bank/post."
 msgstr ""
 "The membership is not valid until paid in full and the membership card is "
-"only valid with an approved stamp or sticker from bank/postage."
+"only valid with an approved stamp or sticker from bank/postal."
 
 #: templates/main/enrollment/registration.html:166
 msgid ""
@@ -1175,13 +1173,13 @@ msgid ""
 "forbindelse med tilbud på utvalgte medlemsfordeler. Det er mulig å reservere "
 "seg mot dette på Min side."
 msgstr ""
-"DNT will only disclose personal details to its local member organizations, "
-"and certain affiliate third parties in order to offer membership benefits. "
-"One can opt out of this by logging on to the user page after enrollment."
+"DNT will only disclose personal data to its local member organizations, and "
+"affiliated third parties offering membership benefits. Youcan opt out of "
+"this by logging in on the user page after enrollment."
 
 #: templates/main/enrollment/registration.html:170
 msgid "Sist endret: 9. november 2012."
-msgstr "Last change: 9th of November 2012."
+msgstr "Last updated on 9th November 2012."
 
 #: templates/main/enrollment/registration.html:171
 msgid "Med forbehold om endringer i løpet av medlemsåret."
@@ -1213,7 +1211,7 @@ msgstr ""
 msgid ""
 "For å bli medlem, vennligst ta kontakt med medlemsservice på tlf. 4000 1870 "
 "eller e-post"
-msgstr "To enroll, please contact memberservice on tlf. 4000 1870 or e-mail"
+msgstr "To enroll, please contact memberservice Tel (+47) 40001870 or E-mail"
 
 #: templates/main/enrollment/verification.html:54
 msgid "Ugyldig hovedmedlem"
@@ -1225,9 +1223,9 @@ msgid ""
 "skoleungdomsmedlem som hovedmedlem. Dette er ikke tillatt. Vennligst prøv "
 "igjen, eller kontakt medlemsservice dersom feilen vedvarer."
 msgstr ""
-"We're sorry, we experienced a technical error which enabled you to choose a "
-"child or school-member as main member. This is not allowed. Please try "
-"again, or contact memberservice if the error persists."
+"Sorry, we experienced a technical error that incorrectly allowed you to "
+"choose a child or school-member as main member. Please try again, or contact "
+"memberservice if the error persists."
 
 #: templates/main/enrollment/verification.html:60
 msgid "Mangler hovedmedlem"
@@ -1241,9 +1239,9 @@ msgid ""
 "prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer."
 msgstr ""
 "A technical error occured, which enabled you to proceed without choosing a "
-"main member even though you've registered members able to be main member. In "
-"such a case, you do need to choose a main member. Please try again, or "
-"contact memberservice if the error persists."
+"main member even though you've registered members that may be a main member. "
+"In such a case, you should choose a main member. Please try again, or "
+"contact member service if the error persists."
 
 #: templates/main/enrollment/verification.html:69
 msgid "Årbok og Fjell og Vidde må bestilles separat"
@@ -1261,9 +1259,9 @@ msgid ""
 msgstr ""
 "\n"
 "You have indicated that you wish to receive the yearbook and Fjell og Vidde. "
-"Since your main member (%(existing_name)s) already is a member, you can't "
-"order that in this form. Please contact memberservice to order the yearbook "
-"and Fjell og Vidde."
+"Your main member (%(existing_name)s) already is a member, so you can't order "
+"that in this form. Please contact memberservice to order the yearbook and "
+"Fjell og Vidde."
 
 #: templates/main/enrollment/verification.html:78
 msgid "Rabattmulighet!"
@@ -1278,9 +1276,9 @@ msgid ""
 "          "
 msgstr ""
 "\n"
-"Since <span class=\"name\"></span> is <span class=\"type\"></span>, we've "
-"recommended to choose him/her as main member in your household, as that will "
-"be the cheapest offer. You can change this if you so wish."
+"<span class=\"name\"></span> is <span class=\"type\"></span>, We've "
+"recommended that you choose him/her as main member in your household, as "
+"that will be the cheapest offer. You can change this if you so wish."
 
 #: templates/main/enrollment/verification.html:90
 msgid "Registrerte opplysninger"
@@ -1319,8 +1317,8 @@ msgid ""
 "Dette er prisene i din medlemsforening. Prisene kan variere mellom "
 "foreningene."
 msgstr ""
-"These are the prices for your local membership organization. The prices may "
-"vary between local organizations."
+"These are the prices for your local membership organization. Local "
+"organization prices may vary."
 
 #: templates/main/enrollment/verification.html:101
 #: templates/main/enrollment/result/success_card.html:53
@@ -1371,7 +1369,7 @@ msgstr[0] ""
 "You will be member of DNT and %(forening)s."
 msgstr[1] ""
 "\n"
-"You will be members of DNT and %(forening)s."
+"You will be a members of DNT and %(forening)s."
 
 #: templates/main/enrollment/verification.html:213
 #, python-format
@@ -1401,7 +1399,7 @@ msgid ""
 "i vår betalingsløsning."
 msgstr ""
 "The membership will not be registered unless payment is processed and "
-"confirmed by our payment provided."
+"confirmed by our payment provider."
 
 #: templates/main/enrollment/result/cancel.html:21
 #: templates/main/enrollment/result/fail.html:25
@@ -1421,8 +1419,8 @@ msgid ""
 "Betalingen ble ikke godkjent i vår betalingsløsning. Dette kan skyldes "
 "problemer hos din bank eller at det ikke er dekning på konto."
 msgstr ""
-"The payment was not verified by our payment provider. This could occur due "
-"to problems in your bank, or insufficient funds."
+"The payment has not yet been verified by our payment provider. This could be "
+"due to problems in your bank, or to insufficient funds in your account."
 
 #: templates/main/enrollment/result/fail.html:21
 msgid "Medlemskapet blir ikke registrert før betalingen er godkjent."
@@ -1517,8 +1515,8 @@ msgid ""
 "Du vil i løpet av kort tid motta ditt medlemskort i posten. Inntil da kan du "
 "skrive ut denne siden som midlertidig medlemsbevis gyldig frem til"
 msgstr ""
-"Your membership card will ship shortly. Meanwhile, you may print this page "
-"and use it as a membership certificate valid until"
+"Your membership card will be sent shortly. Meanwhile, you may print this "
+"page and use it as a membership certificate valid until"
 
 #: templates/main/enrollment/result/success_card.html:74
 #: templates/main/enrollment/result/success_card.html:76
@@ -1527,7 +1525,7 @@ msgstr "or receive a free SMS receipt"
 
 #: templates/main/enrollment/result/success_card.html:74
 msgid "Kvittering er også sendt på e-post til"
-msgstr "A receipt has also been sent by e-mail to"
+msgstr "A receipt has also been sent by E-mail to"
 
 #: templates/main/enrollment/result/success_card.html:76
 msgid ""
@@ -1539,7 +1537,7 @@ msgstr ""
 
 #: templates/main/enrollment/result/success_card.html:76
 msgid "Kvittering er også sendt på e-post til følgende adresser:"
-msgstr "A receipt has also been sent by e-mail to the following adresses:"
+msgstr "A receipt has also been sent by E-mail to the following adresses:"
 
 #: templates/main/enrollment/result/success_card.html:88
 msgid "Send gratis kvittering på SMS til"
@@ -1564,9 +1562,8 @@ msgid ""
 "å vente på at medlemskortet ankommer, kan dere kontakte medlemsservice for å "
 "få tilsendt kvittering på SMS."
 msgstr ""
-"If you plan to use our services in the near future, and cannot wait for the "
-"membership card to arrive, please contact memberservice to receive a receipt "
-"by SMS."
+"If you plan to use our services soon, before your  membership card arrives, "
+"please contact memberservice to get a receipt by SMS."
 
 #: templates/main/enrollment/result/success_card.html:104
 msgid ""
@@ -1599,7 +1596,7 @@ msgid_plural ""
 "          "
 msgstr[0] ""
 "\n"
-"You are now enrolled! You can continue to signup, first you'll just need to "
+"You are now enrolled! You can continue to signup, but first you should "
 "register a user."
 msgstr[1] ""
 "\n"
@@ -1724,14 +1721,14 @@ msgid ""
 "          "
 msgstr ""
 "\n"
-"A receipt for this registration has been sent by e-mail to <strong>"
+"A receipt for this registration has been sent by E-mail to <strong>"
 "%(email)s</strong>."
 
 #: templates/main/enrollment/result/success_invoice.html:58
 msgid ""
 "Kvittering på denne registreringen er sendt på e-post til følgende adresser:"
 msgstr ""
-"A receipt for this registration has also been sent by e-mail to the "
+"A receipt for this registration has also been sent by E-mail to the "
 "following adresses:"
 
 #: templates/main/enrollment/result/success_invoice.html:72
@@ -1812,7 +1809,8 @@ msgid ""
 "på telefon 40001870 eller medlem@turistforeningen.no"
 msgstr ""
 "If you have any questions about your membership, please contact "
-"memberservice by phone no. +47 4000 1870 or e-mail medlem@turistforeningen.no"
+"memberservice by phone no. (+47) 40001870 or E-mail medlem@turistforeningen."
+"no"
 
 #: templates/main/enrollment/result/emails/card-multiple.txt:16
 #: templates/main/enrollment/result/emails/invoice-multiple.txt:14
@@ -1826,7 +1824,7 @@ msgstr ""
 "Get more out of your membership with Min side:\n"
 "Here you can change your address, read our magazines, and access "
 "Fjelltreffen. Note that your enrollment needs to be processed before you can "
-"access thesemembership services, this is usually processed the following "
+"access these membership services, this is usually done the following "
 "business day. Register here:"
 
 #: templates/main/enrollment/result/emails/card-multiple.txt:23
@@ -1876,7 +1874,7 @@ msgstr ""
 
 #: templates/main/enrollment/result/emails/card-single.txt:9
 msgid "Mer informasjon om medlemskapet og medlemsfordelene dine finner du på"
-msgstr "You'll find more information about the membership and your benefits on"
+msgstr "You'll find more information about membership and your benefits on"
 
 #: templates/main/enrollment/result/emails/card-single.txt:12
 #: templates/main/enrollment/result/emails/invoice-single.txt:11
@@ -1886,7 +1884,7 @@ msgid ""
 "på telefon 40001870 eller medlem@turistforeningen.no"
 msgstr ""
 "If you have any questions about your membership, please contact "
-"memberservice by phone no. 4000 1870 or e-mail medlem@turistforeningen.no"
+"memberservice by phone no. 4000 1870 or E-mail medlem@turistforeningen.no"
 
 #: templates/main/enrollment/result/emails/card-single.txt:15
 #: templates/main/enrollment/result/emails/invoice-single.txt:14
@@ -1899,9 +1897,9 @@ msgid ""
 msgstr ""
 "Get more out of your membership with Min side:\n"
 "Here you can change your address, read our magazines, and access "
-"Fjelltreffen. Note that your enrollment needs to be processed before you can "
-"access thesemembership services, this is usually processed the following "
-"business day. Register here:"
+"Fjelltreffen. Note that your enrollment must be processed before you can "
+"access thesemembership services, this is usually done the following business "
+"day. Register here:"
 
 #: templates/main/enrollment/result/emails/card-single.txt:22
 #: templates/main/enrollment/result/emails/invoice-single.txt:21
@@ -1919,10 +1917,10 @@ msgid ""
 "%(total_price)s\n"
 "i posten. Medlemskapet er gyldig når betalingen er registrert i vårt system."
 msgstr ""
-"You will shortly receive your membership card and an invoice of kr. "
+"You will soon receive your membership card and an invoice for kr. "
 "%(total_price)s\n"
 "by mail. Your membership is valid from when the payment is registered in our "
-"systems."
+"system."
 
 #: templates/main/enrollment/result/emails/invoice-multiple.txt:8
 msgid ""
@@ -1936,7 +1934,7 @@ msgid ""
 "medlemsservice på telefon 40001870 eller medlem@turistforeningen.no"
 msgstr ""
 "If you have any questions about your membership, please contact "
-"memberservice by phone no. +47 4000 1870 or e-mail medlem@turistforeningen.no"
+"memberservice by phone  (+47) 40001870 or E-mail medlem@turistforeningen.no"
 
 #: templates/main/enrollment/result/emails/invoice-single.txt:5
 #, python-format
@@ -1945,15 +1943,14 @@ msgid ""
 "%(total_price)s\n"
 "i posten. Medlemskapet er gyldig når betalingen er registrert i vårt system."
 msgstr ""
-"You will shortly receive your membership card and an invoice of kr. "
+"You will soon receive your membership card and an invoice for kr. "
 "%(total_price)s\n"
 "by mail. Your membership is valid from when the payment is registered in our "
 "systems."
 
 #: templates/main/enrollment/result/emails/invoice-single.txt:8
 msgid "Mer informasjon om medlemskapet og medlemsfordelene dine finner du på:"
-msgstr ""
-"You'll find more information about the membership and your benefits on:"
+msgstr "You'll find more information about  membership and your benefits on:"
 
 #: templates/main/membership/infobox.html:4
 msgid "Spørsmål?"
@@ -1965,7 +1962,7 @@ msgstr "Contact memberservice:"
 
 #: templates/main/membership/infobox.html:7
 msgid "Tlf: 40001870"
-msgstr "Phone: 40001870"
+msgstr "Tel (+47) 40001870"
 
 #: templates/main/membership/infobox.html:9
 msgid "Åpent alle hverdager:"
@@ -1985,7 +1982,7 @@ msgstr "Or"
 
 #: templates/main/membership/infobox.html:12
 msgid "gå til medlemsservice"
-msgstr "go to memberservice"
+msgstr "go to member service"
 
 #: templates/main/membership/memberid_sms/forgotten.html:8
 msgid "Få medlemsnummeret tilsendt gratis på SMS."
@@ -2018,16 +2015,16 @@ msgid ""
 "Beklager, det oppstod en teknisk feil. Vennligst prøv igjen senere, eller ta "
 "kontakt med medlemsservice på %(email)s dersom feilen vedvarer."
 msgstr ""
-"We're sorry, we experienced a technical error! Please try again, or contect "
-"memberservice on %(email)s if the error persists."
+"We're sorry, a technical error occurred. Please try again later, or contact "
+"member service on %(email)s if the error persists."
 
 #: templates/main/membership/memberid_sms/forgotten.html:26
 msgid ""
 "Du har sendt for mange SMS-forespørsler på kort tid! Vennligst vent en stund "
 "før du prøver igjen."
 msgstr ""
-"You've sent too many SMS requests in a short time! Please wait a while "
-"before you try again."
+"You've sent too many SMS requests in a short period of time! Please wait a "
+"while before you try again."
 
 #: templates/main/membership/memberid_sms/message.txt:1
 msgid "Medlemsnummer for:"
@@ -2055,5 +2052,8 @@ msgid ""
 msgstr ""
 "Best regards\n"
 "DNT Memberservice\n"
-"Tlf: 40001870\n"
+"Tel (+47) 40001870\n"
 "E-mail: medlem@turistforeningen.no"
+
+#~ msgid "Paid membership cannot be cancelled."
+#~ msgstr "There is no right to cancel a paid membership."
