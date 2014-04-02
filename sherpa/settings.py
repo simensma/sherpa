@@ -156,8 +156,8 @@ FOCUS_DOWNTIME_PERIODS = [
     },
     {
         'from': datetime(year=2014, month=4, day=7, hour=17),
-        'to': datetime(year=2014, month=4, day=7, hour=23, minute=59),
-        'period_message': 'mandag 7. april fra kl. 17:00 og ut kvelden'
+        'to': datetime(year=2014, month=4, day=7, hour=19),
+        'period_message': 'mandag 7. april fra kl. 17:00 til kl. 19:00'
     },
 ]
 
