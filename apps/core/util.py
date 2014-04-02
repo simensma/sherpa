@@ -2,8 +2,6 @@
 
 from django.conf import settings
 
-from user.models import ForeningRole
-
 from datetime import datetime, date
 import re
 
@@ -26,19 +24,6 @@ def use_image_thumb(url, preferred_size):
     else:
         appropriate_size = min(larger_than_preferred)
     return "%s-%s.%s" % (pre, appropriate_size, post)
-
-def forening_user_role(forening, user):
-    try:
-        return ForeningRole.objects.get(forening=forening, user=user).role
-    except ForeningRole.DoesNotExist:
-        # This might be a related forening where we're admin beacuse we're admin for a parent. Check it
-        role = ForeningRole.objects.filter(forening=forening, user=user)
-        while not role.exists() or role[0].role != 'admin':
-            forening = forening.parent
-            if forening is None:
-                raise NoRoleRelationException
-            role = ForeningRole.objects.filter(forening=forening, user=user)
-        return role[0].role
 
 class NoRoleRelationException(Exception):
     """Raised when the Forening does not have a related role"""
