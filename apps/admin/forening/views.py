@@ -161,8 +161,21 @@ def index(request):
                 forening.post_address = create_form.cleaned_data['post_address']
                 forening.visit_address = create_form.cleaned_data['visit_address']
                 forening.zipcode = create_form.cleaned_data['zipcode']
+
+                if create_form.cleaned_data['choose_contact'] == 'person':
+                    if create_form.cleaned_data['contact_person'] is not None:
+                        forening.contact_person = create_form.cleaned_data['contact_person']
+                        forening.contact_person_name = ''
+                    else:
+                        forening.contact_person = None
+                        forening.contact_person_name = create_form.cleaned_data['contact_person_name']
+                else:
+                    forening.contact_person = None
+                    forening.contact_person_name = ''
+
                 forening.phone = create_form.cleaned_data['phone']
                 forening.email = create_form.cleaned_data['email']
+
                 forening.organization_no = create_form.cleaned_data['organization_no']
                 forening.gmap_url = create_form.cleaned_data['gmap_url']
                 forening.facebook_url = create_form.cleaned_data['facebook_url']

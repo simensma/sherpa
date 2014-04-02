@@ -144,7 +144,43 @@
 
     <div class="form-group">
       <div class="col-md-offset-2 col-md-10">
-        <h2>Kontakinformasjon</h2>
+        <h2>Kontaktinformasjon</h2>
+      </div>
+    </div>
+
+    <div class="form-group choose-contact{% if create_form.choose_contact.errors %} has-error{% endif %}">
+      <label class="col-md-2 control-label">Hvem kan kontaktes</label>
+      <div class="col-md-10">
+        {% for input in create_form.choose_contact %}
+          <div class="checkbox">
+            {{ input }}
+          </div>
+        {% endfor %}
+        <span class="help-block">
+          De fleste foreninger har generell kontaktinformasjon, men for små turgrupper kan det være mer aktuelt å oppgi en kontaktperson.
+        </span>
+        {% if create_form.choose_contact.errors %}
+          {% for error in create_form.choose_contact.errors %}
+            <span class="help-block error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-group contact_person_name{% if create_form.contact_person_name.errors %} has-error{% endif %}{% if create_form.choose_contact.value == 'forening' %} jq-hide{% endif %}">
+      <label class="col-md-2 control-label" for="id_edit-contact_person_name">Navn</label>
+      <div class="col-md-10">
+        {{ create_form.contact_person_name }}
+        {{ create_form.contact_person }}
+        <span class="help-block">
+          <a href="javascript:undefined" class="search{% if create_form.contact_person.value != None %} jq-hide{% endif %}">Hent personopplysninger fra medlemsregisteret</a>
+          <a href="javascript:undefined" class="manual{% if create_form.contact_person.value == None %} jq-hide{% endif %}">Fyll ut personopplysninger selv</a>
+        </span>
+        {% if create_form.contact_person_name.errors %}
+          {% for error in create_form.contact_person_name.errors %}
+            <span class="help-block error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
       </div>
     </div>
 
