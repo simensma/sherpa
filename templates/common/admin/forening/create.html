@@ -184,17 +184,8 @@
       </div>
     </div>
 
-    <div class="form-group{% if create_form.gmap_url.errors %} has-error{% endif %}">
-      <label class="col-md-2 control-label" for="id_create_gmap_url">Google Maps URL</label>
-      <div class="col-md-10">
-        {{ create_form.gmap_url }}
-        {% if create_form.gmap_url.errors %}
-          {% for error in create_form.gmap_url.errors %}
-            <span class="help-block error">{{ error }}</span>
-          {% endfor %}
-        {% endif %}
-      </div>
-    </div>
+    {# Hidden and uneditable for now #}
+    {{ edit_form.gmap_url }}
 
     <div class="form-group{% if create_form.facebook_url.errors %} has-error{% endif %}">
       <label class="col-md-2 control-label" for="id_create_facebook_url">Facebook URL</label>

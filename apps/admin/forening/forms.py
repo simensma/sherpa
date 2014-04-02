@@ -122,11 +122,7 @@ class ForeningDataForm(forms.Form):
         'class': 'form-control',
     })
 
-    gmap_url = forms.CharField(required=False)
-
-    gmap_url.widget.attrs.update({
-        'class': 'form-control',
-    })
+    gmap_url = forms.CharField(required=False, widget=forms.HiddenInput())
 
     facebook_url = forms.CharField(required=False)
 
