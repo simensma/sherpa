@@ -84,17 +84,17 @@ $(function() {
     contact_person_manual.click(function() {
         contact_person_input.val('');
         resetContactDetailsState();
-        contact_person_name_input.prop('disabled', false);
-        contact_person_phone_input.prop('disabled', false);
-        contact_person_email_input.prop('disabled', false);
+        contact_person_name_input.prop('readonly', false);
+        contact_person_phone_input.prop('readonly', false);
+        contact_person_email_input.prop('readonly', false);
     });
 
     // Reset the contact info fields based on chosen-user state
     function resetContactDetailsState() {
         var chosen_contact = (contact_person_input.val() !== '');
-        contact_person_name_input.prop('disabled', chosen_contact);
-        contact_person_phone_input.prop('disabled', chosen_contact);
-        contact_person_email_input.prop('disabled', chosen_contact);
+        contact_person_name_input.prop('readonly', chosen_contact);
+        contact_person_phone_input.prop('readonly', chosen_contact);
+        contact_person_email_input.prop('readonly', chosen_contact);
         if(chosen_contact) {
             contact_person_search.hide();
             contact_person_manual.show();
@@ -104,7 +104,7 @@ $(function() {
         }
     }
 
-    // Reset the disabled state on page load - this is kind of hard to do through the Django forms API
+    // Reset the readonly state on page load - this is kind of hard to do through the Django forms API
     resetContactDetailsState();
 
 });
