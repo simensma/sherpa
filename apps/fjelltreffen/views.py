@@ -112,7 +112,7 @@ def show(request, id):
                 )
         else:
             # Log temporary for spam details
-            if len(form['captcha'].errors) > 0:
+            if 'captcha' not in form or len(form['captcha'].errors) > 0:
                 logger.info(u"Fjelltreffen-svar - ugyldig captcha",
                     extra={'request': request}
                 )
