@@ -42,17 +42,7 @@
       {% include 'main/enrollment/progress.html' with step=1 %}
 
       {% for message in messages %}
-        {% if message.message == 'too_many_underage' %}
-          <div class="notice-alert">
-            <h2>{% trans "Beklager, men du kan ikke registrere disse medlemmene!" %}</h2>
-            <p>
-              {% blocktrans with count=enrollment.users.count %}
-                Du har registrert {{ count }} medlemmer, hvorav ingen er gammel nok til å være hovedmedlem. Av tekniske årsaker kan du melde inn maks 3 slike medlemmer av gangen.
-              {% endblocktrans %}
-            </p>
-            <p>{% trans "Vi beklager ulempene dette medfører og vi arbeider med å unngå en slik begrensning." %}</p>
-          </div>
-        {% elif message.message == 'contact_missing' %}
+        {% if message.message == 'contact_missing' %}
           <div class="alert alert-error">
             <a class="close">x</a><strong><i class="icon-warning-sign"></i> {% trans "Kontaktinformasjon mangler." %}</strong><br>
             {% trans "Minst ett medlem av husstanden må ha gyldig kontaktinformasjon (både telefon og e-post)." %}

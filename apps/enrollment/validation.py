@@ -12,12 +12,6 @@ def validate(enrollment, require_location, require_existing):
             'valid': False,
             'redirect': ["enrollment.views.registration"]
         }
-    if not validate_youth_count(enrollment):
-        return {
-            'valid': False,
-            'message': 'too_many_underage',
-            'redirect': ["enrollment.views.registration"]
-        }
     # Verify that at least one member has valid contact information
     if not any([u.is_valid(require_contact_info=True) for u in enrollment.users.all()]):
         return {
@@ -100,15 +94,3 @@ def validate_existing(enrollment):
         return False
 
     return True
-
-def validate_youth_count(enrollment):
-    # Based on order number length, which is 32.
-    # MemberID is 7 chars, order number format is I[_<memberid>]+ so 4 users = 33 chars.
-    if enrollment.users.count() <= 3:
-        return True
-    at_least_one_main_member = False
-    for user in enrollment.users.all():
-        if user.get_age() >= AGE_YOUTH:
-            at_least_one_main_member = True
-            break
-    return at_least_one_main_member
