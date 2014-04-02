@@ -26,7 +26,7 @@ class Forening(models.Model):
 
     name = models.CharField(max_length=255)
     # The child/parent rules are dependent on type; this is defined in admin.forening.forms.ExistingForeningDataForm
-    parent = models.ForeignKey('foreninger.Forening', null=True, related_name='children')
+    parents = models.ManyToManyField('foreninger.Forening', related_name='children')
     focus_id = models.IntegerField(null=True, default=None)
     type = models.CharField(max_length=255, choices=TYPES)
     group_type = models.CharField(max_length=255, choices=GROUP_TYPES, default='')
@@ -54,6 +54,14 @@ class Forening(models.Model):
     def __repr__(self):
         return '%s: %s' % (self.pk, self.name.encode('utf-8'))
 
+    def get_parents_deep(self):
+        parents = []
+        for parent in self.parents.all():
+            parents += parent.get_with_parents_deep()
+        return parents
+
+    def get_with_parents_deep(self):
+        return [self] + self.get_parents_deep()
 
     def get_children_sorted(self):
         """Get children foreninger, sorted by type in form of a dict"""
@@ -95,11 +103,14 @@ class Forening(models.Model):
             'senior': [g for g in turgrupper if g.group_type == 'senior'],
         }
 
-    def get_main_forening(self):
+    def get_main_forenings(self):
         if self.type == 'sentral' or self.type == 'forening':
-            return self
+            return [self]
         else:
-            return self.parent.get_main_forening()
+            mains = []
+            for parent in self.parents.all():
+                mains += parent.get_main_forenings()
+            return mains
 
     def get_old_url(self):
         """Temporary method! Retrieves the site URL from sherpa2"""
@@ -118,52 +129,63 @@ class Forening(models.Model):
             'turgrupper': [f for f in foreninger if f.type == 'turgruppe'],
         }
 
-    def validate_relationships(self):
+    def validate_relationships(self, simulate_type=None, simulate_parents=None):
         """Validate a forening's relationships based on its type and its relationships types
         See https://turistforeningen.atlassian.net/wiki/pages/viewpage.action?pageId=1540233"""
 
+        # Callers may simulate the type and/or parents fields, e.g. for form validation purposes
+        type = self.type if simulate_type is None else simulate_type
+        if simulate_parents is not None:
+            parents = simulate_parents
+        elif self.id is None:
+            parents = []
+        else:
+            parents = self.parents.all()
+
         # A central group cannot have any children
-        if self.type in ['sentral', 'turgruppe'] and self.children.count() > 0:
+        if self.id is not None and type in ['sentral', 'turgruppe'] and self.children.count() > 0:
             raise ForeningTypeCannotHaveChildren()
 
         # These types must have a parent
-        if self.type in ['turlag', 'turgruppe'] and self.parent is None:
+        if self.id is not None and self.type in ['turlag', 'turgruppe'] and len(parents) == 0:
             raise ForeningTypeNeedsParent()
 
-        # The following checks presume that the forening has a parent
-        if self.parent is not None:
+        # Parent-related validations
+        for parent in parents:
 
-            if self == self.parent:
+            if self == parent:
                 raise ForeningWithItselfAsParent()
 
             # Central foreninger can't have relationships
-            if self.type == 'sentral' or self.parent.type == 'sentral':
+            if type == 'sentral' or parent.type == 'sentral':
                 raise SentralForeningWithRelation()
 
             # Forening can't be child of other forening
-            if self.type == 'forening' and self.parent.type == 'forening':
+            if type == 'forening' and parent.type == 'forening':
                 raise ForeningWithForeningParent()
 
             # Turlag can't be child of other turlag
-            if self.type == 'turlag' and self.parent.type == 'turlag':
+            if type == 'turlag' and parent.type == 'turlag':
                 raise TurlagWithTurlagParent()
 
             # Turgruppe can't be child of other turgruppe
-            if self.type == 'turgruppe' and self.parent.type == 'turgruppe':
+            if type == 'turgruppe' and parent.type == 'turgruppe':
                 raise TurgruppeWithTurgruppeParent()
 
             # Forening can't be child of turlag/turgruppe
-            if self.type == 'forening' and self.parent.type in ['turlag', 'turgruppe']:
+            if type == 'forening' and parent.type in ['turlag', 'turgruppe']:
                 raise ForeningWithTurlagParent()
 
             # Turlag can't be child of turgruppe
-            if self.type == 'turlag' and self.parent.type == 'turgruppe':
+            if type == 'turlag' and parent.type == 'turgruppe':
                 raise TurlagWithTurgruppeParent()
 
             # The parent can't already be a child - this would probably be impossible due to above
             # rules, but check explicitly anyway
-            if self.parent in self.get_children_deep():
-                raise ForeningParentIsChild()
+            if self.id is not None and parent in self.get_children_deep():
+                exc = ForeningParentIsChild()
+                exc.parent = parent
+                raise exc
 
     class Meta:
         ordering = ['name']

@@ -1,4 +1,4 @@
-{% if active_forening.parent %}
+{% if active_forening.parents.count > 0 %}
   <table class="table">
     <thead>
       <tr>
@@ -11,7 +11,9 @@
         <td>
           {{ active_forening.name }} er underlagt
           {# The following line is too long because we don't want spacing between punctuations. #}
-          {% if active_forening.parent in user.all_foreninger %}<a href="/sherpa/aktiv-forening/{{ active_forening.parent.id }}/?next={% url 'admin.forening.views.index' %}#grupper">{% endif %}{{ active_forening.parent.name }}{% if active_forening.parent in user.all_foreninger %}</a>{% endif %}.
+          {% for parent in active_forening.parents.all %}
+            {% if parent in user.all_foreninger %}<a href="/sherpa/aktiv-forening/{{ parent.id }}/?next={% url 'admin.forening.views.index' %}#grupper">{% endif %}{{ parent.name }}{% if parent in user.all_foreninger %}</a>{% endif %}{% if not forloop.last %} og {% else %}.{% endif %}
+          {% endfor %}
         </td>
       </tr>
     </tbody>

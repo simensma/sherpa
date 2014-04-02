@@ -12,30 +12,32 @@
 
   <div class="section">
 
-    <div class="form-group parent{% if create_form.parent.errors %} has-error{% endif %} jq-hide">
-      <label class="col-md-2 control-label" for="id_create_parent">Moderforening</label>
+    <div class="form-group parents{% if create_form.parents.errors %} has-error{% endif %} jq-hide">
+      <label class="col-md-2 control-label" for="id_create_parents">Moderforening</label>
       <div class="col-md-10">
 
-        <select id="id_create-parent" name="create-parent" data-chosen data-placeholder="Velg moderforening...">
+        <select id="id_create-parents" name="create-parents" data-chosen data-placeholder="Velg moderforening..." multiple>
           <option value=""></option>
-          {% if parent_choices.foreninger|length > 0 %}
+          {% if parents_choices.foreninger|length > 0 %}
             <optgroup label="Foreninger">
-              {% for forening in parent_choices.foreninger %}
-                <option value="{{ forening.id }}"{% if create_form.parent.value|stringformat:"s" == forening.id|stringformat:"s" %} selected{% endif %}>{{ forening.name }}</option>
+              {% for forening in parents_choices.foreninger %}
+                {# The following stringformat hack is kind of ugly, why doesn't djangos form value return a list of ID ints? #}
+                <option value="{{ forening.id }}"{% if forening.id in create_form.parents.value or forening.id|stringformat:"s" in create_form.parents.value %} selected{% endif %}>{{ forening.name }}</option>
               {% endfor %}
             </optgroup>
           {% endif %}
-          {% if parent_choices.turlag|length > 0 %}
+          {% if parents_choices.turlag|length > 0 %}
             <optgroup label="Turlag">
-              {% for forening in parent_choices.turlag %}
-                <option value="{{ forening.id }}"{% if create_form.parent.value|stringformat:"s" == forening.id|stringformat:"s" %} selected{% endif %}>{{ forening.name }}</option>
+              {% for forening in parents_choices.turlag %}
+                {# The following stringformat hack is kind of ugly, why doesn't djangos form value return a list of ID ints? #}
+                <option value="{{ forening.id }}"{% if forening.id in create_form.parents.value or forening.id|stringformat:"s" in create_form.parents.value %} selected{% endif %}>{{ forening.name }}</option>
               {% endfor %}
             </optgroup>
           {% endif %}
         </select>
 
-        {% if create_form.parent.errors %}
-          {% for error in create_form.parent.errors %}
+        {% if create_form.parents.errors %}
+          {% for error in create_form.parents.errors %}
             <span class="help-block error">{{ error }}</span>
           {% endfor %}
         {% endif %}

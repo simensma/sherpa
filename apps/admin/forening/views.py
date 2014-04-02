@@ -21,11 +21,9 @@ def index(request):
     forening_users = list(User.objects.filter(foreninger=request.session['active_forening']))
 
     forening_users_by_parent = []
-    active_forening = request.session['active_forening']
-    while active_forening.parent is not None:
-        active_forening = active_forening.parent
-        for user in User.objects.filter(foreninger=active_forening):
-            forening_users_by_parent.append(user)
+
+    parent_ids = [p.id for p in request.session['active_forening'].get_parents_deep()]
+    forening_users_by_parent = list(User.objects.filter(foreninger__in=parent_ids))
 
     # Prefetch and cache the actors
     memberids = [u.memberid for u in (forening_users + forening_users_by_parent)]
@@ -38,7 +36,7 @@ def index(request):
 
     # The parent choices are tricky to define in the forms API, so do it here
     all_sorted = request.user.all_foreninger_sorted()
-    parent_choices = {
+    parents_choices = {
         'foreninger': all_sorted['foreninger'],
         'turlag': all_sorted['turlag'],
     }
@@ -46,7 +44,7 @@ def index(request):
     context = {
         'forening_users': forening_users,
         'forening_users_by_parent': forening_users_by_parent,
-        'parent_choices': parent_choices,
+        'parents_choices': parents_choices,
         'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH
     }
 
@@ -74,7 +72,7 @@ def index(request):
 
     edit_form = ExistingForeningDataForm(request.user, prefix='edit', initial={
         'forening': request.session['active_forening'].id,
-        'parent': request.session['active_forening'].parent,
+        'parents': request.session['active_forening'].parents.all(),
         'name': request.session['active_forening'].name,
         'type': request.session['active_forening'].type,
         'post_address': request.session['active_forening'].post_address,
@@ -110,7 +108,7 @@ def index(request):
             edit_form = ExistingForeningDataForm(request.user, request.POST, prefix='edit')
             if edit_form.is_valid():
                 forening = edit_form.cleaned_data['forening']
-                forening.parent = edit_form.cleaned_data['parent']
+                forening.parents = edit_form.cleaned_data['parents']
                 forening.name = edit_form.cleaned_data['name']
                 forening.type = edit_form.cleaned_data['type']
                 if forening.type == 'turgruppe':
@@ -152,7 +150,6 @@ def index(request):
             create_form = ForeningDataForm(request.user, request.POST, prefix='create')
             if create_form.is_valid():
                 forening = Forening()
-                forening.parent = create_form.cleaned_data['parent']
                 forening.name = create_form.cleaned_data['name']
                 forening.type = create_form.cleaned_data['type']
                 if forening.type == 'turgruppe':
@@ -183,6 +180,7 @@ def index(request):
                 forening.save()
 
                 # Set M2M-fields after the initial db-save
+                forening.parents = create_form.cleaned_data['parents']
                 forening.counties = create_form.cleaned_data['counties']
 
                 # Add the current user as admin on the new forening

@@ -5,7 +5,7 @@ $(function() {
 
     var type_input = form.find("select[name='create-type']");
     var group_type = form.find("div.group_type");
-    var parent = form.find("div.parent");
+    var parents = form.find("div.parents");
 
     var zipcode = form.find("input[name='create-zipcode']");
     var area = form.find("input[name='create-area']");
@@ -22,9 +22,9 @@ $(function() {
 
     type_input.change(function() {
         if($(this).val() == 'sentral' || $(this).val() == 'forening') {
-            parent.hide();
+            parents.hide();
         } else {
-            parent.show();
+            parents.show();
         }
 
         if($(this).val() == 'turgruppe') {

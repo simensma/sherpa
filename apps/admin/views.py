@@ -24,7 +24,7 @@ def index(request):
         all_members = Actor.all_members()
         total_membership_count = all_members.count()
         local_membership_count = all_members.filter(
-            main_forening_id=request.session['active_forening'].get_main_forening().focus_id
+            main_forening_id__in=[f.focus_id for f in request.session['active_forening'].get_main_forenings()],
         ).count()
         cache.set('admin.total_membership_count', total_membership_count, 60 * 60 * 12)
         cache.set('admin.local_membership_count.%s' % request.session['active_forening'].id, local_membership_count, 60 * 60 * 12)
