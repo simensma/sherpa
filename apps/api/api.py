@@ -32,7 +32,7 @@ def members(request, version, format):
             return HttpResponse(json.dumps(get_member_data(user)))
         except (User.DoesNotExist, ValueError):
             raise BadRequest(
-                "A member matching that sherpa_id, memberid, or both if both were provided, does not exist.",
+                "A member matching that 'sherpa_id', 'medlemsnummer', or both if both were provided, does not exist.",
                 code=error_codes.RESOURCE_NOT_FOUND,
                 http_code=404
             )
