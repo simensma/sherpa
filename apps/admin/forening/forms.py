@@ -84,6 +84,18 @@ class ForeningDataForm(forms.Form):
     # Contact information
     #
 
+    choose_contact = forms.ChoiceField(
+        required=True,
+        widget=forms.RadioSelect(),
+        choices=(
+            ('forening', "Foreningen har egen kontaktinformasjon"),
+            ('person', "En kontaktperson"),
+        ),
+        error_messages={
+            'required': "Du må velge om det er foreningen eller en person som kan kontaktes",
+        }
+    )
+
     contact_person = forms.IntegerField(required=False, widget=forms.HiddenInput())
 
     contact_person_name = forms.CharField(required=False)

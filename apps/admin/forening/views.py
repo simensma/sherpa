@@ -44,6 +44,10 @@ def index(request):
 
     zipcode = request.session['active_forening'].zipcode
     edit_form_zipcode_area = zipcode.area if zipcode is not None else ''
+    if request.session['active_forening'].contact_person is None and request.session['active_forening'].contact_person_name == '':
+        choose_contact = 'forening'
+    else:
+        choose_contact = 'person'
 
     edit_form = ExistingForeningDataForm(request.user, prefix='edit', initial={
         'forening': request.session['active_forening'].id,
@@ -54,6 +58,7 @@ def index(request):
         'visit_address': request.session['active_forening'].visit_address,
         'zipcode': zipcode.zipcode if zipcode is not None else '',
         'counties': request.session['active_forening'].counties.all(),
+        'choose_contact': choose_contact,
         'contact_person': request.session['active_forening'].contact_person,
         'contact_person_name': request.session['active_forening'].contact_person_name,
         'phone': request.session['active_forening'].phone,
@@ -94,7 +99,7 @@ def index(request):
                 forening.zipcode = edit_form.cleaned_data['zipcode']
                 forening.counties = edit_form.cleaned_data['counties']
 
-                if request.POST['edit-choose-contact'] == 'person':
+                if edit_form.cleaned_data['choose_contact'] == 'person':
                     if edit_form.cleaned_data['contact_person'] is not None:
                         forening.contact_person = edit_form.cleaned_data['contact_person']
                         forening.contact_person_name = ''
