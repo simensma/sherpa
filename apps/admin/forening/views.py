@@ -54,6 +54,8 @@ def index(request):
         'visit_address': request.session['active_forening'].visit_address,
         'zipcode': zipcode.zipcode if zipcode is not None else '',
         'counties': request.session['active_forening'].counties.all(),
+        'contact_person': request.session['active_forening'].contact_person,
+        'contact_person_name': request.session['active_forening'].contact_person_name,
         'phone': request.session['active_forening'].phone,
         'email': request.session['active_forening'].email,
         'organization_no': request.session['active_forening'].organization_no,
@@ -91,8 +93,21 @@ def index(request):
                 forening.visit_address = edit_form.cleaned_data['visit_address']
                 forening.zipcode = edit_form.cleaned_data['zipcode']
                 forening.counties = edit_form.cleaned_data['counties']
+
+                if request.POST['edit-choose-contact'] == 'person':
+                    if edit_form.cleaned_data['contact_person'] is not None:
+                        forening.contact_person = edit_form.cleaned_data['contact_person']
+                        forening.contact_person_name = ''
+                    else:
+                        forening.contact_person = None
+                        forening.contact_person_name = edit_form.cleaned_data['contact_person_name']
+                else:
+                    forening.contact_person = None
+                    forening.contact_person_name = ''
+
                 forening.phone = edit_form.cleaned_data['phone']
                 forening.email = edit_form.cleaned_data['email']
+
                 forening.organization_no = edit_form.cleaned_data['organization_no']
                 forening.gmap_url = edit_form.cleaned_data['gmap_url']
                 forening.facebook_url = edit_form.cleaned_data['facebook_url']

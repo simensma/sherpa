@@ -10,6 +10,9 @@ $(function() {
     var area = form.find("input[name='edit-area']");
     var loader = form.find("img.ajaxloader.zipcode");
 
+    var choose_contact = form.find("div.choose-contact");
+    var contact_person_name = form.find("div.contact_person_name");
+
     type_input.change(function() {
         if($(this).val() == 'sentral' || $(this).val() == 'forening') {
             parent.hide();
@@ -44,4 +47,14 @@ $(function() {
             area.val('');
         }
     });
+
+    choose_contact.find("input[type='radio']").change(function() {
+        var val = choose_contact.find("input[type='radio']:checked").val();
+        if(val === 'person') {
+            contact_person_name.show();
+        } else if(val === 'forening') {
+            contact_person_name.hide();
+        }
+    });
+
 });

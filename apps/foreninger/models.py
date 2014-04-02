@@ -38,7 +38,10 @@ class Forening(models.Model):
     zipcode = models.ForeignKey('core.Zipcode', null=True)
     counties = models.ManyToManyField('core.County', related_name='foreninger')
 
-    # Contact information
+    # Contact information - user may choose between setting the relation (which automatically fills name/phone/email,
+    # manually providing a contact person (name/phone/email), or only setting phone/email
+    contact_person = models.ForeignKey('user.User', null=True)
+    contact_person_name = models.CharField(max_length=255, default='')
     phone = models.CharField(max_length=255, default='')
     email = models.CharField(max_length=255, default='')
     organization_no = models.CharField(max_length=255, default='')

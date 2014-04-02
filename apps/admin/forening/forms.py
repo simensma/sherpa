@@ -4,6 +4,7 @@ from django import forms
 from foreninger.models import Forening
 from foreninger.exceptions import ForeningTypeCannotHaveChildren, ForeningTypeNeedsParent, ForeningWithItselfAsParent, SentralForeningWithRelation, ForeningWithForeningParent, ForeningWithTurlagParent, TurlagWithTurgruppeParent, TurgruppeWithTurgruppeParent, ForeningParentIsChild, TurlagWithTurlagParent
 from core.models import County, Zipcode
+from user.models import User
 
 class ForeningDataForm(forms.Form):
     def __init__(self, user, *args, **kwargs):
@@ -79,6 +80,18 @@ class ForeningDataForm(forms.Form):
         'data-placeholder': 'Velg tilhørende fylke(r)...',
     })
 
+    #
+    # Contact information
+    #
+
+    contact_person = forms.IntegerField(required=False, widget=forms.HiddenInput())
+
+    contact_person_name = forms.CharField(required=False)
+
+    contact_person_name.widget.attrs.update({
+        'class': 'form-control',
+    })
+
     phone = forms.CharField(required=False)
 
     phone.widget.attrs.update({
@@ -130,6 +143,21 @@ class ForeningDataForm(forms.Form):
                 code='invalid'
             )
         return zipcode
+
+    def clean_contact_person(self):
+        if self.cleaned_data['contact_person'] is None:
+            return None
+        else:
+            return User.get_users().get(id=self.cleaned_data['contact_person'])
+
+    def clean_contact_person_name(self):
+        return self.cleaned_data['contact_person_name'].strip()
+
+    def clean_phone(self):
+        return self.cleaned_data['phone'].strip()
+
+    def clean_email(self):
+        return self.cleaned_data['email'].strip()
 
     def clean(self):
         cleaned_data = super(ForeningDataForm, self).clean()
