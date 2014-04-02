@@ -174,6 +174,15 @@ class ForeningDataForm(forms.Form):
     def clean(self):
         cleaned_data = super(ForeningDataForm, self).clean()
 
+        if cleaned_data.get('choose_contact') == 'person':
+            if cleaned_data.get('contact_person') is None and \
+                (cleaned_data.get('contact_person_name') is None or cleaned_data.get('contact_person_name') == ''):
+                self._errors['contact_person_name'] = self.error_class([
+                    u"Hvis det er en kontaktperson som kan kontaktes, må du oppgi et navn eller velge en person fra medlemsregisteret."
+                ])
+                if 'contact_person_name' in cleaned_data:
+                    del cleaned_data['contact_person_name']
+
         type_ = cleaned_data.get('type')
         parent = cleaned_data.get('parent')
 
