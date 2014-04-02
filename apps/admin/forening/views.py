@@ -4,6 +4,12 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.core.cache import cache
 from django.conf import settings
+from django.http import HttpResponse
+from django.db.models import Q
+from django.template import RequestContext
+from django.template.loader import render_to_string
+
+import json
 
 from foreninger.models import Forening
 from .forms import ForeningDataForm, ExistingForeningDataForm
@@ -40,14 +46,30 @@ def index(request):
         'forening_users': forening_users,
         'forening_users_by_parent': forening_users_by_parent,
         'parent_choices': parent_choices,
+        'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH
     }
 
     zipcode = request.session['active_forening'].zipcode
     edit_form_zipcode_area = zipcode.area if zipcode is not None else ''
-    if request.session['active_forening'].contact_person is None and request.session['active_forening'].contact_person_name == '':
-        choose_contact = 'forening'
-    else:
+
+    if request.session['active_forening'].contact_person is not None:
         choose_contact = 'person'
+        contact_person = request.session['active_forening'].contact_person.id
+        contact_person_name = request.session['active_forening'].contact_person.get_full_name()
+        phone = request.session['active_forening'].contact_person.get_phone_mobile()
+        email = request.session['active_forening'].contact_person.get_sherpa_email()
+    elif request.session['active_forening'].contact_person_name != '':
+        choose_contact = 'person'
+        contact_person = None
+        contact_person_name = request.session['active_forening'].contact_person_name
+        phone = request.session['active_forening'].phone
+        email = request.session['active_forening'].email
+    else:
+        choose_contact = 'forening'
+        contact_person = None
+        contact_person_name = ''
+        phone = request.session['active_forening'].phone
+        email = request.session['active_forening'].email
 
     edit_form = ExistingForeningDataForm(request.user, prefix='edit', initial={
         'forening': request.session['active_forening'].id,
@@ -59,10 +81,10 @@ def index(request):
         'zipcode': zipcode.zipcode if zipcode is not None else '',
         'counties': request.session['active_forening'].counties.all(),
         'choose_contact': choose_contact,
-        'contact_person': request.session['active_forening'].contact_person,
-        'contact_person_name': request.session['active_forening'].contact_person_name,
-        'phone': request.session['active_forening'].phone,
-        'email': request.session['active_forening'].email,
+        'contact_person': contact_person,
+        'contact_person_name': contact_person_name,
+        'phone': phone,
+        'email': email,
         'organization_no': request.session['active_forening'].organization_no,
         'gmap_url': request.session['active_forening'].gmap_url,
         'facebook_url': request.session['active_forening'].facebook_url,
@@ -168,3 +190,40 @@ def index(request):
 
         else:
             return redirect('admin.forening.views.index')
+
+def contact_person_search(request):
+    MAX_HITS = 100
+
+    if len(request.POST['q']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:
+        raise PermissionDenied
+
+    local_nonmember_users = User.get_users().filter(memberid__isnull=True)
+    for word in request.POST['q'].split():
+        local_nonmember_users = local_nonmember_users.filter(
+            Q(first_name__icontains=word) |
+            Q(last_name__icontains=word)
+        )
+    local_nonmember_users = local_nonmember_users.order_by('first_name')
+
+    actors = Actor.objects.all()
+    for word in request.POST['q'].split():
+        actors = actors.filter(
+            Q(first_name__icontains=word) |
+            Q(last_name__icontains=word) |
+            Q(memberid__icontains=word)
+        )
+    actors = actors.order_by('first_name')
+
+    # Get (or create) the user objects for the first MAX_HITS actor-hits
+    users = [User.get_or_create_inactive(a.memberid) for a in actors[:MAX_HITS]]
+
+    # Merge with non-members
+    users = sorted(list(users) + list(local_nonmember_users), key=lambda u: u.get_full_name())
+
+    context = RequestContext(request, {
+        'users': users[:MAX_HITS]
+    })
+    return HttpResponse(json.dumps({
+        'results': render_to_string('common/admin/forening/contact_person_search_results.html', context),
+        'max_hits_exceeded': len(users) > MAX_HITS or len(actors) > MAX_HITS
+    }))

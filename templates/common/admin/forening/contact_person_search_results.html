@@ -1,0 +1,47 @@
+{% for user in users %}
+  <tr class="result" data-id="{{ user.id }}" data-name="{{ user.get_full_name }}" data-phone="{{ user.get_phone_mobile }}" data-email="{{ user.get_sherpa_email }}">
+    <td>
+      {{ user.get_full_name }}
+    </td>
+    <td>
+      {% if user.is_member %}
+        {{ user.get_birth_date|date:"d.m.y" }}
+      {% endif %}
+    </td>
+    <td>
+      {% if user.is_member %}
+        {{ user.main_forening.name }}<br>
+        Medlemsnr: {{ user.memberid }}
+      {% else %}
+        <em>Ikke medlem</em>
+      {% endif %}
+    </td>
+    <td>
+      {% if user.is_member %}
+        {{ user.get_address.format_with_newlines|linebreaksbr }}
+      {% endif %}
+    </td>
+    <td>
+      {% if user.is_member %}
+        {% if user.get_phone_home %}
+          {{ user.get_phone_home }}<br>
+        {% endif %}
+        {% if user.get_phone_mobile %}
+          {{ user.get_phone_mobile }}<br>
+        {% endif %}
+        {% if user.get_sherpa_email %}
+          {{ user.get_sherpa_email }}
+        {% endif %}
+
+        {% if not user.get_phone_home and not user.get_phone_mobile and not user.get_sherpa_email %}
+          <em>Mangler kontaktopplysninger</em><br>
+          Han/hun må selv legge dette inn på Min side.
+        {% endif %}
+      {% endif %}
+    </td>
+    <td>
+      <a href="javascript:undefined" class="btn btn-danger pick">Velg</a>
+    </td>
+  </tr>
+
+{% endfor %}

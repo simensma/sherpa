@@ -1,6 +1,7 @@
 $(function() {
     var admin = $("div.foreningsadmin");
     var form = admin.find("form.edit-forening");
+    var contact_person_search_modal = admin.find("div.contact-person-search");
 
     var type_input = form.find("select[name='edit-type']");
     var group_type = form.find("div.group_type");
@@ -12,6 +13,12 @@ $(function() {
 
     var choose_contact = form.find("div.choose-contact");
     var contact_person_name = form.find("div.contact_person_name");
+    var contact_person_name_input = contact_person_name.find("input[name='edit-contact_person_name']");
+    var contact_person_input = contact_person_name.find("input[name='edit-contact_person']");
+    var contact_person_search = contact_person_name.find("a.search");
+    var contact_person_manual = contact_person_name.find("a.manual");
+    var contact_person_phone_input = form.find("input[name='edit-phone']");
+    var contact_person_email_input = form.find("input[name='edit-email']");
 
     type_input.change(function() {
         if($(this).val() == 'sentral' || $(this).val() == 'forening') {
@@ -54,7 +61,50 @@ $(function() {
             contact_person_name.show();
         } else if(val === 'forening') {
             contact_person_name.hide();
+            contact_person_input.val('');
+            resetContactDetailsState();
         }
     });
+
+    // Searching for a contact person in the member register
+    contact_person_search.click(function() {
+        AdminForeningContactPersonSearch.enable({
+            callback: function(opts) {
+                contact_person_input.val(opts.result_row.attr('data-id'));
+                resetContactDetailsState();
+                contact_person_name_input.val(opts.result_row.attr('data-name'));
+                contact_person_phone_input.val(opts.result_row.attr('data-phone'));
+                contact_person_email_input.val(opts.result_row.attr('data-email'));
+                contact_person_search_modal.modal('hide');
+            }
+        });
+    });
+
+    // Fill contact person details manually
+    contact_person_manual.click(function() {
+        contact_person_input.val('');
+        resetContactDetailsState();
+        contact_person_name_input.prop('disabled', false);
+        contact_person_phone_input.prop('disabled', false);
+        contact_person_email_input.prop('disabled', false);
+    });
+
+    // Reset the contact info fields based on chosen-user state
+    function resetContactDetailsState() {
+        var chosen_contact = (contact_person_input.val() !== '');
+        contact_person_name_input.prop('disabled', chosen_contact);
+        contact_person_phone_input.prop('disabled', chosen_contact);
+        contact_person_email_input.prop('disabled', chosen_contact);
+        if(chosen_contact) {
+            contact_person_search.hide();
+            contact_person_manual.show();
+        } else {
+            contact_person_search.show();
+            contact_person_manual.hide();
+        }
+    }
+
+    // Reset the disabled state on page load - this is kind of hard to do through the Django forms API
+    resetContactDetailsState();
 
 });

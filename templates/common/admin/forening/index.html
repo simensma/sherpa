@@ -7,7 +7,16 @@
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/forening/index.js"></script>
   <script src="{{ STATIC_URL }}js/admin/forening/metadata.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/forening/metadata_contact_person_search.js"></script>
   <script src="{{ STATIC_URL }}js/admin/forening/create.js"></script>
+{% endblock %}
+
+{% block js_globals %}
+  <script>
+    window.Turistforeningen = {
+      admin_user_search_char_length: {{ admin_user_search_char_length }}
+    };
+  </script>
 {% endblock %}
 
 {% block body %}
