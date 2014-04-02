@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from django.db.models import Q
 from django.template import RequestContext
 from django.template.loader import render_to_string
+from django.core.exceptions import PermissionDenied
 
 import json
 
