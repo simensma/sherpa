@@ -219,7 +219,13 @@ def get_static_promo_context(path):
             'id': 'vintereventyr',
             'name': 'Vintereventyr',
             'start_date': date(year=2014, month=2, day=3),
-            'end_date': date(year=2014, month=2, day=3),
+            'end_date': date(year=2014, month=4, day=2),
+        },
+        {
+            'id': 'pasketur',
+            'name': 'Påsketur',
+            'start_date': date(year=2014, month=4, day=3),
+            'end_date': date(year=2014, month=4, day=3),
         },
     ]
 
