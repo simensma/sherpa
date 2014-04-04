@@ -1,7 +1,9 @@
 # encoding: utf-8
 from django.db import models
+from django.core.cache import cache
 
 from sherpa2.models import Forening as Sherpa2Forening
+from sherpa2.models import NtbId
 
 # Sometimes we'll need to reference foreninger directly by ID. We'll store the IDs we know and need here.
 DNT_OSLO_ID = 2
@@ -62,6 +64,17 @@ class Forening(models.Model):
             return Sherpa2Forening.objects.get(id=self.id).url
         except Sherpa2Forening.DoesNotExist:
             return ''
+
+    def get_ntb_id(self):
+        """Retrieve the NTB object_id for this forening from Sherpa2"""
+        object_id = cache.get('object_id.forening.%s' % self.id)
+        if object_id is None:
+            try:
+                object_id = NtbId.objects.get(sql_id=self.id, type='G').object_id
+            except NtbId.DoesNotExist:
+                object_id = None
+            cache.set('object_id.forening.%s' % self.id, object_id, 60 * 60 * 24 * 7)
+        return object_id
 
     @staticmethod
     def sort(foreninger):

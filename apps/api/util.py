@@ -1,11 +1,9 @@
 # encoding: utf-8
 
 from django.conf import settings
-from django.core.cache import cache
 
 import base64
 
-from sherpa2.models import NtbId
 from core.util import focus_is_down
 from exceptions import BadRequest
 from urls import supported_versions
@@ -36,22 +34,12 @@ def get_member_data(user):
         if dob is not None:
             dob = dob.strftime("%Y-%m-%d")
 
-        def get_object_id(forening_id):
-            object_id = cache.get('object_id.forening.%s' % forening_id)
-            if object_id is None:
-                try:
-                    object_id = NtbId.objects.get(sql_id=forening_id, type='G').object_id
-                except NtbId.DoesNotExist:
-                    object_id = None
-                cache.set('object_id.forening.%s' % forening_id, object_id, 60 * 60 * 24 * 7)
-            return object_id
-
         if not user.has_perm('sherpa'):
             forening_permissions = []
         else:
             forening_permissions = [{
                 'sherpa_id': f.id,
-                'object_id': get_object_id(f.id),
+                'object_id': f.get_ntb_id(),
             } for f in user.all_foreninger()]
 
         return {
