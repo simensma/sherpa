@@ -7,7 +7,7 @@ from django.core.cache import cache
 from django.conf import settings
 
 from sherpa.decorators import user_requires_login
-from sherpa2.models import Forening
+from foreninger.models import Forening
 from focus.models import FocusZipcode, Price, Actor
 from focus.util import ACTOR_ENDCODE_DUBLETT, DNT_OSLO_ID as DNT_OSLO_ID_FOCUS
 from core.models import Zipcode
@@ -31,13 +31,13 @@ def index(request):
 def benefits(request, forening_id):
     if forening_id is None:
         # No forening-attachment provided, use default prices (DNT Oslo og Omegn).
-        forening_focus_id = DNT_OSLO_ID_FOCUS
         forening = None
+        forening_focus_id = DNT_OSLO_ID_FOCUS
     else:
-        forening = cache.get('forening_sherpa2.%s' % forening_id)
+        forening = cache.get('forening.%s' % forening_id)
         if forening is None:
             forening = Forening.objects.get(id=forening_id)
-            cache.set('forening_sherpa2.%s' % forening_id, forening, 60 * 60 * 24 * 7)
+            cache.set('forening.%s' % forening_id, forening, 60 * 60 * 24 * 7)
         forening_focus_id = forening.focus_id
 
     price = cache.get('forening.price.%s' % forening_focus_id)
@@ -64,10 +64,7 @@ def zipcode_search(request):
             cache.set('focus.zipcode_forening.%s' % request.POST['zipcode'], focus_forening_id, 60 * 60 * 24 * 7)
 
         # Get forening based on zipcode-ID
-        forening = cache.get('forening_sherpa2.focus.%s' % focus_forening_id)
-        if forening is None:
-            forening = Forening.objects.get(focus_id=focus_forening_id)
-            cache.set('forening_sherpa2.focus.%s' % focus_forening_id, forening, 60 * 60 * 24 * 7)
+        forening = Forening.objects.get(focus_id=focus_forening_id)
 
         # Success, redirect user
         url = "%s-%s/" % (reverse('membership.views.benefits', args=[forening.id])[:-1], slugify(forening.name))
