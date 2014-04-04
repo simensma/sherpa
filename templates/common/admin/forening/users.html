@@ -4,6 +4,27 @@
   <div class="row">
     <div class="col-lg-12">
 
+      {% for message in messages %}
+        {% if message.message == 'permission_created' %}
+          <div class="alert alert-success">
+            <strong>Brukeren har nå tilgang til Sherpa og {{ active_forening.name }}!</strong>
+          </div>
+        {% elif message.message == 'equal_permission_already_exists' %}
+          <div class="alert alert-success">
+            <strong>Brukeren du valgte har allerede tilgang til {{ active_forening.name }}.</strong>
+          </div>
+        {% elif message.message == 'user_is_sherpa_admin' %}
+          <div class="alert alert-success">
+            <strong>Brukeren du valgte er Sherpa-administrator, og har implisitt tilgang til alle foreninger. Du trenger derfor ikke gi ham/henne tilgang til {{ active_forening.name }}.</strong>
+          </div>
+        {% elif message.message == 'user_has_admin_in_parent' %}
+          <div class="alert alert-danger">
+            <strong>Brukeren er administrator i en moderforening.</strong><br>
+            Du kan ikke endre tilgangen til "Vanlig bruker", fordi brukeren du valgte allerede er administrator i en moderforening og det betyr at han/henne allerede har tilgang til alle underlagte foreninger, turlag og turgrupper.
+          </div>
+        {% endif %}
+      {% endfor %}
+
       <table class="table">
         <thead>
           <tr>
@@ -70,7 +91,64 @@
       </p>
 
       <div class="give-access jq-hide">
-        TBD
+        <p>
+          <strong>Søk i medlemsregisteret etter brukeren du vil gi tilgang.</strong> En vanlig bruker har tilgang til sin egen forening, mens en administrator også har tilgang til turlag og turgrupper underlagt foreningen.
+        </p>
+
+        <input type="text" class="form-control" name="search" placeholder="Søk etter navn eller medlemsnummer...">
+        <button class="btn btn-default search input-button-align"><i class="fa fa-search"></i></button>
+
+        <table class="table search-results" data-search-url="{% url 'admin.forening.views.users_access_search' %}" data-forening-name="{{ active_forening.name }}">
+          <tr>
+            <th>Navn</th>
+            <th>Født</th>
+            <th>Medlemsforening</th>
+            <th>Adresse</th>
+            <th>Tlf / e-post</th>
+            <th>Sherpa-tilgang</th>
+            <th>Gi tilgang til {{ active_forening.name }}</th>
+          </tr>
+
+          <tr class="intro">
+            <td colspan="7">Søk etter medlemmer i søkeboksen over.</td>
+          </tr>
+
+          <tr class="no-hits jq-hide">
+            <td colspan="7">Fant ingen med navn eller medlemsnummer <span class="result-mirror"></span>.</td>
+          </tr>
+
+          <tr class="short_query jq-hide">
+            <td colspan="7">
+              Du må bruke minst {{ admin_user_search_char_length }} tegn når du søker, ellers vil du få alt for mange treff.
+            </td>
+          </tr>
+
+          <tr class="technical-error jq-hide">
+            <td colspan="7">
+              <div class="alert alert-danger">
+                Beklager, det oppstod en teknisk feil ved oppslag i databasen. Feilen har blitt logget og vi vil se på problemet så snart som mulig.
+              </div>
+            </td>
+          </tr>
+
+          <tr class="max-hits-exceeded jq-hide">
+            <td colspan="7">
+
+              <div class="alert alert-danger">
+                Du fikk veldig mange treff, kun et utvalg vises her.<br>
+                Prøv å søke på noe litt mer spesifikt, som for eksempel medlemsnummeret.
+              </div>
+            </td>
+          </tr>
+
+          <tr class="loader jq-hide">
+            <td colspan="7">
+              Vennligst vent mens vi søker.<br>
+              Medlemsdatabasen er stor, så dette kan ta noen sekunder.<br>
+              <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent...">
+            </td>
+          </tr>
+        </table>
       </div>
 
     </div>
