@@ -5,10 +5,6 @@ from django.core.cache import cache
 from datetime import datetime, date, timedelta
 import json
 
-# Sometimes we'll need to reference foreninger directly by ID. We'll store the IDs we know and need here.
-DNT_OSLO_ID = 2
-DNT_UNG_OSLO_ID = 152
-
 class Forening(models.Model):
     id = models.IntegerField(db_column='gr_id', primary_key=True)
     focus_id = models.IntegerField(db_column='gr_my_id', null=True, blank=True)
@@ -41,16 +37,6 @@ class Forening(models.Model):
     facebook = models.TextField(db_column='gr_facebook', blank=True)
     risk_url = models.TextField(db_column='gr_risk_url', blank=True)
     map = models.TextField(db_column='gr_map', blank=True)
-
-    # Categories and their order
-    CATEGORIES = [
-        {'name': 'Turistforeninger/turlag', 'db': 'Foreninger'},
-        {'name': 'Barnas Turlag', 'db': 'Barn'},
-        {'name': 'DNT ung', 'db': 'Ungdom'},
-        {'name': 'DNT fjellsport', 'db': 'Fjellsport'},
-        {'name': 'DNT senior', 'db': 'Senior'},
-        {'name': 'Andre turgrupper', 'db': 'Annen'},
-    ]
 
     def __unicode__(self):
         return u'%s' % self.pk

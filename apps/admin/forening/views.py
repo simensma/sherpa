@@ -83,6 +83,7 @@ def index(request):
         'parents': request.session['active_forening'].parents.all(),
         'name': request.session['active_forening'].name,
         'type': request.session['active_forening'].type,
+        'group_type': request.session['active_forening'].group_type,
         'post_address': request.session['active_forening'].post_address,
         'visit_address': request.session['active_forening'].visit_address,
         'zipcode': zipcode.zipcode if zipcode is not None else '',
@@ -149,6 +150,8 @@ def index(request):
                 messages.info(request, 'forening_save_success')
                 # Not sure why "request.session.modified = True" doesn't work here, so just update the var
                 request.session['active_forening'] = forening
+                cache.delete('foreninger.full_list')
+                cache.delete('forening.%s' % forening.id)
                 return redirect('admin.forening.views.index')
             else:
                 context.update({'edit_form': edit_form})
@@ -201,6 +204,8 @@ def index(request):
 
                 messages.info(request, 'forening_create_success')
                 request.session['active_forening'] = forening
+                cache.delete('foreninger.full_list')
+                cache.delete('forening.%s' % forening.id)
                 # Since GET url == POST url, we need to specifically set the tab hashtag we want, or the existing
                 # one (create) will be kept
                 return redirect('%s#metadata' % reverse('admin.forening.views.index'))

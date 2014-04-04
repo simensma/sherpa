@@ -6,10 +6,6 @@ from django.dispatch import receiver
 from .exceptions import ForeningTypeCannotHaveChildren, ForeningTypeNeedsParent, ForeningWithItselfAsParent, SentralForeningWithRelation, ForeningWithForeningParent, ForeningWithTurlagParent, TurlagWithTurgruppeParent, TurgruppeWithTurgruppeParent, ForeningParentIsChild, TurlagWithTurlagParent
 from sherpa2.models import Forening as Sherpa2Forening
 
-# Sometimes we'll need to reference foreninger directly by ID. We'll store the IDs we know and need here.
-DNT_OSLO_ID = 2
-DNT_UNG_OSLO_ID = 152
-
 class Forening(models.Model):
     TYPES = [
         (u'sentral', u'Sentral/nasjonal'), # Central/national - only a handful; DNT, DNT ung, DNT Fjellsport
@@ -47,6 +43,19 @@ class Forening(models.Model):
     organization_no = models.CharField(max_length=255, default='')
     gmap_url = models.CharField(max_length=2048, default='') # Temporary - find other ways to display this map!
     facebook_url = models.CharField(max_length=2048, default='')
+
+    # Sometimes we'll need to reference foreninger directly by ID. We'll store a couple of IDs here.
+    DNT_OSLO_ID = 2
+    DNT_UNG_OSLO_ID = 152
+
+    # Public categories and their order
+    PUBLIC_CATEGORIES = [
+        (u'foreninger', u'Turistforeninger/turlag'),
+        (u'barn', u'Barnas Turlag'),
+        (u'ung', u'DNT ung'),
+        (u'fjellsport', u'DNT fjellsport'),
+        (u'senior', u'DNT senior'),
+    ]
 
     def __unicode__(self):
         return self.name
@@ -111,6 +120,14 @@ class Forening(models.Model):
             for parent in self.parents.all():
                 mains += parent.get_main_forenings()
             return mains
+
+    def get_site_or_old_url(self):
+        """Since it'll be a while until all foreninger gets their own site, we'll have to get the old URL
+        from Sherpa2 - this method is temporary and should be removed at some point"""
+        if self.site is not None:
+            return 'http://%s/' % self.site.domain
+        else:
+            return self.get_old_url()
 
     def get_old_url(self):
         """Temporary method! Retrieves the site URL from sherpa2"""

@@ -10,14 +10,13 @@ from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 
 from core.models import Zipcode, FocusCountry
-from sherpa2.models import Forening
 from focus.models import FocusZipcode, Enrollment as FocusEnrollment, Actor, ActorAddress
 from focus.util import get_membership_type_by_codename
 from enrollment.models import State, User as EnrollmentUser, Transaction
 from enrollment.util import current_template_layout, get_or_create_enrollment, prepare_and_send_email, polite_title, TEMPORARY_PROOF_VALIDITY, KEY_PRICE, FOREIGN_SHIPMENT_PRICE, invalid_location, invalid_existing, AGE_SENIOR, AGE_MAIN, AGE_YOUTH, AGE_SCHOOL
 from enrollment.validation import validate, validate_location
 from user.models import User
-from foreninger.models import DNT_OSLO_ID
+from foreninger.models import Forening
 
 from datetime import datetime, timedelta
 import requests
@@ -283,27 +282,27 @@ def verification(request):
     if enrollment.existing_memberid != '':
         # Use main members' forening if applicable
         focus_forening_id = Actor.objects.get(memberid=enrollment.existing_memberid).main_forening_id
-        forening = cache.get('forening_sherpa2.focus.%s' % focus_forening_id)
+        forening = cache.get('forening.focus.%s' % focus_forening_id)
         if forening is None:
             forening = Forening.objects.get(focus_id=focus_forening_id)
-            cache.set('forening_sherpa2.focus.%s' % focus_forening_id, forening, 60 * 60 * 24 * 7)
+            cache.set('forening.focus.%s' % focus_forening_id, forening, 60 * 60 * 24 * 7)
     else:
         if enrollment.country == 'NO':
             focus_forening_id = cache.get('focus.zipcode_forening.%s' % enrollment.zipcode)
             if focus_forening_id is None:
                 focus_forening_id = FocusZipcode.objects.get(zipcode=enrollment.zipcode).main_forening_id
                 cache.set('focus.zipcode_forening.%s' % enrollment.zipcode, focus_forening_id, 60 * 60 * 24 * 7)
-            forening = cache.get('forening_sherpa2.focus.%s' % focus_forening_id)
+            forening = cache.get('forening.focus.%s' % focus_forening_id)
             if forening is None:
                 forening = Forening.objects.get(focus_id=focus_forening_id)
-                cache.set('forening_sherpa2.focus.%s' % focus_forening_id, forening, 60 * 60 * 24 * 7)
+                cache.set('forening.focus.%s' % focus_forening_id, forening, 60 * 60 * 24 * 7)
         else:
             # Foreign members are registered with DNT Oslo og Omegn
-            forening = cache.get('forening_sherpa2.%s' % DNT_OSLO_ID)
+            forening = cache.get('forening.%s' % Forening.DNT_OSLO_ID)
             if forening is None:
-                forening = Forening.objects.get(id=DNT_OSLO_ID)
-                cache.set('forening_sherpa2.%s' % DNT_OSLO_ID, forening, 60 * 60 * 24 * 7)
-    enrollment.forening = forening.id
+                forening = Forening.objects.get(id=Forening.DNT_OSLO_ID)
+                cache.set('forening.%s' % Forening.DNT_OSLO_ID, forening, 60 * 60 * 24 * 7)
+    enrollment.forening = forening
     enrollment.save()
 
     keycount = 0

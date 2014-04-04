@@ -6,8 +6,7 @@ from django.core.cache import cache
 from django.utils import crypto
 
 from focus.models import Actor, Enrollment
-from foreninger.models import Forening, DNT_OSLO_ID, DNT_UNG_OSLO_ID
-from sherpa2.models import Forening as Sherpa2Forening, DNT_OSLO_ID as DNT_OSLO_ID_SHERPA2, DNT_UNG_OSLO_ID as DNT_UNG_OSLO_ID_SHERPA2
+from foreninger.models import Forening
 from focus.abstractions import ActorProxy
 
 from itertools import groupby
@@ -326,8 +325,8 @@ class User(AbstractBaseUser):
         if forening is None:
             forening = Forening.objects.get(focus_id=self.get_actor().main_forening_id)
 
-            if convert_dnt_oslo_for_youth and forening.id == DNT_OSLO_ID and self.membership_type()['codename'] == 'youth':
-                forening = Forening.objects.get(id=DNT_UNG_OSLO_ID)
+            if convert_dnt_oslo_for_youth and forening.id == Forening.DNT_OSLO_ID and self.membership_type()['codename'] == 'youth':
+                forening = Forening.objects.get(id=Forening.DNT_UNG_OSLO_ID)
 
             cache.set('user.%s.%s.forening' % (self.identifier, convert_dnt_oslo_for_youth), forening, 60 * 60 * 24)
         return forening
@@ -337,34 +336,6 @@ class User(AbstractBaseUser):
         Shortcut method to main_forening() with parameter for use in templates.
         """
         return self.main_forening(convert_dnt_oslo_for_youth=False)
-
-    def main_forening_old(self):
-        """
-        This sad method returns the forening object from the old sherpa2 model.
-        For now it's mostly used to get the site url because most of the new objects
-        don't have an assigned site. Cache heavily since this hits the old DB.
-        """
-
-        # Users' forening cache
-        forening = cache.get('user.%s.forening_sherpa2' % self.identifier)
-        if forening is None:
-
-            # The actual forening cache
-            forening = cache.get('forening_sherpa2.focus.%s' % self.get_actor().main_forening_id)
-            if forening is None:
-                forening = Sherpa2Forening.objects.get(focus_id=self.get_actor().main_forening_id)
-                cache.set('forening_sherpa2.focus.%s' % self.get_actor().main_forening_id, forening, 60 * 60 * 24 * 7)
-
-            # Special case, just like in main_forening()
-            if forening.id == DNT_OSLO_ID_SHERPA2 and self.membership_type()['codename'] == 'youth':
-                # Get the DNT ung Oslo forening, use the forening cache
-                forening = cache.get('forening_sherpa2.%s' % DNT_UNG_OSLO_ID_SHERPA2)
-                if forening is None:
-                    forening = Sherpa2Forening.objects.get(id=DNT_UNG_OSLO_ID_SHERPA2)
-                    cache.set('forening_sherpa2.%s' % DNT_UNG_OSLO_ID_SHERPA2, forening, 60 * 60 * 24 * 7)
-
-            cache.set('user.%s.forening_sherpa2' % self.identifier, forening, 60 * 60 * 24 * 7)
-        return forening
 
     def is_eligible_for_norway_bus_tickets(self):
         if NorwayBusTicket.objects.filter(user=self).exists():
