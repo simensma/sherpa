@@ -14,7 +14,7 @@ import json
 
 from foreninger.models import Forening
 from .forms import ForeningDataForm, ExistingForeningDataForm
-from user.models import User, ForeningRole
+from user.models import User, Permission, ForeningRole
 from focus.models import Actor
 
 def index(request):
