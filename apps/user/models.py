@@ -6,7 +6,7 @@ from django.core.cache import cache
 from django.utils import crypto
 
 from focus.models import Actor, Enrollment
-from foreninger.models import Forening, DNT_OSLO_ID, DNT_UNG_OSLO_ID
+from foreninger.models import Forening
 from focus.abstractions import ActorProxy
 
 from itertools import groupby
@@ -325,8 +325,8 @@ class User(AbstractBaseUser):
         if forening is None:
             forening = Forening.objects.get(focus_id=self.get_actor().main_forening_id)
 
-            if convert_dnt_oslo_for_youth and forening.id == DNT_OSLO_ID and self.membership_type()['codename'] == 'youth':
-                forening = Forening.objects.get(id=DNT_UNG_OSLO_ID)
+            if convert_dnt_oslo_for_youth and forening.id == Forening.DNT_OSLO_ID and self.membership_type()['codename'] == 'youth':
+                forening = Forening.objects.get(id=Forening.DNT_UNG_OSLO_ID)
 
             cache.set('user.%s.%s.forening' % (self.identifier, convert_dnt_oslo_for_youth), forening, 60 * 60 * 24)
         return forening

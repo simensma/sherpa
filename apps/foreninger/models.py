@@ -6,10 +6,6 @@ from django.dispatch import receiver
 from .exceptions import ForeningTypeCannotHaveChildren, ForeningTypeNeedsParent, ForeningWithItselfAsParent, SentralForeningWithRelation, ForeningWithForeningParent, ForeningWithTurlagParent, TurlagWithTurgruppeParent, TurgruppeWithTurgruppeParent, ForeningParentIsChild, TurlagWithTurlagParent
 from sherpa2.models import Forening as Sherpa2Forening
 
-# Sometimes we'll need to reference foreninger directly by ID. We'll store the IDs we know and need here.
-DNT_OSLO_ID = 2
-DNT_UNG_OSLO_ID = 152
-
 class Forening(models.Model):
     TYPES = [
         (u'sentral', u'Sentral/nasjonal'), # Central/national - only a handful; DNT, DNT ung, DNT Fjellsport
@@ -47,6 +43,10 @@ class Forening(models.Model):
     organization_no = models.CharField(max_length=255, default='')
     gmap_url = models.CharField(max_length=2048, default='') # Temporary - find other ways to display this map!
     facebook_url = models.CharField(max_length=2048, default='')
+
+    # Sometimes we'll need to reference foreninger directly by ID. We'll store a couple of IDs here.
+    DNT_OSLO_ID = 2
+    DNT_UNG_OSLO_ID = 152
 
     # Public categories and their order
     PUBLIC_CATEGORIES = [

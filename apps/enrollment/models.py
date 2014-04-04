@@ -4,7 +4,7 @@ from django.core.cache import cache
 
 from core import validator
 from core.models import FocusCountry
-from foreninger.models import Forening, DNT_OSLO_ID, DNT_UNG_OSLO_ID
+from foreninger.models import Forening
 
 from focus.models import Price, Enrollment as FocusEnrollment
 
@@ -106,7 +106,7 @@ class Enrollment(models.Model):
         logic here. Use this method to find out how applicable this is for these users
         (applicable for none of them, some, or all).
         """
-        if self.forening.id != DNT_OSLO_ID:
+        if self.forening.id != Forening.DNT_OSLO_ID:
             # Not DNT Oslo og Omegn, applicable for none
             return 'none'
         else:
@@ -124,11 +124,11 @@ class Enrollment(models.Model):
         return self.get_actual_forening(all)
 
     def get_actual_forening(self, desired_count):
-        if self.forening.id == DNT_OSLO_ID and desired_count([u.get_age() < AGE_MAIN and u.get_age() >= AGE_YOUTH for u in self.users.all()]):
-            forening = cache.get('forening.%s' % DNT_UNG_OSLO_ID)
+        if self.forening.id == Forening.DNT_OSLO_ID and desired_count([u.get_age() < AGE_MAIN and u.get_age() >= AGE_YOUTH for u in self.users.all()]):
+            forening = cache.get('forening.%s' % Forening.DNT_UNG_OSLO_ID)
             if forening is None:
-                forening = Forening.objects.get(id=DNT_UNG_OSLO_ID)
-                cache.set('forening.%s' % DNT_UNG_OSLO_ID, forening, 60 * 60 * 24 * 7)
+                forening = Forening.objects.get(id=Forening.DNT_UNG_OSLO_ID)
+                cache.set('forening.%s' % Forening.DNT_UNG_OSLO_ID, forening, 60 * 60 * 24 * 7)
             return forening
         else:
             return self.forening
@@ -247,11 +247,11 @@ class User(models.Model):
         cases, but DNT ung Oslo if the default is DNT Oslo og Omegn and this is a youth member.
         """
         forening = self.enrollment.forening
-        if forening.id == DNT_OSLO_ID and self.applicable_for_dnt_ung_oslo():
-            forening = cache.get('forening.%s' % DNT_UNG_OSLO_ID)
+        if forening.id == Forening.DNT_OSLO_ID and self.applicable_for_dnt_ung_oslo():
+            forening = cache.get('forening.%s' % Forening.DNT_UNG_OSLO_ID)
             if forening is None:
-                forening = Forening.objects.get(id=DNT_UNG_OSLO_ID)
-                cache.set('forening.%s' % DNT_UNG_OSLO_ID, forening, 60 * 60 * 24 * 7)
+                forening = Forening.objects.get(id=Forening.DNT_UNG_OSLO_ID)
+                cache.set('forening.%s' % Forening.DNT_UNG_OSLO_ID, forening, 60 * 60 * 24 * 7)
         return forening
 
     def applicable_for_dnt_ung_oslo(self):
