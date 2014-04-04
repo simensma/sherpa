@@ -23,7 +23,7 @@ def index(request):
     forening_users_by_parent = []
 
     parent_ids = [p.id for p in request.session['active_forening'].get_parents_deep()]
-    forening_users_by_parent = list(User.objects.filter(foreninger__in=parent_ids))
+    forening_users_by_parent_all = list(User.objects.filter(foreninger__in=parent_ids))
 
     # Prefetch and cache the actors
     memberids = [u.memberid for u in (forening_users + forening_users_by_parent)]
@@ -31,6 +31,14 @@ def index(request):
         cache.set('actor.%s' % actor.memberid, actor, settings.FOCUS_MEMBER_CACHE_PERIOD)
 
     # Safe to iterate without having n+1 issues
+
+    # Filter on admins
+    forening_users_by_parent = []
+    for user in forening_users_by_parent_all:
+        for forening in user.all_foreninger():
+            if forening == request.session['active_forening'] and forening.role == 'admin':
+                forening_users_by_parent.append(user)
+
     forening_users = sorted(forening_users, key=lambda u: u.get_full_name())
     forening_users_by_parent = sorted(forening_users_by_parent, key=lambda u: u.get_full_name())
 
