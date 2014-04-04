@@ -67,6 +67,15 @@ def get_member_data(user):
             'foreningstilganger': forening_permissions,
         }
 
+def get_forening_data(forening):
+    return {
+        'sherpa_id': forening.id,
+        'object_id': forening.get_ntb_id(),
+        'navn': forening.name,
+        'type': forening.type,
+        'gruppetype': forening.group_type,
+    }
+
 def authenticate(request):
     return base64.b64decode(request.GET.get('autentisering', '')) in settings.API_KEYS
 

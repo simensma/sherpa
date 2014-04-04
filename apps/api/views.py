@@ -34,6 +34,8 @@ def url_versioning(request, resource, version):
 def call_api(request, resource, version, format):
     if resource == 'members':
         response = api.members(request, version, format)
+    elif resource == 'forening':
+        response = api.forening(request, version, format)
 
     # We'll just let an unhandled KeyError be raised here if we typoed resource or something
     response['Content-Type'] = "%s.%s+%s; charset=utf-8" % (vendor_media_type, version, format)
