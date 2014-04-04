@@ -9,7 +9,7 @@
     </div>
     <h2>{{ forening.name }}</h2>
     {% if forening.url %}
-      <p><a href="{{ forening.url }}">{{ forening.url }}</a></p>
+      <p><a href="{{ forening.url }}">{{ forening.url|truncatechars:"50" }}</a></p>
     {% endif %}
     {% if forening.email %}
       <p>E-post: <a href="mailto:{{ forening.email }}">{{ forening.email }}</a></p>
