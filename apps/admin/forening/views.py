@@ -83,6 +83,7 @@ def index(request):
         'parents': request.session['active_forening'].parents.all(),
         'name': request.session['active_forening'].name,
         'type': request.session['active_forening'].type,
+        'group_type': request.session['active_forening'].group_type,
         'post_address': request.session['active_forening'].post_address,
         'visit_address': request.session['active_forening'].visit_address,
         'zipcode': zipcode.zipcode if zipcode is not None else '',
