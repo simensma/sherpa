@@ -1,15 +1,15 @@
 <tr>
   <td>
     <div class="forening-logo right">
-      {% if forening.url %}<a class="logo-url noexternal" href="{{ forening.url }}">{% else %}<span>{% endif %}
+      {% if forening.get_site_or_old_url %}<a class="logo-url noexternal" href="{{ forening.get_site_or_old_url }}">{% else %}<span>{% endif %}
 
         {{ forening.name }}
 
-      {% if forening.url %}</a>{% else %}</span>{% endif %}
+      {% if forening.get_site_or_old_url %}</a>{% else %}</span>{% endif %}
     </div>
     <h2>{{ forening.name }}</h2>
-    {% if forening.url %}
-      <p><a href="{{ forening.url }}">{{ forening.url|truncatechars:"50" }}</a></p>
+    {% if forening.get_site_or_old_url %}
+      <p><a href="{{ forening.get_site_or_old_url }}">{{ forening.get_site_or_old_url|truncatechars:"50" }}</a></p>
     {% endif %}
     {% if forening.email %}
       <p>E-post: <a href="mailto:{{ forening.email }}">{{ forening.email }}</a></p>
@@ -20,27 +20,28 @@
     {% if forening.facebook %}
       <p><a href="{{ forening.facebook }}">Besøk oss på Facebook</a></p>
     {% endif %}
-    {% if forening.post_address %}
-      <p>Postadresse: {{ forening.post_address }}, {{ forening.zipcode }} {{ forening.ziparea }}</p>
-      {% endif %}
-    {% if forening.visit_address %}
-      <p>
-        Besøksadresse: {{ forening.visit_address }}
-        {% if forening.map %}
-          <a href="javascript:undefined" class="open-map" data-id="{{ forening.id }}">Se kart <i class="icon-arrow-down"></i></a>
-          <a href="javascript:undefined" class="close-map" data-id="{{ forening.id }}">Skjul kart <i class="icon-arrow-up"></i></a>
-        {% endif %}
-      </p>
+
+    {% if forening.post_address == '' and forening.type != 'forening' %}
+      {% include 'main/foreninger/result_address.html' with forening=forening forening_for_address=forening.get_main_forenings.0 %}
+    {% else %}
+      {% include 'main/foreninger/result_address.html' with forening=forening forening_for_address=forening %}
     {% endif %}
-    {% if parents and parents|length > 0 %}
+
+    {% if forening.type != 'forening' %}
       <p>
         <br>
-        <em>Tilknyttet <a href="{{ parents.0.url }}">{{ parents.0.name }}</a>.</em>
+        <em>
+          Tilknyttet
+          {% for parent in forening.get_main_forenings %}
+            {# Ugly long line to avoid spacing between word and punctuation #}
+            <a href="{{ parent.get_site_or_old_url }}">{{ parent.name }}</a>{% if forloop.last %}.{% else %} og {% endif %}
+          {% endfor %}
+        </em>
       </p>
     {% endif %}
-    {% if forening.map %}
+    {% if forening.gmap_url %}
       <div class="map" data-id="{{ forening.id }}">
-        <iframe frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="" data-src="{{ forening.map }}"></iframe>
+        <iframe frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="" data-src="{{ forening.gmap_url }}"></iframe>
       </div>
     {% endif %}
   </td>

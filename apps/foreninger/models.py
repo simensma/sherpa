@@ -48,6 +48,15 @@ class Forening(models.Model):
     gmap_url = models.CharField(max_length=2048, default='') # Temporary - find other ways to display this map!
     facebook_url = models.CharField(max_length=2048, default='')
 
+    # Public categories and their order
+    PUBLIC_CATEGORIES = [
+        (u'foreninger', u'Turistforeninger/turlag'),
+        (u'barn', u'Barnas Turlag'),
+        (u'ung', u'DNT ung'),
+        (u'fjellsport', u'DNT fjellsport'),
+        (u'senior', u'DNT senior'),
+    ]
+
     def __unicode__(self):
         return self.name
 
