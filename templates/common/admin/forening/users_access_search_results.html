@@ -1,0 +1,62 @@
+{% load role_for %}
+
+{% for potential_user in users %}
+  <tr class="result" data-id="{{ potential_user.id }}" data-name="{{ potential_user.get_full_name }}" data-gender="{{ user.get_gender }}" data-has-sherpa-perm="{{ potential_user.perms.sherpa|yesno:"true,false" }}">
+    <td>
+      {{ potential_user.get_full_name }}
+    </td>
+    <td>
+      {% if potential_user.is_member %}
+        {{ potential_user.get_birth_date|date:"d.m.y" }}
+      {% endif %}
+    </td>
+    <td>
+      {% if potential_user.is_member %}
+        {{ potential_user.main_forening.name }}<br>
+        Medlemsnr: {{ potential_user.memberid }}
+      {% else %}
+        <em>Ikke medlem</em>
+      {% endif %}
+    </td>
+    <td>
+      {% if potential_user.is_member %}
+        {{ potential_user.get_address.format_with_newlines|linebreaksbr }}
+      {% endif %}
+    </td>
+    <td>
+      {% if potential_user.is_member %}
+        {% if potential_user.get_phone_home %}
+          {{ potential_user.get_phone_home }}<br>
+        {% endif %}
+        {% if potential_user.get_phone_mobile %}
+          {{ potential_user.get_phone_mobile }}<br>
+        {% endif %}
+        {% if potential_user.get_sherpa_email %}
+          {{ potential_user.get_sherpa_email }}
+        {% endif %}
+
+        {% if not potential_user.get_phone_home and not potential_user.get_phone_mobile and not potential_user.get_sherpa_email %}
+          <em>Mangler kontaktopplysninger</em>
+        {% endif %}
+      {% endif %}
+    </td>
+    <td>
+      {% if potential_user.perms.sherpa %}
+        <i class="fa fa-check"></i> Ja
+      {% else %}
+        <i class="fa fa-exclamation"></i> Nei
+      {% endif %}
+    </td>
+    <td>
+      <a href="{% url 'admin.forening.views.users_give_access' potential_user.id 'user' %}" class="btn btn-danger pick">
+        <i class="fa fa-user"></i> Vanlig bruker
+      </a>
+      {% if user|role_for:active_forening == 'admin' %}
+        <a href="{% url 'admin.forening.views.users_give_access' potential_user.id 'admin' %}" class="btn btn-danger pick">
+          <i class="fa fa-star"></i> Administrator
+        </a>
+      {% endif %}
+    </td>
+  </tr>
+
+{% endfor %}

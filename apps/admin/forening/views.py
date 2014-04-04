@@ -23,7 +23,7 @@ def index(request):
     forening_users_by_parent = []
 
     parent_ids = [p.id for p in request.session['active_forening'].get_parents_deep()]
-    forening_users_by_parent = list(User.objects.filter(foreninger__in=parent_ids))
+    forening_users_by_parent_all = list(User.objects.filter(foreninger__in=parent_ids))
 
     # Prefetch and cache the actors
     memberids = [u.memberid for u in (forening_users + forening_users_by_parent)]
@@ -31,6 +31,14 @@ def index(request):
         cache.set('actor.%s' % actor.memberid, actor, settings.FOCUS_MEMBER_CACHE_PERIOD)
 
     # Safe to iterate without having n+1 issues
+
+    # Filter on admins
+    forening_users_by_parent = []
+    for user in forening_users_by_parent_all:
+        for forening in user.all_foreninger():
+            if forening == request.session['active_forening'] and forening.role == 'admin':
+                forening_users_by_parent.append(user)
+
     forening_users = sorted(forening_users, key=lambda u: u.get_full_name())
     forening_users_by_parent = sorted(forening_users_by_parent, key=lambda u: u.get_full_name())
 
@@ -239,3 +247,104 @@ def contact_person_search(request):
         'results': render_to_string('common/admin/forening/contact_person_search_results.html', context),
         'max_hits_exceeded': len(users) > MAX_HITS or len(actors) > MAX_HITS
     }))
+
+def users_access_search(request):
+    MAX_HITS = 100
+
+    if len(request.POST['q']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:
+        raise PermissionDenied
+
+    local_nonmember_users = User.get_users().filter(memberid__isnull=True)
+    for word in request.POST['q'].split():
+        local_nonmember_users = local_nonmember_users.filter(
+            Q(first_name__icontains=word) |
+            Q(last_name__icontains=word)
+        )
+    local_nonmember_users = local_nonmember_users.order_by('first_name')
+
+    actors = Actor.objects.all()
+    for word in request.POST['q'].split():
+        actors = actors.filter(
+            Q(first_name__icontains=word) |
+            Q(last_name__icontains=word) |
+            Q(memberid__icontains=word)
+        )
+    actors = actors.order_by('first_name')
+
+    # Get (or create) the user objects for the first MAX_HITS actor-hits
+    users = [User.get_or_create_inactive(a.memberid) for a in actors[:MAX_HITS]]
+
+    # Merge with non-members
+    users = sorted(list(users) + list(local_nonmember_users), key=lambda u: u.get_full_name())
+
+    context = RequestContext(request, {
+        'users': users[:MAX_HITS]
+    })
+    return HttpResponse(json.dumps({
+        'results': render_to_string('common/admin/forening/users_access_search_results.html', context),
+        'max_hits_exceeded': len(users) > MAX_HITS or len(actors) > MAX_HITS
+    }))
+
+def users_give_access(request, user, wanted_role):
+    if wanted_role not in [role[0] for role in ForeningRole.ROLE_CHOICES]:
+        raise PermissionDenied
+
+    # Verify that the user has the same access that they're giving
+    passed = False
+    for forening in request.user.all_foreninger():
+        if forening == request.session['active_forening']:
+            if wanted_role == 'admin' and forening.role == 'user':
+                raise PermissionDenied
+            else:
+                passed = True
+    if not passed:
+        raise PermissionDenied
+
+    other_user = User.get_users(include_pending=True).get(id=user)
+    if other_user.has_perm('sherpa_admin'):
+        messages.info(request, 'user_is_sherpa_admin')
+        return redirect('%s#brukere' % reverse('admin.forening.views.index'))
+
+    # Adding the sherpa permission, if missing, is implicit - and informed about client-side
+    if not other_user.has_perm('sherpa'):
+        p = Permission.objects.get(name='sherpa')
+        other_user.permissions.add(p)
+
+    for forening in other_user.all_foreninger():
+        if forening == request.session['active_forening']:
+            # The user already has access to this forening
+            print("Well, %s // %s" % (forening.role, wanted_role))
+            if forening.role == 'user' and wanted_role == 'admin':
+                # But it's a user role and we want admin! Update it.
+                forening_role = ForeningRole.objects.get(user=other_user, forening=forening)
+                forening_role.role = 'admin'
+                forening_role.save()
+                messages.info(request, 'permission_created')
+            elif forening.role == 'admin' and wanted_role == 'user':
+                # We want user access, but they have admin. Chcek if it's an explicit relationship:
+                try:
+                    forening_role = ForeningRole.objects.get(user=other_user, forening=forening)
+                    forening_role.role = 'user'
+                    forening_role.save()
+                    messages.info(request, 'permission_created')
+                except ForeningRole.DoesNotExist:
+                    # No explicit relationship, so the user must have admin access to a parent
+                    messages.info(request, 'user_has_admin_in_parent')
+            else:
+                # In this case, forening.role should equal wanted_role, so just inform the user that all is in order
+                messages.info(request, 'equal_permission_already_exists')
+            cache.delete('user.%s.all_foreninger' % other_user.id)
+            return redirect('%s#brukere' % reverse('admin.forening.views.index'))
+
+    # If we reach this code path, this is a new relationship - create it
+    forening_role = ForeningRole(
+        user=other_user,
+        forening=request.session['active_forening'],
+        role=wanted_role,
+    )
+    forening_role.save()
+    messages.info(request, 'permission_created')
+    cache.delete('user.%s.all_foreninger' % other_user.id)
+    return redirect('%s#brukere' % reverse('admin.forening.views.index'))
+
+
