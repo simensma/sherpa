@@ -61,4 +61,76 @@
   </div>
 </div><!-- /.foreningsadmin -->
 
+<div class="modal container jq-hide contact-person-search">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h3>Finn kontaktperson</h3>
+  </div>
+  <div class="modal-body">
+
+    <p>
+      Her kan du søke opp en kontaktperson for foreningen. Du kan kun søke etter personer som finnes i DNTs medlemsregister.
+    </p>
+
+    <p>
+      <strong>Hvis vedkommende mangler kontaktopplysninger, bør du be ham/henne legge dette inn på Min side.</strong>
+    </p>
+
+    <input type="text" class="form-control" name="search" placeholder="Søk etter navn eller medlemsnummer...">
+    <button class="btn btn-default search input-button-align"><i class="fa fa-search"></i></button>
+
+    <table class="table search-results" data-search-url="{% url 'admin.forening.views.contact_person_search' %}">
+      <tr>
+        <th>Navn</th>
+        <th>Født</th>
+        <th>Medlemsforening</th>
+        <th>Adresse</th>
+        <th>Tlf / e-post</th>
+        <th>Velg kontaktperson</th>
+      </tr>
+
+      <tr class="intro">
+        <td colspan="6">Søk etter medlemmer i søkeboksen over.</td>
+      </tr>
+
+      <tr class="no-hits jq-hide">
+        <td colspan="6">Fant ingen med navn eller medlemsnummer <span class="result-mirror"></span>.</td>
+      </tr>
+
+      <tr class="short_query jq-hide">
+        <td colspan="6">
+          Du må bruke minst {{ admin_user_search_char_length }} tegn når du søker, ellers vil du få alt for mange treff.
+        </td>
+      </tr>
+
+      <tr class="technical-error jq-hide">
+        <td colspan="6">
+          <div class="alert alert-danger">
+            Beklager, det oppstod en teknisk feil ved oppslag i databasen. Feilen har blitt logget og vi vil se på problemet så snart som mulig.
+          </div>
+        </td>
+      </tr>
+
+      <tr class="max-hits-exceeded jq-hide">
+        <td colspan="6">
+
+          <div class="alert alert-danger">
+            Du fikk veldig mange treff, kun et utvalg vises her.<br>
+            Prøv å søke på noe litt mer spesifikt, som for eksempel medlemsnummeret.
+          </div>
+        </td>
+      </tr>
+
+      <tr class="loader jq-hide">
+        <td colspan="6">
+          Vennligst vent mens vi søker.<br>
+          Medlemsdatabasen er stor, så dette kan ta noen sekunder.<br>
+          <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent...">
+        </td>
+      </tr>
+    </table>
+
+  </div>
+</div>
+
 {% endblock %}
