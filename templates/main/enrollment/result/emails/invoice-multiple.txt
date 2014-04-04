@@ -21,7 +21,7 @@ https://www.turistforeningen.no/minside/logg-inn/?registreringsnokkel={{ user.pe
 {% blocktrans %}Planlegg turen på UT.no:
 På http://ut.no/ finner dere hytter og turer over hele landet.{% endblocktrans %}
 
-{% if enrollment.country == 'NO' %}{% blocktrans with forening=user.get_actual_forening.name forening_url=user.get_actual_forening.url %}Bli med på tur:
+{% if enrollment.country == 'NO' %}{% blocktrans with forening=user.get_actual_forening.name forening_url=user.get_actual_forening.get_site_or_old_url %}Bli med på tur:
 {{ forening }} arrangerer en rekke fellesturer og aktiviteter
 hele året. Sjekk tilbudet på {{ forening_url }}{% endblocktrans %}
 
