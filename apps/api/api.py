@@ -50,8 +50,8 @@ def forening(request, version, format):
         if 'bruker_sherpa_id' in request.GET or 'bruker_medlemsnummer' in request.GET:
             try:
                 # Lookup by specified members' access
-                if 'bruker_sherpa_id' in request.GET and 'medlemsnummer' in request.GET:
-                    user = User.get_users(include_pending=True).get(id=request.GET['bruker_sherpa_id'], memberid=request.GET['medlemsnummer'])
+                if 'bruker_sherpa_id' in request.GET and 'bruker_medlemsnummer' in request.GET:
+                    user = User.get_users(include_pending=True).get(id=request.GET['bruker_sherpa_id'], memberid=request.GET['bruker_medlemsnummer'])
                 elif 'bruker_sherpa_id' in request.GET:
                     user = User.get_users(include_pending=True).get(id=request.GET['bruker_sherpa_id'])
                 elif 'bruker_medlemsnummer' in request.GET:
@@ -66,7 +66,7 @@ def forening(request, version, format):
 
             except (User.DoesNotExist, ValueError):
                 raise BadRequest(
-                    "A member matching that 'sherpa_id', 'medlemsnummer', or both if both were provided, does not exist.",
+                    "A member matching that 'sherpa_id', 'bruker_medlemsnummer', or both if both were provided, does not exist.",
                     code=error_codes.RESOURCE_NOT_FOUND,
                     http_code=404
                 )
