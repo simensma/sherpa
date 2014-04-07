@@ -93,6 +93,8 @@ $(function () {
         }
         var file = data.files[0];
         var container = images.find("div.clone").clone().removeClass('clone').appendTo(images);
+        // IE sets the placeholder value as real value in the cloned object, so remove it
+        container.find("textarea[name='description']").val('');
         data.context = container;
         container.show().find("label").text(file.name);
         container.data(data);
