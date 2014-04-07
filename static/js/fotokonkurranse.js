@@ -9,7 +9,7 @@ $(function () {
     var upload_input = image_adder.find("input[type='file']");
     var images = uploader.find("div.images");
     var submit = uploader.find("button[type='submit']");
-    var success_generic = uploader.find("div.upload-success-generic");
+    var success_generic = fotokonkurranse.find("div.upload-success-generic");
 
     var name = uploader.find("input[name='name']");
     var phone = uploader.find("input[name='phone']");
@@ -131,7 +131,7 @@ $(function () {
         data.context.find("div.description").text(desc).show();
         data.context.find("div.loader").hide();
         data.context.find("div.upload-success").show();
-        success_generic.slideDown();
+        success_generic.modal();
     }).on('fileuploadfail', function (e, data) {
         data.context.removeClass('sending').addClass('upload-fail');
         data.context.find("textarea[name='description']").prop('disabled', false);
