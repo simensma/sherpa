@@ -9,7 +9,9 @@ $(function () {
     var upload_input = image_adder.find("input[type='file']");
     var images = uploader.find("div.images");
     var submit = uploader.find("button[type='submit']");
-    var success_generic = uploader.find("div.upload-success-generic");
+    var conditions = uploader.find("a.conditions");
+    var back_to_upload = fotokonkurranse.find("a.back-to-upload");
+    var success_generic = fotokonkurranse.find("div.upload-success-generic");
 
     var name = uploader.find("input[name='name']");
     var phone = uploader.find("input[name='phone']");
@@ -93,6 +95,8 @@ $(function () {
         }
         var file = data.files[0];
         var container = images.find("div.clone").clone().removeClass('clone').appendTo(images);
+        // IE sets the placeholder value as real value in the cloned object, so remove it
+        container.find("textarea[name='description']").val('');
         data.context = container;
         container.show().find("label").text(file.name);
         container.data(data);
@@ -129,7 +133,7 @@ $(function () {
         data.context.find("div.description").text(desc).show();
         data.context.find("div.loader").hide();
         data.context.find("div.upload-success").show();
-        success_generic.slideDown();
+        success_generic.modal();
     }).on('fileuploadfail', function (e, data) {
         data.context.removeClass('sending').addClass('upload-fail');
         data.context.find("textarea[name='description']").prop('disabled', false);
@@ -151,5 +155,8 @@ $(function () {
         });
         image_adder.show();
     });
+
+    conditions.smoothScroll();
+    back_to_upload.smoothScroll();
 
 });

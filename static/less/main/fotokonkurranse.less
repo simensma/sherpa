@@ -4,20 +4,54 @@ div.fotokonkurranse-root {
     width: 940px;
     height: 508px;
     background-image: url('/static/img/fotokonkurranse/intro.jpg');
+    margin-bottom: 20px;
 
     h1 {
-      position: absolute;
-      top: 80px;
-      left: 220px;
+      color: white;
+      text-align: center;
+      padding-top: 40px;
+      margin-bottom: 0;
       border-bottom: none;
     }
 
     p {
-      position: absolute;
-      top: 140px;
-      left: 200px;
+      color: white;
+      text-align: center;
+      padding-top: 10px;
       font-family: "DTL Nobel" !important;
       font-size: 20px;
+    }
+
+    p.credits {
+      position: absolute;
+      color: black;
+      right: 6px;
+      bottom: 6px;
+      font-size: 12px;
+      margin-bottom: 0;
+    }
+  }
+
+  @media (max-width: 767px) {
+    div.intro-image {
+      width: auto;
+      height: auto;
+      background-image: none;
+      .form-border;
+
+      h1 {
+        padding-top: 0;
+        color: #333;
+      }
+
+      p {
+        color: #333;
+      }
+
+      p.credits {
+        display: none;
+      }
+
     }
   }
 
@@ -51,16 +85,6 @@ div.fotokonkurranse-root {
         span {
           font-family: "DTL Nobel" !important;
         }
-      }
-    }
-
-    div.upload-success-generic {
-      .form-border;
-      text-align: center;
-
-      p {
-        font-family: "DTL Nobel" !important;
-        font-size: 18px;
       }
     }
   }
@@ -97,5 +121,17 @@ div.fotokonkurranse-root {
       font-style: italic;
     }
   }
+}
 
+div.upload-success-generic {
+  text-align: center;
+
+  h2 {
+    margin-bottom: 0;
+  }
+
+  p {
+    font-family: "DTL Nobel" !important;
+    font-size: 18px;
+  }
 }
