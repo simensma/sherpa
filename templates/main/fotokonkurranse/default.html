@@ -10,6 +10,7 @@
   <script src="{{ STATIC_URL }}lib/jquery-file-upload/js/jquery.fileupload.js"></script>
   <script src="{{ STATIC_URL }}lib/jquery-file-upload/js/jquery.fileupload-process.js"></script>
   <script src="{{ STATIC_URL }}lib/jquery-file-upload/js/jquery.fileupload-image.js"></script>
+  <script src="{{ STATIC_URL }}lib/jquery-smooth-scroll/jquery.smooth-scroll.min.js"></script>
 
   <script src="{{ STATIC_URL }}js/fotokonkurranse.js"></script>
 {% endblock %}
@@ -37,7 +38,7 @@
         Del dine naturopplevelser i {{ now|date:"Y" }} med oss og send inn dine beste bilder til vår store fotokonkurranse, som arrangeres i samarbeid med DNTs turpartner <a href="https://www.norsk-tipping.no/">Norsk Tipping</a>. Finalistene er med i konkurransen om flotte premier - førstpremien er 10 000 kr og 100 Flax-lodd fra <a href="https://www.norsk-tipping.no/">Norsk Tipping</a>, andre-, og tredjepremie er ryggsekk og overnatting på våre hytter.
       </p>
 
-      <p>
+      <p id="lastopp">
         <strong>Last opp dine fineste bilder med tema: «Vinterglede» innen 31. mai. Bruk opplastingsskjemaet nedenfor.</strong>
       </p>
 
@@ -112,7 +113,7 @@
           <div class="control-group">
             <div class="controls">
               <div class="control-as-text">
-                Du kan laste opp inntil 3 bilder. Når du sender inn bilde(r) samtykker du samtidig til <a href="#regler">vilkårene i konkurransereglene</a>.
+                Du kan laste opp inntil 3 bilder. Når du sender inn bilde(r) samtykker du samtidig til <a href="#regler" class="conditions">vilkårene i konkurransereglene</a>.
               </div>
             </div>
           </div>
@@ -210,6 +211,10 @@
         <li><a href="http://ut.no/artikkel/1.7926733">Slik tar du bedre vinterbilder (UT.no)</a></li>
         <li><a href="http://ut.no/artikkel/1.7847895">Slik tar du fartsfylte bilder (UT.no)</a></li>
       </ul>
+
+      <p>
+        <a href="#lastopp" class="btn btn-default back-to-upload"><i class="icon-arrow-up"></i> Send inn dine bilder!</a>
+      </p>
 
     </div>
   </div>

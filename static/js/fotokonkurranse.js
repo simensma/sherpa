@@ -9,6 +9,8 @@ $(function () {
     var upload_input = image_adder.find("input[type='file']");
     var images = uploader.find("div.images");
     var submit = uploader.find("button[type='submit']");
+    var conditions = uploader.find("a.conditions");
+    var back_to_upload = fotokonkurranse.find("a.back-to-upload");
     var success_generic = fotokonkurranse.find("div.upload-success-generic");
 
     var name = uploader.find("input[name='name']");
@@ -153,5 +155,8 @@ $(function () {
         });
         image_adder.show();
     });
+
+    conditions.smoothScroll();
+    back_to_upload.smoothScroll();
 
 });
