@@ -199,7 +199,7 @@ def new(request):
     if not request.user.has_paid():
         return render(request, 'main/fjelltreffen/payment_required.html')
 
-    other_active_annonse_exists = Annonse.objects.filter(user=request.user, hidden=False).exists()
+    other_active_annonse_exists = Annonse.get_active().filter(user=request.user, hidden=False).exists()
     context = {
         'counties': County.typical_objects().order_by('name'),
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS,
