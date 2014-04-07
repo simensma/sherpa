@@ -1,5 +1,6 @@
 div.fotokonkurranse-root {
   div.intro-image {
+    position: relative;
     width: 940px;
     height: 508px;
     background-image: url('/static/img/fotokonkurranse/intro.jpg');
@@ -20,6 +21,15 @@ div.fotokonkurranse-root {
       font-family: "DTL Nobel" !important;
       font-size: 20px;
     }
+
+    p.credits {
+      position: absolute;
+      color: black;
+      right: 6px;
+      bottom: 6px;
+      font-size: 12px;
+      margin-bottom: 0;
+    }
   }
 
   @media (max-width: 767px) {
@@ -37,6 +47,11 @@ div.fotokonkurranse-root {
       p {
         color: #333;
       }
+
+      p.credits {
+        display: none;
+      }
+
     }
   }
 
