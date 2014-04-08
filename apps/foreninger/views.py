@@ -16,8 +16,11 @@ def index(request):
 
     full_list = cache.get('foreninger.full_list')
     if full_list is None:
-        full_list = Forening.objects.order_by('name')
-        cache.set('foreninger.full_list', full_list, 60 * 60 * 24)
+        full_list = [
+            (f.name, f.get_site_or_old_url() or f.get_main_forenings()[0].get_site_or_old_url())
+            for f in Forening.objects.order_by('name')
+        ]
+        cache.set('foreninger.full_list', full_list, 60 * 60 * 24 * 7)
 
     context = {
         'categories': Forening.PUBLIC_CATEGORIES,

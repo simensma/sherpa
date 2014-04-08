@@ -79,8 +79,8 @@
   <div class="span6">
     <select name="full-list" data-placeholder="Vet du hva du leter etter?">
       <option value=""></option>
-      {% for forening in full_list %}
-        <option value="{% firstof forening.get_site_or_old_url forening.get_main_forenings.0.get_site_or_old_url %}">{{ forening.name }}</option>
+      {% for forening_tuple in full_list %}
+        <option value="{{ forening_tuple.1 }}">{{ forening_tuple.0 }}</option>
       {% endfor %}
     </select>
   </div>
