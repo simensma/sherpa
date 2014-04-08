@@ -1,0 +1,12 @@
+{% if forening_for_address.post_address %}
+  <p>Postadresse: {{ forening_for_address.post_address }}, {{ forening_for_address.zipcode }} {{ forening_for_address.ziparea }}</p>
+{% endif %}
+{% if forening_for_address.visit_address %}
+  <p>
+    Besøksadresse: {{ forening_for_address.visit_address }}
+    {% if forening.gmap_url %}
+      <a href="javascript:undefined" class="open-map" data-id="{{ forening.id }}">Se kart <i class="icon-arrow-down"></i></a>
+      <a href="javascript:undefined" class="close-map" data-id="{{ forening.id }}">Skjul kart <i class="icon-arrow-up"></i></a>
+    {% endif %}
+  </p>
+{% endif %}

@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-    var searchbox = $("div#searchbox");
+    var searchbox = $("div.searchbox");
 
     $("div.loading").hide();
     $("div.count").hide();

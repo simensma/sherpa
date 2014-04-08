@@ -1,0 +1,42 @@
+{% if active_forening.parents.count > 0 %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Moderforening</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          {{ active_forening.name }} er underlagt
+          {# The following line is too long because we don't want spacing between punctuations. #}
+          {% for parent in active_forening.parents.all %}
+            {% if parent in user.all_foreninger %}<a href="/sherpa/aktiv-forening/{{ parent.id }}/?next={% url 'admin.forening.views.index' %}#grupper">{% endif %}{{ parent.name }}{% if parent in user.all_foreninger %}</a>{% endif %}{% if not forloop.last %} og {% else %}.{% endif %}
+          {% endfor %}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+{% endif %}
+
+{# The with statement helps us save the underlying query in a var and avoid excessive lookups #}
+{% with children=active_forening.get_children_sorted %}
+  {% include 'common/admin/forening/structure_table_forening.html' with header="Sentral/nasjonal forening" foreninger=children.sentral %}
+  {% include 'common/admin/forening/structure_table_forening.html' with header="Foreninger" foreninger=children.forening %}
+  {% include 'common/admin/forening/structure_table_forening.html' with header="Turlag" foreninger=children.turlag %}
+
+  {% with turgrupper=active_forening.get_turgrupper_deep_sorted_by_group %}
+    {% include 'common/admin/forening/structure_table_forening.html' with display_parent=True header="Barnas Turlag" foreninger=turgrupper.barn %}
+    {% include 'common/admin/forening/structure_table_forening.html' with display_parent=True header="DNT ung" foreninger=turgrupper.ung %}
+    {% include 'common/admin/forening/structure_table_forening.html' with display_parent=True header="DNT Fjellsport" foreninger=turgrupper.fjellsport %}
+    {% include 'common/admin/forening/structure_table_forening.html' with display_parent=True header="DNT senior" foreninger=turgrupper.senior %}
+
+    {% if children|length == 0 and turgrupper.barn|length == 0 and turgrupper.ung|length == 0 and turgrupper.fjellsport|length == 0 and turgrupper.senior|length == 0 %}
+      <p>
+        <em>{{ active_forening.name }} har ingen underliggende turlag/turgrupper.</em>
+      </p>
+    {% endif %}
+
+  {% endwith %}
+{% endwith %}

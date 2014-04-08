@@ -6,8 +6,7 @@ from django.core.cache import cache
 from django.utils import crypto
 
 from focus.models import Actor, Enrollment
-from foreninger.models import Forening, DNT_OSLO_ID, DNT_UNG_OSLO_ID
-from sherpa2.models import Forening as Sherpa2Forening, DNT_OSLO_ID as DNT_OSLO_ID_SHERPA2, DNT_UNG_OSLO_ID as DNT_UNG_OSLO_ID_SHERPA2
+from foreninger.models import Forening
 from focus.abstractions import ActorProxy
 
 from itertools import groupby
@@ -326,8 +325,8 @@ class User(AbstractBaseUser):
         if forening is None:
             forening = Forening.objects.get(focus_id=self.get_actor().main_forening_id)
 
-            if convert_dnt_oslo_for_youth and forening.id == DNT_OSLO_ID and self.membership_type()['codename'] == 'youth':
-                forening = Forening.objects.get(id=DNT_UNG_OSLO_ID)
+            if convert_dnt_oslo_for_youth and forening.id == Forening.DNT_OSLO_ID and self.membership_type()['codename'] == 'youth':
+                forening = Forening.objects.get(id=Forening.DNT_UNG_OSLO_ID)
 
             cache.set('user.%s.%s.forening' % (self.identifier, convert_dnt_oslo_for_youth), forening, 60 * 60 * 24)
         return forening
@@ -337,34 +336,6 @@ class User(AbstractBaseUser):
         Shortcut method to main_forening() with parameter for use in templates.
         """
         return self.main_forening(convert_dnt_oslo_for_youth=False)
-
-    def main_forening_old(self):
-        """
-        This sad method returns the forening object from the old sherpa2 model.
-        For now it's mostly used to get the site url because most of the new objects
-        don't have an assigned site. Cache heavily since this hits the old DB.
-        """
-
-        # Users' forening cache
-        forening = cache.get('user.%s.forening_sherpa2' % self.identifier)
-        if forening is None:
-
-            # The actual forening cache
-            forening = cache.get('forening_sherpa2.focus.%s' % self.get_actor().main_forening_id)
-            if forening is None:
-                forening = Sherpa2Forening.objects.get(focus_id=self.get_actor().main_forening_id)
-                cache.set('forening_sherpa2.focus.%s' % self.get_actor().main_forening_id, forening, 60 * 60 * 24 * 7)
-
-            # Special case, just like in main_forening()
-            if forening.id == DNT_OSLO_ID_SHERPA2 and self.membership_type()['codename'] == 'youth':
-                # Get the DNT ung Oslo forening, use the forening cache
-                forening = cache.get('forening_sherpa2.%s' % DNT_UNG_OSLO_ID_SHERPA2)
-                if forening is None:
-                    forening = Sherpa2Forening.objects.get(id=DNT_UNG_OSLO_ID_SHERPA2)
-                    cache.set('forening_sherpa2.%s' % DNT_UNG_OSLO_ID_SHERPA2, forening, 60 * 60 * 24 * 7)
-
-            cache.set('user.%s.forening_sherpa2' % self.identifier, forening, 60 * 60 * 24 * 7)
-        return forening
 
     def is_eligible_for_norway_bus_tickets(self):
         if NorwayBusTicket.objects.filter(user=self).exists():
@@ -451,6 +422,14 @@ class User(AbstractBaseUser):
         dnt_central = Forening.objects.get(name='Den Norske Turistforening')
         return dnt_central in self.all_foreninger()
 
+    def is_admin_in_main_central(self):
+        """True if the user has the admin role for DNT central."""
+        dnt_central = Forening.objects.get(id=56)
+        for forening in self.all_foreninger():
+            if forening == dnt_central and forening.role == 'admin':
+                return True
+        return False
+
     def all_foreninger(self):
         """
         Returns foreninger this user has access to.
@@ -472,7 +451,7 @@ class User(AbstractBaseUser):
                     role = ForeningRole.objects.get(forening=forening, user=self).role
                     if role == 'admin':
                         # Add this one and all its children
-                        for forening in forening.get_with_children():
+                        for forening in forening.get_with_children_deep():
                             forening.role = 'admin'
                             foreninger.append(forening)
                     elif role == 'user':
@@ -518,7 +497,7 @@ class User(AbstractBaseUser):
                 # A normal user, return all connected foreninger with their children
                 foreninger = []
                 for forening in self.foreninger.all():
-                    for forening in forening.get_with_children():
+                    for forening in forening.get_with_children_deep():
                         # forening.role = 'admin'
                         foreninger.append(forening)
 

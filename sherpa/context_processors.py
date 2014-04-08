@@ -11,10 +11,10 @@ def menus(request):
     if request.is_ajax():
         return {}
     else:
-        menus = cache.get('main.menu')
+        menus = cache.get('main.menu.%s' % request.site.id)
         if menus is None:
             menus = Menu.on(request.site).all().order_by('order')
-            cache.set('main.menu', menus, 60 * 60 * 24)
+            cache.set('main.menu.%s' % request.site.id, menus, 60 * 60 * 24)
         for menu in menus:
             url = re.sub('https?:\/\/', '', menu.url) # Strip protocol
             # Add final slash if missing

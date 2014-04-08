@@ -229,7 +229,7 @@
                 Lokale tilbud der du bor
               </dt>
               <dd>
-                {{ forening.name }} tilbyr et stort utvalg av fellesturer, kurs og aktiviteter du kan delta på. Enkelte medlemsforeninger har også egne medlemsfordeler som medlemsblader, årbøker og rabattordninger. Sjekk ditt lokale tilbud på <a href="{{ forening.url }}">nettsidene til {{ forening.name }}</a>.
+                {{ forening.name }} tilbyr et stort utvalg av fellesturer, kurs og aktiviteter du kan delta på. Enkelte medlemsforeninger har også egne medlemsfordeler som medlemsblader, årbøker og rabattordninger. Sjekk ditt lokale tilbud på <a href="{{ forening.get_site_or_old_url }}">nettsidene til {{ forening.name }}</a>.
               </dd>
             {% endif %}
           </dl>
@@ -359,8 +359,8 @@
     <div class="span8">
       <div class="well">
         <h2>{{ forening.name }}</h2>
-        {% if forening.url %}
-          <p><a href="{{ forening.url }}">{{ forening.url }}</a></p>
+        {% if forening.get_site_or_old_url %}
+          <p><a href="{{ forening.get_site_or_old_url }}">{{ forening.get_site_or_old_url }}</a></p>
         {% endif %}
         {% if forening.email %}
           <p>E-post: <a href="{{ forening.email }}">{{ forening.email }}</a></p>
@@ -377,8 +377,8 @@
         {% if forening.visit_address %}
           <p>Besøksadresse: {{ forening.visit_address }}</p>
         {% endif %}
-        {% if forening.map %}
-          <iframe class="map" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="{{ forening.map }}"></iframe>
+        {% if forening.gmap_url %}
+          <iframe class="map" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="{{ forening.gmap_url }}"></iframe>
         {% endif %}
       </div>
     </div>

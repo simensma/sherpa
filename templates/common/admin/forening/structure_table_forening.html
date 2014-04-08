@@ -1,0 +1,50 @@
+{% if foreninger|length != 0 %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>{{ header }}</th>
+        {% if display_parent %}
+          <th>Underlagt</th>
+        {% endif %}
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for forening in foreninger %}
+        <tr>
+          <td>
+            {% if forening in user.all_foreninger %}
+              <a href="/sherpa/aktiv-forening/{{ forening.id }}/?next={% url 'admin.forening.views.index' %}#grupper">
+            {% endif %}
+
+            {{ forening.name }}
+
+            {% if forening in user.all_foreninger %}
+              </a>
+            {% endif %}
+          </td>
+
+          {% if display_parent %}
+            <td>
+              {% for parent in forening.parents.all %}
+                {% if parent in user.all_foreninger %}
+                  <a href="/sherpa/aktiv-forening/{{ parent.id }}/?next={% url 'admin.forening.views.index' %}#grupper">
+                {% endif %}
+
+                {{ parent.name }}
+
+                {% if parent in user.all_foreninger %}
+                  </a>
+                {% endif %}
+
+                {% if not forloop.last %}
+                  og
+                {% endif %}
+              {% endfor %}
+            </td>
+          {% endif %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}

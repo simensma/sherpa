@@ -1,0 +1,254 @@
+{% for message in messages %}
+  {% if message.message == 'forening_save_success' %}
+    <div class="alert alert-success">
+      <strong>Endringene har blitt lagret!</strong><br>
+    </div>
+  {% elif message.message == 'forening_create_success' %}
+    <div class="alert alert-success">
+      <strong>{{ active_forening.name }} har blitt opprettet!</strong><br>
+      Du er nå administrator i den nye foreningen.
+    </div>
+  {% endif %}
+{% endfor %}
+
+<form action="{% url 'admin.forening.views.index' %}" method="post" class="edit-forening form-default form-horizontal">
+  {% csrf_token %}
+  <input type="hidden" name="form" value="edit">
+  {{ edit_form.forening }}
+
+  <div class="section">
+
+    <div class="form-group parents{% if edit_form.parents.errors %} has-error{% endif %}{% if active_forening.type == 'sentral' or active_forening.type == 'forening' %} jq-hide{% endif %}">
+      <label class="col-md-2 control-label" for="id_edit-parents">Moderforening</label>
+      <div class="col-md-10">
+
+        <select id="id_edit-parents" name="edit-parents" data-chosen data-placeholder="Velg moderforening..." multiple>
+          <option value=""></option>
+          {% if parents_choices.foreninger|length > 0 %}
+            <optgroup label="Foreninger">
+              {% for forening in parents_choices.foreninger %}
+                {# The following stringformat hack is kind of ugly, why doesn't djangos form value return a list of ID ints? #}
+                <option value="{{ forening.id }}"{% if forening.id in edit_form.parents.value or forening.id|stringformat:"s" in edit_form.parents.value %} selected{% endif %}>{{ forening.name }}</option>
+              {% endfor %}
+            </optgroup>
+          {% endif %}
+          {% if parents_choices.turlag|length > 0 %}
+            <optgroup label="Turlag">
+              {% for forening in parents_choices.turlag %}
+                {# The following stringformat hack is kind of ugly, why doesn't djangos form value return a list of ID ints? #}
+                <option value="{{ forening.id }}"{% if forening.id in edit_form.parents.value or forening.id|stringformat:"s" in edit_form.parents.value %} selected{% endif %}>{{ forening.name }}</option>
+              {% endfor %}
+            </optgroup>
+          {% endif %}
+        </select>
+
+        {% if edit_form.parents.errors %}
+          {% for error in edit_form.parents.errors %}
+            <span class="help-block error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-group{% if edit_form.name.errors %} has-error{% endif %}">
+      <label class="col-md-2 control-label" for="id_edit_name">Navn</label>
+      <div class="col-md-10">
+        {{ edit_form.name }}
+        {% if edit_form.name.errors %}
+          {% for error in edit_form.name.errors %}
+            <span class="help-block error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-group{% if edit_form.type.errors %} has-error{% endif %}">
+      <label class="col-md-2 control-label" for="id_edit_type">Type</label>
+      <div class="col-md-10">
+        {{ edit_form.type }}
+        {% if edit_form.type.errors %}
+          {% for error in edit_form.type.errors %}
+            <span class="help-block error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-group group_type{% if edit_form.group_type.errors %} has-error{% endif %}{% if active_forening.type != 'turgruppe' %} jq-hide{% endif %}">
+      <label class="col-md-2 control-label" for="id_edit_group_type">Turgruppe</label>
+      <div class="col-md-10">
+        {{ edit_form.group_type }}
+        {% if edit_form.group_type.errors %}
+          {% for error in edit_form.group_type.errors %}
+            <span class="help-block error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+  </div><!-- /.section -->
+
+  <div class="section">
+
+    <div class="form-group">
+      <div class="col-md-offset-2 col-md-10">
+        <h2>Adresse</h2>
+      </div>
+    </div>
+
+    <div class="form-group{% if edit_form.post_address.errors %} has-error{% endif %}">
+      <label class="col-md-2 control-label" for="id_edit_post_address">Postadresse</label>
+      <div class="col-md-10">
+        {{ edit_form.post_address }}
+        {% if edit_form.post_address.errors %}
+          {% for error in edit_form.post_address.errors %}
+            <span class="help-block error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-group{% if edit_form.visit_address.errors %} has-error{% endif %}">
+      <label class="col-md-2 control-label" for="id_edit_visit_address">Besøksadresse</label>
+      <div class="col-md-10">
+        {{ edit_form.visit_address }}
+        {% if edit_form.visit_address.errors %}
+          {% for error in edit_form.visit_address.errors %}
+            <span class="help-block error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-group{% if edit_form.zipcode.errors %} has-error{% endif %}">
+      <label class="col-md-2 control-label" for="id_edit_zipcode">Postnummer / Poststed</label>
+      <div class="col-md-10">
+        <input type="text" class="form-control" id="id_edit_zipcode" name="edit-zipcode" value="{{ edit_form.zipcode.value }}" maxlength="10">
+        <input type="text" class="form-control" id="id_edit_area" name="edit-area" value="{{ edit_form_zipcode_area }}" disabled>
+        <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="zipcode ajaxloader jq-hide" alt="Laster poststed...">
+        {% if edit_form.zipcode.errors %}
+          {% for error in edit_form.zipcode.errors %}
+            <span class="help-block error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-group{% if edit_form.counties.errors %} has-error{% endif %}">
+      <label class="col-md-2 control-label" for="id_edit_counties">Fylke(r)</label>
+      <div class="col-md-10">
+        {{ edit_form.counties }}
+        {% if edit_form.counties.errors %}
+          {% for error in edit_form.counties.errors %}
+            <span class="help-block error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+  </div><!-- /.section -->
+
+  <div class="section contact skip-border">
+
+    <div class="form-group">
+      <div class="col-md-offset-2 col-md-10">
+        <h2>Kontaktinformasjon</h2>
+      </div>
+    </div>
+
+    <div class="form-group choose-contact{% if edit_form.choose_contact.errors %} has-error{% endif %}">
+      <label class="col-md-2 control-label">Hvem kan kontaktes</label>
+      <div class="col-md-10">
+        {% for input in edit_form.choose_contact %}
+          <div class="checkbox">
+            {{ input }}
+          </div>
+        {% endfor %}
+        <span class="help-block">
+          De fleste foreninger har generell kontaktinformasjon, men for små turgrupper kan det være mer aktuelt å oppgi en kontaktperson.
+        </span>
+        {% if create_form.choose_contact.errors %}
+          {% for error in create_form.choose_contact.errors %}
+            <span class="help-block error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-group contact_person_name{% if edit_form.contact_person_name.errors %} has-error{% endif %}{% if edit_form.choose_contact.value == 'forening' %} jq-hide{% endif %}">
+      <label class="col-md-2 control-label" for="id_edit-contact_person_name">Navn</label>
+      <div class="col-md-10">
+        {{ edit_form.contact_person_name }}
+        {{ edit_form.contact_person }}
+        <span class="help-block">
+          <a href="javascript:undefined" class="search{% if edit_form.contact_person.value != None %} jq-hide{% endif %}">Hent personopplysninger fra medlemsregisteret</a>
+          <a href="javascript:undefined" class="manual{% if edit_form.contact_person.value == None %} jq-hide{% endif %}">Fyll ut personopplysninger selv</a>
+        </span>
+        {% if edit_form.contact_person_name.errors %}
+          {% for error in edit_form.contact_person_name.errors %}
+            <span class="help-block error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-group{% if edit_form.phone.errors %} has-error{% endif %}">
+      <label class="col-md-2 control-label" for="id_edit-phone">Telefonnummer</label>
+      <div class="col-md-10">
+        {{ edit_form.phone }}
+        {% if edit_form.phone.errors %}
+          {% for error in edit_form.phone.errors %}
+            <span class="help-block error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-group{% if edit_form.email.errors %} has-error{% endif %}">
+      <label class="col-md-2 control-label" for="id_edit-email">E-postadresse</label>
+      <div class="col-md-10">
+        {{ edit_form.email }}
+        {% if edit_form.email.errors %}
+          {% for error in edit_form.email.errors %}
+            <span class="help-block error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-group{% if edit_form.organization_no.errors %} has-error{% endif %}">
+      <label class="col-md-2 control-label" for="id_edit_organization_no">Organisasjonsnr.</label>
+      <div class="col-md-10">
+        {{ edit_form.organization_no }}
+        {% if edit_form.organization_no.errors %}
+          {% for error in edit_form.organization_no.errors %}
+            <span class="help-block error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    {# Hidden and uneditable for now #}
+    {{ edit_form.gmap_url }}
+
+    <div class="form-group{% if edit_form.facebook_url.errors %} has-error{% endif %}">
+      <label class="col-md-2 control-label" for="id_edit_facebook_url">Facebook URL</label>
+      <div class="col-md-10">
+        {{ edit_form.facebook_url }}
+        {% if edit_form.facebook_url.errors %}
+          {% for error in edit_form.facebook_url.errors %}
+            <span class="help-block error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+  </div><!-- /.section -->
+
+  <div class="form-group submit">
+    <div class="col-md-offset-2 col-md-10">
+      <button type="submit" class="btn btn-large">Lagre foreningsdata</button>
+    </div>
+  </div>
+
+</form>

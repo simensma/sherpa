@@ -50,7 +50,10 @@ class County(models.Model):
     objects = models.GeoManager()
 
     def __unicode__(self):
-        return u'%s: %s' % (self.pk, self.name)
+        return self.name
+
+    def __repr__(self):
+        return (u'%s: %s' % (self.pk, self.name)).encode('utf-8')
 
     @staticmethod
     def typical_objects():

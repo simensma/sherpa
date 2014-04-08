@@ -149,6 +149,9 @@ def delete_publication(request, publication):
 def get_forening_main_mappings():
     forening_main_mappings = cache.get('forening_main_mappings')
     if forening_main_mappings is None:
-        forening_main_mappings = {a.id: a.get_main_forening().name for a in Forening.objects.all()}
+        forening_main_mappings = {
+            a.id: u' og '.join([m.name for m in a.get_main_forenings()])
+            for a in Forening.objects.all()
+        }
         cache.set('forening_main_mappings', forening_main_mappings, 60 * 60 * 24)
     return forening_main_mappings

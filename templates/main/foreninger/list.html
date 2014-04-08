@@ -11,7 +11,7 @@
 
 <h1>DNT der du bor</h1>
 
-<div id="searchbox" data-filter-url="{% url 'foreninger.views.filter' %}">
+<div class="searchbox" data-filter-url="{% url 'foreninger.views.filter' %}">
   <div id="content">
     <table>
       <tr>
@@ -22,8 +22,8 @@
         <td class="categories">
           {% for category in categories %}
             <label class="radio">
-              <input type="radio" name="category" value="{{ category.db }}"{% if category.chosen %} checked{% endif %}>
-              {{ category.name }}
+              <input type="radio" name="category" value="{{ category.0 }}"{% if category.0 == chosen_category %} checked{% endif %}>
+              {{ category.1 }}
             </label>
           {% endfor %}
         </td>
@@ -37,7 +37,7 @@
           {% for county in counties %}
             <div class="county">
               <label class="radio">
-                <input type="radio" name="county" value="{{ county.sherpa_id }}"{% if chosen_county|lower == county.name|lower %} checked{% endif %}> {{ county.name }}
+                <input type="radio" name="county" value="{{ county.id }}"{% if chosen_county == county %} checked{% endif %}> {{ county.name }}
               </label>
             </div>
           {% endfor %}
@@ -47,7 +47,7 @@
   </div>
 </div>
 
-<div id="searchbox-mobile">
+<div class="searchbox-mobile">
   <p>Velg type:</p>
   <select name="category">
   {% for category in categories %}
@@ -80,7 +80,7 @@
     <select name="full-list" data-placeholder="Vet du hva du leter etter?">
       <option value=""></option>
       {% for forening in full_list %}
-        <option value="{{ forening.url }}">{{ forening.name }}</option>
+        <option value="{% firstof forening.get_site_or_old_url forening.get_main_forenings.0.get_site_or_old_url %}">{{ forening.name }}</option>
       {% endfor %}
     </select>
   </div>

@@ -5,10 +5,6 @@ from django.core.cache import cache
 from datetime import datetime, date, timedelta
 import json
 
-# Sometimes we'll need to reference foreninger directly by ID. We'll store the IDs we know and need here.
-DNT_OSLO_ID = 2
-DNT_UNG_OSLO_ID = 152
-
 class Forening(models.Model):
     id = models.IntegerField(db_column='gr_id', primary_key=True)
     focus_id = models.IntegerField(db_column='gr_my_id', null=True, blank=True)
