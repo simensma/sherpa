@@ -115,13 +115,16 @@ class Forening(models.Model):
         }
 
     def get_main_forenings(self):
-        if self.type == 'sentral' or self.type == 'forening':
-            return [self]
-        else:
-            mains = []
-            for parent in self.parents.all():
-                mains += parent.get_main_forenings()
-            return mains
+        mains = cache.get('forening.main_forenings.%s' % self.id)
+        if mains is None:
+            if self.type == 'sentral' or self.type == 'forening':
+                mains = [self]
+            else:
+                mains = []
+                for parent in self.parents.all():
+                    mains += parent.get_main_forenings()
+            cache.set('forening.main_forenings.%s' % self.id, mains, 60 * 60 * 24)
+        return mains
 
     def get_site_or_old_url(self):
         """Since it'll be a while until all foreninger gets their own site, we'll have to get the old URL

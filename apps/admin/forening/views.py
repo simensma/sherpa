@@ -152,6 +152,7 @@ def index(request):
                 request.session['active_forening'] = forening
                 cache.delete('foreninger.full_list')
                 cache.delete('forening.%s' % forening.id)
+                cache.delete('forening.main_forenings.%s' % forening.id)
                 return redirect('admin.forening.views.index')
             else:
                 context.update({'edit_form': edit_form})
@@ -206,6 +207,7 @@ def index(request):
                 request.session['active_forening'] = forening
                 cache.delete('foreninger.full_list')
                 cache.delete('forening.%s' % forening.id)
+                cache.delete('forening.main_forenings.%s' % forening.id)
                 # Since GET url == POST url, we need to specifically set the tab hashtag we want, or the existing
                 # one (create) will be kept
                 return redirect('%s#metadata' % reverse('admin.forening.views.index'))
