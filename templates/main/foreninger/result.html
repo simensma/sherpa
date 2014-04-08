@@ -1,11 +1,31 @@
 <tr>
   <td>
     <div class="forening-logo right">
-      {% if forening.get_site_or_old_url %}<a class="logo-url noexternal" href="{{ forening.get_site_or_old_url }}">{% else %}<span>{% endif %}
-
-        {{ forening.name }}
-
-      {% if forening.get_site_or_old_url %}</a>{% else %}</span>{% endif %}
+      {% if forening.type != 'turlag' %}
+        {# Regular logo #}
+        {% if forening.get_site_or_old_url %}
+          <a class="logo-url single noexternal" href="{{ forening.get_site_or_old_url }}">
+            {{ forening.name }}
+          </a>
+        {% else %}
+          <span class="single">
+            {{ forening.name }}
+          </span>
+        {% endif %}
+      {% else %}
+        {# Double logo - include parents name below #}
+        {% if forening.get_site_or_old_url %}
+          <a class="logo-url double noexternal" href="{{ forening.get_site_or_old_url }}">
+            <span class="main">{{ forening.name }}</span>
+            <span class="parent">{{ forening.get_main_forenings.0.name }}</span>
+          </a>
+        {% else %}
+          <span class="double">
+            <span class="main">{{ forening.name }}</span>
+            <span class="parent">{{ forening.get_main_forenings.0.name }}</span>
+          </span>
+        {% endif %}
+      {% endif %}
     </div>
     <h2>{{ forening.name }}</h2>
     {% if forening.get_site_or_old_url %}
