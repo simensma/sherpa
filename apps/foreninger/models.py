@@ -133,10 +133,14 @@ class Forening(models.Model):
 
     def get_old_url(self):
         """Temporary method! Retrieves the site URL from sherpa2"""
-        try:
-            return Sherpa2Forening.objects.get(id=self.id).url
-        except Sherpa2Forening.DoesNotExist:
-            return ''
+        old_url = cache.get('forening.old_sherpa2_url.%s' % self.id)
+        if old_url is None:
+            try:
+                old_url = Sherpa2Forening.objects.get(id=self.id).url
+            except Sherpa2Forening.DoesNotExist:
+                old_url = ''
+            cache.set('forening.old_sherpa2_url.%s' % self.id, old_url, 60 * 60 * 24 * 7)
+        return old_url
 
     def get_ntb_id(self):
         """Retrieve the NTB object_id for this forening from Sherpa2"""
