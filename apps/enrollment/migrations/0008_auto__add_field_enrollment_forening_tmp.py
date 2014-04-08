@@ -7,6 +7,10 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    depends_on = (
+        ("foreninger", "0010_remove_deleted_foreninger"),
+    )
+
     def forwards(self, orm):
         # Adding field 'Enrollment.forening_tmp'
         db.add_column(u'enrollment_enrollment', 'forening_tmp',
