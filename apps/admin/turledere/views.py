@@ -35,6 +35,9 @@ def edit_turleder_certificate(request, user):
     if not user.is_member():
         raise PermissionDenied
 
+    if request.POST['role'] not in [r[0] for r in Turleder.TURLEDER_CHOICES]:
+        raise PermissionDenied
+
     if request.POST['turleder'] != '':
         turleder = Turleder.objects.get(id=request.POST['turleder'])
     else:
