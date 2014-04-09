@@ -1,3 +1,5 @@
+{% load advertisement_url %}
+
 {% if advertisement %}
   <div class="row ad">
     <div class="span12">
@@ -10,21 +12,21 @@
           var flashvars = {
             // Account for some unfortunate variations in clicktag capitalization
             {# Also account for unsaved mock-objects - used when testing ads. If no ID, give the direct destination, without any redirect #}
-            clickTAG: "{% if advertisement.id %}http://{{ site.domain }}{% url 'page.views.ad' advertisement.id %}{% else %}{{ advertisement.destination_url }}{% endif %}",
-            clickTag: "{% if advertisement.id %}http://{{ site.domain }}{% url 'page.views.ad' advertisement.id %}{% else %}{{ advertisement.destination_url }}{% endif %}"
+            clickTAG: "{% advertisement_url advertisement %}",
+            clickTag: "{% advertisement_url advertisement %}"
           };
           {# Require flash version 9, not sure if this is reasonable? #}
           swfobject.embedSWF("{{ advertisement.ad.url }}", "ad", "{{ advertisement.ad.width }}", "{{ advertisement.ad.height }}", "9.0.0", undefined, flashvars);
         </script>
         <div id="ad">
           {% if advertisement.ad.has_fallback %}
-            <a href="{% if advertisement.id %}http://{{ site.domain }}{% url 'page.views.ad' advertisement.id %}{% else %}{{ advertisement.destination_url }}{% endif %}">
+            <a href="{% advertisement_url advertisement %}">
               <img src="{{ advertisement.ad.fallback_url }}" alt="{{ advertisement.ad.name }}">
             </a>
           {% endif %}
         </div>
       {% else %}
-        <a href="{% if advertisement.id %}http://{{ site.domain }}{% url 'page.views.ad' advertisement.id %}{% else %}{{ advertisement.destination_url }}{% endif %}">
+        <a href="{% advertisement_url advertisement %}">
           <img src="{{ advertisement.ad.url }}" alt="{{ advertisement.ad.name }}">
         </a>
       {% endif %}
