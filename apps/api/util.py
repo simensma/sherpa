@@ -77,7 +77,14 @@ def get_forening_data(forening):
     }
 
 def authenticate(request):
-    return base64.b64decode(request.GET.get('autentisering', '')) in settings.API_KEYS
+    try:
+        return base64.b64decode(request.GET.get('autentisering', '')) in settings.API_KEYS
+    except TypeError:
+        raise BadRequest(
+            "Unable to base64-decode your authentication parameter '%s'" % request.GET.get('autentisering', ''),
+            code=error_codes.INVALID_AUTHENTICATION,
+            http_code=400
+        )
 
 def requested_representation_from_header(request):
     accepted_types = request.META.get('HTTP_ACCEPT', '').split(',')
