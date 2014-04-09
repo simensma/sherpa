@@ -85,7 +85,11 @@ $(function() {
                 result = JSON.parse(result);
                 var item = $('<li><a class="edit" data-id="' + result.id + '" data-href="' + url + '"  href="javascript:undefined">' + name + '</a></li>');
                 item.find("a.edit").click(edit);
-                menus.find("li").last().after(item);
+                if(menus.find("li").length > 0) {
+                    menus.find("li").last().after(item);
+                } else {
+                    menus.find("ul").append(item);
+                }
             } else {
                 activeMenu.text(name);
                 activeMenu.attr('data-href', url);
