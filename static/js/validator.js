@@ -69,6 +69,11 @@
                     res = false;
                 }
             }
+            if(opts !== undefined && opts.hasOwnProperty('max_year')) {
+                if(Number(input.substring(6)) > opts['max_year']) {
+                    res = false;
+                }
+            }
             return res;
         },
         'anything': function(input, req, opts) {

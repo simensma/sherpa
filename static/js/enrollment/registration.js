@@ -52,7 +52,7 @@ $(document).ready(function() {
             control_group: form.find("div.control-group.dob"),
             input: form.find("input[name='dob']"),
             req: true,
-            opts: {'min_year': 1900}
+            opts: {'min_year': 1900, 'max_year': 2078}
         });
     }
 

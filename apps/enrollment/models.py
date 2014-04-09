@@ -235,8 +235,8 @@ class User(models.Model):
         if self.dob is None:
             return False
 
-        # Birthyear is below 1900 (MSSQLs datetime datatype will barf)
-        if self.dob.year < 1900:
+        # Birthyear is out of smalldatetime range (MSSQLs datetime datatype will barf)
+        if self.dob.year < 1900 or self.dob.year > 2078:
             return False
 
         # All tests passed!
