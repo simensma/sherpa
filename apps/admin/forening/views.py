@@ -293,7 +293,8 @@ def users_access_search(request):
         'max_hits_exceeded': len(users) > MAX_HITS or len(actors) > MAX_HITS
     }))
 
-def users_give_access(request, user, wanted_role):
+def users_give_access(request):
+    wanted_role = request.POST['wanted_role']
     if wanted_role not in [role[0] for role in ForeningRole.ROLE_CHOICES]:
         raise PermissionDenied
 
@@ -308,7 +309,7 @@ def users_give_access(request, user, wanted_role):
     if not passed:
         raise PermissionDenied
 
-    other_user = User.get_users(include_pending=True).get(id=user)
+    other_user = User.get_users(include_pending=True).get(id=request.POST['user'])
     if other_user.has_perm('sherpa_admin'):
         messages.info(request, 'user_is_sherpa_admin')
         return redirect('%s#brukere' % reverse('admin.forening.views.index'))
@@ -351,10 +352,11 @@ def users_give_access(request, user, wanted_role):
         role=wanted_role,
     )
     forening_role.save()
-    if send_access_granted_email(other_user, request.session['active_forening'], request.user):
-        messages.info(request, 'access_email_success')
-    else:
-        messages.warning(request, 'access_email_failure')
+    if request.POST.get('send_email', '') != '':
+        if send_access_granted_email(other_user, request.session['active_forening'], request.user):
+            messages.info(request, 'access_email_success')
+        else:
+            messages.warning(request, 'access_email_failure')
     messages.info(request, 'permission_created')
     cache.delete('user.%s.all_foreninger' % other_user.id)
     return redirect('%s#brukere' % reverse('admin.forening.views.index'))

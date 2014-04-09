@@ -48,14 +48,25 @@
       {% endif %}
     </td>
     <td>
-      <a href="{% url 'admin.forening.views.users_give_access' potential_user.id 'user' %}" class="btn btn-danger pick">
-        <i class="fa fa-user"></i> Vanlig bruker
-      </a>
-      {% if user|role_for:active_forening == 'admin' %}
-        <a href="{% url 'admin.forening.views.users_give_access' potential_user.id 'admin' %}" class="btn btn-danger pick">
-          <i class="fa fa-star"></i> Administrator
-        </a>
-      {% endif %}
+      <form action="{% url 'admin.forening.views.users_give_access' %}" method="post" class="give-access">
+        {% csrf_token %}
+        <input type="hidden" name="user" value="{{ potential_user.id }}">
+        <input type="hidden" name="wanted_role">
+
+        <button class="btn btn-danger pick" data-wanted-role="user">
+          <i class="fa fa-user"></i> Vanlig bruker
+        </button>
+        {% if user|role_for:active_forening == 'admin' %}
+          <button class="btn btn-danger pick" data-wanted-role="admin">
+            <i class="fa fa-star"></i> Administrator
+          </button>
+        {% endif %}
+        <div class="checkbox" title="Send informasjon om Sherpa-tilgang til den nye brukeren på e-post">
+          <label>
+            <input type="checkbox" name="send_email"> Send e-postvarsel
+          </label>
+        </div>
+      </form>
     </td>
   </tr>
 

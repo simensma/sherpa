@@ -10,4 +10,10 @@ $(function() {
         give_access.slideDown();
     });
 
+    $(document).on('click', '.foreningsadmin form.give-access button.pick', function() {
+        var form = $(this).parents("form");
+        var wanted_role = form.find("input[name='wanted_role']");
+        wanted_role.val($(this).attr('data-wanted-role'));
+    });
+
 });

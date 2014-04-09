@@ -222,13 +222,14 @@ def add_forening_permission(request):
         role = ForeningRole(user=user, forening=forening, role=request.POST['role'])
         role.save()
 
-    if user.get_sherpa_email() == '':
-        messages.warning(request, 'no_email_for_user')
-    else:
-        if send_access_granted_email(user, forening, request.user):
-            messages.info(request, 'access_email_success')
+    if request.POST.get('send_email', '') != '':
+        if user.get_sherpa_email() == '':
+            messages.warning(request, 'no_email_for_user')
         else:
-            messages.warning(request, 'access_email_failure')
+            if send_access_granted_email(user, forening, request.user):
+                messages.info(request, 'access_email_success')
+            else:
+                messages.warning(request, 'access_email_failure')
 
     cache.delete('user.%s.all_foreninger' % user.id)
     cache.delete('user.%s.children_foreninger' % user.id)
