@@ -6,6 +6,25 @@
   <p>Sherpa-administrator — har tilgang til alle foreninger.</p>
 {% elif other_user.perms.sherpa %}
 
+  {% for message in messages %}
+    {% if message.message == 'access_email_success' %}
+      <div class="alert alert-success">
+        <strong>{{ other_user.get_full_name }} har fått tilgang.</strong><br>
+        E-postvarsel har blitt sendt til <a href="mailto:{{ other_user.get_sherpa_email }}">{{ other_user.get_sherpa_email }}</a>.
+      </div>
+    {% elif message.message == 'access_email_failure' %}
+      <div class="alert alert-success">
+        <strong>{{ other_user.get_full_name }} har fått tilgang.</strong><br>
+        Et problem oppstod ved utsendelse av e-post, {% if other_user.get_gender == 'm' %}han{% else %}hun{% endif %} har derfor <strong>ikke</strong> mottatt noe e-postvarsel.
+      </div>
+    {% elif message.message == 'no_email_for_user' %}
+      <div class="alert alert-success">
+        <strong>{{ other_user.get_full_name }} har fått tilgang.</strong><br>
+        {% if other_user.get_gender == 'm' %}Han{% else %}Hun{% endif %} har ikke registrert e-postadresse og vi kunne derfor ikke sende ut e-postvarsel.</strong>
+      </div>
+    {% endif %}
+  {% endfor %}
+
   {% if other_user.all_foreninger|length == 0 %}
     <div class="alert alert-danger">
       <strong>{{ other_user.get_full_name }} har ikke tilgang til noen foreninger!</strong><br>

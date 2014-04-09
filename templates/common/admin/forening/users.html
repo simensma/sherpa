@@ -25,6 +25,18 @@
         {% endif %}
       {% endfor %}
 
+      {% for message in messages %}
+        {% if message.message == 'access_email_success' %}
+          <div class="alert alert-success">
+            <strong>E-postvarsel har blitt sendt til brukeren med videre informasjon.</strong>
+          </div>
+        {% elif message.message == 'access_email_failure' %}
+          <div class="alert alert-warning">
+            <strong>En feil oppstod under e-postutsendelse, derfor har brukeren ikke mottatt noe e-postvarsel med videre informasjon.</strong>
+          </div>
+        {% endif %}
+      {% endfor %}
+
       <table class="table">
         <thead>
           <tr>

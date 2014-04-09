@@ -7,9 +7,11 @@ from django.db.models import Q
 from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.core.exceptions import PermissionDenied
+from django.contrib import messages
 
 from foreninger.models import Forening
 from user.models import User, Permission, ForeningRole, Turleder
+from admin.users.util import send_access_granted_email
 from focus.models import Actor, Enrollment
 
 from datetime import date
@@ -219,6 +221,14 @@ def add_forening_permission(request):
     except ForeningRole.DoesNotExist:
         role = ForeningRole(user=user, forening=forening, role=request.POST['role'])
         role.save()
+
+    if user.get_sherpa_email() == '':
+        messages.warning(request, 'no_email_for_user')
+    else:
+        if send_access_granted_email(user, forening, request.user):
+            messages.info(request, 'access_email_success')
+        else:
+            messages.warning(request, 'access_email_failure')
 
     cache.delete('user.%s.all_foreninger' % user.id)
     cache.delete('user.%s.children_foreninger' % user.id)

@@ -16,6 +16,7 @@ from foreninger.models import Forening
 from .forms import ForeningDataForm, ExistingForeningDataForm
 from user.models import User, Permission, ForeningRole
 from focus.models import Actor
+from admin.users.util import send_access_granted_email
 
 def index(request):
     forening_users = list(User.objects.filter(foreninger=request.session['active_forening']))
@@ -350,6 +351,10 @@ def users_give_access(request, user, wanted_role):
         role=wanted_role,
     )
     forening_role.save()
+    if send_access_granted_email(other_user, request.session['active_forening'], request.user):
+        messages.info(request, 'access_email_success')
+    else:
+        messages.warning(request, 'access_email_failure')
     messages.info(request, 'permission_created')
     cache.delete('user.%s.all_foreninger' % other_user.id)
     return redirect('%s#brukere' % reverse('admin.forening.views.index'))
