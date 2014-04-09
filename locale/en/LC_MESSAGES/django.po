@@ -1121,7 +1121,7 @@ msgstr "The membership is personal."
 
 #: templates/main/enrollment/registration.html:153
 msgid "Det er ingen angrerett på betalt medlemskap."
-msgstr ""
+msgstr "Paid membership cannot be cancelled."
 
 #: templates/main/enrollment/registration.html:154
 #, python-format
