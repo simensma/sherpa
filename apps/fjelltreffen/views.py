@@ -91,10 +91,6 @@ def show(request, id):
                 content = render_to_string('main/fjelltreffen/reply_email.txt', email_context)
                 send_mail('DNT Fjelltreffen - Svar fra %s' % form.cleaned_data['name'], content, settings.DEFAULT_FROM_EMAIL, [annonse.email], fail_silently=False)
                 librato.increment('sherpa.fjelltreffen_svar')
-                # Log temporary for details of how SPAM is getting through.
-                logger.info(u"Fjelltreffen-svar (logges midlertidig for opplysninger om rapportert spam)",
-                    extra={'request': request}
-                )
                 request.session['fjelltreffen.reply'] = {
                     'name': form.cleaned_data['name'],
                     'email': form.cleaned_data['email'],
@@ -108,12 +104,6 @@ def show(request, id):
                 context.update({'email_reply_failure': True})
                 logger.warning(u"Klarte ikke å sende Fjelltreffen-epost",
                     exc_info=sys.exc_info(),
-                    extra={'request': request}
-                )
-        else:
-            # Log temporary for spam details
-            if 'captcha' not in form or len(form['captcha'].errors) > 0:
-                logger.info(u"Fjelltreffen-svar - ugyldig captcha",
                     extra={'request': request}
                 )
     else:
