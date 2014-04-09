@@ -168,7 +168,7 @@ def signon_complete(request):
     # The signon field should be set in session by whatever service the user used,
     # but it could be missed so check and log any exceptions
     if not 'signon' in request.session['dntconnect']:
-        logger.error(u"Mangler 'signon' field i session etter vellykket signon",
+        logger.warning(u"Mangler 'signon' field i session etter vellykket signon",
             extra={
                 'request': request,
                 'session': request.session,
