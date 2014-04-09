@@ -249,8 +249,12 @@ def edit_date_preview(request):
     # So this is kind of silly, we'll create a dict representing an AktivitetDate object so that
     # we can render the dates_view template like it normally is.
     fake_date_representation = json.loads(request.POST['date'])
-    fake_date_representation['start_date'] = datetime.strptime(fake_date_representation['start_date'], "%d.%m.%Y")
-    fake_date_representation['end_date'] = datetime.strptime(fake_date_representation['end_date'], "%d.%m.%Y")
+    try:
+        fake_date_representation['start_date'] = datetime.strptime(fake_date_representation['start_date'], "%d.%m.%Y")
+        fake_date_representation['end_date'] = datetime.strptime(fake_date_representation['end_date'], "%d.%m.%Y")
+    except ValueError:
+        # This isn't a big problem for the preview, so just return an error at this point - the client-side will handle it
+        raise PermissionDenied
     fake_date_representation['signup_enabled'] = fake_date_representation['signup_type'] == 'minside' or fake_date_representation['signup_type'] == 'simple'
     fake_date_representation['signup_simple_allowed'] = fake_date_representation['signup_type'] == 'simple'
     fake_date_representation['turledere'] = {
