@@ -149,10 +149,12 @@
                         {% endif %}
                       </td>
                       <td>
-                        {% if user.dob %}
-                          kr. {{ user.price }},-
-                        {% else %}
+                        {% if not user.dob %}
                           <em>Alder ukjent</em>
+                        {% elif not enrollment.forening %}
+                          <em>Ukjent adresse og foreningspris</em>
+                        {% else %}
+                          kr. {{ user.price }},-
                         {% endif %}
                       </td>
                     </tr>
