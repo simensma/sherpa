@@ -18,7 +18,7 @@ def menus(request):
         for menu in menus:
             url = re.sub('https?:\/\/', '', menu.url) # Strip protocol
             # Add final slash if missing
-            if url[-1] != '/':
+            if len(url) == 0 or url[-1] != '/':
                 url = "%s/" % url
             if "%s%s" % (request.site.domain, request.path) == url:
                 menu.active = True
