@@ -96,6 +96,33 @@
         </table>
       {% endif %}
 
+      {% if sherpa_admins|length > 0 %}
+        <table class="table">
+          <thead>
+            <tr>
+              <th colspan="3">Sherpa-administratorer</th>
+            </tr>
+            {% for forening_user in sherpa_admins %}
+              <tr>
+                <td><a href="{% url 'admin.users.views.show' forening_user.id %}">{{ forening_user.get_full_name }}</a></td>
+                <td>
+                  {{ forening_user.memberid|default:"<em>Ikke medlem</em>" }}
+                </td>
+                <td>
+                  {% with role=forening_user|role_for:active_forening %}
+                    {% if role == 'user' %}
+                      <i class="fa fa-user"></i> Vanlig bruker
+                    {% elif role == 'admin' %}
+                      <i class="fa fa-star"></i> Administrator
+                    {% endif %}
+                  {% endwith %}
+                </td>
+              </tr>
+            {% endfor %}
+          </thead>
+        </table>
+      {% endif %}
+
       <p class="give-access-initiation">
         <button class="btn btn-default">
           <i class="fa fa-user"></i> Gi en ny bruker tilgang til {{ active_forening.name }}

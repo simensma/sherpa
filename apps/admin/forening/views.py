@@ -42,6 +42,7 @@ def index(request):
 
     forening_users = sorted(forening_users, key=lambda u: u.get_full_name())
     forening_users_by_parent = sorted(forening_users_by_parent, key=lambda u: u.get_full_name())
+    sherpa_admins = sorted(User.objects.filter(permissions__name='sherpa_admin'), key=lambda u: u.get_full_name())
 
     # The parent choices are tricky to define in the forms API, so do it here
     all_sorted = request.user.all_foreninger_sorted()
@@ -53,6 +54,7 @@ def index(request):
     context = {
         'forening_users': forening_users,
         'forening_users_by_parent': forening_users_by_parent,
+        'sherpa_admins': sherpa_admins,
         'parents_choices': parents_choices,
         'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH
     }
