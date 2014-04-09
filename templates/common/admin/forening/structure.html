@@ -1,3 +1,9 @@
+{% if active_forening.type == 'sentral' %}
+  <p>
+    {{ active_forening.name }} er en sentral forening og har ikke noen tilknyttede turlag/turgrupper.
+  </p>
+{% endif %}
+
 {% if active_forening.parents.count > 0 %}
   <table class="table">
     <thead>
