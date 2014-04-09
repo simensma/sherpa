@@ -1,24 +1,87 @@
 {% for user in users %}
   <tr class="result">
-    <td><a href="{% url 'admin.users.views.show' user.id %}">{{ user.get_full_name }}</a></td>
-    <td>{{ user.memberid|default:"<em>Ikke medlem</em>" }}</td>
-    <td>{% if user.perms.sherpa %}Ja{% else %}Nei{% endif %}</td>
+    <td>
+      <a href="{% url 'admin.users.views.show' user.id %}">{{ user.get_full_name }}</a>
+    </td>
+    <td>
+      {% if user.is_member %}
+        {{ user.get_birth_date|date:"d.m.y" }}
+      {% endif %}
+    </td>
+    <td>
+      {% if user.is_member %}
+        {{ user.main_forening.name }}<br>
+        Medlemsnr: {{ user.memberid }}
+      {% else %}
+        <em>Ikke medlem</em>
+      {% endif %}
+    </td>
+    <td>
+      {% if user.is_member %}
+        {{ user.get_address.format_with_newlines|linebreaksbr }}
+      {% endif %}
+    </td>
+    <td>
+      {% if user.is_member %}
+        {% if user.get_phone_home %}
+          {{ user.get_phone_home }}<br>
+        {% endif %}
+        {% if user.get_phone_mobile %}
+          {{ user.get_phone_mobile }}<br>
+        {% endif %}
+        {% if user.get_email %}
+          {{ user.get_email }}
+        {% endif %}
+
+        {% if not user.get_phone_home and not user.get_phone_mobile and not user.get_email %}
+          <em>Mangler kontaktopplysninger</em>
+        {% endif %}
+      {% endif %}
+    </td>
+
+    <td>
+      {% if user.perms.sherpa %}Ja{% else %}Nei{% endif %}
+    </td>
   </tr>
 {% endfor %}
 
 {% for actor in actors_without_user %}
   <tr class="result">
-    <td><a href="{% url 'admin.users.views.create_inactive' actor.memberid %}">{{ actor.get_full_name }}</a></td>
-    <td>{{ actor.memberid }}</td>
+    <td>
+      <a href="{% url 'admin.users.views.create_inactive' actor.memberid %}">{{ actor.get_full_name }}</a>
+    </td>
+    <td>
+      {{ actor.get_birth_date|date:"d.m.y" }}
+    </td>
+    <td>
+      Medlemsnr: {{ actor.memberid }}
+    </td>
+    <td>
+      {{ actor.get_clean_address.format_with_newlines|linebreaksbr }}
+    </td>
+    <td>
+      {% if actor.get_phone_home %}
+        {{ actor.get_phone_home }}<br>
+      {% endif %}
+      {% if actor.get_phone_mobile %}
+        {{ actor.get_phone_mobile }}<br>
+      {% endif %}
+      {% if actor.get_email %}
+        {{ actor.get_email }}
+      {% endif %}
+
+      {% if not actor.get_phone_home and not actor.get_phone_mobile and not actor.get_email %}
+        <em>Mangler kontaktopplysninger</em>
+      {% endif %}
+    </td>
     <td>Nei</td>
   </tr>
 {% endfor %}
 
 {% for user in expired_users %}
   <tr class="result">
-    <td><a href="{% url 'admin.users.views.show' user.id %}">{{ user.memberid }}</a></td>
-    <td>
-      <em>Mangler bruker i Focus - utgått medlemsnummer</em>
+    <td colspan="5">
+      <a href="{% url 'admin.users.views.show' user.id %}">{{ user.memberid }}</a> - <em>Mangler bruker i Focus - utgått medlemsnummer</em>
     </td>
     <td>{% if user.perms.sherpa %}Ja{% else %}Nei{% endif %}</td>
   </tr>

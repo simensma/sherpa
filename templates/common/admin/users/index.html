@@ -45,30 +45,33 @@
       <table class="table user-search-list" data-search-url="{% url 'admin.users.views.search' %}">
         <tr>
           <th>Navn</th>
-          <th>Medlemsnummer</th>
+          <th>Født</th>
+          <th>Forening</th>
+          <th>Adresse</th>
+          <th>Kontaktinfo</th>
           <th>Sherpa-tilgang</th>
         </tr>
 
         <tr class="initial">
-          <td colspan="4">Søk etter medlemmer/brukere i søkeboksen over...</td>
+          <td colspan="6">Søk etter medlemmer/brukere i søkeboksen over...</td>
         </tr>
 
         <tr class="no-hits jq-hide">
-          <td colspan="4">Fant ingen med navn eller medlemsnummer <span class="result-mirror"></span>.</td>
+          <td colspan="6">Fant ingen med navn eller medlemsnummer <span class="result-mirror"></span>.</td>
         </tr>
 
         <tr class="short_query jq-hide">
-          <td colspan="4">
+          <td colspan="6">
             Du må bruke minst {{ admin_user_search_char_length }} tegn når du søker, ellers vil du få alt for mange treff.
           </td>
         </tr>
 
         <tr class="error jq-hide">
-          <td colspan="4">Beklager, det oppstod en teknisk feil ved oppslag i databasen. Feilen har blitt logget og vi vil se på problemet så snart som mulig.</td>
+          <td colspan="6">Beklager, det oppstod en teknisk feil ved oppslag i databasen. Feilen har blitt logget og vi vil se på problemet så snart som mulig.</td>
         </tr>
 
         <tr class="loader jq-hide">
-          <td colspan="4">
+          <td colspan="6">
             Vennligst vent mens vi søker.<br>
             Medlemsdatabasen er stor, så dette kan ta noen sekunder.<br>
             <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent...">
