@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.shortcuts import render, redirect
@@ -48,7 +48,11 @@ def filter(request):
     }))
 
 def show(request, aktivitet_date):
-    aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
+    try:
+        aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
+    except AktivitetDate.DoesNotExist:
+        raise Http404
+
     context = {
         'aktivitet_date': aktivitet_date,
         'user_is_participating': request.user.is_authenticated() and request.user in aktivitet_date.participants.all()
@@ -56,7 +60,11 @@ def show(request, aktivitet_date):
     return render(request, 'common/aktiviteter/show/show.html', context)
 
 def signup(request, aktivitet_date):
-    aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
+    try:
+        aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
+    except AktivitetDate.DoesNotExist:
+        raise Http404
+
     if not aktivitet_date.accepts_signups():
         raise PermissionDenied
     if request.user.is_authenticated():
@@ -65,7 +73,11 @@ def signup(request, aktivitet_date):
         return redirect('aktiviteter.views.signup_not_logged_on', aktivitet_date.id)
 
 def signup_not_logged_on(request, aktivitet_date):
-    aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
+    try:
+        aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
+    except AktivitetDate.DoesNotExist:
+        raise Http404
+
     if request.user.is_authenticated():
         return redirect('aktiviteter.views.signup_logged_on', aktivitet_date.id)
     if not aktivitet_date.accepts_signups():
@@ -74,7 +86,11 @@ def signup_not_logged_on(request, aktivitet_date):
     return render(request, 'common/aktiviteter/signup_not_logged_on.html', context)
 
 def signup_simple(request, aktivitet_date):
-    aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
+    try:
+        aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
+    except AktivitetDate.DoesNotExist:
+        raise Http404
+
     if not aktivitet_date.accepts_signups() or not aktivitet_date.signup_simple_allowed:
         raise PermissionDenied
 
@@ -114,7 +130,11 @@ def signup_simple(request, aktivitet_date):
 
 @user_requires_login()
 def signup_logged_on(request, aktivitet_date):
-    aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
+    try:
+        aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
+    except AktivitetDate.DoesNotExist:
+        raise Http404
+
     if not aktivitet_date.accepts_signups():
         raise PermissionDenied
     context = {'aktivitet_date': aktivitet_date}
@@ -122,7 +142,11 @@ def signup_logged_on(request, aktivitet_date):
 
 @user_requires_login()
 def signup_confirm(request, aktivitet_date):
-    aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
+    try:
+        aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
+    except AktivitetDate.DoesNotExist:
+        raise Http404
+
     if not aktivitet_date.accepts_signups():
         raise PermissionDenied
     aktivitet_date.participants.add(request.user)
@@ -130,7 +154,11 @@ def signup_confirm(request, aktivitet_date):
 
 @user_requires_login()
 def signup_cancel(request, aktivitet_date):
-    aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
+    try:
+        aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
+    except AktivitetDate.DoesNotExist:
+        raise Http404
+
     if not aktivitet_date.accepts_signup_cancels():
         raise PermissionDenied
     context = {'aktivitet_date': aktivitet_date}
@@ -138,7 +166,11 @@ def signup_cancel(request, aktivitet_date):
 
 @user_requires_login()
 def signup_cancel_confirm(request, aktivitet_date):
-    aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
+    try:
+        aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
+    except AktivitetDate.DoesNotExist:
+        raise Http404
+
     if not aktivitet_date.accepts_signup_cancels():
         raise PermissionDenied
     aktivitet_date.participants.remove(request.user)
