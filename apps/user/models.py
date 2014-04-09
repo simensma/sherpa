@@ -230,6 +230,11 @@ class User(AbstractBaseUser):
         return self.get_actor().get_birth_date()
 
     def get_gender(self):
+        """Returns 'm' for male or 'f' for female.
+        Note that users without membership have no gender defined and this will return None, however
+        most parts of our code haven't accounted for that."""
+        if not self.is_member():
+            return None
         return self.get_actor().get_gender()
 
     def get_age(self):
