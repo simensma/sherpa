@@ -102,7 +102,7 @@ def edit_version(request, version):
             contents = Content.objects.filter(column=column).order_by('order')
             for content in contents:
                 if content.type == 'widget':
-                    content.content = parse_widget(request, json.loads(content.content))
+                    content.content = parse_widget(request, json.loads(content.content), request.session['active_forening'].site)
                 elif content.type == 'image':
                     content.content = json.loads(content.content)
             column.contents = contents
@@ -125,7 +125,7 @@ def preview(request, version):
             contents = Content.objects.filter(column=column).order_by('order')
             for content in contents:
                 if content.type == 'widget':
-                    content.content = parse_widget(request, json.loads(content.content))
+                    content.content = parse_widget(request, json.loads(content.content), request.session['active_forening'].site)
                 elif content.type == 'image':
                     content.content = json.loads(content.content)
             column.contents = contents

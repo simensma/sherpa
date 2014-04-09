@@ -13,7 +13,7 @@ from datetime import datetime
 import json
 
 def render_widget(request):
-    widget = parse_widget(request, json.loads(request.POST['content']))
+    widget = parse_widget(request, json.loads(request.POST['content']), request.session['active_forening'].site)
     context = RequestContext(request, {'widget': widget})
     return HttpResponse(render_to_string(widget['template'], context))
 

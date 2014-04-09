@@ -12,7 +12,7 @@ import random
 from page.models import Version
 
 # Note: This is also imported by some views in admin, and a view in articles
-def parse_widget(request, widget):
+def parse_widget(request, widget, current_site):
     if widget['widget'] == "quote":
         data = {'quote': widget['quote'], 'author': widget['author']}
     elif widget['widget'] == 'carousel':
@@ -25,8 +25,8 @@ def parse_widget(request, widget):
             variant__article__published=True,
             active=True,
             variant__article__pub_date__lt=datetime.now(),
-            variant__article__site=request.site
-            ).order_by('-variant__article__pub_date')
+            variant__article__site=current_site,
+        ).order_by('-variant__article__pub_date')
 
         for tag in widget['tags']:
             versions = versions.filter(tags__name__icontains=tag).distinct()
