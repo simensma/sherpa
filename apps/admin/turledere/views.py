@@ -38,27 +38,38 @@ def edit_turleder_certificate(request, user):
     if request.POST['role'] not in [r[0] for r in Turleder.TURLEDER_CHOICES]:
         raise PermissionDenied
 
-    if request.POST['turleder'] != '':
-        turleder = Turleder.objects.get(id=request.POST['turleder'])
-    else:
-        turleder = Turleder(
-            user=user,
-            role=request.POST['role'],
-        )
-
-    turleder.forening_approved = Forening.objects.get(id=request.POST['forening_approved'])
+    forening_approved = Forening.objects.get(id=request.POST['forening_approved'])
+    date_start = None
+    date_end = None
     try:
-        turleder.date_start = datetime.strptime(request.POST['date_start'], '%d.%m.%Y').date()
-        if turleder.role == u'ambassadør':
-            turleder.date_end = None
-        else:
-            turleder.date_end = datetime.strptime(request.POST['date_end'], '%d.%m.%Y').date()
-        messages.info(request, "success")
+        date_start = datetime.strptime(request.POST['date_start'], '%d.%m.%Y').date()
+        if request.POST['role'] != 'ambassadør':
+            date_end = datetime.strptime(request.POST['date_end'], '%d.%m.%Y').date()
     except ValueError:
         messages.error(request, "invalid_turleder_sertifikat_date")
 
-    turleder.save()
+    if request.POST['turleder'] != '':
+        # Explicit edit of existing object
+        turleder = Turleder.objects.get(id=request.POST['turleder'])
+        turleder.forening_approved = forening_approved
+        turleder.date_start = date_start
+        turleder.date_end = date_end
+        turleder.save()
+    else:
+        # New object, but use get_or_create to avoid creating a duplicate role in case of a double-POST or something
+        turleder, created = Turleder.objects.get_or_create(user=user, role=request.POST['role'], defaults={
+            'forening_approved': forening_approved,
+            'date_start': date_start,
+            'date_end': date_end,
+        })
+        if not created:
+            # Actually, this role already existed; update its values with the posted ones
+            turleder.forening_approved = forening_approved
+            turleder.date_start = date_start
+            turleder.date_end = date_end
+            turleder.save()
 
+    messages.info(request, "success")
     return redirect('%s#turledersertifikat' % reverse('admin.users.views.show', args=[user.id]))
 
 def edit_kursleder_certificate(request, user):
