@@ -13,8 +13,13 @@ from page.models import Variant, Version, Row, Column, Content
 from page.widgets import parse_widget, widget_admin_context
 from user.models import User
 
+BULK_COUNT = 8
+
 def list(request):
-    context = {'versions': list_bulk(request, 0)}
+    context = {
+        'versions': list_bulk(request, 0),
+        'BULK_COUNT': BULK_COUNT,
+    }
     return render(request, 'common/admin/articles/list.html', context)
 
 def list_load(request):
@@ -25,7 +30,6 @@ def list_load(request):
 
 # This is not a view.
 def list_bulk(request, bulk):
-    BULK_COUNT = 8
     versions = Version.objects.filter(
         variant__article__isnull=False,
         variant__segment__isnull=True,
