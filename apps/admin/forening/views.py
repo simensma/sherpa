@@ -19,11 +19,11 @@ from focus.models import Actor
 from admin.users.util import send_access_granted_email
 
 def index(request):
-    forening_users = list(User.objects.filter(foreninger=request.session['active_forening']))
+    forening_users = list(User.objects.filter(foreninger=request.active_forening))
 
     forening_users_by_parent = []
 
-    parent_ids = [p.id for p in request.session['active_forening'].get_parents_deep()]
+    parent_ids = [p.id for p in request.active_forening.get_parents_deep()]
     forening_users_by_parent_all = list(User.objects.filter(foreninger__in=parent_ids))
 
     # Prefetch and cache the actors
@@ -37,7 +37,7 @@ def index(request):
     forening_users_by_parent = []
     for user in forening_users_by_parent_all:
         for forening in user.all_foreninger():
-            if forening == request.session['active_forening'] and forening.role == 'admin':
+            if forening == request.active_forening and forening.role == 'admin':
                 forening_users_by_parent.append(user)
 
     forening_users = sorted(forening_users, key=lambda u: u.get_full_name())
@@ -59,46 +59,46 @@ def index(request):
         'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH
     }
 
-    zipcode = request.session['active_forening'].zipcode
+    zipcode = request.active_forening.zipcode
     edit_form_zipcode_area = zipcode.area if zipcode is not None else ''
 
-    if request.session['active_forening'].contact_person is not None:
+    if request.active_forening.contact_person is not None:
         choose_contact = 'person'
-        contact_person = request.session['active_forening'].contact_person.id
-        contact_person_name = request.session['active_forening'].contact_person.get_full_name()
-        phone = request.session['active_forening'].contact_person.get_phone_mobile()
-        email = request.session['active_forening'].contact_person.get_sherpa_email()
-    elif request.session['active_forening'].contact_person_name != '':
+        contact_person = request.active_forening.contact_person.id
+        contact_person_name = request.active_forening.contact_person.get_full_name()
+        phone = request.active_forening.contact_person.get_phone_mobile()
+        email = request.active_forening.contact_person.get_sherpa_email()
+    elif request.active_forening.contact_person_name != '':
         choose_contact = 'person'
         contact_person = None
-        contact_person_name = request.session['active_forening'].contact_person_name
-        phone = request.session['active_forening'].phone
-        email = request.session['active_forening'].email
+        contact_person_name = request.active_forening.contact_person_name
+        phone = request.active_forening.phone
+        email = request.active_forening.email
     else:
         choose_contact = 'forening'
         contact_person = None
         contact_person_name = ''
-        phone = request.session['active_forening'].phone
-        email = request.session['active_forening'].email
+        phone = request.active_forening.phone
+        email = request.active_forening.email
 
     edit_form = ExistingForeningDataForm(request.user, prefix='edit', initial={
-        'forening': request.session['active_forening'].id,
-        'parents': request.session['active_forening'].parents.all(),
-        'name': request.session['active_forening'].name,
-        'type': request.session['active_forening'].type,
-        'group_type': request.session['active_forening'].group_type,
-        'post_address': request.session['active_forening'].post_address,
-        'visit_address': request.session['active_forening'].visit_address,
+        'forening': request.active_forening.id,
+        'parents': request.active_forening.parents.all(),
+        'name': request.active_forening.name,
+        'type': request.active_forening.type,
+        'group_type': request.active_forening.group_type,
+        'post_address': request.active_forening.post_address,
+        'visit_address': request.active_forening.visit_address,
         'zipcode': zipcode.zipcode if zipcode is not None else '',
-        'counties': request.session['active_forening'].counties.all(),
+        'counties': request.active_forening.counties.all(),
         'choose_contact': choose_contact,
         'contact_person': contact_person,
         'contact_person_name': contact_person_name,
         'phone': phone,
         'email': email,
-        'organization_no': request.session['active_forening'].organization_no,
-        'gmap_url': request.session['active_forening'].gmap_url,
-        'facebook_url': request.session['active_forening'].facebook_url,
+        'organization_no': request.active_forening.organization_no,
+        'gmap_url': request.active_forening.gmap_url,
+        'facebook_url': request.active_forening.facebook_url,
     })
 
     create_form = ForeningDataForm(request.user, prefix='create', initial={
@@ -152,7 +152,7 @@ def index(request):
                 forening.save()
                 messages.info(request, 'forening_save_success')
                 # Not sure why "request.session.modified = True" doesn't work here, so just update the var
-                request.session['active_forening'] = forening
+                request.active_forening = forening
                 cache.delete('foreninger.full_list')
                 cache.delete('forening.%s' % forening.id)
                 cache.delete('forening.main_forenings.%s' % forening.id)
@@ -207,7 +207,7 @@ def index(request):
                 role.save()
 
                 messages.info(request, 'forening_create_success')
-                request.session['active_forening'] = forening
+                request.active_forening = forening
                 cache.delete('foreninger.full_list')
                 cache.delete('forening.%s' % forening.id)
                 cache.delete('forening.main_forenings.%s' % forening.id)
@@ -303,7 +303,7 @@ def users_give_access(request):
     # Verify that the user has the same access that they're giving
     passed = False
     for forening in request.user.all_foreninger():
-        if forening == request.session['active_forening']:
+        if forening == request.active_forening:
             if wanted_role == 'admin' and forening.role == 'user':
                 raise PermissionDenied
             else:
@@ -322,7 +322,7 @@ def users_give_access(request):
         other_user.permissions.add(p)
 
     for forening in other_user.all_foreninger():
-        if forening == request.session['active_forening']:
+        if forening == request.active_forening:
             # The user already has access to this forening
             print("Well, %s // %s" % (forening.role, wanted_role))
             if forening.role == 'user' and wanted_role == 'admin':
@@ -350,12 +350,12 @@ def users_give_access(request):
     # If we reach this code path, this is a new relationship - create it
     forening_role = ForeningRole(
         user=other_user,
-        forening=request.session['active_forening'],
+        forening=request.active_forening,
         role=wanted_role,
     )
     forening_role.save()
     if request.POST.get('send_email', '') != '':
-        if send_access_granted_email(other_user, request.session['active_forening'], request.user):
+        if send_access_granted_email(other_user, request.active_forening, request.user):
             messages.info(request, 'access_email_success')
         else:
             messages.warning(request, 'access_email_failure')

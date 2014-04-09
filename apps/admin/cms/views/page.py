@@ -19,11 +19,11 @@ def list(request):
         variant__page__isnull=False,
         variant__page__parent__isnull=True,
         active=True,
-        variant__page__site=request.session['active_forening'].site
+        variant__page__site=request.active_forening.site
         ).order_by('variant__page__title')
     for version in versions:
         version.children = Version.objects.filter(variant__page__parent=version.variant.page, active=True).count()
-    menus = Menu.on(request.session['active_forening'].site).all().order_by('order')
+    menus = Menu.on(request.active_forening.site).all().order_by('order')
     context = {'versions': versions, 'menus': menus}
     return render(request, 'common/admin/pages/list.html', context)
 
@@ -36,7 +36,7 @@ def edit_domain(request):
             context['existing_forening'] = result['existing_forening']
         return render(request, 'common/admin/pages/list.html', context)
     else:
-        site = request.session['active_forening'].site
+        site = request.active_forening.site
         site.domain = result['domain']
         site.prefix = result['prefix']
         site.save()
@@ -60,7 +60,7 @@ def new(request):
         slug=request.POST['slug'],
         published=False,
         created_by=request.user,
-        site=request.session['active_forening'].site)
+        site=request.active_forening.site)
     page.save()
 
     variant = Variant(
@@ -85,15 +85,15 @@ def new(request):
 
 def check_slug(request):
     urls_valid = slug_is_unique(request.POST['slug'])
-    page_valid = not Page.on(request.session['active_forening'].site).filter(slug=request.POST['slug']).exists()
+    page_valid = not Page.on(request.active_forening.site).filter(slug=request.POST['slug']).exists()
     return HttpResponse(json.dumps({'valid': urls_valid and page_valid}))
 
 def delete(request, page):
-    Page.on(request.session['active_forening'].site).get(id=page).delete()
+    Page.on(request.active_forening.site).get(id=page).delete()
     return redirect('admin.cms.views.page.list')
 
 def edit_version(request, version):
-    pages = Page.on(request.session['active_forening'].site).all().order_by('title')
+    pages = Page.on(request.active_forening.site).all().order_by('title')
     version = Version.objects.get(id=version)
     rows = Row.objects.filter(version=version).order_by('order')
     for row in rows:
@@ -102,7 +102,7 @@ def edit_version(request, version):
             contents = Content.objects.filter(column=column).order_by('order')
             for content in contents:
                 if content.type == 'widget':
-                    content.content = parse_widget(request, json.loads(content.content), request.session['active_forening'].site)
+                    content.content = parse_widget(request, json.loads(content.content), request.active_forening.site)
                 elif content.type == 'image':
                     content.content = json.loads(content.content)
             column.contents = contents
@@ -125,7 +125,7 @@ def preview(request, version):
             contents = Content.objects.filter(column=column).order_by('order')
             for content in contents:
                 if content.type == 'widget':
-                    content.content = parse_widget(request, json.loads(content.content), request.session['active_forening'].site)
+                    content.content = parse_widget(request, json.loads(content.content), request.active_forening.site)
                 elif content.type == 'image':
                     content.content = json.loads(content.content)
             column.contents = contents

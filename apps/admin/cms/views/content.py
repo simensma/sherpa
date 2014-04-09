@@ -13,7 +13,7 @@ from datetime import datetime
 import json
 
 def render_widget(request):
-    widget = parse_widget(request, json.loads(request.POST['content']), request.session['active_forening'].site)
+    widget = parse_widget(request, json.loads(request.POST['content']), request.active_forening.site)
     context = RequestContext(request, {'widget': widget})
     return HttpResponse(render_to_string(widget['template'], context))
 
@@ -91,7 +91,7 @@ def save(request, version):
         if request.POST['parent'] == '':
             new_parent = None
         else:
-            new_parent = Page.on(request.session['active_forening'].site).get(id=request.POST['parent'])
+            new_parent = Page.on(request.active_forening.site).get(id=request.POST['parent'])
             parent = new_parent
             while parent is not None:
                 if parent.id == page.id:

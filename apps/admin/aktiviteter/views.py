@@ -25,8 +25,8 @@ def index(request):
 
     if not (request.GET.get('forening') == 'alle' and request.user.has_perm('sherpa_admin')):
         aktiviteter = aktiviteter.filter(
-            Q(forening=request.session['active_forening']) |
-            Q(co_forening=request.session['active_forening'])
+            Q(forening=request.active_forening) |
+            Q(co_forening=request.active_forening)
         )
         exclude_filter = False
     else:
@@ -42,7 +42,7 @@ def index(request):
 
 def new(request):
     aktivitet = Aktivitet(
-        forening=request.session['active_forening'],
+        forening=request.active_forening,
         pub_date=datetime.now(),
         category=Aktivitet.CATEGORY_CHOICES[0][0],
         audiences=json.dumps([]),

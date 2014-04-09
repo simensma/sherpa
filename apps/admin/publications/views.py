@@ -24,7 +24,7 @@ def index(request):
 
 def edit_publication(request, publication):
     if publication is None:
-        publication = Publication(forening=request.session['active_forening'])
+        publication = Publication(forening=request.active_forening)
     else:
         publication = Publication.objects.get(id=publication)
 

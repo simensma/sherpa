@@ -79,7 +79,7 @@ class DecodeQueryString(object):
         # Unable to decode the query string. Just leave it as it is, and if any later usage
         # of it leads to a decoding error, let it happen and be logged for further inspection.
 
-class SetActiveForening(object):
+class ChangeActiveForening(object):
     def process_request(self, request):
         # This "view" is very special, needs to avoid certain middleware logic that depends on 'active_forening'.
         if request.user.is_authenticated() and request.user.has_perm('sherpa'):
@@ -90,11 +90,29 @@ class SetActiveForening(object):
                 if not forening in request.user.all_foreninger():
                     raise PermissionDenied
 
-                request.session['active_forening'] = forening
+                request.session['active_forening'] = forening.id
                 if request.GET.get('next', '') != '':
                     return redirect(request.GET['next'])
                 else:
                     return redirect('admin.views.index')
+
+class ActiveForening(object):
+    """The session contains an 'active_forening' id of the currently active forening. Get the object from DB each
+    request based on the ID in session. We used to save the entire forening object for efficiency, but that gives
+    us small problems with cache invalidation, and large problems when deploying database migrations that change
+    these objects."""
+    def process_request(self, request):
+        if 'active_forening' in request.session:
+            # First; handle existing sessions which used to save the actual object
+            # You may remove this check at some point (when all sessions have converted their value or timed out)
+            if not type(request.session['active_forening']) == int:
+                request.session['active_forening'] = request.session['active_forening'].id
+
+            try:
+                request.active_forening = Forening.objects.get(id=request.session['active_forening'])
+            except Forening.DoesNotExist:
+                # It might have been removed, remove it and let the user choose a new one
+                del request.session['active_forening']
 
 class CheckSherpaPermissions(object):
     def process_request(self, request):
@@ -108,7 +126,7 @@ class CheckSherpaPermissions(object):
                 raise PermissionDenied
 
             # No active forening set
-            if not 'active_forening' in request.session:
+            if not hasattr(request, 'active_forening'):
                 if len(request.user.all_foreninger()) == 1:
                     # The user has only access to 1 forening, set it automatically
                     return redirect('/sherpa/aktiv-forening/%s/' % request.user.all_foreninger()[0].id)
@@ -118,7 +136,7 @@ class CheckSherpaPermissions(object):
                     return render(request, 'common/admin/set_active_forening.html', context)
 
             # Accessing CMS-functionality, but no site set
-            if request.session['active_forening'].site is None:
+            if request.active_forening.site is None:
                 site_required_paths = [
                     u'/sherpa/cms/',
                     u'/sherpa/nyheter/',

@@ -19,27 +19,27 @@ from admin.cms.views.page_util import verify_domain
 
 def index(request):
     total_membership_count = cache.get('admin.total_membership_count')
-    local_membership_count = cache.get('admin.local_membership_count.%s' % request.session['active_forening'].id)
+    local_membership_count = cache.get('admin.local_membership_count.%s' % request.active_forening.id)
     if total_membership_count is None or local_membership_count is None:
         all_members = Actor.all_members()
         total_membership_count = all_members.count()
         local_membership_count = all_members.filter(
-            main_forening_id__in=[f.focus_id for f in request.session['active_forening'].get_main_forenings()],
+            main_forening_id__in=[f.focus_id for f in request.active_forening.get_main_forenings()],
         ).count()
         cache.set('admin.total_membership_count', total_membership_count, 60 * 60 * 12)
-        cache.set('admin.local_membership_count.%s' % request.session['active_forening'].id, local_membership_count, 60 * 60 * 12)
+        cache.set('admin.local_membership_count.%s' % request.active_forening.id, local_membership_count, 60 * 60 * 12)
 
     turledere = User.get_users().filter(turledere__isnull=False).distinct().count()
-    if request.session['active_forening'].site is not None:
-        pages = Page.on(request.session['active_forening'].site).filter(
+    if request.active_forening.site is not None:
+        pages = Page.on(request.active_forening.site).filter(
             pub_date__lte=datetime.now(),
             published=True
         ).count()
     else:
         pages = None
     aktiviteter = Aktivitet.objects.filter(
-        Q(forening=request.session['active_forening']) |
-        Q(co_forening=request.session['active_forening']),
+        Q(forening=request.active_forening) |
+        Q(co_forening=request.active_forening),
         pub_date__lte=date.today(),
         published=True,
         private=False,
@@ -87,7 +87,7 @@ def index(request):
     return render(request, 'common/admin/dashboard.html', context)
 
 def setup_site(request):
-    if request.session['active_forening'].site is not None:
+    if request.active_forening.site is not None:
         return redirect('admin.cms.views.page.list')
 
     if request.method == 'GET':
@@ -109,7 +109,7 @@ def setup_site(request):
                 template=large_template
             )
             site.save()
-            request.session['active_forening'].site = site
-            request.session['active_forening'].save()
+            request.active_forening.site = site
+            request.active_forening.save()
             request.session.modified = True
             return redirect('admin.cms.views.page.list')
