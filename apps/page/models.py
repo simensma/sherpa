@@ -219,7 +219,7 @@ class Ad(models.Model):
 
         # Change the URL to go via our counter
         pat = r'(\<a href=\")(.+?)(\")'
-        rep = r'\1%s\3' % placement.redirect_url()
+        rep = r'\1%s\3' % placement.destination_url()
         script = re.sub(pat, rep, script)
 
         # Set timestamp to current unix time
@@ -262,7 +262,7 @@ class AdPlacement(models.Model):
     def __unicode__(self):
         return u'%s' % self.pk
 
-    def redirect_url(self):
+    def destination_url(self):
         return self.ad.destination
 
     def is_old(self): return self.end_date < date.today()

@@ -156,7 +156,7 @@ def ad(request, ad):
         ad = AdPlacement.objects.get(id=ad)
         ad.clicks += 1
         ad.save()
-        return redirect(ad.ad.destination)
+        return redirect(ad.destination_url())
     except AdPlacement.DoesNotExist:
         raise Http404
 
