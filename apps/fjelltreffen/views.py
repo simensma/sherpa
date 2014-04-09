@@ -236,7 +236,7 @@ def save(request):
     # Pre-save validations
     errors = False
 
-    if request.POST['id'] == '':
+    if request.POST.get('id', '') == '':
         # New annonse (not editing an existing one), create it
         annonse = Annonse()
         annonse.user = request.user
@@ -246,7 +246,7 @@ def save(request):
             #someone is trying to edit an annonse that dosent belong to them
             raise PermissionDenied
 
-    if request.POST['title'] == '':
+    if request.POST.get('title', '') == '':
         messages.error(request, 'missing_title')
         errors = True
 
@@ -254,7 +254,7 @@ def save(request):
         messages.error(request, 'invalid_email')
         errors = True
 
-    if request.POST['text'] == '':
+    if request.POST.get('text', '') == '':
         messages.error(request, 'missing_text')
         errors = True
 
@@ -289,7 +289,7 @@ def save(request):
             errors = True
 
     if errors:
-        if request.POST['id'] == '':
+        if request.POST.get('id', '') == '':
             return redirect('fjelltreffen.views.new')
         else:
             return redirect('fjelltreffen.views.edit', request.POST['id'])
@@ -302,19 +302,19 @@ def save(request):
             hidden = True
 
     # Don't create new annonser if you already have an active annonse
-    if request.POST['id'] == '':
+    if request.POST.get('id', '') == '':
         annonser_to_check = Annonse.get_active()
     else:
         annonser_to_check = Annonse.get_active().exclude(id=request.POST['id'])
     if annonser_to_check.filter(user=request.user).exists():
         hidden = True
 
-    if request.POST['county'] == 'international':
+    if request.POST.get('county', '') == 'international':
         annonse.county = None
     else:
-        annonse.county = County.objects.get(id=request.POST['county'])
-    annonse.email = request.POST['email']
-    annonse.title = request.POST['title']
+        annonse.county = County.objects.get(id=request.POST.get('county', ''))
+    annonse.email = request.POST.get('email', '')
+    annonse.title = request.POST.get('title', '')
     if 'image' in request.FILES:
         # Delete any existing image
         annonse.delete_image()
@@ -346,9 +346,9 @@ def save(request):
 
         # In case this was an annonse with imported image, specify that it itsn't anymore
         annonse.is_image_old = False
-    annonse.text = request.POST['text']
+    annonse.text = request.POST.get('text', '')
     annonse.hidden = hidden
-    annonse.hideage = request.POST['hideage'] == 'hide'
+    annonse.hideage = request.POST.get('hideage', '') == 'hide'
     annonse.save()
     return redirect('fjelltreffen.views.mine')
 
