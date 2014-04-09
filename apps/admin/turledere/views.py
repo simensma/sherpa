@@ -43,7 +43,7 @@ def edit_turleder_certificate(request, user):
     date_end = None
     try:
         date_start = datetime.strptime(request.POST['date_start'], '%d.%m.%Y').date()
-        if request.POST['role'] != 'ambassadør':
+        if request.POST['role'] not in [u'ambassadør', u'grunnleggende']:
             date_end = datetime.strptime(request.POST['date_end'], '%d.%m.%Y').date()
     except ValueError:
         messages.error(request, "invalid_turleder_sertifikat_date")

@@ -70,7 +70,7 @@
                   <a class="turleder-certificate-expired" href="{% url 'user.views.account' %}">Utgått</a>
                 {% else %}
                   {{ user.get_highest_turleder_role.get_role }}
-                  {% if user.get_highest_turleder_role.role != 'ambassadør' %}
+                  {% if user.get_highest_turleder_role.role != 'ambassadør' and user.get_highest_turleder_role.role != 'grunnleggende' %}
                     til {{ user.get_highest_turleder_role.date_end|date:"Y" }}
                   {% endif %}
                 {% endif %}

@@ -140,7 +140,7 @@
 
                   <p class="status-exists">
                     Godkjent av <strong>{{ turleder_role.forening_approved.name }}</strong>.<br>
-                    {% if turleder_role.role != 'ambassadør' %}
+                    {% if turleder_role.role != 'ambassadør' and turleder_role.role != 'grunnleggende' %}
                       Fra <strong>{{ turleder_role.date_start|date:"j. F Y"|default:"?" }}</strong> til <strong>{{ turleder_role.date_end|date:"j. F Y"|default:"?" }}</strong>.
                     {% else %}
                       Fra <strong>{{ turleder_role.date_start|date:"j. F Y"|default:"?" }}</strong>.
@@ -185,7 +185,7 @@
                     </div>
                   </div>
 
-                  {% if role.0 != 'ambassadør' %}
+                  {% if role.0 != 'ambassadør' and role.0 != 'grunnleggende' %}
                     <div class="form-group">
                       <label class="col-md-2 control-label">Løper ut:</label>
                       <div class="col-md-10">
