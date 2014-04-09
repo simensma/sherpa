@@ -18,13 +18,13 @@
         </script>
         <div id="ad">
           {% if advertisement.ad.has_fallback %}
-            <a href="{{ advertisement.redirect_url }}">
+            <a href="{% if advertisement.id %}http://{{ site.domain }}{% url 'page.views.ad' advertisement.id %}{% else %}{{ advertisement.redirect_url }}{% endif %}">
               <img src="{{ advertisement.ad.fallback_url }}" alt="{{ advertisement.ad.name }}">
             </a>
           {% endif %}
         </div>
       {% else %}
-        <a href="{{ advertisement.redirect_url }}">
+        <a href="{% if advertisement.id %}http://{{ site.domain }}{% url 'page.views.ad' advertisement.id %}{% else %}{{ advertisement.redirect_url }}{% endif %}">
           <img src="{{ advertisement.ad.url }}" alt="{{ advertisement.ad.name }}">
         </a>
       {% endif %}
