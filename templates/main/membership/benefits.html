@@ -229,7 +229,7 @@
                 Lokale tilbud der du bor
               </dt>
               <dd>
-                {{ forening.name }} tilbyr et stort utvalg av fellesturer, kurs og aktiviteter du kan delta på. Enkelte medlemsforeninger har også egne medlemsfordeler som medlemsblader, årbøker og rabattordninger. Sjekk ditt lokale tilbud på <a href="{{ forening.get_site_or_old_url }}">nettsidene til {{ forening.name }}</a>.
+                {{ forening.name }} tilbyr et stort utvalg av fellesturer, kurs og aktiviteter du kan delta på. Enkelte medlemsforeninger har også egne medlemsfordeler som medlemsblader, årbøker og rabattordninger. Sjekk ditt lokale tilbud på <a href="{{ forening.get_active_url }}">nettsidene til {{ forening.name }}</a>.
               </dd>
             {% endif %}
           </dl>
@@ -359,8 +359,8 @@
     <div class="span8">
       <div class="well">
         <h2>{{ forening.name }}</h2>
-        {% if forening.get_site_or_old_url %}
-          <p><a href="{{ forening.get_site_or_old_url }}">{{ forening.get_site_or_old_url }}</a></p>
+        {% if forening.get_active_url %}
+          <p><a href="{{ forening.get_active_url }}">{{ forening.get_active_url }}</a></p>
         {% endif %}
         {% if forening.email %}
           <p>E-post: <a href="{{ forening.email }}">{{ forening.email }}</a></p>

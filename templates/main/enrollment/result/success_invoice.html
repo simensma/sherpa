@@ -24,7 +24,7 @@
     <div id="result" class="span8">
 
       <p>
-        {% blocktrans with forening=enrollment.get_actual_forening_if_all.name url=enrollment.get_actual_forening_if_all.get_site_or_old_url count users=enrollment.users.count %}
+        {% blocktrans with forening=enrollment.get_actual_forening_if_all.name url=enrollment.get_actual_forening_if_all.get_active_url count users=enrollment.users.count %}
           Du blir medlem i DNT og <a href="{{ url }}">{{ forening }}</a>.
         {% plural %}
           Dere blir medlemmer i DNT og <a href="{{ url }}">{{ forening }}</a>.
@@ -33,7 +33,7 @@
 
         {% if enrollment.is_applicable_for_dnt_ung_oslo == 'some' %}
 
-          {% blocktrans with forening=enrollment.get_actual_forening_if_any.name url=enrollment.get_actual_forening_if_any.get_site_or_old_url %}
+          {% blocktrans with forening=enrollment.get_actual_forening_if_any.name url=enrollment.get_actual_forening_if_any.get_active_url %}
             Ungdomsmedlemmer blir medlem i DNT og <a href="{{ url }}">{{ forening }}</a>.
           {% endblocktrans %}
           <br>
@@ -85,7 +85,7 @@
         {% if enrollment.country == 'NO' %}
           <h3>{% trans "Hva skjer der du bor" %}</h3>
           <p>
-            {% blocktrans with forening=enrollment.get_actual_forening_if_all.name url=enrollment.get_actual_forening_if_all.get_site_or_old_url %}
+            {% blocktrans with forening=enrollment.get_actual_forening_if_all.name url=enrollment.get_actual_forening_if_all.get_active_url %}
               <a href="{{ url }}">{{ forening }}</a> arrangerer fellesturer og aktiviteter hele året.
             {% endblocktrans %}
           </p>

@@ -1,4 +1,4 @@
-{% with forening.get_site_or_old_url as forening_url %}
+{% with forening.get_active_url as forening_url %}
   <tr>
     <td>
       <div class="forening-logo right">
@@ -55,7 +55,7 @@
             Tilknyttet
             {% for parent in forening.get_main_forenings %}
               {# Ugly long line to avoid spacing between word and punctuation #}
-              <a href="{{ parent.get_site_or_old_url }}">{{ parent.name }}</a>{% if forloop.last %}.{% else %} og {% endif %}
+              <a href="{{ parent.get_active_url }}">{{ parent.name }}</a>{% if forloop.last %}.{% else %} og {% endif %}
             {% endfor %}
           </em>
         </p>

@@ -126,13 +126,13 @@ class Forening(models.Model):
             cache.set('forening.main_forenings.%s' % self.id, mains, 60 * 60 * 24)
         return mains
 
-    def get_site_or_old_url(self):
-        """Since it'll be a while until all foreninger gets their own site, we'll have to get the old URL
-        from Sherpa2 - this method is temporary and should be removed at some point"""
-        if self.site is not None:
-            return 'http://%s/' % self.site.domain
-        else:
-            return self.get_old_url()
+    def get_active_url(self):
+        """Returns the currently in-use URL for this forening. Right now this is the old sherpa2 URL, but when
+        foreninger starts to go live with their new sites, this method should return that site domain instead."""
+        # Note that we'll need a way to distinguish active sites from test-sites. Something like:
+        # if self.site.is_live:
+        #     return 'http://%s/' % self.site.domain
+        return self.get_old_url()
 
     def get_old_url(self):
         """Temporary method! Retrieves the site URL from sherpa2"""
