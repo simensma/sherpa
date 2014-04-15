@@ -142,7 +142,7 @@ class Forening(models.Model):
                 old_url = Sherpa2Forening.objects.get(id=self.id).url
             except Sherpa2Forening.DoesNotExist:
                 old_url = ''
-            cache.set('forening.old_sherpa2_url.%s' % self.id, old_url, 60 * 60 * 24 * 7)
+            cache.set('forening.old_sherpa2_url.%s' % self.id, old_url, 60 * 60 * 24)
         return old_url
 
     def get_ntb_id(self):
