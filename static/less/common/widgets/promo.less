@@ -548,7 +548,7 @@ div.widget.promo {
   }
 
   div.cover.main.rotation-fotokonkurranse {
-    background-image: url('/static/img/widgets/promo/fotokonkurranse_host.png');
+    background-image: url('/static/img/widgets/promo/fotokonkurranse_etterpaaske_bilde.png');
 
     div.content {
       @width: 940px;
@@ -559,7 +559,7 @@ div.widget.promo {
       padding-right: @padding-right;
       color: white;
 
-      a.giant-anchor {
+      div.wrapper {
         display: block;
         height: 480px;
         color: white !important;
@@ -567,35 +567,60 @@ div.widget.promo {
 
       h1 {
         position: absolute;
-        top: 16px;
-        left: 380px;
-        font-size: 36px;
+        top: 40px;
+        right: 30px;
+        font-size: 30px;
       }
 
       p.lede {
         position: absolute;
-        top: 130px;
-        left: 690px;
-        font-size: 32px;
+        top: 80px;
+        right: 30px;
+        width: 350px;
+        font-size: 20px;
         font-weight: bold;
+        text-align: right;
       }
 
-      p.bottom {
+      p.credits {
         position: absolute;
-        bottom: 10px;
-        right: 20px;
+        bottom: 5px;
+        left: 5px;
+        font-size: 16px;
         margin-bottom: 0;
-        font-size: 18px;
-        font-weight: bold;
+      }
+
+      p.double-button-hack {
+        position: absolute;
+        top: 150px;
+        right: 30px;
+
+        a.full {
+          display: inline;
+        }
+
+        a.small {
+          display: none;
+        }
       }
 
       @media(max-width: 767px) {
-        h1, p.lede, p.bottom {
+        div.wrapper {
+          height: auto;
+        }
+
+        h1, p.lede, p.double-button-hack {
           position: static;
+          text-align: center;
+          width: auto;
         }
 
         a.giant-anchor {
           height: auto;
+        }
+
+        p.credits {
+          display: none;
         }
       }
     }
