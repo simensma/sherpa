@@ -25,9 +25,6 @@ def use_image_thumb(url, preferred_size):
         appropriate_size = min(larger_than_preferred)
     return "%s-%s.%s" % (pre, appropriate_size, post)
 
-class NoRoleRelationException(Exception):
-    """Raised when the Forening does not have a related role"""
-
 def membership_year_start(year=None):
     """
     Returns the date set for the membership year start, see settings.MEMBERSHIP_YEAR_START.
