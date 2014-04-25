@@ -55,7 +55,8 @@ def dntconnect(request):
     if 'dntconnect' in request.session:
         client = settings.DNT_CONNECT[request.session['dntconnect']['client_id']]
         return {'dntconnect': {
-            'client_name': client['friendly_name']
+            'client_id': request.session['dntconnect']['client_id'],
+            'client_name': client['friendly_name'],
         }}
     else:
         return {}

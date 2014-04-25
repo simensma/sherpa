@@ -33,7 +33,7 @@ def signon(request):
     request.session['dntconnect'] = {
         'client_id': client_id,
         'auth_index': auth_index, # Use this to encrypt the response to the client with the same key/method as the request
-        'redirect_url': redirect_url
+        'redirect_url': redirect_url,
     }
     if not request.user.is_authenticated():
         request.session['innmelding.aktivitet'] = {
@@ -61,6 +61,7 @@ def signon_login(request):
 
     if request.user.is_authenticated():
         # Shouldn't happen, but handle it just in case.
+        add_signon_session_value(request, 'logget_inn')
         return redirect('connect.views.signon_complete')
     else:
         context = {
@@ -75,7 +76,7 @@ def signon_login(request):
                 pass
 
         if request.method == 'GET':
-            return render(request, 'main/connect/signon.html', context)
+            return render(request, 'main/connect/%s/signon.html' % request.session['dntconnect']['client_id'], context)
         else:
             matches, message = attempt_login(request)
 
@@ -91,7 +92,7 @@ def signon_login(request):
             else:
                 messages.error(request, message)
                 context['email'] = request.POST['email']
-                return render(request, 'main/connect/signon.html', context)
+                return render(request, 'main/connect/%s/signon.html' % request.session['dntconnect']['client_id'], context)
 
 def signon_choose_authenticated_user(request):
     if not 'authenticated_users' in request.session or not 'dntconnect' in request.session:

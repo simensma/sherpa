@@ -31,10 +31,10 @@ template.add_to_builtins('core.templatetags.url')
 
 class DefaultLanguage():
     def process_request(self, request):
-        # DNT Connect supports language selection now, so do nothing if dnt connect is in session.
-        # Note that it's *possible* someone initiated DNT connect without fulfilling it, which would
-        # let them view other pages with mixed translation results.
-        if 'dntconnect' in request.session:
+        # DNT Connect (only for DNT Oslo/the 'columbus' client) supports language selection now, so do
+        # nothing if dnt connect is in session. Note that it's *possible* someone initiated DNT connect
+        # without fulfilling it, which would let them view other pages with mixed translation results.
+        if 'dntconnect' in request.session and request.session['dntconnect']['client_id'] == 'columbus':
             return
 
         # English enrollment form is activated through a unique URL which sets this session var.

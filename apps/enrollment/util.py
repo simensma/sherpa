@@ -36,10 +36,10 @@ def current_template_layout(request):
     """
     Currently, enrollment could be initiated from:
     - The regular websites (uses main layout)
-    - DNT Connect (should differentiate between clients, but for now uses DNT Oslos template)
+    - DNT Connect
     """
     if 'dntconnect' in request.session:
-        return {'current_layout': 'main/connect/layouts/dntoslo.html'}
+        return {'current_layout': 'main/connect/%s/layout.html' % request.session['dntconnect']['client_id']}
     else:
         return {'current_layout': 'main/layout.html'}
 
