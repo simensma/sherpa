@@ -33,7 +33,7 @@ def signon(request):
     request.session['dntconnect'] = {
         'client_id': client_id,
         'auth_index': auth_index, # Use this to encrypt the response to the client with the same key/method as the request
-        'redirect_url': redirect_url
+        'redirect_url': redirect_url,
     }
     if not request.user.is_authenticated():
         request.session['innmelding.aktivitet'] = {
