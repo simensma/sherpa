@@ -1,9 +1,11 @@
-{% extends "main/connect/layouts/dntoslo.html" %}
+{# This general DNT Connect page will never be directly used but may be included by other client pages for which we haven't created a separate page yet. #}
+
+{% extends "main/connect/general/layout.html" %}
 
 {% load i18n %}
 
-{% block title %}{% trans "Logg inn" %}{% endblock %}
-{% block breadcrumb %}<em><a href="{% url 'connect.views.signon_login' %}">{% trans "Logg inn" %}</a></em>{% endblock %}
+{% block title %}Logg inn{% endblock %}
+{% block breadcrumb %}<em><a href="{% url 'connect.views.signon_login' %}">Logg inn</a></em>{% endblock %}
 
 {% block js_globals %}
   <script>
@@ -36,12 +38,8 @@
 
   <div class="row">
     <div class="span12">
-      <p class="next-step-highlight">
-        {% trans "Du er nå kommet til neste steg i bestillingen" %}
-      </p>
       <p>
-        {% trans "For å gå videre med bestillingen og se antall ledige plasser på turen må du logge deg på Min side." %}<br>
-        {% blocktrans %}Er du ikke Min side-bruker så kan du <a href="javascript:undefined" class="toggle-registration-tab">enkelt registrere deg</a>.{% endblocktrans %}
+        Logg på med din Min side-bruker hos DNT. Er du ikke Min side-bruker så kan du <a href="javascript:undefined" class="toggle-registration-tab">enkelt registrere deg</a>.
       </p>
     </div>
   </div>
@@ -49,8 +47,8 @@
   <div class="row">
     <div class="span7">
       <ul class="nav nav-tabs">
-        <li class="active"><a href="#login" data-toggle="tab">{% trans "Logg inn" %}</a></li>
-        <li><a href="#registration" data-toggle="tab">{% trans "Opprett ny bruker" %}</a></li>
+        <li class="active"><a href="#login" data-toggle="tab">Logg inn</a></li>
+        <li><a href="#registration" data-toggle="tab">Opprett ny bruker</a></li>
       </ul>
 
       <div class="tab-content tab-content-visible">
@@ -82,14 +80,14 @@
 
             <ul>
               <li>
-                <a href="javascript:undefined" class="member">{% trans "Jeg er allerede medlem i DNT" %}</a>
+                <a href="javascript:undefined" class="member">Jeg er allerede medlem i DNT</a>
               </li>
               <li>
-                <a href="{% url 'enrollment.views.index' %}" class="enroll">{% trans "Jeg vil melde meg inn i DNT først" %}</a>
-                {% trans "(må betales på nett)" %}
+                <a href="{% url 'enrollment.views.index' %}" class="enroll">Jeg vil melde meg inn i DNT først</a>
+                (må betales på nett)
               </li>
               <li>
-                <a href="javascript:undefined" class="nonmember">{% trans "Jeg vil opprette bruker uten å bli medlem i DNT nå" %}</a>
+                <a href="javascript:undefined" class="nonmember">Jeg vil opprette bruker uten å bli medlem i DNT nå</a>
               </li>
             </ul>
 
@@ -105,15 +103,15 @@
 
 
         <p>
-          <strong>{% trans "Lurer du på noe?" %}</strong>
+          <strong>Lurer du på noe?</strong>
         </p>
 
         <p>
-          {% trans "For å gå videre med bestillingen og se antall ledige plasser på turen må du logge deg på Min side." %}
+          For å få tilgang til {{ dntconnect.client_name }} må du logge på Min side hos Den Norske Turistforening.
         </p>
 
         <p>
-          {% trans "Har du problemer med påloggingen eller spørsmål rundt bestilling kontakt oss gjerne på: 22 82 28 22" %}
+          Har du problemer med påloggingen kan du ta kontakt med {{ dntconnect.client_name }}.
         </p>
 
       </div>
@@ -131,12 +129,12 @@
     </p>
     {% include 'main/membership/memberid_sms/forgotten.html' %}
     <p>
-      {% trans "Du finner også nummeret på giroen fra forrige årskontingent, og på medlemskortet ditt som vist med rød ring på bildet:" %}
+      Du finner også nummeret på giroen fra forrige årskontingent, og på medlemskortet ditt som vist med rød ring på bildet:
     </p>
-    <img src="{{ STATIC_URL }}img/medlemskort-illustrasjon.jpg" alt="{% trans "Illustrasjonsfoto av medlemsnummer-plassering på medlemskortet" %}">
+    <img src="{{ STATIC_URL }}img/medlemskort-illustrasjon.jpg" alt="Illustrasjonsfoto av medlemsnummer-plassering på medlemskortet">
   </div>
   <div class="modal-footer">
-    <a href="javascript:undefined" class="btn" data-dismiss="modal">{% trans "Lukk vindu" %}</a>
+    <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
   </div>
 </div>
 

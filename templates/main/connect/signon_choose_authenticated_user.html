@@ -1,4 +1,4 @@
-{% extends "main/connect/layouts/dntoslo.html" %}
+{% extends "main/connect/"|add:dntconnect.client_id|add:"/layout.html" %}
 {% block title %}Logg inn{% endblock %}
 {% block breadcrumb %}<a href="{% url 'connect.views.signon_login' %}">Logg inn</a> / <em>Velg bruker</em>{% endblock %}
 
