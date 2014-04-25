@@ -61,6 +61,7 @@ def signon_login(request):
 
     if request.user.is_authenticated():
         # Shouldn't happen, but handle it just in case.
+        add_signon_session_value(request, 'logget_inn')
         return redirect('connect.views.signon_complete')
     else:
         context = {
