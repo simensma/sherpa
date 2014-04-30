@@ -306,7 +306,7 @@ msgstr "Only personal members can register. Please contact"
 
 #: templates/common/user/login/util/registration_form.html:121
 #: templates/common/user/login/util/registration_form.html:159
-msgid "for eventuelle spørsmål."
+msgid "hvis du lurer på noe."
 msgstr "if you have any questions."
 
 #: templates/common/user/login/util/registration_form.html:125
