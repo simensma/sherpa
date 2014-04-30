@@ -13,7 +13,6 @@ from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from datetime import datetime, timedelta
 import json
 import logging
-import sys
 import hashlib
 
 from user.models import User
