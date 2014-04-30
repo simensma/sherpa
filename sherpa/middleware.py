@@ -55,8 +55,11 @@ class Sites():
             request.urlconf = "sherpa.urls_%s" % request.site.template.name
             urlresolvers.set_urlconf(request.urlconf)
         except Site.DoesNotExist:
-            # Todo: This should be more than a regular 404, as it's a completely unknown _site_.
-            raise Http404
+            # Unknown host name, redirect to the main site.
+            # Rendering 404 in the main site's layout would probably also make sense, but don't do that for now since
+            # all links will be relative and hence keep the incorrect host name.
+            main_site = Site.objects.get(id=1)
+            return redirect('http://%s/' % main_site.domain)
 
 class CurrentApp(object):
     def process_request(self, request):
