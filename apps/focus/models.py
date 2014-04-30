@@ -259,7 +259,7 @@ class Actor(models.Model):
     def get_children(self):
         children = cache.get('actor.children.%s' % self.memberid)
         if children is None:
-            children = Actor.objects.filter(parent=self.memberid).exclude(id=self.id)
+            children = Actor.get_members().filter(parent=self.memberid).exclude(id=self.id)
             cache.set('actor.children.%s' % self.memberid, children, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return children
 
@@ -339,7 +339,7 @@ class Actor(models.Model):
     def is_eligible_for_publications(self):
         # Household members are eligible if their parents are eligible
         if self.is_household_member():
-            return Actor.objects.get(memberid=self.get_parent_memberid()).is_eligible_for_publications()
+            return Actor.get_members().get(memberid=self.get_parent_memberid()).is_eligible_for_publications()
 
         # This membership type is supposed to be deprecated, but error logs show it's still in use
         if self.has_membership_type("household_without_main"):
@@ -490,7 +490,7 @@ class Actor(models.Model):
 
     @staticmethod
     def all_active_members():
-        return Actor.objects.filter(
+        return Actor.get_members().filter(
             Q(end_date=date(year=2014, month=12, day=31)) |
             Q(end_date__isnull=True),
             # Balance should actually check for 0, but checks 1 because apparently there are some

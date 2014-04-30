@@ -88,7 +88,7 @@ class User(AbstractBaseUser):
         """
         Regardless of is_expired is set or not, check if this user should be expired.
         """
-        return not self.is_pending and not Actor.objects.filter(memberid=self.memberid).exists()
+        return not self.is_pending and not Actor.get_members().filter(memberid=self.memberid).exists()
 
     def get_actor(self):
         """
@@ -103,7 +103,7 @@ class User(AbstractBaseUser):
             else:
                 actor = cache.get('actor.%s' % self.memberid)
                 if actor is None:
-                    actor = Actor.objects.get(memberid=self.memberid)
+                    actor = Actor.get_members().get(memberid=self.memberid)
                     cache.set('actor.%s' % self.memberid, actor, settings.FOCUS_MEMBER_CACHE_PERIOD)
                 return actor
         except (Enrollment.DoesNotExist, Actor.DoesNotExist) as e:
@@ -163,7 +163,7 @@ class User(AbstractBaseUser):
             return True
         cache.set('user.%s.checked_for_pending' % self.memberid, True, 60 * 60)
 
-        if Actor.objects.filter(memberid=self.memberid).exists():
+        if Actor.get_members().filter(memberid=self.memberid).exists():
             self.is_pending = False
             self.save()
             return False
@@ -650,7 +650,7 @@ class User(AbstractBaseUser):
 
     @staticmethod
     def create_inactive_user(memberid):
-        Actor.objects.get(memberid=memberid) # Verify that the Actor exists
+        Actor.get_members().get(memberid=memberid) # Verify that the Actor exists
         try:
             # Check if the user already exists first.
             existing_user = User.objects.get(memberid=memberid)

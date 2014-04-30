@@ -26,7 +26,7 @@ class Command(BaseCommand):
         # Check for expired pending users that may have gotten their Actor or Enrollment object back
         # (doesn't make sense that this actually happens, but let's not make assumptions for Focus)
         for u in pending_users.filter(is_expired=True):
-            if Actor.objects.filter(memberid=u.memberid).exists():
+            if Actor.get_members().filter(memberid=u.memberid).exists():
                 u.is_expired = False
                 u.is_pending = False
                 u.save()
@@ -36,12 +36,12 @@ class Command(BaseCommand):
 
         # Check for normal expired users that regained their Actor and shouldn't be expired anymore
         for u in normal_users.filter(is_expired=True):
-            if Actor.objects.filter(memberid=u.memberid).exists():
+            if Actor.get_members().filter(memberid=u.memberid).exists():
                 u.is_expired = False
                 u.save()
 
         # Check for normal users that have lost their Actor and should be expired
         for u in normal_users.filter(is_expired=False):
-            if not Actor.objects.filter(memberid=u.memberid).exists():
+            if not Actor.get_members().filter(memberid=u.memberid).exists():
                 u.is_expired = True
                 u.save()

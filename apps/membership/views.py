@@ -124,6 +124,7 @@ def memberid_sms(request):
         sms_request.save()
         return HttpResponse(json.dumps({'status': 'no_match'}))
     # Note that we're excluding Actors with end_code 'dublett' manually here
+    # Note also that we're not filtering on Actor.get_members()
     actors = Actor.objects.raw(
         "select * from Actor where REPLACE(MobPh, ' ', '') = %s AND EndCd != %s;", [number, ACTOR_ENDCODE_DUBLETT])
     actors = list(actors) # Make sure the query has been performed

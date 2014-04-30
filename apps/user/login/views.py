@@ -159,9 +159,11 @@ def verify_memberid(request):
     if not FocusCountry.objects.filter(code=request.POST['country']).exists():
         raise PermissionDenied
     try:
+        # Not filtering on Actor.get_members(), see below
         actor = Actor.objects.filter(
             memberid=request.POST['memberid'],
-            address__country_code=request.POST['country'])
+            address__country_code=request.POST['country']
+        )
         if request.POST['country'] == 'NO':
             actor = actor.filter(address__zipcode=request.POST['zipcode'])
         if actor.exists():
