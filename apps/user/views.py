@@ -188,6 +188,8 @@ def update_account_password(request):
 @user_requires_login()
 @user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 def register_membership(request):
+    """This view should reuse the standard registration logic in user/login/util and still merge the user objects
+    instead of reimplementing the logic."""
     if request.user.is_member():
         return redirect('user.views.home')
 
