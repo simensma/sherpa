@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-02 10:52+0200\n"
+"POT-Creation-Date: 2014-04-30 11:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -64,12 +64,13 @@ msgid "Passord:"
 msgstr "Password:"
 
 #: templates/common/user/login/util/login_form.html:37
-#: templates/main/connect/signon.html:5 templates/main/connect/signon.html:6
-#: templates/main/connect/signon.html:52
 #: templates/main/connect/signon_enrollment_card_deactivated.html:5
 #: templates/main/connect/signon_enrollment_card_deactivated.html:6
 #: templates/main/connect/signon_unavailable.html:5
 #: templates/main/connect/signon_unavailable.html:6
+#: templates/main/connect/columbus/signon.html:5
+#: templates/main/connect/columbus/signon.html:6
+#: templates/main/connect/columbus/signon.html:52
 msgid "Logg inn"
 msgstr "Log on"
 
@@ -185,7 +186,7 @@ msgstr ""
 "Now we only need your E-mail address and a password to complete registration."
 
 #: templates/common/user/login/util/registration_form.html:59
-#: templates/main/connect/layouts/dntoslo.html:126
+#: templates/main/connect/columbus/layout.html:124
 msgid "E-post:"
 msgstr "E-mail:"
 
@@ -237,47 +238,49 @@ msgid "Laster, vennligst vent..."
 msgstr "Loading, please wait..."
 
 #: templates/common/user/login/util/registration_form.html:105
-#: templates/common/user/login/util/registration_form.html:143
+#: templates/common/user/login/util/registration_form.html:148
 msgid "Hmmm... det ser ut som om du allerede har en bruker!"
 msgstr "Hmmm... it looks like you already have a user!"
 
 #: templates/common/user/login/util/registration_form.html:106
-#: templates/common/user/login/util/registration_form.html:144
+#: templates/common/user/login/util/registration_form.html:149
 msgid "Logg inn her"
 msgstr "Log on here"
 
 #: templates/common/user/login/util/registration_form.html:106
-#: templates/common/user/login/util/registration_form.html:144
+#: templates/common/user/login/util/registration_form.html:149
 msgid "Hvis du har glemt passordet kan du gjenopprette det der."
 msgstr "If you forgot your password, you'll be able to restore it there."
 
 #: templates/common/user/login/util/registration_form.html:110
-#: templates/common/user/login/util/registration_form.html:148
+#: templates/common/user/login/util/registration_form.html:153
 msgid "Du har allerede en bruker, men den er markert som inaktiv!"
 msgstr "You already have a user, but your account has expired!"
 
 #: templates/common/user/login/util/registration_form.html:111
-#: templates/common/user/login/util/registration_form.html:149
+#: templates/common/user/login/util/registration_form.html:154
 msgid "Dette kan være en feil i vårt medlemsregister. Vennligst ta kontakt med"
 msgstr "This could be an error in our memberregister. Please contact"
 
 #: templates/common/user/login/util/registration_form.html:111
 #: templates/common/user/login/util/registration_form.html:116
 #: templates/common/user/login/util/registration_form.html:121
-#: templates/common/user/login/util/registration_form.html:129
+#: templates/common/user/login/util/registration_form.html:126
 #: templates/common/user/login/util/registration_form.html:134
-#: templates/common/user/login/util/registration_form.html:149
+#: templates/common/user/login/util/registration_form.html:139
+#: templates/common/user/login/util/registration_form.html:154
+#: templates/common/user/login/util/registration_form.html:159
 #: templates/main/connect/signon_enrollment_card_deactivated.html:28
 msgid "medlemsservice"
 msgstr "memberservice"
 
 #: templates/common/user/login/util/registration_form.html:115
-#: templates/common/user/login/util/registration_form.html:128
+#: templates/common/user/login/util/registration_form.html:133
 msgid "Ukjent bruker"
 msgstr "Unknown user"
 
 #: templates/common/user/login/util/registration_form.html:116
-#: templates/common/user/login/util/registration_form.html:129
+#: templates/common/user/login/util/registration_form.html:134
 msgid ""
 "Beklager, vi har ingen medlemmer med disse opplysningene. Vennligst prøv "
 "igjen, eller kontakt"
@@ -286,17 +289,33 @@ msgstr ""
 "contact"
 
 #: templates/common/user/login/util/registration_form.html:116
-#: templates/common/user/login/util/registration_form.html:129
+#: templates/common/user/login/util/registration_form.html:134
 msgid "hvis du mener at dette skal være rett."
 msgstr "if you think this is correct."
 
 #: templates/common/user/login/util/registration_form.html:120
-#: templates/common/user/login/util/registration_form.html:133
+#: templates/common/user/login/util/registration_form.html:158
+msgid "Medlemsnummeret er ikke tilknyttet et personlig medlemskap"
+msgstr "The member ID doesn not belong to a personal membership"
+
+#: templates/common/user/login/util/registration_form.html:121
+#: templates/common/user/login/util/registration_form.html:159
+msgid ""
+"Kun personlige medlemmer i DNT kan benytte Min side. Vennligst ta kontakt med"
+msgstr "Only personal members can register. Please contact"
+
+#: templates/common/user/login/util/registration_form.html:121
+#: templates/common/user/login/util/registration_form.html:159
+msgid "for eventuelle spørsmål."
+msgstr "if you have any questions."
+
+#: templates/common/user/login/util/registration_form.html:125
+#: templates/common/user/login/util/registration_form.html:138
 msgid "Du kan ikke gjøre flere oppslag på medlemsnummer!"
 msgstr "No more member ID lookups allowed!"
 
-#: templates/common/user/login/util/registration_form.html:121
-#: templates/common/user/login/util/registration_form.html:134
+#: templates/common/user/login/util/registration_form.html:126
+#: templates/common/user/login/util/registration_form.html:139
 #, python-format
 msgid ""
 "Du har alt gjort %(memberid_lookups_limit)s oppslag på medlemsnummer! Prøver "
@@ -307,18 +326,18 @@ msgstr ""
 "to guess someones Postcode? If you're unsure about your registered member ID "
 "or Postcode, please contact"
 
-#: templates/common/user/login/util/registration_form.html:121
-#: templates/common/user/login/util/registration_form.html:134
+#: templates/common/user/login/util/registration_form.html:126
+#: templates/common/user/login/util/registration_form.html:139
 msgid "Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen."
 msgstr ""
 "We can't allow any more lookups right now, but you can try again tomorrow."
 
-#: templates/common/user/login/util/registration_form.html:138
+#: templates/common/user/login/util/registration_form.html:143
 #: templates/common/user/login/util/registration_form_nonmember.html:28
 msgid "For kort passord"
 msgstr "Passoword too short"
 
-#: templates/common/user/login/util/registration_form.html:139
+#: templates/common/user/login/util/registration_form.html:144
 #: templates/common/user/login/util/registration_form_nonmember.html:29
 #, python-format
 msgid ""
@@ -328,12 +347,12 @@ msgstr ""
 "Your password must have at least %(user_password_length)s characters. Please "
 "select a longer password."
 
-#: templates/common/user/login/util/registration_form.html:153
+#: templates/common/user/login/util/registration_form.html:163
 #: templates/common/user/login/util/registration_form_nonmember.html:18
 msgid "E-postadressen din er ikke gyldig!"
 msgstr "Your E-mail address is invalid!"
 
-#: templates/common/user/login/util/registration_form.html:154
+#: templates/common/user/login/util/registration_form.html:164
 #: templates/common/user/login/util/registration_form_nonmember.html:19
 msgid "Vennligst oppgi en gyldig e-postadresse."
 msgstr "Please provide a valid E-mail address."
@@ -377,76 +396,6 @@ msgstr "Full name:"
 #: templates/common/user/login/util/registration_form_nonmember.html:43
 msgid "E-postadresse:"
 msgstr "E-mail address:"
-
-#: templates/main/connect/signon.html:40
-msgid "Du er nå kommet til neste steg i bestillingen"
-msgstr "Next step in e booking"
-
-#: templates/main/connect/signon.html:43
-#: templates/main/connect/signon.html:112
-msgid ""
-"For å gå videre med bestillingen og se antall ledige plasser på turen må du "
-"logge deg på Min side."
-msgstr ""
-"To continue booking and to get an overview of available places you have to "
-"log on to the User Page."
-
-#: templates/main/connect/signon.html:44
-msgid ""
-"Er du ikke Min side-bruker så kan du <a href=\"javascript:undefined\" class="
-"\"toggle-registration-tab\">enkelt registrere deg</a>."
-msgstr ""
-"If you do not have a DNT User Page log on, it is <a href=\"javascript:"
-"undefined\" class=\"toggle-registration-tab\">easy to register</a>."
-
-#: templates/main/connect/signon.html:53
-msgid "Opprett ny bruker"
-msgstr "Create user"
-
-#: templates/main/connect/signon.html:85
-msgid "Jeg er allerede medlem i DNT"
-msgstr "I'm already a member of DNT"
-
-#: templates/main/connect/signon.html:88
-msgid "Jeg vil melde meg inn i DNT først"
-msgstr "I want to become a DNT member now"
-
-#: templates/main/connect/signon.html:89
-msgid "(må betales på nett)"
-msgstr "(must be paid online)"
-
-#: templates/main/connect/signon.html:92
-msgid "Jeg vil opprette bruker uten å bli medlem i DNT nå"
-msgstr "I want to create a user without becoming a DNT member now"
-
-#: templates/main/connect/signon.html:108
-msgid "Lurer du på noe?"
-msgstr "Questions?"
-
-#: templates/main/connect/signon.html:116
-msgid ""
-"Har du problemer med påloggingen eller spørsmål rundt bestilling kontakt oss "
-"gjerne på: 22 82 28 22"
-msgstr ""
-"If you should have any difficulties with log on or enquiries about booking, "
-"feel welcome to call us at: (+47) 22 82 28 22"
-
-#: templates/main/connect/signon.html:134
-msgid ""
-"Du finner også nummeret på giroen fra forrige årskontingent, og på "
-"medlemskortet ditt som vist med rød ring på bildet:"
-msgstr ""
-"You'll also find your ID on your previous invoice, and on your membership "
-"card as shown with a red circle on the following photo:"
-
-#: templates/main/connect/signon.html:136
-msgid "Illustrasjonsfoto av medlemsnummer-plassering på medlemskortet"
-msgstr "Illustration of the member ID's location on the membership card"
-
-#: templates/main/connect/signon.html:139
-#: templates/main/enrollment/registration.html:166
-msgid "Lukk vindu"
-msgstr "Close window"
 
 #: templates/main/connect/signon_enrollment_card_deactivated.html:17
 #: templates/main/enrollment/payment.html:41
@@ -520,41 +469,111 @@ msgstr ""
 "the maintenance period is over. Meanwhile, we'll return you <a href="
 "\"%(previous_url)s\">to where you started</a>."
 
-#: templates/main/connect/layouts/dntoslo.html:51
+#: templates/main/connect/columbus/layout.html:49
 msgid "Avbryt og gå tilbake"
 msgstr "Cancel and return"
 
-#: templates/main/connect/layouts/dntoslo.html:121
+#: templates/main/connect/columbus/layout.html:119
 msgid "Åpningstider tlf."
 msgstr "Calling hours"
 
-#: templates/main/connect/layouts/dntoslo.html:123
+#: templates/main/connect/columbus/layout.html:121
 msgid "Man-fre."
 msgstr "Mon-fri."
 
-#: templates/main/connect/layouts/dntoslo.html:124
+#: templates/main/connect/columbus/layout.html:122
 msgid "Sentralbord"
 msgstr "Operator"
 
-#: templates/main/connect/layouts/dntoslo.html:125
+#: templates/main/connect/columbus/layout.html:123
 msgid "Turinfo"
 msgstr "Tour information"
 
-#: templates/main/connect/layouts/dntoslo.html:130
+#: templates/main/connect/columbus/layout.html:128
 msgid "Åpningstider turinfo"
 msgstr "Opening hours"
 
-#: templates/main/connect/layouts/dntoslo.html:132
+#: templates/main/connect/columbus/layout.html:130
 msgid "Mandag-fredag"
 msgstr "Monday-Friday"
 
-#: templates/main/connect/layouts/dntoslo.html:133
+#: templates/main/connect/columbus/layout.html:131
 msgid "Torsdag"
 msgstr "Thursday"
 
-#: templates/main/connect/layouts/dntoslo.html:134
+#: templates/main/connect/columbus/layout.html:132
 msgid "Lørdag"
 msgstr "Saturday"
+
+#: templates/main/connect/columbus/signon.html:40
+msgid "Du er nå kommet til neste steg i bestillingen"
+msgstr "Next step in e booking"
+
+#: templates/main/connect/columbus/signon.html:43
+#: templates/main/connect/columbus/signon.html:112
+msgid ""
+"For å gå videre med bestillingen og se antall ledige plasser på turen må du "
+"logge deg på Min side."
+msgstr ""
+"To continue booking and to get an overview of available places you have to "
+"log on to the User Page."
+
+#: templates/main/connect/columbus/signon.html:44
+msgid ""
+"Er du ikke Min side-bruker så kan du <a href=\"javascript:undefined\" class="
+"\"toggle-registration-tab\">enkelt registrere deg</a>."
+msgstr ""
+"If you do not have a DNT User Page log on, it is <a href=\"javascript:"
+"undefined\" class=\"toggle-registration-tab\">easy to register</a>."
+
+#: templates/main/connect/columbus/signon.html:53
+msgid "Opprett ny bruker"
+msgstr "Create user"
+
+#: templates/main/connect/columbus/signon.html:85
+msgid "Jeg er allerede medlem i DNT"
+msgstr "I'm already a member of DNT"
+
+#: templates/main/connect/columbus/signon.html:88
+msgid "Jeg vil melde meg inn i DNT først"
+msgstr "I want to become a DNT member now"
+
+#: templates/main/connect/columbus/signon.html:89
+msgid "(må betales på nett)"
+msgstr "(must be paid online)"
+
+#: templates/main/connect/columbus/signon.html:92
+msgid "Jeg vil opprette bruker uten å bli medlem i DNT nå"
+msgstr "I want to create a user without becoming a DNT member now"
+
+#: templates/main/connect/columbus/signon.html:108
+msgid "Lurer du på noe?"
+msgstr "Questions?"
+
+#: templates/main/connect/columbus/signon.html:116
+msgid ""
+"Har du problemer med påloggingen eller spørsmål rundt bestilling kontakt oss "
+"gjerne på: 22 82 28 22"
+msgstr ""
+"If you should have any difficulties with log on or enquiries about booking, "
+"feel welcome to call us at: (+47) 22 82 28 22"
+
+#: templates/main/connect/columbus/signon.html:134
+msgid ""
+"Du finner også nummeret på giroen fra forrige årskontingent, og på "
+"medlemskortet ditt som vist med rød ring på bildet:"
+msgstr ""
+"You'll also find your ID on your previous invoice, and on your membership "
+"card as shown with a red circle on the following photo:"
+
+#: templates/main/connect/columbus/signon.html:136
+msgid "Illustrasjonsfoto av medlemsnummer-plassering på medlemskortet"
+msgstr "Illustration of the member ID's location on the membership card"
+
+#: templates/main/connect/columbus/signon.html:139
+#: templates/main/enrollment/registration.html:166
+msgid "Lukk vindu"
+msgstr "Close window"
 
 #: templates/main/enrollment/household.html:31
 msgid "Dette postnummeret er ikke tilknyttet noen forening"
