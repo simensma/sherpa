@@ -153,11 +153,6 @@
       <strong>{% trans "Du har allerede en bruker, men den er markert som inaktiv!" %}</strong><br>
       {% trans "Dette kan være en feil i vårt medlemsregister. Vennligst ta kontakt med" %} <a href="{% url 'membership.views.service' %}">{% trans "medlemsservice" %}</a>.
     </div>
-  {% elif message.message == 'actor_is_not_member' %}
-    <div class="alert alert-error">
-      <strong>{% trans "Medlemsnummeret er ikke tilknyttet et personlig medlemskap" %}</strong><br>
-      {% trans "Kun personlige medlemmer i DNT kan benytte Min side. Vennligst ta kontakt med" %} <a href="{% url 'membership.views.service' %}">{% trans "medlemsservice" %}</a> {% trans "for eventuelle spørsmål." %}
-    </div>
   {% elif message.message == 'invalid_email' %}
     <div class="alert alert-error">
       <strong>{% trans "E-postadressen din er ikke gyldig!" %}</strong><br>
