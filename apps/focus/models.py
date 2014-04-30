@@ -164,10 +164,22 @@ class Actor(models.Model):
     def __unicode__(self):
         return u'%s (memberid: %s)' % (self.pk, self.memberid)
 
+    def is_member(self):
+        return self.get_services().filter(
+            Q(stop_date__isnull=True) |
+            Q(stop_date__gt=datetime.now()),
+            code__gte=101,
+            code__lte=109,
+        ).exists()
+
     def membership_type(self):
-        now = datetime.now()
         # Supposedly, there should only be one service in this range
-        code = int(self.get_services().get(Q(stop_date__isnull=True) | Q(stop_date__gt=now), code__gt=100, code__lt=110).code.strip())
+        code = int(self.get_services().get(
+            Q(stop_date__isnull=True) |
+            Q(stop_date__gt=datetime.now()),
+            code__gte=101,
+            code__lte=109,
+        ).code.strip())
         return get_membership_type_by_code(code)
 
     def has_membership_type(self, codename):
@@ -462,6 +474,19 @@ class Actor(models.Model):
     def get_clean_address(self):
         from focus.abstractions import ActorAddressClean
         return ActorAddressClean(self.address)
+
+    @staticmethod
+    def get_members():
+        """Returns Actor objects defined as members (has a service with one of the membership type codes).
+        Other objects may be foreninger, organizations or other non-standard object types which we currently
+        aren't supporting. Note that this should probably be used for any Actor lookup, but we might have missed
+        a few spots."""
+        return Actor.objects.filter(
+            Q(services__stop_date__isnull=True) |
+            Q(services__stop_date__gt=datetime.now()),
+            services__code__gte=101,
+            services__code__lte=109,
+        )
 
     @staticmethod
     def all_active_members():
