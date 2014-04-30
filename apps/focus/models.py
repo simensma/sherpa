@@ -464,7 +464,7 @@ class Actor(models.Model):
         return ActorAddressClean(self.address)
 
     @staticmethod
-    def all_members():
+    def all_active_members():
         return Actor.objects.filter(
             Q(end_date=date(year=2014, month=12, day=31)) |
             Q(end_date__isnull=True),
