@@ -177,6 +177,12 @@ def verify_memberid(request):
                 # Give up
                 raise ObjectDoesNotExist
 
+        # Check that it's a proper member object (note that we didn't filter the query on Actor.get_members())
+        if not actor.is_member():
+            return HttpResponse(json.dumps({
+                'actor_is_not_member': True,
+            }))
+
         try:
             user = User.objects.get(memberid=request.POST['memberid'], is_inactive=False)
             user_exists = True
@@ -205,7 +211,7 @@ def send_restore_password_email(request):
     # The address will match only one non-member, but may match several members, registered or not
     local_matches = list(User.objects.filter(email=request.POST['email']))
     focus_unregistered_matches = False
-    for a in Actor.objects.filter(email=request.POST['email']):
+    for a in Actor.get_members().filter(email=request.POST['email']):
         try:
             # Include pending users in case they're resetting it *after* verification (i.e. Actor created),
             # but *before* we've checked if they should still be pending.

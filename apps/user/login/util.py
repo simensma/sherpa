@@ -50,7 +50,7 @@ def attempt_login(request):
                 return matches, 'old_memberid_but_memberid_exists'
 
             # Verify that they exist in the membersystem (this turned out to be an incorrect assumption)
-            if not Actor.objects.filter(memberid=old_member.memberid).exists():
+            if not Actor.get_members().filter(memberid=old_member.memberid).exists():
                 # We're not quite sure why this can happen, so we'll just give them the invalid
                 # credentials message - but this might be confusing for those who were able to log
                 # in previously.
@@ -98,7 +98,7 @@ def attempt_registration(request):
             return None, 'memberid_lookups_exceeded'
         if not FocusCountry.objects.filter(code=request.POST['country']).exists():
             raise PermissionDenied
-        actor = Actor.objects.filter(
+        actor = Actor.get_members().filter(
             memberid=request.POST['memberid'],
             address__country_code=request.POST['country']
         )

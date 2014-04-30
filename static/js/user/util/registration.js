@@ -5,6 +5,7 @@ $(document).ready(function() {
     var registration = $("div.registration-form-wrapper");
     var registration_form = registration.find("form");
     var no_memberid_match = registration.find("div.no-memberid-match");
+    var actor_is_not_member = registration.find("div.actor-is-not-member");
     var country_select = registration.find("select[name='country']");
     var zipcode_control_group = registration.find("div.control-group.zipcode");
 
@@ -53,6 +54,7 @@ $(document).ready(function() {
             return $(this);
         }
         no_memberid_match.hide();
+        actor_is_not_member.hide();
         e.preventDefault();
         step1.find("button[type='submit']").hide();
         step1.find("img.ajaxloader.submit").show();
@@ -65,7 +67,11 @@ $(document).ready(function() {
             }
         }).done(function(result) {
             result = JSON.parse(result);
-            if(result.exists) {
+            if(result.actor_is_not_member) {
+                actor_is_not_member.slideDown();
+                step1.find("button[type='submit']").show();
+                registration.find("img.ajaxloader.submit").hide();
+            } else if(result.exists) {
                 if(!result.user_exists) {
                     enableStep2(result);
                 } else {

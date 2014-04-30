@@ -52,7 +52,10 @@ $(document).ready(function() {
             }
         }).done(function(result) {
             result = JSON.parse(result);
-            if(result.exists) {
+            if(result.actor_is_not_member) {
+                form.find("div.actor-is-not-member").slideDown();
+                form.find("button[type='submit']").show();
+            } else if(result.exists) {
                 if(!result.user_exists) {
                     memberid_accepted = true;
                     var email = form.find("div.control-group.email");

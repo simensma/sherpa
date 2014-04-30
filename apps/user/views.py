@@ -205,7 +205,7 @@ def register_membership(request):
             if memberid_lookups_exceeded(request.META['REMOTE_ADDR']):
                 messages.error(request, 'memberid_lookups_exceeded')
                 return redirect('user.views.register_membership')
-            actor = Actor.objects.get(memberid=request.POST['memberid'], address__zipcode=request.POST['zipcode'])
+            actor = Actor.get_members().get(memberid=request.POST['memberid'], address__zipcode=request.POST['zipcode'])
 
             if request.POST['email-equal'] == 'true':
                 # Focus-email is empty, or equal to this email, so just use it

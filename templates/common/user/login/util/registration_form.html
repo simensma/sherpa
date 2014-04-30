@@ -116,6 +116,11 @@
   {% trans "Beklager, vi har ingen medlemmer med disse opplysningene. Vennligst prøv igjen, eller kontakt" %} <a href="{% url 'membership.views.service' %}">{% trans "medlemsservice" %}</a> {% trans "hvis du mener at dette skal være rett." %}
 </div>
 
+<div class="hide alert alert-error actor-is-not-member">
+  <strong>{% trans "Medlemsnummeret er ikke tilknyttet et personlig medlemskap" %}</strong><br>
+  {% trans "Kun personlige medlemmer i DNT kan benytte Min side. Vennligst ta kontakt med" %} <a href="{% url 'membership.views.service' %}">{% trans "medlemsservice" %}</a> {% trans "for eventuelle spørsmål." %}
+</div>
+
 <div class="hide alert alert-error memberid-lookups-exceeded">
   <strong>{% trans "Du kan ikke gjøre flere oppslag på medlemsnummer!" %}</strong><br>
   {% blocktrans %}Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte{% endblocktrans %} <a href="{% url 'membership.views.service' %}">{% trans "medlemsservice" %}</a>. {% trans "Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen." %}
@@ -147,6 +152,11 @@
     <div class="alert alert-error">
       <strong>{% trans "Du har allerede en bruker, men den er markert som inaktiv!" %}</strong><br>
       {% trans "Dette kan være en feil i vårt medlemsregister. Vennligst ta kontakt med" %} <a href="{% url 'membership.views.service' %}">{% trans "medlemsservice" %}</a>.
+    </div>
+  {% elif message.message == 'actor_is_not_member' %}
+    <div class="alert alert-error">
+      <strong>{% trans "Medlemsnummeret er ikke tilknyttet et personlig medlemskap" %}</strong><br>
+      {% trans "Kun personlige medlemmer i DNT kan benytte Min side. Vennligst ta kontakt med" %} <a href="{% url 'membership.views.service' %}">{% trans "medlemsservice" %}</a> {% trans "for eventuelle spørsmål." %}
     </div>
   {% elif message.message == 'invalid_email' %}
     <div class="alert alert-error">

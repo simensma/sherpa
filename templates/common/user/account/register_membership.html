@@ -116,6 +116,11 @@
         Dette kan være en feil i vårt medlemsregister. Vennligst ta kontakt med <a href="{% url 'membership.views.service' %}">medlemsservice</a>.
       </div>
 
+      <div class="alert alert-error actor-is-not-member hide">
+        <strong>Medlemsnummeret er ikke tilknyttet et personlig medlemskap</strong><br>
+        Kun personlige medlemmer i DNT kan benytte Min side. Vennligst ta kontakt med <a href="{% url 'membership.views.service' %}">medlemsservice</a> for eventuelle spørsmål.
+      </div>
+
       {% for message in messages %}
         {% if message.message == 'invalid_memberid' %}
           <div class="alert alert-error">
