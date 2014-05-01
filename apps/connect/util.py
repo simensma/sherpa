@@ -104,11 +104,11 @@ def decrypt(auth, encoded, hmac_):
         plaintext = pkcs7.decode(plaintext_padded, settings.DNT_CONNECT_BLOCK_SIZE)
 
         # Try both hmac-functions temporary for backwards compatibility - calc_hmac_hexdigest should be removed eventually
-        if auth['iv'] and calc_hmac(auth['key'], iv + plaintext) != hmac and calc_hmac_hexdigest(auth['key'], iv + plaintext) != hmac:
+        if auth['iv'] and calc_hmac(auth['key'], iv + plaintext) != hmac_ and calc_hmac_hexdigest(auth['key'], iv + plaintext) != hmac_:
             logger.warning(u"Forespurt hmac matchet ikke egenkalkulert hmac",
                 extra={
                     'our_hmac': calc_hmac(auth['key'], iv + plaintext),
-                    'their_hmac': hmac,
+                    'their_hmac': hmac_,
                     'encoded': encoded,
                     'plaintext': plaintext,
                     'auth': auth,
