@@ -36,6 +36,8 @@ NETS_TERMINAL_URL = "https://epayment.bbs.no/Terminal/default.aspx"
 NETS_PROCESS_URL = "https://epayment.bbs.no/Netaxept/Process.aspx"
 NETS_QUERY_URL = "https://epayment.bbs.no/Netaxept/Query.aspx"
 
+DNTOSLO_MONTIS_API_URL = "https://booking.dntoslo.no/api/turer"
+
 # For now, require only a minimum password length of 6. This might need to be reconsidered.
 USER_PASSWORD_LENGTH = 6
 RESTORE_PASSWORD_KEY_LENGTH = 40
