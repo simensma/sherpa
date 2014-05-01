@@ -205,6 +205,9 @@ def index(request):
                     role='admin',
                 )
                 role.save()
+                # FIXME: We can't delete the permission cache for all users, so some may find that they can't edit
+                # the new forening even though they should be able, until the cache (which is currently 24h) expires.
+                cache.delete('user.%s.all_foreninger' % request.user.id)
 
                 messages.info(request, 'forening_create_success')
                 request.active_forening = forening
