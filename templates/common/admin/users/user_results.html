@@ -10,7 +10,10 @@
     </td>
     <td>
       {% if user.is_member %}
-        {{ user.main_forening.name }}<br>
+        {% if not user.is_pending %}
+          {{ user.main_forening.name }}<br>
+        {% endif %}
+
         Medlemsnr: {{ user.memberid }}
       {% else %}
         <em>Ikke medlem</em>
