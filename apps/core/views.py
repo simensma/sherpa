@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.core import serializers
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
 from django.conf import settings
 
@@ -10,6 +11,9 @@ import json
 import requests
 
 def zipcode(request):
+    if not request.is_ajax() or not 'zipcode' in request.POST:
+        raise PermissionDenied
+
     try:
         # Django serializers can only serialize lists
         zipcode = serializers.serialize("python", [Zipcode.objects.get(zipcode=request.POST['zipcode'])])[0]['fields']
