@@ -165,15 +165,17 @@ class Actor(models.Model):
         return u'%s (memberid: %s)' % (self.pk, self.memberid)
 
     def is_member(self):
+        # Note that we're ignoring the stop_date. We just need to know if this is a personal membership or not,
+        # we don't care if the type changed or they haven't paid their membership (which is likely why stop_date
+        # would be set)
         return self.get_services().filter(
-            Q(stop_date__isnull=True) |
-            Q(stop_date__gt=datetime.now()),
             code__gte=101,
             code__lte=109,
         ).exists()
 
     def membership_type(self):
-        # Supposedly, there should only be one service in this range
+        # Supposedly, there should only be one service in this range.
+        # Note that we're filtering on stop_date; some members have multiple services with one of them stopped.
         code = int(self.get_services().get(
             Q(stop_date__isnull=True) |
             Q(stop_date__gt=datetime.now()),
@@ -481,9 +483,10 @@ class Actor(models.Model):
         Other objects may be foreninger, organizations or other non-standard object types which we currently
         aren't supporting. Note that this should probably be used for any Actor lookup, but we might have missed
         a few spots."""
+        # Note that we're ignoring the stop_date. We just need to know if this is a personal membership or not,
+        # we don't care if the type changed or they haven't paid their membership (which is likely why stop_date
+        # would be set)
         return Actor.objects.filter(
-            Q(services__stop_date__isnull=True) |
-            Q(services__stop_date__gt=datetime.now()),
             services__code__gte=101,
             services__code__lte=109,
         )
