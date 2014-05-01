@@ -46,16 +46,16 @@ def prepare_response(client, auth_index, response_data, redirect_url):
     json_string = json.dumps(response_data)
     if auth_index is not None:
         # Use the authentication method which worked when decrypting
-        encrypted_data, hmac = encrypt(client['auths'][auth_index], json_string)
+        encrypted_data, hmac_ = encrypt(client['auths'][auth_index], json_string)
     else:
         # This special case handles old sessions and can likely be removed after a couple of weeks
-        encrypted_data, hmac = try_keys(encrypt, client['auths'], json_string)[0]
+        encrypted_data, hmac_ = try_keys(encrypt, client['auths'], json_string)[0]
     url_safe_data = quote_plus(encrypted_data)
 
-    if hmac is None:
+    if hmac_ is None:
         return redirect("%s?data=%s" % (redirect_url, url_safe_data))
     else:
-        url_safe_hmac = quote_plus(hmac)
+        url_safe_hmac = quote_plus(hmac_)
         return redirect("%s?data=%s&hmac=%s" % (redirect_url, url_safe_data, url_safe_hmac))
 
 def try_keys(method, auths, *args, **kwargs):
@@ -80,16 +80,16 @@ def encrypt(auth, plaintext):
         cipher = AES.new(auth['key'], auth['cipher'], iv)
         ciphertext = iv + cipher.encrypt(padded_text)
         # FIXME: Sending deprecated form of hmac back for backwards compatibility
-        hmac = calc_hmac_hexdigest(auth['key'], iv + plaintext)
+        hmac_ = calc_hmac_hexdigest(auth['key'], iv + plaintext)
     else:
         cipher = AES.new(auth['key'], auth['cipher'])
         ciphertext = cipher.encrypt(padded_text)
-        hmac = None
+        hmac_ = None
 
     encoded = base64.b64encode(ciphertext)
-    return encoded, hmac
+    return encoded, hmac_
 
-def decrypt(auth, encoded, hmac):
+def decrypt(auth, encoded, hmac_):
     try:
         decoded = base64.b64decode(encoded)
 
