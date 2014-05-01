@@ -13,6 +13,7 @@ import base64
 import json
 import time
 import os
+import hmac
 import hashlib
 import logging
 
@@ -45,17 +46,17 @@ def prepare_response(client, auth_index, response_data, redirect_url):
     json_string = json.dumps(response_data)
     if auth_index is not None:
         # Use the authentication method which worked when decrypting
-        encrypted_data, hash = encrypt(client['auths'][auth_index], json_string)
+        encrypted_data, hmac = encrypt(client['auths'][auth_index], json_string)
     else:
         # This special case handles old sessions and can likely be removed after a couple of weeks
-        encrypted_data, hash = try_keys(encrypt, client['auths'], json_string)[0]
+        encrypted_data, hmac = try_keys(encrypt, client['auths'], json_string)[0]
     url_safe_data = quote_plus(encrypted_data)
 
-    if hash is None:
+    if hmac is None:
         return redirect("%s?data=%s" % (redirect_url, url_safe_data))
     else:
-        url_safe_hash = quote_plus(hash)
-        return redirect("%s?data=%s&hash=%s" % (redirect_url, url_safe_data, url_safe_hash))
+        url_safe_hmac = quote_plus(hmac)
+        return redirect("%s?data=%s&hash=%s" % (redirect_url, url_safe_data, url_safe_hmac))
 
 def try_keys(method, auths, *args, **kwargs):
     """
@@ -78,17 +79,17 @@ def encrypt(auth, plaintext):
         iv = os.urandom(settings.DNT_CONNECT_BLOCK_SIZE)
         cipher = AES.new(auth['key'], auth['cipher'], iv)
         ciphertext = iv + cipher.encrypt(padded_text)
-        # FIXME: Sending deprecated form of hash back for backwards compatibility
-        hash = calc_hash_hexdigest(auth['key'], iv + plaintext)
+        # FIXME: Sending deprecated form of hmac back for backwards compatibility
+        hmac = calc_hmac_hexdigest(auth['key'], iv + plaintext)
     else:
         cipher = AES.new(auth['key'], auth['cipher'])
         ciphertext = cipher.encrypt(padded_text)
-        hash = None
+        hmac = None
 
     encoded = base64.b64encode(ciphertext)
-    return encoded, hash
+    return encoded, hmac
 
-def decrypt(auth, encoded, hash):
+def decrypt(auth, encoded, hmac):
     try:
         decoded = base64.b64decode(encoded)
 
@@ -102,12 +103,12 @@ def decrypt(auth, encoded, hash):
         plaintext_padded = cipher.decrypt(ciphertext)
         plaintext = pkcs7.decode(plaintext_padded, settings.DNT_CONNECT_BLOCK_SIZE)
 
-        # Try both hash-functions temporary for backwards compatibility - calc_hash_hexdigest should be removed eventually
-        if auth['iv'] and calc_hash(auth['key'], iv + plaintext) != hash and calc_hash_hexdigest(auth['key'], iv + plaintext) != hash:
-            logger.warning(u"Forespurt hash matchet ikke egenkalkulert hash",
+        # Try both hmac-functions temporary for backwards compatibility - calc_hmac_hexdigest should be removed eventually
+        if auth['iv'] and calc_hmac(auth['key'], iv + plaintext) != hmac and calc_hmac_hexdigest(auth['key'], iv + plaintext) != hmac:
+            logger.warning(u"Forespurt hmac matchet ikke egenkalkulert hmac",
                 extra={
-                    'our_hash': calc_hash(auth['key'], iv + plaintext),
-                    'their_hash': hash,
+                    'our_hmac': calc_hmac(auth['key'], iv + plaintext),
+                    'their_hmac': hmac,
                     'encoded': encoded,
                     'plaintext': plaintext,
                     'auth': auth,
@@ -120,16 +121,12 @@ def decrypt(auth, encoded, hash):
         # Can e.g. be incorrect padding if they forgot to URLEncode the data
         raise PermissionDenied
 
-def calc_hash(key, data):
-    h = hashlib.sha512(key)
-    h.update(data)
-    return base64.b64encode(h.digest())
+def calc_hmac(key, data):
+    return base64.b64encode(hmac.new(key, data, hashlib.sha512).digest())
 
-def calc_hash_hexdigest(key, data):
+def calc_hmac_hexdigest(key, data):
     """Deprecated way of using the hexdigest output instead of the actual output bytes"""
-    h = hashlib.sha512(key)
-    h.update(data)
-    return base64.b64encode(h.hexdigest())
+    return base64.b64encode(hmac.new(key, data, hashlib.sha512).hexdigest())
 
 def add_signon_session_value(request, value):
     request.session['dntconnect']['signon'] = value
