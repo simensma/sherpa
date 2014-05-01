@@ -25,7 +25,7 @@ def get_request_data(request):
     else:
         client = settings.DNT_CONNECT[request.GET['client']]
 
-    request_data, auth_index = try_keys(decrypt, client['auths'], request.GET['data'], request.GET.get('hash'))
+    request_data, auth_index = try_keys(decrypt, client['auths'], request.GET['data'], request.GET.get('hmac'))
     request_data = json.loads(request_data)
 
     # Check the transmit datestamp
@@ -56,7 +56,7 @@ def prepare_response(client, auth_index, response_data, redirect_url):
         return redirect("%s?data=%s" % (redirect_url, url_safe_data))
     else:
         url_safe_hmac = quote_plus(hmac)
-        return redirect("%s?data=%s&hash=%s" % (redirect_url, url_safe_data, url_safe_hmac))
+        return redirect("%s?data=%s&hmac=%s" % (redirect_url, url_safe_data, url_safe_hmac))
 
 def try_keys(method, auths, *args, **kwargs):
     """
