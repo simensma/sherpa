@@ -78,7 +78,8 @@ def encrypt(auth, plaintext):
         iv = os.urandom(settings.DNT_CONNECT_BLOCK_SIZE)
         cipher = AES.new(auth['key'], auth['cipher'], iv)
         ciphertext = iv + cipher.encrypt(padded_text)
-        hash = calc_hash(auth['key'], iv + plaintext)
+        # FIXME: Sending deprecated form of hash back for backwards compatibility
+        hash = calc_hash_hexdigest(auth['key'], iv + plaintext)
     else:
         cipher = AES.new(auth['key'], auth['cipher'])
         ciphertext = cipher.encrypt(padded_text)
@@ -101,7 +102,8 @@ def decrypt(auth, encoded, hash):
         plaintext_padded = cipher.decrypt(ciphertext)
         plaintext = pkcs7.decode(plaintext_padded, settings.DNT_CONNECT_BLOCK_SIZE)
 
-        if auth['iv'] and calc_hash(auth['key'], iv + plaintext) != hash:
+        # Try both hash-functions temporary for backwards compatibility - calc_hash_hexdigest should be removed eventually
+        if auth['iv'] and calc_hash(auth['key'], iv + plaintext) != hash and calc_hash_hexdigest(auth['key'], iv + plaintext) != hash:
             logger.warning(u"Forespurt hash matchet ikke egenkalkulert hash",
                 extra={
                     'our_hash': calc_hash(auth['key'], iv + plaintext),
@@ -119,6 +121,12 @@ def decrypt(auth, encoded, hash):
         raise PermissionDenied
 
 def calc_hash(key, data):
+    h = hashlib.sha512(key)
+    h.update(data)
+    return base64.b64encode(h.digest())
+
+def calc_hash_hexdigest(key, data):
+    """Deprecated way of using the hexdigest output instead of the actual output bytes"""
     h = hashlib.sha512(key)
     h.update(data)
     return base64.b64encode(h.hexdigest())
