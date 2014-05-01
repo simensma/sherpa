@@ -513,9 +513,8 @@ def process_invoice(request):
         # Whoops, how did we get here without going through payment first? Redirect back.
         return redirect('enrollment.views.payment_method')
     elif enrollment.state == 'payment':
-        # Cool, this is where we want to be. Update the state to 'complete'
-        enrollment.state = 'complete'
-        enrollment.save()
+        # Cool, this is where we want to be.
+        pass
     elif enrollment.state == 'complete':
         # Registration has already been completed, redirect forwards to results page
         return redirect('enrollment.views.result')
@@ -525,6 +524,7 @@ def process_invoice(request):
         user.save()
 
     prepare_and_send_email(request, enrollment)
+    enrollment.state = 'complete'
     enrollment.result = 'success_invoice'
     enrollment.save()
     return redirect('enrollment.views.result')
@@ -540,9 +540,8 @@ def process_card(request):
         # on a *second* registration by skipping the payment view and going straight to this check.
         return redirect('enrollment.views.payment_method')
     elif enrollment.state == 'payment':
-        # Cool, this is where we want to be. Update the state to 'complete'
-        enrollment.state = 'complete'
-        enrollment.save()
+        # Cool, this is where we want to be.
+        pass
     elif enrollment.state == 'complete':
         # Registration has already been completed, redirect forwards to results page
         return redirect('enrollment.views.result')
@@ -640,6 +639,7 @@ def process_card(request):
                     user.pending_user = User.create_pending(user.memberid)
                     user.save()
                 prepare_and_send_email(request, enrollment)
+                enrollment.state = 'complete'
                 enrollment.result = 'success_card'
                 enrollment.save()
             else:
@@ -647,8 +647,8 @@ def process_card(request):
                 transaction.state = 'fail'
                 transaction.save()
 
-                enrollment.result = 'fail'
                 enrollment.state = 'registration'
+                enrollment.result = 'fail'
                 enrollment.save()
         except requests.ConnectionError as e:
             logger.error(u"(Håndtert, men bør sjekkes) %s" % e.message,
