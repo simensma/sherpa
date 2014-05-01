@@ -42,7 +42,7 @@ def authenticate_users(email, password):
     matches = [u for u in User.get_users().filter(memberid__isnull=True, email=email) if u.check_password(password)]
 
     # Add matching members with active User
-    actor_candidates = Actor.get_members().filter(email=email)
+    actor_candidates = Actor.get_personal_members().filter(email=email)
     for a in actor_candidates:
         try:
             u = User.get_users().get(memberid=a.memberid, is_inactive=False)

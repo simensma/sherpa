@@ -72,7 +72,7 @@ def search(request):
             Q(last_name__icontains=word))
     local_users = local_users.order_by('first_name')
 
-    actors = Actor.get_members()
+    actors = Actor.get_personal_members()
     for word in request.POST['q'].split():
         actors = actors.filter(
             Q(first_name__icontains=word) |
@@ -84,7 +84,7 @@ def search(request):
     expired_users = User.objects.all()
     for word in request.POST['q'].split():
         expired_users = expired_users.filter(memberid__icontains=word)
-    expired_users = [u for u in expired_users if not Actor.get_members().filter(memberid=u.memberid).exists()]
+    expired_users = [u for u in expired_users if not Actor.get_personal_members().filter(memberid=u.memberid).exists()]
 
     # Pending users
     pending_enrollment = Enrollment.get_active()
@@ -124,7 +124,7 @@ def check_memberid(request):
         existing_user = None
 
     try:
-        actor = Actor.get_members().get(memberid=request.POST['memberid'])
+        actor = Actor.get_personal_members().get(memberid=request.POST['memberid'])
     except (Actor.DoesNotExist, ValueError):
         actor = None
 
@@ -146,7 +146,7 @@ def change_memberid(request):
         raise PermissionDenied
 
     # The Actor was already checked client-side, but verify here
-    if not Actor.get_members().filter(memberid=request.POST['new-memberid']).exists():
+    if not Actor.get_personal_members().filter(memberid=request.POST['new-memberid']).exists():
         raise PermissionDenied
 
     old_user = User.objects.get(id=request.POST['old-user'])

@@ -137,7 +137,7 @@ def turleder_search(request):
         if len(request.POST['query']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:
             raise PermissionDenied
 
-        actors = Actor.get_members()
+        actors = Actor.get_personal_members()
         for word in request.POST['query'].split():
             actors = actors.filter(
                 Q(first_name__icontains=word) |
@@ -189,7 +189,7 @@ def turleder_search(request):
     # If we have more than 2100 parameters, MSSQL will cry, so split it up in bulks
     for i in range(0, len(memberids), settings.MSSQL_MAX_PARAMETER_COUNT):
         memberid_chunk = memberids[i:i + settings.MSSQL_MAX_PARAMETER_COUNT]
-        for actor in Actor.get_members().filter(memberid__in=memberid_chunk):
+        for actor in Actor.get_personal_members().filter(memberid__in=memberid_chunk):
             cache.set('actor.%s' % actor.memberid, actor, settings.FOCUS_MEMBER_CACHE_PERIOD)
 
     # Now it's safe to iterate without having n+1 issues - all hits should be cached
@@ -218,7 +218,7 @@ def member_search(request):
         )
     local_users = local_users.order_by('first_name')
 
-    actors = Actor.get_members()
+    actors = Actor.get_personal_members()
     for word in request.POST['query'].split():
         actors = actors.filter(
             Q(first_name__icontains=word) |

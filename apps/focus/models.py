@@ -164,7 +164,7 @@ class Actor(models.Model):
     def __unicode__(self):
         return u'%s (memberid: %s)' % (self.pk, self.memberid)
 
-    def is_member(self):
+    def is_personal_member(self):
         # Note that we're ignoring the stop_date. We just need to know if this is a personal membership or not,
         # we don't care if the type changed or they haven't paid their membership (which is likely why stop_date
         # would be set)
@@ -261,7 +261,7 @@ class Actor(models.Model):
     def get_children(self):
         children = cache.get('actor.children.%s' % self.memberid)
         if children is None:
-            children = Actor.get_members().filter(parent=self.memberid).exclude(id=self.id)
+            children = Actor.get_personal_members().filter(parent=self.memberid).exclude(id=self.id)
             cache.set('actor.children.%s' % self.memberid, children, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return children
 
@@ -341,7 +341,7 @@ class Actor(models.Model):
     def is_eligible_for_publications(self):
         # Household members are eligible if their parents are eligible
         if self.is_household_member():
-            return Actor.get_members().get(memberid=self.get_parent_memberid()).is_eligible_for_publications()
+            return Actor.get_personal_members().get(memberid=self.get_parent_memberid()).is_eligible_for_publications()
 
         # This membership type is supposed to be deprecated, but error logs show it's still in use
         if self.has_membership_type("household_without_main"):
@@ -478,9 +478,9 @@ class Actor(models.Model):
         return ActorAddressClean(self.address)
 
     @staticmethod
-    def get_members():
-        """Returns Actor objects defined as members (has a service with one of the membership type codes).
-        Other objects may be foreninger, organizations or other non-standard object types which we currently
+    def get_personal_members():
+        """Returns Actor objects defined as personal members (has a service with one of the membership type codes).
+        Other objects may be foreninger, organizations or other non-private member types which we currently
         aren't supporting. Note that this should probably be used for any Actor lookup, but we might have missed
         a few spots."""
         # Note that we're ignoring the stop_date. We just need to know if this is a personal membership or not,
@@ -493,7 +493,7 @@ class Actor(models.Model):
 
     @staticmethod
     def all_active_members():
-        return Actor.get_members().filter(
+        return Actor.get_personal_members().filter(
             Q(end_date=date(year=2014, month=12, day=31)) |
             Q(end_date__isnull=True),
             # Balance should actually check for 0, but checks 1 because apparently there are some

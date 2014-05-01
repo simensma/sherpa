@@ -209,7 +209,7 @@ def existing(request):
     if data['country'] == 'NO' and len(data['zipcode']) != 4:
         return HttpResponse(json.dumps({'error': 'bad_zipcode'}))
     try:
-        actor = Actor.get_members().get(memberid=data['id'])
+        actor = Actor.get_personal_members().get(memberid=data['id'])
     except Actor.DoesNotExist:
         return HttpResponse(json.dumps({'error': 'actor.does_not_exist'}))
     except ValueError:
@@ -258,7 +258,7 @@ def verification(request):
     # If existing member is specified, save details and change to that address
     existing_name = ''
     if enrollment.existing_memberid != '':
-        actor = Actor.get_members().get(memberid=enrollment.existing_memberid)
+        actor = Actor.get_personal_members().get(memberid=enrollment.existing_memberid)
         existing_name = "%s %s" % (actor.first_name, actor.last_name)
         enrollment.country = actor.get_clean_address().country.code
         if actor.get_clean_address().country.code == 'NO':
@@ -285,7 +285,7 @@ def verification(request):
     # Figure out which forening this member/these members will belong to
     if enrollment.existing_memberid != '':
         # Use main members' forening if applicable
-        focus_forening_id = Actor.get_members().get(memberid=enrollment.existing_memberid).main_forening_id
+        focus_forening_id = Actor.get_personal_members().get(memberid=enrollment.existing_memberid).main_forening_id
         forening = cache.get('forening.focus.%s' % focus_forening_id)
         if forening is None:
             forening = Forening.objects.get(focus_id=focus_forening_id)

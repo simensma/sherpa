@@ -28,7 +28,7 @@ def index(request):
 
     # Prefetch and cache the actors
     memberids = [u.memberid for u in (forening_users + forening_users_by_parent)]
-    for actor in Actor.get_members().filter(memberid__in=memberids):
+    for actor in Actor.get_personal_members().filter(memberid__in=memberids):
         cache.set('actor.%s' % actor.memberid, actor, settings.FOCUS_MEMBER_CACHE_PERIOD)
 
     # Safe to iterate without having n+1 issues
@@ -235,7 +235,7 @@ def contact_person_search(request):
         )
     local_nonmember_users = local_nonmember_users.order_by('first_name')
 
-    actors = Actor.get_members()
+    actors = Actor.get_personal_members()
     for word in request.POST['q'].split():
         actors = actors.filter(
             Q(first_name__icontains=word) |
@@ -272,7 +272,7 @@ def users_access_search(request):
         )
     local_nonmember_users = local_nonmember_users.order_by('first_name')
 
-    actors = Actor.get_members()
+    actors = Actor.get_personal_members()
     for word in request.POST['q'].split():
         actors = actors.filter(
             Q(first_name__icontains=word) |

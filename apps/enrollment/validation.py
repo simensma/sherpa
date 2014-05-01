@@ -77,7 +77,7 @@ def validate_location(enrollment):
 
 def validate_existing(enrollment):
     try:
-        actor = Actor.get_members().get(memberid=enrollment.existing_memberid)
+        actor = Actor.get_personal_members().get(memberid=enrollment.existing_memberid)
     except (Actor.DoesNotExist, ValueError):
         return False
 

@@ -301,7 +301,7 @@ def turleder_search(request):
         )
     local_nonmember_users = local_nonmember_users.order_by('first_name')
 
-    actors = Actor.get_members()
+    actors = Actor.get_personal_members()
     for word in request.POST['q'].split():
         actors = actors.filter(
             Q(first_name__icontains=word) |
