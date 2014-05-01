@@ -112,6 +112,10 @@ class ActorProxy:
     def __unicode__(self):
         return u'Enrollment: %s' % self.enrollment.memberid
 
+    def is_personal_member(self):
+        """Assume that all new enrollments are personal memberships."""
+        return True
+
     def get_first_name(self):
         return self.enrollment.first_name.strip()
 
