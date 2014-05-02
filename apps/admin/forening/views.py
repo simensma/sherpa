@@ -366,4 +366,7 @@ def users_give_access(request):
     cache.delete('user.%s.all_foreninger' % other_user.id)
     return redirect('%s#brukere' % reverse('admin.forening.views.index'))
 
-
+def expire_forening_permission_cache(request):
+    cache.delete('user.%s.all_foreninger' % request.user.id)
+    messages.info(request, 'permission_cache_deleted')
+    return redirect('%s#grupper' % reverse('admin.forening.views.index'))

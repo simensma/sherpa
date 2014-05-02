@@ -15,12 +15,16 @@
           <td>
             {% if forening in user.all_foreninger %}
               <a href="/sherpa/aktiv-forening/{{ forening.id }}/?next={% url 'admin.forening.views.index' %}#grupper">
+            {% else %}
+              <span{% if not forening in user.all_foreninger %} data-popover data-trigger="hover" data-placement="right" data-html="true" data-title="Ikke tilgang" data-content="Du har ikke tilgang til {{ forening.name }}.<br><br>Hvis du mener du skal ha tilgang, og foreningen ble opprettet i løpet av det siste døgnet kan du prøve å oppdatere tilgangene nederst på siden.<br><br>Hvis ikke må du kontakte noen i foreningen som kan gi deg tilgang."{% endif %}>
             {% endif %}
 
             {{ forening.name }}
 
             {% if forening in user.all_foreninger %}
               </a>
+            {% else %}
+              </span>
             {% endif %}
           </td>
 
@@ -29,12 +33,16 @@
               {% for parent in forening.parents.all %}
                 {% if parent in user.all_foreninger %}
                   <a href="/sherpa/aktiv-forening/{{ parent.id }}/?next={% url 'admin.forening.views.index' %}#grupper">
+                {% else %}
+                  <span{% if not parent in user.all_foreninger %} data-popover data-trigger="hover" data-placement="right" data-html="true" data-title="Ikke tilgang" data-content="Du har ikke tilgang til {{ forening.name }}.<br><br>Hvis du mener du skal ha tilgang, og foreningen ble opprettet i løpet av det siste døgnet kan du prøve å oppdatere tilgangene nederst på siden.<br><br>Hvis ikke må du kontakte noen i foreningen som kan gi deg tilgang."{% endif %}>
                 {% endif %}
 
                 {{ parent.name }}
 
                 {% if parent in user.all_foreninger %}
                   </a>
+                {% else %}
+                  </span>
                 {% endif %}
 
                 {% if not forloop.last %}

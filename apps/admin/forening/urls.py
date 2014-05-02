@@ -6,4 +6,5 @@ urlpatterns = patterns('admin.forening.views',
     url(r'^kontaktperson/$', 'contact_person_search'),
     url(r'^brukere/tilgang/sok/$', 'users_access_search'),
     url(r'^brukere/tilgang/gi/$', 'users_give_access'),
+    url(r'^oppdater-foreningstilgang/$', 'expire_forening_permission_cache'),
 )
