@@ -47,7 +47,9 @@ $(document).ready(function() {
 
         if(high != low) {
             // Recommend the cheapest price
-            price_table.find("tr[data-age]").eq(low.index).addClass('main').find("input[name='main']").click();
+            var main_row = price_table.find("tr[data-age]").eq(low.index);
+            form.find("input[name='main-member']").val(main_row.attr('data-id'));
+            main_row.addClass('main').find("input[name='main']").click();
             var hint = verification.find("div.errors div.cheaper-mainmember-hint");
             hint.find("span.name").text(low.name);
             hint.find("span.type").text(typeOf(low.age).toLowerCase());
@@ -61,6 +63,7 @@ $(document).ready(function() {
                 }
                 if($(this).attr('data-age') > 18) {
                     $(this).addClass('main').find("input[name='main']").click();
+                    form.find("input[name='main-member']").val($(this).attr('data-id'));
                     done = true;
                 }
             });
@@ -70,6 +73,8 @@ $(document).ready(function() {
     form.find("a.verify").click(function() {
         var main = price_table.find("tr.main");
         if(main.attr('data-id') !== undefined) {
+            // This is probably already filled with the chosen main-member, but set it again just in case
+            // See https://sentry.turistforeningen.no/turistforeningen/sherpa/group/1401/
             form.find("input[name='main-member']").val(main.attr('data-id'));
         }
         form.submit();
@@ -80,6 +85,7 @@ $(document).ready(function() {
     price_table.find("input[name='main']").click(function() {
         price_table.find("tr").removeClass('main');
         $(this).parents("tr").addClass('main');
+        form.find("input[name='main-member']").val($(this).parents("tr").attr('data-id'));
         calculatePrices();
     });
 
