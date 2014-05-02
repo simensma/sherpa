@@ -79,8 +79,7 @@ def encrypt(auth, plaintext):
         iv = os.urandom(settings.DNT_CONNECT_BLOCK_SIZE)
         cipher = AES.new(auth['key'], auth['cipher'], iv)
         ciphertext = iv + cipher.encrypt(padded_text)
-        # FIXME: Sending deprecated form of hmac back for backwards compatibility
-        hmac_ = calc_hmac_hexdigest(auth['key'], iv + plaintext)
+        hmac_ = calc_hmac(auth['key'], iv + plaintext)
     else:
         cipher = AES.new(auth['key'], auth['cipher'])
         ciphertext = cipher.encrypt(padded_text)
@@ -103,8 +102,7 @@ def decrypt(auth, encoded, hmac_):
         plaintext_padded = cipher.decrypt(ciphertext)
         plaintext = pkcs7.decode(plaintext_padded, settings.DNT_CONNECT_BLOCK_SIZE)
 
-        # Try both hmac-functions temporary for backwards compatibility - calc_hmac_hexdigest should be removed eventually
-        if auth['iv'] and calc_hmac(auth['key'], iv + plaintext) != hmac_ and calc_hmac_hexdigest(auth['key'], iv + plaintext) != hmac_:
+        if auth['iv'] and calc_hmac(auth['key'], iv + plaintext) != hmac_:
             logger.warning(u"Forespurt hmac matchet ikke egenkalkulert hmac",
                 extra={
                     'our_hmac': calc_hmac(auth['key'], iv + plaintext),
@@ -123,10 +121,6 @@ def decrypt(auth, encoded, hmac_):
 
 def calc_hmac(key, data):
     return base64.b64encode(hmac.new(key, data, hashlib.sha512).digest())
-
-def calc_hmac_hexdigest(key, data):
-    """Deprecated way of using the hexdigest output instead of the actual output bytes"""
-    return base64.b64encode(hmac.new(key, data, hashlib.sha512).hexdigest())
 
 def add_signon_session_value(request, value):
     request.session['dntconnect']['signon'] = value
