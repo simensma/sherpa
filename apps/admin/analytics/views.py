@@ -1,4 +1,3 @@
-from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.core.cache import cache
 
