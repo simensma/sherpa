@@ -318,6 +318,13 @@ class User(AbstractBaseUser):
         actor.reserved_against_partneroffers = reserved
         actor.save()
 
+    def has_local_forening(self):
+        """As many members as possible should have a local forening, but a few zipcodes aren't registered to any
+        forening and members located there will belong to our central forening. We'll need to account for that a
+        few places, hence this method."""
+        # Assume anyone who doesn't have DNT Central's ID (11) has a local forening
+        return self.get_actor().main_forening_id != 11
+
     def main_forening(self, convert_dnt_oslo_for_youth=True):
         """
         We have an interesting special case where we want youth members of DNT Oslo og Omegn
@@ -328,7 +335,12 @@ class User(AbstractBaseUser):
         """
         forening = cache.get('user.%s.%s.forening' % (self.identifier, convert_dnt_oslo_for_youth))
         if forening is None:
-            forening = Forening.objects.get(focus_id=self.get_actor().main_forening_id)
+
+            if not self.has_local_forening():
+                # For users without a local forening, we'll have to return the main forening
+                forening = Forening.objects.get(id=Forening.DNT_CENTRAL_ID)
+            else:
+                forening = Forening.objects.get(focus_id=self.get_actor().main_forening_id)
 
             if convert_dnt_oslo_for_youth and forening.id == Forening.DNT_OSLO_ID and self.membership_type()['codename'] == 'youth':
                 forening = Forening.objects.get(id=Forening.DNT_UNG_OSLO_ID)

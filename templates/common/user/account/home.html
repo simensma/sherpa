@@ -160,7 +160,11 @@
 
     {% if user.is_member %}
       {% column %}
-        <a href="{% url 'membership.views.benefits' user.main_forening_actual.id %}" class="element">
+        {% if user.has_local_forening %}
+          <a href="{% url 'membership.views.benefits' user.main_forening_actual.id %}" class="element">
+        {% else %}
+          <a href="{% url 'membership.views.benefits' %}" class="element">
+        {% endif %}
           <p class="title">Dine medlemsfordeler</p>
           <p>
             Se oversikt over alle fordelene du får gjennom ditt DNT-medlemskap.

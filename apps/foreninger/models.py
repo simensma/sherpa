@@ -47,6 +47,7 @@ class Forening(models.Model):
     facebook_url = models.CharField(max_length=2048, default='')
 
     # Sometimes we'll need to reference foreninger directly by ID. We'll store a couple of IDs here.
+    DNT_CENTRAL_ID = 56
     DNT_OSLO_ID = 2
     DNT_UNG_OSLO_ID = 152
 
