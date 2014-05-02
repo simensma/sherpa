@@ -169,8 +169,8 @@ class Actor(models.Model):
         # we don't care if the type changed or they haven't paid their membership (which is likely why stop_date
         # would be set)
         return self.get_services().filter(
-            code__gte=101,
-            code__lte=109,
+            code__gte=min([t['code'] for t in MEMBERSHIP_TYPES]),
+            code__lte=max([t['code'] for t in MEMBERSHIP_TYPES]),
         ).exists()
 
     def membership_type(self):
@@ -179,8 +179,8 @@ class Actor(models.Model):
         code = int(self.get_services().get(
             Q(stop_date__isnull=True) |
             Q(stop_date__gt=datetime.now()),
-            code__gte=101,
-            code__lte=109,
+            code__gte=min([t['code'] for t in MEMBERSHIP_TYPES]),
+            code__lte=max([t['code'] for t in MEMBERSHIP_TYPES]),
         ).code.strip())
         return get_membership_type_by_code(code)
 
@@ -487,8 +487,8 @@ class Actor(models.Model):
         # we don't care if the type changed or they haven't paid their membership (which is likely why stop_date
         # would be set)
         return Actor.objects.filter(
-            services__code__gte=101,
-            services__code__lte=109,
+            services__code__gte=min([t['code'] for t in MEMBERSHIP_TYPES]),
+            services__code__lte=max([t['code'] for t in MEMBERSHIP_TYPES]),
         )
 
     @staticmethod
