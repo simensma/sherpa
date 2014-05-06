@@ -143,6 +143,32 @@ div.cms-editor {
       font-style: italic;
       font-size: 14px;
     }
+
+    div.add-content {
+      text-align: center;
+      margin: 0;
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+
+    div.add-content.active {
+      background-color: rgb(240, 240, 240);
+
+      img.plus {
+        display: none;
+      }
+    }
+
+    div.add-content:not(.active) {
+      div.content-choices {
+        display: none;
+      }
+    }
+
+    div.add-content:hover {
+      cursor: pointer;
+      background-color: rgb(240, 240, 240);
+    }
   }
 
   div.insert-columns {

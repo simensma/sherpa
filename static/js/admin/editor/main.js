@@ -1,7 +1,9 @@
 /* Common for page- and article-editor */
 $(document).ready(function() {
 
-    var insertion_templates = $("div.insertion-templates");
+    var editor = $("div.cms-editor");
+    var article = editor.find("article");
+    var insertion_templates = editor.find("div.insertion-templates");
 
     /**
      * Initialization
@@ -150,6 +152,28 @@ $(document).ready(function() {
             }
         });
     }
+
+    // New method of adding content
+    $(document).on('click', article.selector + ' div.add-content', function() {
+        $(this).addClass('active');
+    });
+    $(document).on('mouseleave', article.selector + ' div.add-content', function() {
+        $(this).removeClass('active');
+    });
+
+    $(document).on('click', article.selector + ' div.add-content button', function() {
+        if($(this).attr('data-type') === 'text') {
+            var content = insertion_templates.find("div.content.html").clone();
+            content.insertBefore($(this).parents("div.add-content"));
+            insertion_templates.find("div.add-content").clone().insertBefore(content);
+            content.attr('contenteditable', 'true').focus();
+        }
+        // Other types TBD
+    });
+
+    article.find("div.content").each(function() {
+        insertion_templates.find("div.add-content").clone().insertAfter($(this));
+    });
 
     //Content changes (text, images, widgets)
     var noStructureForContentWarning = "Det er ingen rader/kolonner å sette inn innhold i! " +
