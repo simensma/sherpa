@@ -188,48 +188,57 @@ $(document).ready(function() {
         if(type === 'text') {
             var content = insertion_templates.find("div.content.html").clone();
             content.insertBefore(before);
-            if(content.prev("div.add-content").length === 0) {
-                insertion_templates.find("div.add-content").clone().insertBefore(content);
-            }
-            if(content.next("div.add-content").length === 0) {
-                insertion_templates.find("div.add-content").clone().insertAfter(content);
-            }
             content.attr('contenteditable', 'true').focus();
         } else if(type === 'image') {
             var image = insertion_templates.find("div.content.image").clone();
             image.css("overflow", "hidden");
             image.insertBefore(before);
-            if(image.prev("div.add-content").length === 0) {
-                insertion_templates.find("div.add-content").clone().insertBefore(image);
-            }
-            if(image.next("div.add-content").length === 0) {
-                insertion_templates.find("div.add-content").clone().insertAfter(image);
-            }
             image.find("img").click();
         }
+        resetAddContentButtons();
         // Other types TBD
     }
 
+
+    function resetAddContentButtons() {
+        article.find("div.add-content,div.add-content-row").remove();
+
+        var rows = article.find("div[data-row]");
+
+        // Edge case; if there are *no* rows
+        if(rows.length === 0) {
+            insertion_templates.find("div.add-content-row").clone().prependTo(article);
+            return;
+        }
+
+        rows.each(function() {
+            var columns = $(this).find("div.column");
+
+            // If there is one great column, no nead for a trailing add column after last content
+            // If there are several, we do want one
+            var trailing_add_content = columns.length > 1;
+
+            columns.each(function() {
+                insertion_templates.find("div.add-content").clone().prependTo($(this));
+                $(this).find("div.content").each(function() {
+                    insertion_templates.find("div.add-content").clone().insertAfter($(this));
+                });
+                if(!trailing_add_content) {
+                    $(this).children().last().remove();
+                }
+            });
+            insertion_templates.find("div.add-content-row").clone().insertAfter($(this));
+        });
+    }
 
     //
     // Initial edit-control states
     //
 
-    // First, if there are NO rows at all, create a single row w/single column
-    if(article.find("div[data-row]").length === 0) {
-        var empty_row = $.parseHTML('<div class="row-fluid" data-row><div class="column span12"></div></div>');
-        empty_row.prependTo(article);
-    }
+    resetAddContentButtons();
+
     article.find("div[data-row]").each(function() {
-        // If the row has no columns, add the default large one
-        if($(this).children().length === 0) {
-            var empty_column = $.parseHTML('<div class="column span12"></div>');
-            empty_column.prependTo($(this));
-        }
-
         insertion_templates.find("div.edit-structure").clone().insertBefore($(this));
-        insertion_templates.find("div.add-content-row").clone().insertAfter($(this));
-
     });
 
     $(document).on('mouseenter', 'article div.content', function() {
@@ -242,6 +251,7 @@ $(document).ready(function() {
 
     $(document).on('click', 'article div.content div.remove-content a', function() {
         $(this).parents("div.content").remove();
+        resetAddContentButtons();
     });
 
     //
@@ -316,11 +326,12 @@ $(document).ready(function() {
             third_column.attr('class', '').addClass('column span4');
 
             extra_columns.each(function() {
-                $(this).children().detach().prependTo(third_column);
+                $(this).children().detach().appendTo(third_column);
             });
             extra_columns.remove();
         }
 
+        resetAddContentButtons();
     });
 
 
