@@ -11,15 +11,21 @@
 <article data-save-url="{% url 'admin.cms.views.content.save' version.id %}" data-render-widget-url="{% url 'admin.cms.views.content.render_widget' %}">
 
   {% for row in rows %}
-    <div class="row-fluid">
+    {# Rows are recognized by their data-row attribute, not their class #}
+    <div class="row-fluid" data-row>
+
       {% for column in row.columns %}
         <div class="column offset{{ column.offset }} span{{ column.span }}">
+
           {% for content in column.contents %}
             {% if content.type == 'html' or content.type == 'title' or content.type == 'lede' %}
+
               <div class="content {{ content.type }} editable">
                 {{ content.content|safe }}
               </div>
+
             {% elif content.type == 'image' %}
+
               <div style="{% if content.content.parentHeight %}height:{{ content.content.parentHeight }}px;{% endif %}" class="content image">
                 {% if content.content.anchor %}<a href="{{ content.content.anchor }}">{% endif %}
                 <img src="{{ content.content.src }}"
@@ -36,14 +42,19 @@
                     </span>
                 </div>
               </div>
+
             {% elif content.type == 'widget' %}
+
               <div class="content widget {{ content.content.widget }}" data-json="{{ content.content.json }}">
                 {% include content.content.template with widget=content.content %}
               </div>
+
             {% endif %}
           {% endfor %}
+
         </div>
       {% endfor %}
+
     </div>
   {% endfor %}
 
@@ -90,13 +101,25 @@
     </div>
   </div>
 
-  <div class="add-content">
-    <img src="/static/img/icons/glyph/original/glyphicons_190_circle_plus.png" alt="Legg til" class="plus">
-    <div class="content-choices">
-      <button class="btn" data-type="text">Tekst</button>
-      <button class="btn" data-type="image">Bilde</button>
-      <button class="btn" data-type="">Widgets TBD...</button>
+  <div class="row-fluid edit-structure">
+    <div class="column span12">
+      <div class="edit-structure-inner">
+        <button class="btn" data-type="single">Én</button>
+        <button class="btn" data-type="double">To</button>
+        <button class="btn" data-type="sidebar">Sb</button>
+        <button class="btn" data-type="triple">Tre</button>
+      </div>
     </div>
+  </div>
+
+  <div class="row-fluid add-content-row">
+    <div class="column span12">
+      {% include 'common/admin/editor/add-content.html' %}
+    </div>
+  </div>
+
+  <div class="add-content">
+    {% include 'common/admin/editor/add-content.html' %}
   </div>
 
 </div>

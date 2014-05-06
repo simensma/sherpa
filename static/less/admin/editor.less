@@ -144,14 +144,25 @@ div.cms-editor {
       font-size: 14px;
     }
 
-    div.add-content {
+    div.edit-structure-inner {
+      text-align: center;
+      // background-color: rgb(240, 240, 240);
+      padding-top: 10px;
+      padding-bottom: 10px;
+      border-top: 1px solid rgb(200, 200, 200);
+      border-left: 1px solid rgb(200, 200, 200);
+      border-right: 1px solid rgb(200, 200, 200);
+      // border-bottom: 1px solid rgb(200, 200, 200);
+    }
+
+    div.add-content, div.add-content-row {
       text-align: center;
       margin: 0;
       padding-top: 10px;
       padding-bottom: 10px;
     }
 
-    div.add-content.active {
+    div.add-content.active, div.add-content-row.active {
       background-color: rgb(240, 240, 240);
 
       img.plus {
@@ -159,13 +170,13 @@ div.cms-editor {
       }
     }
 
-    div.add-content:not(.active) {
+    div.add-content:not(.active), div.add-content-row:not(.active) {
       div.content-choices {
         display: none;
       }
     }
 
-    div.add-content:hover {
+    div.add-content:hover, div.add-content-row:hover {
       cursor: pointer;
       background-color: rgb(240, 240, 240);
     }

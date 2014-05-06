@@ -62,7 +62,7 @@ $(document).ready(function() {
 
         // Rows
         var rows = [];
-        article.children("div.row-fluid").each(function() {
+        article.children("div[data-row]").each(function() {
             var row = {
                 order: $(this).prevAll().length
             };

@@ -154,32 +154,163 @@ $(document).ready(function() {
     }
 
     // New method of adding content
-    $(document).on('click', article.selector + ' div.add-content', function() {
+    $(document).on('click', article.selector + ' div.add-content,' + article.selector + ' div.add-content-row', function() {
         $(this).addClass('active');
     });
-    $(document).on('mouseleave', article.selector + ' div.add-content', function() {
+    $(document).on('mouseleave', article.selector + ' div.add-content,' + article.selector + ' div.add-content-row', function() {
         $(this).removeClass('active');
     });
 
     $(document).on('click', article.selector + ' div.add-content button', function() {
-        if($(this).attr('data-type') === 'text') {
+        insertContent($(this).attr('data-type'), $(this).parents("div.add-content"));
+    });
+
+    $(document).on('click', article.selector + ' div.add-content-row button', function() {
+
+        var prev_row = $(this).parents("div.row-fluid").prev();
+
+        if(prev_row.length === 0) {
+            // No previous column, just insert a new row
+            // TBD
+        }
+
+        // If the previous row is single-column, we'll just add an element to that row
+        if(prev_row.children("div.column").length === 1) {
+            insertContent($(this).attr('data-type'), prev_row.children("div.column").children().last());
+        } else {
+            // If not, this creates a new single-column row
+            // TBD
+        }
+
+    });
+
+    function insertContent(type, before) {
+        if(type === 'text') {
             var content = insertion_templates.find("div.content.html").clone();
-            content.insertBefore($(this).parents("div.add-content"));
-            insertion_templates.find("div.add-content").clone().insertBefore(content);
+            content.insertBefore(before);
+            if(content.prev("div.add-content").length === 0) {
+                insertion_templates.find("div.add-content").clone().insertBefore(content);
+            }
+            if(content.next("div.add-content").length === 0) {
+                insertion_templates.find("div.add-content").clone().insertAfter(content);
+            }
             content.attr('contenteditable', 'true').focus();
-        } else if($(this).attr('data-type') === 'image') {
+        } else if(type === 'image') {
             var image = insertion_templates.find("div.content.image").clone();
             image.css("overflow", "hidden");
-            image.insertBefore($(this).parents("div.add-content"));
-            insertion_templates.find("div.add-content").clone().insertBefore(image);
+            image.insertBefore(before);
+            if(image.prev("div.add-content").length === 0) {
+                insertion_templates.find("div.add-content").clone().insertBefore(image);
+            }
+            if(image.next("div.add-content").length === 0) {
+                insertion_templates.find("div.add-content").clone().insertAfter(image);
+            }
             image.find("img").click();
         }
         // Other types TBD
+    }
+
+
+    //
+    // Initial edit-control states
+    //
+
+    // First, if there are NO rows at all, create a single row w/single column
+    if(article.find("div[data-row]").length === 0) {
+        var empty_row = $.parseHTML('<div class="row-fluid" data-row><div class="column span12"></div></div>');
+        empty_row.prependTo(article);
+    }
+    article.find("div[data-row]").each(function() {
+        // If the row has no columns, add the default large one
+        if($(this).children().length === 0) {
+            var empty_column = $.parseHTML('<div class="column span12"></div>');
+            empty_column.prependTo($(this));
+        }
+
+        insertion_templates.find("div.edit-structure").clone().insertBefore($(this));
+        insertion_templates.find("div.add-content-row").clone().insertAfter($(this));
+
     });
 
-    article.find("div.content").each(function() {
-        insertion_templates.find("div.add-content").clone().insertAfter($(this));
+    //
+    // Structure changes
+    //
+
+    $(document).on('click', article.selector + ' div.edit-structure button', function() {
+
+        var row = $(this).parents("div.row-fluid").next("div[data-row]");
+
+        if($(this).attr('data-type') === 'single') {
+            var first_column = row.children("div.column").first();
+            var extra_columns = row.children("div.column").slice(1);
+            first_column.attr('class', '').addClass('column span12');
+
+            extra_columns.each(function() {
+                $(this).children().detach().prependTo(first_column);
+            });
+            extra_columns.remove();
+        } else if($(this).attr('data-type') === 'double') {
+            var first_column = row.children("div.column").first();
+            var second_column = row.children("div.column").eq(1);
+            var extra_columns = row.children("div.column").slice(2);
+
+            if(second_column.length === 0) {
+                second_column = $('<div></div>');
+                second_column.insertAfter(first_column);
+            }
+
+            first_column.attr('class', '').addClass('column span6');
+            second_column.attr('class', '').addClass('column span6');
+
+            extra_columns.each(function() {
+                $(this).children().detach().prependTo(second_column);
+            });
+            extra_columns.remove();
+        } else if($(this).attr('data-type') === 'sidebar') {
+            var first_column = row.children("div.column").first();
+            var second_column = row.children("div.column").eq(1);
+            var extra_columns = row.children("div.column").slice(2);
+
+            if(second_column.length === 0) {
+                second_column = $('<div></div>');
+                second_column.insertAfter(first_column);
+            }
+
+            first_column.attr('class', '').addClass('column span9');
+            second_column.attr('class', '').addClass('column span3');
+
+            extra_columns.each(function() {
+                $(this).children().detach().prependTo(second_column);
+            });
+            extra_columns.remove();
+        } else if($(this).attr('data-type') === 'triple') {
+            var first_column = row.children("div.column").first();
+            var second_column = row.children("div.column").eq(1);
+            var third_column = row.children("div.column").eq(2);
+            var extra_columns = row.children("div.column").slice(3);
+
+            if(second_column.length === 0) {
+                second_column = $('<div></div>');
+                second_column.insertAfter(first_column);
+            }
+
+            if(third_column.length === 0) {
+                third_column = $('<div></div>');
+                third_column.insertAfter(second_column);
+            }
+
+            first_column.attr('class', '').addClass('column span4');
+            second_column.attr('class', '').addClass('column span4');
+            third_column.attr('class', '').addClass('column span4');
+
+            extra_columns.each(function() {
+                $(this).children().detach().prependTo(third_column);
+            });
+            extra_columns.remove();
+        }
+
     });
+
 
     //Content changes (text, images, widgets)
     var noStructureForContentWarning = "Det er ingen rader/kolonner å sette inn innhold i! " +
@@ -387,7 +518,7 @@ $(document).ready(function() {
                 {span: 3, offset: 0, order: 3}
             ];
         }
-        var wrapper = $('<div class="row-fluid"></div>');
+        var wrapper = $('<div class="row-fluid" data-row></div>');
         for(var i=0; i<columns.length; i++) {
             wrapper.append($('<div class="column span' + columns[i].span + ' offset' +
                 columns[i].offset + '"></div>'));
@@ -408,17 +539,17 @@ $(document).ready(function() {
     // Remove a row and all its content
     toolbar.find("button.remove-columns").click(function() {
         function doneRemoving() {
-            $(document).off('mouseenter mouseleave click', 'article > div.row-fluid');
+            $(document).off('mouseenter mouseleave click', 'article > div[data-row]');
             enableEditing();
             enableToolbar();
         }
         disableToolbar("Velg raden du vil fjerne...", doneRemoving);
         disableEditing();
-        $(document).on('mouseenter', 'article > div.row-fluid', function() {
+        $(document).on('mouseenter', 'article > div[data-row]', function() {
             $(this).addClass('hover-remove');
-        }).on('mouseleave', 'article > div.row-fluid', function() {
+        }).on('mouseleave', 'article > div[data-row]', function() {
             $(this).removeClass('hover-remove');
-        }).on('click', 'article > div.row-fluid', function() {
+        }).on('click', 'article > div[data-row]', function() {
             var row = $(this);
             row.hide();
             doneRemoving();
