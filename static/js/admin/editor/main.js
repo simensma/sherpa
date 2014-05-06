@@ -11,7 +11,7 @@ $(document).ready(function() {
      */
 
     rangy.init();
-    window.selection;
+    window.selection = undefined;
     var insertable;
     setEmpties();
     enableEditing();

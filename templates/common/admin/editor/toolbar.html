@@ -15,17 +15,16 @@
     <a href="javascript:undefined" data-title="Sett inn strek" class="button hr" data-image="{{ STATIC_URL }}img/editorbuttons/hr">&nbsp;</a>
     <a href="javascript:undefined" data-title="Fjern formatering" class="button remove-format" data-image="{{ STATIC_URL }}img/editorbuttons/remove-format">&nbsp;</a>
     <div style="clear: both;"></div>
-    <select class="formatting">
-      <option value="default">Velg skrifttype...</option>
-      <optgroup label="--------------------">
-        <option value="h1">Hovedtittel</option>
-        <option value="h2">Subtittel</option>
-        <option value="h3">Mellomtittel</option>
-        <option value="lede">Ingress</option>
-        <option value="bread">Brødtekst</option>
-      </optgroup>
-    </select>
+
+    <div class="btn-group formatting">
+      <button class="btn" data-format="h1">Tittel</button>
+      <button class="btn" data-format="h2">Subtittel</button>
+      <button class="btn" data-format="h3">Mellomtittel</button>
+      <button class="btn" data-format="lede">Ingress</button>
+      <button class="btn" data-format="bread">Brødtekst</button>
+    </div>
     <br>
+
     <button class="btn insert-button"><i class="icon-share-alt"></i> Knapp</button>
   </div>
   <div class="anchor-insert jq-hide">
