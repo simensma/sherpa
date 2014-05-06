@@ -195,13 +195,13 @@ $(document).ready(function() {
             image.insertBefore(before);
             image.find("img").click();
         }
-        resetAddContentButtons();
+        resetControls();
         // Other types TBD
     }
 
 
-    function resetAddContentButtons() {
-        article.find("div.add-content,div.add-content-row").remove();
+    function resetControls() {
+        article.find("div.edit-structure,div.add-content,div.add-content-row").remove();
 
         var rows = article.find("div[data-row]");
 
@@ -227,6 +227,7 @@ $(document).ready(function() {
                     $(this).children().last().remove();
                 }
             });
+            insertion_templates.find("div.edit-structure").clone().insertBefore($(this));
             insertion_templates.find("div.add-content-row").clone().insertAfter($(this));
         });
     }
@@ -235,11 +236,7 @@ $(document).ready(function() {
     // Initial edit-control states
     //
 
-    resetAddContentButtons();
-
-    article.find("div[data-row]").each(function() {
-        insertion_templates.find("div.edit-structure").clone().insertBefore($(this));
-    });
+    resetControls();
 
     $(document).on('mouseenter', 'article div.content', function() {
         insertion_templates.find("div.remove-content").clone().appendTo($(this));
@@ -251,7 +248,7 @@ $(document).ready(function() {
 
     $(document).on('click', 'article div.content div.remove-content a', function() {
         $(this).parents("div.content").remove();
-        resetAddContentButtons();
+        resetControls();
     });
 
     //
@@ -331,7 +328,7 @@ $(document).ready(function() {
             extra_columns.remove();
         }
 
-        resetAddContentButtons();
+        resetControls();
     });
 
 
