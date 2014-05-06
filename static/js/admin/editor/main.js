@@ -1,6 +1,8 @@
 /* Common for page- and article-editor */
 $(document).ready(function() {
 
+    var insertion_templates = $("div.insertion-templates");
+
     /**
      * Initialization
      */
@@ -165,7 +167,7 @@ $(document).ready(function() {
             setEmpties();
         });
         insertables("Klikk for å legge til tekst her", $("article .column"), function(event) {
-            var content = $("div.insertion-templates div.content.html").clone();
+            var content = insertion_templates.find("div.content.html").clone();
             content.insertAfter($(event.target));
             setEmpties();
             enableToolbar();
@@ -186,7 +188,7 @@ $(document).ready(function() {
             setEmpties();
         });
         insertables("Klikk for å legge til bilde her", $("article .column"), function(event) {
-            var image = $("div.insertion-templates div.content.image").clone();
+            var image = insertion_templates.find("div.content.image").clone();
             image.css("overflow", "hidden");
             image.insertAfter($(event.target));
             image.find("img").click();
