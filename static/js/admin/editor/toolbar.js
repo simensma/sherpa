@@ -5,7 +5,7 @@ $(document).ready(function() {
     var FORMATTER_ELEMENTS = "abbr,acronym,b,bdi,bdo,big,blink,cite,code,dfn,em,font,h1,h2,h3,h4,h5,h6,i,ins,kbd,mark,nobr,q,s,samp,small,span,strike,strong,sub,sup,tt,u,var";
 
     var toolbar = $("div.cms-editor-toolbar");
-    var toolbarContents = toolbar.find("div.toolbar-contents")
+    var toolbarContents = toolbar.find("div.toolbar-contents");
     var anchorInsert = toolbar.find("div.anchor-insert");
     var formatting = toolbar.find("div.formatting");
 
