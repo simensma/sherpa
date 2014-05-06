@@ -3,7 +3,6 @@
     <a href="javascript:undefined" data-title="Fet tekst" class="button bold" data-image="{{ STATIC_URL }}img/editorbuttons/bold">&nbsp;</a>
     <a href="javascript:undefined" data-title="Kursiv tekst" class="button italic" data-image="{{ STATIC_URL }}img/editorbuttons/italic">&nbsp;</a>
     <a href="javascript:undefined" data-title="Understreket tekst" class="button underline" data-image="{{ STATIC_URL }}img/editorbuttons/underline">&nbsp;</a>
-    <a href="javascript:undefined" data-title="Sett inn bilde" class="button image" data-image="{{ STATIC_URL }}img/editorbuttons/image">&nbsp;</a>
     <a href="javascript:undefined" data-title="Sett inn widget" class="button widget" data-image="{{ STATIC_URL }}img/editorbuttons/widget">&nbsp;</a>
     <a href="javascript:undefined" data-title="Sett inn lenke" class="button anchor-add" data-image="{{ STATIC_URL }}img/editorbuttons/anchor-add">&nbsp;</a>
     <a href="javascript:undefined" data-title="Sett inn e-postadresse" class="button email-add" data-image="{{ STATIC_URL }}img/editorbuttons/email-add">&nbsp;</a>
@@ -26,17 +25,8 @@
         <option value="bread">Brødtekst</option>
       </optgroup>
     </select>
-    <div class="btn-group">
-      <button class="btn add-text"><i class="icon-align-left"></i> Tekst</button>
-      <button class="btn insert-button"><i class="icon-share-alt"></i> Knapp</button>
-      <button class="btn remove-content"><i class="icon-remove"></i> Ta bort innhold</button>
-    </div>
-    {% if toolbar_structure %}
-      <div class="btn-group">
-        <button class="btn add-columns"><i class="icon-list-alt"></i> Legg til ny rad</button>
-        <button class="btn remove-columns"><i class="icon-remove"></i> Ta bort en rad</button>
-      </div>
-    {% endif %}
+    <br>
+    <button class="btn insert-button"><i class="icon-share-alt"></i> Knapp</button>
   </div>
   <div class="anchor-insert jq-hide">
     <span class="url">URL-adresse: </span>

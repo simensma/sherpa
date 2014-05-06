@@ -384,49 +384,6 @@ $(document).ready(function() {
     var noStructureForContentWarning = "Det er ingen rader/kolonner å sette inn innhold i! " +
         "Gå til 'struktur'-knappen først, og legg til noen rader og kolonner.";
 
-    // Add text
-    toolbar.find("button.add-text").click(function() {
-        if($("article").children().length === 0) {
-            alert(noStructureForContentWarning);
-            return;
-        }
-        removeEmpties();
-        disableToolbar("Klikk på et ledig felt i artikkelen for å legge til tekst...", function() {
-            $("article .insertable").remove();
-            setEmpties();
-        });
-        insertables("Klikk for å legge til tekst her", $("article .column"), function(event) {
-            var content = insertion_templates.find("div.content.html").clone();
-            content.insertAfter($(event.target));
-            setEmpties();
-            enableToolbar();
-            $("article .insertable").remove();
-            content.attr('contenteditable', 'true').focus();
-        });
-    });
-
-    // Add image
-    toolbar.find("a.button.image").click(function() {
-        if($("article").children().length === 0) {
-            alert(noStructureForContentWarning);
-            return;
-        }
-        removeEmpties();
-        disableToolbar("Klikk på et ledig felt i artikkelen for å legge til bilde...", function() {
-            $("article .insertable").remove();
-            setEmpties();
-        });
-        insertables("Klikk for å legge til bilde her", $("article .column"), function(event) {
-            var image = insertion_templates.find("div.content.image").clone();
-            image.css("overflow", "hidden");
-            image.insertAfter($(event.target));
-            image.find("img").click();
-            setEmpties();
-            $("article .insertable").remove();
-            enableToolbar();
-        });
-    });
-
     // Add widget
     window.widgetPosition; // Set when inserting a new widget
     window.widgetBeingEdited; // If undefined: a new widget, if defined: the widget being edited
