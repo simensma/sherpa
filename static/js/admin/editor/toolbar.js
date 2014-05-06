@@ -76,8 +76,6 @@ $(document).ready(function() {
         var container = start.parent();
         if(styleClass === 'bread') {
             if(!container.is(FORMATTER_ELEMENTS)) {
-                alert("Dette elementet er allerede brødtekst.\n\n" +
-                      "Hvis du mener det ikke stemmer, prøv 'Fjern formatering' (merk teksten igjen og klikk på malekost-ikonet til høyre).");
                 return $(this);
             }
             mozillaMadness(container);
