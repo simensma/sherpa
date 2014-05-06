@@ -168,7 +168,7 @@ $(document).ready(function() {
     $(document).on('click', article.selector + ' div.add-content-row button', function() {
 
         var that = this;
-        var prev_row = $(this).parents("div[data-row]").prev();
+        var prev_row = $(this).parents("div.row-fluid").prev("div[data-row]");
 
         function insertRow() {
             var row = $('<div class="row-fluid" data-row><div class="column span12"></div></div>');
