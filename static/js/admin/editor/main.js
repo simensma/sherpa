@@ -258,7 +258,7 @@ $(document).ready(function() {
             first_column.attr('class', '').addClass('column span12');
 
             extra_columns.each(function() {
-                $(this).children().detach().prependTo(first_column);
+                $(this).children().detach().appendTo(first_column);
             });
             extra_columns.remove();
         } else if($(this).attr('data-type') === 'double') {
@@ -275,7 +275,7 @@ $(document).ready(function() {
             second_column.attr('class', '').addClass('column span6');
 
             extra_columns.each(function() {
-                $(this).children().detach().prependTo(second_column);
+                $(this).children().detach().appendTo(second_column);
             });
             extra_columns.remove();
         } else if($(this).attr('data-type') === 'sidebar') {
@@ -292,7 +292,7 @@ $(document).ready(function() {
             second_column.attr('class', '').addClass('column span3');
 
             extra_columns.each(function() {
-                $(this).children().detach().prependTo(second_column);
+                $(this).children().detach().appendTo(second_column);
             });
             extra_columns.remove();
         } else if($(this).attr('data-type') === 'triple') {
