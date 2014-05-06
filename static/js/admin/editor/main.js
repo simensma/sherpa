@@ -312,7 +312,24 @@ $(document).ready(function() {
                 $(this).children().detach().appendTo(second_column);
             });
             extra_columns.remove();
-        } else if($(this).attr('data-type') === 'sidebar') {
+        } else if($(this).attr('data-type') === 'sidebar-left') {
+            var first_column = row.children("div.column").first();
+            var second_column = row.children("div.column").eq(1);
+            var extra_columns = row.children("div.column").slice(2);
+
+            if(second_column.length === 0) {
+                second_column = $('<div></div>');
+                second_column.insertAfter(first_column);
+            }
+
+            first_column.attr('class', '').addClass('column span3');
+            second_column.attr('class', '').addClass('column span9');
+
+            extra_columns.each(function() {
+                $(this).children().detach().appendTo(second_column);
+            });
+            extra_columns.remove();
+        } else if($(this).attr('data-type') === 'sidebar-right') {
             var first_column = row.children("div.column").first();
             var second_column = row.children("div.column").eq(1);
             var extra_columns = row.children("div.column").slice(2);
