@@ -167,6 +167,12 @@ $(document).ready(function() {
             content.insertBefore($(this).parents("div.add-content"));
             insertion_templates.find("div.add-content").clone().insertBefore(content);
             content.attr('contenteditable', 'true').focus();
+        } else if($(this).attr('data-type') === 'image') {
+            var image = insertion_templates.find("div.content.image").clone();
+            image.css("overflow", "hidden");
+            image.insertBefore($(this).parents("div.add-content"));
+            insertion_templates.find("div.add-content").clone().insertBefore(image);
+            image.find("img").click();
         }
         // Other types TBD
     });
