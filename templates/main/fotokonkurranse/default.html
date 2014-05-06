@@ -65,14 +65,14 @@
           <div class="control-group">
             <label class="control-label" for="phone">Telefonnummer</label>
             <div class="controls">
-              <input type="text" id="phone" name="phone" value="{{ user.get_phone_mobile }}" class="input-medium">
+              <input type="text" id="phone" name="phone" value="{% if user.is_member %}{{ user.get_phone_mobile }}{% endif %}" class="input-medium">
             </div>
           </div>
 
           <div class="control-group">
             <label class="control-label" for="email">E-postadresse</label>
             <div class="controls">
-              <input type="text" id="email" name="email" value="{{ user.get_email }}" class="input-xlarge">
+              <input type="text" id="email" name="email" value="{% if user.is_member %}{{ user.get_email }}{% endif %}" class="input-xlarge">
             </div>
           </div>
 
