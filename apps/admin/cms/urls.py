@@ -20,10 +20,6 @@ urlpatterns = patterns('admin.cms.views',
     url(r'^meny/sorter/$', 'menu.reorder'),
     url(r'^meny/slett/$', 'menu.delete'),
 
-    # Rows
-    url(r'^kolonner/ny/$', 'row.add_columns'),
-    url(r'^rad/slett/(?P<row>\d+)/$', 'row.delete'),
-
     # Content
     url(r'^widget/$', 'content.render_widget'),
 )

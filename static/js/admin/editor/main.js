@@ -355,40 +355,22 @@ $(document).ready(function() {
                 {span: 3, offset: 0, order: 3}
             ];
         }
-        var order = insertable.prevAll(":not(.insertable)").length;
-        $.ajaxQueue({
-            url: $("article").attr('data-add-columns-url'),
-            data: {
-                version: $("div.editor-header").attr("data-version-id"),
-                order: order,
-                columns: JSON.stringify(columns)
-            }
-        }).done(function(result) {
-            var wrapper = $('<div class="row-fluid"></div>');
-            for(var i=0; i<columns.length; i++) {
-                wrapper.append($('<div class="column span' + columns[i].span + ' offset' +
-                    columns[i].offset + '"></div>'));
-            }
-            var prev = insertable.prev();
-            if(prev.length === 0) {
-                insertable.parent().prepend(wrapper);
-            } else {
-                prev.after(wrapper);
-            }
-            var ids = JSON.parse(result);
-            wrapper.attr("data-id", ids[0]);
-            var i = 1;
-            wrapper.children().each(function() {
-                $(this).attr("data-id", ids[i++]);
-                setEmpty($(this));
-            });
-        }).fail(function(result) {
-            // Todo
-        }).always(function(result) {
-            $("article .insertable").remove();
-            disableOverlay();
-            enableToolbar();
+        var wrapper = $('<div class="row-fluid"></div>');
+        for(var i=0; i<columns.length; i++) {
+            wrapper.append($('<div class="column span' + columns[i].span + ' offset' +
+                columns[i].offset + '"></div>'));
+        }
+        var prev = insertable.prev();
+        if(prev.length === 0) {
+            insertable.parent().prepend(wrapper);
+        } else {
+            prev.after(wrapper);
+        }
+        wrapper.children().each(function() {
+            setEmpty($(this));
         });
+        $("article .insertable").remove();
+        enableToolbar();
     }
 
     // Remove a row and all its content
@@ -419,18 +401,8 @@ $(document).ready(function() {
             });
             confirmation.find("button.confirm").click(function() {
                 confirmation.remove();
-                enableOverlay();
-                $.ajaxQueue({
-                    url: '/sherpa/cms/rad/slett/' + encodeURIComponent(row.attr('data-id')) + '/',
-                    type: 'POST'
-                }).done(function(result) {
-                    row.remove();
-                }).fail(function(result) {
-                    // Todo
-                }).always(function(result) {
-                    doneRemoving();
-                    disableOverlay();
-                });
+                row.remove();
+                doneRemoving();
             });
         });
     });

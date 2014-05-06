@@ -8,19 +8,19 @@
   </div>
 </div>
 
-<article data-add-columns-url="{% url 'admin.cms.views.row.add_columns' %}" data-save-url="{% url 'admin.cms.views.content.save' version.id %}" data-render-widget-url="{% url 'admin.cms.views.content.render_widget' %}">
+<article data-save-url="{% url 'admin.cms.views.content.save' version.id %}" data-render-widget-url="{% url 'admin.cms.views.content.render_widget' %}">
 
   {% for row in rows %}
-    <div class="row-fluid" data-id="{{ row.id }}">
+    <div class="row-fluid">
       {% for column in row.columns %}
-        <div class="column offset{{ column.offset }} span{{ column.span }}" data-id="{{ column.id }}">
+        <div class="column offset{{ column.offset }} span{{ column.span }}">
           {% for content in column.contents %}
             {% if content.type == 'html' or content.type == 'title' or content.type == 'lede' %}
-              <div class="content {{ content.type }} editable" data-id="{{ content.id }}">
+              <div class="content {{ content.type }} editable">
                 {{ content.content|safe }}
               </div>
             {% elif content.type == 'image' %}
-              <div style="{% if content.content.parentHeight %}height:{{ content.content.parentHeight }}px;{% endif %}" class="content image" data-id="{{ content.id }}">
+              <div style="{% if content.content.parentHeight %}height:{{ content.content.parentHeight }}px;{% endif %}" class="content image">
                 {% if content.content.anchor %}<a href="{{ content.content.anchor }}">{% endif %}
                 <img src="{{ content.content.src }}"
                   {% if content.content.style %}style="{{ content.content.style }}"{% endif %}
@@ -37,7 +37,7 @@
                 </div>
               </div>
             {% elif content.type == 'widget' %}
-              <div class="content widget {{ content.content.widget }}" data-id="{{ content.id }}" data-json="{{ content.content.json }}">
+              <div class="content widget {{ content.content.widget }}" data-json="{{ content.content.json }}">
                 {% include content.content.template with widget=content.content %}
               </div>
             {% endif %}
