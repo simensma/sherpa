@@ -7,6 +7,7 @@ var NO_SAVE_WARNING_TIMEOUT = 60 * 5;
 $(document).ready(function() {
 
     var header = $("div.editor-header");
+    var save_button = header.find("button.save");
     var no_save_warning = $("div.no-save-warning");
 
     var lastSaveCount = 0;
@@ -14,7 +15,7 @@ $(document).ready(function() {
     var statusIcon = '<i class="icon-heart"></i>';
     function updateSaveCount() {
         lastSaveCount += 1;
-        header.find("button.save").html(statusIcon + ' Lagre (' + lastSaveCount + ')');
+        save_button.html(statusIcon + ' Lagre (' + lastSaveCount + ')');
 
         if(lastSaveCount == NO_SAVE_WARNING_TIMEOUT) {
             no_save_warning.show();
@@ -23,7 +24,7 @@ $(document).ready(function() {
     }
     updateSaveCount();
 
-    header.find("button.save").click(save);
+    save_button.click(save);
     header.find("button.preview").click(saveAndGo);
     header.find("button.save-and-quit").click(saveAndGo);
     header.find("a.quit").click(function(e) {
@@ -48,9 +49,8 @@ $(document).ready(function() {
     window.save = save;
     function save(done, fail) {
         clearTimeout(updateSaveCountID);
-        var saveButton = header.find("button.save");
-        saveButton.prop('disabled', true);
-        saveButton.html('<i class="icon-heart"></i> Lagrer...');
+        save_button.prop('disabled', true);
+        save_button.html('<i class="icon-heart"></i> Lagrer...');
         no_save_warning.hide();
 
         var data = {};
@@ -188,7 +188,7 @@ $(document).ready(function() {
 
             lastSaveCount = 0;
             statusIcon = '<i class="icon-heart"></i>';
-            saveButton.removeClass('btn-danger').addClass('btn-success');
+            save_button.removeClass('btn-danger').addClass('btn-success');
             if(typeof(done) == 'function') {
                 done();
             }
@@ -247,13 +247,13 @@ $(document).ready(function() {
             alert("Whoops!\n\nVi klarte ikke å lagre innholdet. Er du sikker på at du har nettilgang?\n" +
                 "Du kan prøve igjen til det går.\n\n" +
                 "Hvis du lukker siden, vil du miste alle endringene siden sist du lagret.");
-            saveButton.removeClass('btn-success').addClass('btn-danger');
+            save_button.removeClass('btn-success').addClass('btn-danger');
             if(typeof(fail) == 'function') {
                 fail();
             }
         }).always(function(result) {
             updateSaveCount();
-            saveButton.prop('disabled', false);
+            save_button.prop('disabled', false);
         });
 
     }
