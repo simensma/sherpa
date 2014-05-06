@@ -230,14 +230,13 @@ $(document).ready(function() {
                 header.find("div.publish input[name='publish']").prop('checked', false);
             }
 
+            var publish = header.find("div.publish");
             if(result.publish_error === 'auto_now') {
-                var publish = header.find("div.publish");
                 publish.find("input[name='date']").val(result.publish_date);
                 publish.find("input[name='time']").val(result.publish_time);
             }
 
             if(result.publish_error === 'error_nullify') {
-                var publish = header.find("div.publish");
                 publish.find("input[name='date']").val('');
                 publish.find("input[name='time']").val('');
             }
