@@ -184,15 +184,15 @@ $(document).ready(function() {
 
     });
 
-    function insertContent(type, before) {
+    function insertContent(type, after) {
         if(type === 'text') {
             var content = insertion_templates.find("div.content.html").clone();
-            content.insertBefore(before);
+            content.insertAfter(after);
             content.attr('contenteditable', 'true').focus();
         } else if(type === 'image') {
             var image = insertion_templates.find("div.content.image").clone();
             image.css("overflow", "hidden");
-            image.insertBefore(before);
+            image.insertAfter(after);
             image.find("img").click();
         }
         resetControls();
