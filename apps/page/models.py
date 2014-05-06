@@ -29,7 +29,7 @@ class Menu(models.Model):
         return Menu.objects.filter(site=site)
 
 @receiver(pre_delete, sender=Menu, dispatch_uid="page.models")
-def delete_content(sender, **kwargs):
+def delete_menu(sender, **kwargs):
     for menu in Menu.on(kwargs['instance'].site).filter(order__gt=kwargs['instance'].order):
         menu.order = (menu.order-1)
         menu.save();
