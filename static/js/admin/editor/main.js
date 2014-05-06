@@ -220,6 +220,14 @@ $(document).ready(function() {
 
 
     function resetControls() {
+
+        // Remove all rows that are completely empty for content
+        article.find("div[data-row]").each(function() {
+            if($(this).find("div.column:has(div.content)").length === 0) {
+                $(this).remove();
+            }
+        });
+
         article.find("div.edit-structure,div.add-content,div.add-content-row").remove();
 
         var rows = article.find("div[data-row]");
