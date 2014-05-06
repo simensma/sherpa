@@ -273,7 +273,8 @@ $(document).ready(function() {
         $(this).find("div.remove-content").remove();
     });
 
-    $(document).on('click', 'article div.content div.remove-content a', function() {
+    $(document).on('click', 'article div.content div.remove-content a', function(e) {
+        e.stopPropagation(); // Mostly to avoid click-event on an image
         $(this).parents("div.content").remove();
         resetControls();
     });
