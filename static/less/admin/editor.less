@@ -151,6 +151,34 @@ div.cms-editor {
       border-top: 1px solid rgb(200, 200, 200);
       border-left: 1px solid rgb(200, 200, 200);
       border-right: 1px solid rgb(200, 200, 200);
+
+      button {
+        width: 30px;
+        height: 30px;
+        background-position: center center;
+        background-repeat: no-repeat;
+      }
+
+      button[data-type='single'] {
+        background-image: url("/static/img/editorbuttons/structure/single.png");
+      }
+
+      button[data-type='double'] {
+        background-image: url("/static/img/editorbuttons/structure/double.png");
+      }
+
+      button[data-type='sidebar-left'] {
+        background-image: url("/static/img/editorbuttons/structure/sidebar-left.png");
+      }
+
+      button[data-type='sidebar-right'] {
+        background-image: url("/static/img/editorbuttons/structure/sidebar-right.png");
+      }
+
+      button[data-type='triple'] {
+        background-image: url("/static/img/editorbuttons/structure/triple.png");
+      }
+
     }
 
     div.add-content, div.add-content-row {
