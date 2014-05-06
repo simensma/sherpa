@@ -232,6 +232,18 @@ $(document).ready(function() {
 
     });
 
+    $(document).on('mouseenter', 'article div.content', function() {
+        insertion_templates.find("div.remove-content").clone().appendTo($(this));
+    });
+
+    $(document).on('mouseleave', 'article div.content', function() {
+        $(this).find("div.remove-content").remove();
+    });
+
+    $(document).on('click', 'article div.content div.remove-content a', function() {
+        $(this).parents("div.content").remove();
+    });
+
     //
     // Structure changes
     //
