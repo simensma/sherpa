@@ -24,55 +24,28 @@ def save(request, version):
         'unexpected_content_ids': [],
     }
 
+    # Delete all existing rows - a bit scary to do this before creating the new ones in case there's some error
+    version.rows.all().delete()
+
     for row in json.loads(request.POST['rows']):
-        obj = Row.objects.get(id=row['id'])
-        obj.order = row['order']
-        obj.save()
-
-    for column in json.loads(request.POST['columns']):
-        obj = Column.objects.get(id=column['id'])
-        obj.order = column['order']
-        obj.save()
-
-        # Remove contained elements that aren't there client-side
-        # If any code in this project should ever be bug-free, it's this.
-        # Do NOT do this *after* creating new content elements
-        Content.objects.filter(column=obj).exclude(id__in=column['contained_elements']).delete()
-
-    for content in json.loads(request.POST['contents']):
-        def create_new_content(content):
-            column = Column.objects.get(id=content['column'])
-            obj = Content(
-                column=column,
-                content=content['content'],
-                type=content['type'],
-                order=content['order'])
-            obj.save()
-            return obj
-
-        if 'id' in content:
-            try:
-                # Existing element - update it
-                obj = Content.objects.get(id=content['id'])
-                obj.order = content['order']
-                obj.content = content['content']
-                obj.save()
-            except Content.DoesNotExist:
-                # Whoops, it didn't exist! We'll choose to think that the user is right, and the element
-                # should be created, since they have it client-side and are trying to save it.
-                # This might happen if two users are editing the same version of a page; one user removes
-                # an element and saves, and then the other user saves *her* version, which will try to update
-                # a non-existing element.
-                new_obj = create_new_content(content)
-
-                # The client will need to update the client-side ID for this element
-                response['unexpected_content_ids'].append({
-                    'old_id': content['id'],
-                    'new_id': new_obj.id})
-        else:
-            # Send the generated ID to the client
-            new_obj = create_new_content(content)
-            response['new_content_ids'].append(new_obj.id)
+        row_obj = Row(version=version, order=row['order'])
+        row_obj.save()
+        for column in row['columns']:
+            column_obj = Column(
+                row=row_obj,
+                span=column['span'],
+                offset=column['offset'],
+                order=column['order'],
+            )
+            column_obj.save()
+            for content in column['contents']:
+                content_obj = Content(
+                    column=column_obj,
+                    content=content['content'],
+                    type=content['type'],
+                    order=content['order']
+                )
+                content_obj.save()
 
     # Tags - common for pages and articles
     version.tags.clear()

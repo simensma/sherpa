@@ -9,6 +9,7 @@ $(document).ready(function() {
     var header = $("div.editor-header");
     var save_button = header.find("button.save");
     var no_save_warning = $("div.no-save-warning");
+    var article = $("article");
 
     var lastSaveCount = 0;
     var updateSaveCountID;
@@ -55,97 +56,94 @@ $(document).ready(function() {
 
         var data = {};
 
-        // Element selectors
-        var article_element = $("article");
-        var row_elements = article_element.children("div.row-fluid");
-        var column_elements = row_elements.children("div.column");
-        var content_elements = column_elements.children("div.content");
+        //
+        // Now iterate the client DOM and build the data structure to send to the server
+        //
 
         // Rows
         var rows = [];
-        row_elements.each(function() {
-            rows.push({
-                id: $(this).attr('data-id'),
-                order: $(this).prevAll().length
-            });
-        });
-        data.rows = JSON.stringify(rows);
-
-        // Columns
-        var columns = [];
-        column_elements.each(function() {
-            var contained_elements = [];
-            $(this).children('[data-id]').each(function() {
-                // This is used server-side to delete items, so be pretty fucking sure that everything is included
-                contained_elements.push($(this).attr('data-id'));
-            });
-            columns.push({
-                id: $(this).attr('data-id'),
-                order: $(this).prevAll().length,
-                contained_elements: contained_elements
-            });
-        });
-        data.columns = JSON.stringify(columns);
-
-        // Contents
-        var contents = [];
-        var contents_awaiting_id = [];
-        content_elements.each(function() {
-            var content = {
-                column: $(this).parents('div.column').attr('data-id'),
+        article.children("div.row-fluid").each(function() {
+            var row = {
                 order: $(this).prevAll().length
             };
 
-            // Check if this is a new or existing element
-            if($(this).is('[data-id]')) {
-                content.id = $(this).attr('data-id');
-            } else {
-                contents_awaiting_id.push($(this));
-            }
-
-            // Retrieve content and content type
-            if($(this).is('.html,.title,.lede')) {
-                if($(this).is('.html')) {
-                    content.type = 'html';
-                } else if($(this).is('.title')) {
-                    content.type = 'title';
-                } else if($(this).is('.lede')) {
-                    content.type = 'lede';
-                }
-
-                // Don't include placeholder text
-                if($(this).is('[data-placeholder]')) {
-                    content.content = '';
-                } else {
-                    content.content = $(this).html();
-                }
-            } else if($(this).is('.image')) {
-                var anchor;
-                if($(this).find('a').length === 0) {
-                    anchor = null;
-                } else {
-                    anchor = $(this).find('a').attr('href');
-                }
-                var image = {
-                    src: $(this).find('img').attr('src'),
-                    style: $(this).find('img').attr('style'),
-                    selection: $(this).find('img').attr('data-selection'),
-                    ratioWidth: $(this).find('img').attr('data-ratio-width'),
-                    ratioHeight: $(this).find('img').attr('data-ratio-height'),
-                    parentHeight: $(this).find('img').attr('data-parentHeight'),
-                    description: $(this).find('span.description').text(),
-                    photographer: $(this).find('span.photographer span.content').text(),
-                    anchor: anchor
+            // Descend into columns
+            row.columns = [];
+            $(this).children("div.column").each(function() {
+                var span;
+                var offset = 0;
+                $($(this).attr('class').split(' ')).each(function() {
+                    if(this.startsWith('span')) {
+                        span = this.substring('span'.length);
+                    } else if(this.startsWith('offset')) {
+                        offset = this.substring('offset'.length);
+                    }
+                });
+                var column = {
+                    span: span,
+                    offset: offset,
+                    order: $(this).prevAll().length
                 };
-                content.type = 'image';
-                content.content = JSON.stringify(image);
-            } else if($(this).is('.widget')) {
-                content.type = 'widget';
-                content.content = $(this).attr('data-json');
-            }
-            contents.push(content);
+
+                // Descend into contents
+                column.contents = [];
+                $(this).children("div.content").each(function() {
+                    var content = {
+                        order: $(this).prevAll().length
+                    };
+
+                    // Retrieve content and content type
+                    if($(this).is('.html,.title,.lede')) {
+                        if($(this).is('.html')) {
+                            content.type = 'html';
+                        } else if($(this).is('.title')) {
+                            content.type = 'title';
+                        } else if($(this).is('.lede')) {
+                            content.type = 'lede';
+                        }
+
+                        // Don't include placeholder text
+                        if($(this).is('[data-placeholder]')) {
+                            content.content = '';
+                        } else {
+                            content.content = $(this).html();
+                        }
+                    } else if($(this).is('.image')) {
+                        var anchor;
+                        if($(this).find('a').length === 0) {
+                            anchor = null;
+                        } else {
+                            anchor = $(this).find('a').attr('href');
+                        }
+                        var image = {
+                            src: $(this).find('img').attr('src'),
+                            style: $(this).find('img').attr('style'),
+                            selection: $(this).find('img').attr('data-selection'),
+                            ratioWidth: $(this).find('img').attr('data-ratio-width'),
+                            ratioHeight: $(this).find('img').attr('data-ratio-height'),
+                            parentHeight: $(this).find('img').attr('data-parentHeight'),
+                            description: $(this).find('span.description').text(),
+                            photographer: $(this).find('span.photographer span.content').text(),
+                            anchor: anchor
+                        };
+                        content.type = 'image';
+                        content.content = JSON.stringify(image);
+                    } else if($(this).is('.widget')) {
+                        content.type = 'widget';
+                        content.content = $(this).attr('data-json');
+                    }
+                    // Push the content into the column...
+                    column.contents.push(content);
+                });
+                // The column into the row...
+                row.columns.push(column);
+            });
+            // And the row into the rows
+            rows.push(row);
         });
-        data.contents = JSON.stringify(contents);
+
+        // Finally add the structure+content as a JSON-string named 'rows' in data
+        data.rows = JSON.stringify(rows);
 
         // Tags
         data.tags = JSON.stringify(TagDisplay.getTags());
@@ -181,7 +179,7 @@ $(document).ready(function() {
 
         // Save content
         $.ajaxQueue({
-            url: article_element.attr('data-save-url'),
+            url: article.attr('data-save-url'),
             data: data
         }).done(function(result) {
             result = JSON.parse(result);
@@ -191,22 +189,6 @@ $(document).ready(function() {
             save_button.removeClass('btn-danger').addClass('btn-success');
             if(typeof(done) == 'function') {
                 done();
-            }
-
-            // Retrieve new contents IDs
-            if(result.new_content_ids.length != contents_awaiting_id.length) {
-                alert("Whoops! Serveren sier at vi opprettet " + result.new_content_ids.length + " nye elementer, mens vi egentlig opprettet " + contents_awaiting_id.length + "!\n\n" +
-                      "Dette er ikke bra - det kan være at du har mistet noe av arbeidet du har gjort. Du bør ta kopi av det du kan, og lagre det lokalt, før du gjør noe annet.\n\n" +
-                      "Når du har tatt en lokal kopi kan du prøve å oppdatere siden, og se om noen av elementene forsvinner.\n\n" +
-                      "Dette skal egentlig ikke skje. Du bør rapportere feilen til DNTs webutviklingsteam. Beklager!");
-            }
-            for(var i=0; i<contents_awaiting_id.length; i++) {
-                contents_awaiting_id[i].attr('data-id', result.new_content_ids[i]);
-            }
-
-            // Update IDs for contents we thought existed serverside, but didn't
-            for(var i=0; i<result.unexpected_content_ids.length; i++) {
-                content_elements.filter("[data-id='" + result.unexpected_content_ids[i].old_id + "']").attr('data-id', result.unexpected_content_ids[i].new_id);
             }
 
             // Parent page-response

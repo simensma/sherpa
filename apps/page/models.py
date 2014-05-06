@@ -130,7 +130,7 @@ def delete_page_version(sender, **kwargs):
 ### CMS
 
 class Row(models.Model):
-    version = models.ForeignKey('page.Version')
+    version = models.ForeignKey('page.Version', related_name='rows')
     order = models.IntegerField()
     columns = None
 
