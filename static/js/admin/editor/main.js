@@ -411,18 +411,6 @@ $(document).ready(function() {
      * Small, logical code snippets
      */
 
-    /* Toggle overlay for the entire site */
-    window.enableOverlay = enableOverlay;
-    function enableOverlay() {
-        $("<div class=\"ui-widget-overlay\"></div>").appendTo('body');
-        $("<div class=\"overlay-loader\"><h3>Lagrer, vennligst vent...</h3><p><img src=\"/static/img/ajax-loader-large.gif\" alt=\"Lagrer, vennligst vent...\"></p></div>")
-          .appendTo('body');
-    }
-    window.disableOverlay = disableOverlay;
-    function disableOverlay() {
-        $(".ui-widget-overlay,.overlay-loader").remove();
-    }
-
     /* Toggle toolbar usage */
     function disableToolbar(displayText, cancelCallback) {
         toolbarContents.hide();
