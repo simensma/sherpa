@@ -173,7 +173,7 @@ $(document).ready(function() {
         function insertRow() {
             var row = $('<div class="row-fluid" data-row><div class="column span12"></div></div>');
             row.insertAfter($(that).parents("div.row-fluid"));
-            insertContent($(that).attr('data-type'), 'prepend', row.find("div.column").children());
+            insertContent($(that).attr('data-type'), 'prepend', row.find("div.column"));
             resetControls();
         }
 
