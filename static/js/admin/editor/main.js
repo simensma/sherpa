@@ -162,7 +162,7 @@ $(document).ready(function() {
     });
 
     $(document).on('click', article.selector + ' div.add-content button', function() {
-        insertContent($(this).attr('data-type'), $(this).parents("div.add-content"));
+        insertContent($(this).attr('data-type'), 'after', $(this).parents("div.add-content"));
     });
 
     $(document).on('click', article.selector + ' div.add-content-row button', function() {
@@ -176,7 +176,8 @@ $(document).ready(function() {
 
         // If the previous row is single-column, we'll just add an element to that row
         if(prev_row.children("div.column").length === 1) {
-            insertContent($(this).attr('data-type'), prev_row.children("div.column").children().last());
+            // If the previous row is single-column, we'll just add an element to that row
+            insertContent($(this).attr('data-type'), 'append', prev_row.children("div.column"));
         } else {
             // If not, this creates a new single-column row
             // TBD
@@ -184,15 +185,27 @@ $(document).ready(function() {
 
     });
 
-    function insertContent(type, after) {
+    function insertContent(type, insertion, existingElement) {
         if(type === 'text') {
             var content = insertion_templates.find("div.content.html").clone();
-            content.insertAfter(after);
+            if(insertion === 'after') {
+                content.insertAfter(existingElement);
+            } else if(insertion === 'append') {
+                content.appendTo(existingElement);
+            } else if(insertion === 'prepend') {
+                content.prependTo(existingElement);
+            }
             content.attr('contenteditable', 'true').focus();
         } else if(type === 'image') {
             var image = insertion_templates.find("div.content.image").clone();
             image.css("overflow", "hidden");
-            image.insertAfter(after);
+            if(insertion === 'after') {
+                image.insertAfter(existingElement);
+            } else if(insertion === 'append') {
+                image.appendTo(existingElement);
+            } else if(insertion === 'prepend') {
+                image.prependTo(existingElement);
+            }
             image.find("img").click();
         }
         resetControls();
