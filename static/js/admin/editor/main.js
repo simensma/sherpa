@@ -374,6 +374,37 @@ $(document).ready(function() {
                 $(this).children().detach().appendTo(third_column);
             });
             extra_columns.remove();
+        } else if($(this).attr('data-type') === 'quadruple') {
+            var first_column = row.children("div.column").first();
+            var second_column = row.children("div.column").eq(1);
+            var third_column = row.children("div.column").eq(2);
+            var fourth_column = row.children("div.column").eq(3);
+            var extra_columns = row.children("div.column").slice(4);
+
+            if(second_column.length === 0) {
+                second_column = $('<div></div>');
+                second_column.insertAfter(first_column);
+            }
+
+            if(third_column.length === 0) {
+                third_column = $('<div></div>');
+                third_column.insertAfter(second_column);
+            }
+
+            if(fourth_column.length === 0) {
+                fourth_column = $('<div></div>');
+                fourth_column.insertAfter(third_column);
+            }
+
+            first_column.attr('class', '').addClass('column span3');
+            second_column.attr('class', '').addClass('column span3');
+            third_column.attr('class', '').addClass('column span3');
+            fourth_column.attr('class', '').addClass('column span3');
+
+            extra_columns.each(function() {
+                $(this).children().detach().appendTo(fourth_column);
+            });
+            extra_columns.remove();
         }
 
         resetControls();
