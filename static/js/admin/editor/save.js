@@ -2,28 +2,31 @@
  * Saving the document
  */
 
-var NO_SAVE_WARNING = 60 * 5;
+var NO_SAVE_WARNING_TIMEOUT = 60 * 5;
 
 $(document).ready(function() {
+
+    var header = $("div.editor-header");
+    var no_save_warning = $("div.no-save-warning");
 
     var lastSaveCount = 0;
     var updateSaveCountID;
     var statusIcon = '<i class="icon-heart"></i>';
     function updateSaveCount() {
         lastSaveCount += 1;
-        $("div.editor-header button.save").html(statusIcon + ' Lagre (' + lastSaveCount + ')');
+        header.find("button.save").html(statusIcon + ' Lagre (' + lastSaveCount + ')');
 
-        if(lastSaveCount == NO_SAVE_WARNING) {
-            $("div.no-save-warning").show();
+        if(lastSaveCount == NO_SAVE_WARNING_TIMEOUT) {
+            no_save_warning.show();
         }
         updateSaveCountID = setTimeout(updateSaveCount, 1000);
     }
     updateSaveCount();
 
-    $("div.editor-header button.save").click(save);
-    $("div.editor-header button.preview").click(saveAndGo);
-    $("div.editor-header button.save-and-quit").click(saveAndGo);
-    $("div.editor-header a.quit").click(function(e) {
+    header.find("button.save").click(save);
+    header.find("button.preview").click(saveAndGo);
+    header.find("button.save-and-quit").click(saveAndGo);
+    header.find("a.quit").click(function(e) {
         if(!(confirm($(this).attr('data-confirm')))) {
             e.preventDefault();
         }
@@ -45,10 +48,10 @@ $(document).ready(function() {
     window.save = save;
     function save(done, fail) {
         clearTimeout(updateSaveCountID);
-        var saveButton = $("div.editor-header button.save");
+        var saveButton = header.find("button.save");
         saveButton.prop('disabled', true);
         saveButton.html('<i class="icon-heart"></i> Lagrer...');
-        $("div.no-save-warning").hide();
+        no_save_warning.hide();
 
         var data = {};
 
@@ -148,24 +151,24 @@ $(document).ready(function() {
         data.tags = JSON.stringify(TagDisplay.getTags());
 
         // Publish-state
-        var publish = $("div.editor-header div.publish");
+        var publish = header.find("div.publish");
         data.publish_date = publish.find("input[name='date']").val();
         data.publish_time = publish.find("input[name='time']").val();
         data.status = JSON.stringify(publish.find("input[name='publish']:checked").length > 0);
 
-        var parent_select = $("div.editor-header.page select[name='parent']");
-        if($("div.editor-header.page").length > 0) {
+        var parent_select = header.find("select[name='parent']");
+        if(header.is(".page")) {
             /* Page-specific */
 
             // Title
-            data.title = $("div.editor-header.page input[name='title']").val();
+            data.title = header.find("input[name='title']").val();
 
             // Parent page
             data.parent = parent_select.find("option:selected").val();
 
             // Whether or not to display ads
-            data.ads = JSON.stringify($("div.editor-header.page input[name='display-ads']:checked").length > 0);
-        } else if($("div.editor-header.article").length > 0) {
+            data.ads = JSON.stringify(header.find("input[name='display-ads']:checked").length > 0);
+        } else if(header.is(".article")) {
             /* Article-specific */
 
             // Authors
@@ -224,17 +227,17 @@ $(document).ready(function() {
             // Publish-state response
             if(result.publish_error === 'unparseable_datetime') {
                 alert("Publiseringstidspunktet er ikke i rett format!\n\nBruk velgeren for å velge dato, og skriv klokkeslettet som for eksempel '08:00' for å publisere kl. 8 om morgenen.\n\nSiden vi ikke vet om du ville publisere nå eller ikke, har vi satt den til 'ikke publisert'.\n\nHusk å krysse boksen bak 'Publiseres' hvis du vil publisere nå.");
-                $("div.editor-header div.publish input[name='publish']").prop('checked', false);
+                header.find("div.publish input[name='publish']").prop('checked', false);
             }
 
             if(result.publish_error === 'auto_now') {
-                var publish = $("div.editor-header div.publish");
+                var publish = header.find("div.publish");
                 publish.find("input[name='date']").val(result.publish_date);
                 publish.find("input[name='time']").val(result.publish_time);
             }
 
             if(result.publish_error === 'error_nullify') {
-                var publish = $("div.editor-header div.publish");
+                var publish = header.find("div.publish");
                 publish.find("input[name='date']").val('');
                 publish.find("input[name='time']").val('');
             }
