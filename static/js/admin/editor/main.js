@@ -4,6 +4,7 @@ $(document).ready(function() {
     var editor = $("div.cms-editor");
     var article = editor.find("article");
     var insertion_templates = editor.find("div.insertion-templates");
+    var add_button_modal = editor.find("div.add-button.modal");
 
     /**
      * Initialization
@@ -213,6 +214,8 @@ $(document).ready(function() {
                 image.prependTo(existingElement);
             }
             image.find("img").click();
+        } else if(type === 'button') {
+            add_button_modal.modal();
         }
         resetControls();
         // Other types TBD
@@ -498,11 +501,8 @@ $(document).ready(function() {
 
 
     // Insert custom button
-    $("button.insert-button").click(function() {
-        $("div.add-button").modal();
-    });
-    $("div.add-button div.alert").hide();
-    $("div.add-button").on('show', function(event) {
+    add_button_modal.find("div.alert").hide();
+    add_button_modal.on('show', function(event) {
         if(selection === undefined) {
             alert('Trykk på tekstelementet du vil legge til knappen i først, og prøv igjen.');
             $(this).on('shown', function() {
@@ -510,11 +510,11 @@ $(document).ready(function() {
             });
         }
     });
-    $("div.add-button button.insert").click(function() {
-        var text = $("div.add-button input[name='text']").val();
-        var url = $("div.add-button input[name='url']").val().trim();
+    add_button_modal.find("button.insert").click(function() {
+        var text = add_button_modal.find("input[name='text']").val();
+        var url = add_button_modal.find("input[name='url']").val().trim();
         if(text === "") {
-            $("div.add-button div.alert").show();
+            add_button_modal.find("div.alert").show();
             return;
         }
         var el;
@@ -527,12 +527,12 @@ $(document).ready(function() {
             el = 'button';
         }
         var button = $('<' + el + ' class="btn">' + text + '</' + el + '>');
-        button.addClass($("div.add-button input[name='color']:checked").val())
-              .addClass($("div.add-button input[name='size']:checked").val());
+        button.addClass(add_button_modal.find("input[name='color']:checked").val())
+              .addClass(add_button_modal.find("input[name='size']:checked").val());
         $(selection.anchorNode).parents(".editable").append($('<p></p>').prepend(button), $('<p><br></p>'));
-        $("div.add-button").modal('hide');
+        add_button_modal.modal('hide');
     });
-    $("div.add-button table.choices button").click(function() {
+    add_button_modal.find("table.choices button").click(function() {
         $(this).parent().prev().children("input[type='radio']").click();
     });
 
