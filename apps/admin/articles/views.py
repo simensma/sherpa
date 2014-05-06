@@ -55,7 +55,7 @@ def new(request):
     version.save()
     version.publishers.add(request.user)
     create_template(request.POST['template'], version, request.POST['title'])
-    return redirect('admin.articles.views.edit_version', version.id)
+    return redirect('admin.articles.views.edit', version.id)
 
 def image(request, article):
     article = Article.objects.get(id=article)
@@ -91,7 +91,7 @@ def delete(request, article):
         pass
     return redirect('admin.articles.views.list')
 
-def edit_version(request, version):
+def edit(request, version):
     rows, version = parse_version_content(request, version)
     users = sorted(User.sherpa_users(), key=lambda u: u.get_first_name())
     context = {
@@ -101,7 +101,7 @@ def edit_version(request, version):
         'image_search_length': settings.IMAGE_SEARCH_LENGTH,
         'widget_data': widget_admin_context()
     }
-    return render(request, 'common/admin/articles/edit_version.html', context)
+    return render(request, 'common/admin/articles/edit.html', context)
 
 def preview(request, version):
     rows, version = parse_version_content(request, version)

@@ -81,7 +81,7 @@ def new(request):
     version.save()
 
     create_template(request.POST['template'], version)
-    return redirect('admin.cms.views.page.edit_version', version.id)
+    return redirect('admin.cms.views.page.edit', version.id)
 
 def check_slug(request):
     urls_valid = slug_is_unique(request.POST['slug'])
@@ -92,7 +92,7 @@ def delete(request, page):
     Page.on(request.active_forening.site).get(id=page).delete()
     return redirect('admin.cms.views.page.list')
 
-def edit_version(request, version):
+def edit(request, version):
     pages = Page.on(request.active_forening.site).all().order_by('title')
     version = Version.objects.get(id=version)
     rows = Row.objects.filter(version=version).order_by('order')
@@ -114,7 +114,7 @@ def edit_version(request, version):
         'pages': pages,
         'image_search_length': settings.IMAGE_SEARCH_LENGTH
     }
-    return render(request, 'common/admin/pages/edit_version.html', context)
+    return render(request, 'common/admin/pages/edit.html', context)
 
 def preview(request, version):
     version = Version.objects.get(id=version)
