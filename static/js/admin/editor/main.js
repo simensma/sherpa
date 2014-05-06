@@ -167,20 +167,26 @@ $(document).ready(function() {
 
     $(document).on('click', article.selector + ' div.add-content-row button', function() {
 
-        var prev_row = $(this).parents("div.row-fluid").prev();
+        var that = this;
+        var prev_row = $(this).parents("div[data-row]").prev();
 
-        if(prev_row.length === 0) {
-            // No previous column, just insert a new row
-            // TBD
+        function insertRow() {
+            var row = $('<div class="row-fluid" data-row><div class="column span12"></div></div>');
+            row.insertAfter($(that).parents("div.row-fluid"));
+            insertContent($(that).attr('data-type'), 'prepend', row.find("div.column").children());
+            resetControls();
         }
 
-        // If the previous row is single-column, we'll just add an element to that row
+        if(prev_row.length === 0) {
+            insertRow();
+        }
+
         if(prev_row.children("div.column").length === 1) {
             // If the previous row is single-column, we'll just add an element to that row
             insertContent($(this).attr('data-type'), 'append', prev_row.children("div.column"));
         } else {
-            // If not, this creates a new single-column row
-            // TBD
+            // If not, create a new single-column row
+            insertRow();
         }
 
     });
