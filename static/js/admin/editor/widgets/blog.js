@@ -1,22 +1,23 @@
 (function(BlogWidgetEditor, $, undefined ) {
 
     var widget_editor; // Gets set in the preparations below
+    var editor_callback; // Sent with the trigger from the editor
 
     /* New widget */
 
-    $(document).on('widget.new.blog', function() {
+    $(document).on('widget.new.blog', function(e, _editor_callback) {
+        editor_callback = _editor_callback;
         widget_editor.modal();
     });
 
     /* Editing existing widget */
 
-    $(document).on('widget.edit', 'div.widget.blog', function() {
-        widgetBeingEdited = $(this);
+    $(document).on('widget.edit', 'div.widget.blog', function(e, widget_content, _editor_callback) {
+        editor_callback = _editor_callback;
         widget_editor.modal();
-        var widget = JSON.parse($(this).attr('data-json'));
 
-        widget_editor.find("input[name='count']").val(widget.count);
-        widget_editor.find("select[name='category']").val(widget.category);
+        widget_editor.find("input[name='count']").val(widget_content.count);
+        widget_editor.find("select[name='category']").val(widget_content.category);
     });
 
     /* Document preparations */
@@ -38,11 +39,11 @@
                 return $(this);
             }
 
-            saveWidget(widgetBeingEdited, {
+            saveWidget({
                 widget: "blog",
                 count: count,
                 category : category
-            });
+            }, editor_callback);
             widget_editor.modal('hide');
         });
 

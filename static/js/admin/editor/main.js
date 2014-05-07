@@ -23,6 +23,26 @@ $(document).ready(function() {
     // An image currently being changed (need to save this state while opening the changer dialog)
     var currentImage;
 
+    // Edit an existing widget
+    $(document).on('click', 'article div.content.widget', function() {
+        var widget_element = $(this);
+        var widget_content = JSON.parse($(this).attr('data-json'));
+        $(this).trigger('widget.edit', [widget_content, function(widget) {
+            var prev = widget_element.prevAll("div.content").first();
+            var column = widget_element.parents("div.column");
+            widget_element.remove();
+
+            var position;
+            if(prev.length === 0) {
+                position = {insertion: 'prepend', existingElement: column};
+            } else {
+                position = {insertion: 'after', existingElement: prev};
+            }
+
+            insertContent({type: 'widget', widget: widget}, position);
+        }]);
+    });
+
     // Make toolbar draggable, but not if input-elements are clicked
     toolbar.draggable();
     toolbar.find("input,select,button,a").mousedown(function(e) {
@@ -162,68 +182,79 @@ $(document).ready(function() {
         $(this).removeClass('active');
     });
 
-    $(document).on('click', article.selector + ' div.add-content button', function() {
-        var prev = $(this).parents("div.add-content").prev("div.content");
+    $(document).on('click', article.selector + " div.add-content button", function() {
+        var type = $(this).attr('data-type');
+        var widget_type = $(this).attr('data-widget');
+        var prev = $(this).parents("div.add-content").prevAll("div.content").first();
+        var column = $(this).parents("div.column");
+
+        var position;
         if(prev.length === 0) {
-            insertContent($(this).attr('data-type'), $(this).attr('data-widget'), 'prepend', $(this).parents("div.column"));
+            position = {insertion: 'prepend', existingElement: column};
         } else {
-            insertContent($(this).attr('data-type'), $(this).attr('data-widget'), 'after', prev);
+            position = {insertion: 'after', existingElement: prev};
+        }
+
+        if(type !== 'widget') {
+            insertContent({type: type}, position);
+        } else {
+            $(document).trigger('widget.new.' + widget_type, function(widget) {
+                insertContent({type: type, widget: widget}, position);
+            });
         }
     });
 
     $(document).on('click', article.selector + ' div.add-content-row button', function() {
-
-        var that = this;
+        var type = $(this).attr('data-type');
+        var widget_type = $(this).attr('data-widget');
         var prev_row = $(this).parents("div.row-fluid").prev("div[data-row]");
 
-        function insertRow() {
-            var row = $('<div class="row-fluid" data-row><div class="column span12"></div></div>');
-            row.insertAfter($(that).parents("div.row-fluid"));
-            insertContent($(that).attr('data-type'), 'prepend', row.find("div.column"));
-            resetControls();
-        }
-
-        if(prev_row.length === 0) {
-            insertRow();
-        }
-
-        if(prev_row.children("div.column").length === 1) {
-            // If the previous row is single-column, we'll just add an element to that row
-            insertContent($(this).attr('data-type'), 'append', prev_row.children("div.column"));
+        var position;
+        if(prev_row.length > 0 && prev_row.children("div.column").length === 1) {
+            // The previous row exists and is a single-column; just add an element to that row
+            position = {insertion: 'append', existingElement: prev_row.children("div.column")};
         } else {
-            // If not, create a new single-column row
-            insertRow();
+            // No previous row or not single-column; create a new row
+            var new_row = $('<div class="row-fluid" data-row><div class="column span12"></div></div>');
+            new_row.insertAfter($(this).parents("div.row-fluid"));
+            position = {insertion: 'prepend', existingElement: new_row.find("div.column")};
         }
 
+        if(type !== 'widget') {
+            insertContent({type: type}, position);
+        } else {
+            $(document).trigger('widget.new.' + widget_type, function(widget) {
+                insertContent({type: type, widget: widget}, position);
+            });
+        }
     });
 
-    function insertContent(type, insertion, existingElement) {
-        if(type === 'text') {
-            var content = insertion_templates.find("div.content.html").clone();
-            if(insertion === 'after') {
-                content.insertAfter(existingElement);
-            } else if(insertion === 'append') {
-                content.appendTo(existingElement);
-            } else if(insertion === 'prepend') {
-                content.prependTo(existingElement);
-            }
+    function insertContent(content, position) {
+        if(content.type === 'text') {
+            content = insertion_templates.find("div.content.html").clone();
+            insertItem(content, position);
             content.attr('contenteditable', 'true').focus();
-        } else if(type === 'image') {
+        } else if(content.type === 'image') {
             var image = insertion_templates.find("div.content.image").clone();
             image.css("overflow", "hidden");
-            if(insertion === 'after') {
-                image.insertAfter(existingElement);
-            } else if(insertion === 'append') {
-                image.appendTo(existingElement);
-            } else if(insertion === 'prepend') {
-                image.prependTo(existingElement);
-            }
+            insertItem(image, position);
             image.find("img").click();
-        } else if(type === 'button') {
+        } else if(content.type === 'widget') {
+            insertItem(content.widget, position);
+        } else if(content.type === 'button') {
             add_button_modal.modal();
         }
         resetControls();
-        // Other types TBD
+    }
+
+    function insertItem(item, position) {
+        if(position.insertion === 'after') {
+            item.insertAfter(position.existingElement);
+        } else if(position.insertion === 'append') {
+            item.appendTo(position.existingElement);
+        } else if(position.insertion === 'prepend') {
+            item.prependTo(position.existingElement);
+        }
     }
 
 
@@ -413,41 +444,6 @@ $(document).ready(function() {
         }
 
         resetControls();
-    });
-
-
-    //Content changes (text, images, widgets)
-    var noStructureForContentWarning = "Det er ingen rader/kolonner å sette inn innhold i! " +
-        "Gå til 'struktur'-knappen først, og legg til noen rader og kolonner.";
-
-    // Add widget
-    window.widgetPosition; // Set when inserting a new widget
-    window.widgetBeingEdited; // If undefined: a new widget, if defined: the widget being edited
-    toolbar.find("a.button.widget").click(function() {
-        if($("article").children().length === 0) {
-            alert(noStructureForContentWarning);
-            return;
-        }
-        removeEmpties();
-        disableToolbar("Klikk på et ledig felt i artikkelen for å legge til widget...", function() {
-            $("article .insertable").remove();
-            setEmpties();
-        });
-        insertables("Klikk for å legge til widget her", $("article .column"), function() {
-            $("div.add-widget").modal();
-            enableToolbar();
-            widgetPosition = {
-                prev: $(this).prev(),
-                parent: $(this).parent()
-            };
-            $("article .insertable").remove();
-            enableToolbar();
-        });
-    });
-    $("div.add-widget div.widget-thumbnail").click(function() {
-        widgetBeingEdited = undefined;
-        $(this).parents("div.add-widget").modal('hide');
-        $(document).trigger('widget.new.' + $(this).attr('data-widget'));
     });
 
     // Remove content (text/image/widget)
@@ -650,14 +646,10 @@ $(document).ready(function() {
     function disableEditing() {
         $("article div.editable").removeAttr('contenteditable');
         $(document).off('click', 'article div.content.image');
-        $(document).off('click', 'article div.content.widget');
     }
     window.enableEditing = enableEditing;
     function enableEditing() {
         $("article div.editable").attr('contenteditable', 'true');
-        $(document).on('click', 'article div.content.widget', function() {
-            $(this).trigger('widget.edit');
-        });
         $(document).on('click', 'article div.content.image', changeImage);
     }
 
