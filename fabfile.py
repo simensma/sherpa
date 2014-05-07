@@ -20,7 +20,7 @@ def deploy_soft():
         # Note that we're blanking DJANGO_SETTINGS_MODULE when running django-admin.py due to the project being named the same as the root folder.
         # See http://stackoverflow.com/a/6949892/302484
         commands = ' && '.join([
-            'git pull --tags github master',
+            'git pull --tags origin master',
             './manage.py migrate',
             'DJANGO_SETTINGS_MODULE="" django-admin.py compilemessages',
             'sv hup sherpa',
@@ -31,7 +31,7 @@ def deploy_hard():
     with cd('/sherpa'):
         commands = ' && '.join([
             'sv stop sherpa',
-            'git pull --tags github master',
+            'git pull --tags origin master',
             './manage.py migrate',
             'DJANGO_SETTINGS_MODULE="" django-admin.py compilemessages',
             'sv start sherpa'
@@ -41,7 +41,7 @@ def deploy_hard():
 def deploy_with_requirements():
     with cd('/sherpa'):
         commands = ' && '.join([
-            'git pull --tags github master',
+            'git pull --tags origin master',
             'pip install -r requirements.txt',
             './manage.py migrate',
             'DJANGO_SETTINGS_MODULE="" django-admin.py compilemessages',
