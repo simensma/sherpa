@@ -183,6 +183,9 @@ $(document).ready(function() {
     });
 
     $(document).on('click', article.selector + " div.add-content button", function() {
+        // Trigger mouseout manually so that the tooltip is removed
+        $(this).trigger('mouseout');
+
         var type = $(this).attr('data-type');
         var widget_type = $(this).attr('data-widget');
         var prev = $(this).parents("div.add-content").prevAll("div.content").first();
@@ -205,6 +208,9 @@ $(document).ready(function() {
     });
 
     $(document).on('click', article.selector + ' div.add-content-row button', function() {
+        // Trigger mouseout manually so that the tooltip is removed
+        $(this).trigger('mouseout');
+
         var type = $(this).attr('data-type');
         var widget_type = $(this).attr('data-widget');
         var prev_row = $(this).parents("div.row-fluid").prev("div[data-row]");
