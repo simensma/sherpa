@@ -325,14 +325,14 @@ $(document).ready(function() {
     resetControls();
 
     $(document).on('mouseenter', 'article div.content', function() {
-        insertion_templates.find("div.remove-content").clone().appendTo($(this));
+        insertion_templates.find("div.remove-content").clone().appendTo($(this)).tooltip();
     });
 
     $(document).on('mouseleave', 'article div.content', function() {
         $(this).find("div.remove-content").remove();
     });
 
-    $(document).on('click', 'article div.content div.remove-content a', function(e) {
+    $(document).on('click', 'article div.content div.remove-content', function(e) {
         e.stopPropagation(); // Mostly to avoid click-event on an image
         $(this).parents("div.content").remove();
         resetControls();

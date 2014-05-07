@@ -82,7 +82,7 @@ div.cms-editor {
       min-height: 20px;
     }
 
-    div.image:hover, div.widget:not(.static):hover {
+    div.image:hover > img, div.widget:not(.static):hover {
       opacity: 0.5;
       filter: alpha(opacity=50);
       cursor: alias;
@@ -209,21 +209,33 @@ div.cms-editor {
 
     div.content {
       position: relative;
-      min-height: 50px;
+      min-height: 70px;
 
       div.remove-content {
         position: absolute;
-        top: 10px;
-        right: 10px;
+        top: 0;
+        right: 0;
+        width: 23px;
+        height: 23px;
+        padding: 12px 25px;
+        border: 1px solid rgb(52, 224, 194);
+        background-color: rgb(255, 255, 255);
 
-        a {
-          padding-right: 10px;
-          padding-top: 10px;
-          padding-bottom: 10px;
+        img.active {
+          display: none;
+        }
+      }
+
+      div.remove-content:hover {
+        cursor: pointer;
+        background-color: rgb(52, 224, 194);
+
+        img.active {
+          display: block;
         }
 
-        a:hover {
-          cursor: pointer;
+        img.inactive {
+          display: none;
         }
       }
     }
