@@ -504,7 +504,7 @@ $(function() {
         content.find("iframe").each(function() {
             var width = $(this).css('width');
             var height = $(this).css('height');
-            var div = $('<div style="background: url(/static/img/iframe-placeholder.png) top left repeat">&nbsp;</div>');
+            var div = $('<div style="background: url(/static/img/iframe-placeholder.png) top left repeat; max-width: 100%">&nbsp;</div>');
             div.css('width', width);
             div.css('height', height);
             $(this).replaceWith(div);
