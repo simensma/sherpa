@@ -5,8 +5,9 @@ $(document).ready(function() {
     var FORMATTER_ELEMENTS = "abbr,acronym,b,bdi,bdo,big,blink,cite,code,dfn,em,font,h1,h2,h3,h4,h5,h6,i,ins,kbd,mark,nobr,q,s,samp,small,span,strike,strong,sub,sup,tt,u,var";
 
     var toolbar = $("div.cms-editor-toolbar");
-    var toolbarContents = toolbar.find("div.toolbar-contents")
+    var toolbarContents = toolbar.find("div.toolbar-contents");
     var anchorInsert = toolbar.find("div.anchor-insert");
+    var formatting = toolbar.find("div.formatting");
 
     /**
      * Toolbar buttons
@@ -24,9 +25,35 @@ $(document).ready(function() {
         $(this).css('background-image', 'url(' + $(this).attr('data-image') + '-hover.png)');
     });
 
-    toolbar.find("select.formatting").change(function() {
-        var styleClass = toolbar.find("select.formatting option:selected").val();
-        $(this).val("default");
+    // Button-group formatting
+    $(document).mouseup(function() {
+        formatting.find("button").prop('disabled', false).removeClass('active');
+        if(selection !== undefined && selection.rangeCount !== 0) {
+            var range = selection.getRangeAt(0);
+            var start = $(range.startContainer);
+            var container = start.parent();
+            if(container.is("h1") || container.hasClass('h1')) {
+                formatting.find("button[data-format='h1']").addClass('active');
+            } else if(container.is("h2") || container.hasClass('h2')) {
+                formatting.find("button[data-format='h2']").addClass('active');
+            } else if(container.is("h3") || container.hasClass('h3')) {
+                formatting.find("button[data-format='h3']").addClass('active');
+            } else if(container.hasClass('lede')) {
+                formatting.find("button[data-format='lede']").addClass('active');
+            } else if(container.is("div") || container.is("p")) {
+                formatting.find("button[data-format='bread']").addClass('active');
+            } else {
+                formatting.find("button").prop('disabled', true);
+            }
+        } else {
+            formatting.find("button").prop('disabled', true);
+        }
+    });
+
+    formatting.find("button").click(function() {
+        var styleClass = $(this).attr('data-format');
+        formatting.find("button").removeClass('active');
+        $(this).addClass('active');
 
         if(selection === undefined || selection.rangeCount === 0) {
             alert("Du har ikke merket noen tekst!\n\n" +
@@ -49,8 +76,6 @@ $(document).ready(function() {
         var container = start.parent();
         if(styleClass === 'bread') {
             if(!container.is(FORMATTER_ELEMENTS)) {
-                alert("Dette elementet er allerede brødtekst.\n\n" +
-                      "Hvis du mener det ikke stemmer, prøv 'Fjern formatering' (merk teksten igjen og klikk på malekost-ikonet til høyre).");
                 return $(this);
             }
             mozillaMadness(container);

@@ -75,7 +75,7 @@ div.cms-editor {
       filter: alpha(opacity=20);
     }
 
-    div.image img {
+    div.image > img {
       display: block;
       background-color: rgb(0, 0, 0);
       min-width: 20px;
@@ -142,6 +142,94 @@ div.cms-editor {
       color: @profile-red;
       font-style: italic;
       font-size: 14px;
+    }
+
+    div.edit-structure-inner {
+      text-align: center;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      border-top: 1px solid rgb(200, 200, 200);
+      border-left: 1px solid rgb(200, 200, 200);
+      border-right: 1px solid rgb(200, 200, 200);
+
+      button {
+        width: 30px;
+        height: 30px;
+        background-position: center center;
+        background-repeat: no-repeat;
+      }
+
+      button[data-type='single'] {
+        background-image: url("/static/img/editorbuttons/structure/single.png");
+      }
+
+      button[data-type='double'] {
+        background-image: url("/static/img/editorbuttons/structure/double.png");
+      }
+
+      button[data-type='sidebar-left'] {
+        background-image: url("/static/img/editorbuttons/structure/sidebar-left.png");
+      }
+
+      button[data-type='sidebar-right'] {
+        background-image: url("/static/img/editorbuttons/structure/sidebar-right.png");
+      }
+
+      button[data-type='triple'] {
+        background-image: url("/static/img/editorbuttons/structure/triple.png");
+      }
+
+      button[data-type='quadruple'] {
+        background-image: url("/static/img/editorbuttons/structure/quadruple.png");
+      }
+
+    }
+
+    div.add-content, div.add-content-row {
+      text-align: center;
+      margin: 0;
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+
+    div.add-content.active, div.add-content-row.active {
+      background-color: rgb(240, 240, 240);
+
+      img.plus {
+        display: none;
+      }
+    }
+
+    div.add-content:not(.active), div.add-content-row:not(.active) {
+      div.content-choices {
+        display: none;
+      }
+    }
+
+    div.add-content:hover, div.add-content-row:hover {
+      cursor: pointer;
+      background-color: rgb(240, 240, 240);
+    }
+
+    div.content {
+      position: relative;
+      min-height: 50px;
+
+      div.remove-content {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+
+        a {
+          padding-right: 10px;
+          padding-top: 10px;
+          padding-bottom: 10px;
+        }
+
+        a:hover {
+          cursor: pointer;
+        }
+      }
     }
   }
 

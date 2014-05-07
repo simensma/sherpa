@@ -1,14 +1,17 @@
 /* Common for page- and article-editor */
 $(document).ready(function() {
 
-    var insertion_templates = $("div.insertion-templates");
+    var editor = $("div.cms-editor");
+    var article = editor.find("article");
+    var insertion_templates = editor.find("div.insertion-templates");
+    var add_button_modal = editor.find("div.add-button.modal");
 
     /**
      * Initialization
      */
 
     rangy.init();
-    window.selection;
+    window.selection = undefined;
     var insertable;
     setEmpties();
     enableEditing();
@@ -151,52 +154,266 @@ $(document).ready(function() {
         });
     }
 
+    // New method of adding content
+    $(document).on('click', article.selector + ' div.add-content,' + article.selector + ' div.add-content-row', function() {
+        $(this).addClass('active');
+    });
+    $(document).on('mouseleave', article.selector + ' div.add-content,' + article.selector + ' div.add-content-row', function() {
+        $(this).removeClass('active');
+    });
+
+    $(document).on('click', article.selector + ' div.add-content button', function() {
+        insertContent($(this).attr('data-type'), 'after', $(this).parents("div.add-content"));
+    });
+
+    $(document).on('click', article.selector + ' div.add-content-row button', function() {
+
+        var that = this;
+        var prev_row = $(this).parents("div.row-fluid").prev("div[data-row]");
+
+        function insertRow() {
+            var row = $('<div class="row-fluid" data-row><div class="column span12"></div></div>');
+            row.insertAfter($(that).parents("div.row-fluid"));
+            insertContent($(that).attr('data-type'), 'prepend', row.find("div.column"));
+            resetControls();
+        }
+
+        if(prev_row.length === 0) {
+            insertRow();
+        }
+
+        if(prev_row.children("div.column").length === 1) {
+            // If the previous row is single-column, we'll just add an element to that row
+            insertContent($(this).attr('data-type'), 'append', prev_row.children("div.column"));
+        } else {
+            // If not, create a new single-column row
+            insertRow();
+        }
+
+    });
+
+    function insertContent(type, insertion, existingElement) {
+        if(type === 'text') {
+            var content = insertion_templates.find("div.content.html").clone();
+            if(insertion === 'after') {
+                content.insertAfter(existingElement);
+            } else if(insertion === 'append') {
+                content.appendTo(existingElement);
+            } else if(insertion === 'prepend') {
+                content.prependTo(existingElement);
+            }
+            content.attr('contenteditable', 'true').focus();
+        } else if(type === 'image') {
+            var image = insertion_templates.find("div.content.image").clone();
+            image.css("overflow", "hidden");
+            if(insertion === 'after') {
+                image.insertAfter(existingElement);
+            } else if(insertion === 'append') {
+                image.appendTo(existingElement);
+            } else if(insertion === 'prepend') {
+                image.prependTo(existingElement);
+            }
+            image.find("img").click();
+        } else if(type === 'button') {
+            add_button_modal.modal();
+        }
+        resetControls();
+        // Other types TBD
+    }
+
+
+    function resetControls() {
+
+        // Remove all rows that are completely empty for content
+        article.find("div[data-row]").each(function() {
+            if($(this).find("div.column:has(div.content)").length === 0) {
+                $(this).remove();
+            }
+        });
+
+        article.find("div.edit-structure,div.add-content,div.add-content-row").remove();
+
+        var rows = article.find("div[data-row]");
+
+        // Edge case; if there are *no* rows
+        if(rows.length === 0) {
+            insertion_templates.find("div.add-content-row").clone().prependTo(article);
+            return;
+        }
+
+        rows.each(function() {
+            var columns = $(this).find("div.column");
+
+            // If there is one great column, no nead for a trailing add column after last content
+            // If there are several, we do want one
+            var trailing_add_content = columns.length > 1;
+
+            columns.each(function() {
+                insertion_templates.find("div.add-content").clone().prependTo($(this));
+                $(this).find("div.content").each(function() {
+                    insertion_templates.find("div.add-content").clone().insertAfter($(this));
+                });
+                if(!trailing_add_content) {
+                    $(this).children().last().remove();
+                }
+            });
+            insertion_templates.find("div.edit-structure").clone().insertBefore($(this));
+            insertion_templates.find("div.add-content-row").clone().insertAfter($(this));
+        });
+    }
+
+    //
+    // Initial edit-control states
+    //
+
+    resetControls();
+
+    $(document).on('mouseenter', 'article div.content', function() {
+        insertion_templates.find("div.remove-content").clone().appendTo($(this));
+    });
+
+    $(document).on('mouseleave', 'article div.content', function() {
+        $(this).find("div.remove-content").remove();
+    });
+
+    $(document).on('click', 'article div.content div.remove-content a', function(e) {
+        e.stopPropagation(); // Mostly to avoid click-event on an image
+        $(this).parents("div.content").remove();
+        resetControls();
+    });
+
+    //
+    // Structure changes
+    //
+
+    $(document).on('click', article.selector + ' div.edit-structure button', function() {
+
+        var row = $(this).parents("div.row-fluid").next("div[data-row]");
+
+        if($(this).attr('data-type') === 'single') {
+            var first_column = row.children("div.column").first();
+            var extra_columns = row.children("div.column").slice(1);
+            first_column.attr('class', '').addClass('column span12');
+
+            extra_columns.each(function() {
+                $(this).children().detach().appendTo(first_column);
+            });
+            extra_columns.remove();
+        } else if($(this).attr('data-type') === 'double') {
+            var first_column = row.children("div.column").first();
+            var second_column = row.children("div.column").eq(1);
+            var extra_columns = row.children("div.column").slice(2);
+
+            if(second_column.length === 0) {
+                second_column = $('<div></div>');
+                second_column.insertAfter(first_column);
+            }
+
+            first_column.attr('class', '').addClass('column span6');
+            second_column.attr('class', '').addClass('column span6');
+
+            extra_columns.each(function() {
+                $(this).children().detach().appendTo(second_column);
+            });
+            extra_columns.remove();
+        } else if($(this).attr('data-type') === 'sidebar-left') {
+            var first_column = row.children("div.column").first();
+            var second_column = row.children("div.column").eq(1);
+            var extra_columns = row.children("div.column").slice(2);
+
+            if(second_column.length === 0) {
+                second_column = $('<div></div>');
+                second_column.insertAfter(first_column);
+            }
+
+            first_column.attr('class', '').addClass('column span3');
+            second_column.attr('class', '').addClass('column span9');
+
+            extra_columns.each(function() {
+                $(this).children().detach().appendTo(second_column);
+            });
+            extra_columns.remove();
+        } else if($(this).attr('data-type') === 'sidebar-right') {
+            var first_column = row.children("div.column").first();
+            var second_column = row.children("div.column").eq(1);
+            var extra_columns = row.children("div.column").slice(2);
+
+            if(second_column.length === 0) {
+                second_column = $('<div></div>');
+                second_column.insertAfter(first_column);
+            }
+
+            first_column.attr('class', '').addClass('column span9');
+            second_column.attr('class', '').addClass('column span3');
+
+            extra_columns.each(function() {
+                $(this).children().detach().appendTo(second_column);
+            });
+            extra_columns.remove();
+        } else if($(this).attr('data-type') === 'triple') {
+            var first_column = row.children("div.column").first();
+            var second_column = row.children("div.column").eq(1);
+            var third_column = row.children("div.column").eq(2);
+            var extra_columns = row.children("div.column").slice(3);
+
+            if(second_column.length === 0) {
+                second_column = $('<div></div>');
+                second_column.insertAfter(first_column);
+            }
+
+            if(third_column.length === 0) {
+                third_column = $('<div></div>');
+                third_column.insertAfter(second_column);
+            }
+
+            first_column.attr('class', '').addClass('column span4');
+            second_column.attr('class', '').addClass('column span4');
+            third_column.attr('class', '').addClass('column span4');
+
+            extra_columns.each(function() {
+                $(this).children().detach().appendTo(third_column);
+            });
+            extra_columns.remove();
+        } else if($(this).attr('data-type') === 'quadruple') {
+            var first_column = row.children("div.column").first();
+            var second_column = row.children("div.column").eq(1);
+            var third_column = row.children("div.column").eq(2);
+            var fourth_column = row.children("div.column").eq(3);
+            var extra_columns = row.children("div.column").slice(4);
+
+            if(second_column.length === 0) {
+                second_column = $('<div></div>');
+                second_column.insertAfter(first_column);
+            }
+
+            if(third_column.length === 0) {
+                third_column = $('<div></div>');
+                third_column.insertAfter(second_column);
+            }
+
+            if(fourth_column.length === 0) {
+                fourth_column = $('<div></div>');
+                fourth_column.insertAfter(third_column);
+            }
+
+            first_column.attr('class', '').addClass('column span3');
+            second_column.attr('class', '').addClass('column span3');
+            third_column.attr('class', '').addClass('column span3');
+            fourth_column.attr('class', '').addClass('column span3');
+
+            extra_columns.each(function() {
+                $(this).children().detach().appendTo(fourth_column);
+            });
+            extra_columns.remove();
+        }
+
+        resetControls();
+    });
+
+
     //Content changes (text, images, widgets)
     var noStructureForContentWarning = "Det er ingen rader/kolonner å sette inn innhold i! " +
         "Gå til 'struktur'-knappen først, og legg til noen rader og kolonner.";
-
-    // Add text
-    toolbar.find("button.add-text").click(function() {
-        if($("article").children().length === 0) {
-            alert(noStructureForContentWarning);
-            return;
-        }
-        removeEmpties();
-        disableToolbar("Klikk på et ledig felt i artikkelen for å legge til tekst...", function() {
-            $("article .insertable").remove();
-            setEmpties();
-        });
-        insertables("Klikk for å legge til tekst her", $("article .column"), function(event) {
-            var content = insertion_templates.find("div.content.html").clone();
-            content.insertAfter($(event.target));
-            setEmpties();
-            enableToolbar();
-            $("article .insertable").remove();
-            content.attr('contenteditable', 'true').focus();
-        });
-    });
-
-    // Add image
-    toolbar.find("a.button.image").click(function() {
-        if($("article").children().length === 0) {
-            alert(noStructureForContentWarning);
-            return;
-        }
-        removeEmpties();
-        disableToolbar("Klikk på et ledig felt i artikkelen for å legge til bilde...", function() {
-            $("article .insertable").remove();
-            setEmpties();
-        });
-        insertables("Klikk for å legge til bilde her", $("article .column"), function(event) {
-            var image = insertion_templates.find("div.content.image").clone();
-            image.css("overflow", "hidden");
-            image.insertAfter($(event.target));
-            image.find("img").click();
-            setEmpties();
-            $("article .insertable").remove();
-            enableToolbar();
-        });
-    });
 
     // Add widget
     window.widgetPosition; // Set when inserting a new widget
@@ -272,11 +489,8 @@ $(document).ready(function() {
 
 
     // Insert custom button
-    $("button.insert-button").click(function() {
-        $("div.add-button").modal();
-    });
-    $("div.add-button div.alert").hide();
-    $("div.add-button").on('show', function(event) {
+    add_button_modal.find("div.alert").hide();
+    add_button_modal.on('show', function(event) {
         if(selection === undefined) {
             alert('Trykk på tekstelementet du vil legge til knappen i først, og prøv igjen.');
             $(this).on('shown', function() {
@@ -284,11 +498,11 @@ $(document).ready(function() {
             });
         }
     });
-    $("div.add-button button.insert").click(function() {
-        var text = $("div.add-button input[name='text']").val();
-        var url = $("div.add-button input[name='url']").val().trim();
+    add_button_modal.find("button.insert").click(function() {
+        var text = add_button_modal.find("input[name='text']").val();
+        var url = add_button_modal.find("input[name='url']").val().trim();
         if(text === "") {
-            $("div.add-button div.alert").show();
+            add_button_modal.find("div.alert").show();
             return;
         }
         var el;
@@ -301,12 +515,12 @@ $(document).ready(function() {
             el = 'button';
         }
         var button = $('<' + el + ' class="btn">' + text + '</' + el + '>');
-        button.addClass($("div.add-button input[name='color']:checked").val())
-              .addClass($("div.add-button input[name='size']:checked").val());
+        button.addClass(add_button_modal.find("input[name='color']:checked").val())
+              .addClass(add_button_modal.find("input[name='size']:checked").val());
         $(selection.anchorNode).parents(".editable").append($('<p></p>').prepend(button), $('<p><br></p>'));
-        $("div.add-button").modal('hide');
+        add_button_modal.modal('hide');
     });
-    $("div.add-button table.choices button").click(function() {
+    add_button_modal.find("table.choices button").click(function() {
         $(this).parent().prev().children("input[type='radio']").click();
     });
 
@@ -357,7 +571,7 @@ $(document).ready(function() {
                 {span: 3, offset: 0, order: 3}
             ];
         }
-        var wrapper = $('<div class="row-fluid"></div>');
+        var wrapper = $('<div class="row-fluid" data-row></div>');
         for(var i=0; i<columns.length; i++) {
             wrapper.append($('<div class="column span' + columns[i].span + ' offset' +
                 columns[i].offset + '"></div>'));
@@ -378,17 +592,17 @@ $(document).ready(function() {
     // Remove a row and all its content
     toolbar.find("button.remove-columns").click(function() {
         function doneRemoving() {
-            $(document).off('mouseenter mouseleave click', 'article > div.row-fluid');
+            $(document).off('mouseenter mouseleave click', 'article > div[data-row]');
             enableEditing();
             enableToolbar();
         }
         disableToolbar("Velg raden du vil fjerne...", doneRemoving);
         disableEditing();
-        $(document).on('mouseenter', 'article > div.row-fluid', function() {
+        $(document).on('mouseenter', 'article > div[data-row]', function() {
             $(this).addClass('hover-remove');
-        }).on('mouseleave', 'article > div.row-fluid', function() {
+        }).on('mouseleave', 'article > div[data-row]', function() {
             $(this).removeClass('hover-remove');
-        }).on('click', 'article > div.row-fluid', function() {
+        }).on('click', 'article > div[data-row]', function() {
             var row = $(this);
             row.hide();
             doneRemoving();
