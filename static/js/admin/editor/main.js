@@ -177,14 +177,20 @@ $(document).ready(function() {
     // New method of adding content
     $(document).on('click', article.selector + ' div.add-content,' + article.selector + ' div.add-content-row', function() {
         $(this).addClass('active');
+        // The container may change size, so make sure the tooltip is removed
+        // Simply hiding it was buggy, so try destroying and recreating it
+        $(this).tooltip('destroy');
+        $(this).tooltip({placement: 'bottom'});
+        $(this).tooltip('show');
     });
     $(document).on('mouseleave', article.selector + ' div.add-content,' + article.selector + ' div.add-content-row', function() {
         $(this).removeClass('active');
     });
 
     $(document).on('click', article.selector + " div.add-content button", function() {
-        // Trigger mouseout manually so that the tooltip is removed
-        $(this).trigger('mouseout');
+        // Manually hide the tooltips since mouseleave won't be triggered
+        $(this).tooltip('hide');
+        $(this).parents("div.add-content,div.add-content-row").tooltip('hide');
 
         var type = $(this).attr('data-type');
         var widget_type = $(this).attr('data-widget');
