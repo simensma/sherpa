@@ -298,6 +298,9 @@ $(document).ready(function() {
 
         // After each reset, add tooltip to the new button elements
         editor.find("div.content-choices button").tooltip();
+
+        // Add tooltip to the add-content rows
+        editor.find("article div.add-content, article div.add-content-row").tooltip({placement: 'bottom'});
     }
 
     //
