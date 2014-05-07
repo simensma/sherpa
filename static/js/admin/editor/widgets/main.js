@@ -1,9 +1,4 @@
 /* Editing widgets */
-$(document).ready(function() {
-
-    $("div.add-widget div.widget-thumbnail").tooltip();
-
-});
 
 function saveWidget(content, editor_callback) {
     var editor = $("div.cms-editor");

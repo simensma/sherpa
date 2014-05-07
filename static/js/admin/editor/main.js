@@ -274,28 +274,30 @@ $(document).ready(function() {
         // Edge case; if there are *no* rows
         if(rows.length === 0) {
             insertion_templates.find("div.add-content-row").clone().prependTo(article);
-            return;
+        } else {
+            rows.each(function() {
+                var columns = $(this).find("div.column");
+
+                // If there is one great column, no nead for a trailing add column after last content
+                // If there are several, we do want one
+                var trailing_add_content = columns.length > 1;
+
+                columns.each(function() {
+                    insertion_templates.find("div.add-content").clone().prependTo($(this));
+                    $(this).find("div.content").each(function() {
+                        insertion_templates.find("div.add-content").clone().insertAfter($(this));
+                    });
+                    if(!trailing_add_content) {
+                        $(this).children().last().remove();
+                    }
+                });
+                insertion_templates.find("div.edit-structure").clone().insertBefore($(this));
+                insertion_templates.find("div.add-content-row").clone().insertAfter($(this));
+            });
         }
 
-        rows.each(function() {
-            var columns = $(this).find("div.column");
-
-            // If there is one great column, no nead for a trailing add column after last content
-            // If there are several, we do want one
-            var trailing_add_content = columns.length > 1;
-
-            columns.each(function() {
-                insertion_templates.find("div.add-content").clone().prependTo($(this));
-                $(this).find("div.content").each(function() {
-                    insertion_templates.find("div.add-content").clone().insertAfter($(this));
-                });
-                if(!trailing_add_content) {
-                    $(this).children().last().remove();
-                }
-            });
-            insertion_templates.find("div.edit-structure").clone().insertBefore($(this));
-            insertion_templates.find("div.add-content-row").clone().insertAfter($(this));
-        });
+        // After each reset, add tooltip to the new button elements
+        editor.find("div.content-choices button").tooltip();
     }
 
     //
