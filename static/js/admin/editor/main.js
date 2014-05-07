@@ -334,8 +334,10 @@ $(document).ready(function() {
 
     $(document).on('click', 'article div.content div.remove-content', function(e) {
         e.stopPropagation(); // Mostly to avoid click-event on an image
-        $(this).parents("div.content").remove();
-        resetControls();
+        if(confirm($(this).attr('data-confirm'))) {
+            $(this).parents("div.content").remove();
+            resetControls();
+        }
     });
 
     //
