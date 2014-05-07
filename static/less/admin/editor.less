@@ -61,7 +61,7 @@ div.cms-editor {
       min-height: 20px;
     }
 
-    div.image:hover > img, div.widget:not(.static):hover {
+    div.image:hover > *:not(.remove-content), div.widget:not(.static):hover > *:not(.remove-content) {
       opacity: 0.5;
       filter: alpha(opacity=50);
       cursor: alias;
