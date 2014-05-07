@@ -1,47 +1,25 @@
-/* Common for page- and article-editor */
-$(document).ready(function() {
+/* The main CMS editor functionality */
+
+$(function() {
 
     var editor = $("div.cms-editor");
     var article = editor.find("article");
     var insertion_templates = editor.find("div.insertion-templates");
     var add_button_modal = editor.find("div.add-button.modal");
+    var toolbar = editor.find("div.cms-editor-toolbar");
+    var toolbarContents = toolbar.find("div.toolbar-contents");
 
-    /**
-     * Initialization
-     */
+    //
+    // Initialization
+    //
 
     rangy.init();
     window.selection = undefined;
-    var insertable;
-    setEmpties();
-    enableEditing();
-    disableIframes($("article div.content.widget"));
-
-    var toolbar = $("div.cms-editor-toolbar");
-    var toolbarContents = toolbar.find("div.toolbar-contents");
+    disableIframes(article.find("div.content.widget"));
+    resetControls();
 
     // An image currently being changed (need to save this state while opening the changer dialog)
     var currentImage;
-
-    // Edit an existing widget
-    $(document).on('click', 'article div.content.widget', function() {
-        var widget_element = $(this);
-        var widget_content = JSON.parse($(this).attr('data-json'));
-        $(this).trigger('widget.edit', [widget_content, function(widget) {
-            var prev = widget_element.prevAll("div.content").first();
-            var column = widget_element.parents("div.column");
-            widget_element.remove();
-
-            var position;
-            if(prev.length === 0) {
-                position = {insertion: 'prepend', existingElement: column};
-            } else {
-                position = {insertion: 'after', existingElement: prev};
-            }
-
-            insertContent({type: 'widget', widget: widget}, position);
-        }]);
-    });
 
     // Make toolbar draggable, but not if input-elements are clicked
     toolbar.draggable();
@@ -52,27 +30,27 @@ $(document).ready(function() {
     // Draggable will set position relative, so make sure it is fixed before the user drags it
     toolbar.css('position', 'fixed');
 
-    /* Prevent all anchor clicks within the article */
-    $(document).on('click', 'a', function(e) {
-        if($(this).parents("article").length !== 0) {
-            e.preventDefault();
-        }
+    // Prevent all anchor clicks within the article
+    $(document).on('click', article.selector + ' a', function(e) {
+        e.preventDefault();
     });
 
-    /* Highlight contenteditables that _are being edited_. */
+    // Highlight contenteditables that are being edited
     $(document).on('focus', 'article div.editable', function() {
         $(this).addClass('selected');
     });
     $(document).on('focusout', 'article div.editable', function() {
         $(this).removeClass('selected');
     });
+
+    // Set the selection when appropriate
     $(document).on('mouseup', 'article div.editable', setSelection);
     $(document).on('keyup', 'article div.editable', setSelection);
     function setSelection() {
         selection = rangy.getSelection();
     }
 
-    /* Highlight empty html contents */
+    // Highlight empty html contents
     $(document).on('click', 'article div.content.html[data-placeholder], article div.content.lede[data-placeholder]', function() {
         $(this).removeAttr('data-placeholder');
         $(this).text('');
@@ -94,10 +72,9 @@ $(document).ready(function() {
             }
         }
     });
-    $("article div.content.html, article div.content.lede").focusout();
 
-    /* Hide completely empty image descriptions */
-    $("article div.content.image").each(function() {
+    // Hide completely empty image descriptions
+    article.find("div.content.image").each(function() {
         var content = $(this);
         hidePictureText(content);
     });
@@ -125,9 +102,8 @@ $(document).ready(function() {
         }
     }
 
-    /* Change image sources upon being clicked. */
-    function changeImage() {
-
+    // Change image sources upon being clicked
+    $(document).on('click', 'article div.content.image', function() {
         currentImage = $(this).find("img");
         var content = $(this);
         var currentDescription = content.find("span.description");
@@ -169,12 +145,13 @@ $(document).ready(function() {
 
             },
             remove: function() {
-                removeContent(content);
+                content.remove();
+                resetControls();
             }
         });
-    }
+    });
 
-    // New method of adding content
+    // Add content (expand plus-icon into available content items)
     $(document).on('click', article.selector + ' div.add-content,' + article.selector + ' div.add-content-row', function() {
         $(this).addClass('active');
         // The container may change size, so make sure the tooltip is removed
@@ -183,10 +160,13 @@ $(document).ready(function() {
         $(this).tooltip({placement: 'bottom'});
         $(this).tooltip('show');
     });
+
+    // Cancel add-content on mouse out
     $(document).on('mouseleave', article.selector + ' div.add-content,' + article.selector + ' div.add-content-row', function() {
         $(this).removeClass('active');
     });
 
+    // Add chosen content-type
     $(document).on('click', article.selector + " div.add-content button", function() {
         // Manually hide the tooltips since mouseleave won't be triggered
         $(this).tooltip('hide');
@@ -213,6 +193,7 @@ $(document).ready(function() {
         }
     });
 
+    // Add chosen content-type (separate logic for row-based addition)
     $(document).on('click', article.selector + ' div.add-content-row button', function() {
         // Trigger mouseout manually so that the tooltip is removed
         $(this).trigger('mouseout');
@@ -241,7 +222,18 @@ $(document).ready(function() {
         }
     });
 
+    // Insert the specified content at the specified position
     function insertContent(content, position) {
+        function insertItem(item, position) {
+            if(position.insertion === 'after') {
+                item.insertAfter(position.existingElement);
+            } else if(position.insertion === 'append') {
+                item.appendTo(position.existingElement);
+            } else if(position.insertion === 'prepend') {
+                item.prependTo(position.existingElement);
+            }
+        }
+
         if(content.type === 'text') {
             content = insertion_templates.find("div.content.html").clone();
             insertItem(content, position);
@@ -259,91 +251,26 @@ $(document).ready(function() {
         resetControls();
     }
 
-    function insertItem(item, position) {
-        if(position.insertion === 'after') {
-            item.insertAfter(position.existingElement);
-        } else if(position.insertion === 'append') {
-            item.appendTo(position.existingElement);
-        } else if(position.insertion === 'prepend') {
-            item.prependTo(position.existingElement);
-        }
-    }
-
-
-    function resetControls() {
-
-        // Remove all rows that are completely empty for content
-        article.find("div[data-row]").each(function() {
-            if($(this).find("div.column:has(div.content)").length === 0) {
-                $(this).remove();
-            }
-        });
-
-        article.find("div.edit-structure,div.add-content,div.add-content-row").remove();
-
-        var rows = article.find("div[data-row]");
-
-        // Edge case; if there are *no* rows
-        if(rows.length === 0) {
-            insertion_templates.find("div.add-content-row").clone().prependTo(article);
-        } else {
-            rows.each(function() {
-                var columns = $(this).find("div.column");
-
-                // If there is one great column, no nead for a trailing add column after last content
-                // If there are several, we do want one
-                var trailing_add_content = columns.length > 1;
-
-                columns.each(function() {
-                    insertion_templates.find("div.add-content").clone().prependTo($(this));
-                    $(this).find("div.content").each(function() {
-                        insertion_templates.find("div.add-content").clone().insertAfter($(this));
-                    });
-                    if(!trailing_add_content) {
-                        $(this).children().last().remove();
-                    }
-                });
-                insertion_templates.find("div.edit-structure").clone().insertBefore($(this));
-                insertion_templates.find("div.add-content-row").clone().insertAfter($(this));
-            });
-        }
-
-        // After each reset, add tooltip to the new button elements
-        editor.find("div.content-choices button").tooltip();
-
-        // Add tooltip to the edit-structure buttons
-        editor.find("div.edit-structure button").tooltip();
-
-        // Add tooltip to the add-content rows
-        editor.find("article div.add-content, article div.add-content-row").tooltip({placement: 'bottom'});
-    }
-
-    //
-    // Initial edit-control states
-    //
-
-    resetControls();
-
+    // Show 'remove-content' icon upon hovering content
     $(document).on('mouseenter', 'article div.content', function() {
         insertion_templates.find("div.remove-content").clone().appendTo($(this)).tooltip();
     });
 
+    // Cancel the 'remove-content' icon upon mouse leave
     $(document).on('mouseleave', 'article div.content', function() {
         $(this).find("div.remove-content").remove();
     });
 
+    // Confirm and remove content when 'remove-content' icon clicked
     $(document).on('click', 'article div.content div.remove-content', function(e) {
-        e.stopPropagation(); // Mostly to avoid click-event on an image
+        e.stopPropagation(); // Avoid click-event on an image or widget
         if(confirm($(this).attr('data-confirm'))) {
             $(this).parents("div.content").remove();
             resetControls();
         }
     });
 
-    //
-    // Structure changes
-    //
-
+    // Change a row's column-structure
     $(document).on('click', article.selector + ' div.edit-structure button', function() {
 
         var row = $(this).parents("div.row-fluid").next("div[data-row]");
@@ -468,48 +395,71 @@ $(document).ready(function() {
         resetControls();
     });
 
-    // Remove content (text/image/widget)
-    toolbar.find("button.remove-content").click(function() {
-        function doneRemoving() {
-            $(document).off('mouseenter mouseleave click', 'article div.content.html, article div.content.widget, article div.content.image');
-            enableEditing();
-            enableToolbar();
-        }
-        disableToolbar('Klikk på innholdet i artikkelen du vil ta bort...', doneRemoving);
-        disableEditing();
-        $(document).on('mouseenter', 'article div.content.html, article div.content.widget, article div.content.image', function() {
-            $(this).addClass('hover-remove');
-        }).on('mouseleave', 'article div.content.html, article div.content.widget, article div.content.image', function() {
-            $(this).removeClass('hover-remove');
-        }).on('click', 'article div.content.html, article div.content.widget, article div.content.image', function() {
-            doneRemoving();
-            var content = $(this);
-            content.hide();
-            var confirmation = $('<div class="alert alert-error"><p class="delete-content-warning">Er du sikker på at du vil fjerne dette elementet?</p><p><button class="btn btn-large btn-danger confirm"><i class="icon-warning-sign"></i> Ja, slett innholdet</button> <button class="btn btn-large cancel"><i class="icon-heart"></i> Nei, avbryt og ikke slett noe</button></p></div>');
-            content.before(confirmation);
-            confirmation.find("button.cancel").click(function() {
-                confirmation.remove();
-                content.show();
-                content.removeClass('hover-remove');
-                content.find(".editable").focusout();
-                toolbar.find("button.cancel").click();
-            });
-            confirmation.find("button.confirm").click(function() {
-                confirmation.remove();
-                removeContent(content);
-            });
-        });
-    });
+    // Remove all editing-markup and re-build from scratch
+    function resetControls() {
 
-    // Actually remove the content from DOM
-    window.removeContent = removeContent;
-    function removeContent(content) {
-        if(content.siblings().length === 0) {
-            setEmpty(content.parent());
+        // Remove all rows that are completely empty for content
+        article.find("div[data-row]").each(function() {
+            if($(this).find("div.column:has(div.content)").length === 0) {
+                $(this).remove();
+            }
+        });
+
+        // Remove existing editing-markups
+        article.find("div.edit-structure,div.add-content,div.add-content-row").remove();
+
+        var rows = article.find("div[data-row]");
+        if(rows.length === 0) {
+            // Edge case; if there are *no* rows
+            insertion_templates.find("div.add-content-row").clone().prependTo(article);
+        } else {
+            // Iterate existing rows
+            rows.each(function() {
+                var columns = $(this).find("div.column");
+
+                // If there is one great column, no nead for a trailing add column after last content
+                // If there are several, we do want one
+                var trailing_add_content = columns.length > 1;
+
+                columns.each(function() {
+                    insertion_templates.find("div.add-content").clone().prependTo($(this));
+                    $(this).find("div.content").each(function() {
+                        insertion_templates.find("div.add-content").clone().insertAfter($(this));
+                    });
+                    if(!trailing_add_content) {
+                        $(this).children().last().remove();
+                    }
+                });
+                insertion_templates.find("div.edit-structure").clone().insertBefore($(this));
+                insertion_templates.find("div.add-content-row").clone().insertAfter($(this));
+            });
         }
-        content.remove();
+
+        // After each reset, add tooltips to the new button elements, the edit-structure buttons and add-content rows
+        editor.find("div.content-choices button").tooltip();
+        editor.find("div.edit-structure button").tooltip();
+        editor.find("article div.add-content, article div.add-content-row").tooltip({placement: 'bottom'});
     }
 
+    // Edit an existing widget
+    $(document).on('click', 'article div.content.widget', function() {
+        var widget_element = $(this);
+        var widget_content = JSON.parse($(this).attr('data-json'));
+        $(this).trigger('widget.edit', [widget_content, function(widget) {
+            var prev = widget_element.prevAll("div.content").first();
+            var column = widget_element.parents("div.column");
+            widget_element.remove();
+
+            var position;
+            if(prev.length === 0) {
+                position = {insertion: 'prepend', existingElement: column};
+            } else {
+                position = {insertion: 'after', existingElement: prev};
+            }
+
+            insertContent({type: 'widget', widget: widget}, position);
+        }]);
+    });
 
     // Insert custom button
     add_button_modal.find("div.alert").hide();
@@ -547,163 +497,7 @@ $(document).ready(function() {
         $(this).parent().prev().children("input[type='radio']").click();
     });
 
-    /**
-     * Structural changes (rows/columns)
-     */
-
-    // Add a new row with columns
-    toolbar.find("button.add-columns").click(function() {
-        disableToolbar("Velg hvor i artikkelen du vil legge til en ny rad...", function() {
-            $(".insertable").remove();
-        });
-        insertables("Klikk her for å sette inn en rad", $("article"), function(event) {
-            $("div.insert-columns").modal();
-            insertable = $(this);
-        });
-    });
-
-    $("div.insert-columns img[data-choice]").click(function() {
-        $(this).parents("div.insert-columns").modal('hide');
-        addColumns($(this).attr('data-choice'));
-    });
-
-    function addColumns(choice) {
-        if(choice === "0") {
-            columns = [{span: 12, offset: 0, order: 0}];
-        } else if(choice === "1") {
-            columns = [
-                {span: 9, offset: 0, order: 0},
-                {span: 3, offset: 0, order: 1}
-            ];
-        } else if(choice === "2") {
-            columns = [
-                {span: 6, offset: 0, order: 0},
-                {span: 6, offset: 0, order: 1}
-            ];
-        } else if(choice === "3") {
-            columns = [
-                {span: 4, offset: 0, order: 0},
-                {span: 4, offset: 0, order: 1},
-                {span: 4, offset: 0, order: 2}
-            ];
-        } else if(choice === "4") {
-            columns = [
-                {span: 3, offset: 0, order: 0},
-                {span: 3, offset: 0, order: 1},
-                {span: 3, offset: 0, order: 2},
-                {span: 3, offset: 0, order: 3}
-            ];
-        }
-        var wrapper = $('<div class="row-fluid" data-row></div>');
-        for(var i=0; i<columns.length; i++) {
-            wrapper.append($('<div class="column span' + columns[i].span + ' offset' +
-                columns[i].offset + '"></div>'));
-        }
-        var prev = insertable.prev();
-        if(prev.length === 0) {
-            insertable.parent().prepend(wrapper);
-        } else {
-            prev.after(wrapper);
-        }
-        wrapper.children().each(function() {
-            setEmpty($(this));
-        });
-        $("article .insertable").remove();
-        enableToolbar();
-    }
-
-    // Remove a row and all its content
-    toolbar.find("button.remove-columns").click(function() {
-        function doneRemoving() {
-            $(document).off('mouseenter mouseleave click', 'article > div[data-row]');
-            enableEditing();
-            enableToolbar();
-        }
-        disableToolbar("Velg raden du vil fjerne...", doneRemoving);
-        disableEditing();
-        $(document).on('mouseenter', 'article > div[data-row]', function() {
-            $(this).addClass('hover-remove');
-        }).on('mouseleave', 'article > div[data-row]', function() {
-            $(this).removeClass('hover-remove');
-        }).on('click', 'article > div[data-row]', function() {
-            var row = $(this);
-            row.hide();
-            doneRemoving();
-            var confirmation = $('<div class="alert alert-error"><p class="delete-content-warning">Er du sikker på at du vil fjerne dette elementet?</p><p><button class="btn btn-large btn-danger confirm"><i class="icon-warning-sign"></i> Ja, slett innholdet</button> <button class="btn btn-large cancel"><i class="icon-heart"></i> Nei, avbryt og ikke slett noe</button></p></div>');
-            row.before(confirmation);
-            confirmation.find("button.cancel").click(function() {
-                confirmation.remove();
-                row.show();
-                row.removeClass('hover-remove');
-                row.find(".editable").focusout();
-                toolbar.find("button.cancel").click();
-            });
-            confirmation.find("button.confirm").click(function() {
-                confirmation.remove();
-                row.remove();
-                doneRemoving();
-            });
-        });
-    });
-
-    /**
-     * Small, logical code snippets
-     */
-
-    /* Toggle toolbar usage */
-    function disableToolbar(displayText, cancelCallback) {
-        toolbarContents.hide();
-        var btn = $('<button class="btn cancel">Avbryt</button>');
-        btn.click(enableToolbar);
-        btn.click(cancelCallback);
-        toolbar.append('<p class="cancel">' + displayText + '</p>', btn);
-    }
-    function enableToolbar() {
-        toolbar.find(".cancel").remove();
-        toolbarContents.show();
-    }
-
-    /* Toggle editing of the actual content */
-    window.disableEditing = disableEditing;
-    function disableEditing() {
-        $("article div.editable").removeAttr('contenteditable');
-        $(document).off('click', 'article div.content.image');
-    }
-    window.enableEditing = enableEditing;
-    function enableEditing() {
-        $("article div.editable").attr('contenteditable', 'true');
-        $(document).on('click', 'article div.content.image', changeImage);
-    }
-
-    /* Divs for inserting widgets/images/text */
-    function insertables(text, container, click) {
-        var well = $('<div class="insertable well">' + text + '</div>');
-        well.click(click);
-        var children = container.children();
-        container.prepend(well);
-        children.each(function() {
-            well = well.clone(true);
-            $(this).after(well);
-        });
-    }
-
-    /* Show/remove placeholder text for empty columns */
-    function setEmpty(column) {
-        column.append('<div class="empty well">Tom kolonne</div>');
-    }
-    window.setEmpties = setEmpties;
-    function setEmpties() {
-        $("article .column").each(function() {
-            if($(this).children(":not(.insertable)").length === 0) {
-                setEmpty($(this));
-            }
-        });
-    }
-    window.removeEmpties = removeEmpties;
-    function removeEmpties() {
-        $("article .column").children("div.empty.well").remove();
-    }
-
+    // Global disable-iframes function
     window.disableIframes = disableIframes;
     function disableIframes(content) {
         // Can't capture click events in iframes, so replace them
@@ -717,7 +511,7 @@ $(document).ready(function() {
         });
     }
 
-    /* Tags, used for both pages and articles */
+    // Tags, used in the header for both pages and articles
 
     TagDisplay.enable({
         tagBox: $("div.editor-header div.tags div.tag-box"),
