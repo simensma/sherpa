@@ -15,7 +15,7 @@ $(document).ready(function() {
 
 function saveWidget(widget, content) {
     var rendring_message = '<img src="/static/img/ajax-loader-small.gif" alt="Laster..."> <em>Rendrer widget...</em>';
-    var rendring_failed = '<p class="widget-rendring-failed">Klarte ikke å rendre widgeten! Er du sikker på at du har tilgang til internett?<br>Klikk her og velg lagre på nytt for å prøve å rendre igjen.</p>'
+    var rendring_failed = '<p class="widget-rendring-failed">Klarte ikke å rendre widgeten! Er du sikker på at du har tilgang til internett?<br>Klikk her og velg lagre på nytt for å prøve å rendre igjen.</p>';
     var content_json = JSON.stringify(content);
     var article = $("article");
     if(widget !== undefined) {
@@ -32,10 +32,10 @@ function saveWidget(widget, content) {
             disableIframes(widget);
         });
     } else {
-        var widget = $('<div class="content widget ' + content.widget + '"></div>');
+        widget = $('<div class="content widget ' + content.widget + '"></div>');
         widget.append(rendring_message);
         widget.attr('data-json', content_json);
-        if(widgetPosition.prev.length == 0) {
+        if(widgetPosition.prev.length === 0) {
             widgetPosition.parent.prepend(widget);
         } else {
             widgetPosition.prev.after(widget);
