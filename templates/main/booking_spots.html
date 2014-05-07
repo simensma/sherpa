@@ -18,9 +18,9 @@
   <body>
     <p>
       {% if available > 0 %}
-        Ledige plasser: {{ available }}/{{ total }}
+        {{ available }} ledige plasser
       {% else %}
-        {{ available }}/{{ total }}, {{ waiting_list }} på venteliste
+        Sett deg på venteliste
       {% endif %}
     </p>
   </body>
