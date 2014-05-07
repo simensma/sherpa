@@ -163,7 +163,12 @@ $(document).ready(function() {
     });
 
     $(document).on('click', article.selector + ' div.add-content button', function() {
-        insertContent($(this).attr('data-type'), 'after', $(this).parents("div.add-content"));
+        var prev = $(this).parents("div.add-content").prev("div.content");
+        if(prev.length === 0) {
+            insertContent($(this).attr('data-type'), $(this).attr('data-widget'), 'prepend', $(this).parents("div.column"));
+        } else {
+            insertContent($(this).attr('data-type'), $(this).attr('data-widget'), 'after', prev);
+        }
     });
 
     $(document).on('click', article.selector + ' div.add-content-row button', function() {
