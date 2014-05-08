@@ -141,14 +141,15 @@ div.cms-editor {
       margin: 0;
       padding-top: 10px;
       padding-bottom: 10px;
+      min-height: 26px; // background-image height
+      background-image: url('/static/img/icons/glyph/original/glyphicons_190_circle_plus.png');
+      background-position: center center;
+      background-repeat: no-repeat;
     }
 
     div.add-content.active, div.add-content-row.active {
       background-color: rgb(240, 240, 240);
-
-      img.plus {
-        display: none;
-      }
+      background-image: none;
     }
 
     div.add-content:not(.active), div.add-content-row:not(.active) {
@@ -175,23 +176,15 @@ div.cms-editor {
         padding: 12px 25px;
         border: 1px solid rgb(52, 224, 194);
         background-color: rgb(255, 255, 255);
-
-        img.active {
-          display: none;
-        }
+        background-image: url('/static/img/editorbuttons/remove-content-inactive.png');
+        background-position: center center;
+        background-repeat: no-repeat;
       }
 
       div.remove-content:hover {
         cursor: pointer;
         background-color: rgb(52, 224, 194);
-
-        img.active {
-          display: block;
-        }
-
-        img.inactive {
-          display: none;
-        }
+        background-image: url('/static/img/editorbuttons/remove-content-active.png');
       }
     }
   }
