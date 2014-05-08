@@ -106,7 +106,13 @@ $(document).ready(function() {
                         if($(this).is('[data-placeholder]')) {
                             content.content = '';
                         } else {
-                            content.content = $(this).html();
+                            // Remove any editor-elements that could have been temporarily inserted as children,
+                            // and supposed to be removed but remained there due to UI bugs
+                            var clone = $(this).clone();
+                            clone.find("div.content-control,div.tooltip").remove();
+
+                            // And add the result
+                            content.content = clone.html();
                         }
                     } else if($(this).is('.image')) {
                         var anchor;

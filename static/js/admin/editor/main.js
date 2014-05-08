@@ -251,14 +251,24 @@ $(function() {
         resetControls();
     }
 
-    // Show 'remove-content' icon upon hovering content
+    // Show content control icons upon hovering content
     $(document).on('mouseenter', 'article div.content', function() {
+        if(EditorMoveContent.isMoving()) {
+            // Ignore this while moving
+            return $(this);
+        }
         insertion_templates.find("div.remove-content").clone().appendTo($(this)).tooltip();
+        insertion_templates.find("div.move-content").clone().appendTo($(this)).tooltip();
     });
 
-    // Cancel the 'remove-content' icon upon mouse leave
+    // Cancel the content control icons upon mouse leave
     $(document).on('mouseleave', 'article div.content', function() {
+        if(EditorMoveContent.isMoving()) {
+            // Ignore this while moving
+            return $(this);
+        }
         $(this).find("div.remove-content").remove();
+        $(this).find("div.move-content").remove();
     });
 
     // Confirm and remove content when 'remove-content' icon clicked
@@ -268,6 +278,15 @@ $(function() {
             $(this).parents("div.content").remove();
             resetControls();
         }
+    });
+
+    // Enable content moving on 'move-content' icon click
+    $(document).on('click', 'article div.content div.move-content', function(e) {
+        e.stopPropagation(); // Avoid click-event on an image or widget
+        EditorMoveContent.init({
+            content: $(this).parents("div.content"),
+            endCallback: resetControls,
+        });
     });
 
     // Change a row's column-structure
