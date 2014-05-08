@@ -210,7 +210,7 @@ def index(request):
                 cache.delete('user.%s.all_foreninger' % request.user.id)
 
                 messages.info(request, 'forening_create_success')
-                request.active_forening = forening
+                request.session['active_forening'] = forening.id
                 cache.delete('foreninger.full_list')
                 cache.delete('forening.%s' % forening.id)
                 cache.delete('forening.main_forenings.%s' % forening.id)
