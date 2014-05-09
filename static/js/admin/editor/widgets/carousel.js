@@ -1,3 +1,5 @@
+// FIXME this widget desperately needs cleanup
+
 (function(ImageCarouselWidgetEditor, $, undefined ) {
 
     /* Private variables */

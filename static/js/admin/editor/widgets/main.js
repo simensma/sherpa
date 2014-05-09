@@ -2,9 +2,47 @@
 
 (function(WidgetEditor, $, undefined ) {
 
-    WidgetEditor.saveWidget = function(content, editor_callback) {
-        var editor = $("div.cms-editor");
-        var article = editor.find("article");
+    var editor;
+    var article;
+    var editor_callback;
+
+    $(function() {
+        editor = $("div.cms-editor");
+        article = editor.find("article");
+    });
+
+    WidgetEditor.listen = function(opts) {
+        // Can't use the 'editor' element for lookup; listen may be called before the ready-function above runs
+        var widget_editor = $("div.cms-editor div.widget-editor[data-widget='" + opts.widget_name + "']");
+
+        if(opts.init !== undefined) {
+            opts.init(widget_editor);
+        }
+
+        $(document).on('widget.new.' + opts.widget_name, function(e, _editor_callback) {
+            editor_callback = _editor_callback;
+            widget_editor.modal();
+            if(opts.onNew !== undefined) {
+                opts.onNew(widget_editor);
+            }
+        });
+
+        $(document).on('widget.edit', 'div.widget.' + opts.widget_name, function(e, widget_content, _editor_callback) {
+            editor_callback = _editor_callback;
+            widget_editor.modal();
+            if(opts.onEdit !== undefined) {
+                opts.onEdit(widget_editor, widget_content);
+            }
+        });
+
+        widget_editor.find("button.save").click(function() {
+            if(opts.onSave(widget_editor)) {
+                widget_editor.modal('hide');
+            }
+        });
+    };
+
+    WidgetEditor.saveWidget = function(content) {
         var rendering_failed = editor.find("div.insertion-templates p.widget-rendering-failed").clone();
         var content_json = JSON.stringify(content);
 
