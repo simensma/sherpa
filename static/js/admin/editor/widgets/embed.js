@@ -32,7 +32,7 @@
                 alert("Du må jo legge inn koden du vil bruke først! Hvis du ikke vil bruke widgeten likevel, lukk vinduet med krysset oppe til høyre.");
                 return $(this);
             }
-            saveWidget({
+            WidgetEditor.saveWidget({
                 widget: "embed",
                 code: code
             }, editor_callback);

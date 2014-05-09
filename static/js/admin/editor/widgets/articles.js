@@ -93,7 +93,7 @@
                 var tags = [];
             }
 
-            saveWidget({
+            WidgetEditor.saveWidget({
                 widget: "articles",
                 title: title,
                 display_images: display_images,

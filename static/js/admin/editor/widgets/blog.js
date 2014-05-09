@@ -39,7 +39,7 @@
                 return $(this);
             }
 
-            saveWidget({
+            WidgetEditor.saveWidget({
                 widget: "blog",
                 count: count,
                 category : category

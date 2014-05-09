@@ -262,7 +262,7 @@
                     imageList.splice(i, 1);
                 }
             }
-            saveWidget({
+            WidgetEditor.saveWidget({
                 widget: "carousel",
                 images: imageList
             }, editor_callback);
