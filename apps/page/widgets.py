@@ -87,11 +87,19 @@ def parse_widget(request, widget, current_site):
         data = {'code': widget['code']}
     elif widget['widget'] == "fact":
         data = {'content': widget['content']}
+    elif widget['widget'] == "button":
+        data = {
+            'text': widget['text'],
+            'url': widget['url'],
+            'color': widget['color'],
+            'size': widget['size'],
+        }
 
     data.update({
         'json': json.dumps(widget),
         'template': 'common/widgets/%s/display.html' % widget['widget'],
-        'widget': widget['widget']})
+        'widget': widget['widget'],
+    })
     return data
 
 

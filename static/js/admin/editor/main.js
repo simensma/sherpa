@@ -5,7 +5,6 @@ $(function() {
     var editor = $("div.cms-editor");
     var article = editor.find("article");
     var insertion_templates = editor.find("div.insertion-templates");
-    var add_button_modal = editor.find("div.add-button.modal");
     var toolbar = editor.find("div.cms-editor-toolbar");
     var toolbarContents = toolbar.find("div.toolbar-contents");
 
@@ -245,8 +244,6 @@ $(function() {
             image.find("img").click();
         } else if(content.type === 'widget') {
             insertItem(content.widget, position);
-        } else if(content.type === 'button') {
-            add_button_modal.modal();
         }
         resetControls();
     }
@@ -478,42 +475,6 @@ $(function() {
 
             insertContent({type: 'widget', widget: widget}, position);
         }]);
-    });
-
-    // Insert custom button
-    add_button_modal.find("div.alert").hide();
-    add_button_modal.on('show', function(event) {
-        if(selection === undefined) {
-            alert('Trykk på tekstelementet du vil legge til knappen i først, og prøv igjen.');
-            $(this).on('shown', function() {
-                $(this).modal('hide');
-            });
-        }
-    });
-    add_button_modal.find("button.insert").click(function() {
-        var text = add_button_modal.find("input[name='text']").val();
-        var url = add_button_modal.find("input[name='url']").val().trim();
-        if(text === "") {
-            add_button_modal.find("div.alert").show();
-            return;
-        }
-        var el;
-        if(url !== "") {
-            if(!url.match(/^https?:\/\//)) {
-                url = "http://" + url;
-            }
-            el = 'a href="' + url + '"';
-        } else {
-            el = 'button';
-        }
-        var button = $('<' + el + ' class="btn">' + text + '</' + el + '>');
-        button.addClass(add_button_modal.find("input[name='color']:checked").val())
-              .addClass(add_button_modal.find("input[name='size']:checked").val());
-        $(selection.anchorNode).parents(".editable").append($('<p></p>').prepend(button), $('<p><br></p>'));
-        add_button_modal.modal('hide');
-    });
-    add_button_modal.find("table.choices button").click(function() {
-        $(this).parent().prev().children("input[type='radio']").click();
     });
 
     // Global disable-iframes function
