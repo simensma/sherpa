@@ -144,8 +144,10 @@ $(function() {
 
             },
             remove: function() {
-                content.remove();
-                resetControls();
+                content.slideUp(function() {
+                    $(this).remove();
+                    resetControls();
+                });
             }
         });
     });
@@ -272,8 +274,10 @@ $(function() {
     $(document).on('click', 'article div.content div.remove-content', function(e) {
         e.stopPropagation(); // Avoid click-event on an image or widget
         if(confirm($(this).attr('data-confirm'))) {
-            $(this).parents("div.content").remove();
-            resetControls();
+            $(this).parents("div.content").slideUp(function() {
+                $(this).remove();
+                resetControls();
+            });
         }
     });
 
