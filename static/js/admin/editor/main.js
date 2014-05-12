@@ -53,17 +53,13 @@ $(function() {
     $(document).on('click', 'article div.content.html[data-placeholder], article div.content.lede[data-placeholder]', function() {
         $(this).removeAttr('data-placeholder');
         $(this).text('');
-        $(this).attr('contenteditable', true);
+        $(this).attr('contenteditable', 'true');
         $(this).focus();
     });
     $(document).on('focusout', 'article div.content.html, article div.content.lede', function() {
         if($(this).text().trim() === "" && $(this).children("hr").length === 0) {
-            $(this).addClass('empty');
-            $(this).focus(function() {
-                $(this).removeClass('empty');
-            });
             $(this).removeAttr('contenteditable');
-            $(this).attr('data-placeholder', true);
+            $(this).attr('data-placeholder', '');
             if($(this).hasClass('html')) {
                 $(this).text("Klikk for å legge til tekst...");
             } else if($(this).hasClass('lede')) {

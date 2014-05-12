@@ -67,14 +67,6 @@ div.cms-editor {
       cursor: alias;
     }
 
-    div[data-placeholder] {
-      font-style: italic;
-    }
-
-    div[data-placeholder]:hover {
-      cursor: text;
-    }
-
     div[contenteditable='true'].selected {
       background-color: rgb(235, 235, 235);
     }
@@ -83,10 +75,15 @@ div.cms-editor {
       background-color: rgb(240, 240, 240);
     }
 
-    div.html.empty, div.lede.empty {
+    div.html[data-placeholder], div.lede[data-placeholder] {
       margin: -1px -1px 19px -1px; /* Subtract the border from the default margins */
       border: 1px solid rgb(255, 95, 95);
       background-color: rgb(255, 220, 220);
+      font-style: italic;
+    }
+
+    div.html[data-placeholder]:hover, div.lede[data-placeholder]:hover {
+      cursor: text;
     }
 
     div.widget p.widget-rendering-failed {

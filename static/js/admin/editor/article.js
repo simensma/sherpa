@@ -1,8 +1,10 @@
 /* Specific article-editing scripts */
 
-$(document).ready(function() {
+$(function() {
 
-    var header = $("div.editor-header");
+    var editor = $("div.cms-editor");
+    var header = editor.find("div.editor-header");
+    var article = editor.find("article");
 
     header.find("select[name='authors']").chosen();
 
@@ -39,7 +41,7 @@ $(document).ready(function() {
 
     header.find("input[name='thumbnail'][value='default']").change(function(e) {
         if($(this).is(':checked')) {
-            if($("article div.image").length === 0) {
+            if(article.find("div.image").length === 0) {
                 alert("Det er ingen bilder i artikkelen å bruke som minibilde!");
                 header.find("input[name='thumbnail'][value='none']").click();
                 return;
@@ -84,16 +86,5 @@ $(document).ready(function() {
             }
         });
     });
-
-    /* Mark empty text elements */
-    $(document).on('focusout', 'div.editable', markEmptyContent);
-    $("div.editable").each(markEmptyContent);
-    function markEmptyContent() {
-        if($(this).text().trim() === "") {
-            $(this).addClass('selected');
-        } else {
-            $(this).removeClass('selected');
-        }
-    }
 
 });

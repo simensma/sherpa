@@ -20,8 +20,12 @@
           {% for content in column.contents %}
             {% if content.type == 'html' or content.type == 'title' or content.type == 'lede' %}
 
-              <div class="content {{ content.type }} editable" contenteditable="true">
-                {{ content.content|safe }}
+              <div class="content {{ content.type }} editable" {% if content.content != '' %}contenteditable="true"{% else %}data-placeholder{% endif %}>
+                {% if content.content != '' %}
+                  {{ content.content|safe }}
+                {% else %}
+                  Klikk for å legge til tekst
+                {% endif %}
               </div>
 
             {% elif content.type == 'image' %}
