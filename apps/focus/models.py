@@ -497,7 +497,7 @@ class Actor(models.Model):
         # return Actor.objects.filter(
         #     services__code__gte=min([t['code'] for t in MEMBERSHIP_TYPES]),
         #     services__code__lte=max([t['code'] for t in MEMBERSHIP_TYPES]),
-        # )
+        # ).distinct()
 
     @staticmethod
     def all_active_members():
