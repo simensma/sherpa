@@ -62,6 +62,6 @@ def booking_spots(request, code, date):
 
         # Invalid date?
         raise Exception()
-    except Exception():
+    except Exception:
         # Don't handle; ignore any errors for now
         return HttpResponse('')
