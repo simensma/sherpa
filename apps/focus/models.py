@@ -165,13 +165,17 @@ class Actor(models.Model):
         return u'%s (memberid: %s)' % (self.pk, self.memberid)
 
     def is_personal_member(self):
+        # We'll have to disable this functionality for now, as we're dependent on the underlying Focus datatypes.
+        # When we get confirmation from memberservice, remove this and uncomment the code below.
+        return True
+
         # Note that we're ignoring the stop_date. We just need to know if this is a personal membership or not,
         # we don't care if the type changed or they haven't paid their membership (which is likely why stop_date
         # would be set)
-        return self.get_services().filter(
-            code__gte=min([t['code'] for t in MEMBERSHIP_TYPES]),
-            code__lte=max([t['code'] for t in MEMBERSHIP_TYPES]),
-        ).exists()
+        # return self.get_services().filter(
+        #     code__gte=min([t['code'] for t in MEMBERSHIP_TYPES]),
+        #     code__lte=max([t['code'] for t in MEMBERSHIP_TYPES]),
+        # ).exists()
 
     def membership_type(self):
         # Supposedly, there should only be one service in this range.
@@ -483,13 +487,17 @@ class Actor(models.Model):
         Other objects may be foreninger, organizations or other non-private member types which we currently
         aren't supporting. Note that this should probably be used for any Actor lookup, but we might have missed
         a few spots."""
+        # We'll have to disable this functionality for now, as we're dependent on the underlying Focus datatypes.
+        # When we get confirmation from memberservice, remove this and uncomment the code below.
+        return Actor.objects.all()
+
         # Note that we're ignoring the stop_date. We just need to know if this is a personal membership or not,
         # we don't care if the type changed or they haven't paid their membership (which is likely why stop_date
         # would be set)
-        return Actor.objects.filter(
-            services__code__gte=min([t['code'] for t in MEMBERSHIP_TYPES]),
-            services__code__lte=max([t['code'] for t in MEMBERSHIP_TYPES]),
-        )
+        # return Actor.objects.filter(
+        #     services__code__gte=min([t['code'] for t in MEMBERSHIP_TYPES]),
+        #     services__code__lte=max([t['code'] for t in MEMBERSHIP_TYPES]),
+        # )
 
     @staticmethod
     def all_active_members():
