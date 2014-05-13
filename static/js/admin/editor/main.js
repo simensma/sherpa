@@ -320,7 +320,11 @@ $(function() {
     // Enable cropping on 'crop-content' icon click
     $(document).on('click', 'article div.crop-content', function(e) {
         e.stopPropagation(); // Avoid click-event on an image or widget
-        // TBD cropping
+        var content = $(this).nextAll("div.content").first();
+        content.Jcrop();
+        $(this).tooltip('destroy'); // Just in case the browser doesn't trigger the mouseleave
+        $(this).siblings("div.content-control").remove();
+        $(this).remove();
     });
 
     // Change a row's column-structure
