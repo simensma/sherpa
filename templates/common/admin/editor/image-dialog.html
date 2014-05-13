@@ -1,4 +1,4 @@
-<div class="modal jq-hide change-image">
+<div class="modal hide change-image" data-missing-url-warning="Du må angi URL-adressen til bildet. Denne kommer automatisk hvis du velger et bilde fra bildearkivet eller laster opp et nytt bilde fra din PC.">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
     <h3>Velg et bilde å sette inn...</h3>
@@ -6,79 +6,49 @@
   <div class="modal-body">
 
     <div class="image-details">
-      <div class="alert alert-danger empty-src hide">
-        <a class="close">x</a>
-        <strong>Sett inn hvilket bilde?</strong><br>
-        Du må angi URL-adressen til bildet. Denne kommer automatisk hvis du velger et bilde i bildegalleriet under, men hvis du har et eksternt bilde må du finne adressen selv.
-      </div>
-
       <div class="form-horizontal">
         <div class="control-group">
           <label class="control-label">Bilde:</label>
           <div class="controls">
             <input type="text" name="src" class="input-xxlarge">
-            <div>
+            <p style="margin-top: 8px;">
               <button class="btn choose-image">
-                <i class="icon-search"></i> Finn bilde i arkivet
+                <i class="icon-search"></i> Finn bilde i arkivet i Sherpa
               </button>
               <button class="btn upload-image">
-                <i class="icon-share-alt"></i> Last opp bilde
+                <i class="icon-share-alt"></i> Last opp bilde fra din PC
               </button>
-            </div>
+            </p>
           </div>
         </div>
 
         <div class="control-group">
-          <label class="control-label">Bildetekst</label>
+          <label class="control-label">Bildetekst:</label>
           <div class="controls">
-            <input type="text" class="input-xlarge" name="description">
+            <input type="text" class="input-xxlarge" name="description">
           </div>
         </div>
+
         <div class="control-group">
-          <label class="control-label">Fotograf</label>
+          <label class="control-label">Fotograf:</label>
           <div class="controls">
             <input type="text" class="input-xlarge" name="photographer" data-photographers-url="{% url 'admin.images.views.photographer' %}">
           </div>
         </div>
+
         <div class="control-group">
-          <label class="control-label">Lenker til</label>
+          <label class="control-label">Lenker til:</label>
           <div class="controls">
-            <input type="text" class="input-xlarge" name="anchor">
+            <input type="text" class="input-xxlarge" name="anchor">
           </div>
         </div>
       </div>
 
-      <table>
-        <tr>
-          <td>Bilde:</td>
-          <td><input type="text" class="input-xlarge" name="src"></td>
-          <td><button class="btn btn-success choose-image"><i class="icon-share-alt"></i> Finn bilde i arkivet</button></td>
-          <td><button class="btn btn-success upload-image"><i class="icon-share-alt"></i> Last opp bilde</button></td>
-        </tr>
-        <tr class="description">
-          <td>Bildetekst:</td>
-          <td></td>
-        </tr>
-        <tr class="photographer">
-          <td>Fotograf:</td>
-          <td></td>
-        </tr>
-        <tr class="anchor">
-          <td>Lenker til:</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>
-            <button class="btn btn-success btn-large insert-image"><i class="icon-ok"></i> Sett inn</button>
-            <button class="btn btn-danger btn-large remove-image"><i class="icon-remove"></i> Fjern bildet</button>
-          </td>
-        </tr>
-      </table>
     </div>
 
   </div>
   <div class="modal-footer">
-    <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
+    <button class="btn btn-success insert-image"><i class="icon-white icon-ok"></i> Sett inn bildet</button>
+    <a href="javascript:undefined" class="btn" data-dismiss="modal">Avbryt</a>
   </div>
 </div>
