@@ -256,6 +256,10 @@ $(function() {
             // Ignore if they're already there (happens when mouse goes from content directly to control and back)
             return $(this);
         }
+        if($(this).is(".image")) {
+            // Insert the cropper only for images
+            insertion_templates.find("div.crop-content").clone().insertBefore($(this)).tooltip();
+        }
         insertion_templates.find("div.remove-content").clone().insertBefore($(this)).tooltip();
         insertion_templates.find("div.move-content").clone().insertBefore($(this)).tooltip();
     });
@@ -311,6 +315,12 @@ $(function() {
         $(this).tooltip('destroy'); // Just in case the browser doesn't trigger the mouseleave
         $(this).siblings("div.content-control").remove();
         $(this).remove();
+    });
+
+    // Enable cropping on 'crop-content' icon click
+    $(document).on('click', 'article div.crop-content', function(e) {
+        e.stopPropagation(); // Avoid click-event on an image or widget
+        // TBD cropping
     });
 
     // Change a row's column-structure
