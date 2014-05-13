@@ -38,7 +38,8 @@ def english(request):
     return redirect('enrollment.views.index')
 
 def norwegian(request):
-    del request.session['activated_english_enrollment']
+    if 'activated_english_enrollment' in request.session:
+        del request.session['activated_english_enrollment']
     return redirect('enrollment.views.index')
 
 def index(request):
