@@ -23,7 +23,7 @@
         }
 
         image_dialog.find("button.insert-image").click(function() {
-            var src = image_dialog.find("input[name='src']").val().trim();
+            var src = ImageUtils.removeImageSizeFromUrl(image_dialog.find("input[name='src']").val().trim());
             if(src === "") {
                 alert(image_dialog.attr('data-missing-url-warning'));
                 return;
