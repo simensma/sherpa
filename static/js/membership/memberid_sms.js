@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
     var wrapper = $("div.memberid-sms");
     var button = wrapper.find("button");
     var input = wrapper.find("input[name='phone_mobile']");

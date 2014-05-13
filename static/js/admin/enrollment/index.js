@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 
     var overview = $("div.enrollment-overview");
 

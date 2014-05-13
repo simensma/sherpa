@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
     var refresh_button = $("a.refresh");
     var what_to_do_anchor = $("p.help-action.what-to-do a");
     var more_information_anchor = $("p.help-action.more-information a");

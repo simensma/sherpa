@@ -7,7 +7,7 @@
     var images = [];
     var currentIndex = 0;
 
-    $(document).ready(function() {
+    $(function() {
         elements.picker = $("div.image-carousel-picker");
 
         elements.navigation = elements.picker.find("div.navigation");

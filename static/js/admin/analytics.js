@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
     $("tr.expand button").click(function() {
         var expand = $(this).parents("tr.expand");
         expand.hide();

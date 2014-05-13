@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 
     var login_wrapper = $("div.login-form-wrapper");
     var login_form = login_wrapper.find("form");

@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 
     var result = $("div.enrollment-result");
     var sms = result.find("div.sms");

@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
     var listing = $("div.aktivitet-listing");
     var actual_listing = listing.find("div.list-wrapper");
 

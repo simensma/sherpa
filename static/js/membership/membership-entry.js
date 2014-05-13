@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 
     var entry = $("div.membership-entry");
     var entry_box = entry.find("div.entry-box");

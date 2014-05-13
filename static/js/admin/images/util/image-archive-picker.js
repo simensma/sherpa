@@ -4,7 +4,7 @@
 
     var picker;
     var ajaxloader;
-    $(document).ready(function() {
+    $(function() {
         picker = $("div.image-archive-picker");
         ajaxloader = picker.find("img.ajaxloader");
 

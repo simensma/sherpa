@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 
     var wrapper = $("div.loginpage-wrapper");
 

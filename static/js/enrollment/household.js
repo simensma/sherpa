@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 
     var form = $("form#household");
     var existing_result = form.find("div.existing-result");

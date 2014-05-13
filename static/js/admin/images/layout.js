@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 
     $("div.image-archive-quicksearch select").chosen();
 

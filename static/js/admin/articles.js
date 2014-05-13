@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 
     var table = $("table.article-listing");
     var container = table.children("tbody");

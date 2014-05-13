@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 
     var form = $("form.fjelltreffen-annonse-edit");
     var submit_button = form.find("button[type='submit']");

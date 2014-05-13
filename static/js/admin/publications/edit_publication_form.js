@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
     var form = $("form.edit-publication");
     var forening_select = form.find("select[name='forening']");
     var access = form.find("div.form-group.access");

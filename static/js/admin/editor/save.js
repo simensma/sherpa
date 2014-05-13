@@ -4,7 +4,7 @@
 
 var NO_SAVE_WARNING_TIMEOUT = 60 * 5;
 
-$(document).ready(function() {
+$(function() {
 
     var header = $("div.editor-header");
     var save_button = header.find("button.save");

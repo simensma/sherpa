@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
     var register = $("div.turlederregister");
     var filters = register.find("div.search-area");
     var filters_content = filters.find("div.content");

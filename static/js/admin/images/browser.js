@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 
     var actionButtons = $("div.action-buttons");
     var modal_album_details = $("div.modal.album-details");

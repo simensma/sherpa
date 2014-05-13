@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 
     var start_index;
     var loading = false;

@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 
     var registration = $("div.enrollment-registration");
     var form = registration.find("form#registration");

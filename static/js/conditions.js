@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
     var filter = $("select[name='conditions-filter']");
 
     filter.chosen({

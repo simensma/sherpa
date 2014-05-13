@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
     var form = $("form");
 
     var now = new Date();

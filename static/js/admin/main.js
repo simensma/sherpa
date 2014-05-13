@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 
     /* When creating a page, slugify the title as URL */
     $("#add-page-dialog input[name='title']").keyup(function() {

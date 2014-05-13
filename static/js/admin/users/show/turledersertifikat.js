@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
     var register = $("div.turlederregister-edit");
     var table = register.find("table.edit");
     var active_foreninger = register.find("select[name='active_foreninger']");

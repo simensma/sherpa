@@ -151,7 +151,7 @@
         ImageCarouselWidgetEditor.listImages();
     });
 
-    $(document).ready(function() {
+    $(function() {
 
         widget_editor = $("div.widget-editor[data-widget='carousel']");
         widget_editor.find("div#ratio-radio").append(getRatioRadioButtons());

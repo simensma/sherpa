@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 
     // All elements from the spec[1] plus header elements (h1-h6)
     // [1] http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#the-removeformat-command

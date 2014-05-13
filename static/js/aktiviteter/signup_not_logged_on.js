@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
     var signup = $("div.aktivitet-signup");
     var login = signup.find("div.choice.login");
     var register = signup.find("div.choice.register");

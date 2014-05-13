@@ -4,7 +4,7 @@ var uploadReady = false;
 var iframeCallbackSuccess = false;
 var iframeUploadComplete;
 
-$(document).ready(function() {
+$(function() {
 
     var uploader = $("div.uploader");
     var uploading = uploader.find("div.uploading");
