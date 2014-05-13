@@ -48,7 +48,7 @@ $(function() {
 
     header.find("img.article-thumbnail").click(function() {
         var image = $(this);
-        ImageDialog.openImageDialog({
+        ImageDialog.open({
             image: $(this),
             anchor: undefined,
             description: undefined,

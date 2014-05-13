@@ -107,7 +107,7 @@ $(function() {
         if(anchor === undefined) {
             anchor = '';
         }
-        ImageDialog.openImageDialog({
+        ImageDialog.open({
             image: currentImage,
             anchor: anchor,
             description: currentDescription.text(),

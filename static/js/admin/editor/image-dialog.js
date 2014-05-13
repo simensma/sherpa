@@ -47,7 +47,7 @@
         });
     });
 
-    ImageDialog.openImageDialog = function(opts) {
+    ImageDialog.open = function(opts) {
         image_picked_callback = opts.save;
         image_removed_callback = opts.remove;
 
