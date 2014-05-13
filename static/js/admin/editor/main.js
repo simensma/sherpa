@@ -283,14 +283,49 @@ $(function() {
     });
 
     // Enable cropping on 'crop-content' icon click
+    var jcrop_api;
     $(document).on('click', 'article div.crop-content', function(e) {
         e.stopPropagation(); // Avoid click-event on an image or widget
         var content = $(this).nextAll("div.content").first();
-        content.Jcrop();
+        var crop_control = insertion_templates.find("div.crop-control").clone().insertBefore(content);
+        crop_control.data('content-clone', content.clone());
+        crop_control.offset({
+            top: crop_control.offset().top - crop_control.height(),
+            left: crop_control.offset().left,
+        });
+        content.Jcrop({
+            onSelect: function(c) {
+                content.attr('data-crop', JSON.stringify(c));
+            },
+        }, function() {
+            jcrop_api = this;
+        });
         $(this).tooltip('destroy'); // Just in case the browser doesn't trigger the mouseleave
         $(this).siblings("div.content-control").remove();
         $(this).remove();
     });
+
+    $(document).on('click', 'article div.crop-control button.use', function(e) {
+        var crop_control = $(this).parents("div.crop-control");
+        // JCrop removes the original image element when destroying, so reinsert our spare clone
+        crop_control.data('content-clone').insertAfter(crop_control);
+        endCropping(crop_control);
+    });
+
+    $(document).on('click', 'article div.crop-control button.remove', function(e) {
+        var crop_control = $(this).parents("div.crop-control");
+        // JCrop removes the original image element when destroying, so reinsert our spare clone
+        crop_control.data('content-clone').insertAfter(crop_control);
+        endCropping(crop_control);
+    });
+
+    function endCropping(crop_control) {
+        if(jcrop_api !== undefined) {
+            jcrop_api.destroy();
+            jcrop_api = undefined;
+        }
+        crop_control.remove();
+    }
 
     // Change a row's column-structure
     $(document).on('click', article.selector + ' div.edit-structure button', function() {
