@@ -49,6 +49,11 @@ $(function() {
 
     window.save = save;
     function save(done, fail) {
+        if(article.find("div.crop-control").length > 0) {
+            alert("Du har aktivert beskjæring av et bilde - du må gjøre deg ferdig med beskjæringen før du lagrer.");
+            return;
+        }
+
         clearTimeout(updateSaveCountID);
         save_button.prop('disabled', true);
         save_button.html('<i class="icon-heart"></i> Lagrer...');
