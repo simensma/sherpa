@@ -4,7 +4,7 @@
       <div style="{% if image.parentHeight %}height:{{ image.parentHeight }}px;{% endif %} overflow:hidden;" class="{% if forloop.counter == 1 %}active item{%  else %}item{% endif %}">
         <img src="{{ image.url }}" style="{% if image.style %}{{ image.style }}{% endif %}">
         {% if image.photographer or image.description %}
-          <div class="img-desc">
+          <div class="description">
             {{ image.description }}
             {% if image.photographer %}
               Foto: {{ image.photographer }}

@@ -79,9 +79,9 @@ $(function() {
         var photographer = content.find("span.photographer span.content").text();
 
         if(description === '' && photographer === ''){
-            content.find("div.img-desc").hide();
+            content.find("div.description").hide();
         }else{
-            content.find("div.img-desc").show();
+            content.find("div.description").show();
         }
 
         if(description === '') {
