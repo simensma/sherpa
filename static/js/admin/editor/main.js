@@ -260,16 +260,7 @@ $(function() {
         insertion_templates.find("div.move-content").clone().insertBefore($(this)).tooltip();
     });
 
-    $(document).on('mouseleave', 'article div.content-control', function(e) {
-        if(contains($(this).nextAll("div.content").first(), e.pageX, e.pageY)) {
-            // Mouse is still inside the content, presumably hovering content-controls; don't remove them
-        } else {
-            $(this).siblings("div.content-control").remove();
-            $(this).remove();
-        }
-    });
-
-    // Cancel the content control icons upon mouse leave
+    // Remove the content control icons upon mouse leave
     $(document).on('mouseleave', 'article div.content', function(e) {
         if(EditorMoveContent.isMoving()) {
             // Ignore this while moving
@@ -280,6 +271,16 @@ $(function() {
             // Mouse is still inside the content, presumably hovering content-controls; don't remove them
         } else {
             $(this).siblings("div.content-control").remove();
+        }
+    });
+
+    // Also remove them when mouse leaves the icons themselves
+    $(document).on('mouseleave', 'article div.content-control', function(e) {
+        if(contains($(this).nextAll("div.content").first(), e.pageX, e.pageY)) {
+            // Mouse is still inside the content, presumably hovering content-controls; don't remove them
+        } else {
+            $(this).siblings("div.content-control").remove();
+            $(this).remove();
         }
     });
 
