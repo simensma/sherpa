@@ -21,8 +21,6 @@ def list(request):
         active=True,
         variant__page__site=request.active_forening.site
         ).order_by('variant__page__title')
-    for version in versions:
-        version.children = Version.objects.filter(variant__page__parent=version.variant.page, active=True).count()
     menus = Menu.on(request.active_forening.site).all().order_by('order')
     context = {'versions': versions, 'menus': menus}
     return render(request, 'common/admin/pages/list.html', context)
@@ -45,8 +43,6 @@ def edit_domain(request):
 
 def children(request, page):
     versions = Version.objects.filter(variant__page__parent=page, active=True).order_by('variant__page__title')
-    for version in versions:
-        version.children = Version.objects.filter(variant__page__parent=version.variant.page, active=True).count()
     context = RequestContext(request, {'versions': versions, 'level': request.POST['level']})
     return HttpResponse(render_to_string('common/admin/pages/result.html', context))
 

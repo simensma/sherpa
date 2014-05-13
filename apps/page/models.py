@@ -93,7 +93,6 @@ class Version(models.Model):
     lede = None
     thumbnail = None
     hide_thumbnail = False
-    children = None # Used in page listing
 
     def __unicode__(self):
         return u'%s' % self.pk
@@ -122,6 +121,9 @@ class Version(models.Model):
             # Remove previous size spec if existing
             t = re.sub('-\d+\.', '.', t)
             self.thumbnail = t[:t.rfind('.')] + '-' + str(min(settings.THUMB_SIZES)) + t[t.rfind('.'):]
+
+    def get_children_count(self):
+        return Version.objects.filter(variant__page__parent=self.variant.page, active=True).count()
 
 @receiver(post_delete, sender=Version, dispatch_uid="page.models")
 def delete_page_version(sender, **kwargs):

@@ -1,7 +1,7 @@
 {% for version in versions %}
-  <tr data-id="{{ version.variant.page.id }}" data-parent="{{ version.variant.page.parent.id }}" data-children="{{ version.children }}">
+  <tr data-id="{{ version.variant.page.id }}" data-parent="{{ version.variant.page.parent.id }}" data-children="{{ version.get_children_count }}">
     <td data-level="{{ level }}">
-      {% if version.children > 0 %}
+      {% if version.get_children_count > 0 %}
         <a href="javascript:undefined" class="expand" data-id="{{ version.variant.page.id }}">
           <i class="fa fa-plus" data-next-class="fa fa-minus"></i>
         </a>
