@@ -32,8 +32,6 @@ def parse_widget(request, widget, current_site):
             versions = versions.filter(tags__name__icontains=tag).distinct()
 
         versions = versions[:widget['count']]
-        for version in versions:
-            version.load_preview()
         data = {
             'title': widget['title'],
             'display_images': widget['display_images'],

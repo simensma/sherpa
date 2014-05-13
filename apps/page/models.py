@@ -3,6 +3,7 @@ from django.dispatch import receiver
 from django.db import models
 from django.db.models import Q, F
 from django.conf import settings
+from django.core.cache import cache
 
 from datetime import date
 import random
@@ -89,40 +90,65 @@ class Version(models.Model):
     active = models.BooleanField()
     tags = models.ManyToManyField('core.Tag', related_name='versions')
     ads = models.BooleanField()
-    thumbnail = None
-    hide_thumbnail = False
 
     def __unicode__(self):
         return u'%s' % self.pk
-
-    def load_preview(self):
-        if self.variant.article.hide_thumbnail:
-            self.hide_thumbnail = True
-            return
-        if self.variant.article.thumbnail is not None:
-            self.thumbnail = self.variant.article.thumbnail
-        else:
-            try:
-                # Define "main image" as the first one in the first column and row
-                content = Content.objects.filter(column__order=0, column__row__order=0,
-                    column__row__version=self, type='image').order_by('order')[0]
-                self.thumbnail = json.loads(content.content)['src']
-            except IndexError:
-                # There are no images in this article
-                self.hide_thumbnail = True
-        # Statically use the 150px version. This should be optimized; save
-        # the available sizes with the model and use the smallest appropriate one.
-        if self.thumbnail is not None and settings.AWS_BUCKET in self.thumbnail:
-            t = self.thumbnail
-            # Remove previous size spec if existing
-            t = re.sub('-\d+\.', '.', t)
-            self.thumbnail = t[:t.rfind('.')] + '-' + str(min(settings.THUMB_SIZES)) + t[t.rfind('.'):]
 
     def get_title_content(self):
         return Content.objects.get(column__row__version=self, type='title')
 
     def get_lede_content(self):
         return Content.objects.get(column__row__version=self, type='lede')
+
+    def get_thumbnail(self):
+        """Return a dict with two keys:
+        - hide: True if this item shouldn't show a thumbnail
+        - url: The URL to the thumbnail image (None if hide is True)
+        The result of the method is cached.
+        This logic is old and kind of weird, it might need review"""
+        thumbnail = cache.get('version.%s.thumbnail' % self.id)
+        if thumbnail is None:
+            if self.variant.article.hide_thumbnail:
+                thumbnail = {
+                    'hide': True,
+                    'url': None,
+                }
+            else:
+                if self.variant.article.thumbnail is not None:
+                    thumbnail = {
+                        'hide': False,
+                        'url': self.variant.article.thumbnail,
+                    }
+                else:
+                    try:
+                        # Define "main image" as the first one in the first column and row
+                        content = Content.objects.filter(
+                            column__order=0,
+                            column__row__order=0,
+                            column__row__version=self,
+                            type='image'
+                        ).order_by('order')[0]
+                        thumbnail = {
+                            'hide': False,
+                            'url': json.loads(content.content)['src'],
+                        }
+                    except IndexError:
+                        # There are no images in this article (shouldn't really happen)
+                        thumbnail = {
+                            'hide': True,
+                            'url': None,
+                        }
+
+                # Statically use the 150px version. This should be optimized; save
+                # the available sizes with the model and use the smallest appropriate one.
+                if thumbnail['url'] is not None and settings.AWS_BUCKET in thumbnail['url']:
+                    t = thumbnail['url']
+                    # Remove previous size spec if existing
+                    t = re.sub('-\d+\.', '.', t)
+                    thumbnail['url'] = t[:t.rfind('.')] + '-' + str(min(settings.THUMB_SIZES)) + t[t.rfind('.'):]
+
+        cache.set('version.%s.thumbnail' % self.id, thumbnail, 60 * 60 * 24)
+        return thumbnail
 
     def get_children_count(self):
         return Version.objects.filter(variant__page__parent=self.variant.page, active=True).count()

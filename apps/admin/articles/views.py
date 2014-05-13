@@ -30,15 +30,12 @@ def list_load(request):
 
 # This is not a view.
 def list_bulk(request, bulk):
-    versions = Version.objects.filter(
+    return Version.objects.filter(
         variant__article__isnull=False,
         variant__segment__isnull=True,
         active=True,
         variant__article__site=request.active_forening.site
     ).order_by('-variant__article__created_date')[(bulk * BULK_COUNT) : (bulk * BULK_COUNT) + BULK_COUNT]
-    for version in versions:
-        version.load_preview()
-    return versions
 
 def new(request):
     article = Article(
@@ -59,7 +56,6 @@ def new(request):
 
 def confirm_delete(request, article):
     version = Version.objects.get(variant__article=article, variant__segment__isnull=True, active=True)
-    version.load_preview()
     context = {'version': version}
     return render(request, 'common/admin/articles/confirm-delete.html', context)
 
@@ -92,7 +88,6 @@ def preview(request, version):
 
 def parse_version_content(request, version):
     version = Version.objects.get(id=version)
-    version.load_preview()
     rows = Row.objects.filter(version=version).order_by('order')
     for row in rows:
         columns = Column.objects.filter(row=row).order_by('order')

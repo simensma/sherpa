@@ -28,8 +28,6 @@ def index(request):
         versions = versions.filter(tags__name__icontains=request.GET['tag'])
 
     versions = versions[:NEWS_ITEMS_BULK_SIZE]
-    for version in versions:
-        version.load_preview()
     context = {'versions': versions, 'tag': request.GET.get('tag', '')}
     return render(request, 'common/page/articles-list.html', context)
 
@@ -48,7 +46,6 @@ def more(request):
         variant__article__site=request.site
     ).order_by('-variant__article__pub_date')[request.POST['current']:int(request.POST['current']) + NEWS_ITEMS_BULK_SIZE]
     for version in versions:
-        version.load_preview()
         context = RequestContext(request, {'version': version})
         response.append(render_to_string('common/page/article-list-item.html', context))
     return HttpResponse(json.dumps(response))
@@ -74,7 +71,6 @@ def show(request, article, text):
             version = Version.objects.get(variant=variant, active=True)
         except (Article.DoesNotExist, Variant.DoesNotExist, Version.DoesNotExist):
             raise Http404
-        version.load_preview()
         rows = Row.objects.filter(version=version).order_by('order')
         for row in rows:
             columns = Column.objects.filter(row=row).order_by('order')

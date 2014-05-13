@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.db import transaction
+from django.core.cache import cache
 
 from page.models import Page, Version, Row, Column, Content
 from page.widgets import parse_widget

@@ -24,9 +24,6 @@ def index(request):
         variant__article__site=request.active_forening.site,
     ).order_by('-variant__article__pub_date')
 
-    for version in article_versions:
-        version.load_preview()
-
     context = {
         'article_versions': article_versions,
         'page_versions': page_versions,
@@ -49,6 +46,8 @@ def delete(request):
         cache.delete('content.version.%s' % request.POST['id'])
     elif request.POST['key'] == 'article':
         cache.delete('articles.%s' % request.POST['id'])
+        version = Version.objects.get(variant__article__id=request.POST['id'])
+        cache.delete('version.%s.thumbnail' % version.id)
     elif request.POST['key'] == 'blog-widget':
         cache.delete('widgets.blog.category.Alle')
         # Chances are, this was done to show it on the frontpage, so just delete the frontpage-cache too since it's cached twice.
