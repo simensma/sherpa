@@ -1,43 +1,24 @@
-(function(EmbedWidgetEditor, $, undefined ) {
+$(function() {
 
-    var widget_editor; // Gets set in the preparations below
+    WidgetEditor.listen({
+        widget_name: 'embed',
 
-    /* New widget */
+        onEdit: function(editor, widget_content) {
+            editor.find("textarea[name='code']").text(widget_content.code);
+        },
 
-    $(document).on('widget.new.embed', function() {
-        widget_editor.modal();
-    });
-
-    /* Editing existing widget */
-
-    $(document).on('widget.edit', 'div.widget.embed', function() {
-        widgetBeingEdited = $(this);
-        widget_editor.modal();
-        var widget = JSON.parse($(this).attr('data-json'));
-
-        widget_editor.find("textarea[name='code']").text(widget.code);
-    });
-
-    /* Document preparations */
-
-    $(document).ready(function() {
-
-        widget_editor = $("div.widget-editor[data-widget='embed']");
-
-        /* Saving */
-        widget_editor.find("button.save").click(function() {
-            var code = widget_editor.find("textarea[name='code']").val();
-            if(code == '') {
-                alert("Du må jo legge inn koden du vil bruke først! Hvis du ikke vil bruke widgeten likevel, trykk på 'Slett widget'-knappen.");
-                return $(this);
+        onSave: function(editor) {
+            var code = editor.find("textarea[name='code']").val();
+            if(code === '') {
+                alert("Du må jo legge inn koden du vil bruke først! Hvis du ikke vil bruke widgeten likevel, lukk vinduet med krysset oppe til høyre.");
+                return false;
             }
-            saveWidget(widgetBeingEdited, {
+            WidgetEditor.saveWidget({
                 widget: "embed",
                 code: code
             });
-            widget_editor.modal('hide');
-        });
-
+            return true;
+        }
     });
 
-}(window.EmbedWidgetEditor = window.EmbedWidgetEditor || {}, jQuery ));
+});

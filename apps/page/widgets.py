@@ -32,8 +32,6 @@ def parse_widget(request, widget, current_site):
             versions = versions.filter(tags__name__icontains=tag).distinct()
 
         versions = versions[:widget['count']]
-        for version in versions:
-            version.load_preview()
         data = {
             'title': widget['title'],
             'display_images': widget['display_images'],
@@ -87,11 +85,19 @@ def parse_widget(request, widget, current_site):
         data = {'code': widget['code']}
     elif widget['widget'] == "fact":
         data = {'content': widget['content']}
+    elif widget['widget'] == "button":
+        data = {
+            'text': widget['text'],
+            'url': widget['url'],
+            'color': widget['color'],
+            'size': widget['size'],
+        }
 
     data.update({
         'json': json.dumps(widget),
         'template': 'common/widgets/%s/display.html' % widget['widget'],
-        'widget': widget['widget']})
+        'widget': widget['widget'],
+    })
     return data
 
 

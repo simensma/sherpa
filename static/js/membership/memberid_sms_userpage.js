@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
     var wrapper = $("div.memberid-sms");
     var number = wrapper.find("span.number").text();
     var trigger = wrapper.find("a.trigger");

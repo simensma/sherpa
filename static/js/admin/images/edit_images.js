@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 
     $("table.multiple-metadata button.new, table.multiple-metadata button.keep").click(function(e) {
         e.preventDefault();

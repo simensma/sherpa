@@ -1,56 +1,69 @@
 /* Editing widgets */
-$(document).ready(function() {
 
-    // Remove any widget
-    $("div.widget-editor button.remove").click(function() {
-        $(this).parents(".widget-editor").modal('hide');
-        if(typeof widgetBeingEdited !== 'undefined'){
-            removeContent(widgetBeingEdited);
-        }
+(function(WidgetEditor, $, undefined ) {
+
+    var editor;
+    var article;
+    var editor_callback;
+
+    $(function() {
+        editor = $("div.cms-editor");
+        article = editor.find("article");
     });
 
-    $("div.add-widget div.widget-thumbnail").tooltip();
+    WidgetEditor.listen = function(opts) {
+        // Can't use the 'editor' element for lookup; listen may be called before the ready-function above runs
+        var widget_editor = $("div.cms-editor div.widget-editor[data-widget='" + opts.widget_name + "']");
 
-});
-
-function saveWidget(widget, content) {
-    var rendring_message = '<img src="/static/img/ajax-loader-small.gif" alt="Laster..."> <em>Rendrer widget...</em>';
-    var rendring_failed = '<p class="widget-rendring-failed">Klarte ikke å rendre widgeten! Er du sikker på at du har tilgang til internett?<br>Klikk her og velg lagre på nytt for å prøve å rendre igjen.</p>'
-    var content_json = JSON.stringify(content);
-    var article = $("article");
-    if(widget !== undefined) {
-        widget.empty().append(rendring_message);
-        widget.attr('data-json', content_json);
-        $.ajaxQueue({
-            url: article.attr('data-render-widget-url'),
-            data: { content: content_json }
-        }).fail(function(result) {
-            widget.empty().append(rendring_failed);
-        }).done(function(result) {
-            widget.empty().hide().append(result);
-            widget.slideDown();
-            disableIframes(widget);
-        });
-    } else {
-        var widget = $('<div class="content widget ' + content.widget + '"></div>');
-        widget.append(rendring_message);
-        widget.attr('data-json', content_json);
-        if(widgetPosition.prev.length == 0) {
-            widgetPosition.parent.prepend(widget);
-        } else {
-            widgetPosition.prev.after(widget);
+        if(opts.init !== undefined) {
+            opts.init(widget_editor);
         }
-        removeEmpties();
-        setEmpties();
+
+        $(document).on('widget.new.' + opts.widget_name, function(e, _editor_callback) {
+            editor_callback = _editor_callback;
+            widget_editor.modal();
+            if(opts.onNew !== undefined) {
+                opts.onNew(widget_editor);
+            }
+        });
+
+        $(document).on('widget.edit', 'div.widget.' + opts.widget_name, function(e, widget_content, _editor_callback) {
+            editor_callback = _editor_callback;
+            widget_editor.modal();
+            if(opts.onEdit !== undefined) {
+                opts.onEdit(widget_editor, widget_content);
+            }
+        });
+
+        widget_editor.find("button.save").click(function() {
+            if(opts.onSave(widget_editor)) {
+                widget_editor.modal('hide');
+            }
+        });
+    };
+
+    WidgetEditor.saveWidget = function(content) {
+        var rendering_failed = editor.find("div.insertion-templates p.widget-rendering-failed").clone();
+        var content_json = JSON.stringify(content);
+
+        var widget = editor.find("div.insertion-templates div.content.widget").clone();
+        widget.addClass(content.widget);
+        widget.attr('data-json', content_json);
+
+        // Insert the new widget with its rendering message
+        editor_callback(widget);
+
+        // Now attempt the render, and edit the object in-place
         $.ajaxQueue({
             url: article.attr('data-render-widget-url'),
             data: { content: content_json }
         }).fail(function(result) {
-            widget.empty().append(rendring_failed);
+            widget.empty().append(rendering_failed);
         }).done(function(result) {
             widget.empty().hide().append(result);
             widget.slideDown();
             disableIframes(widget);
         });
-    }
-}
+    };
+
+}(window.WidgetEditor = window.WidgetEditor || {}, jQuery ));

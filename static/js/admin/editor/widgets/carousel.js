@@ -1,3 +1,5 @@
+// FIXME this widget desperately needs cleanup
+
 (function(ImageCarouselWidgetEditor, $, undefined ) {
 
     /* Private variables */
@@ -6,6 +8,8 @@
     var imageList = [];
     var newWidgetParentWidth = 0;
     var widget_editor; // Will be set in the document.ready block further down
+    var editor_callback; // Sent with the trigger from the editor
+    var widget_being_edited; // Used when editing existing widget
 
     /* Private methods */
 
@@ -83,15 +87,16 @@
         var ratioWidth = 0;
         var ratioHeight = 0;
 
-        if(widgetBeingEdited == undefined){
-            newWidgetParentWidth = widgetPosition.parent.outerWidth();
+        if(widget_being_edited == undefined){
+            // FIXME assuming largest possible parent width for now as cropping isn't functional anyway
+            newWidgetParentWidth = 940;
             imageList = [{
                 url:"",
                 description:"",
                 photographer:""
             }];
         }else{
-            var widget = JSON.parse(widgetBeingEdited.attr('data-json'));
+            var widget = JSON.parse(widget_being_edited.attr('data-json'));
             imageList = widget.images;
             ratioWidth = widget.ratioWidth;
             ratioHeight = widget.ratioHeight
@@ -101,10 +106,10 @@
 
     ImageCarouselWidgetEditor.saveCropping = function() {
         var parentWidth = 0;
-        if(widgetBeingEdited == undefined){
+        if(widget_being_edited == undefined){
             parentWidth = newWidgetParentWidth;
         }else{
-            parentWidth = widgetBeingEdited.width();
+            parentWidth = widget_being_edited.width();
         }
 
         addCssCropping(parentWidth, function(cssMap, selection, parentHeight){
@@ -131,20 +136,22 @@
 
     /* New widget */
 
-    $(document).on('widget.new.carousel', function() {
+    $(document).on('widget.new.carousel', function(e, _editor_callback) {
+        editor_callback = _editor_callback;
         ImageCarouselWidgetEditor.listImages();
         widget_editor.modal();
     });
 
     /* Preparations and events */
 
-    $(document).on('widget.edit', 'div.widget.carousel', function() {
-        widgetBeingEdited = $(this);
+    $(document).on('widget.edit', 'div.widget.carousel', function(e, widget_content, _editor_callback) {
+        editor_callback = _editor_callback;
+        widget_being_edited = $(this);
         widget_editor.modal();
         ImageCarouselWidgetEditor.listImages();
     });
 
-    $(document).ready(function() {
+    $(function() {
 
         widget_editor = $("div.widget-editor[data-widget='carousel']");
         widget_editor.find("div#ratio-radio").append(getRatioRadioButtons());
@@ -257,10 +264,10 @@
                     imageList.splice(i, 1);
                 }
             }
-            saveWidget(widgetBeingEdited, {
+            WidgetEditor.saveWidget({
                 widget: "carousel",
                 images: imageList
-            });
+            }, editor_callback);
             widget_editor.modal('hide');
         });
 

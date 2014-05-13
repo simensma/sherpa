@@ -1,7 +1,7 @@
 /**
  * Common for admin-ui and main site
  */
-$(document).ready(function() {
+$(function() {
 
     /* Include CSRF-token when applicable in AJAX requests */
     if($("input[name='csrfmiddlewaretoken']").length > 0) {

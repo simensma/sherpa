@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 
     var form = $("form.register-membership");
     var country_select = form.find("select[name='country']");

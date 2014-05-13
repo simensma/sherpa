@@ -15,7 +15,7 @@
       Slett artikkel?
     </h1>
     <p>
-      Du er i ferd med å slette artikkelen "<a href="{% url 'articles.views.show' version.variant.article.id version.title.content|striptags|slugify %}">{{ version.title.content|striptags }}</a>" <strong>for godt</strong>, er du sikker på at det er det du vil?
+      Du er i ferd med å slette artikkelen "<a href="{% url 'articles.views.show' version.variant.article.id version.get_title_content.content|striptags|slugify %}">{{ version.get_title_content.content|striptags }}</a>" <strong>for godt</strong>, er du sikker på at det er det du vil?
     </p>
     <p>
       Hvis du bare vil ta den bort fra forsiden og søkeresultater, men beholde innholdet, bør du heller bare avpublisere den.
@@ -32,7 +32,7 @@
       <button class="btn btn-lg btn-danger confirm-delete"><i class="fa fa-warning"></i> Ja, slett artikkelen for evig og alltid</button>
     </p>
     <p>
-      <a class="btn btn-lg btn-success" href="{% url 'admin.articles.views.edit_version' version.id %}"><i class="fa fa-heart"></i> NEI! Jeg har ombestemt meg, ikke slett noe.</a>
+      <a class="btn btn-lg btn-success" href="{% url 'admin.articles.views.edit' version.id %}"><i class="fa fa-heart"></i> NEI! Jeg har ombestemt meg, ikke slett noe.</a>
     </p>
   </div>
 </div>

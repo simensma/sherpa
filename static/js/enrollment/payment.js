@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 
     var payment = $("div.enrollment-payment-method");
     var form = payment.find("form.payment");

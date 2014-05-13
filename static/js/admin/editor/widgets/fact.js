@@ -1,39 +1,20 @@
-(function(FactWidgetEditor, $, undefined ) {
+$(function() {
 
-    var widget_editor; // Gets set in the preparations below
+    WidgetEditor.listen({
+        widget_name: 'fact',
 
-    /* New widget */
+        onEdit: function(editor, widget_content) {
+            editor.find("div.content").html(widget_content.content);
+        },
 
-    $(document).on('widget.new.fact', function() {
-        widget_editor.modal();
-    });
-
-    /* Editing existing widget */
-
-    $(document).on('widget.edit', 'div.widget.fact', function() {
-        widgetBeingEdited = $(this);
-        widget_editor.modal();
-        var widget = JSON.parse($(this).attr('data-json'));
-
-        widget_editor.find("div.content").html(widget.content);
-    });
-
-    /* Document preparations */
-
-    $(document).ready(function() {
-
-        widget_editor = $("div.widget-editor[data-widget='fact']");
-
-        /* Saving */
-        widget_editor.find("button.save").click(function() {
-            var content = widget_editor.find("div.content").html();
-            saveWidget(widgetBeingEdited, {
+        onSave: function(editor) {
+            var content = editor.find("div.content").text();
+            WidgetEditor.saveWidget({
                 widget: "fact",
                 content: content
             });
-            widget_editor.modal('hide');
-        });
-
+            return true;
+        }
     });
 
-}(window.FactWidgetEditor = window.FactWidgetEditor || {}, jQuery ));
+});

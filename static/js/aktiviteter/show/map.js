@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
     var aktivitet = $("div.aktivitet");
     var popup_content = aktivitet.find("div.leaflet-popup-content").html();
 

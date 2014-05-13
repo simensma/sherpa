@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 
     var verification = $("div.enrollment-verification");
     var form = verification.find("form#verification");

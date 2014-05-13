@@ -1,15 +1,15 @@
 {% for version in versions %}
-  <tr data-id="{{ version.variant.page.id }}" data-parent="{{ version.variant.page.parent.id }}" data-children="{{ version.children }}">
+  <tr data-id="{{ version.variant.page.id }}" data-parent="{{ version.variant.page.parent.id }}" data-children="{{ version.get_children_count }}">
     <td data-level="{{ level }}">
-      {% if version.children > 0 %}
+      {% if version.get_children_count > 0 %}
         <a href="javascript:undefined" class="expand" data-id="{{ version.variant.page.id }}">
           <i class="fa fa-plus" data-next-class="fa fa-minus"></i>
         </a>
       {% endif %}
-      <a href="{% url 'admin.cms.views.page.edit_version' version.id %}">{{ version.variant.page.title }}</a>
+      <a href="{% url 'admin.cms.views.page.edit' version.id %}">{{ version.variant.page.title }}</a>
     </td>
     <td>
-      <a href="{% url 'admin.cms.views.page.edit_version' version.id %}">/{% if version.variant.page.slug %}{{ version.variant.page.slug }}/{% endif %}</a>
+      <a href="{% url 'admin.cms.views.page.edit' version.id %}">/{% if version.variant.page.slug %}{{ version.variant.page.slug }}/{% endif %}</a>
       <img src="/static/img/icons/netlife/icon-info.png" alt="Mer informasjon" class="pull-right" data-popover data-trigger="hover" data-placement="left" data-html="true" data-title="{{ version.variant.page.title }}" data-content="<p><strong>Opprettet av:</strong><br>{{ version.variant.page.created_by.get_full_name }}<br>{{ version.variant.page.created_date }}</p>{% if version.variant.page.modified_by %}<br><p><strong>Sist endret av:</strong><br>{{ version.variant.page.modified_by.get_full_name }}<br>{{ version.variant.page.modified_date }}</p>{% endif %}">
     </td>
   </tr>

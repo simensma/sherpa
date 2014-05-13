@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
     $("table#results div.map").hide();
     $("table#results a.close-map").hide();
 });

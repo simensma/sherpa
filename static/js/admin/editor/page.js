@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 
     var header = $("div.editor-header.page");
 

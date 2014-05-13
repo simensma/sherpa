@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 
     var content_wrappers = $("div.publications div.content-wrapper");
 

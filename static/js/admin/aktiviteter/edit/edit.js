@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 
     var editor = $("div.admin-aktivitet-edit");
     var form = editor.find("form.edit-aktivitet");

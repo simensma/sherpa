@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 
     var form = $("form.edit-release");
     var input_cover_photo = form.find("input[name='cover_photo']");

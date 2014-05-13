@@ -30,15 +30,12 @@ def list_load(request):
 
 # This is not a view.
 def list_bulk(request, bulk):
-    versions = Version.objects.filter(
+    return Version.objects.filter(
         variant__article__isnull=False,
         variant__segment__isnull=True,
         active=True,
         variant__article__site=request.active_forening.site
     ).order_by('-variant__article__created_date')[(bulk * BULK_COUNT) : (bulk * BULK_COUNT) + BULK_COUNT]
-    for version in versions:
-        version.load_preview()
-    return versions
 
 def new(request):
     article = Article(
@@ -55,31 +52,10 @@ def new(request):
     version.save()
     version.publishers.add(request.user)
     create_template(request.POST['template'], version, request.POST['title'])
-    return redirect('admin.articles.views.edit_version', version.id)
-
-def image(request, article):
-    article = Article.objects.get(id=article)
-    article.thumbnail = request.POST['thumbnail']
-    article.hide_thumbnail = False
-    article.save()
-    return HttpResponse()
-
-def image_delete(request, article):
-    article = Article.objects.get(id=article)
-    article.thumbnail = None
-    article.hide_thumbnail = False
-    article.save()
-    return HttpResponse()
-
-def image_hide(request, article):
-    article = Article.objects.get(id=article)
-    article.hide_thumbnail = True
-    article.save()
-    return HttpResponse()
+    return redirect('admin.articles.views.edit', version.id)
 
 def confirm_delete(request, article):
     version = Version.objects.get(variant__article=article, variant__segment__isnull=True, active=True)
-    version.load_preview()
     context = {'version': version}
     return render(request, 'common/admin/articles/confirm-delete.html', context)
 
@@ -91,7 +67,7 @@ def delete(request, article):
         pass
     return redirect('admin.articles.views.list')
 
-def edit_version(request, version):
+def edit(request, version):
     rows, version = parse_version_content(request, version)
     users = sorted(User.sherpa_users(), key=lambda u: u.get_first_name())
     context = {
@@ -101,7 +77,7 @@ def edit_version(request, version):
         'image_search_length': settings.IMAGE_SEARCH_LENGTH,
         'widget_data': widget_admin_context()
     }
-    return render(request, 'common/admin/articles/edit_version.html', context)
+    return render(request, 'common/admin/articles/edit.html', context)
 
 def preview(request, version):
     rows, version = parse_version_content(request, version)
@@ -112,7 +88,6 @@ def preview(request, version):
 
 def parse_version_content(request, version):
     version = Version.objects.get(id=version)
-    version.load_preview()
     rows = Row.objects.filter(version=version).order_by('order')
     for row in rows:
         columns = Column.objects.filter(row=row).order_by('order')
@@ -132,8 +107,8 @@ def create_template(template, version, title):
         contents = [
             {'type': 'title', 'content': """<h1>%s</h1>""" % title},
             {'type': 'image', 'content': json.dumps({'src': settings.STATIC_URL + "img/placeholder.png", "description": "", "photographer": "", "anchor": None})},
-            {'type': 'lede', 'content': """<p class="lede"><br></p>"""},
-            {'type': 'html', 'content': """<p><br></p>"""},
+            {'type': 'lede', 'content': ""},
+            {'type': 'html', 'content': ""},
             {'type': 'image', 'content': json.dumps({'src': settings.STATIC_URL + "img/placeholder.png", "description": "", "photographer": "", "anchor": None})},
         ]
         row = Row(version=version, order=0)
@@ -147,13 +122,13 @@ def create_template(template, version, title):
         contents_upper = [
             {'type': 'title', 'content': """<h1>%s</h1>""" % title},
             {'type': 'image', 'content': json.dumps({'src': settings.STATIC_URL + "img/placeholder.png", "description": "", "photographer": "", "anchor": None})},
-            {'type': 'lede', 'content': """<p class="lede"><br></p>"""},
+            {'type': 'lede', 'content': ""},
         ]
         contents_lower_left = [
-            {'type': 'html', 'content': """<p><br></p>"""},
+            {'type': 'html', 'content': ""},
         ]
         contents_lower_right = [
-            {'type': 'html', 'content': """<p><br></p>"""},
+            {'type': 'html', 'content': ""},
             {'type': 'image', 'content': json.dumps({'src': settings.STATIC_URL + "img/placeholder.png", "description": "", "photographer": "", "anchor": None})},
         ]
         row = Row(version=version, order=0)

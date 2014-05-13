@@ -1,6 +1,6 @@
 /* Membership */
 
-$(document).ready(function() {
+$(function() {
 
     var zipcode_button = $("button.zipcode-search");
 

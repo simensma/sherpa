@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 
     var memberid_accepted = false;
     var memberid_hint_modal = $("div.memberid-hint-modal");

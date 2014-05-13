@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
     var aktivitet = $("div.aktivitet");
 
     aktivitet.find("a.show-alternative-dates").click(function() {

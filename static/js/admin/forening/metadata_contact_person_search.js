@@ -5,7 +5,7 @@
 
     var that = this;
 
-    $(document).ready(function() {
+    $(function() {
 
         that.admin = $("div.foreningsadmin");
         that.search = admin.find("div.contact-person-search");

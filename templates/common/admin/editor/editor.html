@@ -8,19 +8,29 @@
   </div>
 </div>
 
-<article data-add-columns-url="{% url 'admin.cms.views.row.add_columns' %}" data-save-url="{% url 'admin.cms.views.content.save' version.id %}" data-render-widget-url="{% url 'admin.cms.views.content.render_widget' %}">
+<article data-save-url="{% url 'admin.cms.views.content.save' version.id %}" data-render-widget-url="{% url 'admin.cms.views.content.render_widget' %}">
 
   {% for row in rows %}
-    <div class="row-fluid" data-id="{{ row.id }}">
+    {# Rows are recognized by their data-row attribute, not their class #}
+    <div class="row-fluid" data-row>
+
       {% for column in row.columns %}
-        <div class="column offset{{ column.offset }} span{{ column.span }}" data-id="{{ column.id }}">
+        <div class="column offset{{ column.offset }} span{{ column.span }}">
+
           {% for content in column.contents %}
             {% if content.type == 'html' or content.type == 'title' or content.type == 'lede' %}
-              <div class="content {{ content.type }} editable" data-id="{{ content.id }}">
-                {{ content.content|safe }}
+
+              <div class="content {{ content.type }} editable" {% if content.content != '' %}contenteditable="true"{% else %}data-placeholder{% endif %}>
+                {% if content.content != '' %}
+                  {{ content.content|safe }}
+                {% else %}
+                  Klikk for å legge til tekst
+                {% endif %}
               </div>
+
             {% elif content.type == 'image' %}
-              <div style="{% if content.content.parentHeight %}height:{{ content.content.parentHeight }}px;{% endif %}" class="content image" data-id="{{ content.id }}">
+
+              <div style="{% if content.content.parentHeight %}height:{{ content.content.parentHeight }}px;{% endif %}" class="content image">
                 {% if content.content.anchor %}<a href="{{ content.content.anchor }}">{% endif %}
                 <img src="{{ content.content.src }}"
                   {% if content.content.style %}style="{{ content.content.style }}"{% endif %}
@@ -36,49 +46,27 @@
                     </span>
                 </div>
               </div>
+
             {% elif content.type == 'widget' %}
-              <div class="content widget {{ content.content.widget }}" data-id="{{ content.id }}" data-json="{{ content.content.json }}">
+
+              <div class="content widget {{ content.content.widget }}" data-json="{{ content.content.json }}">
                 {% include content.content.template with widget=content.content %}
               </div>
+
             {% endif %}
           {% endfor %}
+
         </div>
       {% endfor %}
+
     </div>
   {% endfor %}
 
 </article>
 
-{# Adding columns #}
-<div class="modal jq-hide insert-columns" data-width="auto">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
-    <h3>Velg kolonnestruktur</h3>
-  </div>
-  <div class="modal-body">
-    <h1 class="sherpa">Én kolonne:</h1>
-    <p><img src="{{ STATIC_URL }}img/columns/full.png" data-choice="0" alt="Én kolonne"></p>
-
-    <h1 class="sherpa">To kolonner (sidebar):</h1>
-    <p><img src="{{ STATIC_URL }}img/columns/sidebar.png" data-choice="1" alt="To kolonner (sidebar)"></p>
-
-    <h1 class="sherpa">To kolonner:</h1>
-    <p><img src="{{ STATIC_URL }}img/columns/two.png" data-choice="2" alt="To kolonner"></p>
-
-    <h1 class="sherpa">Tre kolonner:</h1>
-    <p><img src="{{ STATIC_URL }}img/columns/three.png" data-choice="3" alt="Tre kolonner"></p>
-
-    <h1 class="sherpa">Fire kolonner:</h1>
-    <p><img src="{{ STATIC_URL }}img/columns/four.png" data-choice="4" alt="Fire kolonner"></p>
-  </div>
-  <div class="modal-footer" style="clear: both;">
-    <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
-  </div>
-</div>
-
 <div class="insertion-templates jq-hide">
 
-  <div class="content html editable"></div>
+  <div class="content html editable" contenteditable="true"></div>
 
   <div class="content image">
     <img src="http://www.turistforeningen.no/static/img/placeholder.png" alt="">
@@ -90,20 +78,57 @@
     </div>
   </div>
 
+  <div class="content widget">
+    <img src="/static/img/ajax-loader-small.gif" alt="Laster...">
+    <em>Rendrer widget...</em>
+  </div>
+
+  <p class="widget-rendering-failed">
+    Klarte ikke å rendre widgeten! Er du sikker på at du har tilgang til internett?<br>Klikk her og velg lagre på nytt for å prøve å rendre igjen.
+  </p>
+
+  <div class="row-fluid edit-structure">
+    <div class="column span12">
+      <div class="edit-structure-inner">
+        <button class="btn" data-type="single" title="Bruk én stor kolonne i denne seksjonen"></button>
+        <button class="btn" data-type="double" title="Bruk to like store kolonner i denne seksjonen"></button>
+        <button class="btn" data-type="sidebar-left" title="Bruk to kolonner i denne seksjonen, liten kolonne til venstre"></button>
+        <button class="btn" data-type="sidebar-right" title="Bruk to kolonner i denne seksjonen, liten kolonne til høyre"></button>
+        <button class="btn" data-type="triple" title="Bruk tre kolonner i denne seksjonen"></button>
+        <button class="btn" data-type="quadruple" title="Bruk fire kolonner i denne seksjonen"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row-fluid add-content-row" title="Sett inn innhold...">
+    <div class="column span12">
+      {% include 'common/admin/editor/add-content.html' %}
+    </div>
+  </div>
+
+  <div class="add-content" title="Sett inn innhold...">
+    {% include 'common/admin/editor/add-content.html' %}
+  </div>
+
+  <div class="content-control remove-content" title="Ta bort dette innholdet" data-confirm="Er du helt sikker på at du vil ta bort dette innholdet?">
+  </div>
+
+  <div class="content-control move-content" title="Klikk for å flytte innholdet opp, ned eller til en annen kolonne">
+  </div>
+
 </div>
 
 {# Widget edit-dialogs #}
-{% include 'common/admin/editor/add-widget-dialog.html' %}
 {% include 'common/widgets/quote/edit.html' %}
 {% include 'common/widgets/articles/edit.html' %}
 {% include 'common/widgets/blog/edit.html' %}
 {% include 'common/widgets/embed/edit.html' %}
 {% include 'common/widgets/carousel/edit.html' %}
 {% include 'common/widgets/fact/edit.html' %}
+{% include 'common/widgets/button/edit.html' %}
 
 {# Other dialogs #}
 {% include 'common/admin/images/util/image-archive-picker.html' with bs2compatible=True %}
 {% include 'common/admin/images/util/image-upload-dialog.html' %}
 {% include 'common/admin/editor/image-dialog.html' %}
-{% include 'common/admin/editor/button-dialog.html' %}
 {% include 'common/admin/editor/toolbar.html' %}

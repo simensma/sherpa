@@ -139,9 +139,6 @@ def search(request):
     else:
         old_articles = []
 
-    for version in article_versions:
-        version.load_preview()
-
     context = {
         'search_query': request.GET['q'],
         'article_versions': article_versions,

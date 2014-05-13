@@ -4,7 +4,7 @@
 
     var uploader;
     var form;
-    $(document).ready(function() {
+    $(function() {
         uploader = $("div.image-upload-dialog");
         form = uploader.find("form");
 

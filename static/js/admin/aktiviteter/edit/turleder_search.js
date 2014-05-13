@@ -2,7 +2,7 @@
 
     var that = this;
 
-    $(document).ready(function() {
+    $(function() {
 
         that.editor = $("div.admin-aktivitet-edit");
         that.search = editor.find("div.modal.turleder-search");

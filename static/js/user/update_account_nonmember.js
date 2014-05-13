@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 
     Validator.validate({
         method: 'full_name',

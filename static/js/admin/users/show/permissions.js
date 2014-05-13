@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 
     var admin_buttons = $("p.admin-buttons");
     var admin_button = admin_buttons.find("button.make-sherpa-admin");

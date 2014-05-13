@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 
     $("select[name='article'], select[name='page']").chosen();
 

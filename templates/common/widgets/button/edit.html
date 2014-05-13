@@ -1,13 +1,15 @@
-<div class="modal jq-hide add-button" data-width="auto">
+<div class="modal hide widget-editor" data-widget="button" data-width="auto">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
-    <h3>Legg til ny knapp</h3>
+    <h3>Sett inn knapp</h3>
   </div>
   <div class="modal-body">
-    <div class="alert alert-info">
+
+    <div class="alert alert-info jq-hide">
       <a class="close">x</a>
       <strong>Du kan da ikke legge til en knapp uten en liten tekst på den!</strong>
     </div>
+
     <table>
       <tr>
         <td>Tekst på knappen:</td>
@@ -15,14 +17,15 @@
       </tr>
       <tr>
         <td>Adresse knappen går til:</td>
-        <td><input type="text" name="url" class="input-xlarge"></td>
+        <td><input type="text" name="url" class="input-xlarge" value="http://"></td>
       </tr>
     </table>
+
     <table class="table choices">
       <tr>
         <td><input type="radio" name="color" value="" checked></td>
         <td><button class="btn">Vanlig knapp</button></td>
-        <td><input type="radio" name="size" value=" btn-large"></td>
+        <td><input type="radio" name="size" value="btn-large"></td>
         <td><button class="btn btn-large">Stor</button></td>
       </tr>
       <tr>
@@ -56,9 +59,9 @@
         <td><button class="btn btn-inverse">Invertert</button></td>
       </tr>
     </table>
+
   </div>
   <div class="modal-footer" style="clear: both;">
-    <button class="btn btn-primary insert"><i class="icon-share-alt"></i> Sett inn valgt knapp</button>
-    <a href="javascript:undefined" class="btn" data-dismiss="modal">Avbryt</a>
+    <button class="btn btn-success save"><i class="icon-ok"></i> Lagre widget</button>
   </div>
 </div>

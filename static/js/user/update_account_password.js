@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 
     Validator.validatePasswords({
         control_group: $("div.control-group.password, div.control-group.password-repeat"),

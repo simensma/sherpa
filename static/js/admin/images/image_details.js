@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
     var image_details = $("div.image-details");
     var exif = image_details.find("div.exif");
     image_details.find("a.toggle-exif").click(function() {

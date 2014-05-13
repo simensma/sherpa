@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
     var wrapper = $("div.choose-authenticated-user");
     var form = wrapper.find("form");
     var hidden = form.find("input[type='hidden'][name='user']");

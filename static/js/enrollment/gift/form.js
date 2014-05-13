@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 
     var giver_control_group = $("div.control-group.giver_zipcode");
     var giver_zipcode = $("input[name='giver_zipcode']");

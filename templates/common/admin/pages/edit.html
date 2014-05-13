@@ -21,6 +21,7 @@
 
   {# Editor specific scripts #}
   <script src="{{ STATIC_URL }}js/admin/editor/main.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/editor/move-content.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/page.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/save.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/image-dialog.js"></script>
@@ -30,6 +31,7 @@
   <script src="{{ STATIC_URL }}js/admin/editor/widgets/embed.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/widgets/fact.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/widgets/quote.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/editor/widgets/button.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/widgets/main.js"></script>
   <script src="{{ STATIC_URL }}js/admin/editor/toolbar.js"></script>
 {% endblock %}
@@ -109,7 +111,7 @@
             </a>
             <br><br>
 
-            <button class="btn btn-success save-and-quit" data-href="{% url 'admin.cms.views.page.list' %}">Lagre & Tilbake til Sherpa</button>
+            <button class="btn btn-success save-and-quit" data-href="{% url 'admin.cms.views.page.list' %}">Lagre &amp; Tilbake til Sherpa</button>
             <a href="{% url 'admin.cms.views.page.list' %}" class="btn btn-default quit" data-confirm="Er du sikker på at du vil gå tilbake til Sherpa uten å lagre?">Tilbake til Sherpa UTEN å lagre</a>
           </div>
         </div>
@@ -119,7 +121,7 @@
     </div>
   </div>
 
-  {% include 'common/admin/editor/advanced.html' with toolbar_structure=1 %}
+  {% include 'common/admin/editor/editor.html' %}
 
 </div><!-- /.cms-editor -->
 

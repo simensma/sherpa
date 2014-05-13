@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
     var language_container = $("div.language-container");
     var form = language_container.find("form.set-language");
     var input = form.find("input[name='language']");

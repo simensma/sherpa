@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
     var delete_anchor = $("a.delete-release");
     var delete_confirm = $("div.delete-release-confirm");
     var delete_final = $("a.delete-release-final");

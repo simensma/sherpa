@@ -21,8 +21,6 @@ def list(request):
         active=True,
         variant__page__site=request.active_forening.site
         ).order_by('variant__page__title')
-    for version in versions:
-        version.children = Version.objects.filter(variant__page__parent=version.variant.page, active=True).count()
     menus = Menu.on(request.active_forening.site).all().order_by('order')
     context = {'versions': versions, 'menus': menus}
     return render(request, 'common/admin/pages/list.html', context)
@@ -45,8 +43,6 @@ def edit_domain(request):
 
 def children(request, page):
     versions = Version.objects.filter(variant__page__parent=page, active=True).order_by('variant__page__title')
-    for version in versions:
-        version.children = Version.objects.filter(variant__page__parent=version.variant.page, active=True).count()
     context = RequestContext(request, {'versions': versions, 'level': request.POST['level']})
     return HttpResponse(render_to_string('common/admin/pages/result.html', context))
 
@@ -81,7 +77,7 @@ def new(request):
     version.save()
 
     create_template(request.POST['template'], version)
-    return redirect('admin.cms.views.page.edit_version', version.id)
+    return redirect('admin.cms.views.page.edit', version.id)
 
 def check_slug(request):
     urls_valid = slug_is_unique(request.POST['slug'])
@@ -92,7 +88,7 @@ def delete(request, page):
     Page.on(request.active_forening.site).get(id=page).delete()
     return redirect('admin.cms.views.page.list')
 
-def edit_version(request, version):
+def edit(request, version):
     pages = Page.on(request.active_forening.site).all().order_by('title')
     version = Version.objects.get(id=version)
     rows = Row.objects.filter(version=version).order_by('order')
@@ -114,7 +110,7 @@ def edit_version(request, version):
         'pages': pages,
         'image_search_length': settings.IMAGE_SEARCH_LENGTH
     }
-    return render(request, 'common/admin/pages/edit_version.html', context)
+    return render(request, 'common/admin/pages/edit.html', context)
 
 def preview(request, version):
     version = Version.objects.get(id=version)

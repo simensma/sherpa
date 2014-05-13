@@ -8,7 +8,7 @@
     var imageCurrentRatioWidth = 0;
     var imageCurrentRatioHeight = 0;
 
-    $(document).ready(function() {
+    $(function() {
 
         var imageDialog = $("div.change-image");
 

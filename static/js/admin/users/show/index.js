@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 
     var user = $("div.admin-user-show");
     var nav = user.find("ul.main-nav");

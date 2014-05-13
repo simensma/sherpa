@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 
     var wrapper = $("div.registration-form-nonmember-wrapper");
     var confirmation = wrapper.find("a.confirm");

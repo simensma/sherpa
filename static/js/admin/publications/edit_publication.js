@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
     var edit_publication_form = $("form.edit-publication");
     var edit_release_form = $("form.edit-release");
     var publication_anchor = $("p.publication-actions a.edit-publication");

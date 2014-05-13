@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
     var listing = $("div.aktivitet-listing");
     var filters = listing.find("div.search-filters");
     var button_selections = filters.find("div.button-selections");

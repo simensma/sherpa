@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 
     /* Display/hide main menu for small screens */
     new MobileMenu(

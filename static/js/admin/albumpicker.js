@@ -1,6 +1,6 @@
 /* Changing destination album */
 
-$(document).ready(function() {
+$(function() {
     (function(AlbumPicker, $, undefined ) {
 
         var picker = $("div.album-picker");

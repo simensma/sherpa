@@ -1,6 +1,6 @@
 /* JS for widgets */
 
-$(document).ready(function() {
+$(function() {
 
     //Promo-box
     $("div.widget.promo div.menu li").click(function() {

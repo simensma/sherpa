@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
     $("button.confirm-delete").click(function() {
         $(this).hide();
         $("div.final-confirm").show();
