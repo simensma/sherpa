@@ -49,16 +49,13 @@ $(function() {
     header.find("img.article-thumbnail").click(function() {
         var image = $(this);
         ImageDialog.open({
-            image: $(this),
+            src: image.attr('src'),
             anchor: undefined,
             description: undefined,
             photographer: undefined,
             save: function(src, anchor, description, photographer) {
                 image.attr('src', src);
             },
-            remove: function() {
-                header.find("input[name='thumbnail'][value='none']").click();
-            }
         });
     });
 

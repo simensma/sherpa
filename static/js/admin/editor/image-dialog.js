@@ -51,7 +51,7 @@
         image_picked_callback = opts.save;
         image_removed_callback = opts.remove;
 
-        image_dialog.find("input[name='src']").val(ImageUtils.removeImageSizeFromUrl(opts.image.attr("src")));
+        image_dialog.find("input[name='src']").val(ImageUtils.removeImageSizeFromUrl(opts.src));
         image_dialog.find("input[name='anchor']").val(opts.anchor);
         image_dialog.find("input[name='description']").val(opts.description);
         image_dialog.find("input[name='photographer']").val(opts.photographer);

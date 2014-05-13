@@ -30,21 +30,27 @@
 
             {% elif content.type == 'image' %}
 
-              <div style="{% if content.get_content.parentHeight %}height:{{ content.get_content.parentHeight }}px;{% endif %}" class="content image">
-                {% if content.get_content.anchor %}<a href="{{ content.get_content.anchor }}">{% endif %}
-                <img src="{{ content.get_content.src }}"
-                  {% if content.get_content.style %}style="{{ content.get_content.style }}"{% endif %}
-                  {% if content.get_content.selection %}data-selection="{{ content.get_content.selection }}"{% endif %}
-                  {% if content.get_content.description %}alt="{{ content.get_content.description }}"{% endif %}
-                  {% if content.get_content.ratioWidth %}data-ratio-width="{{ content.get_content.ratioWidth }}"{% endif %}
-                  {% if content.get_content.ratioHeight %}data-ratio-height="{{ content.get_content.ratioHeight }}"{% endif %}>
-                {% if content.get_content.anchor %}</a>{% endif %}
-                <div class="description">
-                  <span class="description">{{ content.get_content.description }}</span>
-                    <span class="photographer">
-                      Foto: <span class="content">{{ content.get_content.photographer }}</span>
-                    </span>
-                </div>
+              <div class="content image" data-json="{{ content.content }}">
+                {% if content.get_content.anchor %}
+                  <a href="{{ content.get_content.anchor }}">
+                    <img src="{{ content.get_content.src }}" alt="{{ content.get_content.description }}">
+                  </a>
+                {% else %}
+                  <img src="{{ content.get_content.src }}" alt="{{ content.get_content.description }}">
+                {% endif %}
+
+                {% if content.get_content.description or content.get_content.photographer %}
+                  <div class="description">
+                    {% if content.get_content.description %}
+                      <span class="description">{{ content.get_content.description }}</span>
+                    {% endif %}
+                    {% if content.get_content.photographer %}
+                      <span class="photographer">
+                        Foto: <span class="content">{{ content.get_content.photographer }}</span>
+                      </span>
+                    {% endif %}
+                  </div>
+                {% endif %}
               </div>
 
             {% elif content.type == 'widget' %}
@@ -68,8 +74,10 @@
 
   <div class="content html editable" contenteditable="true"></div>
 
-  <div class="content image">
-    <img src="http://www.turistforeningen.no/static/img/placeholder.png" alt="">
+  <div class="content image" data-json="{&quot;src&quot;:&quot;http://www.turistforeningen.no/static/img/placeholder.png&quot;,&quot;description&quot;:&quot;&quot;,&quot;photographer&quot;:&quot;&quot;,&quot;anchor&quot;:null}">
+    <a href="">
+      <img src="http://www.turistforeningen.no/static/img/placeholder.png" alt="">
+    </a>
     <div class="description">
       <span class="description"></span>
       <span class="photographer">

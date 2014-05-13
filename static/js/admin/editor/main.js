@@ -68,83 +68,49 @@ $(function() {
         }
     });
 
-    // Hide completely empty image descriptions
-    article.find("div.content.image").each(function() {
-        var content = $(this);
-        hidePictureText(content);
-    });
-
-    function hidePictureText(content){
-        var description = content.find("span.description").text();
-        var photographer = content.find("span.photographer span.content").text();
-
-        if(description === '' && photographer === ''){
-            content.find("div.description").hide();
-        }else{
-            content.find("div.description").show();
-        }
-
-        if(description === '') {
-            content.find("span.description").hide();
-        } else {
-            content.find("span.description").show();
-        }
-
-        if(photographer === '') {
-            content.find("span.photographer").hide();
-        } else {
-            content.find("span.photographer").show();
-        }
-    }
-
     // Change image sources upon being clicked
     $(document).on('click', 'article div.content.image', function() {
-        currentImage = $(this).find("img");
         var content = $(this);
-        var currentDescription = content.find("span.description");
-        var currentPhotographer = content.find("span.photographer span.content");
-        var anchor = $(this).find("a").attr('href');
-        if(anchor === undefined) {
-            anchor = '';
+        var json_content = JSON.parse(content.attr('data-json'));
+        if(json_content.anchor === null) {
+            json_content.anchor = '';
         }
+
         ImageDialog.open({
-            image: currentImage,
-            anchor: anchor,
-            description: currentDescription.text(),
-            photographer: currentPhotographer.text(),
+            src: json_content.src,
+            anchor: json_content.anchor,
+            description: json_content.description,
+            photographer: json_content.photographer,
             save: function(src, anchor, description, photographer) {
-                if(anchor.length === 0) {
-                    // No link
-                    if(currentImage.parent("a").length > 0) {
-                        // *Was* link, but is now removed
-                        currentImage.parent().before(currentImage).remove();
-                    }
+                var image_content = insertion_templates.find("div.content.image").clone();
+                content.replaceWith(image_content);
+                if(anchor === '') {
+                    // No anchor, remove the anchor element
+                    anchor = null;
+                    image_content.find("a").replaceWith(image_content.find("a img"));
                 } else {
-                    // Add link
-                    if(currentImage.parent("a").length > 0) {
-                        // Link exists, update it
-                        currentImage.parent().attr('href', anchor);
-                    } else {
-                        // No existing link, add it
-                        var anchorEl = $('<a href="' + anchor + '"></a>');
-                        currentImage.before(anchorEl).detach();
-                        anchorEl.prepend(currentImage);
-                    }
+                    image_content.find("a").attr('href', anchor);
                 }
-                currentImage.attr('src', src);
-                currentImage.attr('alt', description);
+                image_content.find("img").attr('src', src);
+                image_content.find("img").attr('alt', description);
+                image_content.find("span.description").text(description);
+                image_content.find("span.photographer span.content").text(photographer);
 
-                currentDescription.text(description);
-                currentPhotographer.text(photographer);
-                hidePictureText(content);
+                if(description === '' && photographer === '') {
+                    image_content.find("div.description").remove();
+                } else if(description === '') {
+                    image_content.find("div.description span.description").remove();
+                } else if(photographer === '') {
+                    image_content.find("div.description span.photographer").remove();
+                }
 
+                image_content.attr('data-json', JSON.stringify({
+                    src: src,
+                    anchor: anchor,
+                    description: description,
+                    photographer: photographer,
+                }));
             },
-            remove: function() {
-                content.slideUp(function() {
-                    $(this).remove();
-                    resetControls();
-                });
-            }
         });
     });
 
