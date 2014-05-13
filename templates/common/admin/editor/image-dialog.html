@@ -1,15 +1,53 @@
-<div class="modal container jq-hide change-image">
+<div class="modal jq-hide change-image">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
     <h3>Velg et bilde å sette inn...</h3>
   </div>
   <div class="modal-body">
+
     <div class="image-details">
-      <div class="alert alert-danger empty-src">
+      <div class="alert alert-danger empty-src hide">
         <a class="close">x</a>
         <strong>Sett inn hvilket bilde?</strong><br>
         Du må angi URL-adressen til bildet. Denne kommer automatisk hvis du velger et bilde i bildegalleriet under, men hvis du har et eksternt bilde må du finne adressen selv.
       </div>
+
+      <div class="form-horizontal">
+        <div class="control-group">
+          <label class="control-label">Bilde:</label>
+          <div class="controls">
+            <input type="text" name="src" class="input-xxlarge">
+            <div>
+              <button class="btn choose-image">
+                <i class="icon-search"></i> Finn bilde i arkivet
+              </button>
+              <button class="btn upload-image">
+                <i class="icon-share-alt"></i> Last opp bilde
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">Bildetekst</label>
+          <div class="controls">
+            <input type="text" class="input-xlarge" name="description">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label">Fotograf</label>
+          <div class="controls">
+            <input type="text" class="input-xlarge" name="photographer" data-photographers-url="{% url 'admin.images.views.photographer' %}">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label">Lenker til</label>
+          <div class="controls">
+            <input type="text" class="input-xlarge" name="anchor">
+          </div>
+        </div>
+      </div>
+
       <table>
         <tr>
           <td>Bilde:</td>
@@ -19,15 +57,15 @@
         </tr>
         <tr class="description">
           <td>Bildetekst:</td>
-          <td><input type="text" class="input-xlarge" name="description"></td>
+          <td></td>
         </tr>
         <tr class="photographer">
           <td>Fotograf:</td>
-          <td><input type="text" class="input-xlarge" name="photographer" data-photographers-url="{% url 'admin.images.views.photographer' %}"></td>
+          <td></td>
         </tr>
         <tr class="anchor">
           <td>Lenker til:</td>
-          <td><input type="text" class="input-xlarge" name="anchor"></td>
+          <td></td>
         </tr>
         <tr>
           <td></td>
@@ -38,13 +76,7 @@
         </tr>
       </table>
     </div>
-    <br>
-    <div class="preview-container">
-      <h2>Her kan du beskjære bildet:</h2>
-      <div id="ratio-radio">
-      </div>
-      <img class="preview" src="{{ STATIC_URL }}/img/blank_placeholder.png">
-    </div>
+
   </div>
   <div class="modal-footer">
     <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
