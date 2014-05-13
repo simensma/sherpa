@@ -341,12 +341,14 @@ $(function() {
         var original_image = original_content.find("img");
         var new_content = crop_control.data('content-clone');
         var new_image = new_content.find("img");
-        var crop_selection = JSON.parse(original_content.attr('data-crop-selection'));
+        var crop_selection = original_content.attr('data-crop-selection');
 
         if(crop_selection === undefined) {
             $(this).siblings("button.remove").click();
             return $(this);
         }
+
+        crop_selection = JSON.parse(crop_selection);
 
         // Cropping math magics
         var original_width = original_image.width();
