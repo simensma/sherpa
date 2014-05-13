@@ -196,6 +196,13 @@ class Content(models.Model):
     def __unicode__(self):
         return u'%s' % self.pk
 
+    def get_content(self):
+        """Returned the parsed json-content. Will be called many times per instance during render, so cache it in
+        a local attribute"""
+        if not hasattr(self, '_parsed_content'):
+            self._parsed_content = json.loads(self.content)
+        return self._parsed_content
+
 @receiver(pre_delete, sender=Content, dispatch_uid="page.models")
 def delete_content(sender, **kwargs):
     for content in Content.objects.filter(column=kwargs['instance'].column, order__gt=kwargs['instance'].order):

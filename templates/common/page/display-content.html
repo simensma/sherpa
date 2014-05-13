@@ -13,17 +13,17 @@
 
             {% elif content.type == 'image' %}
 
-              <div class="content image" style="{% if content.content.parentHeight %}height:{{ content.content.parentHeight }}px;{% endif %}">
-                {% if content.content.anchor %}<a href="{{ content.content.anchor }}">{% endif %}
-                  <img src="{{ content.content.src }}" {% if content.content.style %}style="{{ content.content.style }}"{% endif %} alt="{{ content.content.description }}">
-                {% if content.content.anchor %}</a>{% endif %}
-                {% if content.content.description.strip or content.content.photographer %}
+              <div class="content image" style="{% if content.get_content.parentHeight %}height:{{ content.get_content.parentHeight }}px;{% endif %}">
+                {% if content.get_content.anchor %}<a href="{{ content.get_content.anchor }}">{% endif %}
+                  <img src="{{ content.get_content.src }}" {% if content.get_content.style %}style="{{ content.get_content.style }}"{% endif %} alt="{{ content.get_content.description }}">
+                {% if content.get_content.anchor %}</a>{% endif %}
+                {% if content.get_content.description.strip or content.get_content.photographer %}
                   <div class="img-desc">
-                    {% if content.content.description.strip %}
-                      {{ content.content.description }}
+                    {% if content.get_content.description.strip %}
+                      {{ content.get_content.description }}
                     {% endif %}
-                    {% if content.content.photographer %}
-                      Foto: {{ content.content.photographer }}
+                    {% if content.get_content.photographer %}
+                      Foto: {{ content.get_content.photographer }}
                     {% endif %}
                   </div>
                 {% endif %}
