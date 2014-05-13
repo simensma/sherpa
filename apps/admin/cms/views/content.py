@@ -116,6 +116,8 @@ def save(request, version):
             version.save()
             page.save()
 
+            cache.delete('content.version.%s' % version.id)
+
         elif version.variant.article is not None:
             article = version.variant.article
 
@@ -181,5 +183,8 @@ def save(request, version):
 
             version.save()
             article.save()
+
+            cache.delete('articles.%s' % article.id)
+            cache.delete('version.%s.thumbnail' % version.id)
 
     return HttpResponse(json.dumps(response))
