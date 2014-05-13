@@ -59,11 +59,17 @@ div.cms-editor {
       position: relative; // Needed to position its children
     }
 
-    div.image > img {
-      display: block;
-      background-color: rgb(0, 0, 0);
-      min-width: 20px;
-      min-height: 20px;
+    div.image {
+      img {
+        display: block;
+        background-color: rgb(0, 0, 0);
+        min-width: 20px;
+        min-height: 20px;
+      }
+
+      img.cropped {
+        max-width: none !important;
+      }
     }
 
     div.image:hover:not(.moving), div.widget:not(.moving):not(.static):hover {

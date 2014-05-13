@@ -287,19 +287,49 @@ $(function() {
     $(document).on('click', 'article div.crop-content', function(e) {
         e.stopPropagation(); // Avoid click-event on an image or widget
         var content = $(this).nextAll("div.content").first();
+
+        // Retrieve the original cropping selection, if any
+        var original_selection = content.attr('data-crop-selection');
+        if(original_selection !== undefined) {
+            // There's an original selection, keep it in memory but remove it from the image element
+            // (we want the image element to be full-size while cropping)
+            original_selection = JSON.parse(original_selection);
+            var image = content.find("img");
+            image.removeAttr('style');
+            image.removeClass('cropped');
+            content.removeAttr('data-crop-selection');
+            content.removeAttr('style');
+        }
+
+        // Set up crop control elements
         var crop_control = insertion_templates.find("div.crop-control").clone().insertBefore(content);
+        crop_control.data('original-content', content);
         crop_control.data('content-clone', content.clone());
         crop_control.offset({
             top: crop_control.offset().top - crop_control.height(),
             left: crop_control.offset().left,
         });
+
+        // Enable the actual cropping
         content.Jcrop({
             onSelect: function(c) {
-                content.attr('data-crop', JSON.stringify(c));
+                content.attr('data-crop-selection', JSON.stringify(c));
             },
         }, function() {
             jcrop_api = this;
         });
+
+        // Reapply the original selection to the cropper ui, if any
+        if(original_selection !== undefined) {
+            // Why does it take an array here, while it gives us an object in the event!? Tsk
+            jcrop_api.setSelect([
+                original_selection.x,
+                original_selection.y,
+                original_selection.x2,
+                original_selection.y2,
+            ]);
+        }
+
         $(this).tooltip('destroy'); // Just in case the browser doesn't trigger the mouseleave
         $(this).siblings("div.content-control").remove();
         $(this).remove();
@@ -307,14 +337,44 @@ $(function() {
 
     $(document).on('click', 'article div.crop-control button.use', function(e) {
         var crop_control = $(this).parents("div.crop-control");
-        // JCrop removes the original image element when destroying, so reinsert our spare clone
-        crop_control.data('content-clone').insertAfter(crop_control);
+        var original_content = crop_control.data('original-content');
+        var original_image = original_content.find("img");
+        var new_content = crop_control.data('content-clone');
+        var new_image = new_content.find("img");
+        var crop_selection = JSON.parse(original_content.attr('data-crop-selection'));
+
+        if(crop_selection === undefined) {
+            $(this).siblings("button.remove").click();
+            return $(this);
+        }
+
+        // Cropping math magics
+        var original_width = original_image.width();
+        var selection_width = crop_selection.x2 - crop_selection.x;
+        var scaled_width = original_width / selection_width;
+        var offset_left = crop_selection.x * scaled_width;
+
+        var original_height = original_image.height();
+        var selection_height = crop_selection.y2 - crop_selection.y;
+        var scaled_height = scaled_width; // Autoscale height to the new custom ratio
+        var offset_top = crop_selection.y * scaled_height;
+
+        // Now set the calculated values on the new content
+        new_image.css('width', original_width * scaled_width + 'px');
+        new_image.css('height', original_height * scaled_height + 'px');
+        new_image.css('margin-left', '-' + offset_left + 'px');
+        new_image.css('margin-top', '-' + offset_top + 'px');
+        new_image.addClass('cropped');
+        new_content.css('width', selection_width * scaled_width + 'px');
+        new_content.css('height', selection_height * scaled_height + 'px');
+        new_content.attr('data-crop-selection', JSON.stringify(crop_selection));
+
+        new_content.insertAfter(crop_control);
         endCropping(crop_control);
     });
 
     $(document).on('click', 'article div.crop-control button.remove', function(e) {
         var crop_control = $(this).parents("div.crop-control");
-        // JCrop removes the original image element when destroying, so reinsert our spare clone
         crop_control.data('content-clone').insertAfter(crop_control);
         endCropping(crop_control);
     });
