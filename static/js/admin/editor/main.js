@@ -252,38 +252,64 @@ $(function() {
             // Ignore this while moving
             return $(this);
         }
-        insertion_templates.find("div.remove-content").clone().appendTo($(this)).tooltip();
-        insertion_templates.find("div.move-content").clone().appendTo($(this)).tooltip();
+        if($(this).prevAll("div.content-control").length >= 1) {
+            // Ignore if they're already there (happens when mouse goes from content directly to control and back)
+            return $(this);
+        }
+        insertion_templates.find("div.remove-content").clone().insertBefore($(this)).tooltip();
+        insertion_templates.find("div.move-content").clone().insertBefore($(this)).tooltip();
+    });
+
+    $(document).on('mouseleave', 'article div.content-control', function(e) {
+        if(contains($(this).nextAll("div.content").first(), e.pageX, e.pageY)) {
+            // Mouse is still inside the content, presumably hovering content-controls; don't remove them
+        } else {
+            $(this).siblings("div.content-control").remove();
+            $(this).remove();
+        }
     });
 
     // Cancel the content control icons upon mouse leave
-    $(document).on('mouseleave', 'article div.content', function() {
+    $(document).on('mouseleave', 'article div.content', function(e) {
         if(EditorMoveContent.isMoving()) {
             // Ignore this while moving
             return $(this);
         }
-        $(this).find("div.remove-content").remove();
-        $(this).find("div.move-content").remove();
+
+        if(contains($(this), e.pageX, e.pageY)) {
+            // Mouse is still inside the content, presumably hovering content-controls; don't remove them
+        } else {
+            $(this).siblings("div.content-control").remove();
+        }
     });
 
     // Confirm and remove content when 'remove-content' icon clicked
-    $(document).on('click', 'article div.content div.remove-content', function(e) {
+    $(document).on('click', 'article div.remove-content', function(e) {
         e.stopPropagation(); // Avoid click-event on an image or widget
+        // Some browsers may handle mouse movement events even after confirm-window is opened, and that
+        // may detach the content-control. So save the content-reference before continuing
+        var content = $(this).nextAll("div.content").first();
         if(confirm($(this).attr('data-confirm'))) {
-            $(this).parents("div.content").slideUp(function() {
+            content.slideUp(function() {
                 $(this).remove();
                 resetControls();
             });
+            $(this).tooltip('destroy');
+            $(this).siblings("div.content-control").remove();
+            $(this).remove();
         }
     });
 
     // Enable content moving on 'move-content' icon click
-    $(document).on('click', 'article div.content div.move-content', function(e) {
+    $(document).on('click', 'article div.move-content', function(e) {
         e.stopPropagation(); // Avoid click-event on an image or widget
         EditorMoveContent.init({
-            content: $(this).parents("div.content"),
+            content: $(this).nextAll("div.content").first(),
             endCallback: resetControls,
         });
+        $(this).tooltip('destroy'); // Just in case the browser doesn't trigger the mouseleave
+        $(this).siblings("div.content-control").remove();
+        $(this).remove();
     });
 
     // Change a row's column-structure
@@ -443,7 +469,7 @@ $(function() {
                         insertion_templates.find("div.add-content").clone().insertAfter($(this));
                     });
                     if(!trailing_add_content) {
-                        $(this).children().last().remove();
+                        $(this).children("div.add-content").last().remove();
                     }
                 });
                 insertion_templates.find("div.edit-structure").clone().insertBefore($(this));
@@ -497,5 +523,14 @@ $(function() {
         tagBox: $("div.editor-header div.tags div.tag-box"),
         pickerInput: $("div.editor-header div.tags input[name='tags']")
     });
+
+    // Returns true if the given element position contains the given mouse coordinates
+    function contains(element, mouseX, mouseY) {
+        var objX = element.offset().left;
+        var objY = element.offset().top;
+        var objW = element.width();
+        var objH = element.height();
+        return mouseX >= objX && mouseX <= objX + objW && mouseY >= objY && mouseY <= objY + objH;
+    }
 
 });

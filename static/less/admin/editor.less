@@ -54,6 +54,11 @@ div.editor-header.article {
 
 div.cms-editor {
   article {
+
+    div.column {
+      position: relative; // Needed to position its children
+    }
+
     div.image > img {
       display: block;
       background-color: rgb(0, 0, 0);
@@ -61,7 +66,7 @@ div.cms-editor {
       min-height: 20px;
     }
 
-    div.image:hover:not(.moving) > *:not(.content-control), div.widget:not(.moving):not(.static):hover > *:not(.content-control) {
+    div.image:hover:not(.moving), div.widget:not(.moving):not(.static):hover {
       opacity: 0.5;
       filter: alpha(opacity=50);
       cursor: alias;
@@ -186,43 +191,42 @@ div.cms-editor {
     }
 
     div.content {
-      position: relative;
       min-height: 70px;
+    }
 
-      div.content-control {
-        position: absolute;
-        top: 0;
-        width: 23px;
-        height: 23px;
-        padding: 12px 25px;
-        border: 1px solid rgb(52, 224, 194);
-        background-color: rgb(255, 255, 255);
-        background-position: center center;
-        background-repeat: no-repeat;
-      }
+    div.content-control {
+      position: absolute;
+      z-index: 30; // Float above the content you're positioned over
+      width: 23px;
+      height: 23px;
+      padding: 12px 25px;
+      border: 1px solid rgb(52, 224, 194);
+      background-color: rgb(255, 255, 255);
+      background-position: center center;
+      background-repeat: no-repeat;
+    }
 
-      div.content-control:hover, div.content-control.moving {
-        cursor: pointer;
-        background-color: rgb(52, 224, 194);
-      }
+    div.content-control:hover, div.content-control.moving {
+      cursor: pointer;
+      background-color: rgb(52, 224, 194);
+    }
 
-      div.remove-content {
-        right: 0;
-        background-image: url('/static/img/editorbuttons/remove-content-inactive.png');
-      }
+    div.remove-content {
+      right: 0;
+      background-image: url('/static/img/editorbuttons/remove-content-inactive.png');
+    }
 
-      div.remove-content:hover {
-        background-image: url('/static/img/editorbuttons/remove-content-active.png');
-      }
+    div.remove-content:hover {
+      background-image: url('/static/img/editorbuttons/remove-content-active.png');
+    }
 
-      div.move-content {
-        right: 75px; // The outer width of remove-content - could be dynamically calculated
-        background-image: url('/static/img/editorbuttons/move-content-inactive.png');
-      }
+    div.move-content {
+      right: 75px; // The outer width of remove-content - could be dynamically calculated
+      background-image: url('/static/img/editorbuttons/move-content-inactive.png');
+    }
 
-      div.move-content:hover, div.move-content.moving {
-        background-image: url('/static/img/editorbuttons/move-content-active.png');
-      }
+    div.move-content:hover, div.move-content.moving {
+      background-image: url('/static/img/editorbuttons/move-content-active.png');
     }
   }
 
