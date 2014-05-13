@@ -237,7 +237,6 @@ $(function() {
             content.attr('contenteditable', 'true').focus();
         } else if(content.type === 'image') {
             var image = insertion_templates.find("div.content.image").clone();
-            image.css("overflow", "hidden");
             insertItem(image, position);
             image.find("img").click();
         } else if(content.type === 'widget') {
