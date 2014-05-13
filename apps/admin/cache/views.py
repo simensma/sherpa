@@ -1,6 +1,5 @@
 # encoding: utf-8
 from django.shortcuts import render, redirect
-from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.core.cache import cache
 
