@@ -50,9 +50,9 @@ $(function() {
         var image = $(this);
         ImageDialog.open({
             src: image.attr('src'),
-            anchor: undefined,
-            description: undefined,
-            photographer: undefined,
+            anchor: '',
+            description: '',
+            photographer: '',
             save: function(src, anchor, description, photographer) {
                 image.attr('src', src);
             },
