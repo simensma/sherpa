@@ -30,45 +30,21 @@ $(function() {
 
     header.find("input[name='thumbnail'][value='none']").change(function() {
         if($(this).is(':checked')) {
-            var image = $(this);
             header.find("img.article-thumbnail").hide();
-            $.ajaxQueue({
-                url: '/sherpa/nyheter/bilde/' + header.attr('data-article-id') + '/skjul/',
-                type: 'POST'
-            });
         }
     });
 
     header.find("input[name='thumbnail'][value='default']").change(function(e) {
         if($(this).is(':checked')) {
-            if(article.find("div.image").length === 0) {
-                alert("Det er ingen bilder i artikkelen å bruke som minibilde!");
-                header.find("input[name='thumbnail'][value='none']").click();
-                return;
-            }
-            var image = $(this);
             header.find("img.article-thumbnail").hide();
-            $.ajaxQueue({
-                url: '/sherpa/nyheter/bilde/' + header.attr('data-article-id') + '/slett/',
-                type: 'POST'
-            });
         }
     });
 
     header.find("input[name='thumbnail'][value='new']").change(function() {
         if($(this).is(':checked')) {
-            var image = $(this);
             header.find("img.article-thumbnail").show();
-            saveImage();
         }
     });
-
-    function saveImage() {
-        $.ajaxQueue({
-            url: '/sherpa/nyheter/bilde/' + header.attr('data-article-id') + '/',
-            data: { thumbnail: header.find("img.article-thumbnail").attr('src') }
-        });
-    }
 
     header.find("img.article-thumbnail").click(function() {
         var image = $(this);
@@ -79,7 +55,6 @@ $(function() {
             photographer: undefined,
             save: function(src, anchor, description, photographer) {
                 image.attr('src', src);
-                saveImage();
             },
             remove: function() {
                 header.find("input[name='thumbnail'][value='none']").click();

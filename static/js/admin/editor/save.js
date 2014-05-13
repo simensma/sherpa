@@ -181,6 +181,16 @@ $(function() {
                 authors.push($(this).val());
             });
             data.authors = JSON.stringify(authors);
+
+            // Thumbnail
+            if(header.find("input[name='thumbnail'][value='none']").is(":checked")) {
+                data.thumbnail = 'none';
+            } else if(header.find("input[name='thumbnail'][value='default']").is(":checked")) {
+                data.thumbnail = 'default';
+            } else if(header.find("input[name='thumbnail'][value='new']").is(":checked")) {
+                data.thumbnail = 'specified';
+                data.thumbnail_url = header.find("img.article-thumbnail").attr('src');
+            }
         }
 
         // Save content
@@ -227,6 +237,12 @@ $(function() {
             if(result.publish_error === 'error_nullify') {
                 publish.find("input[name='date']").val('');
                 publish.find("input[name='time']").val('');
+            }
+
+            // Thumbnail response
+            if(result.thumbnail_missing_image) {
+                alert("Det er ingen bilder i artikkelen å bruke som minibilde.\n\nVi har endret valget ditt til 'Ikke vis minibilde', hvis du vil ha et minibilde må du sette inn et bilde.");
+                header.find("input[name='thumbnail'][value='none']").click();
             }
 
         }).fail(function(result) {

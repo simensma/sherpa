@@ -57,26 +57,6 @@ def new(request):
     create_template(request.POST['template'], version, request.POST['title'])
     return redirect('admin.articles.views.edit', version.id)
 
-def image(request, article):
-    article = Article.objects.get(id=article)
-    article.thumbnail = request.POST['thumbnail']
-    article.hide_thumbnail = False
-    article.save()
-    return HttpResponse()
-
-def image_delete(request, article):
-    article = Article.objects.get(id=article)
-    article.thumbnail = None
-    article.hide_thumbnail = False
-    article.save()
-    return HttpResponse()
-
-def image_hide(request, article):
-    article = Article.objects.get(id=article)
-    article.hide_thumbnail = True
-    article.save()
-    return HttpResponse()
-
 def confirm_delete(request, article):
     version = Version.objects.get(variant__article=article, variant__segment__isnull=True, active=True)
     version.load_preview()

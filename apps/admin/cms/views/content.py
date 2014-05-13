@@ -31,7 +31,9 @@ def save(request, version):
         # Delete all existing rows
         version.rows.all().delete()
 
-        for row in json.loads(request.POST['rows']):
+        posted_rows = json.loads(request.POST['rows'])
+
+        for row in posted_rows:
             row_obj = Row(version=version, order=row['order'])
             row_obj.save()
             for column in row['columns']:
@@ -147,6 +149,30 @@ def save(request, version):
                     # An error occured, but we're not publishing so just nullify
                     response['publish_error'] = 'error_nullify'
                     article.pub_date = None
+
+            ### Thumbnail state ###
+            if request.POST['thumbnail'] == 'none':
+                article.thumbnail = None
+                article.hide_thumbnail = True
+            elif request.POST['thumbnail'] == 'default':
+                # Verify server-side that there's at least one image
+                image_content = False
+                for row in posted_rows:
+                    for column in row['columns']:
+                        if any(content['type'] == 'image' for content in column['contents']):
+                            image_content = True
+                            break
+
+                if not image_content:
+                    response['thumbnail_missing_image'] = True
+                    article.thumbnail = None
+                    article.hide_thumbnail = True
+                else:
+                    article.thumbnail = None
+                    article.hide_thumbnail = False
+            elif request.POST['thumbnail'] == 'specified':
+                article.thumbnail = request.POST['thumbnail_url']
+                article.hide_thumbnail = False
 
             # Record the modification
             article.modified_by = request.user
