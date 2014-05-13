@@ -1,6 +1,6 @@
 {% extends site.template.name|add:"/layout.html" %}
 
-{% block title %}{{ version.title.content|striptags }}{% endblock %}
+{% block title %}{{ version.get_title_content.content|striptags }}{% endblock %}
 
 {% block body %}
 

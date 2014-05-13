@@ -69,7 +69,7 @@
           <select name="article" class="chosen" data-placeholder="Velg en artikkel...">
             <option value=""></option>
             {% for version in article_versions %}
-              <option value="{{ version.variant.article.id }}">{{ version.title.content|striptags }}</option>
+              <option value="{{ version.variant.article.id }}">{{ version.get_title_content.content|striptags }}</option>
             {% endfor %}
           </select>
         </td>

@@ -89,8 +89,6 @@ class Version(models.Model):
     active = models.BooleanField()
     tags = models.ManyToManyField('core.Tag', related_name='versions')
     ads = models.BooleanField()
-    title = None
-    lede = None
     thumbnail = None
     hide_thumbnail = False
 
@@ -98,8 +96,6 @@ class Version(models.Model):
         return u'%s' % self.pk
 
     def load_preview(self):
-        self.title = Content.objects.get(column__row__version=self, type='title')
-        self.lede = Content.objects.get(column__row__version=self, type='lede')
         if self.variant.article.hide_thumbnail:
             self.hide_thumbnail = True
             return
@@ -121,6 +117,12 @@ class Version(models.Model):
             # Remove previous size spec if existing
             t = re.sub('-\d+\.', '.', t)
             self.thumbnail = t[:t.rfind('.')] + '-' + str(min(settings.THUMB_SIZES)) + t[t.rfind('.'):]
+
+    def get_title_content(self):
+        return Content.objects.get(column__row__version=self, type='title')
+
+    def get_lede_content(self):
+        return Content.objects.get(column__row__version=self, type='lede')
 
     def get_children_count(self):
         return Version.objects.filter(variant__page__parent=self.variant.page, active=True).count()
