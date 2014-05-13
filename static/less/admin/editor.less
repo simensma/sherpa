@@ -189,44 +189,38 @@ div.cms-editor {
       position: relative;
       min-height: 70px;
 
-      div.remove-content {
+      div.content-control {
         position: absolute;
         top: 0;
-        right: 0;
         width: 23px;
         height: 23px;
         padding: 12px 25px;
         border: 1px solid rgb(52, 224, 194);
         background-color: rgb(255, 255, 255);
-        background-image: url('/static/img/editorbuttons/remove-content-inactive.png');
         background-position: center center;
         background-repeat: no-repeat;
       }
 
-      div.remove-content:hover {
+      div.content-control:hover, div.content-control.moving {
         cursor: pointer;
         background-color: rgb(52, 224, 194);
+      }
+
+      div.remove-content {
+        right: 0;
+        background-image: url('/static/img/editorbuttons/remove-content-inactive.png');
+      }
+
+      div.remove-content:hover {
         background-image: url('/static/img/editorbuttons/remove-content-active.png');
       }
 
       div.move-content {
-        position: absolute;
-        top: 0;
         right: 75px; // The outer width of remove-content - could be dynamically calculated
-        width: 23px;
-        height: 23px;
-        padding: 12px 25px;
-        border: 1px solid rgb(52, 224, 194);
-        background-color: rgb(255, 255, 255);
         background-image: url('/static/img/editorbuttons/move-content-inactive.png');
-        background-position: center center;
-        background-repeat: no-repeat;
       }
 
       div.move-content:hover, div.move-content.moving {
-        cursor: pointer;
-        background-color: rgb(52, 224, 194);
-        background-color: rgb(52, 224, 194);
         background-image: url('/static/img/editorbuttons/move-content-active.png');
       }
     }
