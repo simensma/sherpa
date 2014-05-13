@@ -110,7 +110,7 @@ def search(request):
 
     pages = Page.on(request.site).filter(
         # Match page title or content
-        Q(variant__version__row__column__content__content__icontains=request.GET['q']) |
+        Q(variant__version__rows__column__content__content__icontains=request.GET['q']) |
         Q(title__icontains=request.GET['q']),
 
         # Default segment, active version, published page
@@ -120,7 +120,7 @@ def search(request):
 
     article_versions = Version.objects.filter(
         # Match content
-        variant__version__row__column__content__content__icontains=request.GET['q'],
+        variant__version__rows__column__content__content__icontains=request.GET['q'],
 
         # Active version, default segment, published article
         active=True,
