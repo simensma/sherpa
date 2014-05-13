@@ -306,7 +306,7 @@ $(function() {
         crop_control.data('original-content', content);
         crop_control.data('content-clone', content.clone());
         crop_control.offset({
-            top: crop_control.offset().top - crop_control.height(),
+            top: crop_control.offset().top - crop_control.outerHeight(),
             left: crop_control.offset().left,
         });
 
