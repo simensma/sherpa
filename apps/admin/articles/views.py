@@ -132,8 +132,8 @@ def create_template(template, version, title):
         contents = [
             {'type': 'title', 'content': """<h1>%s</h1>""" % title},
             {'type': 'image', 'content': json.dumps({'src': settings.STATIC_URL + "img/placeholder.png", "description": "", "photographer": "", "anchor": None})},
-            {'type': 'lede', 'content': """<p class="lede"><br></p>"""},
-            {'type': 'html', 'content': """<p><br></p>"""},
+            {'type': 'lede', 'content': ""},
+            {'type': 'html', 'content': ""},
             {'type': 'image', 'content': json.dumps({'src': settings.STATIC_URL + "img/placeholder.png", "description": "", "photographer": "", "anchor": None})},
         ]
         row = Row(version=version, order=0)
@@ -147,13 +147,13 @@ def create_template(template, version, title):
         contents_upper = [
             {'type': 'title', 'content': """<h1>%s</h1>""" % title},
             {'type': 'image', 'content': json.dumps({'src': settings.STATIC_URL + "img/placeholder.png", "description": "", "photographer": "", "anchor": None})},
-            {'type': 'lede', 'content': """<p class="lede"><br></p>"""},
+            {'type': 'lede', 'content': ""},
         ]
         contents_lower_left = [
-            {'type': 'html', 'content': """<p><br></p>"""},
+            {'type': 'html', 'content': ""},
         ]
         contents_lower_right = [
-            {'type': 'html', 'content': """<p><br></p>"""},
+            {'type': 'html', 'content': ""},
             {'type': 'image', 'content': json.dumps({'src': settings.STATIC_URL + "img/placeholder.png", "description": "", "photographer": "", "anchor": None})},
         ]
         row = Row(version=version, order=0)
