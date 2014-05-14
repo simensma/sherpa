@@ -203,6 +203,16 @@ class Content(models.Model):
             self._parsed_content = json.loads(self.content)
         return self._parsed_content
 
+    def get_cropping_json(self):
+        if self.type != 'image':
+            raise Exception("You can only call this method on image contents, check your code logic")
+
+        content = self.get_content()
+        if 'crop' in content:
+            return json.dumps(content['crop'])
+        else:
+            return None
+
 @receiver(pre_delete, sender=Content, dispatch_uid="page.models")
 def delete_content(sender, **kwargs):
     for content in Content.objects.filter(column=kwargs['instance'].column, order__gt=kwargs['instance'].order):
