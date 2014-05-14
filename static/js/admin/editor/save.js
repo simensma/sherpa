@@ -122,6 +122,13 @@ $(function() {
                     } else if($(this).is('.image')) {
                         content.type = 'image';
                         content.content = $(this).attr('data-json');
+                        var crop = $(this).attr('data-crop');
+                        if(crop !== undefined) {
+                            // Extract the json content and add the 'crop' key to it
+                            var parsed_content = JSON.parse(content.content);
+                            parsed_content.crop = JSON.parse(crop);
+                            content.content = JSON.stringify(parsed_content);
+                        }
                     } else if($(this).is('.widget')) {
                         content.type = 'widget';
                         content.content = $(this).attr('data-json');
