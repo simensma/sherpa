@@ -17,9 +17,6 @@ $(function() {
     disableIframes(article.find("div.content.widget"));
     resetControls();
 
-    // An image currently being changed (need to save this state while opening the changer dialog)
-    var currentImage;
-
     // Make toolbar draggable, but not if input-elements are clicked
     toolbar.draggable();
     toolbar.find("input,select,button,a").mousedown(function(e) {
