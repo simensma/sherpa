@@ -354,11 +354,17 @@ $(function() {
         var original_width = original_image.width();
         var selection_width = crop_selection.x2 - crop_selection.x;
         var scaled_width = original_width / selection_width;
-        var offset_left = crop_selection.x * scaled_width;
 
         var original_height = original_image.height();
         var selection_height = crop_selection.y2 - crop_selection.y;
         var scaled_height = scaled_width; // Autoscale height to the new custom ratio
+
+        // If the image is smaller than the column, Jcrop will not scale it to 100%, so factor in the difference
+        var image_to_column_ratio = original_content.parents("div.column").width() / original_width;
+        scaled_width *= image_to_column_ratio;
+        scaled_height *= image_to_column_ratio;
+
+        var offset_left = crop_selection.x * scaled_width;
         var offset_top = crop_selection.y * scaled_height;
 
         // Now set the calculated values on the new content
