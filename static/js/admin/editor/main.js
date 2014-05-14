@@ -531,6 +531,9 @@ $(function() {
             extra_columns.remove();
         }
 
+        row.find("div.content.image[data-crop]").each(function() {
+            cropContent($(this));
+        });
         resetControls();
     });
 
