@@ -17,6 +17,13 @@ $(function() {
     disableIframes(article.find("div.content.widget"));
     resetControls();
 
+    // Crop cropped images on page load
+    article.find("div.content.image").each(function() {
+        if(JSON.parse($(this).attr('data-json')).crop !== undefined) {
+            cropContent($(this));
+        }
+    });
+
     // Make toolbar draggable, but not if input-elements are clicked
     toolbar.draggable();
     toolbar.find("input,select,button,a").mousedown(function(e) {
@@ -106,6 +113,7 @@ $(function() {
                     anchor: anchor,
                     description: description,
                     photographer: photographer,
+                    crop: json_content.crop,
                 }));
             },
         });
@@ -284,10 +292,11 @@ $(function() {
     $(document).on('click', 'article div.crop-content', function(e) {
         e.stopPropagation(); // Avoid click-event on an image or widget
         var content = $(this).nextAll("div.content").first();
+        var crop = JSON.parse(content.attr('data-json')).crop;
 
         // Remove the original cropping selection, if any. We want the image element to be full-size while
         // cropping, and we'll use a clone of this original non-cropped element when cancelling the clone.
-        if(content.attr('data-crop') !== undefined) {
+        if(crop !== undefined) {
             var image = content.find("img");
             image.removeAttr('style');
             image.removeClass('cropped');
@@ -302,7 +311,7 @@ $(function() {
             top: crop_control.offset().top - crop_control.outerHeight(),
             right: 0,
         });
-        if(!content.is("[data-crop]")) {
+        if(crop === undefined) {
             // Hide the controls by default for the first selection; until cropping selection has been made
             crop_control.find("div.submit").css('display', 'none');
         }
@@ -317,6 +326,7 @@ $(function() {
     $(document).on('click', 'article div.crop-control div.choose-ratio button', function() {
         var crop_control = $(this).parents("div.crop-control");
         var content = crop_control.data('original-content');
+        var original_crop = JSON.parse(content.attr('data-json')).crop;
         var ratio = $(this).attr('data-ratio');
         var aspect_ratio;
         if(ratio !== 'free') {
@@ -327,22 +337,18 @@ $(function() {
         $(this).siblings().removeClass('btn-danger');
         $(this).addClass('btn-danger');
 
-        // Retrieve the original cropping selection, if any
-        var original_crop = content.attr('data-crop');
-        if(original_crop !== undefined) {
-            original_crop = JSON.parse(original_crop);
-        }
-
         // Enable the actual cropping
         content.Jcrop({
             aspectRatio: aspect_ratio,
             onSelect: function(selection) {
                 crop_control.find("div.submit").css('display', 'block');
-                content.attr('data-crop', JSON.stringify({
+                var image_json = JSON.parse(content.attr('data-json'));
+                image_json.crop = {
                     selection: selection,
                     width: content.find("img").width(),
                     height: content.find("img").height(),
-                }));
+                };
+                content.attr('data-json', JSON.stringify(image_json));
             },
         }, function() {
             JcropApi = this;
@@ -370,15 +376,14 @@ $(function() {
         var original_image = original_content.find("img");
         var new_content = crop_control.data('content-clone');
         var new_image = new_content.find("img");
-        var crop = original_content.attr('data-crop');
+        var crop = JSON.parse(original_content.attr('data-json')).crop;
 
         if(crop === undefined) {
             $(this).siblings("button.remove").click();
             return $(this);
         }
 
-        crop = JSON.parse(crop);
-        new_content.attr('data-crop', JSON.stringify(crop));
+        new_content.attr('data-json', original_content.attr('data-json'));
         new_content.insertAfter(crop_control);
         cropContent(new_content);
         endCropping(crop_control);
@@ -386,7 +391,10 @@ $(function() {
 
     $(document).on('click', 'article div.crop-control div.submit button.remove', function(e) {
         var crop_control = $(this).parents("div.crop-control");
-        crop_control.data('content-clone').removeAttr('data-crop').insertAfter(crop_control);
+        var clone = crop_control.data('content-clone');
+        var json = JSON.parse(clone.attr('data-json'));
+        json.crop = undefined;
+        clone.attr('data-json', JSON.stringify(json)).insertAfter(crop_control);
         endCropping(crop_control);
     });
 
@@ -399,7 +407,7 @@ $(function() {
     }
 
     function cropContent(content) {
-        var crop = JSON.parse(content.attr('data-crop'));
+        var crop = JSON.parse(content.attr('data-json')).crop;
         var image = content.find("img");
 
         // Remove any previous cropping
@@ -552,8 +560,10 @@ $(function() {
             extra_columns.remove();
         }
 
-        row.find("div.content.image[data-crop]").each(function() {
-            cropContent($(this));
+        row.find("div.content.image").each(function() {
+            if(JSON.parse($(this).attr('data-json')).crop !== undefined) {
+                cropContent($(this));
+            }
         });
         resetControls();
     });
