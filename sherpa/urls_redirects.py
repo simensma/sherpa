@@ -34,6 +34,7 @@ urlpatterns = patterns('',
     url(r'^hytteadmin/(?P<slug>.*)', 'page.views.perform_redirect', kwargs={'url': 'http://%s/hytteadmin/' % settings.OLD_SITE}),
     url(r'^gmap.php$', 'page.views.perform_redirect', kwargs={'url': 'http://%s/gmap.php' % settings.OLD_SITE}),
     url(r'^balsfjord/$', 'page.views.perform_redirect', kwargs={'url': 'http://troms.turistforeningen.no/index.php?fo_id=10333'}),
+    url(r'^static.php$', 'page.views.perform_redirect', kwargs={'url': 'http://%s/static.php' % settings.OLD_SITE}),
 
     # Old URLs that are still in use somewhere, even though the old site would link correctly
     url(r'^index.php$', 'page.views.redirect_index'),
