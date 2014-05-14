@@ -285,10 +285,6 @@ $(function() {
         e.stopPropagation(); // Avoid click-event on an image or widget
         var content = $(this).nextAll("div.content").first();
 
-        if($(this).next("div.choose-crop-ratio").length > 0) {
-            return $(this);
-        }
-
         // Remove the original cropping selection, if any. We want the image element to be full-size while
         // cropping, and we'll use a clone of this original non-cropped element when cancelling the clone.
         if(content.attr('data-crop') !== undefined) {
@@ -298,36 +294,28 @@ $(function() {
             content.removeAttr('style');
         }
 
-        // Set up ratio-chooser element
-        var choose_ratio = insertion_templates.find("div.choose-crop-ratio").clone().insertAfter($(this));
-        choose_ratio.offset({
-            top: choose_ratio.offset().top - choose_ratio.outerHeight(),
-            right: 0,
-        });
-
         // Set up crop control elements
         var crop_control = insertion_templates.find("div.crop-control").clone().insertBefore(content);
         crop_control.data('original-content', content);
         crop_control.data('content-clone', content.clone());
         crop_control.offset({
             top: crop_control.offset().top - crop_control.outerHeight(),
-            left: crop_control.offset().left,
+            right: 0,
         });
         if(!content.is("[data-crop]")) {
             // Hide the controls by default for the first selection; until cropping selection has been made
-            crop_control.css('display', 'none');
+            crop_control.find("div.submit").css('display', 'none');
         }
 
         $(this).siblings("div.content-control").tooltip('destroy').remove();
         $(this).tooltip('destroy').remove();
 
         // Default to free
-        choose_ratio.find("button[data-ratio='free']").click();
+        crop_control.find("div.choose-ratio button[data-ratio='free']").click();
     });
 
-    $(document).on('click', 'article div.choose-crop-ratio button', function() {
-        var choose_ratio = $(this).parents("div.choose-crop-ratio");
-        var crop_control = choose_ratio.siblings("div.crop-control");
+    $(document).on('click', 'article div.crop-control div.choose-ratio button', function() {
+        var crop_control = $(this).parents("div.crop-control");
         var content = crop_control.data('original-content');
         var ratio = $(this).attr('data-ratio');
         var aspect_ratio;
@@ -349,7 +337,7 @@ $(function() {
         content.Jcrop({
             aspectRatio: aspect_ratio,
             onSelect: function(selection) {
-                crop_control.css('display', 'block');
+                crop_control.find("div.submit").css('display', 'block');
                 content.attr('data-crop', JSON.stringify({
                     selection: selection,
                     width: content.find("img").width(),
@@ -376,7 +364,7 @@ $(function() {
         }
     });
 
-    $(document).on('click', 'article div.crop-control button.use', function(e) {
+    $(document).on('click', 'article div.crop-control div.submit button.use', function(e) {
         var crop_control = $(this).parents("div.crop-control");
         var original_content = crop_control.data('original-content');
         var original_image = original_content.find("img");
@@ -396,7 +384,7 @@ $(function() {
         endCropping(crop_control);
     });
 
-    $(document).on('click', 'article div.crop-control button.remove', function(e) {
+    $(document).on('click', 'article div.crop-control div.submit button.remove', function(e) {
         var crop_control = $(this).parents("div.crop-control");
         crop_control.data('content-clone').removeAttr('data-crop').insertAfter(crop_control);
         endCropping(crop_control);
@@ -407,7 +395,6 @@ $(function() {
             JcropApi.destroy();
             JcropApi = undefined;
         }
-        crop_control.siblings("div.choose-crop-ratio").remove();
         crop_control.remove();
     }
 

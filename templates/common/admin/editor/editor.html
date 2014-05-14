@@ -121,19 +121,6 @@
   <div class="content-control crop-content" title="Beskjær bildet">
   </div>
 
-  <div class="choose-crop-ratio">
-    <p>
-      <strong>Velg utsnitt:</strong>
-    </p>
-    <div class="btn-group" data-toggle="buttons-radio">
-      <button class="btn" data-ratio="free">Fri</button>
-      <button class="btn" data-ratio="16:9">Widescreen</button>
-      <button class="btn" data-ratio="12:8">Landskap</button>
-      <button class="btn" data-ratio="3:4">Portrett</button>
-      <button class="btn" data-ratio="1:1">Firkant</button>
-    </div>
-  </div>
-
   <div class="content-control remove-content" title="Ta bort dette innholdet" data-confirm="Er du helt sikker på at du vil ta bort dette innholdet?">
   </div>
 
@@ -141,14 +128,28 @@
   </div>
 
   <div class="crop-control">
-    <button class="btn btn-success use">
-      <i class="icon-white icon-check"></i> Bruk dette utsnittet
-    </button>
-    <button class="btn remove">
-      <i class="icon-remove"></i> Vis hele bildet
-    </button>
-  </div>
+    <div class="submit pull-right">
+      <button class="btn btn-success use">
+        <i class="icon-white icon-check"></i> Bruk dette utsnittet
+      </button>
+      <button class="btn remove">
+        <i class="icon-remove"></i> Vis hele bildet
+      </button>
+    </div>
 
+    <div class="choose-ratio">
+      <p>
+        <strong>Velg utsnitt:</strong>
+      </p>
+      <div class="btn-group" data-toggle="buttons-radio">
+        <button class="btn" data-ratio="free">Fri</button>
+        <button class="btn" data-ratio="16:9">Widescreen</button>
+        <button class="btn" data-ratio="12:8">Landskap</button>
+        <button class="btn" data-ratio="3:4">Portrett</button>
+        <button class="btn" data-ratio="1:1">Firkant</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 {# Widget edit-dialogs #}
