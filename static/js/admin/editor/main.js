@@ -324,13 +324,17 @@ $(function() {
         });
 
         // Reapply the original selection to the cropper ui, if any
-        if(original_selection !== undefined) {
+        if(original_crop !== undefined) {
+            // In case we're cropping in a different column size, factor in the difference
+            var image_width_ratio = content.width() / original_crop.width;
+            var image_height_ratio = content.height() / original_crop.height;
+
             // Why does it take an array here, while it gives us an object in the event!? Tsk
             JcropApi.setSelect([
-                original_selection.x,
-                original_selection.y,
-                original_selection.x2,
-                original_selection.y2,
+                original_crop.selection.x * image_width_ratio,
+                original_crop.selection.y * image_height_ratio,
+                original_crop.selection.x2 * image_width_ratio,
+                original_crop.selection.y2 * image_height_ratio,
             ]);
         }
 
