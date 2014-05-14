@@ -289,15 +289,15 @@ $(function() {
         var content = $(this).nextAll("div.content").first();
 
         // Retrieve the original cropping selection, if any
-        var original_selection = content.attr('data-crop-selection');
-        if(original_selection !== undefined) {
+        var original_crop = content.attr('data-crop');
+        if(original_crop !== undefined) {
             // There's an original selection, keep it in memory but remove it from the image element
             // (we want the image element to be full-size while cropping)
-            original_selection = JSON.parse(original_selection);
+            original_crop = JSON.parse(original_crop);
             var image = content.find("img");
             image.removeAttr('style');
             image.removeClass('cropped');
-            content.removeAttr('data-crop-selection');
+            content.removeAttr('data-crop');
             content.removeAttr('style');
         }
 
@@ -312,8 +312,12 @@ $(function() {
 
         // Enable the actual cropping
         content.Jcrop({
-            onSelect: function(c) {
-                content.attr('data-crop-selection', JSON.stringify(c));
+            onSelect: function(selection) {
+                content.attr('data-crop', JSON.stringify({
+                    selection: selection,
+                    width: content.find("img").width(),
+                    height: content.find("img").height(),
+                }));
             },
         }, function() {
             jcrop_api = this;
@@ -341,15 +345,15 @@ $(function() {
         var original_image = original_content.find("img");
         var new_content = crop_control.data('content-clone');
         var new_image = new_content.find("img");
-        var crop_selection = original_content.attr('data-crop-selection');
+        var crop = original_content.attr('data-crop');
 
-        if(crop_selection === undefined) {
+        if(crop === undefined) {
             $(this).siblings("button.remove").click();
             return $(this);
         }
 
-        crop_selection = JSON.parse(crop_selection);
-        new_content.attr('data-crop-selection', JSON.stringify(crop_selection));
+        crop = JSON.parse(crop);
+        new_content.attr('data-crop', JSON.stringify(crop));
         new_content.insertAfter(crop_control);
         cropContent(new_content);
         endCropping(crop_control);
@@ -370,7 +374,7 @@ $(function() {
     }
 
     function cropContent(content) {
-        var crop_selection = JSON.parse(content.attr('data-crop-selection'));
+        var crop = JSON.parse(content.attr('data-crop'));
         var image = content.find("img");
 
         // Remove any previous cropping
@@ -379,26 +383,22 @@ $(function() {
 
         // Math magics
         var column_width = content.parents("div.column").width();
-        var original_width = Math.min(image.get(0).naturalWidth, column_width);
-        var original_height = image.get(0).naturalHeight;
-
-        var selection_width = crop_selection.x2 - crop_selection.x;
-        var selection_height = crop_selection.y2 - crop_selection.y;
-
-        var scaled_width = original_width / selection_width;
+        var selection_width = crop.selection.x2 - crop.selection.x;
+        var selection_height = crop.selection.y2 - crop.selection.y;
+        var scaled_width = crop.width / selection_width;
         var scaled_height = scaled_width; // Autoscale height to the new custom ratio
 
         // If the image is smaller than the column, Jcrop will not scale it to 100%, so factor in the difference
-        var image_to_column_ratio = column_width / original_width;
+        var image_to_column_ratio = column_width / crop.width;
         scaled_width *= image_to_column_ratio;
         scaled_height *= image_to_column_ratio;
 
-        var offset_left = crop_selection.x * scaled_width;
-        var offset_top = crop_selection.y * scaled_height;
+        var offset_left = crop.selection.x * scaled_width;
+        var offset_top = crop.selection.y * scaled_height;
 
         // Now set the calculated values on the new content
-        image.css('width', original_width * scaled_width + 'px');
-        image.css('height', original_height * scaled_height + 'px');
+        image.css('width', crop.width * scaled_width + 'px');
+        image.css('height', crop.height * scaled_height + 'px');
         image.css('margin-left', '-' + offset_left + 'px');
         image.css('margin-top', '-' + offset_top + 'px');
         image.addClass('cropped');
