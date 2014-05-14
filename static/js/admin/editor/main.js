@@ -289,6 +289,15 @@ $(function() {
             return $(this);
         }
 
+        // Remove the original cropping selection, if any. We want the image element to be full-size while
+        // cropping, and we'll use a clone of this original non-cropped element when cancelling the clone.
+        if(content.attr('data-crop') !== undefined) {
+            var image = content.find("img");
+            image.removeAttr('style');
+            image.removeClass('cropped');
+            content.removeAttr('style');
+        }
+
         // Set up ratio-chooser element
         var choose_ratio = insertion_templates.find("div.choose-crop-ratio").clone().insertAfter($(this));
         choose_ratio.offset({
@@ -333,14 +342,7 @@ $(function() {
         // Retrieve the original cropping selection, if any
         var original_crop = content.attr('data-crop');
         if(original_crop !== undefined) {
-            // There's an original selection, keep it in memory but remove it from the image element
-            // (we want the image element to be full-size while cropping)
             original_crop = JSON.parse(original_crop);
-            var image = content.find("img");
-            image.removeAttr('style');
-            image.removeClass('cropped');
-            content.removeAttr('data-crop');
-            content.removeAttr('style');
         }
 
         // Enable the actual cropping
@@ -396,7 +398,7 @@ $(function() {
 
     $(document).on('click', 'article div.crop-control button.remove', function(e) {
         var crop_control = $(this).parents("div.crop-control");
-        crop_control.data('content-clone').insertAfter(crop_control);
+        crop_control.data('content-clone').removeAttr('data-crop').insertAfter(crop_control);
         endCropping(crop_control);
     });
 
