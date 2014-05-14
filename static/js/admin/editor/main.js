@@ -306,10 +306,15 @@ $(function() {
             top: crop_control.offset().top - crop_control.outerHeight(),
             left: crop_control.offset().left,
         });
+        if(original_crop === undefined) {
+            // Hide the controls by default for the first selection; until cropping selection has been made
+            crop_control.css('display', 'none');
+        }
 
         // Enable the actual cropping
         content.Jcrop({
             onSelect: function(selection) {
+                crop_control.css('display', 'block');
                 content.attr('data-crop', JSON.stringify({
                     selection: selection,
                     width: content.find("img").width(),
