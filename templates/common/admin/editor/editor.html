@@ -12,15 +12,15 @@
 
   {% for row in rows %}
     {# Rows are recognized by their data-row attribute, not their class #}
-    <div class="row-fluid" data-row>
+    <div class="row-fluid" data-row data-id="{{ row.id }}">
 
       {% for column in row.columns %}
-        <div class="column offset{{ column.offset }} span{{ column.span }}">
+        <div class="column offset{{ column.offset }} span{{ column.span }}" data-id="{{ column.id }}">
 
           {% for content in column.contents %}
             {% if content.type == 'html' or content.type == 'title' or content.type == 'lede' %}
 
-              <div class="content {{ content.type }} editable" {% if content.content != '' %}contenteditable="true"{% else %}data-placeholder{% endif %}>
+              <div class="content {{ content.type }} editable" {% if content.content != '' %}contenteditable="true"{% else %}data-placeholder{% endif %} data-id="{{ content.id }}">
                 {% if content.content != '' %}
                   {{ content.content|safe }}
                 {% else %}
@@ -30,7 +30,7 @@
 
             {% elif content.type == 'image' %}
 
-              <div class="content image" data-json="{{ content.content }}">
+              <div class="content image" data-json="{{ content.content }}" data-id="{{ content.id }}">
                 {% if content.get_content.anchor %}
                   <a href="{{ content.get_content.anchor }}">
                     <img src="{{ content.get_content.src }}" alt="{{ content.get_content.description }}">
@@ -55,7 +55,7 @@
 
             {% elif content.type == 'widget' %}
 
-              <div class="content widget {{ content.content.widget }}" data-json="{{ content.content.json }}">
+              <div class="content widget {{ content.content.widget }}" data-json="{{ content.content.json }}" data-id="{{ content.id }}">
                 {% include content.content.template with widget=content.content %}
               </div>
 
