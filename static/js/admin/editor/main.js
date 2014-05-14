@@ -349,34 +349,9 @@ $(function() {
         }
 
         crop_selection = JSON.parse(crop_selection);
-
-        // Cropping math magics
-        var original_width = original_image.width();
-        var selection_width = crop_selection.x2 - crop_selection.x;
-        var scaled_width = original_width / selection_width;
-
-        var original_height = original_image.height();
-        var selection_height = crop_selection.y2 - crop_selection.y;
-        var scaled_height = scaled_width; // Autoscale height to the new custom ratio
-
-        // If the image is smaller than the column, Jcrop will not scale it to 100%, so factor in the difference
-        var image_to_column_ratio = original_content.parents("div.column").width() / original_width;
-        scaled_width *= image_to_column_ratio;
-        scaled_height *= image_to_column_ratio;
-
-        var offset_left = crop_selection.x * scaled_width;
-        var offset_top = crop_selection.y * scaled_height;
-
-        // Now set the calculated values on the new content
-        new_image.css('width', original_width * scaled_width + 'px');
-        new_image.css('height', original_height * scaled_height + 'px');
-        new_image.css('margin-left', '-' + offset_left + 'px');
-        new_image.css('margin-top', '-' + offset_top + 'px');
-        new_image.addClass('cropped');
-        new_content.css('height', selection_height * scaled_height + 'px');
         new_content.attr('data-crop-selection', JSON.stringify(crop_selection));
-
         new_content.insertAfter(crop_control);
+        cropContent(new_content);
         endCropping(crop_control);
     });
 
@@ -392,6 +367,42 @@ $(function() {
             jcrop_api = undefined;
         }
         crop_control.remove();
+    }
+
+    function cropContent(content) {
+        var crop_selection = JSON.parse(content.attr('data-crop-selection'));
+        var image = content.find("img");
+
+        // Remove any previous cropping
+        image.removeAttr('style');
+        content.removeAttr('style');
+
+        // Math magics
+        var column_width = content.parents("div.column").width();
+        var original_width = Math.min(image.get(0).naturalWidth, column_width);
+        var original_height = image.get(0).naturalHeight;
+
+        var selection_width = crop_selection.x2 - crop_selection.x;
+        var selection_height = crop_selection.y2 - crop_selection.y;
+
+        var scaled_width = original_width / selection_width;
+        var scaled_height = scaled_width; // Autoscale height to the new custom ratio
+
+        // If the image is smaller than the column, Jcrop will not scale it to 100%, so factor in the difference
+        var image_to_column_ratio = column_width / original_width;
+        scaled_width *= image_to_column_ratio;
+        scaled_height *= image_to_column_ratio;
+
+        var offset_left = crop_selection.x * scaled_width;
+        var offset_top = crop_selection.y * scaled_height;
+
+        // Now set the calculated values on the new content
+        image.css('width', original_width * scaled_width + 'px');
+        image.css('height', original_height * scaled_height + 'px');
+        image.css('margin-left', '-' + offset_left + 'px');
+        image.css('margin-top', '-' + offset_top + 'px');
+        image.addClass('cropped');
+        content.css('height', selection_height * scaled_height + 'px');
     }
 
     // Change a row's column-structure
