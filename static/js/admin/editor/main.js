@@ -283,7 +283,7 @@ $(function() {
     });
 
     // Enable cropping on 'crop-content' icon click
-    var jcrop_api;
+    var JcropApi;
     $(document).on('click', 'article div.crop-content', function(e) {
         e.stopPropagation(); // Avoid click-event on an image or widget
         var content = $(this).nextAll("div.content").first();
@@ -320,13 +320,13 @@ $(function() {
                 }));
             },
         }, function() {
-            jcrop_api = this;
+            JcropApi = this;
         });
 
         // Reapply the original selection to the cropper ui, if any
         if(original_selection !== undefined) {
             // Why does it take an array here, while it gives us an object in the event!? Tsk
-            jcrop_api.setSelect([
+            JcropApi.setSelect([
                 original_selection.x,
                 original_selection.y,
                 original_selection.x2,
@@ -366,9 +366,9 @@ $(function() {
     });
 
     function endCropping(crop_control) {
-        if(jcrop_api !== undefined) {
-            jcrop_api.destroy();
-            jcrop_api = undefined;
+        if(JcropApi !== undefined) {
+            JcropApi.destroy();
+            JcropApi = undefined;
         }
         crop_control.remove();
     }
