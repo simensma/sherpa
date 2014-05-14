@@ -367,7 +367,6 @@ $(function() {
         new_image.css('margin-left', '-' + offset_left + 'px');
         new_image.css('margin-top', '-' + offset_top + 'px');
         new_image.addClass('cropped');
-        new_content.css('width', selection_width * scaled_width + 'px');
         new_content.css('height', selection_height * scaled_height + 'px');
         new_content.attr('data-crop-selection', JSON.stringify(crop_selection));
 
