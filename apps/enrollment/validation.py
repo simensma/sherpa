@@ -81,6 +81,9 @@ def validate_existing(enrollment):
     except (Actor.DoesNotExist, ValueError):
         return False
 
+    if not actor.has_paid():
+        return False
+
     if datetime.now().year - actor.birth_date.year < AGE_YOUTH:
         return False
 

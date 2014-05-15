@@ -106,6 +106,8 @@ $(function() {
                 existing_result.find("span.invalid-id").show();
             } else if(result.error == 'actor.does_not_exist') {
                 existing_result.find("span.actor-does-not-exist").show();
+            } else if(result.error == 'actor.has_not_paid') {
+                existing_result.find("span.actor-has-not-paid").show();
             } else if(result.error == 'actor.too_young') {
                 var too_young = existing_result.find("span.too-young");
                 too_young.show();

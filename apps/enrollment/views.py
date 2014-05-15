@@ -225,6 +225,9 @@ def existing(request):
     except ActorAddress.DoesNotExist:
         return HttpResponse(json.dumps({'error': 'actoraddress.does_not_exist'}))
 
+    if not actor.has_paid():
+        return HttpResponse(json.dumps({'error': 'actor.has_not_paid'}))
+
     age = datetime.now().year - actor.birth_date.year
     if age < AGE_YOUTH:
         return HttpResponse(json.dumps({'error': 'actor.too_young', 'age': age}))
