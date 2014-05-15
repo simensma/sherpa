@@ -683,7 +683,9 @@ class BalanceHistory(models.Model):
         for existing members who paid for the current year, but not the next - however they should still
         have access to member services - that'll have to be checked by the caller as well.
         """
-        return self.current_year <= 0
+        # Focus uses the float datatype, and we've for example encountered one member with
+        # NOK 2.7283730830163222e-14 outstanding. That's why we're checking below 0.001 and not 0.
+        return self.current_year <= 0.001
 
     class Meta:
         db_table = u'Cust_Turist_Balance_Hist_v'
