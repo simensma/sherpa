@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-30 11:18+0200\n"
+"POT-Creation-Date: 2014-05-15 10:39+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -162,7 +162,7 @@ msgid "Laster poststed..."
 msgstr "Loading area..."
 
 #: templates/common/user/login/util/registration_form.html:47
-#: templates/main/enrollment/household.html:157
+#: templates/main/enrollment/household.html:158
 #: templates/main/enrollment/registration.html:85
 #: templates/main/enrollment/result/success_card.html:132
 #: templates/main/enrollment/result/success_card.html:148
@@ -269,7 +269,6 @@ msgstr "This could be an error in our memberregister. Please contact"
 #: templates/common/user/login/util/registration_form.html:134
 #: templates/common/user/login/util/registration_form.html:139
 #: templates/common/user/login/util/registration_form.html:154
-#: templates/common/user/login/util/registration_form.html:159
 #: templates/main/connect/signon_enrollment_card_deactivated.html:28
 msgid "medlemsservice"
 msgstr "memberservice"
@@ -294,18 +293,15 @@ msgid "hvis du mener at dette skal være rett."
 msgstr "if you think this is correct."
 
 #: templates/common/user/login/util/registration_form.html:120
-#: templates/common/user/login/util/registration_form.html:158
 msgid "Medlemsnummeret er ikke tilknyttet et personlig medlemskap"
 msgstr "The member ID doesn not belong to a personal membership"
 
 #: templates/common/user/login/util/registration_form.html:121
-#: templates/common/user/login/util/registration_form.html:159
 msgid ""
 "Kun personlige medlemmer i DNT kan benytte Min side. Vennligst ta kontakt med"
 msgstr "Only personal members can register. Please contact"
 
 #: templates/common/user/login/util/registration_form.html:121
-#: templates/common/user/login/util/registration_form.html:159
 msgid "hvis du lurer på noe."
 msgstr "if you have any questions."
 
@@ -347,12 +343,12 @@ msgstr ""
 "Your password must have at least %(user_password_length)s characters. Please "
 "select a longer password."
 
-#: templates/common/user/login/util/registration_form.html:163
+#: templates/common/user/login/util/registration_form.html:158
 #: templates/common/user/login/util/registration_form_nonmember.html:18
 msgid "E-postadressen din er ikke gyldig!"
 msgstr "Your E-mail address is invalid!"
 
-#: templates/common/user/login/util/registration_form.html:164
+#: templates/common/user/login/util/registration_form.html:159
 #: templates/common/user/login/util/registration_form_nonmember.html:19
 msgid "Vennligst oppgi en gyldig e-postadresse."
 msgstr "Please provide a valid E-mail address."
@@ -727,18 +723,22 @@ msgid "Hovedmedlem:"
 msgstr "Main member:"
 
 #: templates/main/enrollment/household.html:135
+msgid "Dette medlemmet har ikke betalt medlemskontingenten for i år."
+msgstr "This member has not paid for this years membership."
+
+#: templates/main/enrollment/household.html:136
 msgid "Du må oppgi riktig postnummer før du søker."
 msgstr "Enter your Postcode before searching."
 
-#: templates/main/enrollment/household.html:136
+#: templates/main/enrollment/household.html:137
 msgid "Ugyldig medlemsnummer oppgitt."
 msgstr "Invalid member ID."
 
-#: templates/main/enrollment/household.html:137
+#: templates/main/enrollment/household.html:138
 msgid "Fant ingen medlemmer med dette medlemsnummeret."
 msgstr "No members found with this member ID."
 
-#: templates/main/enrollment/household.html:139
+#: templates/main/enrollment/household.html:140
 msgid ""
 "\n"
 "              Det angitte medlemmet er bare <span class=\"age\"></span> år "
@@ -749,17 +749,17 @@ msgstr ""
 "This member is just <span class=\"age\"></span> years old by the end of this "
 "year, and cannot be a main member."
 
-#: templates/main/enrollment/household.html:144
+#: templates/main/enrollment/household.html:145
 msgid ""
 "Det angitte medlemmet er selv et husstandsmedlem. Dere kan kun knytte dere "
 "til et hovedmedlem."
 msgstr "This member is a household member. You can only have one main member."
 
-#: templates/main/enrollment/household.html:147
+#: templates/main/enrollment/household.html:148
 msgid "Det angitte medlemmet bor ikke på samme adresse som dere."
 msgstr "This member doesn't share your address."
 
-#: templates/main/enrollment/household.html:150
+#: templates/main/enrollment/household.html:151
 msgid ""
 "Beklager, det oppstod en teknisk feil ved oppslag i medlemsregisteret. "
 "Feilen har blitt logget i våre systemer. Vennligst prøv igjen, eller kontakt "
@@ -769,7 +769,7 @@ msgstr ""
 "register. The error has been logged in our systems. Please try again, or "
 "contect member service if the error persists."
 
-#: templates/main/enrollment/household.html:156
+#: templates/main/enrollment/household.html:157
 #: templates/main/enrollment/payment.html:74
 #: templates/main/enrollment/verification.html:224
 msgid "Tilbake"
