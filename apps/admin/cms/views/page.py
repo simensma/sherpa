@@ -120,8 +120,6 @@ def preview(request, version):
             for content in contents:
                 if content.type == 'widget':
                     content.content = parse_widget(request, json.loads(content.content), request.active_forening.site)
-                elif content.type == 'image':
-                    content.content = json.loads(content.content)
             column.contents = contents
         row.columns = columns
     context = {'rows': rows, 'version': version}
