@@ -42,6 +42,11 @@
         });
     };
 
+    // Workaround for the carousel widget. Should be rewritten to call listen like the other widgets soon.
+    WidgetEditor.setCallback = function(_editor_callback) {
+        editor_callback = _editor_callback;
+    };
+
     WidgetEditor.saveWidget = function(content) {
         var rendering_failed = editor.find("div.insertion-templates p.widget-rendering-failed").clone();
         var content_json = JSON.stringify(content);

@@ -17,8 +17,12 @@ $(function() {
     disableIframes(article.find("div.content.widget"));
     resetControls();
 
-    // An image currently being changed (need to save this state while opening the changer dialog)
-    var currentImage;
+    // Crop cropped images on page load
+    article.find("div.content.image").each(function() {
+        if(JSON.parse($(this).attr('data-json')).crop !== undefined) {
+            cropContent($(this));
+        }
+    });
 
     // Make toolbar draggable, but not if input-elements are clicked
     toolbar.draggable();
@@ -68,83 +72,50 @@ $(function() {
         }
     });
 
-    // Hide completely empty image descriptions
-    article.find("div.content.image").each(function() {
-        var content = $(this);
-        hidePictureText(content);
-    });
-
-    function hidePictureText(content){
-        var description = content.find("span.description").text();
-        var photographer = content.find("span.photographer span.content").text();
-
-        if(description === '' && photographer === ''){
-            content.find("div.img-desc").hide();
-        }else{
-            content.find("div.img-desc").show();
-        }
-
-        if(description === '') {
-            content.find("span.description").hide();
-        } else {
-            content.find("span.description").show();
-        }
-
-        if(photographer === '') {
-            content.find("span.photographer").hide();
-        } else {
-            content.find("span.photographer").show();
-        }
-    }
-
     // Change image sources upon being clicked
     $(document).on('click', 'article div.content.image', function() {
-        currentImage = $(this).find("img");
         var content = $(this);
-        var currentDescription = content.find("span.description");
-        var currentPhotographer = content.find("span.photographer span.content");
-        var anchor = $(this).find("a").attr('href');
-        if(anchor === undefined) {
-            anchor = '';
+        var json_content = JSON.parse(content.attr('data-json'));
+        if(json_content.anchor === null) {
+            json_content.anchor = '';
         }
-        ImageDialog.openImageDialog({
-            image: currentImage,
-            anchor: anchor,
-            description: currentDescription.text(),
-            photographer: currentPhotographer.text(),
+
+        ImageDialog.open({
+            src: json_content.src,
+            anchor: json_content.anchor,
+            description: json_content.description,
+            photographer: json_content.photographer,
             save: function(src, anchor, description, photographer) {
-                if(anchor.length === 0) {
-                    // No link
-                    if(currentImage.parent("a").length > 0) {
-                        // *Was* link, but is now removed
-                        currentImage.parent().before(currentImage).remove();
-                    }
+                var image_content = insertion_templates.find("div.content.image").clone();
+                content.replaceWith(image_content);
+                if(anchor === '') {
+                    // No anchor, remove the anchor element
+                    anchor = null;
+                    image_content.find("a").replaceWith(image_content.find("a img"));
                 } else {
-                    // Add link
-                    if(currentImage.parent("a").length > 0) {
-                        // Link exists, update it
-                        currentImage.parent().attr('href', anchor);
-                    } else {
-                        // No existing link, add it
-                        var anchorEl = $('<a href="' + anchor + '"></a>');
-                        currentImage.before(anchorEl).detach();
-                        anchorEl.prepend(currentImage);
-                    }
+                    image_content.find("a").attr('href', anchor);
                 }
-                currentImage.attr('src', src);
-                currentImage.attr('alt', description);
+                image_content.find("img").attr('src', src);
+                image_content.find("img").attr('alt', description);
+                image_content.find("span.description").text(description);
+                image_content.find("span.photographer span.content").text(photographer);
 
-                currentDescription.text(description);
-                currentPhotographer.text(photographer);
-                hidePictureText(content);
+                if(description === '' && photographer === '') {
+                    image_content.find("div.description").remove();
+                } else if(description === '') {
+                    image_content.find("div.description span.description").remove();
+                } else if(photographer === '') {
+                    image_content.find("div.description span.photographer").remove();
+                }
 
+                image_content.attr('data-json', JSON.stringify({
+                    src: src,
+                    anchor: anchor,
+                    description: description,
+                    photographer: photographer,
+                    crop: json_content.crop,
+                }));
             },
-            remove: function() {
-                content.slideUp(function() {
-                    $(this).remove();
-                    resetControls();
-                });
-            }
         });
     });
 
@@ -237,7 +208,6 @@ $(function() {
             content.attr('contenteditable', 'true').focus();
         } else if(content.type === 'image') {
             var image = insertion_templates.find("div.content.image").clone();
-            image.css("overflow", "hidden");
             insertItem(image, position);
             image.find("img").click();
         } else if(content.type === 'widget') {
@@ -255,6 +225,10 @@ $(function() {
         if($(this).prevAll("div.content-control").length >= 1) {
             // Ignore if they're already there (happens when mouse goes from content directly to control and back)
             return $(this);
+        }
+        if($(this).is(".image")) {
+            // Insert the cropper only for images
+            insertion_templates.find("div.crop-content").clone().insertBefore($(this)).tooltip();
         }
         insertion_templates.find("div.remove-content").clone().insertBefore($(this)).tooltip();
         insertion_templates.find("div.move-content").clone().insertBefore($(this)).tooltip();
@@ -312,6 +286,157 @@ $(function() {
         $(this).siblings("div.content-control").remove();
         $(this).remove();
     });
+
+    // Choose crop ratio on 'crop-content' icon click
+    var JcropApi;
+    $(document).on('click', 'article div.crop-content', function(e) {
+        e.stopPropagation(); // Avoid click-event on an image or widget
+        var content = $(this).nextAll("div.content").first();
+        var crop = JSON.parse(content.attr('data-json')).crop;
+
+        // Remove the original cropping selection, if any. We want the image element to be full-size while
+        // cropping, and we'll use a clone of this original non-cropped element when cancelling the clone.
+        if(crop !== undefined) {
+            var image = content.find("img");
+            image.removeAttr('style');
+            image.removeClass('cropped');
+            content.removeAttr('style');
+        }
+
+        // Set up crop control elements
+        var crop_control = insertion_templates.find("div.crop-control").clone().insertBefore(content);
+        crop_control.data('original-content', content);
+        crop_control.data('content-clone', content.clone());
+        crop_control.offset({
+            top: crop_control.offset().top - crop_control.outerHeight(),
+            right: 0,
+        });
+        if(crop === undefined) {
+            // Hide the controls by default for the first selection; until cropping selection has been made
+            crop_control.find("div.submit").css('display', 'none');
+        }
+
+        $(this).siblings("div.content-control").tooltip('destroy').remove();
+        $(this).tooltip('destroy').remove();
+
+        // Default to free
+        crop_control.find("div.choose-ratio button[data-ratio='free']").click();
+    });
+
+    $(document).on('click', 'article div.crop-control div.choose-ratio button', function() {
+        var crop_control = $(this).parents("div.crop-control");
+        var content = crop_control.data('original-content');
+        var original_crop = JSON.parse(content.attr('data-json')).crop;
+        var ratio = $(this).attr('data-ratio');
+        var aspect_ratio;
+        if(ratio !== 'free') {
+            aspect_ratio = ratio.split(":")[0] / ratio.split(":")[1];
+        }
+
+        // Highlight the marked button
+        $(this).siblings().removeClass('btn-danger');
+        $(this).addClass('btn-danger');
+
+        // Enable the actual cropping
+        content.Jcrop({
+            aspectRatio: aspect_ratio,
+            onSelect: function(selection) {
+                crop_control.find("div.submit").css('display', 'block');
+                var image_json = JSON.parse(content.attr('data-json'));
+                image_json.crop = {
+                    selection: selection,
+                    width: content.find("img").width(),
+                    height: content.find("img").height(),
+                };
+                content.attr('data-json', JSON.stringify(image_json));
+            },
+        }, function() {
+            JcropApi = this;
+        });
+
+        // Reapply the original selection to the cropper ui, if any
+        if(original_crop !== undefined) {
+            // In case we're cropping in a different column size, factor in the difference
+            var image_width_ratio = content.width() / original_crop.width;
+            var image_height_ratio = content.height() / original_crop.height;
+
+            // Why does it take an array here, while it gives us an object in the event!? Tsk
+            JcropApi.setSelect([
+                original_crop.selection.x * image_width_ratio,
+                original_crop.selection.y * image_height_ratio,
+                original_crop.selection.x2 * image_width_ratio,
+                original_crop.selection.y2 * image_height_ratio,
+            ]);
+        }
+    });
+
+    $(document).on('click', 'article div.crop-control div.submit button.use', function(e) {
+        var crop_control = $(this).parents("div.crop-control");
+        var original_content = crop_control.data('original-content');
+        var original_image = original_content.find("img");
+        var new_content = crop_control.data('content-clone');
+        var new_image = new_content.find("img");
+        var crop = JSON.parse(original_content.attr('data-json')).crop;
+
+        if(crop === undefined) {
+            $(this).siblings("button.remove").click();
+            return $(this);
+        }
+
+        new_content.attr('data-json', original_content.attr('data-json'));
+        new_content.insertAfter(crop_control);
+        cropContent(new_content);
+        endCropping(crop_control);
+    });
+
+    $(document).on('click', 'article div.crop-control div.submit button.remove', function(e) {
+        var crop_control = $(this).parents("div.crop-control");
+        var clone = crop_control.data('content-clone');
+        var json = JSON.parse(clone.attr('data-json'));
+        json.crop = undefined;
+        clone.attr('data-json', JSON.stringify(json)).insertAfter(crop_control);
+        endCropping(crop_control);
+    });
+
+    function endCropping(crop_control) {
+        if(JcropApi !== undefined) {
+            JcropApi.destroy();
+            JcropApi = undefined;
+        }
+        crop_control.remove();
+    }
+
+    function cropContent(content) {
+        var crop = JSON.parse(content.attr('data-json')).crop;
+        var image = content.find("img");
+
+        // Remove any previous cropping
+        image.removeAttr('style');
+        content.removeAttr('style');
+
+        // Math magics
+        var column_width = content.parents("div.column").width();
+        var selection_width = crop.selection.x2 - crop.selection.x;
+        var selection_height = crop.selection.y2 - crop.selection.y;
+        var scaled_width = crop.width / selection_width;
+        var scaled_height = scaled_width; // Autoscale height to the new custom ratio
+
+        // If the image is smaller than the column, Jcrop will not scale it to 100%, so factor in the difference
+        var image_to_column_ratio = column_width / crop.width;
+        scaled_width *= image_to_column_ratio;
+        scaled_height *= image_to_column_ratio;
+
+        var offset_left = crop.selection.x * scaled_width;
+        var offset_top = crop.selection.y * scaled_height;
+
+        // Now set the calculated values on the new content
+        image.css('width', crop.width * scaled_width + 'px');
+        image.css('height', crop.height * scaled_height + 'px');
+        image.css('margin-left', '-' + offset_left + 'px');
+        image.css('margin-top', '-' + offset_top + 'px');
+        image.addClass('cropped');
+        content.css('height', selection_height * scaled_height + 'px');
+    }
 
     // Change a row's column-structure
     $(document).on('click', article.selector + ' div.edit-structure button', function() {
@@ -435,6 +560,11 @@ $(function() {
             extra_columns.remove();
         }
 
+        row.find("div.content.image").each(function() {
+            if(JSON.parse($(this).attr('data-json')).crop !== undefined) {
+                cropContent($(this));
+            }
+        });
         resetControls();
     });
 

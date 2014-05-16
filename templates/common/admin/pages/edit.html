@@ -11,6 +11,7 @@
   <script src="{{ STATIC_URL }}lib/rangy/rangy-core.js"></script>
   <script src="{{ STATIC_URL }}lib/imagesloaded/jquery.imagesloaded.min.js"></script>
   <script src="{{ STATIC_URL }}lib/imgareaselect/js/jquery.imgareaselect.min.js"></script>
+  <script src="{{ STATIC_URL }}lib/jcrop/js/jquery.Jcrop.min.js"></script>
 
   {# Custom libs #}
   <script src="{{ STATIC_URL }}js/admin/tagger.js"></script>
@@ -37,6 +38,7 @@
 {% endblock %}
 
 {% block extra_css %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/jcrop/css/jquery.Jcrop.min.css" media="screen">
   <link rel="stylesheet" href="{{ STATIC_URL }}css/editor.css" media="screen">
 {% endblock %}
 

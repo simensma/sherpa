@@ -13,7 +13,7 @@
         <div class="media-body">
           <h2 class="media-heading">
             <a href="{% url 'admin.articles.views.edit' version.id %}">
-              {{ version.get_title_content.content|striptags }}
+              {% firstof version.get_title_content.content|striptags '(Uten tittel)' %}
             </a>
           </h2>
           <p>

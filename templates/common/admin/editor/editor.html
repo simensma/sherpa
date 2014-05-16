@@ -12,15 +12,15 @@
 
   {% for row in rows %}
     {# Rows are recognized by their data-row attribute, not their class #}
-    <div class="row-fluid" data-row>
+    <div class="row-fluid" data-row data-id="{{ row.id }}">
 
       {% for column in row.columns %}
-        <div class="column offset{{ column.offset }} span{{ column.span }}">
+        <div class="column offset{{ column.offset }} span{{ column.span }}" data-id="{{ column.id }}">
 
           {% for content in column.contents %}
             {% if content.type == 'html' or content.type == 'title' or content.type == 'lede' %}
 
-              <div class="content {{ content.type }} editable" {% if content.content != '' %}contenteditable="true"{% else %}data-placeholder{% endif %}>
+              <div class="content {{ content.type }} editable" {% if content.content != '' %}contenteditable="true"{% else %}data-placeholder{% endif %} data-id="{{ content.id }}">
                 {% if content.content != '' %}
                   {{ content.content|safe }}
                 {% else %}
@@ -30,26 +30,32 @@
 
             {% elif content.type == 'image' %}
 
-              <div style="{% if content.content.parentHeight %}height:{{ content.content.parentHeight }}px;{% endif %}" class="content image">
-                {% if content.content.anchor %}<a href="{{ content.content.anchor }}">{% endif %}
-                <img src="{{ content.content.src }}"
-                  {% if content.content.style %}style="{{ content.content.style }}"{% endif %}
-                  {% if content.content.selection %}data-selection="{{ content.content.selection }}"{% endif %}
-                  {% if content.content.description %}alt="{{ content.content.description }}"{% endif %}
-                  {% if content.content.ratioWidth %}data-ratio-width="{{ content.content.ratioWidth }}"{% endif %}
-                  {% if content.content.ratioHeight %}data-ratio-height="{{ content.content.ratioHeight }}"{% endif %}>
-                {% if content.content.anchor %}</a>{% endif %}
-                <div style="width:auto" class="img-desc">
-                  <span class="description">{{ content.content.description }}</span>
-                    <span class="photographer">
-                      Foto: <span class="content">{{ content.content.photographer }}</span>
-                    </span>
-                </div>
+              <div class="content image" data-json="{{ content.content }}" data-id="{{ content.id }}">
+                {% if content.get_content.anchor %}
+                  <a href="{{ content.get_content.anchor }}">
+                    <img src="{{ content.get_content.src }}" alt="{{ content.get_content.description }}">
+                  </a>
+                {% else %}
+                  <img src="{{ content.get_content.src }}" alt="{{ content.get_content.description }}">
+                {% endif %}
+
+                {% if content.get_content.description or content.get_content.photographer %}
+                  <div class="description">
+                    {% if content.get_content.description %}
+                      <span class="description">{{ content.get_content.description }}</span>
+                    {% endif %}
+                    {% if content.get_content.photographer %}
+                      <span class="photographer">
+                        Foto: <span class="content">{{ content.get_content.photographer }}</span>
+                      </span>
+                    {% endif %}
+                  </div>
+                {% endif %}
               </div>
 
             {% elif content.type == 'widget' %}
 
-              <div class="content widget {{ content.content.widget }}" data-json="{{ content.content.json }}">
+              <div class="content widget {{ content.content.widget }}" data-json="{{ content.content.json }}" data-id="{{ content.id }}">
                 {% include content.content.template with widget=content.content %}
               </div>
 
@@ -68,9 +74,11 @@
 
   <div class="content html editable" contenteditable="true"></div>
 
-  <div class="content image">
-    <img src="http://www.turistforeningen.no/static/img/placeholder.png" alt="">
-    <div class="img-desc">
+  <div class="content image" data-json="{&quot;src&quot;:&quot;http://www.turistforeningen.no/static/img/placeholder.png&quot;,&quot;description&quot;:&quot;&quot;,&quot;photographer&quot;:&quot;&quot;,&quot;anchor&quot;:null}">
+    <a href="">
+      <img src="http://www.turistforeningen.no/static/img/placeholder.png" alt="">
+    </a>
+    <div class="description">
       <span class="description"></span>
       <span class="photographer">
         Foto: <span class="content"></span>
@@ -110,12 +118,38 @@
     {% include 'common/admin/editor/add-content.html' %}
   </div>
 
+  <div class="content-control crop-content" title="Beskjær bildet">
+  </div>
+
   <div class="content-control remove-content" title="Ta bort dette innholdet" data-confirm="Er du helt sikker på at du vil ta bort dette innholdet?">
   </div>
 
   <div class="content-control move-content" title="Klikk for å flytte innholdet opp, ned eller til en annen kolonne">
   </div>
 
+  <div class="crop-control">
+    <div class="submit pull-right">
+      <button class="btn btn-success use">
+        <i class="icon-white icon-check"></i> Bruk dette utsnittet
+      </button>
+      <button class="btn remove">
+        <i class="icon-remove"></i> Vis hele bildet
+      </button>
+    </div>
+
+    <div class="choose-ratio">
+      <p>
+        <strong>Velg utsnitt:</strong>
+      </p>
+      <div class="btn-group" data-toggle="buttons-radio">
+        <button class="btn" data-ratio="free">Fri</button>
+        <button class="btn" data-ratio="16:9">Widescreen</button>
+        <button class="btn" data-ratio="12:8">Landskap</button>
+        <button class="btn" data-ratio="3:4">Portrett</button>
+        <button class="btn" data-ratio="1:1">Firkant</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 {# Widget edit-dialogs #}
@@ -129,6 +163,6 @@
 
 {# Other dialogs #}
 {% include 'common/admin/images/util/image-archive-picker.html' with bs2compatible=True %}
-{% include 'common/admin/images/util/image-upload-dialog.html' %}
+{% include 'common/admin/images/util/image-upload-dialog-bootstrap2compatible.html' %}
 {% include 'common/admin/editor/image-dialog.html' %}
 {% include 'common/admin/editor/toolbar.html' %}

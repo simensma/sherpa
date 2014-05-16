@@ -8,7 +8,6 @@
     var imageList = [];
     var newWidgetParentWidth = 0;
     var widget_editor; // Will be set in the document.ready block further down
-    var editor_callback; // Sent with the trigger from the editor
     var widget_being_edited; // Used when editing existing widget
 
     /* Private methods */
@@ -47,7 +46,7 @@
         });
 
         widget_editor.find("label[name='sequence']").text("Bilde " + (currentIndex+1) + "/" + imageList.length + " ");
-        widget_editor.find("input[name='url']").val(removeImageSizeFromUrl(imageList[currentIndex].url));
+        widget_editor.find("input[name='url']").val(ImageUtils.removeImageSizeFromUrl(imageList[currentIndex].url));
         widget_editor.find("input[name='description']").val(imageList[currentIndex].description);
         widget_editor.find("input[name='photographer']").val(imageList[currentIndex].photographer);
 
@@ -56,7 +55,7 @@
             widget_editor.find("img[name='preview']").attr('src', def);
             widget_editor.find("div#preview").hide();
         }else{
-            widget_editor.find("img[name='preview']").attr('src', addImageSizeToUrl(imageList[currentIndex].url, IMAGE_PPREVIEW_WIDTH));
+            widget_editor.find("img[name='preview']").attr('src', ImageUtils.addImageSizeToUrl(imageList[currentIndex].url, IMAGE_PPREVIEW_WIDTH));
             widget_editor.find("div#preview").show();
         }
 
@@ -117,7 +116,7 @@
                 imageList[currentIndex].style = "width:100%;";
                 imageList[currentIndex].selection = undefined;
                 imageList[currentIndex].parentHeight = undefined;
-                imageList[currentIndex].url = addImageSizeToUrl(imageList[currentIndex].url, bestSizeForImage(parentWidth));
+                imageList[currentIndex].url = ImageUtils.addImageSizeToUrl(imageList[currentIndex].url, bestSizeForImage(parentWidth));
                 return;
             }
 
@@ -130,22 +129,22 @@
             imageList[currentIndex].style = style;
             imageList[currentIndex].selection = selection;
             imageList[currentIndex].parentHeight = parentHeight;
-            imageList[currentIndex].url = addImageSizeToUrl(imageList[currentIndex].url, bestSizeForImage(parentWidth * (parseFloat(cssMap["width"].replace("%", ""))/100) ));
+            imageList[currentIndex].url = ImageUtils.addImageSizeToUrl(imageList[currentIndex].url, bestSizeForImage(parentWidth * (parseFloat(cssMap["width"].replace("%", ""))/100) ));
         });
     }
 
     /* New widget */
 
-    $(document).on('widget.new.carousel', function(e, _editor_callback) {
-        editor_callback = _editor_callback;
+    $(document).on('widget.new.carousel', function(e, editor_callback) {
+        WidgetEditor.setCallback(editor_callback);
         ImageCarouselWidgetEditor.listImages();
         widget_editor.modal();
     });
 
     /* Preparations and events */
 
-    $(document).on('widget.edit', 'div.widget.carousel', function(e, widget_content, _editor_callback) {
-        editor_callback = _editor_callback;
+    $(document).on('widget.edit', 'div.widget.carousel', function(e, widget_content, editor_callback) {
+        WidgetEditor.setCallback(editor_callback);
         widget_being_edited = $(this);
         widget_editor.modal();
         ImageCarouselWidgetEditor.listImages();
@@ -230,7 +229,7 @@
         widget_editor.find("input[name='url']").keyup(function(){
             imageList[currentIndex].url = $(this).val().trim();
             imageList[currentIndex].selection = undefined;
-            widget_editor.find("img[name='preview']").attr('src', addImageSizeToUrl(imageList[currentIndex].url, IMAGE_PPREVIEW_WIDTH));
+            widget_editor.find("img[name='preview']").attr('src', ImageUtils.addImageSizeToUrl(imageList[currentIndex].url, IMAGE_PPREVIEW_WIDTH));
         });
         widget_editor.find("input[name='description']").keyup(function(){
             imageList[currentIndex].description = $(this).val().trim();
@@ -267,7 +266,7 @@
             WidgetEditor.saveWidget({
                 widget: "carousel",
                 images: imageList
-            }, editor_callback);
+            });
             widget_editor.modal('hide');
         });
 

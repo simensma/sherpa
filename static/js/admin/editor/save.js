@@ -49,6 +49,11 @@ $(function() {
 
     window.save = save;
     function save(done, fail) {
+        if(article.find("div.crop-control").length > 0) {
+            alert("Du har aktivert beskjæring av et bilde - du må gjøre deg ferdig med beskjæringen før du lagrer.");
+            return;
+        }
+
         clearTimeout(updateSaveCountID);
         save_button.prop('disabled', true);
         save_button.html('<i class="icon-heart"></i> Lagrer...');
@@ -115,25 +120,8 @@ $(function() {
                             content.content = clone.html();
                         }
                     } else if($(this).is('.image')) {
-                        var anchor;
-                        if($(this).find('a').length === 0) {
-                            anchor = null;
-                        } else {
-                            anchor = $(this).find('a').attr('href');
-                        }
-                        var image = {
-                            src: $(this).find('img').attr('src'),
-                            style: $(this).find('img').attr('style'),
-                            selection: $(this).find('img').attr('data-selection'),
-                            ratioWidth: $(this).find('img').attr('data-ratio-width'),
-                            ratioHeight: $(this).find('img').attr('data-ratio-height'),
-                            parentHeight: $(this).find('img').attr('data-parentHeight'),
-                            description: $(this).find('span.description').text(),
-                            photographer: $(this).find('span.photographer span.content').text(),
-                            anchor: anchor
-                        };
                         content.type = 'image';
-                        content.content = JSON.stringify(image);
+                        content.content = $(this).attr('data-json');
                     } else if($(this).is('.widget')) {
                         content.type = 'widget';
                         content.content = $(this).attr('data-json');

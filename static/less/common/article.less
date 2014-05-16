@@ -55,15 +55,21 @@ article {
 
   div.image {
     position: relative;
-    overflow: hidden; // Not really sure if this is needed
+    overflow: hidden;
 
     img {
       display: block;
     }
   }
 
-  // Note that img-desc is used for both normal images and the carousel widget
-  div.img-desc {
+  div.image[data-crop] {
+    img {
+      max-width: none !important;
+    }
+  }
+
+  // Note that description is used for both normal images and the carousel widget
+  div.description {
     background-color: rgb(0, 0, 0); /* For older browsers, fall-back to black background */
     background-color: rgba(0, 0, 0, 0.75);
     position: absolute;
@@ -72,6 +78,7 @@ article {
     bottom: 0;
     padding: 4px 12px 10px 12px;
     z-index: 1;
+    width: auto;
 
     .font() {
       color: white;
@@ -84,15 +91,16 @@ article {
       .font;
     }
 
-	/* Fixes image captions on mobile devices. */
-  	@media (max-width:767px){	
+    /* Fixes image captions on mobile devices. */
+    @media (max-width:767px) {
       position: relative;
       display: block;
-	}	
+    }
   }
+
   /* Fixes image caption in the carousel */
-  @media (max-width:767px){	
-    div.item[style]{
+  @media (max-width:767px) {
+    div.item[style] {
       height: auto !important;
     }
   }

@@ -48,17 +48,14 @@ $(function() {
 
     header.find("img.article-thumbnail").click(function() {
         var image = $(this);
-        ImageDialog.openImageDialog({
-            image: $(this),
-            anchor: undefined,
-            description: undefined,
-            photographer: undefined,
+        ImageDialog.open({
+            src: image.attr('src'),
+            anchor: '',
+            description: '',
+            photographer: '',
             save: function(src, anchor, description, photographer) {
                 image.attr('src', src);
             },
-            remove: function() {
-                header.find("input[name='thumbnail'][value='none']").click();
-            }
         });
     });
 

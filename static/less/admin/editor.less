@@ -59,11 +59,17 @@ div.cms-editor {
       position: relative; // Needed to position its children
     }
 
-    div.image > img {
-      display: block;
-      background-color: rgb(0, 0, 0);
-      min-width: 20px;
-      min-height: 20px;
+    div.image {
+      img {
+        display: block;
+        background-color: rgb(0, 0, 0);
+        min-width: 20px;
+        min-height: 20px;
+      }
+
+      img.cropped {
+        max-width: none !important;
+      }
     }
 
     div.image:hover:not(.moving), div.widget:not(.moving):not(.static):hover {
@@ -228,6 +234,24 @@ div.cms-editor {
     div.move-content:hover, div.move-content.moving {
       background-image: url('/static/img/editorbuttons/move-content-active.png');
     }
+
+    div.crop-content {
+      right: 150px; // The outer width of other control-contents - could be dynamically calculated
+      background-image: url('/static/img/editorbuttons/crop-content-inactive.png');
+    }
+
+    div.crop-content:hover {
+      background-image: url('/static/img/editorbuttons/crop-content-active.png');
+    }
+
+    div.crop-control {
+      position: absolute;
+      background-color: rgb(245, 245, 245);
+      border: 1px solid rgb(221, 221, 221);
+      padding: 10px;
+      width: 100%;
+    }
+
   }
 
   div.cms-editor-toolbar {
@@ -237,7 +261,6 @@ div.cms-editor {
     width: 500px;
     z-index: 1000;
     padding: 9px;
-    border: 1px solid rgb(221, 221, 221);
     background-color: rgb(245, 245, 245) !important;
     border: 1px solid rgb(221, 221, 221);
 
@@ -262,15 +285,9 @@ div.cms-editor {
 /* Change image-dialog */
 
 div.change-image {
+  width: 800px;
+
   h2 {
     font-size: 20px;
-  }
-
-  div.preview-container {
-    max-width: 100%;
-
-    img {
-      border: 1px solid rgb(0, 0, 0);
-    }
   }
 }
