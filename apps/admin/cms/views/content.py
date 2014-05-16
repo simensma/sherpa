@@ -21,10 +21,7 @@ def render_widget(request):
 
 def save(request, version):
     version = Version.objects.get(id=version)
-    response = {
-        'new_content_ids': [],
-        'unexpected_content_ids': [],
-    }
+    response = {}
 
     # Wrap the entire save operation in an atomic transaction
     with transaction.commit_on_success():
