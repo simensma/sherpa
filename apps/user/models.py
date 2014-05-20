@@ -143,6 +143,9 @@ class User(AbstractBaseUser):
     def is_household_member(self):
         return self.get_actor().is_household_member()
 
+    def is_lifelong_member(self):
+        return self.has_membership_type('lifelong') or self.has_membership_type('lifelong_household')
+
     def membership_type(self):
         return self.get_actor().membership_type()
 

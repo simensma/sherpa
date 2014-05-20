@@ -48,7 +48,11 @@
           <tr>
             <th>Ditt medlemskap:</th>
             <td{% if not user.has_paid %} data-popover data-trigger="hover" data-placement="left" data-title="Ubetalt årskontingent" data-content="Vi kan ikke se at betaling for medlemskap i {{ membership_year_start.public_date.applicable_year }} er registrert i vårt system. Du har derfor ikke tilgang til medlemstjenestene på Min side. Hvis du nettopp har meldt deg inn blir dette oppdatert straks du betaler fakturaen du får tilsendt i posten."{% endif %}>
-              {{ user|payment_status }}
+              {% if user.is_lifelong_member %}
+                Livsvarig meldmesskap
+              {% else %}
+                {{ user|payment_status }}
+              {% endif %}
               {% if not user.has_paid %}
                 <i class="info-hover"></i>
               {% endif %}
