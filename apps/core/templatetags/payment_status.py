@@ -13,7 +13,9 @@ def payment_status(user, prefix='Betalt,Ikke betalt'):
     prefix_paid, prefix_not_paid = prefix.split(',')
 
     payment_years = user.get_payment_years()
-    if payment_years['code'] == 'both':
+    if user.is_lifelong_member():
+        return '%s (livsvarig)'% (prefix_paid)
+    elif payment_years['code'] == 'both':
         return '%s for %s, samt ut %s'% (prefix_paid, payment_years['next'], payment_years['current'])
     elif payment_years['code'] == 'current_not_next':
         return '%s ut %s, men ikke for %s' % (prefix_paid, payment_years['current'], payment_years['next'])
