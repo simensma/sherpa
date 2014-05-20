@@ -10,3 +10,4 @@ static/css/
 *.mo
 *.sublime-project
 *.sublime-workspace
+*.swp
