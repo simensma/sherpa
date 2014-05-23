@@ -140,3 +140,6 @@ def delete_release_pdf(sender, **kwargs):
 
     if kwargs['instance'].pdf_hash != '':
         s3.delete("%s/%s.pdf" % (settings.AWS_PUBLICATIONS_PREFIX, kwargs['instance'].pdf_hash))
+
+class Campaign(models.Model):
+    title = models.CharField(max_length=255)
