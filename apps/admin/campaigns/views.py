@@ -7,3 +7,6 @@ def index(request):
     campaigns = Campaign.objects.all()
     context = {'campaigns': campaigns}
     return render(request, 'common/admin/campaigns/index.html', context)
+
+def new(request):
+    return render(request, 'common/admin/campaigns/new.html')
