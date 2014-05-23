@@ -177,10 +177,12 @@
               <th>E-post:</th>
               <td><a href="mailto:{{ site.forening.email }}">{{ site.forening.email }}</a></td>
             </tr>
-            <tr>
-              <th>Org. nr.:</th>
-              <td>{{ site.forening.organization_no }}</td>
-            </tr>
+            {% if site.forening.organization_no %}
+              <tr>
+                <th>Org. nr.:</th>
+                <td>{{ site.forening.organization_no }}</td>
+              </tr>
+            {% endif %}
             <tr>
               <th>Facebook:</th>
               <td><a href="{{ site.forening.facebook_url }}">{{ site.forening.facebook_url }}</a></td>
