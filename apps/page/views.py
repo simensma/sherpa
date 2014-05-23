@@ -202,11 +202,11 @@ def redirect_index(request):
         return redirect('membership.views.benefits')
     raise Http404
 
-def permission_denied(request, template_name='main/403.html'):
+def permission_denied(request, template_name='common/403.html'):
     context = RequestContext(request)
     return HttpResponseForbidden(render_to_string(template_name, context))
 
-def page_not_found(request, template_name='main/404.html'):
+def page_not_found(request, template_name='common/404.html'):
     # Record the attempted 404-path
     nf = NotFound(
         path=request.path[:2048],
@@ -227,7 +227,7 @@ def page_not_found(request, template_name='main/404.html'):
     c = RequestContext(request, {'path': path})
     return HttpResponseNotFound(t.render(c))
 
-def server_error(request, template_name='main/500.html'):
+def server_error(request, template_name='common/500.html'):
     # Use a custom server_error view because the default doesn't use RequestContext
     t = loader.get_template(template_name)
     return HttpResponseServerError(t.render(RequestContext(request)))
