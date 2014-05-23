@@ -1,0 +1,19 @@
+{% extends 'common/admin/layout.html' %}
+
+{% block title %}Kampanjer — {{ block.super }}{% endblock %}
+
+{% block admin_menu %}{% with 'campaigns' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="col-lg-12">
+    <h1>Kampanjer <small>opprett kampanjer som kan vises på forsiden</small></h1>
+    <ol class="breadcrumb">
+      <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
+      <li><a href="{% url 'admin.campaigns.views.index' %}">Kampanjer</a></li>
+    </ol>
+  </div>
+</div><!-- /.row -->
+
+{% endblock %}

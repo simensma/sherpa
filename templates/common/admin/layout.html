@@ -119,6 +119,7 @@
 
                 {% endif %}
               {% endwith %}
+              <li{% if active_entry == 'campaigns' %} class="active"{% endif %}><a href="{% url 'admin.campaigns.views.index' %}"><i class="fa fa-exclamation"></i> Kampanjer</a></li>
 
               <li{% if active_entry == 'aktiviteter' %} class="active"{% endif %}><a href="{% url 'admin.aktiviteter.views.index' %}"><i class="fa fa-globe"></i> Aktiviteter (prototype)</a></li>
               <li{% if active_entry == 'publications' %} class="active"{% endif %}><a href="{% url 'admin.publications.views.index' %}"><i class="fa fa-font"></i> Publikasjoner</a></li>
