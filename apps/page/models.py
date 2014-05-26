@@ -121,13 +121,11 @@ class Version(models.Model):
                     }
                 else:
                     try:
-                        # Define "main image" as the first one in the first column and row
+                        # Define "main image" as the earliest one occurring (sorted by row, column, content)
                         content = Content.objects.filter(
-                            column__order=0,
-                            column__row__order=0,
                             column__row__version=self,
                             type='image'
-                        ).order_by('order')[0]
+                        ).order_by('column__row__order', 'column__order', 'order')[0]
                         thumbnail = {
                             'hide': False,
                             'url': json.loads(content.content)['src'],
