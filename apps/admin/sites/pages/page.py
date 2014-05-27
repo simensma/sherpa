@@ -39,7 +39,7 @@ def edit_domain(request):
         site.prefix = result['prefix']
         site.save()
         request.session.modified = True
-        return redirect('admin.cms.views.page.list')
+        return redirect('admin.sites.pages.page.list')
 
 def children(request, page):
     versions = Version.objects.filter(variant__page__parent=page, active=True).order_by('variant__page__title')
@@ -77,7 +77,7 @@ def new(request):
     version.save()
 
     create_template(request.POST['template'], version)
-    return redirect('admin.cms.views.page.edit', version.id)
+    return redirect('admin.sites.pages.page.edit', version.id)
 
 def check_slug(request):
     urls_valid = slug_is_unique(request.POST['slug'])
@@ -86,7 +86,7 @@ def check_slug(request):
 
 def delete(request, page):
     Page.on(request.active_forening.site).get(id=page).delete()
-    return redirect('admin.cms.views.page.list')
+    return redirect('admin.sites.pages.page.list')
 
 def edit(request, version):
     pages = Page.on(request.active_forening.site).all().order_by('title')

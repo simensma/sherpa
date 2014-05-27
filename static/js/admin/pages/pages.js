@@ -131,7 +131,7 @@ $(function() {
             var loader = '<tr class="loader"><td colspan="2"><img src="/static/img/ajax-loader-small.gif" alt="Laster..."></td></tr>';
             $(this).parents("tr").after(loader);
             $.ajaxQueue({
-                url: '/sherpa/cms/side/barn/' + id + '/',
+                url: '/sherpa/hjemmesider/sider/side/barn/' + id + '/',
                 data: { level: level }
             }).done(function(result) {
                 $("table.pages tr.loader").remove();

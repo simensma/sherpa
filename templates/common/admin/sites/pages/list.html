@@ -16,7 +16,7 @@
     <h1>Websider <small>sett opp innholdet på <a href="http://{{ active_forening.site.domain }}/">{{ active_forening.site.domain }}</a></small></h1>
     <ol class="breadcrumb">
       <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
-      <li><a href="{% url 'admin.cms.views.page.list' %}">Websider</a></li>
+      <li><a href="{% url 'admin.sites.pages.page.list' %}">Websider</a></li>
     </ol>
   </div>
 </div><!-- /.row -->
@@ -57,7 +57,7 @@
     {{ active_forening.name }} har hjemmesideadresse <strong>http://{{ active_forening.site.domain }}</strong>. Du kan <a href="javascript:undefined" class="edit-domain">endre denne</a> hvis du vet hva du gjør.
 
     <h2>Hovedmeny <small>dra for å sortere, klikk for å endre</small></h2>
-    <nav id="menus" data-reorder-url="{% url 'admin.cms.views.menu.reorder' %}">
+    <nav id="menus" data-reorder-url="{% url 'admin.sites.pages.menu.reorder' %}">
       <ul class="sortable horizontal">
         {% for menu in menus %}
         <li>
@@ -95,13 +95,13 @@
   </div>
 </div><!-- /.row -->
 
-<div class="modal container jq-hide new-page" data-check-slug-url="{% url 'admin.cms.views.page.check_slug' %}">
+<div class="modal container jq-hide new-page" data-check-slug-url="{% url 'admin.sites.pages.page.check_slug' %}">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
     <h3>Opprett ny webside</h3>
   </div>
   <div class="modal-body">
-    <form action="{% url 'admin.cms.views.page.new' %}" method="post">
+    <form action="{% url 'admin.sites.pages.page.new' %}" method="post">
     {% csrf_token %}
       <input type="hidden" name="template" value="0">
       <input type="hidden" name="slug" value="">
@@ -151,7 +151,7 @@
   </div>
 </div>
 
-<div class="modal menu" data-new-url="{% url 'admin.cms.views.menu.new' %}" data-edit-url="{% url 'admin.cms.views.menu.edit' %}" data-delete-url="{% url 'admin.cms.views.menu.delete' %}">
+<div class="modal menu" data-new-url="{% url 'admin.sites.pages.menu.new' %}" data-edit-url="{% url 'admin.sites.pages.menu.edit' %}" data-delete-url="{% url 'admin.sites.pages.menu.delete' %}">
   <div class="modal-header">
 
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
@@ -201,7 +201,7 @@
       Hvis du endrer domenet, vil den gamle adressen slutte å fungere. Man endrer veldig sjeldent domenet for en hjemmeside.
     </div>
 
-    <form action="{% url 'admin.cms.views.page.edit_domain' %}" method="post">
+    <form action="{% url 'admin.sites.pages.page.edit_domain' %}" method="post">
       {% csrf_token %}
       <div class="form-group">
         <label>Ny domeneadresse:</label>

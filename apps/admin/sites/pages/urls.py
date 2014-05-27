@@ -1,7 +1,7 @@
 # encoding: utf-8
 from django.conf.urls.defaults import patterns, include, url
 
-urlpatterns = patterns('admin.cms.views',
+urlpatterns = patterns('admin.sites.pages',
 
     # Pages
     url(r'^$', 'page.list'),

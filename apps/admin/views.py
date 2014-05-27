@@ -15,7 +15,7 @@ from focus.models import Actor
 from page.models import Page
 from user.models import User
 from core.models import Site, SiteTemplate
-from admin.cms.views.page_util import verify_domain
+from admin.sites.pages.page_util import verify_domain
 
 def index(request):
     total_membership_count = cache.get('admin.total_membership_count')
@@ -88,7 +88,7 @@ def index(request):
 
 def setup_site(request):
     if request.active_forening.site is not None:
-        return redirect('admin.cms.views.page.list')
+        return redirect('admin.sites.pages.page.list')
 
     if request.method == 'GET':
         return render(request, 'common/admin/setup_site.html')
@@ -112,4 +112,4 @@ def setup_site(request):
             request.active_forening.site = site
             request.active_forening.save()
             request.session.modified = True
-            return redirect('admin.cms.views.page.list')
+            return redirect('admin.sites.pages.page.list')

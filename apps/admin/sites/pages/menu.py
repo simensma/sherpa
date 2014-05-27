@@ -35,7 +35,7 @@ def edit(request):
 def delete(request):
     Menu.on(request.active_forening.site).get(id=request.POST['menu']).delete()
     cache.delete('main.menu.%s' % request.active_forening.site.id)
-    return redirect('admin.cms.views.page.list')
+    return redirect('admin.sites.pages.page.list')
 
 def reorder(request):
     for menu in json.loads(request.POST['menus']):

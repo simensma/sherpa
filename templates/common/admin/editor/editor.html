@@ -8,7 +8,7 @@
   </div>
 </div>
 
-<article data-save-url="{% url 'admin.cms.views.content.save' version.id %}" data-render-widget-url="{% url 'admin.cms.views.content.render_widget' %}">
+<article data-save-url="{% url 'admin.sites.pages.content.save' version.id %}" data-render-widget-url="{% url 'admin.sites.pages.content.render_widget' %}">
 
   {% for row in rows %}
     {# Rows are recognized by their data-row attribute, not their class #}
