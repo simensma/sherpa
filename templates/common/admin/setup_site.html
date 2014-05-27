@@ -12,9 +12,18 @@
       <li><a href="{% url 'admin.views.setup_site' %}">Sett opp hjemmeside</a></li>
     </ol>
 
-    <div class="alert alert-warning">
-      <strong>Vi har åpnet for testing av hjemmesider i nye Sherpa.</strong><br>
-      Dere kan registrere <strong>&lt;forening&gt;.test.turistforeningen.no</strong> som domeneadresse (endre "forening" til et passende kort ord for deres forening, for eksempel: <strong>http://aust-agder.test.turistforeningen.no</strong>).
+    <p>
+      Her kan du opprette en hjemmeside for {{ active_forening.name }}.
+    </p>
+
+    <h2>1. Hva slags hjemmeside er dette?</h2>
+
+    <div class="btn-group" data-toggle="buttons">
+      {% for type in site_types %}
+        <label class="btn btn-default btn-lg"{% if type.0 == 'forening' and active_forening.get_main_site != None %} disabled data-tooltip="{{ active_forening.name }} har allerede en hjemmeside."{% endif %}>
+          <input type="radio" name="type" value="{{ type.0 }}"> {{ type.1 }}
+        </label>
+      {% endfor %}
     </div>
 
     {% for message in messages %}

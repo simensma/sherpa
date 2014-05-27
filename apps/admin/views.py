@@ -87,13 +87,16 @@ def index(request):
     return render(request, 'common/admin/dashboard.html', context)
 
 def setup_site(request):
+    context = {'site_types': Site.TYPE_CHOICES}
+
     if request.method == 'GET':
-        return render(request, 'common/admin/setup_site.html')
+        return render(request, 'common/admin/setup_site.html', context)
+
     elif request.method == 'POST':
         result = verify_domain(request.POST['domain'])
         if not result['valid']:
             messages.error(request, result['error'])
-            context = {'domain': request.POST['domain'].strip()}
+            context['domain'] = request.POST['domain'].strip()
             if result['error'] == 'site_exists':
                 context['existing_forening'] = result['existing_forening']
             return render(request, 'common/admin/setup_site.html', context)
