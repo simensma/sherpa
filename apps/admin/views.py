@@ -87,9 +87,6 @@ def index(request):
     return render(request, 'common/admin/dashboard.html', context)
 
 def setup_site(request):
-    if request.active_forening.get_main_site() is not None:
-        return redirect('admin.sites.pages.page.list')
-
     if request.method == 'GET':
         return render(request, 'common/admin/setup_site.html')
     elif request.method == 'POST':
