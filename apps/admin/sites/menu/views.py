@@ -9,7 +9,9 @@ from page.models import Menu
 import json
 
 def index(request):
-    return render(request, 'common/admin/sites/menu/index.html')
+    menus = Menu.on(request.active_forening.get_main_site()).all().order_by('order')
+    context = {'menus': menus}
+    return render(request, 'common/admin/sites/menu/index.html', context)
 
 def new(request):
     if request.POST['name'].strip() == '':

@@ -8,7 +8,7 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 
 from page.widgets import parse_widget, widget_admin_context, get_static_promo_context
-from page.models import Menu, Page, Variant, Version, Row, Column, Content
+from page.models import Page, Variant, Version, Row, Column, Content
 
 import json
 
@@ -19,8 +19,7 @@ def list(request):
         active=True,
         variant__page__site=request.active_forening.get_main_site()
         ).order_by('variant__page__title')
-    menus = Menu.on(request.active_forening.get_main_site()).all().order_by('order')
-    context = {'versions': versions, 'menus': menus}
+    context = {'versions': versions}
     return render(request, 'common/admin/sites/pages/list.html', context)
 
 def children(request):
