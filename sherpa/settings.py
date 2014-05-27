@@ -86,7 +86,7 @@ MEMBERSHIP_YEAR_START = [
 ]
 
 # Pixel sizes for thumbnail images generated from uploaded images.
-# Duplicated client-side in js/admin/editor/image-utils.js
+# Duplicated client-side in js/admin/sites/editor/image-utils.js
 THUMB_SIZES = [1880, 940, 500, 150]
 
 # Require this many characters for an image search
