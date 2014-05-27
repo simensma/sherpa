@@ -1,0 +1,31 @@
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from admin.sites.pages.page_util import verify_domain
+
+def index(request):
+    if request.method == 'GET':
+        return render(request, 'common/admin/sites/domain/index.html')
+
+    elif request.method == 'POST':
+        domain = request.POST['domain'].strip()
+
+        if domain.replace('http://', '').rstrip('/') == request.active_forening.get_main_site().domain:
+            # Special case; the domain wasn't changed - so just say that it worked
+            messages.info(request, 'domain_updated')
+            return redirect('admin.sites.domain.views.index')
+
+        result = verify_domain(domain)
+        if not result['valid']:
+            messages.error(request, result['error'])
+            context = {'domain': domain}
+            if result['error'] == 'site_exists':
+                context['existing_forening'] = result['existing_forening']
+            return render(request, 'common/admin/sites/domain/index.html', context)
+        else:
+            messages.info(request, 'domain_updated')
+            site = request.active_forening.get_main_site()
+            site.domain = result['domain']
+            site.prefix = result['prefix']
+            site.save()
+            request.session.modified = True
+            return redirect('admin.sites.domain.views.index')
