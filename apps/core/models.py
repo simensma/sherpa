@@ -20,12 +20,6 @@ class Site(models.Model):
     def __unicode__(self):
         return u'%s: %s' % (self.pk, self.domain)
 
-class SiteTemplate(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __unicode__(self):
-        return u'%s: %s' % (self.pk, self.name)
-
 class Zipcode(models.Model):
     zipcode = models.CharField(max_length=4)
     area = models.CharField(max_length=255)
