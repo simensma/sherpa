@@ -23,7 +23,7 @@ def list(request):
         ).order_by('variant__page__title')
     menus = Menu.on(request.active_forening.site).all().order_by('order')
     context = {'versions': versions, 'menus': menus}
-    return render(request, 'common/admin/pages/list.html', context)
+    return render(request, 'common/admin/sites/pages/list.html', context)
 
 def edit_domain(request):
     result = verify_domain(request.POST['domain'])
@@ -32,7 +32,7 @@ def edit_domain(request):
         context = {'domain': request.POST['domain'].strip()}
         if result['error'] == 'site_exists':
             context['existing_forening'] = result['existing_forening']
-        return render(request, 'common/admin/pages/list.html', context)
+        return render(request, 'common/admin/sites/pages/list.html', context)
     else:
         site = request.active_forening.site
         site.domain = result['domain']
@@ -44,7 +44,7 @@ def edit_domain(request):
 def children(request, page):
     versions = Version.objects.filter(variant__page__parent=page, active=True).order_by('variant__page__title')
     context = RequestContext(request, {'versions': versions, 'level': request.POST['level']})
-    return HttpResponse(render_to_string('common/admin/pages/result.html', context))
+    return HttpResponse(render_to_string('common/admin/sites/pages/result.html', context))
 
 def new(request):
     if not slug_is_unique(request.POST['slug']):
@@ -108,7 +108,7 @@ def edit(request, version):
         'pages': pages,
         'image_search_length': settings.IMAGE_SEARCH_LENGTH
     }
-    return render(request, 'common/admin/pages/edit.html', context)
+    return render(request, 'common/admin/sites/pages/edit.html', context)
 
 def preview(request, version):
     version = Version.objects.get(id=version)
@@ -125,7 +125,7 @@ def preview(request, version):
     context = {'rows': rows, 'version': version}
     if request.site.domain == 'www.turistforeningen.no':
         context.update(get_static_promo_context('/%s/' % version.variant.page.slug))
-    return render(request, 'common/admin/pages/preview.html', context)
+    return render(request, 'common/admin/sites/pages/preview.html', context)
 
 ### Methods - not views - below ###
 
