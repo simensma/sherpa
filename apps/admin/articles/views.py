@@ -20,13 +20,13 @@ def list(request):
         'versions': list_bulk(request, 0),
         'BULK_COUNT': BULK_COUNT,
     }
-    return render(request, 'common/admin/articles/list.html', context)
+    return render(request, 'common/admin/sites/articles/list.html', context)
 
 def list_load(request):
     if not request.is_ajax():
         return redirect('admin.articles.views.list')
     context = RequestContext(request, {'versions': list_bulk(request, int(request.POST['bulk']))})
-    return HttpResponse(render_to_string('common/admin/articles/list-elements.html', context))
+    return HttpResponse(render_to_string('common/admin/sites/articles/list-elements.html', context))
 
 # This is not a view.
 def list_bulk(request, bulk):
@@ -57,7 +57,7 @@ def new(request):
 def confirm_delete(request, article):
     version = Version.objects.get(variant__article=article, variant__segment__isnull=True, active=True)
     context = {'version': version}
-    return render(request, 'common/admin/articles/confirm-delete.html', context)
+    return render(request, 'common/admin/sites/articles/confirm-delete.html', context)
 
 def delete(request, article):
     try:
@@ -77,14 +77,14 @@ def edit(request, version):
         'image_search_length': settings.IMAGE_SEARCH_LENGTH,
         'widget_data': widget_admin_context()
     }
-    return render(request, 'common/admin/articles/edit.html', context)
+    return render(request, 'common/admin/sites/articles/edit.html', context)
 
 def preview(request, version):
     rows, version = parse_version_content(request, version)
     # Pretend publish date is now, just for the preivew
     version.variant.article.pub_date = datetime.now()
     context = {'rows': rows, 'version': version}
-    return render(request, 'common/admin/articles/preview.html', context)
+    return render(request, 'common/admin/sites/articles/preview.html', context)
 
 def parse_version_content(request, version):
     version = Version.objects.get(id=version)
