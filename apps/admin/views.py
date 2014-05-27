@@ -97,11 +97,13 @@ def setup_site(request):
         if not request.POST.get('type', '') in [t[0] for t in Site.TYPE_CHOICES]:
             raise PermissionDenied
 
+        subdomain = request.POST['domain'].strip()
+
         if request.POST['type'] == 'forening' and request.active_forening.get_main_site() is not None:
             messages.error(request, 'main_site_exists')
+            context['domain'] = subdomain
             return render(request, 'common/admin/setup_site.html', context)
 
-        subdomain = request.POST['domain'].strip()
         result = verify_domain('http://%s.test.turistforeningen.no' % subdomain)
         if not result['valid']:
             messages.error(request, result['error'])
