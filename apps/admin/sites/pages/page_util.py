@@ -1,5 +1,4 @@
 from core.models import Site
-from foreninger.models import Forening
 
 def verify_domain(domain):
     """Very simple syntax verification, and a few business rules"""
