@@ -28,6 +28,7 @@ class Site(models.Model):
         ('large', 'Medlemsforening eller turgruppe med et stort nettsted'),
     )
     template = models.CharField(max_length=255, choices=TEMPLATE_CHOICES)
+    forening = models.ForeignKey('foreninger.Forening', related_name='sites')
 
     def __unicode__(self):
         return u'%s: %s' % (self.pk, self.domain)
