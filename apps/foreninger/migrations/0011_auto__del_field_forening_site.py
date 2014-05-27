@@ -7,6 +7,10 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    depends_on = (
+        ('core', '0028_set_initial_site'),
+    )
+
     def forwards(self, orm):
         # Deleting field 'Forening.site'
         db.delete_column(u'foreninger_forening', 'site_id')
