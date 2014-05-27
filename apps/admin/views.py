@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.core.cache import cache
 from django.db.models import Q
 from django.contrib import messages
+from django.core.exceptions import PermissionDenied
 
 from datetime import datetime, date
 from lxml import etree
@@ -93,10 +94,18 @@ def setup_site(request):
         return render(request, 'common/admin/setup_site.html', context)
 
     elif request.method == 'POST':
-        result = verify_domain(request.POST['domain'])
+        if not request.POST.get('type', '') in [t[0] for t in Site.TYPE_CHOICES]:
+            raise PermissionDenied
+
+        if request.POST['type'] == 'forening' and request.active_forening.get_main_site() is not None:
+            messages.error(request, 'main_site_exists')
+            return render(request, 'common/admin/setup_site.html', context)
+
+        subdomain = request.POST['domain'].strip()
+        result = verify_domain('http://%s.test.turistforeningen.no' % subdomain)
         if not result['valid']:
             messages.error(request, result['error'])
-            context['domain'] = request.POST['domain'].strip()
+            context['domain'] = subdomain
             if result['error'] == 'site_exists':
                 context['existing_forening'] = result['existing_forening']
             return render(request, 'common/admin/setup_site.html', context)
@@ -105,6 +114,7 @@ def setup_site(request):
             site = Site(
                 domain=result['domain'],
                 prefix=result['prefix'],
+                type=request.POST['type'],
                 template='large',
                 forening=request.active_forening,
             )
