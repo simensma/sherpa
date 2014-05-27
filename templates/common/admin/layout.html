@@ -67,7 +67,6 @@
             {% endif %}
 
             {% if active_forening.site %}
-              <li{% if active_entry == 'cms' %} class="active"{% endif %}><a href="{% url 'admin.sites.pages.page.list' %}"><i class="fa fa-file"></i> Websider</a></li>
               <li{% if active_entry == 'articles' %} class="active"{% endif %}><a href="{% url 'admin.articles.views.list' %}"><i class="fa fa-bullhorn"></i> Nyheter</a></li>
             {% endif %}
 
