@@ -1,7 +1,7 @@
 {% extends 'common/admin/layout.html' %}
 {% block title %}Nyheter — {{ block.super }}{% endblock %}
 
-{% block admin_menu %}{% with 'articles' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
+{% block admin_menu %}{% with 'sites' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/articles.js"></script>
@@ -16,7 +16,7 @@
       <h1>Nyheter <small>legg ut nyheter om smått & stort</small></h1>
       <ol class="breadcrumb">
         <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
-        <li><a href="{% url 'admin.articles.views.list' %}">Nyheter</a></li>
+        <li><a href="{% url 'admin.sites.articles.views.list' %}">Nyheter</a></li>
       </ol>
     </div>
   </div><!-- /.row -->
@@ -33,7 +33,7 @@
       {% else %}
 
         <table class="table table-striped article-listing">
-          <tbody data-infinite-scroll-url="{% url 'admin.articles.views.list_load' %}">
+          <tbody data-infinite-scroll-url="{% url 'admin.sites.articles.views.list_load' %}">
             {% include 'common/admin/sites/articles/list-elements.html' %}
           </tbody>
         </table>
@@ -50,7 +50,7 @@
           <h3>Opprett ny artikkel</h3>
         </div>
         <div class="modal-body">
-          <form action="{% url 'admin.articles.views.new' %}" method="post">
+          <form action="{% url 'admin.sites.articles.views.new' %}" method="post">
             {% csrf_token %}
             <input type="hidden" name="template" value="0">
             <input type="hidden" name="slug" value="">

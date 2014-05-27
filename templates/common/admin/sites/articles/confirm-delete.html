@@ -25,14 +25,14 @@
         Du kan ikke angre dette.
       </strong>
       <p>
-        <a class="btn btn-danger" href="{% url 'admin.articles.views.delete' version.variant.article.id %}"><i class="fa fa-warning"></i> Jeg forstår, slett den likevel!</a>
+        <a class="btn btn-danger" href="{% url 'admin.sites.articles.views.delete' version.variant.article.id %}"><i class="fa fa-warning"></i> Jeg forstår, slett den likevel!</a>
       </p>
     </div>
     <p>
       <button class="btn btn-lg btn-danger confirm-delete"><i class="fa fa-warning"></i> Ja, slett artikkelen for evig og alltid</button>
     </p>
     <p>
-      <a class="btn btn-lg btn-success" href="{% url 'admin.articles.views.edit' version.id %}"><i class="fa fa-heart"></i> NEI! Jeg har ombestemt meg, ikke slett noe.</a>
+      <a class="btn btn-lg btn-success" href="{% url 'admin.sites.articles.views.edit' version.id %}"><i class="fa fa-heart"></i> NEI! Jeg har ombestemt meg, ikke slett noe.</a>
     </p>
   </div>
 </div>

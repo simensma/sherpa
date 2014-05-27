@@ -1,7 +1,7 @@
 # encoding: utf-8
 from django.conf.urls.defaults import patterns, include, url
 
-urlpatterns = patterns('admin.articles.views',
+urlpatterns = patterns('admin.sites.articles.views',
     url(r'^$', 'list'),
     url(r'^last/$', 'list_load'),
     url(r'^ny/$', 'new'),

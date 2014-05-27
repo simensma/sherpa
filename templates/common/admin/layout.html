@@ -66,10 +66,6 @@
               <li{% if active_entry == 'setup_site' %} class="active"{% endif %}><a href="{% url 'admin.views.setup_site' %}"><i class="fa fa-file"></i> Sett opp hjemmeside</a></li>
             {% endif %}
 
-            {% if active_forening.site %}
-              <li{% if active_entry == 'articles' %} class="active"{% endif %}><a href="{% url 'admin.articles.views.list' %}"><i class="fa fa-bullhorn"></i> Nyheter</a></li>
-            {% endif %}
-
             <li{% if active_entry == 'aktiviteter' %} class="active"{% endif %}><a href="{% url 'admin.aktiviteter.views.index' %}"><i class="fa fa-globe"></i> Aktiviteter (prototype)</a></li>
 
             {% if active_forening.site %}
