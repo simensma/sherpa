@@ -15,7 +15,12 @@ class Tag(models.Model):
 class Site(models.Model):
     domain = models.CharField(max_length=255)
     prefix = models.CharField(max_length=255)
-    template = models.CharField(max_length=255)
+    TEMPLATE_CHOICES = (
+        ('main', 'DNTs nasjonale nettside'),
+        ('small', 'Medlemsforening eller turgruppe med et lite nettsted'),
+        ('large', 'Medlemsforening eller turgruppe med et stort nettsted'),
+    )
+    template = models.CharField(max_length=255, choices=TEMPLATE_CHOICES)
 
     def __unicode__(self):
         return u'%s: %s' % (self.pk, self.domain)
