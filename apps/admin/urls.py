@@ -4,6 +4,7 @@ urlpatterns = patterns('admin.views',
     # Note: Many paths here are harcoded in CheckSherpaPermissions middleware
     url(r'^$', 'index'),
     url(r'^sett-opp-site/', 'setup_site'),
+    url(r'^hjemmesider/', include('admin.sites.urls')),
     url(r'^cms/', include('admin.cms.urls')),
     url(r'^nyheter/', include('admin.articles.urls')),
     url(r'^analyse/', include('admin.analytics.urls')),
