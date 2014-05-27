@@ -14,7 +14,7 @@ from aktiviteter.views import Aktivitet
 from focus.models import Actor
 from page.models import Page
 from user.models import User
-from core.models import Site, SiteTemplate
+from core.models import Site
 from admin.sites.pages.page_util import verify_domain
 
 def index(request):
@@ -102,11 +102,10 @@ def setup_site(request):
             return render(request, 'common/admin/setup_site.html', context)
         else:
             # TODO let creator choose template?
-            large_template = SiteTemplate.objects.get(name='large')
             site = Site(
                 domain=result['domain'],
                 prefix=result['prefix'],
-                template=large_template
+                template='large',
             )
             site.save()
             request.active_forening.site = site

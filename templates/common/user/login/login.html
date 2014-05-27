@@ -1,4 +1,4 @@
-{% extends site.template.name|add:"/layout.html" %}
+{% extends site.template|add:"/layout.html" %}
 {% block title %}Logg inn{% endblock %}
 {% block breadcrumb %}<em><a href="{% url 'user.login.views.login' %}">Logg inn</a></em>{% endblock %}
 

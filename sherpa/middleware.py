@@ -52,7 +52,7 @@ class Sites():
     def process_request(self, request):
         try:
             request.site = Site.objects.get(domain=request.get_host().lower().split(":")[0])
-            request.urlconf = "sherpa.urls_%s" % request.site.template.name
+            request.urlconf = "sherpa.urls_%s" % request.site.template
             urlresolvers.set_urlconf(request.urlconf)
         except Site.DoesNotExist:
             # Unknown host name, redirect to the main site.
