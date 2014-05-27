@@ -11,7 +11,7 @@
     <h1>Analyse og statistikk <small>få innsikt i hvordan medlemmene våre oppfører seg</small></h1>
     <ol class="breadcrumb">
       <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
-      <li><a href="{% url 'admin.analytics.views.index' %}">Analyse og statistikk</a></li>
+      <li><a href="{% url 'admin.sites.analytics.views.index' %}">Analyse og statistikk</a></li>
     </ol>
   </div>
 </div><!-- /.row -->
@@ -23,8 +23,8 @@
     </p>
 
     <ul>
-      <li><a href="{% url 'admin.analytics.views.searches' %}">Søkestatistikk</a></li>
-      <li><a href="{% url 'admin.analytics.views.not_found' %}">404-treff</a></li>
+      <li><a href="{% url 'admin.sites.analytics.views.searches' %}">Søkestatistikk</a></li>
+      <li><a href="{% url 'admin.sites.analytics.views.not_found' %}">404-treff</a></li>
     </ul>
 
     <p>

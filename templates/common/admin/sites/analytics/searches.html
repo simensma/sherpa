@@ -12,24 +12,20 @@
 
 <div class="row">
   <div class="col-lg-12">
-    <h1>Analyse og statistikk <small>se hvilke sider som ikke finnes på <a href="http://{{ active_forening.site.domain }}/">{{ active_forening.site.domain }}</a></small></h1>
+    <h1>Analyse og statistikk <small>søkestatistikk på <a href="http://{{ active_forening.site.domain }}/">{{ active_forening.site.domain }}</a></small></h1>
     <ol class="breadcrumb">
       <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
-      <li><a href="{% url 'admin.analytics.views.index' %}">Analyse og statistikk</a></li>
-      <li><a href="{% url 'admin.analytics.views.not_found' %}">404-treff</a></li>
+      <li><a href="{% url 'admin.sites.analytics.views.index' %}">Analyse og statistikk</a></li>
+      <li><a href="{% url 'admin.sites.analytics.views.searches' %}">Søkestatistikk</a></li>
     </ol>
   </div>
 </div><!-- /.row -->
 
 <div class="row">
-  <div class="col-lg-12">
+  <div class="col-md-12">
 
     <p>
-      Dette viser hvilke sider våre besøkende har forsøkt å vise, men som gir 404-feilmelding (siden finnes ikke).
-    </p>
-
-    <p>
-      Merk: Det gjøres ikke forskjell på store/små bokstaver ved opptelling.
+      Merk: Det gjøres ikke forskjell på store/små bokstaver ved opptelling, derfor har alle søk i flest treff-lista små bokstaver.
     </p>
 
     <p>
@@ -37,21 +33,22 @@
     </p>
 
     <div class="row">
-      <div class="col-md-6">
+
+      <div class="col-sm-6">
         <table class="table">
           <tr>
             <th colspan="2">Flest treff</th>
           </tr>
-          {% for request in most_requested %}
+          {% for search in most_searched %}
             {% if forloop.counter < 50 %}
               <tr>
-                <td>{{ request.count }}</td>
-                <td>{{ request.path }}</td>
+                <td>{{ search.count }}</td>
+                <td>{{ search.query }}</td>
               </tr>
             {% else %}
               <tr class="jq-hide">
-                <td>{{ request.count }}</td>
-                <td>{{ request.path }}</td>
+                <td>{{ search.count }}</td>
+                <td>{{ search.query }}</td>
               </tr>
             {% endif %}
             {% if forloop.counter == 50 %}
@@ -63,22 +60,22 @@
         </table>
       </div>
 
-      <div class="col-md-6">
+      <div class="col-sm-6">
         <table class="table">
           <tr>
-            <th colspan="2">Nyeste treff</th>
+            <th colspan="2">Nyeste søk</th>
           </tr>
-          {% for request in latest_requests %}
+          {% for search in latest_searches %}
             <tr>
-              <td>{{ request.date|date:"H:i" }}</td>
-              <td>{{ request.path }}</td>
+              <td>{{ search.date|date:"H:i" }}</td>
+              <td>{{ search.query }}</td>
             </tr>
           {% endfor %}
         </table>
       </div>
-    </div><!-- /.row -->
+    </div>
 
   </div>
-</div><!-- /.row -->
+</div>
 
 {% endblock %}

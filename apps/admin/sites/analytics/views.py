@@ -4,7 +4,7 @@ from django.core.cache import cache
 from analytics.models import Search, NotFound
 
 def index(request):
-    return render(request, 'common/admin/analytics/index.html')
+    return render(request, 'common/admin/sites/analytics/index.html')
 
 def searches(request):
     most_searched = cache.get('analytics.searches.most_searched')
@@ -25,7 +25,7 @@ def searches(request):
     latest_searches = Search.on(request.active_forening.site).all().order_by('-date')[:50]
 
     context = {'most_searched': most_searched, 'latest_searches': latest_searches}
-    return render(request, 'common/admin/analytics/searches.html', context)
+    return render(request, 'common/admin/sites/analytics/searches.html', context)
 
 def not_found(request):
     most_requested = cache.get('analytics.not_found.most_requested')
@@ -46,4 +46,4 @@ def not_found(request):
     latest_requests = NotFound.on(request.active_forening.site).all().order_by('-date')[:50]
 
     context = {'most_requested': most_requested, 'latest_requests': latest_requests}
-    return render(request, 'common/admin/analytics/not_found.html', context)
+    return render(request, 'common/admin/sites/analytics/not_found.html', context)
