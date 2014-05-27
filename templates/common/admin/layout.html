@@ -59,13 +59,7 @@
 
             <li{% if active_entry == 'dashboard' %} class="active"{% endif %}><a href="{% url 'admin.views.index' %}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
             <li{% if active_entry == 'forening' %} class="active"{% endif %}><a href="{% url 'admin.forening.views.index' %}"><i class="fa fa-bookmark-o"></i> Foreninger og turgrupper</a></li>
-
             <li{% if active_entry == 'sites' %} class="active"{% endif %}><a href="{% url 'admin.sites.views.index' %}"><i class="fa fa-file"></i> Våre hjemmesider</a></li>
-
-            {% if not active_forening.site %}
-              <li{% if active_entry == 'setup_site' %} class="active"{% endif %}><a href="{% url 'admin.views.setup_site' %}"><i class="fa fa-file"></i> Sett opp hjemmeside</a></li>
-            {% endif %}
-
             <li{% if active_entry == 'aktiviteter' %} class="active"{% endif %}><a href="{% url 'admin.aktiviteter.views.index' %}"><i class="fa fa-globe"></i> Aktiviteter (prototype)</a></li>
             <li{% if active_entry == 'publications' %} class="active"{% endif %}><a href="{% url 'admin.publications.views.index' %}"><i class="fa fa-font"></i> Publikasjoner</a></li>
 

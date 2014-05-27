@@ -140,7 +140,7 @@ class CheckSherpaPermissions(object):
 
             # Accessing CMS-functionality, but no site set
             if request.active_forening.site is None and request.path.startswith(u'/sherpa/hjemmesider'):
-                return render(request, 'common/admin/no_forening_site.html')
+                return redirect('admin.views.setup_site')
 
 class DeactivatedEnrollment():
     def process_request(self, request):
