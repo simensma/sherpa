@@ -15,7 +15,7 @@
     <h1>Caching <small>slett mellomlagrede versjoner av nettsidene</small></h1>
     <ol class="breadcrumb">
       <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
-      <li><a href="{% url 'admin.cache.views.index' %}">Caching</a></li>
+      <li><a href="{% url 'admin.sites.cache.views.index' %}">Caching</a></li>
     </ol>
   </div>
 </div><!-- /.row -->
@@ -35,7 +35,7 @@
 <div class="row">
   <div class="col-md-12">
 
-    <table class="table delete-cache" data-url="{% url 'admin.cache.views.delete' %}">
+    <table class="table delete-cache" data-url="{% url 'admin.sites.cache.views.delete' %}">
       <tr>
         <th>Forsiden</th>
         <td>Alt innholdet på forsiden (inkludert lista med nyheter).</td>

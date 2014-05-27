@@ -28,11 +28,11 @@ def index(request):
         'article_versions': article_versions,
         'page_versions': page_versions,
     }
-    return render(request, 'common/admin/cache/index.html', context)
+    return render(request, 'common/admin/sites/cache/index.html', context)
 
 def delete(request):
     if not request.is_ajax():
-        return redirect('admin.cache.views.index')
+        return redirect('admin.sites.cache.views.index')
 
     if request.POST['key'] == 'frontpage':
         id = Version.objects.get(

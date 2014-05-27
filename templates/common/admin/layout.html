@@ -78,7 +78,7 @@
             <li{% if active_entry == 'turledere' %} class="active"{% endif %}><a href="{% url 'admin.turledere.views.index' %}"><i class="fa fa-users"></i> Turledere og instruktører</a></li>
 
             {% if active_forening.site %}
-              <li{% if active_entry == 'cache' %} class="active"{% endif %}><a href="{% url 'admin.cache.views.index' %}"><i class="fa fa-bolt"></i> Caching</a></li>
+              <li{% if active_entry == 'cache' %} class="active"{% endif %}><a href="{% url 'admin.sites.cache.views.index' %}"><i class="fa fa-bolt"></i> Caching</a></li>
             {% endif %}
 
             {# Applies only to DNT Central #}
