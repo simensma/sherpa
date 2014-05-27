@@ -16,17 +16,41 @@
   </div>
 </div><!-- /.row -->
 
-<div class="row">
-  <div class="col-lg-12">
-    <p>
-      <a href="{% url 'admin.sites.pages.page.list' %}">Sider</a>
-      <a href="{% url 'admin.sites.articles.views.list' %}">Nyheter</a>
-      <a href="{% url 'admin.sites.ads.views.list' %}">Annonser</a>
-      <a href="{% url 'admin.sites.menu.views.index' %}">Toppmeny</a>
-      <a href="{% url 'admin.sites.domain.views.index' %}">Domene</a>
-      <a href="{% url 'admin.sites.analytics.views.index' %}">Analyse</a>
-      <a href="{% url 'admin.sites.cache.views.index' %}">Caching</a>
-    </p>
+<div class="site-admin">
+  <div class="row">
+    <div class="col-lg-2">
+      <div class="navigation-block">
+        <p><i class="fa fa-file fa-5x"></i></p>
+        <a href="{% url 'admin.sites.pages.page.list' %}">Sider</a>
+      </div>
+    </div>
+    <div class="col-lg-2">
+      <div class="navigation-block">
+        <p><i class="fa fa-bullhorn fa-5x"></i></p>
+        <a href="{% url 'admin.sites.articles.views.list' %}">Nyheter</a>
+      </div>
+    </div>
+    <div class="col-lg-2">
+      <div class="navigation-block">
+        <p><i class="fa fa-bars fa-5x"></i></p>
+        Navigasjon<br>
+        <a href="{% url 'admin.sites.menu.views.index' %}">Toppmeny</a>
+      </div>
+    </div>
+    <div class="col-lg-2">
+      <div class="navigation-block">
+        <p><i class="fa fa-desktop fa-5x"></i></p>
+        <a href="{% url 'admin.sites.ads.views.list' %}">Annonser</a>
+      </div>
+    </div>
+    <div class="col-lg-2">
+      <div class="navigation-block">
+        <p><i class="fa fa-wrench fa-5x"></i></p>
+        Innstillinger<br>
+        <a href="{% url 'admin.sites.domain.views.index' %}">Domene</a><br>
+        <a href="{% url 'admin.sites.analytics.views.index' %}">Analyse</a> <a href="{% url 'admin.sites.cache.views.index' %}">Caching</a>
+      </div>
+    </div>
   </div>
 </div>
 
