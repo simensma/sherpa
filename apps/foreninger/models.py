@@ -28,7 +28,6 @@ class Forening(models.Model):
     focus_id = models.IntegerField(null=True, default=None)
     type = models.CharField(max_length=255, choices=TYPES)
     group_type = models.CharField(max_length=255, choices=GROUP_TYPES, default='')
-    site = models.OneToOneField('core.Site', null=True, related_name='original_forening')
 
     # Address
     post_address = models.CharField(max_length=255, default='')
