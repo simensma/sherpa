@@ -15,7 +15,7 @@ class Tag(models.Model):
 class Site(models.Model):
     domain = models.CharField(max_length=255)
     prefix = models.CharField(max_length=255)
-    template = models.ForeignKey('core.SiteTemplate')
+    template = models.CharField(max_length=255)
 
     def __unicode__(self):
         return u'%s: %s' % (self.pk, self.domain)
