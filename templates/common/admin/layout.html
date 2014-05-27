@@ -77,10 +77,6 @@
             <li{% if active_entry == 'users' %} class="active"{% endif %}><a href="{% url 'admin.users.views.index' %}"><i class="fa fa-user"></i> Medlemmer og brukere</a></li>
             <li{% if active_entry == 'turledere' %} class="active"{% endif %}><a href="{% url 'admin.turledere.views.index' %}"><i class="fa fa-users"></i> Turledere og instruktører</a></li>
 
-            {% if active_forening.site %}
-              <li{% if active_entry == 'cache' %} class="active"{% endif %}><a href="{% url 'admin.sites.cache.views.index' %}"><i class="fa fa-bolt"></i> Caching</a></li>
-            {% endif %}
-
             {# Applies only to DNT Central #}
             {% if active_forening.id == 56 %}
               <li{% if active_entry == 'enrollment' %} class="active"{% endif %}><a href="{% url 'admin.enrollment.views.index' %}"><i class="fa fa-pencil"></i> Innmelding</a></li>
