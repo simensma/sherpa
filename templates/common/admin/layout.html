@@ -74,10 +74,6 @@
               <li{% if active_entry == 'images' %} class="active"{% endif %}><a href="{% url 'admin.images.views.index' %}"><i class="fa fa-picture-o"></i> Bildearkiv</a></li>
             {% endif %}
 
-            {% if active_forening.site %}
-              <li{% if active_entry == 'analytics' %} class="active"{% endif %}><a href="{% url 'admin.sites.analytics.views.index' %}"><i class="fa fa-bar-chart-o"></i> Analyse og statistikk</a></li>
-            {% endif %}
-
             <li{% if active_entry == 'users' %} class="active"{% endif %}><a href="{% url 'admin.users.views.index' %}"><i class="fa fa-user"></i> Medlemmer og brukere</a></li>
             <li{% if active_entry == 'turledere' %} class="active"{% endif %}><a href="{% url 'admin.turledere.views.index' %}"><i class="fa fa-users"></i> Turledere og instruktører</a></li>
 
