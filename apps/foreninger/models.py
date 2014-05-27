@@ -7,6 +7,7 @@ from django.dispatch import receiver
 from .exceptions import ForeningTypeCannotHaveChildren, ForeningTypeNeedsParent, ForeningWithItselfAsParent, SentralForeningWithRelation, ForeningWithForeningParent, ForeningWithTurlagParent, TurlagWithTurgruppeParent, TurgruppeWithTurgruppeParent, ForeningParentIsChild, TurlagWithTurlagParent
 from sherpa2.models import Forening as Sherpa2Forening
 from sherpa2.models import NtbId
+from core.models import Site
 
 class Forening(models.Model):
     TYPES = [
@@ -155,6 +156,14 @@ class Forening(models.Model):
                 object_id = None
             cache.set('object_id.forening.%s' % self.id, object_id, 60 * 60 * 24 * 7)
         return object_id
+
+    def get_main_site(self):
+        """A forening can have multiple related sites but only one 'main' site, this method returns the main site,
+        or None if it doesn't have a main site."""
+        try:
+            return self.sites.get(type='forening')
+        except Site.DoesNotExist:
+            return None
 
     @staticmethod
     def sort(foreninger):
