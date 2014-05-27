@@ -1,7 +1,7 @@
 # encoding: utf-8
 from django.conf.urls.defaults import patterns, include, url
 
-urlpatterns = patterns('admin.ads.views',
+urlpatterns = patterns('admin.sites.ads.views',
     url(r'^$', 'list'),
     url(r'^ny/$', 'create_ad'),
     url(r'^oppdater/$', 'update_ad'),

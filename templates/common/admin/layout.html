@@ -69,10 +69,6 @@
             <li{% if active_entry == 'aktiviteter' %} class="active"{% endif %}><a href="{% url 'admin.aktiviteter.views.index' %}"><i class="fa fa-globe"></i> Aktiviteter (prototype)</a></li>
             <li{% if active_entry == 'publications' %} class="active"{% endif %}><a href="{% url 'admin.publications.views.index' %}"><i class="fa fa-font"></i> Publikasjoner</a></li>
 
-            {% if active_forening.site %}
-              <li{% if active_entry == 'ads' %} class="active"{% endif %}><a href="{% url 'admin.ads.views.list' %}"><i class="fa fa-desktop"></i> Annonser</a></li>
-            {% endif %}
-
             {# Explicitly hide images for non-central users for now #}
             {% if active_forening.id == 56 %}{# DNT Central #}
               <li{% if active_entry == 'images' %} class="active"{% endif %}><a href="{% url 'admin.images.views.index' %}"><i class="fa fa-picture-o"></i> Bildearkiv</a></li>

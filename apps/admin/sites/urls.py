@@ -6,5 +6,6 @@ urlpatterns = patterns('admin.sites.views',
     url(r'^$', 'index'),
     url(r'^sider/', include('admin.sites.pages.urls')),
     url(r'^nyheter/', include('admin.sites.articles.urls')),
+    url(r'^annonser/', include('admin.sites.ads.urls')),
 
 )

@@ -7,7 +7,7 @@ from datetime import datetime
 import hashlib
 import simples3
 
-from admin.ads.util import parse_adform_script_destination
+from admin.sites.ads.util import parse_adform_script_destination
 from page.models import Ad, AdPlacement
 
 def list(request):
@@ -15,14 +15,14 @@ def list(request):
     time_placements = AdPlacement.on(request.active_forening.site).filter(start_date__isnull=False).order_by('start_date', 'end_date')
     view_placements = AdPlacement.on(request.active_forening.site).filter(view_limit__isnull=False).order_by('views')
     context = {'ads': ads, 'time_placements': time_placements, 'view_placements': view_placements}
-    return render(request, 'common/admin/ads/list.html', context)
+    return render(request, 'common/admin/sites/ads/list.html', context)
 
 def create_ad(request):
 
     if request.POST['type'] == 'file':
 
         if not 'ad' in request.FILES:
-            return redirect('admin.ads.views.list')
+            return redirect('admin.sites.ads.views.list')
 
         hash, extension, content_type = upload(request.FILES['ad'])
         fallback_hash = None
@@ -75,7 +75,7 @@ def create_ad(request):
         except IndexError:
             messages.error(request, 'unparseable_script')
 
-    return redirect('admin.ads.views.list')
+    return redirect('admin.sites.ads.views.list')
 
 def update_ad(request):
     try:
@@ -102,7 +102,7 @@ def update_ad(request):
     except IndexError:
         messages.error(request, 'unparseable_script')
 
-    return redirect('admin.ads.views.list')
+    return redirect('admin.sites.ads.views.list')
 
 def create_placement(request):
     try:
@@ -125,7 +125,7 @@ def create_placement(request):
         ap.save()
     except ValueError:
         messages.error(request, 'invalid_date')
-    return redirect('admin.ads.views.list')
+    return redirect('admin.sites.ads.views.list')
 
 def update_placement(request):
     try:
@@ -139,7 +139,7 @@ def update_placement(request):
         placement.save()
     except ValueError:
         messages.error(request, 'invalid_date')
-    return redirect('admin.ads.views.list')
+    return redirect('admin.sites.ads.views.list')
 
 def upload(file):
     # TODO: Consider streaming the file instead of reading everything into memory first.
