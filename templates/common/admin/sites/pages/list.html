@@ -5,7 +5,6 @@
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/sites/pages/pages.js"></script>
-  <script src="{{ STATIC_URL }}js/admin/sites/pages/menu.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -24,21 +23,6 @@
 <div class="row">
   <div class="col-md-12">
 
-    <h2>Hovedmeny <small>dra for å sortere, klikk for å endre</small></h2>
-    <nav id="menus" data-reorder-url="{% url 'admin.sites.pages.menu.reorder' %}">
-      <ul class="sortable horizontal">
-        {% for menu in menus %}
-        <li>
-          <a class="edit" data-id="{{ menu.id }}" data-href="{{ menu.url }}" href="javascript:undefined">{{ menu.name }}</a>
-        </li>
-        {% endfor %}
-      </ul>
-    </nav>
-    <p>
-      <a class="add-menu-element" href="javascript:undefined">Nytt menyelement</a>
-    </p>
-
-    <h2>Sider</h2>
     <p style="text-align: center;">
       <a id="add-page" class="btn btn-success btn-lg new-page" href="javascript:undefined">
         Opprett ny side
@@ -116,42 +100,6 @@
   </div>
   <div class="modal-footer">
     <a href="javascript:undefined" class="btn btn-default" data-dismiss="modal">Lukk vindu</a>
-  </div>
-</div>
-
-<div class="modal menu" data-new-url="{% url 'admin.sites.pages.menu.new' %}" data-edit-url="{% url 'admin.sites.pages.menu.edit' %}" data-delete-url="{% url 'admin.sites.pages.menu.delete' %}">
-  <div class="modal-header">
-
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
-    <h3>Endre meny-lenke</h3>
-
-  </div>
-  <div class="modal-body">
-
-    <div class="form-group">
-      <label>Tittel</label>
-      <input type="text" name="name" class="form-control">
-    </div>
-    <div class="form-group">
-      <label>Adresse</label>
-      <input type="text" name="url" class="form-control">
-    </div>
-
-    <div class="loading jq-hide">
-      Vennligst vent...<br>
-      <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" class="ajaxloader" alt="Vennligst vent...">
-    </div>
-
-  </div>
-  <div class="modal-footer">
-
-    <button class="btn btn-success save-menu">
-      Lagre
-    </button>
-    <button class="btn btn-danger delete-menu">
-      Slett lenken
-    </button>
-
   </div>
 </div>
 

@@ -1,13 +1,15 @@
-from __future__ import absolute_import
-
-from django.shortcuts import redirect
+from django.shortcuts import render, redirect
 from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 from django.db.models import Max
+
 from page.models import Menu
 
 import json
+
+def index(request):
+    return render(request, 'common/admin/sites/menu/index.html')
 
 def new(request):
     if request.POST['name'].strip() == '':
@@ -35,7 +37,7 @@ def edit(request):
 def delete(request):
     Menu.on(request.active_forening.get_main_site()).get(id=request.POST['menu']).delete()
     cache.delete('main.menu.%s' % request.active_forening.get_main_site().id)
-    return redirect('admin.sites.pages.page.list')
+    return redirect('admin.sites.sites.menu.views.index')
 
 def reorder(request):
     for menu in json.loads(request.POST['menus']):

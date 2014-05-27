@@ -9,6 +9,7 @@ urlpatterns = patterns('admin.sites.views',
     url(r'^annonser/', include('admin.sites.ads.urls')),
     url(r'^analyse/', include('admin.sites.analytics.urls')),
     url(r'^cache/', include('admin.sites.cache.urls')),
+    url(r'^meny/', include('admin.sites.menu.urls')),
     url(r'^domene/', include('admin.sites.domain.urls')),
 
 )
