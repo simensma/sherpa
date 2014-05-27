@@ -2,7 +2,7 @@
 
 {% block title %}Analyse — {{ block.super }}{% endblock %}
 
-{% block admin_menu %}{% with 'analytics' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
+{% block admin_menu %}{% with 'sites' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/analytics.js"></script>
@@ -15,6 +15,7 @@
     <h1>Analyse og statistikk <small>søkestatistikk på <a href="http://{{ active_forening.site.domain }}/">{{ active_forening.site.domain }}</a></small></h1>
     <ol class="breadcrumb">
       <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
+      <li><a href="{% url 'admin.sites.views.index' %}">Våre hjemmesider</a></li>
       <li><a href="{% url 'admin.sites.analytics.views.index' %}">Analyse og statistikk</a></li>
       <li><a href="{% url 'admin.sites.analytics.views.searches' %}">Søkestatistikk</a></li>
     </ol>
