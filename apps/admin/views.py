@@ -106,9 +106,8 @@ def setup_site(request):
                 domain=result['domain'],
                 prefix=result['prefix'],
                 template='large',
+                forening=request.active_forening,
             )
             site.save()
-            request.active_forening.sites.add(site)
-            request.active_forening.save()
             request.session.modified = True
             return redirect('admin.sites.pages.page.list')
