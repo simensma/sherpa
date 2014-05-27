@@ -125,14 +125,18 @@ $(function() {
         if(i.hasClass('fa-plus')) {
             i.removeClass('fa-plus');
             i.addClass('fa-minus');
+            var url = $(this).attr('data-children-url');
             var tr = $(this).parents("tr");
             var level = Number($(this).parents("td").attr('data-level')) + 1;
             var id = $(this).attr("data-id");
             var loader = '<tr class="loader"><td colspan="2"><img src="/static/img/ajax-loader-small.gif" alt="Laster..."></td></tr>';
             $(this).parents("tr").after(loader);
             $.ajaxQueue({
-                url: '/sherpa/hjemmesider/sider/side/barn/' + id + '/',
-                data: { level: level }
+                url: url,
+                data: {
+                    page_id: id,
+                    level: level
+                }
             }).done(function(result) {
                 $("table.pages tr.loader").remove();
                 tr.after(result);

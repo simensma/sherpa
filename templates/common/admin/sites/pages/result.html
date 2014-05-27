@@ -2,7 +2,7 @@
   <tr data-id="{{ version.variant.page.id }}" data-parent="{{ version.variant.page.parent.id }}" data-children="{{ version.get_children_count }}">
     <td data-level="{{ level }}">
       {% if version.get_children_count > 0 %}
-        <a href="javascript:undefined" class="expand" data-id="{{ version.variant.page.id }}">
+        <a href="javascript:undefined" class="expand" data-id="{{ version.variant.page.id }}" data-children-url="{% url 'admin.sites.pages.page.children' %}">
           <i class="fa fa-plus" data-next-class="fa fa-minus"></i>
         </a>
       {% endif %}

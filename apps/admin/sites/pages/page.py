@@ -41,8 +41,8 @@ def edit_domain(request):
         request.session.modified = True
         return redirect('admin.sites.pages.page.list')
 
-def children(request, page):
-    versions = Version.objects.filter(variant__page__parent=page, active=True).order_by('variant__page__title')
+def children(request):
+    versions = Version.objects.filter(variant__page__parent=request.POST['page_id'], active=True).order_by('variant__page__title')
     context = RequestContext(request, {'versions': versions, 'level': request.POST['level']})
     return HttpResponse(render_to_string('common/admin/sites/pages/result.html', context))
 
