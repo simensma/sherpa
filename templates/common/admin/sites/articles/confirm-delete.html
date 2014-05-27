@@ -1,7 +1,7 @@
 {% extends 'common/admin/layout.html' %}
 {% block title %}Nyheter — {{ block.super }}{% endblock %}
 
-{% block admin_menu %}{% with 'cms' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
+{% block admin_menu %}{% with 'sites' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/editor/article-delete.js"></script>
