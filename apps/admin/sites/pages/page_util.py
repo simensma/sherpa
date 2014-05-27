@@ -50,7 +50,7 @@ def verify_domain(domain):
 
     try:
         existing_site = Site.objects.get(domain=domain, prefix=prefix)
-        existing_forening = Forening.objects.get(site=existing_site)
+        existing_forening = existing_site.forening
         return {
             'valid': False,
             'error': 'site_exists',

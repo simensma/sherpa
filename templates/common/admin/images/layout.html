@@ -30,7 +30,7 @@
           {% endfor %}
 
           {# This is currently where DNT central-admins can choose the active fotokonkurranse destination album. #}
-          {% if album and active_forening.site.domain == 'www.turistforeningen.no' %}
+          {% if album and active_forening.get_main_site.domain == 'www.turistforeningen.no' %}
             —
             {% if album == fotokonkurranse_album.id|stringformat:"s" %}
               Dette er aktivt fotokonkurranse-album. <a href="{% url 'admin.images.views.set_fotokonkurranse_album' %}">Avslutt konkurransen</a>

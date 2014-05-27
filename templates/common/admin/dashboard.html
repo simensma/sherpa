@@ -24,7 +24,7 @@
 
 <div class="row">
 
-  {% if active_forening.site %}
+  {% if active_forening.get_main_site %}
     <div class="col-lg-3">
       <div class="dashboard-panel green">
         <div class="content">
@@ -137,7 +137,7 @@
 </div><!-- /.row -->
 
 {# Operator precedence is not supported in Django templates, use two if-tags #}
-{% if not active_forening.site %}
+{% if not active_forening.get_main_site %}
   {% if active_forening.type == 'sentral' or active_forening.type == 'forening' %}
     <div class="row">
       <div class="col-md-12">

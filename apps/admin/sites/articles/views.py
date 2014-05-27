@@ -34,7 +34,7 @@ def list_bulk(request, bulk):
         variant__article__isnull=False,
         variant__segment__isnull=True,
         active=True,
-        variant__article__site=request.active_forening.site
+        variant__article__site=request.active_forening.get_main_site()
     ).order_by('-variant__article__created_date')[(bulk * BULK_COUNT) : (bulk * BULK_COUNT) + BULK_COUNT]
 
 def new(request):
@@ -44,7 +44,7 @@ def new(request):
         published=False,
         pub_date=None,
         created_by=request.user,
-        site=request.active_forening.site)
+        site=request.active_forening.get_main_site())
     article.save()
     variant = Variant(page=None, article=article, name='default', segment=None, priority=1, owner=request.user)
     variant.save()
@@ -95,7 +95,7 @@ def parse_version_content(request, version):
             contents = Content.objects.filter(column=column).order_by('order')
             for content in contents:
                 if content.type == 'widget':
-                    content.content = parse_widget(request, json.loads(content.content), request.active_forening.site)
+                    content.content = parse_widget(request, json.loads(content.content), request.active_forening.get_main_site())
             column.contents = contents
         row.columns = columns
     return rows, version

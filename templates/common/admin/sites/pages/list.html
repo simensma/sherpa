@@ -13,7 +13,7 @@
 
 <div class="row">
   <div class="col-lg-12">
-    <h1>Sider <small>sett opp innholdet på <a href="http://{{ active_forening.site.domain }}/">{{ active_forening.site.domain }}</a></small></h1>
+    <h1>Sider <small>sett opp innholdet på <a href="http://{{ active_forening.get_main_site.domain }}/">{{ active_forening.get_main_site.domain }}</a></small></h1>
     <ol class="breadcrumb">
       <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
       <li><a href="{% url 'admin.sites.views.index' %}">Våre hjemmesider</a></li>
@@ -42,7 +42,7 @@
         </div>
       {% elif message.message == 'site_exists' %}
         <div class="alert alert-danger">
-          <strong>{{ existing_forening.name }}</strong> har allerede domenenavnet <strong>http://{{ existing_forening.site.domain }}/</strong>. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.
+          <strong>{{ existing_forening.name }}</strong> har allerede domenenavnet <strong>http://{{ existing_forening.get_main_site.domain }}/</strong>. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.
         </div>
       {% elif message.message == 'prefix_not_supported_yet' %}
         <div class="alert alert-danger">
@@ -55,7 +55,7 @@
       {% endif %}
     {% endfor %}
 
-    {{ active_forening.name }} har hjemmesideadresse <strong>http://{{ active_forening.site.domain }}</strong>. Du kan <a href="javascript:undefined" class="edit-domain">endre denne</a> hvis du vet hva du gjør.
+    {{ active_forening.name }} har hjemmesideadresse <strong>http://{{ active_forening.get_main_site.domain }}</strong>. Du kan <a href="javascript:undefined" class="edit-domain">endre denne</a> hvis du vet hva du gjør.
 
     <h2>Hovedmeny <small>dra for å sortere, klikk for å endre</small></h2>
     <nav id="menus" data-reorder-url="{% url 'admin.sites.pages.menu.reorder' %}">
@@ -112,7 +112,7 @@
       </div>
       <div class="form-group">
         <label>Permanent URL:</label>
-        http://{{ active_forening.site.domain }}/<span class="slug"></span><span class="slash"></span> <i class="edit-slug fa fa-pencil"></i><i class="save-slug fa fa-check"></i>
+        http://{{ active_forening.get_main_site.domain }}/<span class="slug"></span><span class="slash"></span> <i class="edit-slug fa fa-pencil"></i><i class="save-slug fa fa-check"></i>
         <img class="loader" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster...">
         <span class="valid">
           <img src="{{ STATIC_URL }}img/valid.png" alt="Gyldig URL">
@@ -206,7 +206,7 @@
       {% csrf_token %}
       <div class="form-group">
         <label>Ny domeneadresse:</label>
-        <input type="text" name="domain" class="form-control" value="http://{{ active_forening.site.domain }}">
+        <input type="text" name="domain" class="form-control" value="http://{{ active_forening.get_main_site.domain }}">
       </div>
       <button class="btn btn-success save-menu">
         Lagre nytt domene

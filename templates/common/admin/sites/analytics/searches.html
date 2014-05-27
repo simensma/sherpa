@@ -12,7 +12,7 @@
 
 <div class="row">
   <div class="col-lg-12">
-    <h1>Analyse og statistikk <small>søkestatistikk på <a href="http://{{ active_forening.site.domain }}/">{{ active_forening.site.domain }}</a></small></h1>
+    <h1>Analyse og statistikk <small>søkestatistikk på <a href="http://{{ active_forening.get_main_site.domain }}/">{{ active_forening.get_main_site.domain }}</a></small></h1>
     <ol class="breadcrumb">
       <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
       <li><a href="{% url 'admin.sites.views.index' %}">Våre hjemmesider</a></li>

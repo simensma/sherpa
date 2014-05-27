@@ -30,8 +30,8 @@ def index(request):
         cache.set('admin.local_membership_count.%s' % request.active_forening.id, local_membership_count, 60 * 60 * 12)
 
     turledere = User.get_users().filter(turledere__isnull=False).distinct().count()
-    if request.active_forening.site is not None:
-        pages = Page.on(request.active_forening.site).filter(
+    if request.active_forening.get_main_site() is not None:
+        pages = Page.on(request.active_forening.get_main_site()).filter(
             pub_date__lte=datetime.now(),
             published=True
         ).count()
@@ -87,7 +87,7 @@ def index(request):
     return render(request, 'common/admin/dashboard.html', context)
 
 def setup_site(request):
-    if request.active_forening.site is not None:
+    if request.active_forening.get_main_site() is not None:
         return redirect('admin.sites.pages.page.list')
 
     if request.method == 'GET':
@@ -108,7 +108,7 @@ def setup_site(request):
                 template='large',
             )
             site.save()
-            request.active_forening.site = site
+            request.active_forening.sites.add(site)
             request.active_forening.save()
             request.session.modified = True
             return redirect('admin.sites.pages.page.list')

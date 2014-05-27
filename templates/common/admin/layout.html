@@ -114,8 +114,8 @@
               {% endif %}
             </a>
             <ul class="dropdown-menu">
-              {% if active_forening.site %}
-                <li><a href="http://{{ active_forening.site.domain }}/"><i class="fa fa-home"></i> {{ active_forening.name }}</a></li>
+              {% if active_forening.get_main_site %}
+                <li><a href="http://{{ active_forening.get_main_site.domain }}/"><i class="fa fa-home"></i> {{ active_forening.name }}</a></li>
               {% endif %}
               <li><a href="{% url 'user.views.home' %}"><i class="fa fa-user"></i> Min side</a></li>
               <li><a href="{% url 'user.views.account' %}"><i class="fa fa-pencil-square-o"></i> Dine opplysninger</a></li>
