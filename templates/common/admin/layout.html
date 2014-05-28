@@ -78,7 +78,7 @@
               {% else %}
 
                 {# More than one site which is not homepage - use a dropdown #}
-                <li>
+                <li{% if active_entry == 'sites.setup_site' %} class="active"{% endif %}>
                   <a href="javascript:undefined" data-toggle="sites">
                     <i class="fa fa-file"></i> Nettsteder
                     <span class="pull-right">
