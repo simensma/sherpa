@@ -20,7 +20,7 @@
       <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
       <li><a href="{% url 'admin.publications.views.index' %}">Publikasjoner</a></li>
       <li><a href="{% url 'admin.publications.views.edit_publication' publication.id %}">{{ publication.title }}</a></li>
-      <li><a href="{% url 'admin.publications.views.edit_release' release.id %}">{{ release.title|default:"Ny utgivelse" }}</a></li>
+      <li><a href="{% url 'admin.publications.views.edit_release' publication.id release.id %}">{{ release.title|default:"Ny utgivelse" }}</a></li>
     </ol>
   </div>
 </div><!-- /.row -->
