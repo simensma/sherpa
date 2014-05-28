@@ -165,6 +165,9 @@ class Forening(models.Model):
         except Site.DoesNotExist:
             return None
 
+    def get_sites_sorted(self):
+        return Site.sort(self.sites.all())
+
     @staticmethod
     def sort(foreninger):
         foreninger = sorted(foreninger, key=lambda f: f.name.lower())
