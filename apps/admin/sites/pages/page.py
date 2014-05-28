@@ -67,7 +67,7 @@ def new(request, site):
     version.save()
 
     create_template(request.POST['template'], version)
-    return redirect('admin.sites.pages.page.edit', version.id)
+    return redirect('admin.sites.pages.page.edit', active_site.id, version.id)
 
 def check_slug(request, site):
     active_site = Site.objects.get(id=site)
@@ -78,7 +78,7 @@ def check_slug(request, site):
 def delete(request, site, page):
     active_site = Site.objects.get(id=site)
     Page.on(active_site).get(id=page).delete()
-    return redirect('admin.sites.pages.page.list')
+    return redirect('admin.sites.pages.page.list', active_site.id)
 
 def edit(request, site, version):
     active_site = Site.objects.get(id=site)

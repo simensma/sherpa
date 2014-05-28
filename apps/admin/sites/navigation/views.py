@@ -52,7 +52,7 @@ def delete_menu(request, site):
     active_site = Site.objects.get(id=site)
     Menu.on(active_site).get(id=request.POST['menu']).delete()
     cache.delete('main.menu.%s' % active_site.id)
-    return redirect('admin.sites.sites.navigation.views.index')
+    return redirect('admin.sites.sites.navigation.views.index', active_site.id)
 
 def reorder_menu(request, site):
     active_site = Site.objects.get(id=site)

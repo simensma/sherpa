@@ -36,7 +36,7 @@ def index(request, site):
 def delete(request, site):
     active_site = Site.objects.get(id=site)
     if not request.is_ajax():
-        return redirect('admin.sites.settings.cache.views.index')
+        return redirect('admin.sites.settings.cache.views.index', active_site.id)
 
     if request.POST['key'] == 'frontpage':
         id = Version.objects.get(

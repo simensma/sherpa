@@ -26,8 +26,9 @@ def list(request, site):
     return render(request, 'common/admin/sites/articles/list.html', context)
 
 def list_load(request, site):
+    active_site = Site.objects.get(id=site)
     if not request.is_ajax():
-        return redirect('admin.sites.articles.views.list')
+        return redirect('admin.sites.articles.views.list', active_site.id)
     context = RequestContext(request, {'versions': list_bulk(request, int(request.POST['bulk']))})
     return HttpResponse(render_to_string('common/admin/sites/articles/list-elements.html', context))
 
@@ -57,7 +58,7 @@ def new(request, site):
     version.save()
     version.publishers.add(request.user)
     create_template(request.POST['template'], version, request.POST['title'])
-    return redirect('admin.sites.articles.views.edit', version.id)
+    return redirect('admin.sites.articles.views.edit', active_site.id, version.id)
 
 def confirm_delete(request, site, article):
     active_site = Site.objects.get(id=site)
@@ -74,7 +75,7 @@ def delete(request, site, article):
     except Article.DoesNotExist:
         # Probably not a code error but a double-click or something, ignore
         pass
-    return redirect('admin.sites.articles.views.list')
+    return redirect('admin.sites.articles.views.list', active_site.id)
 
 def edit(request, site, version):
     active_site = Site.objects.get(id=site)

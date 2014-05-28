@@ -137,4 +137,4 @@ def setup_site(request):
                 site.title = request.POST['title'].strip()
             site.save()
             request.session.modified = True
-            return redirect('admin.sites.pages.page.list')
+            return redirect('admin.sites.pages.page.list', site.id)

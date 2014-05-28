@@ -16,7 +16,7 @@ def index(request, site):
         if domain.replace('http://', '').rstrip('/') == active_site.domain:
             # Special case; the domain wasn't changed - so just say that it worked
             messages.info(request, 'domain_updated')
-            return redirect('admin.sites.settings.domain.views.index')
+            return redirect('admin.sites.settings.domain.views.index', active_site.id)
 
         result = Site.verify_domain(domain)
         if not result['valid']:
@@ -31,4 +31,4 @@ def index(request, site):
             active_site.prefix = result['prefix']
             active_site.save()
             request.session.modified = True
-            return redirect('admin.sites.settings.domain.views.index')
+            return redirect('admin.sites.settings.domain.views.index', active_site.id)

@@ -30,7 +30,7 @@ def create_ad(request, site):
     if request.POST['type'] == 'file':
 
         if not 'ad' in request.FILES:
-            return redirect('admin.sites.ads.views.list')
+            return redirect('admin.sites.ads.views.list', active_site.id)
 
         hash, extension, content_type = upload(request.FILES['ad'])
         fallback_hash = None
@@ -83,7 +83,7 @@ def create_ad(request, site):
         except IndexError:
             messages.error(request, 'unparseable_script')
 
-    return redirect('admin.sites.ads.views.list')
+    return redirect('admin.sites.ads.views.list', active_site.id)
 
 def update_ad(request, site):
     active_site = Site.objects.get(id=site)
@@ -111,7 +111,7 @@ def update_ad(request, site):
     except IndexError:
         messages.error(request, 'unparseable_script')
 
-    return redirect('admin.sites.ads.views.list')
+    return redirect('admin.sites.ads.views.list', active_site.id)
 
 def create_placement(request, site):
     active_site = Site.objects.get(id=site)
@@ -135,7 +135,7 @@ def create_placement(request, site):
         ap.save()
     except ValueError:
         messages.error(request, 'invalid_date')
-    return redirect('admin.sites.ads.views.list')
+    return redirect('admin.sites.ads.views.list', active_site.id)
 
 def update_placement(request, site):
     active_site = Site.objects.get(id=site)
@@ -150,7 +150,7 @@ def update_placement(request, site):
         placement.save()
     except ValueError:
         messages.error(request, 'invalid_date')
-    return redirect('admin.sites.ads.views.list')
+    return redirect('admin.sites.ads.views.list', active_site.id)
 
 def upload(file):
     # TODO: Consider streaming the file instead of reading everything into memory first.
