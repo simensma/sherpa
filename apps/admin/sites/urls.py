@@ -11,5 +11,6 @@ urlpatterns = patterns('admin.sites.views',
     url(r'^cache/', include('admin.sites.cache.urls')),
     url(r'^meny/', include('admin.sites.navigation.urls')),
     url(r'^domene/', include('admin.sites.domain.urls')),
+    url(r'^innstillinger/', include('admin.sites.settings.urls')),
 
 )

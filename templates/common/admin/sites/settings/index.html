@@ -1,0 +1,22 @@
+{% extends 'common/admin/layout.html' %}
+{% block title %}Innstillinger — {{ block.super }}{% endblock %}
+
+{% block admin_menu %}{% with 'sites' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="col-lg-12">
+    <h1>Innstillinger <small>endre oppsettet for {{ active_site.domain }}</small></h1>
+    <ol class="breadcrumb">
+      <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
+      <li><a href="{% url 'admin.sites.views.index' active_site.id %}">Nettsteder</a></li>
+      <li><a href="{% url 'admin.sites.views.index' active_site.id %}">{{ active_site.domain }}</a></li>
+      <li><a href="{% url 'admin.sites.settings.views.index' active_site.id %}">Innstillinger</a></li>
+    </ol>
+  </div>
+</div><!-- /.row -->
+
+
+
+{% endblock %}
