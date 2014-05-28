@@ -131,7 +131,10 @@ def setup_site(request):
                 type=request.POST['type'],
                 template='large',
                 forening=request.active_forening,
+                title='',
             )
+            if request.POST['type'] == 'kampanje':
+                site.title = request.POST['title'].strip()
             site.save()
             request.session.modified = True
             return redirect('admin.sites.pages.page.list')

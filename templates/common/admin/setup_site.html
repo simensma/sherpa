@@ -29,18 +29,25 @@
             </div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group type">
             <div class="col-md-offset-2 col-md-10">
               <div class="btn-group" data-toggle="buttons">
                 {% for type in site_types %}
                   {# If this forening as a main site, don't show the main site-button #}
                   {% if type.0 != 'forening' or active_forening.get_main_site == None %}
-                    <label class="btn btn-default btn-lg">
+                    <label class="btn btn-default btn-lg" data-type="{{ type.0 }}">
                       <input type="radio" name="type" value="{{ type.0 }}"> {{ type.1 }}
                     </label>
                   {% endif %}
                 {% endfor %}
               </div>
+            </div>
+          </div>
+
+          <div class="form-group title jq-hide">
+            <label class="col-md-2 control-label" for="title">Tittel for kampanjesiden:</label>
+            <div class="col-md-10">
+              <input type="text" class="form-control" name="title" id="title">
             </div>
           </div>
 
