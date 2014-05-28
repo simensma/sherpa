@@ -20,22 +20,22 @@
 <div class="site-settings">
   <div class="row">
     <div class="col-lg-2">
-      <div class="navigation-block">
+      <a class="navigation-block" href="{% url 'admin.sites.settings.domain.views.index' active_site.id %}">
         <p><i class="fa fa-link fa-5x"></i></p>
-        <a href="{% url 'admin.sites.settings.domain.views.index' active_site.id %}">Domene</a><br>
-      </div>
+        <p>Domene</p>
+      </a>
     </div>
     <div class="col-lg-2">
-      <div class="navigation-block">
+      <a class="navigation-block" href="{% url 'admin.sites.settings.analytics.views.index' active_site.id %}">
         <p><i class="fa fa-bar-chart-o fa-5x"></i></p>
-        <a href="{% url 'admin.sites.settings.analytics.views.index' active_site.id %}">Analyse</a>
-      </div>
+        <p>Analyse</p>
+      </a>
     </div>
     <div class="col-lg-2">
-      <div class="navigation-block">
+      <a class="navigation-block" href="{% url 'admin.sites.settings.cache.views.index' active_site.id %}">
         <p><i class="fa fa-bolt fa-5x"></i></p>
-        <a href="{% url 'admin.sites.settings.cache.views.index' active_site.id %}">Caching</a>
-      </div>
+        <p>Caching</p>
+      </a>
     </div>
   </div>
 </div>
