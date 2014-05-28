@@ -18,76 +18,93 @@
         <li><a href="{% url 'admin.views.setup_site' %}">Sett opp hjemmeside</a></li>
       </ol>
 
-      <form action="{% url 'admin.views.setup_site' %}" method="post">
+      <form action="{% url 'admin.views.setup_site' %}" method="post" class="form-default form-horizontal" data-aktivitet-id="{{ aktivitet.id }}">
         {% csrf_token %}
 
-        <p>
-          Her kan du opprette en hjemmeside for {{ active_forening.name }}.
-        </p>
+        <div class="section">
 
-        <div class="step1">
-          <h2>1. Hva slags hjemmeside er dette?</h2>
-
-          <div class="btn-group" data-toggle="buttons">
-            {% for type in site_types %}
-              {# If this forening as a main site, don't show the main site-button #}
-              {% if type.0 != 'forening' or active_forening.get_main_site == None %}
-                <label class="btn btn-default btn-lg">
-                  <input type="radio" name="type" value="{{ type.0 }}"> {{ type.1 }}
-                </label>
-              {% endif %}
-            {% endfor %}
+          <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+              <h2>1. Hva slags hjemmeside er dette?</h2>
+            </div>
           </div>
-        </div>
 
-        <div class="step2 jq-hide">
-          <h2>2. Hvilket domene skal hjemmesiden ha?</h2>
+          <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+              <div class="btn-group" data-toggle="buttons">
+                {% for type in site_types %}
+                  {# If this forening as a main site, don't show the main site-button #}
+                  {% if type.0 != 'forening' or active_forening.get_main_site == None %}
+                    <label class="btn btn-default btn-lg">
+                      <input type="radio" name="type" value="{{ type.0 }}"> {{ type.1 }}
+                    </label>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+          </div>
 
-          {% for message in messages %}
-            {% if message.message == 'malformed' %}
-              <div class="alert alert-danger">
-                Du må fylle inn et gyldig domenenavn. Hør med DNT sentralt dersom du er usikker på hva dette bør være.
-              </div>
-            {% elif message.message == 'more_than_one_subdir' %}
-              <div class="alert alert-danger">
-                Du kan ikke ha to undermapper i domenenavnet. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.
-              </div>
-            {% elif message.message == 'prefix_for_disallowed_domain' %}
-              <div class="alert alert-danger">
-                Kun domener direkte under <strong>www.turistforeningen.no</strong> kan ha undermapper. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.
-              </div>
-            {% elif message.message == 'site_exists' %}
-              <div class="alert alert-danger">
-                <strong>{{ existing_forening.name }}</strong> har allerede domenenavnet <strong>http://{{ existing_forening.get_main_site.domain }}/</strong>. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.
-              </div>
-            {% elif message.message == 'prefix_not_supported_yet' %}
-              <div class="alert alert-danger">
-                Domenet kan ikke være en undermappe under turistforeningen.no (for eksempel: <strong>www.turistforeningen.no/mitt-turlag</strong>) fordi vi ikke har satt opp teknisk støtte for det ennå.
-              </div>
-            {% elif message.message == 'test_period_requires_test_domain' %}
-              <div class="alert alert-danger">
-                I test-perioden <strong>må</strong> dere ha "<strong>.test.turistforeningen.no</strong>" bak domenet. For eksempel: <strong>http://stf.test.turistforeningen.no</strong>.
-              </div>
-            {% elif message.message == 'main_site_exists' %}
-              <div class="alert alert-danger">
-                {{ active_forening }} har allerede en hjemmeside, du kan ikke sette opp en ny.
-              </div>
-            {% endif %}
-          {% endfor %}
+        </div><!-- /.section -->
 
-          <p>
-            For eksempel: <strong>http://eksempel.test.turistforeningen.no/</strong>
-          </p>
+        <div class="section">
 
-          <p>
-            http:// <input type="text" class="form-control" id="domain" name="domain" value="{{ domain }}" placeholder="forening"> .test.turistforeningen.no
-          </p>
+          <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+              <h2>2. Hvilket domene skal hjemmesiden ha?</h2>
 
-          <p>
-            <button type="submit" class="btn btn-primary" data-enter-domain-warning="Velg hvilket domene dere ønsker at hjemmesiden deres skal ha. Kontakt oss via den røde boksen til høyre på skjermen hvis du lurer på hva dette bør være.">Opprett hjemmeside for {{ active_forening.name }}!</button>
-          </p>
-        </div>
+              {% for message in messages %}
+                {% if message.message == 'malformed' %}
+                  <div class="alert alert-danger">
+                    Du må fylle inn et gyldig domenenavn. Hør med DNT sentralt dersom du er usikker på hva dette bør være.
+                  </div>
+                {% elif message.message == 'more_than_one_subdir' %}
+                  <div class="alert alert-danger">
+                    Du kan ikke ha to undermapper i domenenavnet. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.
+                  </div>
+                {% elif message.message == 'prefix_for_disallowed_domain' %}
+                  <div class="alert alert-danger">
+                    Kun domener direkte under <strong>www.turistforeningen.no</strong> kan ha undermapper. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.
+                  </div>
+                {% elif message.message == 'site_exists' %}
+                  <div class="alert alert-danger">
+                    <strong>{{ existing_forening.name }}</strong> har allerede domenenavnet <strong>http://{{ existing_forening.get_main_site.domain }}/</strong>. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.
+                  </div>
+                {% elif message.message == 'prefix_not_supported_yet' %}
+                  <div class="alert alert-danger">
+                    Domenet kan ikke være en undermappe under turistforeningen.no (for eksempel: <strong>www.turistforeningen.no/mitt-turlag</strong>) fordi vi ikke har satt opp teknisk støtte for det ennå.
+                  </div>
+                {% elif message.message == 'test_period_requires_test_domain' %}
+                  <div class="alert alert-danger">
+                    I test-perioden <strong>må</strong> dere ha "<strong>.test.turistforeningen.no</strong>" bak domenet. For eksempel: <strong>http://stf.test.turistforeningen.no</strong>.
+                  </div>
+                {% elif message.message == 'main_site_exists' %}
+                  <div class="alert alert-danger">
+                    {{ active_forening }} har allerede en hjemmeside, du kan ikke sette opp en ny.
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
 
+          <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+              <p>
+                For eksempel: <strong>http://eksempel.test.turistforeningen.no/</strong>
+              </p>
+
+              <p>
+                http:// <input type="text" class="form-control" id="domain" name="domain" value="{{ domain }}" placeholder="forening"> .test.turistforeningen.no
+              </p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+              <button type="submit" class="btn btn-primary" data-enter-domain-warning="Velg hvilket domene dere ønsker at hjemmesiden deres skal ha. Kontakt oss via den røde boksen til høyre på skjermen hvis du lurer på hva dette bør være.">Opprett hjemmeside for {{ active_forening.name }}!</button>
+            </div>
+          </div>
+
+        </div><!-- /.section -->
       </form>
 
     </div>
