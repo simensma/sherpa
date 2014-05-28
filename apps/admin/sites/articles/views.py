@@ -20,7 +20,7 @@ def list(request, site):
     active_site = Site.objects.get(id=site)
     context = {
         'active_site': active_site,
-        'versions': list_bulk(request, 0),
+        'versions': list_bulk(request, 0, active_site),
         'BULK_COUNT': BULK_COUNT,
     }
     return render(request, 'common/admin/sites/articles/list.html', context)
@@ -29,12 +29,11 @@ def list_load(request, site):
     active_site = Site.objects.get(id=site)
     if not request.is_ajax():
         return redirect('admin.sites.articles.views.list', active_site.id)
-    context = RequestContext(request, {'versions': list_bulk(request, int(request.POST['bulk']))})
+    context = RequestContext(request, {'versions': list_bulk(request, int(request.POST['bulk']), active_site)})
     return HttpResponse(render_to_string('common/admin/sites/articles/list-elements.html', context))
 
 # This is not a view.
-def list_bulk(request, site, bulk):
-    active_site = Site.objects.get(id=site)
+def list_bulk(request, bulk, active_site):
     return Version.objects.filter(
         variant__article__isnull=False,
         variant__segment__isnull=True,
