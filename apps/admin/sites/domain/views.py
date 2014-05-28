@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from admin.sites.pages.page_util import verify_domain
+
+from core.models import Site
 
 def index(request):
     if request.method == 'GET':
@@ -14,7 +15,7 @@ def index(request):
             messages.info(request, 'domain_updated')
             return redirect('admin.sites.domain.views.index')
 
-        result = verify_domain(domain)
+        result = Site.verify_domain(domain)
         if not result['valid']:
             messages.error(request, result['error'])
             context = {'domain': domain}

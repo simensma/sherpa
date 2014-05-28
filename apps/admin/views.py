@@ -16,7 +16,6 @@ from focus.models import Actor
 from page.models import Page
 from user.models import User
 from core.models import Site
-from admin.sites.pages.page_util import verify_domain
 
 def index(request):
     total_membership_count = cache.get('admin.total_membership_count')
@@ -114,7 +113,7 @@ def setup_site(request):
                 context['domain'] = subdomain
             return render(request, 'common/admin/setup_site.html', context)
 
-        result = verify_domain(domain)
+        result = Site.verify_domain(domain)
         if not result['valid']:
             messages.error(request, result['error'])
             if request.POST['domain-type'] == 'fqdn':
