@@ -59,7 +59,50 @@
 
             <li{% if active_entry == 'dashboard' %} class="active"{% endif %}><a href="{% url 'admin.views.index' %}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
             <li{% if active_entry == 'forening' %} class="active"{% endif %}><a href="{% url 'admin.forening.views.index' %}"><i class="fa fa-bookmark-o"></i> Foreninger og turgrupper</a></li>
-            <li{% if active_entry == 'sites' %} class="active"{% endif %}><a href="{% url 'admin.sites.views.index' %}"><i class="fa fa-file"></i> Våre hjemmesider</a></li>
+
+            {% with sites=active_forening.get_sites_sorted %}
+              {% if sites.hytte|length == 0 and sites.kampanje|length == 0 %}
+
+                {# No sites or only homepage - let the link go directly #}
+                <li{% if active_entry == 'sites' %} class="active"{% endif %}><a href="{% url 'admin.sites.views.index' %}"><i class="fa fa-file"></i> Hjemmeside</a></li>
+
+              {% else %}
+
+                {# More than one site which is not homepage - use a dropdown #}
+                <li{% if active_entry == 'sites' %} class="active"{% endif %}>
+                  <a href="javascript:undefined" data-toggle="sites">
+                    <i class="fa fa-file"></i> Nettsteder
+                    <span class="pull-right">
+                      <i class="fa fa-toggle-down"></i>
+                    </span>
+                  </a>
+                </li>
+
+                {% for site in sites.forening %}
+                  <li class="submenu jq-hide" data-type="sites">
+                    <a href="{% url 'admin.sites.views.index' %}">
+                      {{ site.domain }}
+                    </a>
+                  </li>
+                {% endfor %}
+                {% for site in sites.hytte %}
+                  <li class="submenu jq-hide" data-type="sites">
+                    <a href="{% url 'admin.sites.views.index' %}">
+                      {{ site.domain }}
+                    </a>
+                  </li>
+                {% endfor %}
+                {% for site in sites.kampanje %}
+                  <li class="submenu jq-hide" data-type="sites">
+                    <a href="{% url 'admin.sites.views.index' %}">
+                      {{ site.domain }}
+                    </a>
+                  </li>
+                {% endfor %}
+
+              {% endif %}
+            {% endwith %}
+
             <li{% if active_entry == 'aktiviteter' %} class="active"{% endif %}><a href="{% url 'admin.aktiviteter.views.index' %}"><i class="fa fa-globe"></i> Aktiviteter (prototype)</a></li>
             <li{% if active_entry == 'publications' %} class="active"{% endif %}><a href="{% url 'admin.publications.views.index' %}"><i class="fa fa-font"></i> Publikasjoner</a></li>
 
