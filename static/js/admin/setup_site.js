@@ -11,7 +11,8 @@ $(function() {
     var domain = domain_wrapper.find("input[name='domain']");
     var domain_type = domain_wrapper.find("input[name='domain-type']");
     var subdomain_tail = domain_wrapper.find("span.subdomain-tail");
-    var submit = domain_wrapper.find("button[type='submit']");
+
+    var submit = wrapper.find("button[type='submit']");
 
     site_type_buttons.change(function() {
         if(site_type_buttons.filter(":checked").is("[value='kampanje']")) {
