@@ -54,10 +54,6 @@
     </div>
   </div>
 
-  <p>
-    <a href="{% url 'admin.views.setup_site' %}">Sett opp site</a>
-  </p>
-
   {% with sites=active_forening.get_sites_sorted %}
     {% if sites.hytte|length > 0 or sites.kampanje|length > 0 %}
 
@@ -99,6 +95,10 @@
       </table>
     {% endif %}
   {% endwith %}
+
+  <p>
+    <a href="{% url 'admin.views.setup_site' %}" class="btn btn-default">Opprett et nytt nettsted</a>
+  </p>
 
 </div>
 
