@@ -17,6 +17,27 @@
   </div>
 </div><!-- /.row -->
 
-
+<div class="site-settings">
+  <div class="row">
+    <div class="col-lg-2">
+      <div class="navigation-block">
+        <p><i class="fa fa-link fa-5x"></i></p>
+        <a href="{% url 'admin.sites.domain.views.index' active_site.id %}">Domene</a><br>
+      </div>
+    </div>
+    <div class="col-lg-2">
+      <div class="navigation-block">
+        <p><i class="fa fa-bar-chart-o fa-5x"></i></p>
+        <a href="{% url 'admin.sites.analytics.views.index' active_site.id %}">Analyse</a>
+      </div>
+    </div>
+    <div class="col-lg-2">
+      <div class="navigation-block">
+        <p><i class="fa fa-bolt fa-5x"></i></p>
+        <a href="{% url 'admin.sites.cache.views.index' active_site.id %}">Caching</a>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}
