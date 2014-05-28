@@ -116,6 +116,53 @@
             </div>
           </div>
 
+        </div><!-- /.section -->
+
+        <div class="section">
+
+          <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+              <h2>3. Hvordan skal forsiden se ut?</h2>
+            </div>
+          </div>
+
+          <div class="form-group template">
+            <div class="col-md-offset-2 col-md-10">
+              <input type="hidden" name="template">
+              Velg en forhåndsdefinert mal under. Dette blir et utgangspunkt som du kan endre etterpå.
+
+              <div class="row">
+                <div class="col-lg-3">
+                  <div class="template-block" data-template="text">
+                    <h3>Tekst og bilde</h3>
+                    <p>(Bilde kommer)</p>
+                    <p>
+                      En enkel mal med én kolonne, bilde øverst, og litt tekst nedover.
+                    </p>
+                  </div>
+                </div>
+                <div class="col-lg-3">
+                  <div class="template-block" data-template="kampanje">
+                    <h3>Kampanje &amp; nyheter</h3>
+                    <p>(Bilde kommer)</p>
+                    <p>
+                      Viser en kampanje øverst, noen tekstfelter og lister nyheter under. Passer best for store foreninger.
+                    </p>
+                  </div>
+                </div>
+                <div class="col-lg-3">
+                  <div class="template-block" data-template="aktiviteter">
+                    <h3>Aktiviteter</h3>
+                    <p>(Bilde kommer)</p>
+                    <p>
+                      Enkel informasjon om foreningen og kommende aktiviteter. Passer best for små turlag og turgrupper.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
               <button type="submit" class="btn btn-primary" data-enter-domain-warning="Velg hvilket domene dere ønsker at hjemmesiden deres skal ha. Kontakt oss via den røde boksen til høyre på skjermen hvis du lurer på hva dette bør være.">Opprett hjemmeside for {{ active_forening.name }}!</button>
@@ -123,6 +170,7 @@
           </div>
 
         </div><!-- /.section -->
+
       </form>
 
     </div>

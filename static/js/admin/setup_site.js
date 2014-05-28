@@ -12,6 +12,10 @@ $(function() {
     var domain_type = domain_wrapper.find("input[name='domain-type']");
     var subdomain_tail = domain_wrapper.find("span.subdomain-tail");
 
+    var template_wrapper = wrapper.find("div.form-group.template");
+    var template_input = template_wrapper.find("input[name='template']");
+    var templates = template_wrapper.find("div.template-block");
+
     var submit = wrapper.find("button[type='submit']");
 
     site_type_buttons.change(function() {
@@ -30,6 +34,12 @@ $(function() {
             domain.addClass('fqdn');
             subdomain_tail.hide();
         }
+    });
+
+    templates.click(function() {
+        templates.removeClass('active');
+        $(this).addClass('active');
+        template_input.val($(this).attr('data-template'));
     });
 
     submit.click(function(e) {
