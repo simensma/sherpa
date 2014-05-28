@@ -118,14 +118,14 @@
 
         <div class="status">
           <button class="btn btn-success save"><i class="icon-heart"></i> Lagre</button>
-          <button class="btn btn-success preview" data-href="{% url 'admin.sites.articles.views.preview' version.id %}"><i class="icon-search"></i> Forhåndsvisning</button>
-          <a class="btn btn-danger delete-article" href="{% url 'admin.sites.articles.views.confirm_delete' version.variant.article.id %}">
+          <button class="btn btn-success preview" data-href="{% url 'admin.sites.articles.views.preview' active_site.id version.id %}"><i class="icon-search"></i> Forhåndsvisning</button>
+          <a class="btn btn-danger delete-article" href="{% url 'admin.sites.articles.views.confirm_delete' active_site.id version.variant.article.id %}">
             <i class="icon-warning-sign"></i> Slett
           </a>
           <br><br>
 
-          <button class="btn btn-success save-and-quit" data-href="{% url 'admin.sites.pages.page.list' %}">Lagre &amp; Tilbake til Sherpa</button>
-          <a href="{% url 'admin.sites.pages.page.list' %}" class="btn btn-default quit" data-confirm="Er du sikker på at du vil gå tilbake til Sherpa uten å lagre?">Tilbake til Sherpa UTEN å lagre</a>
+          <button class="btn btn-success save-and-quit" data-href="{% url 'admin.sites.pages.page.list' active_site.id %}">Lagre &amp; Tilbake til Sherpa</button>
+          <a href="{% url 'admin.sites.pages.page.list' active_site.id %}" class="btn btn-default quit" data-confirm="Er du sikker på at du vil gå tilbake til Sherpa uten å lagre?">Tilbake til Sherpa UTEN å lagre</a>
 
         </div>
 

@@ -11,9 +11,9 @@
     <h1>Domene <small>endre domene for {{ active_site.domain }}</small></h1>
     <ol class="breadcrumb">
       <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
-      <li><a href="{% url 'admin.sites.views.index' active_side.id %}">Nettsteder</a></li>
-      <li><a href="{% url 'admin.sites.views.index' active_side.id %}">{{ active_site.domain }}</a></li>
-      <li><a href="{% url 'admin.sites.domain.views.index' %}">Domene</a></li>
+      <li><a href="{% url 'admin.sites.views.index' active_site.id %}">Nettsteder</a></li>
+      <li><a href="{% url 'admin.sites.views.index' active_site.id %}">{{ active_site.domain }}</a></li>
+      <li><a href="{% url 'admin.sites.domain.views.index' active_site.id %}">Domene</a></li>
     </ol>
   </div>
 </div><!-- /.row -->
@@ -56,7 +56,7 @@
       {{ active_forening.name }} har hjemmesideadresse <strong>http://{{ active_site.domain }}</strong>. Du kan endre denne hvis du vet hva du gjør. <strong>Hvis du endrer domenet, vil den gamle adressen slutte å fungere</strong>. Man endrer veldig sjeldent domenet for en hjemmeside.
     </p>
 
-    <form action="{% url 'admin.sites.domain.views.index' %}" method="post">
+    <form action="{% url 'admin.sites.domain.views.index' active_site.id %}" method="post">
       {% csrf_token %}
       <div class="form-group">
         <label>Ny domeneadresse:</label>

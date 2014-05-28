@@ -11,8 +11,8 @@
     <h1>Hjemmesider <small>for {{ active_forening.name }}</small></h1>
     <ol class="breadcrumb">
       <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
-      <li><a href="{% url 'admin.sites.views.index' active_side.id %}">Nettsteder</a></li>
-      <li><a href="{% url 'admin.sites.views.index' active_side.id %}">{{ active_site.domain }}</a></li>
+      <li><a href="{% url 'admin.sites.views.index' active_site.id %}">Nettsteder</a></li>
+      <li><a href="{% url 'admin.sites.views.index' active_site.id %}">{{ active_site.domain }}</a></li>
     </ol>
   </div>
 </div><!-- /.row -->
@@ -22,34 +22,34 @@
     <div class="col-lg-2">
       <div class="navigation-block">
         <p><i class="fa fa-file fa-5x"></i></p>
-        <a href="{% url 'admin.sites.pages.page.list' %}">Sider</a>
+        <a href="{% url 'admin.sites.pages.page.list' active_site.id %}">Sider</a>
       </div>
     </div>
     <div class="col-lg-2">
       <div class="navigation-block">
         <p><i class="fa fa-bullhorn fa-5x"></i></p>
-        <a href="{% url 'admin.sites.articles.views.list' %}">Nyheter</a>
+        <a href="{% url 'admin.sites.articles.views.list' active_site.id %}">Nyheter</a>
       </div>
     </div>
     <div class="col-lg-2">
       <div class="navigation-block">
         <p><i class="fa fa-bars fa-5x"></i></p>
         Navigasjon<br>
-        <a href="{% url 'admin.sites.menu.views.index' %}">Toppmeny</a>
+        <a href="{% url 'admin.sites.menu.views.index' active_site.id %}">Toppmeny</a>
       </div>
     </div>
     <div class="col-lg-2">
       <div class="navigation-block">
         <p><i class="fa fa-desktop fa-5x"></i></p>
-        <a href="{% url 'admin.sites.ads.views.list' %}">Annonser</a>
+        <a href="{% url 'admin.sites.ads.views.list' active_site.id %}">Annonser</a>
       </div>
     </div>
     <div class="col-lg-2">
       <div class="navigation-block">
         <p><i class="fa fa-wrench fa-5x"></i></p>
         Innstillinger<br>
-        <a href="{% url 'admin.sites.domain.views.index' %}">Domene</a><br>
-        <a href="{% url 'admin.sites.analytics.views.index' %}">Analyse</a> <a href="{% url 'admin.sites.cache.views.index' %}">Caching</a>
+        <a href="{% url 'admin.sites.domain.views.index' active_site.id %}">Domene</a><br>
+        <a href="{% url 'admin.sites.analytics.views.index' active_site.id %}">Analyse</a> <a href="{% url 'admin.sites.cache.views.index' active_site.id %}">Caching</a>
       </div>
     </div>
   </div>

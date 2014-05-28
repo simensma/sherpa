@@ -6,18 +6,18 @@
 
       <div class="media">
         {% if not version.get_thumbnail.hide %}
-          <a class="pull-left" href="{% url 'admin.sites.articles.views.edit' version.id %}">
+          <a class="pull-left" href="{% url 'admin.sites.articles.views.edit' active_site.id version.id %}">
             <img class="media-object" src="{{ version.get_thumbnail.url }}" alt="{{ version.get_title_content.content|striptags }}">
           </a>
         {% endif %}
         <div class="media-body">
           <h2 class="media-heading">
-            <a href="{% url 'admin.sites.articles.views.edit' version.id %}">
+            <a href="{% url 'admin.sites.articles.views.edit' active_site.id version.id %}">
               {% firstof version.get_title_content.content|striptags '(Uten tittel)' %}
             </a>
           </h2>
           <p>
-            <a href="{% url 'admin.sites.articles.views.edit' version.id %}">
+            <a href="{% url 'admin.sites.articles.views.edit' active_site.id version.id %}">
               {{ version.get_lede_content.content|striptags|safe|truncatewords:40 }}
             </a>
           </p>

@@ -15,9 +15,9 @@
     <h1>Annonser <small>legg ut annonser som vises på websidene</small></h1>
     <ol class="breadcrumb">
       <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
-      <li><a href="{% url 'admin.sites.views.index' active_side.id %}">Nettsteder</a></li>
-      <li><a href="{% url 'admin.sites.views.index' active_side.id %}">{{ active_site.domain }}</a></li>
-      <li><a href="{% url 'admin.sites.ads.views.list' %}">Annonser</a></li>
+      <li><a href="{% url 'admin.sites.views.index' active_site.id %}">Nettsteder</a></li>
+      <li><a href="{% url 'admin.sites.views.index' active_site.id %}">{{ active_site.domain }}</a></li>
+      <li><a href="{% url 'admin.sites.ads.views.list' active_site.id %}">Annonser</a></li>
     </ol>
   </div>
 </div><!-- /.row -->
@@ -123,7 +123,7 @@
         </table>
       {% endif %}
 
-      <form class="placement form-horizontal" method="post" action="{% url 'admin.sites.ads.views.create_placement' %}">
+      <form class="placement form-horizontal" method="post" action="{% url 'admin.sites.ads.views.create_placement' active_site.id %}">
         {% csrf_token %}
 
         <div class="form-group">
@@ -181,7 +181,7 @@
       <div class="tab-content tab-content-visible">
         <div class="tab-pane active" id="fil">
 
-          <form method="post" action="{% url 'admin.sites.ads.views.create_ad' %}" enctype="multipart/form-data" class="form-default form-horizontal">
+          <form method="post" action="{% url 'admin.sites.ads.views.create_ad' active_site.id %}" enctype="multipart/form-data" class="form-default form-horizontal">
             {% csrf_token %}
             <input type="hidden" name="type" value="file">
 
@@ -240,7 +240,7 @@
         </div>
         <div class="tab-pane" id="script">
 
-          <form method="post" action="{% url 'admin.sites.ads.views.create_ad' %}" class="form-default form-horizontal">
+          <form method="post" action="{% url 'admin.sites.ads.views.create_ad' active_site.id %}" class="form-default form-horizontal">
             {% csrf_token %}
             <input type="hidden" name="type" value="adform-script">
 
@@ -333,7 +333,7 @@
       <h3>Annonsevisning</h3>
     </div>
     <div class="modal-body">
-      <form class="placement" method="post" action="{% url 'admin.sites.ads.views.update_placement' %}">
+      <form class="placement" method="post" action="{% url 'admin.sites.ads.views.update_placement' active_site.id %}">
         {% csrf_token %}
         <input type="hidden" name="id" value="">
 
@@ -383,7 +383,7 @@
       <h3>Annonsevisning</h3>
     </div>
     <div class="modal-body">
-      <form class="placement" method="post" action="{% url 'admin.sites.ads.views.update_placement' %}">
+      <form class="placement" method="post" action="{% url 'admin.sites.ads.views.update_placement' active_site.id %}">
         {% csrf_token %}
         <input type="hidden" name="id" value="">
 
@@ -418,7 +418,7 @@
       <h3>Annonsedetaljer</h3>
     </div>
     <div class="modal-body">
-      <form method="post" action="{% url 'admin.sites.ads.views.update_ad' %}" enctype="multipart/form-data">
+      <form method="post" action="{% url 'admin.sites.ads.views.update_ad' active_site.id %}" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="hidden" name="id" value="">
 
@@ -470,7 +470,7 @@
       <h3>Annonsedetaljer</h3>
     </div>
     <div class="modal-body">
-      <form method="post" action="{% url 'admin.sites.ads.views.update_ad' %}" enctype="multipart/form-data">
+      <form method="post" action="{% url 'admin.sites.ads.views.update_ad' active_site.id %}" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="hidden" name="id" value="">
 
