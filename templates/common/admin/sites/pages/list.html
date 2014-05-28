@@ -14,7 +14,8 @@
     <h1>Sider <small>sett opp innholdet på <a href="http://{{ active_site.domain }}/">{{ active_site.domain }}</a></small></h1>
     <ol class="breadcrumb">
       <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
-      <li><a href="{% url 'admin.sites.views.index' %}">Våre hjemmesider</a></li>
+      <li><a href="{% url 'admin.sites.views.index' active_side.id %}">Nettsteder</a></li>
+      <li><a href="{% url 'admin.sites.views.index' active_side.id %}">{{ active_site.domain }}</a></li>
       <li><a href="{% url 'admin.sites.pages.page.list' %}">Sider</a></li>
     </ol>
   </div>
