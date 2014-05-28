@@ -12,10 +12,10 @@
   <div class="row">
     <div class="col-lg-12">
 
-      <h1>Sett opp hjemmeside for {{ active_forening.name}}</h1>
+      <h1>Sett opp nytt nettsted <small>foreningens hjemmeside, en hyttes hjemmeside eller en kampanjeside</small></h1>
       <ol class="breadcrumb">
         <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
-        <li><a href="{% url 'admin.views.setup_site' %}">Sett opp hjemmeside</a></li>
+        <li><a href="{% url 'admin.views.setup_site' %}">Sett opp nytt nettsted</a></li>
       </ol>
 
       <form action="{% url 'admin.views.setup_site' %}" method="post" class="form-default form-horizontal" data-aktivitet-id="{{ aktivitet.id }}">
