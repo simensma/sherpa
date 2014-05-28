@@ -1,5 +1,8 @@
 from django.shortcuts import render
 
+from core.models import Site
+
 def index(request, site):
-    context = {'site': site}
+    active_site = Site.objects.get(id=site)
+    context = {'active_site': active_site}
     return render(request, 'common/admin/sites/index.html', context)
