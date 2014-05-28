@@ -144,6 +144,11 @@ class CheckSherpaPermissions(object):
                 site = [Site.objects.get(id=arg['site']) for arg in args if type(arg) == dict and 'site' in arg]
                 if len(site) == 1:
                     site = site[0]
+
+                    # Verify that the user has access to this site (transitive by forening)
+                    if not site.forening in request.user.all_foreninger():
+                        raise PermissionDenied
+
             except Site.DoesNotExist:
                 # The specified site doesn't exist
                 return redirect('admin.views.setup_site')
