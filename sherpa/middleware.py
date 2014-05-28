@@ -138,7 +138,7 @@ class CheckSherpaPermissions(object):
                     return render(request, 'common/admin/set_active_forening.html', context)
 
     def process_view(self, request, view_func, *args, **kwargs):
-        if request.current_app == 'admin' and request.path.startswith(u'/sherpa/hjemmesider'):
+        if request.current_app == 'admin' and request.path.startswith(u'/sherpa/nettsteder'):
             # Accessing 'sites' subapp in admin
             try:
                 site = [Site.objects.get(id=arg['site']) for arg in args if type(arg) == dict and 'site' in arg]
