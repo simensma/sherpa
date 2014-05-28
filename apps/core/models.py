@@ -18,8 +18,8 @@ class Site(models.Model):
     prefix = models.CharField(max_length=255)
     TYPE_CHOICES = (
         ('forening', u'Foreningens hjemmeside'), # Zero or one per forening
-        ('hytte', u'Hytteside - en betjent hyttes egen hjemmeside'),
-        ('kampanje', u'En egen kampanjeside'),
+        ('hytte', u'Hytteside: Hjemmeside for en betjent hytte'),
+        ('kampanje', u'Kampanjeside'),
     )
     type = models.CharField(max_length=255, choices=TYPE_CHOICES)
     TEMPLATE_CHOICES = (
