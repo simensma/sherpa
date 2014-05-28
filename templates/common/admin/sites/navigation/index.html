@@ -4,19 +4,19 @@
 {% block admin_menu %}{% with 'sites' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
 
 {% block extra_js %}
-  <script src="{{ STATIC_URL }}js/admin/sites/menu/index.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/sites/navigation/menu.js"></script>
 {% endblock %}
 
 {% block body %}
 
 <div class="row">
   <div class="col-lg-12">
-    <h1>Toppmeny <small>dra for å sortere, klikk for å endre</small></h1>
+    <h1>Navigasjon <small>endre menyelementene og innhold i footer</small></h1>
     <ol class="breadcrumb">
       <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
       <li><a href="{% url 'admin.sites.views.index' active_site.id %}">Nettsteder</a></li>
       <li><a href="{% url 'admin.sites.views.index' active_site.id %}">{{ active_site.domain }}</a></li>
-      <li><a href="{% url 'admin.sites.menu.views.index' active_site.id %}">Toppmeny</a></li>
+      <li><a href="{% url 'admin.sites.navigation.views.index' active_site.id %}">Toppmeny</a></li>
     </ol>
   </div>
 </div><!-- /.row -->
@@ -24,7 +24,9 @@
 <div class="row">
   <div class="col-md-12">
 
-    <nav id="menus" data-reorder-url="{% url 'admin.sites.menu.views.reorder' active_site.id %}">
+    <h2>Toppmeny <small>dra for å sortere, klikk for å endre</small></h2>
+
+    <nav id="menus" data-reorder-url="{% url 'admin.sites.navigation.views.reorder_menu' active_site.id %}">
       <ul class="sortable horizontal">
         {% for menu in menus %}
         <li>
@@ -39,7 +41,7 @@
   </div>
 </div><!-- /.row -->
 
-<div class="modal menu" data-new-url="{% url 'admin.sites.menu.views.new' active_site.id %}" data-edit-url="{% url 'admin.sites.menu.views.edit' active_site.id %}" data-delete-url="{% url 'admin.sites.menu.views.delete' active_site.id %}">
+<div class="modal menu" data-new-url="{% url 'admin.sites.navigation.views.new_menu' active_site.id %}" data-edit-url="{% url 'admin.sites.navigation.views.edit_menu' active_site.id %}" data-delete-url="{% url 'admin.sites.navigation.views.delete_menu' active_site.id %}">
   <div class="modal-header">
 
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>

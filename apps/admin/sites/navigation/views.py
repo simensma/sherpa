@@ -16,9 +16,9 @@ def index(request, site):
         'active_site': active_site,
         'menus': menus,
     }
-    return render(request, 'common/admin/sites/menu/index.html', context)
+    return render(request, 'common/admin/sites/navigation/index.html', context)
 
-def new(request, site):
+def new_menu(request, site):
     active_site = Site.objects.get(id=site)
     if request.POST['name'].strip() == '':
         raise PermissionDenied
@@ -36,7 +36,7 @@ def new(request, site):
     cache.delete('main.menu.%s' % active_site.id)
     return HttpResponse(json.dumps({'id': menu.id}))
 
-def edit(request, site):
+def edit_menu(request, site):
     active_site = Site.objects.get(id=site)
     if request.POST['name'].strip() == '':
         raise PermissionDenied
@@ -48,13 +48,13 @@ def edit(request, site):
     cache.delete('main.menu.%s' % active_site.id)
     return HttpResponse()
 
-def delete(request, site):
+def delete_menu(request, site):
     active_site = Site.objects.get(id=site)
     Menu.on(active_site).get(id=request.POST['menu']).delete()
     cache.delete('main.menu.%s' % active_site.id)
-    return redirect('admin.sites.sites.menu.views.index')
+    return redirect('admin.sites.sites.navigation.views.index')
 
-def reorder(request, site):
+def reorder_menu(request, site):
     active_site = Site.objects.get(id=site)
     for menu in json.loads(request.POST['menus']):
         obj = Menu.on(active_site).get(id=menu['id'])
