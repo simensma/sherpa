@@ -30,8 +30,8 @@ def index(request):
         cache.set('admin.local_membership_count.%s' % request.active_forening.id, local_membership_count, 60 * 60 * 12)
 
     turledere = User.get_users().filter(turledere__isnull=False).distinct().count()
-    if request.active_forening.get_main_site() is not None:
-        pages = Page.on(request.active_forening.get_main_site()).filter(
+    if request.active_forening.get_homepage_site() is not None:
+        pages = Page.on(request.active_forening.get_homepage_site()).filter(
             pub_date__lte=datetime.now(),
             published=True
         ).count()
@@ -105,7 +105,7 @@ def setup_site(request):
             domain = '%s.test.turistforeningen.no' % domain
         domain = domain.replace('http://', '').rstrip('/')
 
-        if request.POST['type'] == 'forening' and request.active_forening.get_main_site() is not None:
+        if request.POST['type'] == 'forening' and request.active_forening.get_homepage_site() is not None:
             messages.error(request, 'main_site_exists')
             if request.POST['domain-type'] == 'fqdn':
                 context['domain'] = domain

@@ -139,7 +139,7 @@ class CheckSherpaPermissions(object):
                     return render(request, 'common/admin/set_active_forening.html', context)
 
             # Accessing CMS-functionality, but no site set
-            if request.active_forening.get_main_site() is None and request.path.startswith(u'/sherpa/hjemmesider'):
+            if request.active_forening.get_homepage_site() is None and request.path.startswith(u'/sherpa/hjemmesider'):
                 return redirect('admin.views.setup_site')
 
 class DeactivatedEnrollment():

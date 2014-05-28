@@ -17,7 +17,7 @@ def list(request):
         variant__page__isnull=False,
         variant__page__parent__isnull=True,
         active=True,
-        variant__page__site=request.active_forening.get_main_site()
+        variant__page__site=request.active_forening.get_homepage_site()
         ).order_by('variant__page__title')
     context = {'versions': versions}
     return render(request, 'common/admin/sites/pages/list.html', context)
@@ -37,7 +37,7 @@ def new(request):
         slug=request.POST['slug'],
         published=False,
         created_by=request.user,
-        site=request.active_forening.get_main_site())
+        site=request.active_forening.get_homepage_site())
     page.save()
 
     variant = Variant(
@@ -62,15 +62,15 @@ def new(request):
 
 def check_slug(request):
     urls_valid = slug_is_unique(request.POST['slug'])
-    page_valid = not Page.on(request.active_forening.get_main_site()).filter(slug=request.POST['slug']).exists()
+    page_valid = not Page.on(request.active_forening.get_homepage_site()).filter(slug=request.POST['slug']).exists()
     return HttpResponse(json.dumps({'valid': urls_valid and page_valid}))
 
 def delete(request, page):
-    Page.on(request.active_forening.get_main_site()).get(id=page).delete()
+    Page.on(request.active_forening.get_homepage_site()).get(id=page).delete()
     return redirect('admin.sites.pages.page.list')
 
 def edit(request, version):
-    pages = Page.on(request.active_forening.get_main_site()).all().order_by('title')
+    pages = Page.on(request.active_forening.get_homepage_site()).all().order_by('title')
     version = Version.objects.get(id=version)
     rows = Row.objects.filter(version=version).order_by('order')
     for row in rows:
@@ -79,7 +79,7 @@ def edit(request, version):
             contents = Content.objects.filter(column=column).order_by('order')
             for content in contents:
                 if content.type == 'widget':
-                    content.content = parse_widget(request, json.loads(content.content), request.active_forening.get_main_site())
+                    content.content = parse_widget(request, json.loads(content.content), request.active_forening.get_homepage_site())
             column.contents = contents
         row.columns = columns
     context = {
@@ -100,7 +100,7 @@ def preview(request, version):
             contents = Content.objects.filter(column=column).order_by('order')
             for content in contents:
                 if content.type == 'widget':
-                    content.content = parse_widget(request, json.loads(content.content), request.active_forening.get_main_site())
+                    content.content = parse_widget(request, json.loads(content.content), request.active_forening.get_homepage_site())
             column.contents = contents
         row.columns = columns
     context = {'rows': rows, 'version': version}

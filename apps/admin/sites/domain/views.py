@@ -10,7 +10,7 @@ def index(request):
     elif request.method == 'POST':
         domain = request.POST['domain'].strip()
 
-        if domain.replace('http://', '').rstrip('/') == request.active_forening.get_main_site().domain:
+        if domain.replace('http://', '').rstrip('/') == request.active_forening.get_homepage_site().domain:
             # Special case; the domain wasn't changed - so just say that it worked
             messages.info(request, 'domain_updated')
             return redirect('admin.sites.domain.views.index')
@@ -24,7 +24,7 @@ def index(request):
             return render(request, 'common/admin/sites/domain/index.html', context)
         else:
             messages.info(request, 'domain_updated')
-            site = request.active_forening.get_main_site()
+            site = request.active_forening.get_homepage_site()
             site.domain = result['domain']
             site.prefix = result['prefix']
             site.save()

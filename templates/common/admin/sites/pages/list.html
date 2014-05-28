@@ -11,7 +11,7 @@
 
 <div class="row">
   <div class="col-lg-12">
-    <h1>Sider <small>sett opp innholdet på <a href="http://{{ active_forening.get_main_site.domain }}/">{{ active_forening.get_main_site.domain }}</a></small></h1>
+    <h1>Sider <small>sett opp innholdet på <a href="http://{{ active_forening.get_homepage_site.domain }}/">{{ active_forening.get_homepage_site.domain }}</a></small></h1>
     <ol class="breadcrumb">
       <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
       <li><a href="{% url 'admin.sites.views.index' %}">Våre hjemmesider</a></li>
@@ -63,7 +63,7 @@
       </div>
       <div class="form-group">
         <label>Permanent URL:</label>
-        http://{{ active_forening.get_main_site.domain }}/<span class="slug"></span><span class="slash"></span> <i class="edit-slug fa fa-pencil"></i><i class="save-slug fa fa-check"></i>
+        http://{{ active_forening.get_homepage_site.domain }}/<span class="slug"></span><span class="slash"></span> <i class="edit-slug fa fa-pencil"></i><i class="save-slug fa fa-check"></i>
         <img class="loader" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster...">
         <span class="valid">
           <img src="{{ STATIC_URL }}img/valid.png" alt="Gyldig URL">

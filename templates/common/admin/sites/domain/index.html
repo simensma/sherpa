@@ -8,11 +8,11 @@
 
 <div class="row">
   <div class="col-lg-12">
-    <h1>Domene <small>endre domene for {{ active_forening.get_main_site.domain }}</small></h1>
+    <h1>Domene <small>endre domene for {{ active_forening.get_homepage_site.domain }}</small></h1>
     <ol class="breadcrumb">
       <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
       <li><a href="{% url 'admin.sites.views.index' %}">Våre hjemmesider</a></li>
-      <li><a href="{% url 'admin.sites.views.index' %}">{{ active_forening.get_main_site.domain }}</a></li>
+      <li><a href="{% url 'admin.sites.views.index' %}">{{ active_forening.get_homepage_site.domain }}</a></li>
       <li><a href="{% url 'admin.sites.domain.views.index' %}">Domene</a></li>
     </ol>
   </div>
@@ -39,7 +39,7 @@
         </div>
       {% elif message.message == 'site_exists' %}
         <div class="alert alert-danger">
-          <strong>{{ existing_forening.name }}</strong> har allerede domenenavnet <strong>http://{{ existing_forening.get_main_site.domain }}/</strong>. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.
+          <strong>{{ existing_forening.name }}</strong> har allerede domenenavnet <strong>http://{{ existing_forening.get_homepage_site.domain }}/</strong>. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.
         </div>
       {% elif message.message == 'prefix_not_supported_yet' %}
         <div class="alert alert-danger">
@@ -53,14 +53,14 @@
     {% endfor %}
 
     <p>
-      {{ active_forening.name }} har hjemmesideadresse <strong>http://{{ active_forening.get_main_site.domain }}</strong>. Du kan endre denne hvis du vet hva du gjør. <strong>Hvis du endrer domenet, vil den gamle adressen slutte å fungere</strong>. Man endrer veldig sjeldent domenet for en hjemmeside.
+      {{ active_forening.name }} har hjemmesideadresse <strong>http://{{ active_forening.get_homepage_site.domain }}</strong>. Du kan endre denne hvis du vet hva du gjør. <strong>Hvis du endrer domenet, vil den gamle adressen slutte å fungere</strong>. Man endrer veldig sjeldent domenet for en hjemmeside.
     </p>
 
     <form action="{% url 'admin.sites.domain.views.index' %}" method="post">
       {% csrf_token %}
       <div class="form-group">
         <label>Ny domeneadresse:</label>
-        <input type="text" name="domain" class="form-control" value="http://{{ active_forening.get_main_site.domain }}">
+        <input type="text" name="domain" class="form-control" value="http://{{ active_forening.get_homepage_site.domain }}">
       </div>
       <button class="btn btn-success save-menu">
         Lagre nytt domene
