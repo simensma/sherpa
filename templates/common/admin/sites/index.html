@@ -97,6 +97,39 @@
     <a href="{% url 'admin.views.setup_site' %}" class="btn btn-default">Opprett et nytt nettsted</a>
   </p>
 
+  {% if children_foreninger_with_site|length > 0 %}
+
+    <h2>Nettsteder for turlag og turgrupper</h2>
+
+    <table class="table">
+      <tr>
+        <th>Forening</th>
+        <th>Type</th>
+        <th>Nettsted</th>
+        <th>Tittel</th>
+      </tr>
+
+      {% for forening in children_foreninger_with_site %}
+        {% for site in forening.sites.all %}
+
+          <tr>
+            <td>
+              {% if forloop.first %}
+                {{ forening.name }}
+              {% endif %}
+            </td>
+            <td>{{ site.get_type_short }}</td>
+            <td><a href="{% url 'admin.sites.views.index' site.id %}">{{ site.domain }}</a></td>
+            <td>{{ site.get_title }}</td>
+          </tr>
+
+        {% endfor %}
+      {% endfor %}
+
+    </table>
+
+  {% endif %}
+
 </div>
 
 {% endblock %}
