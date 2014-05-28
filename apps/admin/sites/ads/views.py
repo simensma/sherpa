@@ -16,7 +16,12 @@ def list(request, site):
     ads = Ad.on(site).all().order_by('name')
     time_placements = AdPlacement.on(active_site).filter(start_date__isnull=False).order_by('start_date', 'end_date')
     view_placements = AdPlacement.on(active_site).filter(view_limit__isnull=False).order_by('views')
-    context = {'ads': ads, 'time_placements': time_placements, 'view_placements': view_placements}
+    context = {
+        'active_site': active_site,
+        'ads': ads,
+        'time_placements': time_placements,
+        'view_placements': view_placements,
+    }
     return render(request, 'common/admin/sites/ads/list.html', context)
 
 def create_ad(request, site):

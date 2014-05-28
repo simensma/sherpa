@@ -12,7 +12,10 @@ import json
 def index(request, site):
     active_site = Site.objects.get(id=site)
     menus = Menu.on(active_site).all().order_by('order')
-    context = {'menus': menus}
+    context = {
+        'active_site': active_site,
+        'menus': menus,
+    }
     return render(request, 'common/admin/sites/menu/index.html', context)
 
 def new(request, site):

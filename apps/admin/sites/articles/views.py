@@ -17,7 +17,9 @@ from core.models import Site
 BULK_COUNT = 8
 
 def list(request, site):
+    active_site = Site.objects.get(id=site)
     context = {
+        'active_site': active_site,
         'versions': list_bulk(request, 0),
         'BULK_COUNT': BULK_COUNT,
     }
@@ -58,8 +60,12 @@ def new(request, site):
     return redirect('admin.sites.articles.views.edit', version.id)
 
 def confirm_delete(request, site, article):
+    active_site = Site.objects.get(id=site)
     version = Version.objects.get(variant__article=article, variant__segment__isnull=True, active=True)
-    context = {'version': version}
+    context = {
+        'active_site': active_site,
+        'version': version,
+    }
     return render(request, 'common/admin/sites/articles/confirm-delete.html', context)
 
 def delete(request, site, article):
@@ -71,9 +77,11 @@ def delete(request, site, article):
     return redirect('admin.sites.articles.views.list')
 
 def edit(request, site, version):
+    active_site = Site.objects.get(id=site)
     rows, version = parse_version_content(request, version)
     users = sorted(User.sherpa_users(), key=lambda u: u.get_first_name())
     context = {
+        'active_site': active_site,
         'rows': rows,
         'version': version,
         'users': users,
@@ -83,10 +91,15 @@ def edit(request, site, version):
     return render(request, 'common/admin/sites/articles/edit.html', context)
 
 def preview(request, site, version):
+    active_site = Site.objects.get(id=site)
     rows, version = parse_version_content(request, version)
     # Pretend publish date is now, just for the preivew
     version.variant.article.pub_date = datetime.now()
-    context = {'rows': rows, 'version': version}
+    context = {
+        'active_site': active_site,
+        'rows': rows,
+        'version': version,
+    }
     return render(request, 'common/admin/sites/articles/preview.html', context)
 
 def parse_version_content(request, site, version):

@@ -27,6 +27,7 @@ def index(request, site):
     ).order_by('-variant__article__pub_date')
 
     context = {
+        'active_site': active_site,
         'article_versions': article_versions,
         'page_versions': page_versions,
     }

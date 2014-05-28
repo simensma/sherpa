@@ -6,7 +6,8 @@ from core.models import Site
 
 def index(request, site):
     active_site = Site.objects.get(id=site)
-    return render(request, 'common/admin/sites/analytics/index.html')
+    context = {'active_site': active_site}
+    return render(request, 'common/admin/sites/analytics/index.html', context)
 
 def searches(request, site):
     active_site = Site.objects.get(id=site)
@@ -27,7 +28,11 @@ def searches(request, site):
 
     latest_searches = Search.on(active_site).all().order_by('-date')[:50]
 
-    context = {'most_searched': most_searched, 'latest_searches': latest_searches}
+    context = {
+        'active_site': active_site,
+        'most_searched': most_searched,
+        'latest_searches': latest_searches,
+    }
     return render(request, 'common/admin/sites/analytics/searches.html', context)
 
 def not_found(request, site):
@@ -49,5 +54,9 @@ def not_found(request, site):
 
     latest_requests = NotFound.on(active_site).all().order_by('-date')[:50]
 
-    context = {'most_requested': most_requested, 'latest_requests': latest_requests}
+    context = {
+        'active_site': active_site,
+        'most_requested': most_requested,
+        'latest_requests': latest_requests,
+    }
     return render(request, 'common/admin/sites/analytics/not_found.html', context)

@@ -5,9 +5,10 @@ from core.models import Site
 
 def index(request, site):
     active_site = Site.objects.get(id=site)
+    context = {'active_site': active_site}
 
     if request.method == 'GET':
-        return render(request, 'common/admin/sites/domain/index.html')
+        return render(request, 'common/admin/sites/domain/index.html', context)
 
     elif request.method == 'POST':
         domain = request.POST['domain'].strip()
@@ -20,7 +21,7 @@ def index(request, site):
         result = Site.verify_domain(domain)
         if not result['valid']:
             messages.error(request, result['error'])
-            context = {'domain': domain}
+            context['domain'] = domain
             if result['error'] == 'site_exists':
                 context['existing_forening'] = result['existing_forening']
             return render(request, 'common/admin/sites/domain/index.html', context)

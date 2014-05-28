@@ -21,7 +21,10 @@ def list(request, site):
         active=True,
         variant__page__site=active_site,
     ).order_by('variant__page__title')
-    context = {'versions': versions}
+    context = {
+        'active_site': active_site,
+        'versions': versions,
+    }
     return render(request, 'common/admin/sites/pages/list.html', context)
 
 def children(request, site):
@@ -92,6 +95,7 @@ def edit(request, site, version):
             column.contents = contents
         row.columns = columns
     context = {
+        'active_site': active_site,
         'rows': rows,
         'version': version,
         'widget_data': widget_admin_context(),
@@ -113,7 +117,11 @@ def preview(request, site, version):
                     content.content = parse_widget(request, json.loads(content.content), active_site)
             column.contents = contents
         row.columns = columns
-    context = {'rows': rows, 'version': version}
+    context = {
+        'active_site': active_site,
+        'rows': rows,
+        'version': version,
+    }
     if request.site.domain == 'www.turistforeningen.no':
         context.update(get_static_promo_context('/%s/' % version.variant.page.slug))
     return render(request, 'common/admin/sites/pages/preview.html', context)
