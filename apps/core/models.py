@@ -34,6 +34,20 @@ class Site(models.Model):
     def __unicode__(self):
         return u'%s: %s' % (self.pk, self.domain)
 
+    def get_type(self):
+        return [t for t in Site.TYPE_CHOICES if t[0] == self.type][0][1]
+
+    def get_type_short(self):
+        """Return an even shorter friendly name than the TYPE_CHOICES tuple description"""
+        if self.type == 'forening':
+            return "Hjemmeside"
+        elif self.type == 'hytte':
+            return "Hytteside"
+        elif self.type == 'kampanje':
+            return "Kampanjeside"
+        else:
+            raise Exception("Unrecognized site type '%s'" % self.type)
+
     def get_title(self):
         """Return the site title based on what type the site is"""
         if self.type == 'forening':
