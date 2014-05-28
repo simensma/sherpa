@@ -29,7 +29,7 @@ class Site(models.Model):
     )
     template = models.CharField(max_length=255, choices=TEMPLATE_CHOICES)
     forening = models.ForeignKey('foreninger.Forening', related_name='sites')
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255) # Only specified for type='kampanje', empty and unused for other types
 
     def __unicode__(self):
         return u'%s: %s' % (self.pk, self.domain)
