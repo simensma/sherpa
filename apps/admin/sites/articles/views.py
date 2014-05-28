@@ -6,15 +6,13 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 
 from datetime import datetime
-import json
 
+from admin.sites.articles.util import BULK_COUNT, list_bulk, create_template, parse_version_content
 from articles.models import Article
-from page.models import Variant, Version, Row, Column, Content
-from page.widgets import parse_widget, widget_admin_context
+from page.models import Variant, Version
+from page.widgets import widget_admin_context
 from user.models import User
 from core.models import Site
-
-BULK_COUNT = 8
 
 def list(request, site):
     active_site = Site.objects.get(id=site)
@@ -31,15 +29,6 @@ def list_load(request, site):
         return redirect('admin.sites.articles.views.list', active_site.id)
     context = RequestContext(request, {'versions': list_bulk(request, int(request.POST['bulk']), active_site)})
     return HttpResponse(render_to_string('common/admin/sites/articles/list-elements.html', context))
-
-# This is not a view.
-def list_bulk(request, bulk, active_site):
-    return Version.objects.filter(
-        variant__article__isnull=False,
-        variant__segment__isnull=True,
-        active=True,
-        variant__article__site=active_site
-    ).order_by('-variant__article__created_date')[(bulk * BULK_COUNT) : (bulk * BULK_COUNT) + BULK_COUNT]
 
 def new(request, site):
     active_site = Site.objects.get(id=site)
@@ -69,6 +58,7 @@ def confirm_delete(request, site, article):
     return render(request, 'common/admin/sites/articles/confirm-delete.html', context)
 
 def delete(request, site, article):
+    active_site = Site.objects.get(id=site)
     try:
         Article.objects.get(id=article).delete()
     except Article.DoesNotExist:
@@ -78,7 +68,7 @@ def delete(request, site, article):
 
 def edit(request, site, version):
     active_site = Site.objects.get(id=site)
-    rows, version = parse_version_content(request, version)
+    rows, version = parse_version_content(request, version, active_site)
     users = sorted(User.sherpa_users(), key=lambda u: u.get_first_name())
     context = {
         'active_site': active_site,
@@ -92,7 +82,7 @@ def edit(request, site, version):
 
 def preview(request, site, version):
     active_site = Site.objects.get(id=site)
-    rows, version = parse_version_content(request, version)
+    rows, version = parse_version_content(request, version, active_site)
     # Pretend publish date is now, just for the preivew
     version.variant.article.pub_date = datetime.now()
     context = {
@@ -101,67 +91,3 @@ def preview(request, site, version):
         'version': version,
     }
     return render(request, 'common/admin/sites/articles/preview.html', context)
-
-def parse_version_content(request, site, version):
-    active_site = Site.objects.get(id=site)
-    version = Version.objects.get(id=version)
-    rows = Row.objects.filter(version=version).order_by('order')
-    for row in rows:
-        columns = Column.objects.filter(row=row).order_by('order')
-        for column in columns:
-            contents = Content.objects.filter(column=column).order_by('order')
-            for content in contents:
-                if content.type == 'widget':
-                    content.content = parse_widget(request, json.loads(content.content), active_site)
-            column.contents = contents
-        row.columns = columns
-    return rows, version
-
-def create_template(template, version, title):
-    if template == '0':
-        contents = [
-            {'type': 'title', 'content': """<h1>%s</h1>""" % title},
-            {'type': 'image', 'content': json.dumps({'src': "http://www.turistforeningen.no" + settings.STATIC_URL + "img/placeholder.png", "description": "", "photographer": "", "anchor": None})},
-            {'type': 'lede', 'content': ""},
-            {'type': 'html', 'content': ""},
-            {'type': 'image', 'content': json.dumps({'src': "http://www.turistforeningen.no" + settings.STATIC_URL + "img/placeholder.png", "description": "", "photographer": "", "anchor": None})},
-        ]
-        row = Row(version=version, order=0)
-        row.save()
-        column = Column(row=row, span=12, offset=0, order=0)
-        column.save()
-        for i in range(len(contents)):
-            content = Content(column=column, content=contents[i]['content'], type=contents[i]['type'], order=i)
-            content.save()
-    elif template == '1':
-        contents_upper = [
-            {'type': 'title', 'content': """<h1>%s</h1>""" % title},
-            {'type': 'image', 'content': json.dumps({'src': "http://www.turistforeningen.no" + settings.STATIC_URL + "img/placeholder.png", "description": "", "photographer": "", "anchor": None})},
-            {'type': 'lede', 'content': ""},
-        ]
-        contents_lower_left = [
-            {'type': 'html', 'content': ""},
-        ]
-        contents_lower_right = [
-            {'type': 'html', 'content': ""},
-            {'type': 'image', 'content': json.dumps({'src': "http://www.turistforeningen.no" + settings.STATIC_URL + "img/placeholder.png", "description": "", "photographer": "", "anchor": None})},
-        ]
-        row = Row(version=version, order=0)
-        row.save()
-        column = Column(row=row, span=12, offset=0, order=0)
-        column.save()
-        for i in range(len(contents_upper)):
-            content = Content(column=column, content=contents_upper[i]['content'], type=contents_upper[i]['type'], order=i)
-            content.save()
-        row = Row(version=version, order=1)
-        row.save()
-        column = Column(row=row, span=9, offset=0, order=0)
-        column.save()
-        for i in range(len(contents_lower_left)):
-            content = Content(column=column, content=contents_lower_left[i]['content'], type=contents_lower_left[i]['type'], order=i)
-            content.save()
-        column = Column(row=row, span=3, offset=0, order=1)
-        column.save()
-        for i in range(len(contents_lower_right)):
-            content = Content(column=column, content=contents_lower_right[i]['content'], type=contents_lower_right[i]['type'], order=i)
-            content.save()
