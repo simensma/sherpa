@@ -86,15 +86,26 @@
             </div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group domain">
             <div class="col-md-offset-2 col-md-10">
-              <p>
-                For eksempel: <strong>http://eksempel.test.turistforeningen.no/</strong>
+
+              <div class="radio">
+                <label>
+                  <input type="radio" name="domain-type" value="subdomain" checked>
+                  Domene under turistforeningen.no (vil fungere automatisk). Eksempel: <strong>http://stavanger.test.turistforeningen.no</strong>
+                </label>
+              </div>
+              <div class="radio">
+                <label>
+                  <input type="radio" name="domain-type" value="fqdn">
+                  Et eget domene (må settes opp selv). Eksempel: <strong>http://www.stavanger-turistforening.no</strong>
+                </label>
+              </div>
+
+              <p class="domain-input">
+                http:// <input type="text" class="form-control" name="domain" value="{{ domain }}" placeholder="forening"> <span class="subdomain-tail">.test.turistforeningen.no</span>
               </p>
 
-              <p>
-                http:// <input type="text" class="form-control" id="domain" name="domain" value="{{ domain }}" placeholder="forening"> .test.turistforeningen.no
-              </p>
             </div>
           </div>
 

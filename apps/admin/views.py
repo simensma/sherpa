@@ -97,17 +97,30 @@ def setup_site(request):
         if not request.POST.get('type', '') in [t[0] for t in Site.TYPE_CHOICES]:
             raise PermissionDenied
 
-        subdomain = request.POST['domain'].strip()
+        if not request.POST['domain-type'] in ['fqdn', 'subdomain']:
+            raise PermissionDenied
+
+        domain = request.POST['domain'].strip()
+        subdomain = domain
+        if request.POST['domain-type'] == 'subdomain':
+            domain = '%s.test.turistforeningen.no' % domain
+        domain = domain.replace('http://', '').rstrip('/')
 
         if request.POST['type'] == 'forening' and request.active_forening.get_main_site() is not None:
             messages.error(request, 'main_site_exists')
-            context['domain'] = subdomain
+            if request.POST['domain-type'] == 'fqdn':
+                context['domain'] = domain
+            else:
+                context['domain'] = subdomain
             return render(request, 'common/admin/setup_site.html', context)
 
-        result = verify_domain('http://%s.test.turistforeningen.no' % subdomain)
+        result = verify_domain(domain)
         if not result['valid']:
             messages.error(request, result['error'])
-            context['domain'] = subdomain
+            if request.POST['domain-type'] == 'fqdn':
+                context['domain'] = domain
+            else:
+                context['domain'] = subdomain
             if result['error'] == 'site_exists':
                 context['existing_forening'] = result['existing_forening']
             return render(request, 'common/admin/setup_site.html', context)

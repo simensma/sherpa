@@ -12,8 +12,17 @@ div.setup-site {
     border-bottom: none !important;
   }
 
-  input[name='domain'] {
-    display: inline-block;
-    width: 200px;
+  div.form-group.domain {
+    p.domain-input {
+      margin-top: 20px;
+    }
+
+    input[name='domain'] {
+      display: inline-block;
+      width: 200px;
+    }
+    input[name='domain'].fqdn {
+      width: 300px;
+    }
   }
 }

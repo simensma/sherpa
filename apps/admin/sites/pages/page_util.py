@@ -3,13 +3,12 @@ from core.models import Site
 def verify_domain(domain):
     """Very simple syntax verification, and a few business rules"""
     domain = domain.strip()
-    if domain == '' or domain == 'http://' or not domain.startswith('http://') or not '.' in domain:
+    if domain == '' or not '.' in domain:
         return {
             'valid': False,
             'error': 'malformed',
         }
 
-    domain = domain[len('http://'):]
     if domain.endswith('/'):
         domain = domain[:-1]
 
