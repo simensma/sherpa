@@ -1,4 +1,5 @@
 from django.shortcuts import render
 
-def index(request):
-    return render(request, 'common/admin/sites/index.html')
+def index(request, site):
+    context = {'site': site}
+    return render(request, 'common/admin/sites/index.html', context)

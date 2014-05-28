@@ -5,46 +5,57 @@ from django.http import HttpResponse
 from django.db.models import Max
 
 from page.models import Menu
+from core.models import Site
 
 import json
 
-def index(request):
-    menus = Menu.on(request.active_forening.get_homepage_site()).all().order_by('order')
+def index(request, site):
+    active_site = Site.objects.get(id=site)
+    menus = Menu.on(active_site).all().order_by('order')
     context = {'menus': menus}
     return render(request, 'common/admin/sites/menu/index.html', context)
 
-def new(request):
+def new(request, site):
+    active_site = Site.objects.get(id=site)
     if request.POST['name'].strip() == '':
         raise PermissionDenied
 
-    max_order = Menu.on(request.active_forening.get_homepage_site()).aggregate(Max('order'))['order__max']
+    max_order = Menu.on(active_site).aggregate(Max('order'))['order__max']
     if max_order is None:
         max_order = 0
-    menu = Menu(name=request.POST['name'], url=request.POST['url'], order=(max_order + 1), site=request.active_forening.get_homepage_site())
+    menu = Menu(
+        name=request.POST['name'],
+        url=request.POST['url'],
+        order=(max_order + 1),
+        site=active_site
+    )
     menu.save()
-    cache.delete('main.menu.%s' % request.active_forening.get_homepage_site().id)
+    cache.delete('main.menu.%s' % active_site.id)
     return HttpResponse(json.dumps({'id': menu.id}))
 
-def edit(request):
+def edit(request, site):
+    active_site = Site.objects.get(id=site)
     if request.POST['name'].strip() == '':
         raise PermissionDenied
 
-    menu = Menu.on(request.active_forening.get_homepage_site()).get(id=request.POST['id'])
+    menu = Menu.on(active_site).get(id=request.POST['id'])
     menu.name = request.POST['name']
     menu.url = request.POST['url']
     menu.save()
-    cache.delete('main.menu.%s' % request.active_forening.get_homepage_site().id)
+    cache.delete('main.menu.%s' % active_site.id)
     return HttpResponse()
 
-def delete(request):
-    Menu.on(request.active_forening.get_homepage_site()).get(id=request.POST['menu']).delete()
-    cache.delete('main.menu.%s' % request.active_forening.get_homepage_site().id)
+def delete(request, site):
+    active_site = Site.objects.get(id=site)
+    Menu.on(active_site).get(id=request.POST['menu']).delete()
+    cache.delete('main.menu.%s' % active_site.id)
     return redirect('admin.sites.sites.menu.views.index')
 
-def reorder(request):
+def reorder(request, site):
+    active_site = Site.objects.get(id=site)
     for menu in json.loads(request.POST['menus']):
-        obj = Menu.on(request.active_forening.get_homepage_site()).get(id=menu['id'])
+        obj = Menu.on(active_site).get(id=menu['id'])
         obj.order = menu['order']
         obj.save()
-    cache.delete('main.menu.%s' % request.active_forening.get_homepage_site().id)
+    cache.delete('main.menu.%s' % active_site.id)
     return HttpResponse()

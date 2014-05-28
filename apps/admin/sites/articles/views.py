@@ -12,39 +12,42 @@ from articles.models import Article
 from page.models import Variant, Version, Row, Column, Content
 from page.widgets import parse_widget, widget_admin_context
 from user.models import User
+from core.models import Site
 
 BULK_COUNT = 8
 
-def list(request):
+def list(request, site):
     context = {
         'versions': list_bulk(request, 0),
         'BULK_COUNT': BULK_COUNT,
     }
     return render(request, 'common/admin/sites/articles/list.html', context)
 
-def list_load(request):
+def list_load(request, site):
     if not request.is_ajax():
         return redirect('admin.sites.articles.views.list')
     context = RequestContext(request, {'versions': list_bulk(request, int(request.POST['bulk']))})
     return HttpResponse(render_to_string('common/admin/sites/articles/list-elements.html', context))
 
 # This is not a view.
-def list_bulk(request, bulk):
+def list_bulk(request, site, bulk):
+    active_site = Site.objects.get(id=site)
     return Version.objects.filter(
         variant__article__isnull=False,
         variant__segment__isnull=True,
         active=True,
-        variant__article__site=request.active_forening.get_homepage_site()
+        variant__article__site=active_site
     ).order_by('-variant__article__created_date')[(bulk * BULK_COUNT) : (bulk * BULK_COUNT) + BULK_COUNT]
 
-def new(request):
+def new(request, site):
+    active_site = Site.objects.get(id=site)
     article = Article(
         thumbnail=None,
         hide_thumbnail=False,
         published=False,
         pub_date=None,
         created_by=request.user,
-        site=request.active_forening.get_homepage_site())
+        site=active_site)
     article.save()
     variant = Variant(page=None, article=article, name='default', segment=None, priority=1, owner=request.user)
     variant.save()
@@ -54,12 +57,12 @@ def new(request):
     create_template(request.POST['template'], version, request.POST['title'])
     return redirect('admin.sites.articles.views.edit', version.id)
 
-def confirm_delete(request, article):
+def confirm_delete(request, site, article):
     version = Version.objects.get(variant__article=article, variant__segment__isnull=True, active=True)
     context = {'version': version}
     return render(request, 'common/admin/sites/articles/confirm-delete.html', context)
 
-def delete(request, article):
+def delete(request, site, article):
     try:
         Article.objects.get(id=article).delete()
     except Article.DoesNotExist:
@@ -67,7 +70,7 @@ def delete(request, article):
         pass
     return redirect('admin.sites.articles.views.list')
 
-def edit(request, version):
+def edit(request, site, version):
     rows, version = parse_version_content(request, version)
     users = sorted(User.sherpa_users(), key=lambda u: u.get_first_name())
     context = {
@@ -79,14 +82,15 @@ def edit(request, version):
     }
     return render(request, 'common/admin/sites/articles/edit.html', context)
 
-def preview(request, version):
+def preview(request, site, version):
     rows, version = parse_version_content(request, version)
     # Pretend publish date is now, just for the preivew
     version.variant.article.pub_date = datetime.now()
     context = {'rows': rows, 'version': version}
     return render(request, 'common/admin/sites/articles/preview.html', context)
 
-def parse_version_content(request, version):
+def parse_version_content(request, site, version):
+    active_site = Site.objects.get(id=site)
     version = Version.objects.get(id=version)
     rows = Row.objects.filter(version=version).order_by('order')
     for row in rows:
@@ -95,7 +99,7 @@ def parse_version_content(request, version):
             contents = Content.objects.filter(column=column).order_by('order')
             for content in contents:
                 if content.type == 'widget':
-                    content.content = parse_widget(request, json.loads(content.content), request.active_forening.get_homepage_site())
+                    content.content = parse_widget(request, json.loads(content.content), active_site)
             column.contents = contents
         row.columns = columns
     return rows, version

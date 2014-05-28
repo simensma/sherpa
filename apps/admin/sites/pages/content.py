@@ -9,17 +9,19 @@ from django.core.cache import cache
 from page.models import Page, Version, Row, Column, Content
 from page.widgets import parse_widget
 from user.models import User
-from core.models import Tag
+from core.models import Tag, Site
 
 from datetime import datetime
 import json
 
-def render_widget(request):
-    widget = parse_widget(request, json.loads(request.POST['content']), request.active_forening.get_homepage_site())
+def render_widget(request, site):
+    active_site = Site.objects.get(id=site)
+    widget = parse_widget(request, json.loads(request.POST['content']), active_site)
     context = RequestContext(request, {'widget': widget})
     return HttpResponse(render_to_string(widget['template'], context))
 
-def save(request, version):
+def save(request, site, version):
+    active_site = Site.objects.get(id=site)
     version = Version.objects.get(id=version)
     response = {}
 
@@ -68,7 +70,7 @@ def save(request, version):
             if request.POST['parent'] == '':
                 new_parent = None
             else:
-                new_parent = Page.on(request.active_forening.get_homepage_site()).get(id=request.POST['parent'])
+                new_parent = Page.on(active_site).get(id=request.POST['parent'])
                 parent = new_parent
                 while parent is not None:
                     if parent.id == page.id:

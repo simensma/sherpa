@@ -6,10 +6,12 @@ from django.core.cache import cache
 from datetime import datetime
 
 from page.models import *
+from core.models import Site
 
 from instagram.views import initial_url as instagram_initial_url
 
-def index(request):
+def index(request, site):
+    active_site = Site.objects.get(id=site)
     page_versions = Version.objects.filter(
         variant__page__isnull=False,
         active=True,
@@ -21,7 +23,7 @@ def index(request):
         variant__article__published=True,
         active=True,
         variant__article__pub_date__lt=datetime.now(),
-        variant__article__site=request.active_forening.get_homepage_site(),
+        variant__article__site=active_site,
     ).order_by('-variant__article__pub_date')
 
     context = {
@@ -30,7 +32,8 @@ def index(request):
     }
     return render(request, 'common/admin/sites/cache/index.html', context)
 
-def delete(request):
+def delete(request, site):
+    active_site = Site.objects.get(id=site)
     if not request.is_ajax():
         return redirect('admin.sites.cache.views.index')
 
@@ -39,7 +42,7 @@ def delete(request):
             active=True,
             variant__segment__isnull=True,
             variant__page__slug='',
-            variant__page__site=request.active_forening.get_homepage_site(),
+            variant__page__site=active_site,
         ).id
         cache.delete('content.version.%s' % id)
     elif request.POST['key'] == 'page':

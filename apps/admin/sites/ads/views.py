@@ -9,15 +9,18 @@ import simples3
 
 from admin.sites.ads.util import parse_adform_script_destination
 from page.models import Ad, AdPlacement
+from core.models import Site
 
-def list(request):
-    ads = Ad.on(request.active_forening.get_homepage_site()).all().order_by('name')
-    time_placements = AdPlacement.on(request.active_forening.get_homepage_site()).filter(start_date__isnull=False).order_by('start_date', 'end_date')
-    view_placements = AdPlacement.on(request.active_forening.get_homepage_site()).filter(view_limit__isnull=False).order_by('views')
+def list(request, site):
+    active_site = Site.objects.get(id=site)
+    ads = Ad.on(site).all().order_by('name')
+    time_placements = AdPlacement.on(active_site).filter(start_date__isnull=False).order_by('start_date', 'end_date')
+    view_placements = AdPlacement.on(active_site).filter(view_limit__isnull=False).order_by('views')
     context = {'ads': ads, 'time_placements': time_placements, 'view_placements': view_placements}
     return render(request, 'common/admin/sites/ads/list.html', context)
 
-def create_ad(request):
+def create_ad(request, site):
+    active_site = Site.objects.get(id=site)
 
     if request.POST['type'] == 'file':
 
@@ -46,7 +49,7 @@ def create_ad(request):
             fallback_extension=fallback_extension,
             fallback_sha1_hash=fallback_hash,
             fallback_content_type=fallback_content_type,
-            site=request.active_forening.get_homepage_site(),
+            site=active_site,
         )
         ad.save()
 
@@ -69,7 +72,7 @@ def create_ad(request):
                 fallback_extension=None,
                 fallback_sha1_hash=None,
                 fallback_content_type=None,
-                site=request.active_forening.get_homepage_site(),
+                site=active_site,
             )
             ad.save()
         except IndexError:
@@ -77,9 +80,10 @@ def create_ad(request):
 
     return redirect('admin.sites.ads.views.list')
 
-def update_ad(request):
+def update_ad(request, site):
+    active_site = Site.objects.get(id=site)
     try:
-        ad = Ad.on(request.active_forening.get_homepage_site()).get(id=request.POST['id'])
+        ad = Ad.on(active_site).get(id=request.POST['id'])
         ad.name = request.POST['name']
         ad.viewcounter = request.POST['viewcounter']
 
@@ -104,9 +108,10 @@ def update_ad(request):
 
     return redirect('admin.sites.ads.views.list')
 
-def create_placement(request):
+def create_placement(request, site):
+    active_site = Site.objects.get(id=site)
     try:
-        ad = Ad.on(request.active_forening.get_homepage_site()).get(id=request.POST['ad'])
+        ad = Ad.on(active_site).get(id=request.POST['ad'])
         if request.POST['adplacement_type'] == 'time':
             start_date = datetime.strptime(request.POST['start_date'], "%d.%m.%Y")
             end_date = datetime.strptime(request.POST['end_date'], "%d.%m.%Y")
@@ -120,17 +125,18 @@ def create_placement(request):
             start_date=start_date,
             end_date=end_date,
             view_limit=view_limit,
-            site=request.active_forening.get_homepage_site(),
+            site=active_site,
         )
         ap.save()
     except ValueError:
         messages.error(request, 'invalid_date')
     return redirect('admin.sites.ads.views.list')
 
-def update_placement(request):
+def update_placement(request, site):
+    active_site = Site.objects.get(id=site)
     try:
-        placement = AdPlacement.on(request.active_forening.get_homepage_site()).get(id=request.POST['id'])
-        placement.ad = Ad.on(request.active_forening.get_homepage_site()).get(id=request.POST['ad'])
+        placement = AdPlacement.on(active_site).get(id=request.POST['id'])
+        placement.ad = Ad.on(active_site).get(id=request.POST['ad'])
         if placement.start_date is not None:
             placement.start_date = datetime.strptime(request.POST['start_date'], "%d.%m.%Y")
             placement.end_date = datetime.strptime(request.POST['end_date'], "%d.%m.%Y")

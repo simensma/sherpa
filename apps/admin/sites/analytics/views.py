@@ -2,14 +2,17 @@ from django.shortcuts import render
 from django.core.cache import cache
 
 from analytics.models import Search, NotFound
+from core.models import Site
 
-def index(request):
+def index(request, site):
+    active_site = Site.objects.get(id=site)
     return render(request, 'common/admin/sites/analytics/index.html')
 
-def searches(request):
+def searches(request, site):
+    active_site = Site.objects.get(id=site)
     most_searched = cache.get('analytics.searches.most_searched')
     if most_searched is None:
-        searches = Search.on(request.active_forening.get_homepage_site()).all()
+        searches = Search.on(active_site).all()
         hashes = {}
 
         for search in searches:
@@ -22,15 +25,16 @@ def searches(request):
         most_searched = sorted(most_searched, key=lambda search: -search['count'])
         cache.set('analytics.searches.most_searched', most_searched, 60 * 60 * 24)
 
-    latest_searches = Search.on(request.active_forening.get_homepage_site()).all().order_by('-date')[:50]
+    latest_searches = Search.on(active_site).all().order_by('-date')[:50]
 
     context = {'most_searched': most_searched, 'latest_searches': latest_searches}
     return render(request, 'common/admin/sites/analytics/searches.html', context)
 
-def not_found(request):
+def not_found(request, site):
+    active_site = Site.objects.get(id=site)
     most_requested = cache.get('analytics.not_found.most_requested')
     if most_requested is None:
-        hits = NotFound.on(request.active_forening.get_homepage_site()).all()
+        hits = NotFound.on(active_site).all()
         hashes = {}
 
         for hit in hits:
@@ -43,7 +47,7 @@ def not_found(request):
         most_requested = sorted(most_requested, key=lambda search: -search['count'])
         cache.set('analytics.not_found.most_requested', most_requested, 60 * 60 * 24)
 
-    latest_requests = NotFound.on(request.active_forening.get_homepage_site()).all().order_by('-date')[:50]
+    latest_requests = NotFound.on(active_site).all().order_by('-date')[:50]
 
     context = {'most_requested': most_requested, 'latest_requests': latest_requests}
     return render(request, 'common/admin/sites/analytics/not_found.html', context)
