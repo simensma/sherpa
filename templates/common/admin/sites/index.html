@@ -65,15 +65,18 @@
       <table class="table">
         <tr>
           <th>Nettsted</th>
+          <th>Tittel</th>
         </tr>
         {% for site in active_forening.get_sites_sorted.hytte %}
           <tr>
-            <td>{{ site.domain }} — {{ site.get_title }}</td>
+            <td>{{ site.domain }}</td>
+            <td>{{ site.get_title }}</td>
           </tr>
         {% endfor %}
         {% for site in active_forening.get_sites_sorted.kampanje %}
           <tr>
-            <td>{{ site.domain }} — {{ site.get_title }}</td>
+            <td>{{ site.domain }}</td>
+            <td>{{ site.get_title }}</td>
           </tr>
         {% endfor %}
       </table>
