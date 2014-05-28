@@ -8,7 +8,7 @@ def index(request, site):
     context = {'active_site': active_site}
 
     if request.method == 'GET':
-        return render(request, 'common/admin/sites/domain/index.html', context)
+        return render(request, 'common/admin/sites/settings/domain/index.html', context)
 
     elif request.method == 'POST':
         domain = request.POST['domain'].strip()
@@ -16,7 +16,7 @@ def index(request, site):
         if domain.replace('http://', '').rstrip('/') == active_site.domain:
             # Special case; the domain wasn't changed - so just say that it worked
             messages.info(request, 'domain_updated')
-            return redirect('admin.sites.domain.views.index')
+            return redirect('admin.sites.settings.domain.views.index')
 
         result = Site.verify_domain(domain)
         if not result['valid']:
@@ -24,11 +24,11 @@ def index(request, site):
             context['domain'] = domain
             if result['error'] == 'site_exists':
                 context['existing_forening'] = result['existing_forening']
-            return render(request, 'common/admin/sites/domain/index.html', context)
+            return render(request, 'common/admin/sites/settings/domain/index.html', context)
         else:
             messages.info(request, 'domain_updated')
             active_site.domain = result['domain']
             active_site.prefix = result['prefix']
             active_site.save()
             request.session.modified = True
-            return redirect('admin.sites.domain.views.index')
+            return redirect('admin.sites.settings.domain.views.index')

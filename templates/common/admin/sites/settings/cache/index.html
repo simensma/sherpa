@@ -5,7 +5,7 @@
 {% block admin_menu %}{% with 'sites' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
 
 {% block extra_js %}
-  <script src="{{ STATIC_URL }}js/admin/sites/cache/index.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/sites/settings/cache/index.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -17,7 +17,8 @@
       <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
       <li><a href="{% url 'admin.sites.views.index' active_site.id %}">Nettsteder</a></li>
       <li><a href="{% url 'admin.sites.views.index' active_site.id %}">{{ active_site.domain }}</a></li>
-      <li><a href="{% url 'admin.sites.cache.views.index' active_site.id %}">Caching</a></li>
+      <li><a href="{% url 'admin.sites.settings.views.index' active_site.id %}">Innstillinger</a></li>
+      <li><a href="{% url 'admin.sites.settings.cache.views.index' active_site.id %}">Caching</a></li>
     </ol>
   </div>
 </div><!-- /.row -->
@@ -37,7 +38,7 @@
 <div class="row">
   <div class="col-md-12">
 
-    <table class="table delete-cache" data-url="{% url 'admin.sites.cache.views.delete' active_site.id %}">
+    <table class="table delete-cache" data-url="{% url 'admin.sites.settings.cache.views.delete' active_site.id %}">
       <tr>
         <th>Forsiden</th>
         <td>Alt innholdet på forsiden (inkludert lista med nyheter).</td>

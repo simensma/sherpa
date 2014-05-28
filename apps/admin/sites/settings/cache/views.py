@@ -31,12 +31,12 @@ def index(request, site):
         'article_versions': article_versions,
         'page_versions': page_versions,
     }
-    return render(request, 'common/admin/sites/cache/index.html', context)
+    return render(request, 'common/admin/sites/settings/cache/index.html', context)
 
 def delete(request, site):
     active_site = Site.objects.get(id=site)
     if not request.is_ajax():
-        return redirect('admin.sites.cache.views.index')
+        return redirect('admin.sites.settings.cache.views.index')
 
     if request.POST['key'] == 'frontpage':
         id = Version.objects.get(

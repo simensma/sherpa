@@ -17,8 +17,9 @@
       <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
       <li><a href="{% url 'admin.sites.views.index' active_site.id %}">Nettsteder</a></li>
       <li><a href="{% url 'admin.sites.views.index' active_site.id %}">{{ active_site.domain }}</a></li>
-      <li><a href="{% url 'admin.sites.analytics.views.index' active_site.id %}">Analyse og statistikk</a></li>
-      <li><a href="{% url 'admin.sites.analytics.views.not_found' active_site.id %}">404-treff</a></li>
+      <li><a href="{% url 'admin.sites.settings.views.index' active_site.id %}">Innstillinger</a></li>
+      <li><a href="{% url 'admin.sites.settings.analytics.views.index' active_site.id %}">Analyse og statistikk</a></li>
+      <li><a href="{% url 'admin.sites.settings.analytics.views.not_found' active_site.id %}">404-treff</a></li>
     </ol>
   </div>
 </div><!-- /.row -->

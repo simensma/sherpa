@@ -7,7 +7,7 @@ from core.models import Site
 def index(request, site):
     active_site = Site.objects.get(id=site)
     context = {'active_site': active_site}
-    return render(request, 'common/admin/sites/analytics/index.html', context)
+    return render(request, 'common/admin/sites/settings/analytics/index.html', context)
 
 def searches(request, site):
     active_site = Site.objects.get(id=site)
@@ -33,7 +33,7 @@ def searches(request, site):
         'most_searched': most_searched,
         'latest_searches': latest_searches,
     }
-    return render(request, 'common/admin/sites/analytics/searches.html', context)
+    return render(request, 'common/admin/sites/settings/analytics/searches.html', context)
 
 def not_found(request, site):
     active_site = Site.objects.get(id=site)
@@ -59,4 +59,4 @@ def not_found(request, site):
         'most_requested': most_requested,
         'latest_requests': latest_requests,
     }
-    return render(request, 'common/admin/sites/analytics/not_found.html', context)
+    return render(request, 'common/admin/sites/settings/analytics/not_found.html', context)
