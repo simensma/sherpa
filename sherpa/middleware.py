@@ -137,8 +137,15 @@ class CheckSherpaPermissions(object):
                     context = {'next': request.get_full_path()}
                     return render(request, 'common/admin/set_active_forening.html', context)
 
-            # Accessing CMS-functionality, but no site set
-            if request.active_forening.get_homepage_site() is None and request.path.startswith(u'/sherpa/hjemmesider'):
+    def process_view(self, request, view_func, *args, **kwargs):
+        if request.current_app == 'admin' and request.path.startswith(u'/sherpa/hjemmesider'):
+            # Accessing 'sites' subapp in admin
+            try:
+                site = [Site.objects.get(id=arg['site']) for arg in args if type(arg) == dict and 'site' in arg]
+                if len(site) == 1:
+                    site = site[0]
+            except Site.DoesNotExist:
+                # The specified site doesn't exist
                 return redirect('admin.views.setup_site')
 
 class DeactivatedEnrollment():
