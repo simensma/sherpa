@@ -34,6 +34,18 @@ class Site(models.Model):
     def __unicode__(self):
         return u'%s: %s' % (self.pk, self.domain)
 
+    def get_title(self):
+        """Return the site title based on what type the site is"""
+        if self.type == 'forening':
+            return self.forening.name
+        elif self.type == 'hytte':
+            # TODO: FIXME
+            return u'Her bør hyttenavnet hentes automatisk (se core.Site.get_title())'
+        elif self.type == 'kampanje':
+            return self.title
+        else:
+            raise Exception("Unrecognized site type '%s'" % self.type)
+
 class Zipcode(models.Model):
     zipcode = models.CharField(max_length=4)
     area = models.CharField(max_length=255)
