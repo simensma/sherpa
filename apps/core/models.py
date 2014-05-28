@@ -47,6 +47,14 @@ class Site(models.Model):
             raise Exception("Unrecognized site type '%s'" % self.type)
 
     @staticmethod
+    def sort(sites):
+        """Sort the given sites iterable by title and return a dict with a key for each site type, containing
+        a list of sites of that type"""
+        sites = sorted(sites, key=lambda s: s.get_title())
+        types = [t[0] for t in Site.TYPE_CHOICES]
+        return {t: [s for s in sites if s.type == t] for t in types}
+
+    @staticmethod
     def verify_domain(domain):
         """Very simple syntax verification, and a few business rules"""
         domain = domain.strip()
