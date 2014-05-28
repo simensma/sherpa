@@ -88,21 +88,21 @@
                 </li>
 
                 {% for site in sites.forening %}
-                  <li class="submenu jq-hide" data-type="sites">
+                  <li class="submenu" data-type="sites">
                     <a href="{% url 'admin.sites.views.index' site.id %}">
                       {{ site.domain }}
                     </a>
                   </li>
                 {% endfor %}
                 {% for site in sites.hytte %}
-                  <li class="submenu jq-hide" data-type="sites">
+                  <li class="submenu" data-type="sites">
                     <a href="{% url 'admin.sites.views.index' site.id %}">
                       {{ site.domain }}
                     </a>
                   </li>
                 {% endfor %}
                 {% for site in sites.kampanje %}
-                  <li class="submenu jq-hide" data-type="sites">
+                  <li class="submenu" data-type="sites">
                     <a href="{% url 'admin.sites.views.index' site.id %}">
                       {{ site.domain }}
                     </a>
