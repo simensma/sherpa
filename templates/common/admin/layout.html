@@ -66,12 +66,12 @@
                 {% if sites.forening|length == 0 %}
 
                   {# No sites - link to setup_site #}
-                  <li{% if active_entry == 'sites' %} class="active"{% endif %}><a href="{% url 'admin.views.setup_site' %}"><i class="fa fa-file"></i> Hjemmeside</a></li>
+                  <li{% if active_entry == 'sites' or active_entry == 'sites.setup_site'%} class="active"{% endif %}><a href="{% url 'admin.views.setup_site' %}"><i class="fa fa-file"></i> Hjemmeside</a></li>
 
                 {% else %}
 
                   {# Only homepage - let the link go directly there #}
-                  <li{% if active_entry == 'sites' %} class="active"{% endif %}><a href="{% url 'admin.sites.views.index' active_site.id %}"><i class="fa fa-file"></i> Hjemmeside</a></li>
+                  <li{% if active_entry == 'sites' or active_entry == 'sites.setup_site'%} class="active"{% endif %}><a href="{% url 'admin.sites.views.index' active_site.id %}"><i class="fa fa-file"></i> Hjemmeside</a></li>
 
                 {% endif %}
 
