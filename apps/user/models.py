@@ -445,8 +445,12 @@ class User(AbstractBaseUser):
     def is_admin_in_main_central(self):
         """True if the user has the admin role for DNT central."""
         dnt_central = Forening.objects.get(id=56)
+        return self.is_admin_in_forening(dnt_central)
+
+    def is_admin_in_forening(self, given_forening):
+        """True if the user has the admin role for the given forening."""
         for forening in self.all_foreninger():
-            if forening == dnt_central and forening.role == 'admin':
+            if forening == given_forening and forening.role == 'admin':
                 return True
         return False
 
