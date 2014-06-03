@@ -1,5 +1,7 @@
 {% extends 'common/admin/layout.html' %}
 
+{% load role_for %}
+
 {% block title %}Hjemmesider — {{ block.super }}{% endblock %}
 
 {% block admin_menu %}{% with 'sites' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
@@ -87,7 +89,10 @@
         {# This can happen if the active forening has no sites but we're editing the site for another forening #}
         <tr>
           <td colspan="3">
-            <em>{{ active_forening.name }} har ingen nettsteder. <a href="{% url 'admin.views.setup_site' %}">Opprett en hjemmeside for {{ active_forening.name }}</a></em>
+            <em>{{ active_forening.name }} har ingen nettsteder.
+            {% if user|role_for:active_forening == 'admin' %}
+              <a href="{% url 'admin.views.setup_site' %}">Opprett en hjemmeside for {{ active_forening.name }}</a></em>
+            {% endif %}
           </td>
         </tr>
       {% endif %}
@@ -95,9 +100,11 @@
 
   {% endwith %}
 
-  <p>
-    <a href="{% url 'admin.views.setup_site' %}" class="btn btn-default">Opprett et nytt nettsted</a>
-  </p>
+  {% if user|role_for:active_forening == 'admin' %}
+    <p>
+      <a href="{% url 'admin.views.setup_site' %}" class="btn btn-default">Opprett et nytt nettsted tilknyttet {{ active_forening.name }}</a>
+    </p>
+  {% endif %}
 
   {% if children_foreninger_with_site|length > 0 %}
 

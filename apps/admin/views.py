@@ -88,6 +88,9 @@ def index(request):
     return render(request, 'common/admin/dashboard.html', context)
 
 def setup_site(request):
+    if not request.user.is_admin_in_forening(request.active_forening):
+        return render(request, 'common/admin/setup_site_disallowed.html')
+
     context = {'site_types': Site.TYPE_CHOICES}
 
     if request.method == 'GET':
@@ -171,6 +174,9 @@ def setup_site(request):
             return redirect('admin.views.site_created', site.id)
 
 def site_created(request, site):
+    if not request.user.is_admin_in_forening(request.active_forening):
+        raise PermissionDenied
+
     site = Site.objects.get(id=site)
     forside_version = Version.objects.get(
         variant__page__title='Forside',
