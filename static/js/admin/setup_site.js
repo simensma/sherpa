@@ -46,6 +46,12 @@ $(function() {
         if(domain.val().trim() === 'forening' || domain.val().trim() === '') {
             alert(submit.attr('data-enter-domain-warning'));
             e.preventDefault();
+            return;
+        }
+        if(template_input.val().trim() === '') {
+            alert(submit.attr('data-choose-template-warning'));
+            e.preventDefault();
+            return;
         }
     });
 
