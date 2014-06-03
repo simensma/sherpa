@@ -13,9 +13,10 @@ import re
 # should be 'from aktiviteter.models import Aktivitet'
 from aktiviteter.views import Aktivitet
 from focus.models import Actor
-from page.models import Page
+from page.models import Page, Variant, Version
 from user.models import User
 from core.models import Site
+from admin.sites.pages.util import create_template
 
 def index(request):
     total_membership_count = cache.get('admin.total_membership_count')
@@ -136,5 +137,35 @@ def setup_site(request):
             if request.POST['type'] == 'kampanje':
                 site.title = request.POST['title'].strip()
             site.save()
+
+            page = Page(
+                title='Forside',
+                slug='',
+                published=False,
+                created_by=request.user,
+                site=site,
+            )
+            page.save()
+
+            variant = Variant(
+                page=page,
+                article=None,
+                name='Standard',
+                segment=None,
+                priority=1,
+                owner=request.user,
+            )
+            variant.save()
+
+            version = Version(
+                variant=variant,
+                version=1,
+                owner=request.user,
+                active=True,
+                ads=True,
+            )
+            version.save()
+
+            create_template(request.POST['template'], version)
             request.session.modified = True
             return redirect('admin.sites.pages.page.list', site.id)
