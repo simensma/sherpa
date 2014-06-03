@@ -96,6 +96,9 @@
           <div class="form-group domain">
             <div class="col-md-offset-2 col-md-10">
 
+              {# Force subdomains for now. When we're ready, we can let the user choose between subdomain or a FQDN #}
+              <input type="hidden" name="domain-type" value="subdomain">
+              <!--
               <div class="radio">
                 <label>
                   <input type="radio" name="domain-type" value="subdomain" checked>
@@ -108,6 +111,7 @@
                   Et eget domene (må settes opp selv). Eksempel: <strong>http://www.stavanger-turistforening.no</strong>
                 </label>
               </div>
+              -->
 
               <p class="domain-input">
                 http:// <input type="text" class="form-control" name="domain" value="{{ domain }}" placeholder="forening"> <span class="subdomain-tail">.test.turistforeningen.no</span>
