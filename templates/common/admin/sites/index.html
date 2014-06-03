@@ -6,6 +6,10 @@
 
 {% block admin_menu %}{% with 'sites' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
 
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/sites/index.js"></script>
+{% endblock %}
+
 {% block body %}
 
 <div class="row">
@@ -22,31 +26,31 @@
 <div class="site-admin">
   <div class="row">
     <div class="col-lg-2">
-      <a class="navigation-block" href="{% url 'admin.sites.pages.page.list' active_site.id %}">
+      <a class="navigation-block" href="{% url 'admin.sites.pages.page.list' active_site.id %}" data-toogle="tooltip" title="Opprett eller rediger nettsidene for dette nettstedet">
         <p><i class="fa fa-file fa-5x"></i></p>
         <p>Sider</p>
       </a>
     </div>
     <div class="col-lg-2">
-      <a class="navigation-block" href="{% url 'admin.sites.articles.views.list' active_site.id %}">
+      <a class="navigation-block" href="{% url 'admin.sites.articles.views.list' active_site.id %}" data-toogle="tooltip" title="Legg ut nyheter">
         <p><i class="fa fa-bullhorn fa-5x"></i></p>
         <p>Nyheter</p>
       </a>
     </div>
     <div class="col-lg-2">
-      <a class="navigation-block" href="{% url 'admin.sites.navigation.views.index' active_site.id %}">
+      <a class="navigation-block" href="{% url 'admin.sites.navigation.views.index' active_site.id %}" data-toogle="tooltip" title="Endre lenkene i toppmenyen og hva slags innhold som skal vises i footeren på alle sidene">
         <p><i class="fa fa-bars fa-5x"></i></p>
         <p>Navigasjon</p>
       </a>
     </div>
     <div class="col-lg-2">
-      <a class="navigation-block" href="{% url 'admin.sites.ads.views.list' active_site.id %}">
+      <a class="navigation-block" href="{% url 'admin.sites.ads.views.list' active_site.id %}" data-toogle="tooltip" title="Legg ut reklameannonser som vises på nettisdene">
         <p><i class="fa fa-desktop fa-5x"></i></p>
         <p>Annonser</p>
       </a>
     </div>
     <div class="col-lg-2">
-      <a class="navigation-block" href="{% url 'admin.sites.settings.views.index' active_site.id %}">
+      <a class="navigation-block" href="{% url 'admin.sites.settings.views.index' active_site.id %}" data-toogle="tooltip" title="Vis avanserte innstillinger for nettstedet som for eksempel domeneadresse, google analytics og annen statistikk, med mer">
         <p><i class="fa fa-wrench fa-5x"></i></p>
         <p>Innstillinger</p>
       </a>
