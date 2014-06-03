@@ -71,7 +71,7 @@
                 {% else %}
 
                   {# Only homepage - let the link go directly there #}
-                  <li{% if active_entry == 'sites' or active_entry == 'sites.setup_site'%} class="active"{% endif %}><a href="{% url 'admin.sites.views.index' active_site.id %}"><i class="fa fa-file"></i> Hjemmeside</a></li>
+                  <li{% if active_entry == 'sites' or active_entry == 'sites.setup_site'%} class="active"{% endif %}><a href="{% url 'admin.sites.views.index' sites.forening.0.id %}"><i class="fa fa-file"></i> Hjemmeside</a></li>
 
                 {% endif %}
 
