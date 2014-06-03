@@ -168,4 +168,16 @@ def setup_site(request):
 
             create_template(request.POST['template'], version)
             request.session.modified = True
-            return redirect('admin.sites.pages.page.list', site.id)
+            return redirect('admin.views.site_created', site.id)
+
+def site_created(request, site):
+    site = Site.objects.get(id=site)
+    forside_version = Version.objects.get(
+        variant__page__title='Forside',
+        variant__page__site=site,
+    )
+    context = {
+        'created_site': site,
+        'forside_version': forside_version,
+    }
+    return render(request, 'common/admin/site_created.html', context)
