@@ -43,6 +43,11 @@ $(function() {
     });
 
     submit.click(function(e) {
+        if(site_type_buttons.filter(":checked").length === 0) {
+            alert(submit.attr('data-choose-site-type-warning'));
+            e.preventDefault();
+            return;
+        }
         if(domain.val().trim() === 'forening' || domain.val().trim() === '') {
             alert(submit.attr('data-enter-domain-warning'));
             e.preventDefault();
