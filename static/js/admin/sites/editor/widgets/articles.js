@@ -50,6 +50,13 @@ $(function() {
 
         onEdit: function(editor, widget_content) {
             editor.find("input[name='layout'][value='" + widget_content.layout + "']").click();
+            if(widget_content.layout === 'medialist') {
+                editor.find("div.medialist-section").show();
+                editor.find("div.horizontal-section").hide();
+            } else {
+                editor.find("div.medialist-section").hide();
+                editor.find("div.horizontal-section").show();
+            }
             editor.find("select[name='columns'] option[value='" + widget_content.columns + "']").prop('selected', true);
             editor.find("input[name='title']").val(widget_content.title);
             editor.find("input[name='count']").val(widget_content.count);
