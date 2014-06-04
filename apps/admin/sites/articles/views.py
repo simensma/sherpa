@@ -27,7 +27,10 @@ def list_load(request, site):
     active_site = Site.objects.get(id=site)
     if not request.is_ajax():
         return redirect('admin.sites.articles.views.list', active_site.id)
-    context = RequestContext(request, {'versions': list_bulk(request, int(request.POST['bulk']), active_site)})
+    context = RequestContext(request, {
+        'versions': list_bulk(request, int(request.POST['bulk']), active_site),
+        'active_site': active_site,
+    })
     return HttpResponse(render_to_string('common/admin/sites/articles/list-elements.html', context))
 
 def new(request, site):
