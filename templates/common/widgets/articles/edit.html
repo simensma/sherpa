@@ -6,18 +6,27 @@
   <div class="modal-body">
     <p>
       <label>Endre tittel:</label>
-      <input type="text" name="title" class="input-large" value="Siste nyheter"><br>
+      <input type="text" name="title" class="input-large" value="Siste nyheter">
+    </p>
 
+    <p>
       <label>Antall nyheter:</label>
-      <input type="text" name="count" class="input-small"><br>
+      <input type="text" name="count" class="input-small">
+    </p>
 
+    <p>
       <label><input type="checkbox" name="display-images"> Vis bilder</label>
+    </p>
 
+    <p>
       <label><input type="checkbox" name="set-tag-link"> Link til nøkkelord:</label>
       <input type="text" name="tag-link" class="input-large" data-tags-url="{% url 'core.views.filter_tags' %}" disabled><br>
+    </p>
 
+    <p>
       <label><input type="checkbox" name="enable-tags"> Vis kun nyheter med følgende nøkkelord:</label>
       <input type="text" name="tags" class="input-large" disabled><br>
+    </p>
 
       <div class="tag-box">
       </div>
