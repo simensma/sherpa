@@ -626,6 +626,70 @@ div.widget.promo {
     }
   }
 
+  div.cover.main.rotation-sommer {
+    background-image: url('/static/img/widgets/promo/sommerbanner14.png');
+
+    div.content {
+      @width: 940px;
+      @padding-right: 0;
+      padding-left: 940px - @width - @padding-right;
+      padding-top: 0;
+      width: @width;
+      padding-right: @padding-right;
+      color: white;
+
+      div.wrapper {
+        display: block;
+        height: 480px;
+        color: white !important;
+      }
+
+      h1 {
+        position: absolute;
+        top: 230px;
+        left: 210px;
+        width: 300px;
+        font-size: 32px;
+        text-transform: none;
+        text-align: left;
+      }
+
+      p.lede {
+        position: absolute;
+        top: 345px;
+        left: 210px;
+        width: 600px;
+        font-size: 20px;
+        font-weight: bold;
+        text-align: left;
+      }
+
+      p.credits {
+        position: absolute;
+        bottom: 5px;
+        left: 5px;
+        font-size: 16px;
+        margin-bottom: 0;
+      }
+
+      @media(max-width: 767px) {
+        div.wrapper {
+          height: auto;
+        }
+
+        h1, p.lede {
+          position: static;
+          text-align: center;
+          width: auto;
+        }
+
+        p.credits {
+          display: none;
+        }
+      }
+    }
+  }
+
   div.cover.main.rotation-gjensidige {
     background-image: url('/static/img/widgets/promo/gjensidigerabatt.jpg');
 

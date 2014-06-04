@@ -254,7 +254,13 @@ def get_static_promo_context(path):
             'id': 'fotokonkurranse',
             'name': 'Fotokonkurranse',
             'start_date': date(year=2014, month=4, day=24),
-            'end_date': date(year=2014, month=4, day=24),
+            'end_date': date(year=2014, month=6, day=3),
+        },
+        {
+            'id': 'sommer',
+            'name': 'Sommer',
+            'start_date': date(year=2014, month=6, day=4),
+            'end_date': date(year=2014, month=6, day=4),
         },
     ]
 
