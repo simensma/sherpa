@@ -143,7 +143,11 @@ class Version(models.Model):
                     t = thumbnail['url']
                     # Remove previous size spec if existing
                     t = re.sub('-\d+\.', '.', t)
-                    thumbnail['url'] = t[:t.rfind('.')] + '-' + str(min(settings.THUMB_SIZES)) + t[t.rfind('.'):]
+                    thumbnail['url'] = '%s-%s%s' % (
+                        t[:t.rfind('.')],
+                        str(min(settings.THUMB_SIZES)),
+                        t[t.rfind('.'):]
+                    )
 
         cache.set('version.%s.thumbnail' % self.id, thumbnail, 60 * 60 * 24)
         return thumbnail
