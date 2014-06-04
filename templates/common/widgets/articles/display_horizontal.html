@@ -4,7 +4,7 @@
       <div class="span{{ widget.span }}">
         {% if widget.display_images and not version.get_medium_thumbnail.hide %}
           <div class="image-container">
-            <a href="{% url 'articles.views.show' version.variant.article.id version.get_title_content.content|striptags|slugify %}">
+            <a class="text-anchor" href="{% url 'articles.views.show' version.variant.article.id version.get_title_content.content|striptags|slugify %}">
               <img src="{{ version.get_medium_thumbnail.url }}" alt="{{ version.get_title_content.content|striptags }}">
             </a>
           </div>
