@@ -106,7 +106,7 @@ class Version(models.Model):
         - url: The URL to the thumbnail image (None if hide is True)
         The result of the method is cached.
         This logic is old and kind of weird, it might need review"""
-        thumbnail = cache.get('version.%s.thumbnail' % self.id)
+        thumbnail = cache.get('version.%s.thumbnail.%s' % (self.id, size))
         if thumbnail is None:
             if self.variant.article.hide_thumbnail:
                 thumbnail = {
@@ -153,7 +153,7 @@ class Version(models.Model):
                         t[t.rfind('.'):]
                     )
 
-        cache.set('version.%s.thumbnail' % self.id, thumbnail, 60 * 60 * 24)
+        cache.set('version.%s.thumbnail.%s' % (self.id, size), thumbnail, 60 * 60 * 24)
         return thumbnail
 
     def get_medium_thumbnail(self):
