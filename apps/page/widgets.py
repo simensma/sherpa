@@ -28,15 +28,24 @@ def parse_widget(request, widget, current_site):
             variant__article__site=current_site,
         ).order_by('-variant__article__pub_date')
 
-        for tag in widget['tags']:
-            versions = versions.filter(tags__name__icontains=tag).distinct()
+        if len(widget['tags']) == 0:
+            version_matches = versions
+        else:
+            # Filter on tags. We'll have to do multiple queries, since we can't make list-lookups with 'icontains'.
+            # The alternative would be some sort of advanced regex.
+            version_matches = []
+            for tag in widget['tags']:
+                for version in versions.filter(tags__name__icontains=tag):
+                    # Drop duplicates manually
+                    if not version in version_matches:
+                        version_matches.append(version)
 
-        versions = versions[:int(widget['count'])]
+        version_matches = version_matches[:int(widget['count'])]
         data = {
             'title': widget['title'],
             'display_images': widget['display_images'],
             'tag_link': widget['tag_link'],
-            'versions': versions
+            'versions': version_matches
         }
     elif widget['widget'] == "blog":
         # This is a pretty heavy query, so cache it for a while
