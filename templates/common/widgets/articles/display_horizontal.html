@@ -8,6 +8,8 @@
               <img src="{{ version.get_medium_thumbnail.url }}" alt="{{ version.get_title_content.content|striptags }}">
             </a>
           </div>
+        {% else %}
+          <div class="image-placeholder"></div>
         {% endif %}
 
         <h2>

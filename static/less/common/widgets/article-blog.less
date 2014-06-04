@@ -41,14 +41,20 @@ div.widget.articles, div.widget.blog {
   }
 
   div.horizontal {
+    @image-height: 150px;
+
     div.image-container {
-      height: 150px;
+      height: @image-height;
       overflow: hidden;
       position: relative; // Needed to position its children
 
       img {
         position: absolute;
       }
+    }
+
+    div.image-placeholder {
+      height: @image-height;
     }
 
     h2 {
