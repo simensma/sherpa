@@ -31,13 +31,20 @@ def parse_widget(request, widget, current_site):
         for tag in widget['tags']:
             versions = versions.filter(tags__name__icontains=tag).distinct()
 
-        versions = versions[:widget['count']]
+        if widget['layout'] == 'medialist':
+            versions = versions[:widget['count']]
+            span = None
+        else:
+            versions = versions[:widget['columns']]
+            span = 12 / int(widget['columns'])
+
         data = {
             'layout': widget['layout'],
             'title': widget['title'],
             'display_images': widget['display_images'],
             'tag_link': widget['tag_link'],
             'versions': versions,
+            'span': span,
         }
     elif widget['widget'] == "blog":
         # This is a pretty heavy query, so cache it for a while

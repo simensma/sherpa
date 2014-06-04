@@ -1,1 +1,32 @@
-{# TODO #}
+<div class="row-fluid">
+  {% for version in widget.versions %}
+    <div class="span{{ widget.span }}">
+      {% if widget.display_images and not version.get_thumbnail.hide %}
+        <p>
+          <img src="{{ version.get_thumbnail.url }}" alt="{{ version.get_title_content.content|striptags }}">
+        </p>
+      {% endif %}
+
+      <h3>
+        <a href="{% url 'articles.views.show' version.variant.article.id version.get_title_content.content|striptags|slugify %}">
+          {{ version.get_title_content.content|striptags }}
+        </a>
+      </h3>
+
+      <p>
+        <a href="{% url 'articles.views.show' version.variant.article.id version.get_title_content.content|striptags|slugify %}">
+          {{ version.get_lede_content.content|striptags|safe|truncatewords:15 }}
+        </a>
+      </p>
+
+    </div>
+  {% endfor %}
+</div>
+
+<p class="more">
+  {% if widget.tag_link %}
+    <a href="{% url 'articles.views.index' %}?tag={{ widget.tag_link }}">Se flere nyheter om {{ widget.tag_link }}</a>
+  {% else %}
+    <a href="{% url 'articles.views.index' %}">Se eldre nyheter</a>
+  {% endif %}
+</p>
