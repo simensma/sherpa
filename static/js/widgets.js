@@ -10,8 +10,7 @@ $(function() {
 
 (function(Widgets, $, undefined) {
 
-    Widgets.runIfExists = function(type, selector) {
-        var widget = $(selector);
+    Widgets.runIfExists = function(type, widget) {
         if(widget.length > 0) {
             Widgets.run(type, widget);
         }
