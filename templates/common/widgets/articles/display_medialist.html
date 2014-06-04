@@ -1,0 +1,31 @@
+{% if widget.title %}
+  <h1>{{ widget.title }}</h1>
+{% endif %}
+
+{% for version in widget.versions %}
+  <div class="media">
+    <h2 class="media-heading">
+      <a href="{% url 'articles.views.show' version.variant.article.id version.get_title_content.content|striptags|slugify %}">
+        {{ version.get_title_content.content|striptags }}
+      </a>
+    </h2>
+    {% if widget.display_images and not version.get_thumbnail.hide %}
+      <a class="pull-left" href="{% url 'articles.views.show' version.variant.article.id version.get_title_content.content|striptags|slugify %}">
+        <img class="media-object" src="{{ version.get_thumbnail.url }}" alt="{{ version.get_title_content.content|striptags }}">
+      </a>
+    {% endif %}
+    <div class="media-body">
+      <a href="{% url 'articles.views.show' version.variant.article.id version.get_title_content.content|striptags|slugify %}">
+        {{ version.get_lede_content.content|striptags|safe|truncatewords:15 }}
+      </a>
+    </div>
+  </div>
+{% endfor %}
+
+<p class="more">
+  {% if widget.tag_link %}
+    <a href="{% url 'articles.views.index' %}?tag={{ widget.tag_link }}">Se flere nyheter om {{ widget.tag_link }}</a>
+  {% else %}
+    <a href="{% url 'articles.views.index' %}">Se eldre nyheter</a>
+  {% endif %}
+</p>
