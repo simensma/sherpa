@@ -216,9 +216,9 @@
           <tr>
             <th>Medlemsforening</th>
             <td>
-              {% if other_user.main_forening.site %}<a href="http://{{ other_user.main_forening.site.domain }}/">{% endif %}
+              {% if other_user.main_forening.get_homepage_site %}<a href="http://{{ other_user.main_forening.get_homepage_site.domain }}/">{% endif %}
                 {{ other_user.main_forening.name }}
-              {% if other_user.main_forening.site %}</a>{% endif %}
+              {% if other_user.main_forening.get_homepage_site %}</a>{% endif %}
             </td>
           </tr>
           <tr>

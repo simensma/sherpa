@@ -1,0 +1,130 @@
+{# Note that this template is rendered in the main layout #}
+{% extends 'main/layout.html' %}
+
+{% block title %}{{ version.variant.page.title }} — {{ block.super }}{% endblock %}
+
+{% load taglist %}
+
+{% block extra_js %}
+  {# 3rd party libs #}
+  <script src="{{ STATIC_URL }}lib/jquery-draggable/jquery.draggable.min.js"></script>
+  <script src="{{ STATIC_URL }}lib/rangy/rangy-core.js"></script>
+  <script src="{{ STATIC_URL }}lib/imagesloaded/jquery.imagesloaded.min.js"></script>
+  <script src="{{ STATIC_URL }}lib/imgareaselect/js/jquery.imgareaselect.min.js"></script>
+  <script src="{{ STATIC_URL }}lib/jcrop/js/jquery.Jcrop.min.js"></script>
+
+  {# Custom libs #}
+  <script src="{{ STATIC_URL }}js/admin/tagger.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/sites/editor/image-utils.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/sites/editor/image-cropper.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/images/util/image-archive-picker.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/images/util/image-upload-dialog.js"></script>
+
+  {# Editor specific scripts #}
+  <script src="{{ STATIC_URL }}js/admin/sites/editor/main.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/sites/editor/move-content.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/sites/editor/page.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/sites/editor/save.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/sites/editor/image-dialog.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/sites/editor/widgets/articles.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/sites/editor/widgets/blog.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/sites/editor/widgets/carousel.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/sites/editor/widgets/embed.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/sites/editor/widgets/fact.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/sites/editor/widgets/quote.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/sites/editor/widgets/button.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/sites/editor/widgets/main.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/sites/editor/toolbar.js"></script>
+{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/jcrop/css/jquery.Jcrop.min.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}css/editor.css" media="screen">
+{% endblock %}
+
+{% block js_globals %}
+  <script>
+    window.Turistforeningen = {
+      image_search_length: {{ image_search_length }}
+    };
+  </script>
+{% endblock %}
+
+{% block body %}
+
+<div class="cms-editor">
+
+  <div class="row">
+    <div class="span12">
+      <div class="well editor-header page" data-page-id="{{ version.variant.page.id }}" data-version-id="{{ version.id }}">
+        <div class="status"{% if version.variant.page.published %} data-published{% endif %}>
+          <div class="title">
+            Tittel: <input name="title" type="text" class="input-xlarge" value="{{ version.variant.page.title }}">
+          </div>
+
+          <div class="parent">
+            Ligger under:
+            <select name="parent" class="chosen" data-placeholder="Ingen foreldreside">
+              <option value=""></option>
+              {% for page in pages %}
+                <option value="{{ page.id }}"{% if version.variant.page.parent.id == page.id %} selected class="default"{% endif %}>{{ page.title }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="publish">
+            <input type="checkbox" name="publish"{% if version.variant.page.published %} checked="checked"{% endif %}> Publiseres
+
+            <div class="input-append date">
+              <input type="text" name="date" value="{{ version.variant.page.pub_date|date:"d.m.Y" }}" placeholder="dd.mm.åååå">
+              <span class="add-on"><i class="icon-th"></i></span>
+            </div>
+            kl.
+            <input type="text" name="time" value="{{ version.variant.page.pub_date|date:"H:i" }}" placeholder="tt:mm">
+          </div>
+
+          <div class="display-ads">
+            <label class="checkbox"><input type="checkbox" name="display-ads"{% if version.ads %} checked{% endif %}>Vis annonser</label>
+          </div>
+
+          <div class="tags">
+            <table>
+              <tr>
+                <td style="vertical-align: top">
+                  Nøkkelord:
+                  <input type="text" name="tags">
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="tag-box" data-predefined-tags="{{ version.tags.all|taglist }}"></div>
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <div style="clear: left;"></div>
+
+          <div class="save">
+            <button class="btn btn-success save"><i class="icon-heart"></i> Lagre nå</button>
+            <button class="btn btn-success preview" data-href="{% url 'admin.sites.pages.page.preview' active_site.id version.id %}"><i class="icon-search"></i> Forhåndsvisning</button>
+            <a class="btn btn-danger delete-page" href="{% url 'admin.sites.pages.page.delete' active_site.id version.variant.page.id %}">
+              <i class="icon-warning-sign"></i> Slett
+            </a>
+            <br><br>
+
+            <button class="btn btn-success save-and-quit" data-href="{% url 'admin.sites.pages.page.list' active_site.id %}">Lagre &amp; Tilbake til Sherpa</button>
+            <a href="{% url 'admin.sites.pages.page.list' active_site.id %}" class="btn btn-default quit" data-confirm="Er du sikker på at du vil gå tilbake til Sherpa uten å lagre?">Tilbake til Sherpa UTEN å lagre</a>
+          </div>
+        </div>
+
+        <div style="clear: both;"></div>
+      </div>
+    </div>
+  </div>
+
+  {% include 'common/admin/sites/editor/editor.html' %}
+
+</div><!-- /.cms-editor -->
+
+{% endblock %}

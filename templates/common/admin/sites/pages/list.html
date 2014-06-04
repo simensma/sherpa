@@ -1,0 +1,107 @@
+{% extends 'common/admin/layout.html' %}
+{% block title %}Sider — {{ block.super }}{% endblock %}
+
+{% block admin_menu %}{% with 'sites' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/sites/pages/pages.js"></script>
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="col-lg-12">
+    <h1>Sider <small>sett opp innholdet på <a href="http://{{ active_site.domain }}/">{{ active_site.domain }}</a></small></h1>
+    <ol class="breadcrumb">
+      <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
+      <li><a href="{% url 'admin.sites.views.index' active_site.id %}">Nettsteder</a></li>
+      <li><a href="{% url 'admin.sites.views.index' active_site.id %}">{{ active_site.domain }}</a></li>
+      <li><a href="{% url 'admin.sites.pages.page.list' active_site.id %}">Sider</a></li>
+    </ol>
+  </div>
+</div><!-- /.row -->
+
+<div class="row">
+  <div class="col-md-12">
+
+    <p style="text-align: center;">
+      <a id="add-page" class="btn btn-success btn-lg new-page" href="javascript:undefined">
+        Opprett ny side
+      </a>
+    </p>
+
+    {% if not versions %}
+      <div class="alert alert-info">Det er ikke opprettet noen sider for dette nettstedet.</div>
+    {% else %}
+      <table class="table pages">
+        <thead>
+          <tr>
+            <th>Tittel</th>
+            <th>URL til siden</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% include 'common/admin/sites/pages/result.html' with versions=versions level=0 %}
+        </tbody>
+      </table>
+    {% endif %}
+  </div>
+</div><!-- /.row -->
+
+<div class="modal container jq-hide new-page" data-check-slug-url="{% url 'admin.sites.pages.page.check_slug' active_site.id %}">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h3>Opprett ny side</h3>
+  </div>
+  <div class="modal-body">
+    <form action="{% url 'admin.sites.pages.page.new' active_site.id %}" method="post">
+    {% csrf_token %}
+      <input type="hidden" name="template" value="0">
+      <input type="hidden" name="slug" value="">
+      <div class="form-group">
+        <label>Tittel</label>
+        <input type="text" name="title" class="form-control">
+      </div>
+      <div class="form-group">
+        <label>Permanent URL:</label>
+        http://{{ active_site.domain }}/<span class="slug"></span><span class="slash"></span> <i class="edit-slug fa fa-pencil"></i><i class="save-slug fa fa-check"></i>
+        <img class="loader" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster...">
+        <span class="valid">
+          <img src="{{ STATIC_URL }}img/valid.png" alt="Gyldig URL">
+          Ok!
+        </span>
+        <span class="invalid">
+          <img src="{{ STATIC_URL }}img/invalid.png" alt="Ugyldig URL">
+          Denne URLen er allerede i bruk!
+        </span>
+
+      </div>
+
+      <h2>Velg en ferdigdefinert mal her:</h2>
+
+      <div class="row">
+        <div class="col-sm-3">
+          <img src="{{ STATIC_URL }}img/templates/empty.jpg" alt="Ferdigdefinert mal" data-template="1">
+          <p>Tom</p>
+        </div>
+        <div class="col-sm-3">
+          <img src="{{ STATIC_URL }}img/templates/full-width.jpg" alt="Ferdigdefinert mal" data-template="2">
+          <p>Én kolonne</p>
+        </div>
+        <div class="col-sm-3">
+          <img src="{{ STATIC_URL }}img/templates/sidebar.jpg" alt="Ferdigdefinert mal" data-template="3">
+          <p>Sidebar (hele)</p>
+        </div>
+        <div class="col-sm-3">
+          <img src="{{ STATIC_URL }}img/templates/3-columns.jpg" alt="Ferdigdefinert mal" data-template="4">
+          <p>Tre kolonner</p>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <a href="javascript:undefined" class="btn btn-default" data-dismiss="modal">Lukk vindu</a>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'common/admin/layout.html' %}
+{% block title %}Nyheter — {{ block.super }}{% endblock %}
+
+{% block admin_menu %}{% with 'sites' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/sites/editor/article-delete.js"></script>
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="col-lg-12">
+    <h1>
+      Slett artikkel?
+    </h1>
+    <p>
+      Du er i ferd med å slette artikkelen "<a href="{% url 'articles.views.show' version.variant.article.id version.get_title_content.content|striptags|slugify %}">{{ version.get_title_content.content|striptags }}</a>" <strong>for godt</strong>, er du sikker på at det er det du vil?
+    </p>
+    <p>
+      Hvis du bare vil ta den bort fra forsiden og søkeresultater, men beholde innholdet, bør du heller bare avpublisere den.
+    </p>
+    <div class="alert alert-danger final-confirm jq-hide">
+      <strong>
+        Du kan ikke angre dette.
+      </strong>
+      <p>
+        <a class="btn btn-danger" href="{% url 'admin.sites.articles.views.delete' active_site.id version.variant.article.id %}"><i class="fa fa-warning"></i> Jeg forstår, slett den likevel!</a>
+      </p>
+    </div>
+    <p>
+      <button class="btn btn-lg btn-danger confirm-delete"><i class="fa fa-warning"></i> Ja, slett artikkelen for evig og alltid</button>
+    </p>
+    <p>
+      <a class="btn btn-lg btn-success" href="{% url 'admin.sites.articles.views.edit' active_site.id version.id %}"><i class="fa fa-heart"></i> NEI! Jeg har ombestemt meg, ikke slett noe.</a>
+    </p>
+  </div>
+</div>
+
+{% endblock %}

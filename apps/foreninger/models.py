@@ -7,6 +7,7 @@ from django.dispatch import receiver
 from .exceptions import ForeningTypeCannotHaveChildren, ForeningTypeNeedsParent, ForeningWithItselfAsParent, SentralForeningWithRelation, ForeningWithForeningParent, ForeningWithTurlagParent, TurlagWithTurgruppeParent, TurgruppeWithTurgruppeParent, ForeningParentIsChild, TurlagWithTurlagParent
 from sherpa2.models import Forening as Sherpa2Forening
 from sherpa2.models import NtbId
+from core.models import Site
 
 class Forening(models.Model):
     TYPES = [
@@ -28,7 +29,6 @@ class Forening(models.Model):
     focus_id = models.IntegerField(null=True, default=None)
     type = models.CharField(max_length=255, choices=TYPES)
     group_type = models.CharField(max_length=255, choices=GROUP_TYPES, default='')
-    site = models.OneToOneField('core.Site', null=True)
 
     # Address
     post_address = models.CharField(max_length=255, default='')
@@ -131,8 +131,8 @@ class Forening(models.Model):
         """Returns the currently in-use URL for this forening. Right now this is the old sherpa2 URL, but when
         foreninger starts to go live with their new sites, this method should return that site domain instead."""
         # Note that we'll need a way to distinguish active sites from test-sites. Something like:
-        # if self.site.is_live:
-        #     return 'http://%s/' % self.site.domain
+        # if self.get_homepage_site().is_live:
+        #     return 'http://%s/' % self.get_homepage_site().domain
         return self.get_old_url()
 
     def get_old_url(self):
@@ -156,6 +156,17 @@ class Forening(models.Model):
                 object_id = None
             cache.set('object_id.forening.%s' % self.id, object_id, 60 * 60 * 24 * 7)
         return object_id
+
+    def get_homepage_site(self):
+        """A forening can have multiple related sites but only one homepage, this method returns the homepage site,
+        or None if it doesn't have a homepage."""
+        try:
+            return self.sites.get(type='forening')
+        except Site.DoesNotExist:
+            return None
+
+    def get_sites_sorted(self):
+        return Site.sort(self.sites.all())
 
     @staticmethod
     def sort(foreninger):

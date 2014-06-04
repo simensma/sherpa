@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.core.cache import cache
 from django.db.models import Q
 from django.contrib import messages
+from django.core.exceptions import PermissionDenied
 
 from datetime import datetime, date
 from lxml import etree
@@ -12,10 +13,10 @@ import re
 # should be 'from aktiviteter.models import Aktivitet'
 from aktiviteter.views import Aktivitet
 from focus.models import Actor
-from page.models import Page
+from page.models import Page, Variant, Version
 from user.models import User
-from core.models import Site, SiteTemplate
-from admin.cms.views.page_util import verify_domain
+from core.models import Site
+from admin.sites.pages.util import create_template
 
 def index(request):
     total_membership_count = cache.get('admin.total_membership_count')
@@ -30,8 +31,8 @@ def index(request):
         cache.set('admin.local_membership_count.%s' % request.active_forening.id, local_membership_count, 60 * 60 * 12)
 
     turledere = User.get_users().filter(turledere__isnull=False).distinct().count()
-    if request.active_forening.site is not None:
-        pages = Page.on(request.active_forening.site).filter(
+    if request.active_forening.get_homepage_site() is not None:
+        pages = Page.on(request.active_forening.get_homepage_site()).filter(
             pub_date__lte=datetime.now(),
             published=True
         ).count()
@@ -87,29 +88,102 @@ def index(request):
     return render(request, 'common/admin/dashboard.html', context)
 
 def setup_site(request):
-    if request.active_forening.site is not None:
-        return redirect('admin.cms.views.page.list')
+    if not request.user.is_admin_in_forening(request.active_forening):
+        return render(request, 'common/admin/setup_site_disallowed.html')
+
+    context = {'site_types': Site.TYPE_CHOICES}
 
     if request.method == 'GET':
-        return render(request, 'common/admin/setup_site.html')
+        return render(request, 'common/admin/setup_site.html', context)
+
     elif request.method == 'POST':
-        result = verify_domain(request.POST['domain'])
+        if not request.POST.get('type', '') in [t[0] for t in Site.TYPE_CHOICES]:
+            raise PermissionDenied
+
+        if not request.POST['domain-type'] in ['fqdn', 'subdomain']:
+            raise PermissionDenied
+
+        domain = request.POST['domain'].strip()
+        subdomain = domain
+        if request.POST['domain-type'] == 'subdomain':
+            domain = '%s.test.turistforeningen.no' % domain
+        domain = domain.replace('http://', '').rstrip('/')
+
+        if request.POST['type'] == 'forening' and request.active_forening.get_homepage_site() is not None:
+            messages.error(request, 'main_site_exists')
+            if request.POST['domain-type'] == 'fqdn':
+                context['domain'] = domain
+            else:
+                context['domain'] = subdomain
+            return render(request, 'common/admin/setup_site.html', context)
+
+        result = Site.verify_domain(domain)
         if not result['valid']:
             messages.error(request, result['error'])
-            context = {'domain': request.POST['domain'].strip()}
+            if request.POST['domain-type'] == 'fqdn':
+                context['domain'] = domain
+            else:
+                context['domain'] = subdomain
             if result['error'] == 'site_exists':
                 context['existing_forening'] = result['existing_forening']
             return render(request, 'common/admin/setup_site.html', context)
         else:
             # TODO let creator choose template?
-            large_template = SiteTemplate.objects.get(name='large')
             site = Site(
                 domain=result['domain'],
                 prefix=result['prefix'],
-                template=large_template
+                type=request.POST['type'],
+                template='large',
+                forening=request.active_forening,
+                title='',
             )
+            if request.POST['type'] == 'kampanje':
+                site.title = request.POST['title'].strip()
             site.save()
-            request.active_forening.site = site
-            request.active_forening.save()
+
+            page = Page(
+                title='Forside',
+                slug='',
+                published=False,
+                created_by=request.user,
+                site=site,
+            )
+            page.save()
+
+            variant = Variant(
+                page=page,
+                article=None,
+                name='Standard',
+                segment=None,
+                priority=1,
+                owner=request.user,
+            )
+            variant.save()
+
+            version = Version(
+                variant=variant,
+                version=1,
+                owner=request.user,
+                active=True,
+                ads=True,
+            )
+            version.save()
+
+            create_template(request.POST['template'], version)
             request.session.modified = True
-            return redirect('admin.cms.views.page.list')
+            return redirect('admin.views.site_created', site.id)
+
+def site_created(request, site):
+    if not request.user.is_admin_in_forening(request.active_forening):
+        raise PermissionDenied
+
+    site = Site.objects.get(id=site)
+    forside_version = Version.objects.get(
+        variant__page__title='Forside',
+        variant__page__site=site,
+    )
+    context = {
+        'created_site': site,
+        'forside_version': forside_version,
+    }
+    return render(request, 'common/admin/site_created.html', context)

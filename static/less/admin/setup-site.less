@@ -1,0 +1,49 @@
+div.setup-site {
+  div.section {
+    border-bottom: 1px solid rgb(200, 200, 200);
+    padding-bottom: 20px;
+
+    h2 {
+      margin-top: 30px;
+    }
+  }
+
+  div.section:last-of-type {
+    border-bottom: none !important;
+  }
+
+  div.form-group.domain {
+    p.domain-input {
+      margin-top: 20px;
+    }
+
+    input[name='domain'] {
+      display: inline-block;
+      width: 200px;
+    }
+    input[name='domain'].fqdn {
+      width: 300px;
+    }
+  }
+
+  div.form-group.template {
+    div.template-block {
+      border: 1px solid rgb(200, 200, 200);
+      margin-top: 10px;
+      padding: 15px;
+
+      h3 {
+        margin-top: 0;
+      }
+    }
+
+    div.template-block:hover {
+      cursor: pointer;
+      background-color: rgb(245, 245, 245);
+    }
+
+    div.template-block.active {
+      background-color: rgb(235, 235, 235);
+    }
+  }
+}

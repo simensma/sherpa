@@ -40,12 +40,20 @@ def parse_widget(request, widget, current_site):
                     if not version in version_matches:
                         version_matches.append(version)
 
-        version_matches = version_matches[:int(widget['count'])]
+        if widget['layout'] == 'medialist':
+            version_matches = version_matches[:int(widget['count'])]
+            span = None
+        else:
+            version_matches = version_matches[:int(widget['columns'])]
+            span = 12 / int(widget['columns'])
+
         data = {
+            'layout': widget['layout'],
             'title': widget['title'],
             'display_images': widget['display_images'],
             'tag_link': widget['tag_link'],
-            'versions': version_matches
+            'versions': version_matches,
+            'span': span,
         }
     elif widget['widget'] == "blog":
         # This is a pretty heavy query, so cache it for a while

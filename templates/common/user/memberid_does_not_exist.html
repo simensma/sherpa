@@ -1,4 +1,4 @@
-{% extends site.template.name|add:"/layout.html" %}
+{% extends site.template|add:"/layout.html" %}
 {% block title %}Din bruker er utgått &mdash; Min side{% endblock %}
 {% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <em>Din bruker er utgått</em>{% endblock %}
 

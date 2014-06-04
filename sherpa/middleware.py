@@ -1,7 +1,6 @@
 # encoding: utf-8
 from django.shortcuts import render, redirect
 from django.conf import settings
-from django.http import Http404
 from django.core.exceptions import PermissionDenied
 from django.core import urlresolvers
 from django.core.urlresolvers import resolve, Resolver404
@@ -52,7 +51,7 @@ class Sites():
     def process_request(self, request):
         try:
             request.site = Site.objects.get(domain=request.get_host().lower().split(":")[0])
-            request.urlconf = "sherpa.urls_%s" % request.site.template.name
+            request.urlconf = "sherpa.urls_%s" % request.site.template
             urlresolvers.set_urlconf(request.urlconf)
         except Site.DoesNotExist:
             # Unknown host name, redirect to the main site.
@@ -138,17 +137,21 @@ class CheckSherpaPermissions(object):
                     context = {'next': request.get_full_path()}
                     return render(request, 'common/admin/set_active_forening.html', context)
 
-            # Accessing CMS-functionality, but no site set
-            if request.active_forening.site is None:
-                site_required_paths = [
-                    u'/sherpa/cms/',
-                    u'/sherpa/nyheter/',
-                    u'/sherpa/annonser/',
-                    u'/sherpa/analyse/'
-                ]
-                for path in site_required_paths:
-                    if request.path.startswith(path):
-                        return render(request, 'common/admin/no_forening_site.html')
+    def process_view(self, request, view_func, *args, **kwargs):
+        if request.current_app == 'admin' and request.path.startswith(u'/sherpa/nettsteder'):
+            # Accessing 'sites' subapp in admin
+            try:
+                site = [Site.objects.get(id=arg['site']) for arg in args if type(arg) == dict and 'site' in arg]
+                if len(site) == 1:
+                    site = site[0]
+
+                    # Verify that the user has access to this site (transitive by forening)
+                    if not site.forening in request.user.all_foreninger():
+                        raise PermissionDenied
+
+            except Site.DoesNotExist:
+                # The specified site doesn't exist
+                return redirect('admin.views.setup_site')
 
 class DeactivatedEnrollment():
     def process_request(self, request):

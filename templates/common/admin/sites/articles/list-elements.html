@@ -1,0 +1,77 @@
+{% load dategtnow %}
+
+{% for version in versions %}
+  <tr>
+    <td class="article-preview">
+
+      <div class="media">
+        {% if not version.get_thumbnail.hide %}
+          <a class="pull-left" href="{% url 'admin.sites.articles.views.edit' active_site.id version.id %}">
+            <img class="media-object" src="{{ version.get_thumbnail.url }}" alt="{{ version.get_title_content.content|striptags }}">
+          </a>
+        {% endif %}
+        <div class="media-body">
+          <h2 class="media-heading">
+            <a href="{% url 'admin.sites.articles.views.edit' active_site.id version.id %}">
+              {% firstof version.get_title_content.content|striptags '(Uten tittel)' %}
+            </a>
+          </h2>
+          <p>
+            <a href="{% url 'admin.sites.articles.views.edit' active_site.id version.id %}">
+              {{ version.get_lede_content.content|striptags|safe|truncatewords:40 }}
+            </a>
+          </p>
+        </div>
+      </div>
+
+    </td>
+    <td>
+      <!-- INCEPTION -->
+      <table class="article-metadata">
+        <tr>
+          <th>Publiseres:</th>
+            {% if version.variant.article.published %}
+              {% if version.variant.article.pub_date|dategtnow %}
+                <td class="published-future">
+                  {{ version.variant.article.pub_date }}
+                </td>
+              {% else %}
+                <td class="published-past">
+                  {{ version.variant.article.pub_date }}
+                </td>
+              {% endif %}
+            {% else %}
+              <td class="unpublished">
+                Ikke publisert
+              </td>
+            {% endif %}
+        </tr>
+        <tr>
+          <th>Forfattere:</th>
+          <td>
+            {% for publisher in version.publishers.all %}
+              {{ publisher.get_full_name }}
+              {% if not forloop.last %}<br>{% endif %}
+            {% endfor %}
+          </td>
+        </tr>
+        <tr>
+          <th>Opprettet av:</th>
+          <td>
+            {{ version.variant.article.created_by.get_full_name }}<br>
+            {{ version.variant.article.created_date }}
+          </td>
+        </tr>
+        {% if version.variant.article.modified_by %}
+          <tr>
+            <th>Sist endret av:</th>
+            <td>
+              {{ version.variant.article.modified_by.get_full_name }}<br>
+              {{ version.variant.article.modified_date }}
+            </td>
+          </tr>
+        {% endif %}
+      </table>
+    </td>
+  </tr>
+{% endfor %}

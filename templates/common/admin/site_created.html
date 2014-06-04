@@ -1,0 +1,45 @@
+{% extends 'common/admin/layout.html' %}
+
+{% block admin_menu %}{% with 'sites.setup_site' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="col-lg-12">
+
+    <h1>Gratulerer! <small>{{ created_site.get_title }} har blitt opprettet</small></h1>
+    <ol class="breadcrumb">
+      <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
+      <li><a href="{% url 'admin.views.setup_site' %}">Sett opp nytt nettsted</a></li>
+      <li><a href="{% url 'admin.views.site_created' created_site.id %}">{{ created_site.get_title }}</a></li>
+    </ol>
+
+    <p>
+      Nettstedet <strong>{{ created_site.get_title }}</strong> har blitt opprettet! Du kan besøke siden på følgende adresse: <a href="http://{{ created_site.domain }}/">http://{{ created_site.domain }}/</a>.
+    </p>
+
+    <p>
+      Her er noen veier videre:
+    </p>
+
+    <p>
+      <a href="{% url 'admin.sites.pages.page.edit' created_site.id forside_version.id %}" class="btn btn-default">Rediger forsiden</i></a>
+    </p>
+
+    <p>
+      <a href="{% url 'admin.sites.pages.page.list' created_site.id %}" class="btn btn-default">Opprett en ny side</i></a>
+    </p>
+
+    <p>
+      <a href="{% url 'admin.sites.articles.views.list' created_site.id %}" class="btn btn-default">Legg inn en ny artikkel</i></a>
+    </p>
+
+    <p>
+      <a href="{% url 'admin.aktiviteter.views.index' %}" class="btn btn-default">Opprett en aktivitet</i></a>
+    </p>
+
+
+  </div>
+</div><!-- /.row -->
+
+{% endblock %}

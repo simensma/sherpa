@@ -1,4 +1,4 @@
-{% extends site.template.name|add:"/layout.html" %}
+{% extends site.template|add:"/layout.html" %}
 {% block title %}Min side{% endblock %}
 {% block breadcrumb %}<em><a href="{% url 'user.views.home' %}">Min side</a></em>{% endblock %}
 
@@ -61,9 +61,9 @@
           <tr>
             <th>Din medlemsforening:</th>
             <td>
-              {% if user.main_forening.site %}<a href="http://{{ user.main_forening.site.domain }}/">{% endif %}
+              {% if user.main_forening.get_homepage_site %}<a href="http://{{ user.main_forening.get_homepage_site.domain }}/">{% endif %}
                 {{ user.main_forening.name }}
-              {% if user.main_forening.site %}</a>{% endif %}
+              {% if user.main_forening.get_homepage_site %}</a>{% endif %}
             </td>
           </tr>
           {% if user.turledere.count > 0 %}

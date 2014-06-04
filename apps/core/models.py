@@ -1,3 +1,4 @@
+# encoding: utf-8
 from django.contrib.gis.db import models
 
 class Tag(models.Model):
@@ -15,16 +16,121 @@ class Tag(models.Model):
 class Site(models.Model):
     domain = models.CharField(max_length=255)
     prefix = models.CharField(max_length=255)
-    template = models.ForeignKey('core.SiteTemplate')
+    TYPE_CHOICES = (
+        ('forening', u'Foreningens hjemmeside'), # Zero or one per forening
+        ('hytte', u'Hytteside: Hjemmeside for en betjent hytte'),
+        ('kampanje', u'Kampanjeside'),
+    )
+    type = models.CharField(max_length=255, choices=TYPE_CHOICES)
+    TEMPLATE_CHOICES = (
+        ('main', 'DNTs nasjonale nettside'),
+        ('small', 'Medlemsforening eller turgruppe med et lite nettsted'),
+        ('large', 'Medlemsforening eller turgruppe med et stort nettsted'),
+    )
+    template = models.CharField(max_length=255, choices=TEMPLATE_CHOICES)
+    forening = models.ForeignKey('foreninger.Forening', related_name='sites')
+    title = models.CharField(max_length=255) # Only specified for type='kampanje', empty and unused for other types
 
     def __unicode__(self):
         return u'%s: %s' % (self.pk, self.domain)
 
-class SiteTemplate(models.Model):
-    name = models.CharField(max_length=100)
+    def get_type(self):
+        return [t for t in Site.TYPE_CHOICES if t[0] == self.type][0][1]
 
-    def __unicode__(self):
-        return u'%s: %s' % (self.pk, self.name)
+    def get_type_short(self):
+        """Return an even shorter friendly name than the TYPE_CHOICES tuple description"""
+        if self.type == 'forening':
+            return "Hjemmeside"
+        elif self.type == 'hytte':
+            return "Hytteside"
+        elif self.type == 'kampanje':
+            return "Kampanjeside"
+        else:
+            raise Exception("Unrecognized site type '%s'" % self.type)
+
+    def get_title(self):
+        """Return the site title based on what type the site is"""
+        if self.type == 'forening':
+            return self.forening.name
+        elif self.type == 'hytte':
+            # TODO: FIXME
+            return u'Her bør hyttenavnet hentes automatisk (se core.Site.get_title())'
+        elif self.type == 'kampanje':
+            return self.title
+        else:
+            raise Exception("Unrecognized site type '%s'" % self.type)
+
+    @staticmethod
+    def sort(sites):
+        """Sort the given sites iterable by title and return a dict with a key for each site type, containing
+        a list of sites of that type"""
+        sites = sorted(sites, key=lambda s: s.get_title())
+        types = [t[0] for t in Site.TYPE_CHOICES]
+        return {t: [s for s in sites if s.type == t] for t in types}
+
+    @staticmethod
+    def verify_domain(domain):
+        """Very simple syntax verification, and a few business rules"""
+        domain = domain.strip()
+        if domain == '' or not '.' in domain:
+            return {
+                'valid': False,
+                'error': 'malformed',
+            }
+
+        if domain.endswith('/'):
+            domain = domain[:-1]
+
+        if '/' not in domain:
+            prefix = ''
+        else:
+            try:
+                # Prefix folder specified
+                domain, prefix = domain.split('/')
+                # Only allowed for turistforeningen.no
+                if domain != 'turistforeningen.no' and domain != 'www.turistforeningen.no':
+                    return {
+                        'valid': False,
+                        'error': 'prefix_for_disallowed_domain',
+                    }
+            except ValueError:
+                # More than one subdir specified
+                return {
+                    'valid': False,
+                    'error': 'more_than_one_subdir',
+                }
+
+        if prefix != '':
+            return {
+                'valid': False,
+                'error': 'prefix_not_supported_yet',
+            }
+
+        if not domain.endswith('.test.turistforeningen.no'):
+            return {
+                'valid': False,
+                'error': 'test_period_requires_test_domain',
+            }
+
+        if domain.count('.') == 1 and not domain.startswith('www'):
+            domain = "www.%s" % domain
+
+        try:
+            existing_site = Site.objects.get(domain=domain, prefix=prefix)
+            existing_forening = existing_site.forening
+            return {
+                'valid': False,
+                'error': 'site_exists',
+                'existing_forening': existing_forening,
+            }
+        except Site.DoesNotExist:
+            pass
+
+        return {
+            'valid': True,
+            'domain': domain,
+            'prefix': prefix,
+        }
 
 class Zipcode(models.Model):
     zipcode = models.CharField(max_length=4)

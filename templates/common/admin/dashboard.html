@@ -24,7 +24,7 @@
 
 <div class="row">
 
-  {% if active_forening.site %}
+  {% if active_forening.get_homepage_site %}
     <div class="col-lg-3">
       <div class="dashboard-panel green">
         <div class="content">
@@ -38,7 +38,7 @@
             </div>
           </div>
         </div>
-        <a href="{% url 'admin.cms.views.page.list' %}" class="action">
+        <a href="{% url 'admin.sites.pages.page.list' active_forening.get_homepage_site.id %}" class="action">
           <div class="row">
             <div class="col-xs-6">
               Publisér flere sider
@@ -137,7 +137,7 @@
 </div><!-- /.row -->
 
 {# Operator precedence is not supported in Django templates, use two if-tags #}
-{% if not active_forening.site %}
+{% if not active_forening.get_homepage_site %}
   {% if active_forening.type == 'sentral' or active_forening.type == 'forening' %}
     <div class="row">
       <div class="col-md-12">

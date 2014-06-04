@@ -1,0 +1,88 @@
+{% extends 'common/admin/layout.html' %}
+{% block title %}Nyheter — {{ block.super }}{% endblock %}
+
+{% block admin_menu %}{% with 'sites' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/sites/articles/list.js"></script>
+{% endblock %}
+
+{% block body %}
+
+<div class="article-listing">
+
+  <div class="row">
+    <div class="col-lg-12">
+      <h1>Nyheter <small>legg ut nyheter om smått &amp; stort</small></h1>
+      <ol class="breadcrumb">
+        <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
+        <li><a href="{% url 'admin.sites.views.index' active_site.id %}">Nettsteder</a></li>
+        <li><a href="{% url 'admin.sites.views.index' active_site.id %}">{{ active_site.domain }}</a></li>
+        <li><a href="{% url 'admin.sites.articles.views.list' active_site.id %}">Nyheter</a></li>
+      </ol>
+    </div>
+  </div><!-- /.row -->
+
+  <div class="row">
+    <div class="col-lg-12">
+
+      <p>
+        <a class="btn btn-default btn-lg new-article" href="javascript:undefined">Opprett ny artikkel</a>
+      </p>
+
+      {% if not versions %}
+        <div class="alert alert-info">Det er ikke opprettet noen artikler ennå.</div>
+      {% else %}
+
+        <table class="table table-striped article-listing">
+          <tbody data-infinite-scroll-url="{% url 'admin.sites.articles.views.list_load' active_site.id %}">
+            {% include 'common/admin/sites/articles/list-elements.html' %}
+          </tbody>
+        </table>
+
+        <div class="infinite-scroll-loader{% if versions|length < BULK_COUNT %} hide{% endif %}">
+          <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent..."><br>
+          Laster flere elementer, vennligst vent...
+        </div>
+      {% endif %}
+
+      <div class="modal jq-hide new-article">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+          <h3>Opprett ny artikkel</h3>
+        </div>
+        <div class="modal-body">
+          <form action="{% url 'admin.sites.articles.views.new' active_site.id %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="template" value="0">
+            <input type="hidden" name="slug" value="">
+            <table class="table">
+            <tr>
+              <td class="big">Tittel på artikkelen:</td>
+              <td><input type="text" name="title" class="input-xxlarge"></td>
+            </tr>
+            </table>
+            <h2 class="skinny">Velg en ferdigdefinert mal her:</h2>
+            <div class="row">
+              <div class="col-md-6">
+                <img src="{{ STATIC_URL }}img/templates/full-width.jpg" alt="Ferdigdefinert mal" data-template="0">
+                <p>Én full kolonne</p>
+              </div>
+              <div class="col-md-6">
+                <img src="{{ STATIC_URL }}img/templates/sidebar.jpg" alt="Ferdigdefinert mal" data-template="1">
+                <p>Hovedkolonne med sidebar</p>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer" style="clear: both;">
+          <a href="javascript:undefined" class="btn btn-default" data-dismiss="modal">Lukk vindu</a>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /.row -->
+
+</div><!-- /.article-listing -->
+
+{% endblock %}
