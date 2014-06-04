@@ -3,9 +3,9 @@
     {% for version in widget.versions %}
       <div class="span{{ widget.span }}">
         {% if widget.display_images and not version.get_medium_thumbnail.hide %}
-          <p>
+          <div class="image-container">
             <img src="{{ version.get_medium_thumbnail.url }}" alt="{{ version.get_title_content.content|striptags }}">
-          </p>
+          </div>
         {% endif %}
 
         <h3>

@@ -41,6 +41,16 @@ div.widget.articles, div.widget.blog {
   }
 
   div.horizontal {
+    div.image-container {
+      height: 150px;
+      overflow: hidden;
+      position: relative; // Needed to position its children
+
+      img {
+        position: absolute;
+      }
+    }
+
     h2 {
       font-weight: normal;
       font-size: 18px;
