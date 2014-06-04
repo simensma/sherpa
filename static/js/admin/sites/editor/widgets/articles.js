@@ -49,7 +49,8 @@ $(function() {
         },
 
         onEdit: function(editor, widget_content) {
-            editor.find("input[name='layout'][value='" + widget_content.layout + "']").prop('checked', True);
+            editor.find("input[name='layout'][value='" + widget_content.layout + "']").click();
+            editor.find("select[name='columns'] option[value='" + widget_content.columns + "']").prop('selected', true);
             editor.find("input[name='title']").val(widget_content.title);
             editor.find("input[name='count']").val(widget_content.count);
             editor.find("input[name='display-images']").prop('checked', widget_content.display_images);
