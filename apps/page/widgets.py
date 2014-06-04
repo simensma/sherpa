@@ -31,7 +31,7 @@ def parse_widget(request, widget, current_site):
         for tag in widget['tags']:
             versions = versions.filter(tags__name__icontains=tag).distinct()
 
-        versions = versions[:widget['count']]
+        versions = versions[:int(widget['count'])]
         data = {
             'title': widget['title'],
             'display_images': widget['display_images'],
