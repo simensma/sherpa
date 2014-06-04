@@ -2,9 +2,9 @@
   <div class="row-fluid">
     {% for version in widget.versions %}
       <div class="span{{ widget.span }}">
-        {% if widget.display_images and not version.get_thumbnail.hide %}
+        {% if widget.display_images and not version.get_medium_thumbnail.hide %}
           <p>
-            <img src="{{ version.get_thumbnail.url }}" alt="{{ version.get_title_content.content|striptags }}">
+            <img src="{{ version.get_medium_thumbnail.url }}" alt="{{ version.get_title_content.content|striptags }}">
           </p>
         {% endif %}
 

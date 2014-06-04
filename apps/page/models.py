@@ -100,7 +100,7 @@ class Version(models.Model):
     def get_lede_content(self):
         return Content.objects.get(column__row__version=self, type='lede')
 
-    def get_thumbnail(self):
+    def get_thumbnail(self, size='small'):
         """Return a dict with two keys:
         - hide: True if this item shouldn't show a thumbnail
         - url: The URL to the thumbnail image (None if hide is True)
@@ -140,17 +140,24 @@ class Version(models.Model):
                 # Statically use the 150px version. This should be optimized; save
                 # the available sizes with the model and use the smallest appropriate one.
                 if thumbnail['url'] is not None and settings.AWS_BUCKET in thumbnail['url']:
+                    if size == 'small':
+                        size_string = str(min(settings.THUMB_SIZES))
+                    else:
+                        size_string = str(settings.THUMB_SIZES[-2])
                     t = thumbnail['url']
                     # Remove previous size spec if existing
                     t = re.sub('-\d+\.', '.', t)
                     thumbnail['url'] = '%s-%s%s' % (
                         t[:t.rfind('.')],
-                        str(min(settings.THUMB_SIZES)),
+                        size_string,
                         t[t.rfind('.'):]
                     )
 
         cache.set('version.%s.thumbnail' % self.id, thumbnail, 60 * 60 * 24)
         return thumbnail
+
+    def get_medium_thumbnail(self):
+        return self.get_thumbnail(size='medium')
 
     def get_children_count(self):
         return Version.objects.filter(variant__page__parent=self.variant.page, active=True).count()
