@@ -68,6 +68,7 @@
             widget.empty().hide().append(result);
             widget.slideDown();
             disableIframes(widget);
+            Widgets.run(content.widget, widget);
         });
     };
 
