@@ -24,7 +24,7 @@
     {% endfor %}
   </div>
 
-  <p class="more">
+  <p class="more pull-right">
     {% if widget.tag_link %}
       <a href="{% url 'articles.views.index' %}?tag={{ widget.tag_link }}">Se flere nyheter om {{ widget.tag_link }}</a>
     {% else %}
