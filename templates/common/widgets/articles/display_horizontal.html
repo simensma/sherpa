@@ -16,7 +16,7 @@
 
         <p>
           <a href="{% url 'articles.views.show' version.variant.article.id version.get_title_content.content|striptags|slugify %}">
-            {{ version.get_lede_content.content|striptags|safe|truncatewords:15 }}
+            {{ version.get_lede_content.content|striptags|safe|truncatewords:20 }}
           </a>
         </p>
 
