@@ -69,15 +69,17 @@ $(function() {
             }
             var title = editor.find("input[name='title']").val();
             var display_images = editor.find("input[name='display-images']").prop('checked');
+            var tag_link;
             if(editor.find("input[name='set-tag-link']").is(':checked')) {
-                var tag_link = editor.find("input[name='tag-link']").val();
+                tag_link = editor.find("input[name='tag-link']").val();
             } else {
-                var tag_link = null;
+                tag_link = null;
             }
+            var tags;
             if(editor.find("input[name='enable-tags']:checked").length > 0) {
-                var tags = TagDisplay.getTags('article_widget');
+                tags = TagDisplay.getTags('article_widget');
             } else {
-                var tags = [];
+                tags = [];
             }
 
             WidgetEditor.saveWidget({
