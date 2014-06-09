@@ -225,6 +225,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
     "django.contrib.messages.context_processors.messages",
     "sherpa.context_processors.menus",
+    "sherpa.context_processors.main_site",
     "sherpa.context_processors.current_site",
     "sherpa.context_processors.old_site",
     "sherpa.context_processors.admin_active_forening",

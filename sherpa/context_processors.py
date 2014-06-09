@@ -2,6 +2,7 @@ from django.conf import settings
 from django.core.cache import cache
 
 from page.models import Menu
+from core.models import Site
 from core.util import membership_year_start as membership_year_start_date_set
 
 from datetime import datetime, date
@@ -24,6 +25,9 @@ def menus(request):
                 menu.active = True
                 break
         return {'menus': menus}
+
+def main_site(request):
+    return {'main_site': Site.objects.get(id=Site.DNT_CENTRAL_ID)}
 
 def current_site(request):
     return {'site': request.site}
