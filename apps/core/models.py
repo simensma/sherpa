@@ -31,6 +31,9 @@ class Site(models.Model):
     forening = models.ForeignKey('foreninger.Forening', related_name='sites')
     title = models.CharField(max_length=255) # Only specified for type='kampanje', empty and unused for other types
 
+    # Hardcoded site IDs that we may need to know
+    DNT_CENTRAL_ID = 1
+
     def __unicode__(self):
         return u'%s: %s' % (self.pk, self.domain)
 
