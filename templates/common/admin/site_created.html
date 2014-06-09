@@ -7,7 +7,7 @@
 <div class="row">
   <div class="col-lg-12">
 
-    <h1>Gratulerer! <small>{{ created_site.get_title }} har blitt opprettet</small></h1>
+    <h1>Gratulerer! <small>nettstedet {{ created_site.get_title }} har blitt opprettet</small></h1>
     <ol class="breadcrumb">
       <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
       <li><a href="{% url 'admin.views.setup_site' %}">Sett opp nytt nettsted</a></li>
@@ -15,11 +15,7 @@
     </ol>
 
     <p>
-      Nettstedet <strong>{{ created_site.get_title }}</strong> har blitt opprettet! Du kan besøke siden på følgende adresse: <a href="http://{{ created_site.domain }}/">http://{{ created_site.domain }}/</a>.
-    </p>
-
-    <p>
-      Her er noen veier videre:
+      Nettstedet <strong>{{ created_site.get_title }}</strong> har blitt opprettet! Før du kan se nettstedet på adressen <a href="http://{{ created_site.domain }}/">http://{{ created_site.domain }}/</a> må du redigere - og publisere - forsiden til nettstedet.
     </p>
 
     <p>
