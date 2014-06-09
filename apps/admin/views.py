@@ -126,6 +126,7 @@ def setup_site(request):
                 context['domain'] = subdomain
             if result['error'] == 'site_exists':
                 context['existing_forening'] = result['existing_forening']
+                context['existing_domain'] = domain
             return render(request, 'common/admin/setup_site.html', context)
         else:
             # TODO let creator choose template?
