@@ -48,7 +48,7 @@
     };
 
     WidgetEditor.saveWidget = function(content) {
-        var rendering_failed = editor.find("div.insertion-templates p.widget-rendering-failed").clone();
+        var rendering_failed = editor.find("div.insertion-templates div.widget-rendering-failed").clone();
         var content_json = JSON.stringify(content);
 
         var widget = editor.find("div.insertion-templates div.content.widget").clone();
