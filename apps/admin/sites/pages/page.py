@@ -127,6 +127,6 @@ def preview(request, site, version):
         'rows': rows,
         'version': version,
     }
-    if request.site.domain == 'www.turistforeningen.no':
+    if active_site.domain == 'www.turistforeningen.no':
         context.update(get_static_promo_context('/%s/' % version.variant.page.slug))
     return render(request, 'common/admin/sites/pages/preview.html', context)
