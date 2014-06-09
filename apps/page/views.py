@@ -17,6 +17,7 @@ from articles.models import OldArticle
 from analytics.models import Search, NotFound
 from page.widgets import parse_widget, get_static_promo_context
 from sherpa2.models import Cabin as Sherpa2Cabin
+from core.models import Site
 
 variant_key = 'var'
 
@@ -87,7 +88,7 @@ def parse_content(request, version):
 
     context['request'] = request
 
-    if request.site.domain == 'www.turistforeningen.no':
+    if request.site.id == Site.DNT_CENTRAL_ID:
         context.update(get_static_promo_context(request.path))
     return render(request, 'common/page/page.html', context)
 
@@ -128,7 +129,7 @@ def search(request):
         variant__article__site=request.site
         ).distinct().order_by('-variant__article__pub_date')
 
-    if request.site.domain == 'www.turistforeningen.no':
+    if request.site.id == Site.DNT_CENTRAL_ID:
         old_articles = OldArticle.objects.filter(
             Q(title__icontains=request.GET['q']) |
             Q(lede__icontains=request.GET['q']) |

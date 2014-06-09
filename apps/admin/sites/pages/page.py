@@ -130,7 +130,7 @@ def preview(request, site, version):
         'rows': rows,
         'version': version,
     }
-    if active_site.domain == 'www.turistforeningen.no':
+    if active_site.id == Site.DNT_CENTRAL_ID:
         path = '/' if version.variant.page.slug == '' else '/%s/' % version.variant.page.slug
         context.update(get_static_promo_context(path))
 

@@ -51,7 +51,7 @@ def more(request):
     return HttpResponse(json.dumps(response))
 
 def more_old(request):
-    if request.site.domain != 'www.turistforeningen.no':
+    if request.site.id != Site.DNT_CENTRAL_ID:
         return HttpResponse(json.dumps('local_site'))
 
     response = []
