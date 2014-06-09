@@ -53,8 +53,10 @@ class Site(models.Model):
         if self.type == 'forening':
             return self.forening.name
         elif self.type == 'hytte':
-            # TODO: FIXME
-            return u'Her bør hyttenavnet hentes automatisk (se core.Site.get_title())'
+            # TODO: We should fetch this automatically when the site is connected to a cabin.
+            # At that point, clear the title field for all hytte-sites and remove the option to
+            # input title for hytte-site when creating new sites.
+            return self.title
         elif self.type == 'kampanje':
             return self.title
         else:

@@ -19,7 +19,7 @@ $(function() {
     var submit = wrapper.find("button[type='submit']");
 
     site_type_buttons.change(function() {
-        if(site_type_buttons.filter(":checked").is("[value='kampanje']")) {
+        if(site_type_buttons.filter(":checked").is("[value='hytte']") || site_type_buttons.filter(":checked").is("[value='kampanje']")) {
             title_wrapper.slideDown('fast');
         } else {
             title_wrapper.slideUp('fast');
