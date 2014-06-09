@@ -33,10 +33,10 @@ def create_template(template, version, title):
     if template == '0':
         contents = [
             {'type': 'title', 'content': """<h1>%s</h1>""" % title},
-            {'type': 'image', 'content': json.dumps({'src': "http://www.turistforeningen.no" + settings.STATIC_URL + "img/placeholder.png", "description": "", "photographer": "", "anchor": None})},
+            {'type': 'image', 'content': json.dumps({'src': "http://www.turistforeningen.no%simg/placeholder.png" % settings.STATIC_URL, "description": "", "photographer": "", "anchor": None})},
             {'type': 'lede', 'content': ""},
             {'type': 'html', 'content': ""},
-            {'type': 'image', 'content': json.dumps({'src': "http://www.turistforeningen.no" + settings.STATIC_URL + "img/placeholder.png", "description": "", "photographer": "", "anchor": None})},
+            {'type': 'image', 'content': json.dumps({'src': "http://www.turistforeningen.no%simg/placeholder.png" % settings.STATIC_URL, "description": "", "photographer": "", "anchor": None})},
         ]
         row = Row(version=version, order=0)
         row.save()
@@ -48,7 +48,7 @@ def create_template(template, version, title):
     elif template == '1':
         contents_upper = [
             {'type': 'title', 'content': """<h1>%s</h1>""" % title},
-            {'type': 'image', 'content': json.dumps({'src': "http://www.turistforeningen.no" + settings.STATIC_URL + "img/placeholder.png", "description": "", "photographer": "", "anchor": None})},
+            {'type': 'image', 'content': json.dumps({'src': "http://www.turistforeningen.no%simg/placeholder.png" % settings.STATIC_URL, "description": "", "photographer": "", "anchor": None})},
             {'type': 'lede', 'content': ""},
         ]
         contents_lower_left = [
@@ -56,7 +56,7 @@ def create_template(template, version, title):
         ]
         contents_lower_right = [
             {'type': 'html', 'content': ""},
-            {'type': 'image', 'content': json.dumps({'src': "http://www.turistforeningen.no" + settings.STATIC_URL + "img/placeholder.png", "description": "", "photographer": "", "anchor": None})},
+            {'type': 'image', 'content': json.dumps({'src': "http://www.turistforeningen.no%simg/placeholder.png" % settings.STATIC_URL, "description": "", "photographer": "", "anchor": None})},
         ]
         row = Row(version=version, order=0)
         row.save()
