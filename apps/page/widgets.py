@@ -40,6 +40,9 @@ def parse_widget(request, widget, current_site):
                     if not version in version_matches:
                         version_matches.append(version)
 
+            # Now re-apply the date sorting, since picking out matches in the order of the tags will mess that up
+            version_matches = sorted(version_matches, key=lambda v: v.variant.article.pub_date, reverse=True)
+
         if widget['layout'] == 'medialist':
             version_matches = version_matches[:int(widget['count'])]
             span = None
