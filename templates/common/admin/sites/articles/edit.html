@@ -1,5 +1,5 @@
-{# Note that this template is rendered in the main layout #}
-{% extends 'main/layout.html' %}
+{# Note that this template is rendered in the site layout #}
+{% extends active_site.template|add:"/layout.html" %}
 
 {% block title %}Nyheter — {{ block.super }}{% endblock %}
 

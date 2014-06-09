@@ -13,7 +13,7 @@ import re
 # should be 'from aktiviteter.models import Aktivitet'
 from aktiviteter.views import Aktivitet
 from focus.models import Actor
-from page.models import Page, Variant, Version
+from page.models import Menu, Page, Variant, Version
 from user.models import User
 from core.models import Site
 from admin.sites.pages.util import create_template
@@ -126,6 +126,7 @@ def setup_site(request):
                 context['domain'] = subdomain
             if result['error'] == 'site_exists':
                 context['existing_forening'] = result['existing_forening']
+                context['existing_domain'] = domain
             return render(request, 'common/admin/setup_site.html', context)
         else:
             # TODO let creator choose template?
@@ -137,7 +138,7 @@ def setup_site(request):
                 forening=request.active_forening,
                 title='',
             )
-            if request.POST['type'] == 'kampanje':
+            if request.POST['type'] == 'hytte' or request.POST['type'] == 'kampanje':
                 site.title = request.POST['title'].strip()
             site.save()
 
@@ -168,6 +169,14 @@ def setup_site(request):
                 ads=True,
             )
             version.save()
+
+            menu = Menu(
+                name='Forside',
+                url='http://%s/' % site.domain,
+                order=1,
+                site=site,
+            )
+            menu.save()
 
             create_template(request.POST['template'], version)
             request.session.modified = True

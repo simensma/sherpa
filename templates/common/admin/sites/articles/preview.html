@@ -1,4 +1,6 @@
-{% extends site.template|add:"/layout.html" %}
+{# Note that this template is rendered in the site layout #}
+{% extends active_site.template|add:"/layout.html" %}
+
 {% block title %}{{ version.get_title_content.content|striptags }}{% endblock %}
 {% block header %}<a href="{% url 'admin.sites.articles.views.list' active_site.id %}">Nyheter</a>{% endblock %}
 

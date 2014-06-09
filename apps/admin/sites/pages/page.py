@@ -107,6 +107,9 @@ def edit(request, site, version):
         'pages': pages,
         'image_search_length': settings.IMAGE_SEARCH_LENGTH
     }
+
+    # Fake request.site to the edited site; this will make context processors behave accordingly
+    request.site = active_site
     return render(request, 'common/admin/sites/pages/edit.html', context)
 
 def preview(request, site, version):
@@ -127,6 +130,10 @@ def preview(request, site, version):
         'rows': rows,
         'version': version,
     }
-    if request.site.domain == 'www.turistforeningen.no':
-        context.update(get_static_promo_context('/%s/' % version.variant.page.slug))
+    if active_site.id == Site.DNT_CENTRAL_ID:
+        path = '/' if version.variant.page.slug == '' else '/%s/' % version.variant.page.slug
+        context.update(get_static_promo_context(path))
+
+    # Fake request.site to the edited site; this will make context processors behave accordingly
+    request.site = active_site
     return render(request, 'common/admin/sites/pages/preview.html', context)

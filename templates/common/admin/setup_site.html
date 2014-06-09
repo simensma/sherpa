@@ -25,7 +25,7 @@
 
           <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-              <h2>1. Hva slags hjemmeside vil du opprette?</h2>
+              <h2>1. Hva slags nettsted vil du opprette?</h2>
             </div>
           </div>
 
@@ -45,7 +45,7 @@
           </div>
 
           <div class="form-group title jq-hide">
-            <label class="col-md-2 control-label" for="title">Tittel for kampanjesiden:</label>
+            <label class="col-md-2 control-label" for="title">Tittel for nettstedet:</label>
             <div class="col-md-10">
               <input type="text" class="form-control" name="title" id="title">
             </div>
@@ -57,7 +57,7 @@
 
           <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-              <h2>2. Hvilket domene skal hjemmesiden ha?</h2>
+              <h2>2. Hvilket domene skal nettstedet ha?</h2>
 
               {% for message in messages %}
                 {% if message.message == 'malformed' %}
@@ -74,7 +74,7 @@
                   </div>
                 {% elif message.message == 'site_exists' %}
                   <div class="alert alert-danger">
-                    <strong>{{ existing_forening.name }}</strong> har allerede domenenavnet <strong>http://{{ existing_forening.get_homepage_site.domain }}/</strong>. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.
+                    <strong>{{ existing_forening.name }}</strong> har allerede domenenavnet <strong>http://{{ existing_domain }}/</strong>. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.
                   </div>
                 {% elif message.message == 'prefix_not_supported_yet' %}
                   <div class="alert alert-danger">
@@ -98,6 +98,11 @@
 
               {# Force subdomains for now. When we're ready, we can let the user choose between subdomain or a FQDN #}
               <input type="hidden" name="domain-type" value="subdomain">
+
+              <p>
+                Dette er et midlertidig domene for nettstedet, som kun skal benyttes i en testperiode. Når nye Sherpa og nye nettsteder skal lanseres vil domenet bli endret til foreningens/turlagets riktige domene.
+              </p>
+
               <!--
               <div class="radio">
                 <label>
@@ -186,7 +191,7 @@
 
           <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-              <button type="submit" class="btn btn-primary" data-choose-site-type-warning="Velg hva slags hjemmeside du vil opprette før du går videre. Du må klikke på en av knappene i punkt 1." data-enter-domain-warning="Velg hvilket domene dere ønsker at hjemmesiden deres skal ha. Kontakt oss via den røde boksen til høyre på skjermen hvis du lurer på hva dette bør være." data-choose-template-warning="Velg hvordan forsiden skal se ut før du går videre. Klikk på en av malene under punkt 3.">Opprett ny hjemmeside!</button>
+              <button type="submit" class="btn btn-danger btn-lg" data-choose-site-type-warning="Velg hva slags nettsted du vil opprette før du går videre. Du må klikke på en av knappene i punkt 1." data-enter-domain-warning="Velg hvilket domene du ønsker at nettstedet skal ha. Kontakt oss via den røde boksen til høyre på skjermen hvis du lurer på hva dette bør være." data-choose-template-warning="Velg hvordan forsiden skal se ut før du går videre. Klikk på en av malene under punkt 3.">Opprett nytt nettsted!</button>
             </div>
           </div>
 

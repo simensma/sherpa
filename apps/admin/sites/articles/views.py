@@ -81,6 +81,9 @@ def edit(request, site, version):
         'image_search_length': settings.IMAGE_SEARCH_LENGTH,
         'widget_data': widget_admin_context()
     }
+
+    # Fake request.site to the edited site; this will make context processors behave accordingly
+    request.site = active_site
     return render(request, 'common/admin/sites/articles/edit.html', context)
 
 def preview(request, site, version):
@@ -93,4 +96,7 @@ def preview(request, site, version):
         'rows': rows,
         'version': version,
     }
+
+    # Fake request.site to the edited site; this will make context processors behave accordingly
+    request.site = active_site
     return render(request, 'common/admin/sites/articles/preview.html', context)

@@ -18,7 +18,7 @@ class Site(models.Model):
     prefix = models.CharField(max_length=255)
     TYPE_CHOICES = (
         ('forening', u'Foreningens hjemmeside'), # Zero or one per forening
-        ('hytte', u'Hytteside: Hjemmeside for en betjent hytte'),
+        ('hytte', u'Hjemmeside for en betjent hytte'),
         ('kampanje', u'Kampanjeside'),
     )
     type = models.CharField(max_length=255, choices=TYPE_CHOICES)
@@ -30,6 +30,9 @@ class Site(models.Model):
     template = models.CharField(max_length=255, choices=TEMPLATE_CHOICES)
     forening = models.ForeignKey('foreninger.Forening', related_name='sites')
     title = models.CharField(max_length=255) # Only specified for type='kampanje', empty and unused for other types
+
+    # Hardcoded site IDs that we may need to know
+    DNT_CENTRAL_ID = 1
 
     def __unicode__(self):
         return u'%s: %s' % (self.pk, self.domain)
@@ -53,8 +56,10 @@ class Site(models.Model):
         if self.type == 'forening':
             return self.forening.name
         elif self.type == 'hytte':
-            # TODO: FIXME
-            return u'Her bør hyttenavnet hentes automatisk (se core.Site.get_title())'
+            # TODO: We should fetch this automatically when the site is connected to a cabin.
+            # At that point, clear the title field for all hytte-sites and remove the option to
+            # input title for hytte-site when creating new sites.
+            return self.title
         elif self.type == 'kampanje':
             return self.title
         else:
