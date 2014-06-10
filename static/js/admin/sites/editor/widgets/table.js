@@ -4,6 +4,8 @@ $(function() {
         widget_name: 'table',
 
         init: function(editor) {
+
+            // Set up the initial table
             var initial_table_content = [
                 [
                     {url: undefined, text: 'Tittel 1'},
@@ -21,8 +23,22 @@ $(function() {
             table.data('table_content', initial_table_content);
             drawTable(editor);
 
+            var table_selector = "div.widget-editor[data-widget='table'] table.editor";
+
+            // Control clicks
+            $(document).on('click', table_selector + " button.delete-column", function() {
+                var column_index = $(this).parent().prevAll("td.delete-column").length;
+                var table_content = table.data('table_content');
+                var new_table_content = [];
+                for(var i = 0; i < table_content.length; i++) {
+                    new_table_content[i] = table_content[i].slice(0, column_index).concat(table_content[i].slice(column_index + 1));
+                }
+                table.data('table_content', new_table_content);
+                drawTable(editor);
+            });
+
             // Prevent all anchor clicks
-            $(document).on('click', "div.widget-editor[data-widget='table'] table.editor a", function(e) {
+            $(document).on('click', table_selector + " a", function(e) {
                 e.preventDefault();
             });
         },
