@@ -136,6 +136,8 @@ $(function() {
         $("<th></th>").appendTo(thead_lower_row);
 
         // Now insert the rest of the rows
+        var tbody = $("<tbody></tbody>");
+
         // Note that we're starting on 1 since the first row was manually inserted into thead
         for(i = 1; i < table_content.length; i++) {
             row = $("<tr></tr>");
@@ -156,17 +158,20 @@ $(function() {
                 cell.appendTo(row);
             }
             $("<td></td>").appendTo(row);
-            row.appendTo(table);
+            row.appendTo(tbody);
         }
+        tbody.appendTo(table);
 
         // And finally, insert a row for the add-row control
+        var tfoot = $("<tfoot></tfoot>");
         row = $("<tr class='control'></tr>");
         controls.find("td.add-row").clone().appendTo(row);
         for(i = 0; i < column_count; i++) {
             $("<td></td>").appendTo(row);
         }
         $("<td></td>").appendTo(row); // And the final control-column
-        row.appendTo(table);
+        row.appendTo(tfoot);
+        tfoot.appendTo(table);
 
     }
 
