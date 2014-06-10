@@ -7,6 +7,7 @@ $(function() {
 
             var table = editor.find("table.editor");
             var table_selector = "div.widget-editor[data-widget='table'] table.editor";
+            var url_modal = $("div.modal.table-widget-url");
 
             // Control clicks
 
@@ -53,6 +54,18 @@ $(function() {
                 }
                 table.data('table_content', table_content);
                 drawTable(editor);
+            });
+
+            // Edit link
+            $(document).on('click', table_selector + " a.edit-link", function() {
+                url_modal.modal();
+                table.data('edited-link', $(this).parent());
+            });
+
+            $(document).on('click', "div.table-widget-url button.save-link", function() {
+            });
+
+            $(document).on('click', "div.table-widget-url button.no-link", function() {
             });
 
             // Prevent all anchor clicks
