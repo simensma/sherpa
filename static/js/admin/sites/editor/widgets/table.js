@@ -26,6 +26,22 @@ $(function() {
             var table_selector = "div.widget-editor[data-widget='table'] table.editor";
 
             // Control clicks
+
+            $(document).on('click', table_selector + " button.delete-row", function() {
+                var row_index = $(this).parents("tr").prevAll("tr").length;
+                var table_content = table.data('table_content');
+                var new_table_content = [];
+                // Note that we're starting on index 1; skipping the header row which can't be removed
+                for(var i = 1; i < table_content.length; i++) {
+                    if(i === row_index) {
+                        continue;
+                    }
+                    new_table_content.push(table_content[i]);
+                }
+                table.data('table_content', new_table_content);
+                drawTable(editor);
+            });
+
             $(document).on('click', table_selector + " button.delete-column", function() {
                 var column_index = $(this).parent().prevAll("td.delete-column").length;
                 var table_content = table.data('table_content');
