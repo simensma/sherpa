@@ -4,7 +4,7 @@ $(function() {
         widget_name: 'table',
 
         init: function(editor) {
-            drawTable(editor, [
+            var initial_table_content = [
                 [
                     {url: undefined, text: 'Tittel 1'},
                     {url: undefined, text: 'Tittel 2'},
@@ -15,7 +15,11 @@ $(function() {
                     {url: undefined, text: 'Innhold 2'},
                     {url: undefined, text: 'Innhold 3'},
                 ],
-            ]);
+            ];
+
+            var table = editor.find("table.editor");
+            table.data('table_content', initial_table_content);
+            drawTable(editor);
 
             // Prevent all anchor clicks
             $(document).on('click', "div.widget-editor[data-widget='table'] table.editor a", function(e) {
@@ -33,9 +37,10 @@ $(function() {
         }
     });
 
-    function drawTable(editor, table_content) {
+    function drawTable(editor) {
         var i, j;
         var table = editor.find("table.editor");
+        var table_content = table.data('table_content');
         var controls = editor.find("div.controls");
         var column_count = table_content[0].length;
 
