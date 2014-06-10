@@ -97,6 +97,9 @@ $(function() {
         }
     });
 
+    /**
+     * Reads the table editor DOM and overwrites the 'table_content' data field accordingly
+     */
     function readTable(editor) {
         var table = editor.find("table.editor");
         var table_content = [[]];
@@ -144,6 +147,9 @@ $(function() {
         table.data('table_content', table_content);
     }
 
+    /**
+     * Clears the current table editor and draws out the DOM according to its 'table_content' data field
+     */
     function drawTable(editor) {
         var i, j;
         var table = editor.find("table.editor");
