@@ -22,12 +22,12 @@
   <div class="row">
     <div class="col-lg-3">
       <p>
-        <button class="btn btn-success btn-lg upload"{% if active_user != user %} disabled data-tooltip="Du kan ikke laste opp bilder her. Gå til &quot;Mine bilder&quot; eller &quot;Alle bilder&quot;."{% endif %}>
+        <button class="btn btn-success btn-lg upload"{% if active_user != user %} disabled data-tooltip title="Du kan ikke laste opp bilder her. Gå til &quot;Mine bilder&quot; eller &quot;Alle bilder&quot;."{% endif %}>
           <i class="fa fa-picture-o"></i> Last opp nytt bilde
         </button>
       </p>
-      <p>
-        <button class="btn btn-success btn-lg add-album" disabled data-tooltip="Du kan ikke opprette album her.">
+      <p data-tooltip title="Du kan ikke opprette album her.">
+        <button class="btn btn-success btn-lg add-album" disabled>
           <i class="fa fa-folder-open"></i> Opprett nytt album
         </button>
       </p>
@@ -39,9 +39,11 @@
       <button class="btn btn-warning btn-lg images details jq-hide">
         <i class="fa fa-pencil"></i> Endre bildedetaljer
       </button>
-      <button class="btn btn-warning btn-lg dummy details" disabled data-tooltip="For å endre albumnavn eller bildedetaljer, merk et album eller bilde under først.">
-        <i class="fa fa-pencil"></i> Endre detaljer
-      </button>
+      <div data-tooltip title="For å endre albumnavn eller bildedetaljer, merk et album eller bilde under først.">
+        <button class="btn btn-warning btn-lg dummy details" disabled>
+          <i class="fa fa-pencil"></i> Endre detaljer
+        </button>
+      </div>
     </div>
     <div class="col-lg-3" data-album-id="{{ current_album.id }}">
       <button class="btn btn-warning btn-lg albums move jq-hide">
@@ -53,9 +55,11 @@
       <button class="btn btn-warning btn-lg both move jq-hide">
         <i class="fa fa-share-square"></i> Flytt album/bilder
       </button>
-      <button class="btn btn-warning btn-lg dummy move" disabled data-tooltip="For å flytte album eller bilder til andre album, merk et album eller bilde under først.">
-        <i class="fa fa-share-square"></i> Flytt album/bilder
-      </button>
+      <div data-tooltip title="For å flytte album eller bilder til andre album, merk et album eller bilde under først.">
+        <button class="btn btn-warning btn-lg dummy move" disabled>
+          <i class="fa fa-share-square"></i> Flytt album/bilder
+        </button>
+      </div>
       <form class="move-items jq-hide" method="post" action="{% url 'admin.images.views.move_items' %}">
         {% csrf_token %}
         <input type="hidden" name="images">
@@ -73,9 +77,11 @@
       <button class="btn btn-danger btn-lg delete both jq-hide">
         <i class="fa fa-warning"></i> Slett album og bilder
       </button>
-      <button class="btn btn-danger btn-lg delete dummy" disabled data-tooltip="For å slette album eller bilder, merk det du vil slette under først.">
-        <i class="fa fa-warning"></i> Slett bilder
-      </button>
+      <div data-tooltip title="For å slette album eller bilder, merk det du vil slette under først.">
+        <button class="btn btn-danger btn-lg delete dummy" disabled>
+          <i class="fa fa-warning"></i> Slett bilder
+        </button>
+      </div>
     </div>
   </div>
 </div><!-- /.action-buttons -->

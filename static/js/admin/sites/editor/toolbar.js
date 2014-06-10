@@ -260,16 +260,4 @@ $(function() {
         selection.removeAllRanges();
     });
 
-    /* Show tooltip for toolbar formatting buttons */
-
-    toolbar.find("a.button").hover(function() {
-        var tooltip = $('<button class="btn btn-primary title">' + $(this).attr('data-title') + '</button>');
-        tooltip.css('font-weight', 'bold');
-        tooltip.css('position', 'absolute');
-        tooltip.css('top', '36px');
-        $(this).append(tooltip);
-    }, function() {
-        $("button.title").remove();
-    });
-
 });

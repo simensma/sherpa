@@ -112,6 +112,11 @@ def parse_widget(request, widget, current_site):
             'color': widget['color'],
             'size': widget['size'],
         }
+    elif widget['widget'] == "table":
+        data = {
+            'header': widget['table'][0],
+            'body': widget['table'][1:],
+        }
 
     data.update({
         'json': json.dumps(widget),
