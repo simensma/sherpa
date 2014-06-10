@@ -59,8 +59,17 @@ $(function() {
 
             // Edit link
             $(document).on('click', table_selector + " a.edit-link", function() {
+                var cell = $(this).parent();
+                var anchor = cell.find("a.link");
+                var default_link;
+                if(anchor.length > 0) {
+                    default_link = anchor.attr('href');
+                } else {
+                    default_link = 'http://';
+                }
+                url_modal.find("input[name='link']").val(default_link);
+                table.data('edited-link', cell);
                 url_modal.modal();
-                table.data('edited-link', $(this).parent());
             });
 
             $(document).on('click', "div.table-widget-url button.save-link", function() {
