@@ -56,7 +56,7 @@ $(function() {
             });
 
             // Prevent all anchor clicks
-            $(document).on('click', table_selector + " a", function(e) {
+            $(document).on('click', table_selector + " a.link", function(e) {
                 e.preventDefault();
             });
         },
@@ -108,8 +108,8 @@ $(function() {
             if($(this).find("span").length > 0) {
                 text = $(this).find("span").text();
             } else {
-                url = $(this).find("a").attr('href');
-                text = $(this).find("a").text();
+                url = $(this).find("a.link").attr('href');
+                text = $(this).find("a.link").text();
             }
 
             table_content[0].push({
@@ -128,8 +128,8 @@ $(function() {
                 if($(this).find("span").length > 0) {
                     text = $(this).find("span").text();
                 } else {
-                    url = $(this).find("a").attr('href');
-                    text = $(this).find("a").text();
+                    url = $(this).find("a.link").attr('href');
+                    text = $(this).find("a.link").text();
                 }
 
                 row.push({
