@@ -8,14 +8,14 @@ $(function() {
             // Set up the initial table
             var initial_table_content = [
                 [
-                    {url: undefined, text: 'Tittel 1'},
-                    {url: undefined, text: 'Tittel 2'},
-                    {url: undefined, text: 'Tittel 3'},
+                    {text: 'Tittel 1'},
+                    {text: 'Tittel 2'},
+                    {text: 'Tittel 3'},
                 ],
                 [
-                    {url: undefined, text: 'Innhold 1'},
-                    {url: undefined, text: 'Innhold 2'},
-                    {url: undefined, text: 'Innhold 3'},
+                    {text: 'Innhold 1'},
+                    {text: 'Innhold 2'},
+                    {text: 'Innhold 3'},
                 ],
             ];
 
@@ -55,10 +55,7 @@ $(function() {
                 var table_content = table.data('table_content');
                 var new_row = [];
                 for(var i = 0; i < table_content[0].length; i++) {
-                    new_row.push({
-                        url: undefined,
-                        text: "Innhold",
-                    });
+                    new_row.push({text: "Innhold"});
                 }
                 table_content.push(new_row);
                 table.data('table_content', table_content);
@@ -69,10 +66,7 @@ $(function() {
                 readTable(editor);
                 var table_content = table.data('table_content');
                 for(var i = 0; i < table_content.length; i++) {
-                    table_content[i].push({
-                        url: undefined,
-                        text: "Innhold",
-                    });
+                    table_content[i].push({text: "Innhold"});
                 }
                 table.data('table_content', table_content);
                 drawTable(editor);
@@ -103,7 +97,6 @@ $(function() {
             var text;
 
             if($(this).find("span").length > 0) {
-                url = undefined;
                 text = $(this).find("span").text();
             } else {
                 url = $(this).find("a").attr('href');
@@ -124,7 +117,6 @@ $(function() {
                 var text;
 
                 if($(this).find("span").length > 0) {
-                    url = undefined;
                     text = $(this).find("span").text();
                 } else {
                     url = $(this).find("a").attr('href');
