@@ -78,7 +78,10 @@ $(function() {
             });
         },
 
-        onEdit: function(editor, widget_content) {},
+        onEdit: function(editor, widget_content) {
+            editor.find("table.editor").data('table_content', widget_content.table);
+            drawTable(editor);
+        },
 
         onSave: function(editor) {
             readTable(editor);
