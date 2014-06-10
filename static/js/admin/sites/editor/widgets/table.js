@@ -255,7 +255,7 @@ $(function() {
             for(j = 0; j < table_content[i].length; j++) {
                 item = table_content[i][j];
                 cell = $("<td></td>");
-                controls.find("a.edit-link").clone().appendTo(cell);
+                controls.find("a.edit-link").clone().tooltip().appendTo(cell);
                 if(item.url === undefined) {
                     content = controls.find("span.text").clone();
                     content.text(item.text);
