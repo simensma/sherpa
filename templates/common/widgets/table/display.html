@@ -1,12 +1,30 @@
 <table class="table">
   <thead>
     <tr>
-      <th>TBD</th>
+      {% for cell in widget.header %}
+        <th>
+          {% if cell.url %}
+            <a href="{{ cell.url }}">{{ cell.text }}</a>
+          {% else %}
+            {{ cell.text }}
+          {% endif %}
+        </th>
+      {% endfor %}
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td>TBD</td>
-    </tr>
+    {% for row in widget.body %}
+      <tr>
+        {% for cell in row %}
+          <td>
+            {% if cell.url %}
+              <a href="{{ cell.url }}">{{ cell.text }}</a>
+            {% else %}
+              {{ cell.text }}
+            {% endif %}
+          </td>
+        {% endfor %}
+      </tr>
+    {% endfor %}
   </tbody>
 </table>
