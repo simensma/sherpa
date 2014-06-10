@@ -28,6 +28,7 @@ $(function() {
             // Control clicks
 
             $(document).on('click', table_selector + " button.delete-row", function() {
+                readTable(editor);
                 // Note that we're adding 1 to the index; skipping the header row which can't be removed
                 var row_index = $(this).parents("tr").prevAll("tr").length + 1;
                 var table_content = table.data('table_content');
@@ -38,6 +39,7 @@ $(function() {
             });
 
             $(document).on('click', table_selector + " button.delete-column", function() {
+                readTable(editor);
                 var column_index = $(this).parent().prevAll("td.delete-column").length;
                 var table_content = table.data('table_content');
                 var new_table_content = [];
@@ -49,6 +51,7 @@ $(function() {
             });
 
             $(document).on('click', table_selector + " button.add-row", function() {
+                readTable(editor);
                 var table_content = table.data('table_content');
                 var new_row = [];
                 for(var i = 0; i < table_content[0].length; i++) {
@@ -63,6 +66,7 @@ $(function() {
             });
 
             $(document).on('click', table_selector + " button.add-column", function() {
+                readTable(editor);
                 var table_content = table.data('table_content');
                 for(var i = 0; i < table_content.length; i++) {
                     table_content[i].push({
@@ -89,6 +93,55 @@ $(function() {
             return true;
         }
     });
+
+    function readTable(editor) {
+        var table = editor.find("table.editor");
+        var table_content = [[]];
+
+        table.find("thead tr:not(.control) th:not(.control)").each(function() {
+            var url;
+            var text;
+
+            if($(this).find("span").length > 0) {
+                url = undefined;
+                text = $(this).find("span").text();
+            } else {
+                url = $(this).find("a").attr('href');
+                text = $(this).find("a").text();
+            }
+
+            table_content[0].push({
+                url: url,
+                text: text,
+            });
+        });
+
+        table.find("tbody tr").each(function() {
+            var row = [];
+
+            $(this).find("td:not(.control)").each(function() {
+                var url;
+                var text;
+
+                if($(this).find("span").length > 0) {
+                    url = undefined;
+                    text = $(this).find("span").text();
+                } else {
+                    url = $(this).find("a").attr('href');
+                    text = $(this).find("a").text();
+                }
+
+                row.push({
+                    url: url,
+                    text: text,
+                });
+            });
+
+            table_content.push(row);
+        });
+
+        table.data('table_content', table_content);
+    }
 
     function drawTable(editor) {
         var i, j;
