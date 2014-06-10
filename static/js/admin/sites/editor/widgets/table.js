@@ -28,17 +28,12 @@ $(function() {
             // Control clicks
 
             $(document).on('click', table_selector + " button.delete-row", function() {
-                var row_index = $(this).parents("tr").prevAll("tr").length;
+                // Note that we're adding 1 to the index; skipping the header row which can't be removed
+                var row_index = $(this).parents("tr").prevAll("tr").length + 1;
                 var table_content = table.data('table_content');
                 var new_table_content = [];
-                // Note that we're starting on index 1; skipping the header row which can't be removed
-                for(var i = 1; i < table_content.length; i++) {
-                    if(i === row_index) {
-                        continue;
-                    }
-                    new_table_content.push(table_content[i]);
-                }
-                table.data('table_content', new_table_content);
+                table_content = table_content.slice(0, row_index).concat(table_content.slice(row_index + 1));
+                table.data('table_content', table_content);
                 drawTable(editor);
             });
 
