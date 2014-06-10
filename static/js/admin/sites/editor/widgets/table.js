@@ -76,6 +76,9 @@ $(function() {
                 var cell = table.data('edited-link');
                 var link = cell.find("a.link");
                 var url = url_modal.find("input[name='link']").val();
+                if(!url.startsWith("http://")) {
+                    url = "http://" + url;
+                }
                 if(link.length > 0) {
                     link.attr('href', url);
                 } else {
