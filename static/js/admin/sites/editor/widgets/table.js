@@ -7,6 +7,7 @@ $(function() {
 
             var table = editor.find("table.editor");
             var table_selector = "div.widget-editor[data-widget='table'] table.editor";
+            var controls = editor.find("div.controls");
             var url_modal = $("div.modal.table-widget-url");
 
             // Control clicks
@@ -63,9 +64,31 @@ $(function() {
             });
 
             $(document).on('click', "div.table-widget-url button.save-link", function() {
+                var cell = table.data('edited-link');
+                var link = cell.find("a.link");
+                var url = url_modal.find("input[name='link']").val();
+                if(link.length > 0) {
+                    link.attr('href', url);
+                } else {
+                    var span = cell.find("span.text");
+                    var anchor = controls.find("a.link").clone();
+                    anchor.attr('href', url);
+                    anchor.text(span.text());
+                    span.replaceWith(anchor);
+                }
+                url_modal.modal('hide');
             });
 
             $(document).on('click', "div.table-widget-url button.no-link", function() {
+                var cell = table.data('edited-link');
+                var anchor = cell.find("a.link");
+                if(anchor.length > 0) {
+                    var span = controls.find("span.text").clone();
+                    span.text(anchor.text());
+                    anchor.replaceWith(span);
+                }
+                // Else, this is a text element and we want a text element, so do nothing
+                url_modal.modal('hide');
             });
 
             // Prevent all anchor clicks
