@@ -42,14 +42,7 @@ $(function() {
     });
 
     /* Enable any tooltips */
-    $("*[data-tooltip]").hover(function(e) {
-        var tooltip = $('<div class="btn btn-primary custom-tooltip">' + $(this).attr('data-tooltip') + '</div>');
-        tooltip.css('top', e.pageY + 'px');
-        tooltip.css('left', e.pageX + 'px');
-        $(document.body).append(tooltip);
-    }, function() {
-        $("div.custom-tooltip").remove();
-    });
+    $("*[data-tooltip]").tooltip();
 
     /* Tags use data-href for links */
     $("div.tag-box div.tag[data-href]").click(function() {

@@ -20,7 +20,7 @@
   <div class="row">
     <div class="col-lg-3">
       <p>
-        <button class="btn btn-success btn-lg upload"{% if not current_album %} disabled data-tooltip="Du kan ikke laste opp bilder her i rotalbumet - velg eller opprett et album først."{% endif %}>
+        <button class="btn btn-success btn-lg upload"{% if not current_album %} disabled data-tooltip title="Du kan ikke laste opp bilder her i rotalbumet - velg eller opprett et album først."{% endif %}>
           <i class="fa fa-picture-o"></i> Last opp nytt bilde
         </button>
       </p>
@@ -37,7 +37,7 @@
       <button class="btn btn-warning btn-lg images details jq-hide">
         <i class="fa fa-pencil"></i> Endre bildedetaljer
       </button>
-      <button class="btn btn-warning btn-lg dummy details" disabled data-tooltip="For å endre albumnavn eller bildedetaljer, merk et album eller bilde under først.">
+      <button class="btn btn-warning btn-lg dummy details" disabled data-tooltip title="For å endre albumnavn eller bildedetaljer, merk et album eller bilde under først.">
         <i class="fa fa-pencil"></i> Endre detaljer
       </button>
     </div>
@@ -51,7 +51,7 @@
       <button class="btn btn-warning btn-lg both move jq-hide">
         <i class="fa fa-share-square"></i> Flytt album/bilder
       </button>
-      <button class="btn btn-warning btn-lg dummy move" disabled data-tooltip="For å flytte album eller bilder til andre album, merk et album eller bilde under først.">
+      <button class="btn btn-warning btn-lg dummy move" disabled data-tooltip title="For å flytte album eller bilder til andre album, merk et album eller bilde under først.">
         <i class="fa fa-share-square"></i> Flytt album/bilder
       </button>
       <form class="move-items jq-hide" method="post" action="{% url 'admin.images.views.move_items' %}">
@@ -71,7 +71,7 @@
       <button class="btn btn-danger btn-lg delete both jq-hide">
         <i class="fa fa-warning"></i> Slett album og bilder
       </button>
-      <button class="btn btn-danger btn-lg delete dummy" disabled data-tooltip="For å slette album eller bilder, merk det du vil slette under først.">
+      <button class="btn btn-danger btn-lg delete dummy" disabled data-tooltip title="For å slette album eller bilder, merk det du vil slette under først.">
         <i class="fa fa-warning"></i> Slett bilder
       </button>
     </div>
