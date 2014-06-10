@@ -112,12 +112,14 @@ $(function() {
         thead.appendTo(table);
 
         // Add controls for each column
+        $("<td></td>").appendTo(thead_upper_row);
         for(i = 0; i < column_count; i++) {
             controls.find("td.delete-column").clone().appendTo(thead_upper_row);
         }
         controls.find("td.add-column").clone().appendTo(thead_upper_row);
 
         // Now insert the header row (with an empty column control first)
+        $('<th class="control"></th>').appendTo(thead_lower_row);
         for(i = 0; i < column_count; i++) {
             item = table_content[0][i];
             cell = $("<th></th>");
@@ -133,7 +135,7 @@ $(function() {
             }
             cell.appendTo(thead_lower_row);
         }
-        $("<th></th>").appendTo(thead_lower_row);
+        $('<th class="control"></th>').appendTo(thead_lower_row);
 
         // Now insert the rest of the rows
         var tbody = $("<tbody></tbody>");
@@ -157,7 +159,7 @@ $(function() {
                 }
                 cell.appendTo(row);
             }
-            $("<td></td>").appendTo(row);
+            $('<td class="control"></td>').appendTo(row);
             row.appendTo(tbody);
         }
         tbody.appendTo(table);
