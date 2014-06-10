@@ -81,8 +81,11 @@ $(function() {
         onEdit: function(editor, widget_content) {},
 
         onSave: function(editor) {
+            readTable(editor);
+
             WidgetEditor.saveWidget({
                 widget: "table",
+                table: editor.find("table.editor").data('table_content'),
             });
             return true;
         }
