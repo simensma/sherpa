@@ -5,24 +5,7 @@ $(function() {
 
         init: function(editor) {
 
-            // Set up the initial table
-            var initial_table_content = [
-                [
-                    {text: 'Tittel 1'},
-                    {text: 'Tittel 2'},
-                    {text: 'Tittel 3'},
-                ],
-                [
-                    {text: 'Innhold 1'},
-                    {text: 'Innhold 2'},
-                    {text: 'Innhold 3'},
-                ],
-            ];
-
             var table = editor.find("table.editor");
-            table.data('table_content', initial_table_content);
-            drawTable(editor);
-
             var table_selector = "div.widget-editor[data-widget='table'] table.editor";
 
             // Control clicks
@@ -76,6 +59,26 @@ $(function() {
             $(document).on('click', table_selector + " a", function(e) {
                 e.preventDefault();
             });
+        },
+
+        onNew: function(editor) {
+            // Set up the initial table
+            var initial_table_content = [
+                [
+                    {text: 'Tittel 1'},
+                    {text: 'Tittel 2'},
+                    {text: 'Tittel 3'},
+                ],
+                [
+                    {text: 'Innhold 1'},
+                    {text: 'Innhold 2'},
+                    {text: 'Innhold 3'},
+                ],
+            ];
+
+            var table = editor.find("table.editor");
+            table.data('table_content', initial_table_content);
+            drawTable(editor);
         },
 
         onEdit: function(editor, widget_content) {
