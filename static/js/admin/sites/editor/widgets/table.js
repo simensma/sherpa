@@ -62,6 +62,18 @@ $(function() {
                 drawTable(editor);
             });
 
+            $(document).on('click', table_selector + " button.add-column", function() {
+                var table_content = table.data('table_content');
+                for(var i = 0; i < table_content.length; i++) {
+                    table_content[i].push({
+                        url: undefined,
+                        text: "Innhold",
+                    });
+                }
+                table.data('table_content', table_content);
+                drawTable(editor);
+            });
+
             // Prevent all anchor clicks
             $(document).on('click', table_selector + " a", function(e) {
                 e.preventDefault();
