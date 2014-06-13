@@ -14,6 +14,7 @@ from cStringIO import StringIO
 import json
 import logging
 import sys
+import os
 from datetime import datetime
 import simples3 # TODO: Replace with boto
 from hashlib import sha1
@@ -163,20 +164,34 @@ def download_album(request, album):
     conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
     bucket = conn.get_bucket(settings.AWS_BUCKET)
 
-    memory_file = StringIO()
-    zip_archive = zipfile.ZipFile(memory_file, 'w')
-    file_count = 1
-    for image in Image.objects.filter(album=album):
-        image_key = bucket.get_key("%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, image.key, image.extension))
-        if image.photographer == '':
-            image_filename = '%s-%s.%s' % (album.name, file_count, image.extension)
-        else:
-            image_filename = '%s-%s-%s.%s' % (album.name, file_count, image.photographer, image.extension)
-        zip_archive.writestr(image_filename, image_key.get_contents_as_string())
-        file_count += 1
-    zip_archive.close()
+    def build_zipfile():
+        memory_file = StringIO()
+        zip_archive = zipfile.ZipFile(memory_file, 'w')
+        file_count = 1
+        zipfile_index = 0 # Used to keep track of the amount of written data each iteration
 
-    response = HttpResponse(memory_file.getvalue(), content_type='application/x-zip-compressed')
+        for image in Image.objects.filter(album=album):
+            image_key = bucket.get_key("%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, image.key, image.extension))
+            if image.photographer == '':
+                image_filename = '%s-%s.%s' % (album.name, file_count, image.extension)
+            else:
+                image_filename = '%s-%s-%s.%s' % (album.name, file_count, image.photographer, image.extension)
+            zip_archive.writestr(image_filename, image_key.get_contents_as_string())
+            file_count += 1
+
+            # Rewind the memory file back, read the written data, and yield it to our response,
+            # while we'll go fetch the next file from S3
+            next_zipfile_index = memory_file.tell()
+            memory_file.seek(zipfile_index)
+            zipfile_index = next_zipfile_index
+            yield memory_file.read()
+
+        # Now close the archive and yield the final piece of data written
+        zip_archive.close()
+        memory_file.seek(zipfile_index)
+        yield memory_file.read()
+
+    response = HttpResponse(build_zipfile(), content_type='application/x-zip-compressed')
     response['Content-Disposition'] = 'attachment; filename="%s.zip"' % album.name
     return response
 
