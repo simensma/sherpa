@@ -14,7 +14,6 @@ from cStringIO import StringIO
 import json
 import logging
 import sys
-import os
 from datetime import datetime
 import simples3 # TODO: Replace with boto
 from hashlib import sha1
