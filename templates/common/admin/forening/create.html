@@ -6,7 +6,7 @@
   {% endif %}
 {% endfor %}
 
-<form action="{% url 'admin.forening.views.index' %}#opprett" method="post" class="create-forening form-default form-horizontal">
+<form action="{% url 'admin.forening.views.index' current_forening.id %}#opprett" method="post" class="create-forening form-default form-horizontal">
   {% csrf_token %}
   <input type="hidden" name="form" value="create">
 
@@ -68,7 +68,7 @@
       </div>
     </div>
 
-    <div class="form-group group_type{% if create_form.group_type.errors %} has-error{% endif %}{% if active_forening.type != 'turgruppe' %} jq-hide{% endif %}">
+    <div class="form-group group_type{% if create_form.group_type.errors %} has-error{% endif %}{% if current_forening.type != 'turgruppe' %} jq-hide{% endif %}">
       <label class="col-md-2 control-label" for="id_create_group_type">Turgruppe</label>
       <div class="col-md-10">
         {{ create_form.group_type }}
