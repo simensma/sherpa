@@ -7,15 +7,15 @@
       {% for message in messages %}
         {% if message.message == 'permission_created' %}
           <div class="alert alert-success">
-            <strong>Brukeren har nå tilgang til Sherpa og {{ active_forening.name }}!</strong>
+            <strong>Brukeren har nå tilgang til Sherpa og {{ current_forening.name }}!</strong>
           </div>
         {% elif message.message == 'equal_permission_already_exists' %}
           <div class="alert alert-success">
-            <strong>Brukeren du valgte har allerede tilgang til {{ active_forening.name }}.</strong>
+            <strong>Brukeren du valgte har allerede tilgang til {{ current_forening.name }}.</strong>
           </div>
         {% elif message.message == 'user_is_sherpa_admin' %}
           <div class="alert alert-success">
-            <strong>Brukeren du valgte er Sherpa-administrator, og har implisitt tilgang til alle foreninger. Du trenger derfor ikke gi ham/henne tilgang til {{ active_forening.name }}.</strong>
+            <strong>Brukeren du valgte er Sherpa-administrator, og har implisitt tilgang til alle foreninger. Du trenger derfor ikke gi ham/henne tilgang til {{ current_forening.name }}.</strong>
           </div>
         {% elif message.message == 'user_has_admin_in_parent' %}
           <div class="alert alert-danger">
@@ -40,7 +40,7 @@
       <table class="table">
         <thead>
           <tr>
-            <th>Registrert bruker i {{ active_forening.name }}</th>
+            <th>Registrert bruker i {{ current_forening.name }}</th>
             <th>Født</th>
             <th>Forening</th>
             <th>Adresse</th>
@@ -89,7 +89,7 @@
                 {% endif %}
               </td>
               <td>
-                {% with role=forening_user|role_for:active_forening %}
+                {% with role=forening_user|role_for:current_forening %}
                   {% if role == 'user' %}
                     <i class="fa fa-user"></i> Vanlig bruker
                   {% elif role == 'admin' %}
@@ -100,7 +100,7 @@
             </tr>
           {% empty %}
             <tr>
-              <td colspan="6"><em>Ingen brukere er registrert i {{ active_forening.name }}.</em></td>
+              <td colspan="6"><em>Ingen brukere er registrert i {{ current_forening.name }}.</em></td>
             </tr>
           {% endfor %}
         </tbody>
@@ -158,7 +158,7 @@
                   {% endif %}
                 </td>
                 <td>
-                  {% with role=forening_user|role_for:active_forening %}
+                  {% with role=forening_user|role_for:current_forening %}
                     {% if role == 'user' %}
                       <i class="fa fa-user"></i> Vanlig bruker
                     {% elif role == 'admin' %}
@@ -222,7 +222,7 @@
                   {% endif %}
                 </td>
                 <td>
-                  {% with role=forening_user|role_for:active_forening %}
+                  {% with role=forening_user|role_for:current_forening %}
                     {% if role == 'user' %}
                       <i class="fa fa-user"></i> Vanlig bruker
                     {% elif role == 'admin' %}
@@ -238,7 +238,7 @@
 
       <p class="give-access-initiation">
         <button class="btn btn-default">
-          <i class="fa fa-user"></i> Gi en ny bruker tilgang til {{ active_forening.name }}
+          <i class="fa fa-user"></i> Gi en ny bruker tilgang til {{ current_forening.name }}
         </button>
       </p>
 
@@ -250,7 +250,7 @@
         <input type="text" class="form-control" name="search" placeholder="Søk etter navn eller medlemsnummer...">
         <button class="btn btn-default search input-button-align"><i class="fa fa-search"></i></button>
 
-        <table class="table search-results" data-search-url="{% url 'admin.forening.views.users_access_search' %}" data-forening-name="{{ active_forening.name }}">
+        <table class="table search-results" data-search-url="{% url 'admin.forening.views.users_access_search' current_forening.id %}" data-forening-name="{{ current_forening.name }}">
           <tr>
             <th>Navn</th>
             <th>Født</th>
@@ -258,7 +258,7 @@
             <th>Adresse</th>
             <th>Tlf / e-post</th>
             <th>Sherpa-tilgang</th>
-            <th>Gi tilgang til {{ active_forening.name }}</th>
+            <th>Gi tilgang til {{ current_forening.name }}</th>
           </tr>
 
           <tr class="intro">

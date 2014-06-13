@@ -5,20 +5,20 @@
     </div>
   {% elif message.message == 'forening_create_success' %}
     <div class="alert alert-success">
-      <strong>{{ active_forening.name }} har blitt opprettet!</strong><br>
+      <strong>{{ current_forening.name }} har blitt opprettet!</strong><br>
       Du er nå administrator i den nye foreningen.
     </div>
   {% endif %}
 {% endfor %}
 
-<form action="{% url 'admin.forening.views.index' %}" method="post" class="edit-forening form-default form-horizontal">
+<form action="{% url 'admin.forening.views.index' current_forening.id %}" method="post" class="edit-forening form-default form-horizontal">
   {% csrf_token %}
   <input type="hidden" name="form" value="edit">
   {{ edit_form.forening }}
 
   <div class="section">
 
-    <div class="form-group parents{% if edit_form.parents.errors %} has-error{% endif %}{% if active_forening.type == 'sentral' or active_forening.type == 'forening' %} jq-hide{% endif %}">
+    <div class="form-group parents{% if edit_form.parents.errors %} has-error{% endif %}{% if current_forening.type == 'sentral' or current_forening.type == 'forening' %} jq-hide{% endif %}">
       <label class="col-md-2 control-label" for="id_edit-parents">Moderforening</label>
       <div class="col-md-10">
 
@@ -74,7 +74,7 @@
       </div>
     </div>
 
-    <div class="form-group group_type{% if edit_form.group_type.errors %} has-error{% endif %}{% if active_forening.type != 'turgruppe' %} jq-hide{% endif %}">
+    <div class="form-group group_type{% if edit_form.group_type.errors %} has-error{% endif %}{% if current_forening.type != 'turgruppe' %} jq-hide{% endif %}">
       <label class="col-md-2 control-label" for="id_edit_group_type">Turgruppe</label>
       <div class="col-md-10">
         {{ edit_form.group_type }}

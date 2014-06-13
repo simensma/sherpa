@@ -83,11 +83,11 @@ class DecodeQueryString(object):
 
 class ChangeActiveForening(object):
     def process_request(self, request):
-        # This "view" is very special, needs to avoid certain middleware logic that depends on 'active_forening'.
+        # This lets the user change the active forening. It could be a view, but it needs to apply before the
+        # ActiveForening middleware logic.
         if request.user.is_authenticated() and request.user.has_perm('sherpa'):
             m = re.match(r'/sherpa/aktiv-forening/(?P<forening>\d+)/', request.path)
             if m is not None:
-                # Note: this object will be copied in session for a while and will NOT get updated even if the original object is.
                 forening = Forening.objects.get(id=m.groupdict()['forening'])
                 if not forening in request.user.all_foreninger():
                     raise PermissionDenied

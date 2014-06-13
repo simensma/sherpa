@@ -48,7 +48,7 @@
       {% endif %}
     </td>
     <td>
-      <form action="{% url 'admin.forening.views.users_give_access' %}" method="post" class="give-access">
+      <form action="{% url 'admin.forening.views.users_give_access' current_forening.id %}" method="post" class="give-access">
         {% csrf_token %}
         <input type="hidden" name="user" value="{{ potential_user.id }}">
         <input type="hidden" name="wanted_role">
@@ -56,7 +56,7 @@
         <button class="btn btn-danger pick" data-wanted-role="user">
           <i class="fa fa-user"></i> Vanlig bruker
         </button>
-        {% if user|role_for:active_forening == 'admin' %}
+        {% if user|role_for:current_forening == 'admin' %}
           <button class="btn btn-danger pick" data-wanted-role="admin">
             <i class="fa fa-star"></i> Administrator
           </button>

@@ -1,6 +1,6 @@
 {% extends 'common/admin/layout.html' %}
 
-{% block title %}{{ active_forening.name }} — {{ block.super }}{% endblock %}
+{% block title %}{{ current_forening.name }} — {{ block.super }}{% endblock %}
 
 {% block admin_menu %}{% with 'forening' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
 
@@ -25,10 +25,10 @@
 
   <div class="row">
     <div class="col-lg-12">
-      <h1>{{ active_forening.name }} <small>endre informasjon om foreningen og se registrerte Sherpabrukere</small></h1>
+      <h1>{{ current_forening.name }} <small>endre informasjon om foreningen og se registrerte Sherpabrukere</small></h1>
       <ol class="breadcrumb">
         <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
-        <li><a href="{% url 'admin.forening.views.index' %}">{{ active_forening.name }}</a></li>
+        <li><a href="{% url 'admin.forening.views.index' current_forening.id %}">{{ current_forening.name }}</a></li>
       </ol>
     </div>
   </div><!-- /.row -->
@@ -80,7 +80,7 @@
       <input type="text" class="form-control" name="search" placeholder="Søk etter navn eller medlemsnummer...">
       <button class="btn btn-default search input-button-align"><i class="fa fa-search"></i></button>
 
-      <table class="table search-results" data-search-url="{% url 'admin.forening.views.contact_person_search' %}">
+      <table class="table search-results" data-search-url="{% url 'admin.forening.views.contact_person_search' current_forening.id %}">
         <tr>
           <th>Navn</th>
           <th>Født</th>

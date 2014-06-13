@@ -18,12 +18,16 @@ from user.models import User, Permission, ForeningRole
 from focus.models import Actor
 from admin.users.util import send_access_granted_email
 
-def index(request):
-    forening_users = list(User.objects.filter(foreninger=request.active_forening))
+def index(request, forening_id):
+    current_forening = Forening.objects.get(id=forening_id)
+    if current_forening not in request.user.all_foreninger():
+        raise PermissionDenied
+
+    forening_users = list(User.objects.filter(foreninger=current_forening))
 
     forening_users_by_parent = []
 
-    parent_ids = [p.id for p in request.active_forening.get_parents_deep()]
+    parent_ids = [p.id for p in current_forening.get_parents_deep()]
     forening_users_by_parent_all = list(User.objects.filter(foreninger__in=parent_ids))
 
     # Prefetch and cache the actors
@@ -37,7 +41,7 @@ def index(request):
     forening_users_by_parent = []
     for user in forening_users_by_parent_all:
         for forening in user.all_foreninger():
-            if forening == request.active_forening and forening.role == 'admin':
+            if forening == current_forening and forening.role == 'admin':
                 forening_users_by_parent.append(user)
 
     forening_users = sorted(forening_users, key=lambda u: u.get_full_name())
@@ -52,6 +56,7 @@ def index(request):
     }
 
     context = {
+        'current_forening': current_forening,
         'forening_users': forening_users,
         'forening_users_by_parent': forening_users_by_parent,
         'sherpa_admins': sherpa_admins,
@@ -59,46 +64,46 @@ def index(request):
         'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH
     }
 
-    zipcode = request.active_forening.zipcode
+    zipcode = current_forening.zipcode
     edit_form_zipcode_area = zipcode.area if zipcode is not None else ''
 
-    if request.active_forening.contact_person is not None:
+    if current_forening.contact_person is not None:
         choose_contact = 'person'
-        contact_person = request.active_forening.contact_person.id
-        contact_person_name = request.active_forening.contact_person.get_full_name()
-        phone = request.active_forening.contact_person.get_phone_mobile()
-        email = request.active_forening.contact_person.get_sherpa_email()
-    elif request.active_forening.contact_person_name != '':
+        contact_person = current_forening.contact_person.id
+        contact_person_name = current_forening.contact_person.get_full_name()
+        phone = current_forening.contact_person.get_phone_mobile()
+        email = current_forening.contact_person.get_sherpa_email()
+    elif current_forening.contact_person_name != '':
         choose_contact = 'person'
         contact_person = None
-        contact_person_name = request.active_forening.contact_person_name
-        phone = request.active_forening.phone
-        email = request.active_forening.email
+        contact_person_name = current_forening.contact_person_name
+        phone = current_forening.phone
+        email = current_forening.email
     else:
         choose_contact = 'forening'
         contact_person = None
         contact_person_name = ''
-        phone = request.active_forening.phone
-        email = request.active_forening.email
+        phone = current_forening.phone
+        email = current_forening.email
 
     edit_form = ExistingForeningDataForm(request.user, prefix='edit', initial={
-        'forening': request.active_forening.id,
-        'parents': request.active_forening.parents.all(),
-        'name': request.active_forening.name,
-        'type': request.active_forening.type,
-        'group_type': request.active_forening.group_type,
-        'post_address': request.active_forening.post_address,
-        'visit_address': request.active_forening.visit_address,
+        'forening': current_forening.id,
+        'parents': current_forening.parents.all(),
+        'name': current_forening.name,
+        'type': current_forening.type,
+        'group_type': current_forening.group_type,
+        'post_address': current_forening.post_address,
+        'visit_address': current_forening.visit_address,
         'zipcode': zipcode.zipcode if zipcode is not None else '',
-        'counties': request.active_forening.counties.all(),
+        'counties': current_forening.counties.all(),
         'choose_contact': choose_contact,
         'contact_person': contact_person,
         'contact_person_name': contact_person_name,
         'phone': phone,
         'email': email,
-        'organization_no': request.active_forening.organization_no,
-        'gmap_url': request.active_forening.gmap_url,
-        'facebook_url': request.active_forening.facebook_url,
+        'organization_no': current_forening.organization_no,
+        'gmap_url': current_forening.gmap_url,
+        'facebook_url': current_forening.facebook_url,
     })
 
     create_form = ForeningDataForm(request.user, prefix='create', initial={
@@ -151,12 +156,10 @@ def index(request):
                 forening.facebook_url = edit_form.cleaned_data['facebook_url']
                 forening.save()
                 messages.info(request, 'forening_save_success')
-                # Not sure why "request.session.modified = True" doesn't work here, so just update the var
-                request.active_forening = forening
                 cache.delete('foreninger.full_list')
                 cache.delete('forening.%s' % forening.id)
                 cache.delete('forening.main_forenings.%s' % forening.id)
-                return redirect('admin.forening.views.index')
+                return redirect('admin.forening.views.index', current_forening)
             else:
                 context.update({'edit_form': edit_form})
                 return render(request, 'common/admin/forening/index.html', context)
@@ -216,15 +219,19 @@ def index(request):
                 cache.delete('forening.main_forenings.%s' % forening.id)
                 # Since GET url == POST url, we need to specifically set the tab hashtag we want, or the existing
                 # one (create) will be kept
-                return redirect('%s#metadata' % reverse('admin.forening.views.index'))
+                return redirect('%s#metadata' % reverse('admin.forening.views.index', args=[current_forening.id]))
             else:
                 context.update({'create_form': create_form})
                 return render(request, 'common/admin/forening/index.html', context)
 
         else:
-            return redirect('admin.forening.views.index')
+            return redirect('admin.forening.views.index', current_forening)
 
-def contact_person_search(request):
+def contact_person_search(request, forening_id):
+    current_forening = Forening.objects.get(id=forening_id)
+    if current_forening not in request.user.all_foreninger():
+        raise PermissionDenied
+
     MAX_HITS = 100
 
     if len(request.POST['q']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:
@@ -254,14 +261,19 @@ def contact_person_search(request):
     users = sorted(list(users) + list(local_nonmember_users), key=lambda u: u.get_full_name())
 
     context = RequestContext(request, {
-        'users': users[:MAX_HITS]
+        'current_forening': current_forening,
+        'users': users[:MAX_HITS],
     })
     return HttpResponse(json.dumps({
         'results': render_to_string('common/admin/forening/contact_person_search_results.html', context),
         'max_hits_exceeded': len(users) > MAX_HITS or len(actors) > MAX_HITS
     }))
 
-def users_access_search(request):
+def users_access_search(request, forening_id):
+    current_forening = Forening.objects.get(id=forening_id)
+    if current_forening not in request.user.all_foreninger():
+        raise PermissionDenied
+
     MAX_HITS = 100
 
     if len(request.POST['q']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:
@@ -291,14 +303,19 @@ def users_access_search(request):
     users = sorted(list(users) + list(local_nonmember_users), key=lambda u: u.get_full_name())
 
     context = RequestContext(request, {
-        'users': users[:MAX_HITS]
+        'current_forening': current_forening,
+        'users': users[:MAX_HITS],
     })
     return HttpResponse(json.dumps({
         'results': render_to_string('common/admin/forening/users_access_search_results.html', context),
         'max_hits_exceeded': len(users) > MAX_HITS or len(actors) > MAX_HITS
     }))
 
-def users_give_access(request):
+def users_give_access(request, forening_id):
+    current_forening = Forening.objects.get(id=forening_id)
+    if current_forening not in request.user.all_foreninger():
+        raise PermissionDenied
+
     wanted_role = request.POST['wanted_role']
     if wanted_role not in [role[0] for role in ForeningRole.ROLE_CHOICES]:
         raise PermissionDenied
@@ -317,7 +334,7 @@ def users_give_access(request):
     other_user = User.get_users(include_pending=True).get(id=request.POST['user'])
     if other_user.has_perm('sherpa_admin'):
         messages.info(request, 'user_is_sherpa_admin')
-        return redirect('%s#brukere' % reverse('admin.forening.views.index'))
+        return redirect('%s#brukere' % reverse('admin.forening.views.index', args=[current_forening.id]))
 
     # Adding the sherpa permission, if missing, is implicit - and informed about client-side
     if not other_user.has_perm('sherpa'):
@@ -348,7 +365,7 @@ def users_give_access(request):
                 # In this case, forening.role should equal wanted_role, so just inform the user that all is in order
                 messages.info(request, 'equal_permission_already_exists')
             cache.delete('user.%s.all_foreninger' % other_user.id)
-            return redirect('%s#brukere' % reverse('admin.forening.views.index'))
+            return redirect('%s#brukere' % reverse('admin.forening.views.index', args=[current_forening.id]))
 
     # If we reach this code path, this is a new relationship - create it
     forening_role = ForeningRole(
@@ -364,9 +381,13 @@ def users_give_access(request):
             messages.warning(request, 'access_email_failure')
     messages.info(request, 'permission_created')
     cache.delete('user.%s.all_foreninger' % other_user.id)
-    return redirect('%s#brukere' % reverse('admin.forening.views.index'))
+    return redirect('%s#brukere' % reverse('admin.forening.views.index', args=[current_forening.id]))
 
-def expire_forening_permission_cache(request):
+def expire_forening_permission_cache(request, forening_id):
+    current_forening = Forening.objects.get(id=forening_id)
+    if current_forening not in request.user.all_foreninger():
+        raise PermissionDenied
+
     cache.delete('user.%s.all_foreninger' % request.user.id)
     messages.info(request, 'permission_cache_deleted')
-    return redirect('%s#grupper' % reverse('admin.forening.views.index'))
+    return redirect('%s#grupper' % reverse('admin.forening.views.index', args=[current_forening.id]))
