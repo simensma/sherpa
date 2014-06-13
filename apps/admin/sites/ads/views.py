@@ -5,7 +5,7 @@ from django.contrib import messages
 
 from datetime import datetime
 import hashlib
-import simples3
+import simples3 # TODO: Replace with boto
 
 from admin.sites.ads.util import parse_adform_script_destination
 from page.models import Ad, AdPlacement

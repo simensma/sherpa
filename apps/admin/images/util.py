@@ -17,7 +17,7 @@ import random
 from PIL import Image as pil
 from cStringIO import StringIO
 from hashlib import sha1
-import simples3
+import simples3 # TODO: Replace with boto
 import logging
 import sys
 

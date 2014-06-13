@@ -9,7 +9,7 @@ from datetime import date
 import random
 import json
 import re
-import simples3
+import simples3 # TODO: Replace with boto
 import time
 
 class Menu(models.Model):

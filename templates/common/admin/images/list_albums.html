@@ -19,16 +19,11 @@
 <div class="action-buttons">
   <div class="row">
     <div class="col-lg-3">
-      <p{% if not current_album %} data-tooltip title="Du kan ikke laste opp bilder her i rotalbumet - velg eller opprett et album først."{% endif %}>
+      <div{% if not current_album %} data-tooltip title="Du kan ikke laste opp bilder her i rotalbumet - velg eller opprett et album først."{% endif %}>
         <button class="btn btn-success btn-lg upload"{% if not current_album %} disabled{% endif %}>
           <i class="fa fa-picture-o"></i> Last opp nytt bilde
         </button>
-      </p>
-      <p>
-        <button class="btn btn-success btn-lg album add">
-          <i class="fa fa-folder-open"></i> Opprett nytt album
-        </button>
-      </p>
+      </div>
     </div>
     <div class="col-lg-3">
       <button class="btn btn-warning btn-lg albums details jq-hide">
@@ -80,6 +75,27 @@
           <i class="fa fa-warning"></i> Slett bilder
         </button>
       </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-3">
+      <button class="btn btn-success btn-lg album add">
+        <i class="fa fa-folder-open"></i> Opprett nytt album
+      </button>
+    </div>
+    <div class="col-lg-3">
+      {% if current_album and images|length > 0 %}
+        <a href="{% url 'admin.images.views.download_album' current_album.id %}" class="btn btn-success btn-lg">
+          <i class="fa fa-download"></i> Last ned hele albumet
+        </a>
+      {% else %}
+        <div data-tooltip title="Det er ingen bilder å laste ned her.">
+          <button class="btn btn-success btn-lg" disabled>
+            <i class="fa fa-download"></i> Last ned hele albumet
+          </button>
+        </div>
+      {% endif %}
     </div>
   </div>
 </div><!-- /.action-buttons -->
