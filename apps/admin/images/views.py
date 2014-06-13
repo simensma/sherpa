@@ -191,7 +191,7 @@ def download_album(request, album):
         yield memory_file.read()
 
     response = HttpResponse(build_zipfile(), content_type='application/x-zip-compressed')
-    response['Content-Disposition'] = 'attachment; filename="%s.zip"' % album.name
+    response['Content-Disposition'] = 'attachment; filename="%s.zip"' % album.name.encode('utf-8')
     return response
 
 def update_images(request):
