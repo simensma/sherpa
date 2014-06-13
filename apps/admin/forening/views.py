@@ -20,6 +20,8 @@ from admin.users.util import send_access_granted_email
 
 def index(request, forening_id):
     current_forening = Forening.objects.get(id=forening_id)
+    if current_forening not in request.user.all_foreninger():
+        raise PermissionDenied
 
     forening_users = list(User.objects.filter(foreninger=current_forening))
 
@@ -227,6 +229,8 @@ def index(request, forening_id):
 
 def contact_person_search(request, forening_id):
     current_forening = Forening.objects.get(id=forening_id)
+    if current_forening not in request.user.all_foreninger():
+        raise PermissionDenied
 
     MAX_HITS = 100
 
@@ -267,6 +271,8 @@ def contact_person_search(request, forening_id):
 
 def users_access_search(request, forening_id):
     current_forening = Forening.objects.get(id=forening_id)
+    if current_forening not in request.user.all_foreninger():
+        raise PermissionDenied
 
     MAX_HITS = 100
 
@@ -307,6 +313,8 @@ def users_access_search(request, forening_id):
 
 def users_give_access(request, forening_id):
     current_forening = Forening.objects.get(id=forening_id)
+    if current_forening not in request.user.all_foreninger():
+        raise PermissionDenied
 
     wanted_role = request.POST['wanted_role']
     if wanted_role not in [role[0] for role in ForeningRole.ROLE_CHOICES]:
@@ -376,6 +384,10 @@ def users_give_access(request, forening_id):
     return redirect('%s#brukere' % reverse('admin.forening.views.index', args=[current_forening.id]))
 
 def expire_forening_permission_cache(request, forening_id):
+    current_forening = Forening.objects.get(id=forening_id)
+    if current_forening not in request.user.all_foreninger():
+        raise PermissionDenied
+
     cache.delete('user.%s.all_foreninger' % request.user.id)
     messages.info(request, 'permission_cache_deleted')
-    return redirect('%s#grupper' % reverse('admin.forening.views.index', args=[forening_id]))
+    return redirect('%s#grupper' % reverse('admin.forening.views.index', args=[current_forening.id]))
