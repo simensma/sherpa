@@ -156,6 +156,9 @@ def update_album(request):
     else:
         return redirect('admin.images.views.list_albums', parent.id)
 
+def download_album(request, album):
+    raise Exception("TBD")
+
 def update_images(request):
     if request.method == 'GET':
         ids = json.loads(request.GET['bilder'])
