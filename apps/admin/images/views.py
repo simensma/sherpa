@@ -17,6 +17,8 @@ import sys
 from datetime import datetime
 import simples3 # TODO: Replace with boto
 from hashlib import sha1
+import boto
+import zipfile
 
 logger = logging.getLogger('sherpa')
 
@@ -156,7 +158,27 @@ def update_album(request):
         return redirect('admin.images.views.list_albums', parent.id)
 
 def download_album(request, album):
-    raise Exception("TBD")
+    album = Album.objects.get(id=album)
+
+    conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+    bucket = conn.get_bucket(settings.AWS_BUCKET)
+
+    memory_file = StringIO()
+    zip_archive = zipfile.ZipFile(memory_file, 'w')
+    file_count = 1
+    for image in Image.objects.filter(album=album):
+        image_key = bucket.get_key("%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, image.key, image.extension))
+        if image.photographer == '':
+            image_filename = '%s-%s.%s' % (album.name, file_count, image.extension)
+        else:
+            image_filename = '%s-%s-%s.%s' % (album.name, file_count, image.photographer, image.extension)
+        zip_archive.writestr(image_filename, image_key.get_contents_as_string())
+        file_count += 1
+    zip_archive.close()
+
+    response = HttpResponse(memory_file.getvalue(), content_type='application/x-zip-compressed')
+    response['Content-Disposition'] = 'attachment; filename="%s.zip"' % album.name
+    return response
 
 def update_images(request):
     if request.method == 'GET':
