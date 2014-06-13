@@ -28,7 +28,7 @@
             {{ current_forening.name }} er underlagt
             {# The following line is too long because we don't want spacing between punctuations. #}
             {% for parent in current_forening.parents.all %}
-              {% if parent in user.all_foreninger %}<a href="/sherpa/aktiv-forening/{{ parent.id }}/?next={% url 'admin.forening.views.index' current_forening.id %}#grupper">{% endif %}{{ parent.name }}{% if parent in user.all_foreninger %}</a>{% endif %}{% if not forloop.last %} og {% else %}.{% endif %}
+              {% if parent in user.all_foreninger %}<a href="{% url 'admin.forening.views.index' parent.id %}#grupper">{% endif %}{{ parent.name }}{% if parent in user.all_foreninger %}</a>{% endif %}{% if not forloop.last %} og {% else %}.{% endif %}
             {% endfor %}
           </td>
         </tr>
