@@ -12,7 +12,7 @@ from core.models import Tag
 from datetime import datetime
 import json
 import hashlib
-import simples3
+import simples3 # TODO: Replace with boto
 
 def index(request):
     publications = Publication.objects.filter(forening__in=request.user.all_foreninger()).order_by('title')

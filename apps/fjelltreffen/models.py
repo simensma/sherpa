@@ -5,7 +5,7 @@ from django.conf import settings
 from django.db.models import Q
 
 from datetime import date, timedelta
-import simples3
+import simples3 # TODO: Replace with boto
 
 # Default annonse-filters
 default_min_age = '18'

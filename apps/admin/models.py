@@ -4,7 +4,7 @@ from django.db import models
 from django.conf import settings
 
 from datetime import date
-import simples3
+import simples3 # TODO: Replace with boto
 
 from core.util import use_image_thumb
 

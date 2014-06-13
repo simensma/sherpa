@@ -15,7 +15,7 @@ import logging
 from PIL import Image as pil
 from cStringIO import StringIO
 import hashlib
-import simples3
+import simples3 # TODO: Replace with boto
 
 from admin.images.util import standardize_extension
 from sherpa.decorators import user_requires, user_requires_login

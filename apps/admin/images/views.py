@@ -15,7 +15,7 @@ import json
 import logging
 import sys
 from datetime import datetime
-import simples3
+import simples3 # TODO: Replace with boto
 from hashlib import sha1
 
 logger = logging.getLogger('sherpa')
