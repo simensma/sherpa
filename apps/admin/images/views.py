@@ -19,6 +19,7 @@ import simples3 # TODO: Replace with boto
 from hashlib import sha1
 import boto
 import zipfile
+import pyexiv2
 
 logger = logging.getLogger('sherpa')
 
@@ -163,6 +164,12 @@ def download_album(request, album):
     conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
     bucket = conn.get_bucket(settings.AWS_BUCKET)
 
+    def set_exif_tag(metadata, key, value):
+        if key in metadata:
+            metadata[key].value = value
+        else:
+            metadata[key] = pyexiv2.ExifTag(key, value)
+
     def build_zipfile():
         memory_file = StringIO()
         zip_archive = zipfile.ZipFile(memory_file, 'w')
@@ -171,6 +178,17 @@ def download_album(request, album):
 
         for image in Image.objects.filter(album=album):
             image_key = bucket.get_key("%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, image.key, image.extension))
+            image_data = image_key.get_contents_as_string()
+
+            # Write relevant exif data
+            metadata = pyexiv2.ImageMetadata.from_buffer(image_data)
+            metadata.read()
+            set_exif_tag(metadata, 'Exif.Image.ImageDescription', image.description)
+            set_exif_tag(metadata, 'Exif.Image.Artist', image.photographer)
+            set_exif_tag(metadata, 'Exif.Image.Copyright', image.licence)
+            metadata.write()
+
+            # And add the modified image to the zip archive
             if image.photographer == '':
                 image_filename = '%s-%s.%s' % (album.name, file_count, image.extension)
             else:
