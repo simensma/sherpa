@@ -175,7 +175,7 @@ def download_album(request, album):
                 image_filename = '%s-%s.%s' % (album.name, file_count, image.extension)
             else:
                 image_filename = '%s-%s-%s.%s' % (album.name, file_count, image.photographer, image.extension)
-            zip_archive.writestr(image_filename, image_key.get_contents_as_string())
+            zip_archive.writestr(image_filename.encode('ascii', 'ignore'), metadata.buffer)
             file_count += 1
 
             # Rewind the memory file back, read the written data, and yield it to our response,
