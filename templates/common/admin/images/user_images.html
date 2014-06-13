@@ -21,8 +21,8 @@
 <div class="action-buttons">
   <div class="row">
     <div class="col-lg-3">
-      <p>
-        <button class="btn btn-success btn-lg upload"{% if active_user != user %} disabled data-tooltip title="Du kan ikke laste opp bilder her. Gå til &quot;Mine bilder&quot; eller &quot;Alle bilder&quot;."{% endif %}>
+      <p{% if active_user != user %} data-tooltip title="Du kan ikke laste opp bilder her. Gå til &quot;Mine bilder&quot; eller &quot;Alle bilder&quot;."{% endif %}>
+        <button class="btn btn-success btn-lg upload"{% if active_user != user %} disabled{% endif %}>
           <i class="fa fa-picture-o"></i> Last opp nytt bilde
         </button>
       </p>
