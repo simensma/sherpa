@@ -35,7 +35,7 @@ def children(request, site):
         'versions': versions,
         'level': request.POST['level'],
     })
-    return HttpResponse(render_to_string('common/admin/sites/pages/result.html', context))
+    return HttpResponse(render_to_string('common/admin/sites/pages/list_result.html', context))
 
 def new(request, site):
     active_site = Site.objects.get(id=site)
