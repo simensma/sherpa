@@ -7,6 +7,7 @@ from django.template.loader import render_to_string
 from articles.models import Article, OldArticle
 from page.models import Variant, Version, Row, Column, Content
 from page.widgets import parse_widget
+from core.models import Site
 
 from datetime import datetime
 import json
