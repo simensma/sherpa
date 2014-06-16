@@ -57,79 +57,88 @@
 
           {% block admin_menu %}
 
-            <li{% if active_entry == 'dashboard' %} class="active"{% endif %}><a href="{% url 'admin.views.index' %}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li{% if active_entry == 'forening' %} class="active"{% endif %}><a href="{% url 'admin.forening.views.index' active_forening.id %}"><i class="fa fa-bookmark-o"></i> Foreninger og turgrupper</a></li>
+            {% if not active_forening %}
 
-            {% with sites=active_forening.get_sites_sorted %}
-              {% if sites.hytte|length == 0 and sites.kampanje|length == 0 %}
+              {# If active forening isn't chosen, hide the main admin menu. Notice the empty href, which will work as a refresh #}
+              <li class="active"><a href=""><i class="fa fa-bookmark-o"></i> Velg aktiv forening</a></li>
 
-                {% if sites.forening|length == 0 %}
+            {% else %}
 
-                  {# No sites - link to setup_site #}
-                  <li{% if active_entry == 'sites' or active_entry == 'sites.setup_site'%} class="active"{% endif %}><a href="{% url 'admin.views.setup_site' %}"><i class="fa fa-file"></i> Hjemmeside</a></li>
+              <li{% if active_entry == 'dashboard' %} class="active"{% endif %}><a href="{% url 'admin.views.index' %}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+              <li{% if active_entry == 'forening' %} class="active"{% endif %}><a href="{% url 'admin.forening.views.index' active_forening.id %}"><i class="fa fa-bookmark-o"></i> Foreninger og turgrupper</a></li>
+
+              {% with sites=active_forening.get_sites_sorted %}
+                {% if sites.hytte|length == 0 and sites.kampanje|length == 0 %}
+
+                  {% if sites.forening|length == 0 %}
+
+                    {# No sites - link to setup_site #}
+                    <li{% if active_entry == 'sites' or active_entry == 'sites.setup_site'%} class="active"{% endif %}><a href="{% url 'admin.views.setup_site' %}"><i class="fa fa-file"></i> Hjemmeside</a></li>
+
+                  {% else %}
+
+                    {# Only homepage - let the link go directly there #}
+                    <li{% if active_entry == 'sites' or active_entry == 'sites.setup_site'%} class="active"{% endif %}><a href="{% url 'admin.sites.views.index' sites.forening.0.id %}"><i class="fa fa-file"></i> Hjemmeside</a></li>
+
+                  {% endif %}
 
                 {% else %}
 
-                  {# Only homepage - let the link go directly there #}
-                  <li{% if active_entry == 'sites' or active_entry == 'sites.setup_site'%} class="active"{% endif %}><a href="{% url 'admin.sites.views.index' sites.forening.0.id %}"><i class="fa fa-file"></i> Hjemmeside</a></li>
+                  {# More than one site which is not homepage - use a dropdown #}
+                  <li{% if active_entry == 'sites.setup_site' %} class="active"{% endif %}>
+                    <a href="javascript:undefined" data-toggle="sites">
+                      <i class="fa fa-file"></i> Nettsteder
+                      <span class="pull-right">
+                        <i class="fa fa-toggle-down"></i>
+                      </span>
+                    </a>
+                  </li>
+
+                  {% for site in sites.forening %}
+                    <li class="submenu{% if active_entry == 'sites' %} visible{% endif %}{% if active_site == site %} active{% endif %}" data-type="sites">
+                      <a href="{% url 'admin.sites.views.index' site.id %}">
+                        {{ site.domain }}
+                      </a>
+                    </li>
+                  {% endfor %}
+                  {% for site in sites.hytte %}
+                    <li class="submenu{% if active_entry == 'sites' %} visible{% endif %}{% if active_site == site %} active{% endif %}" data-type="sites">
+                      <a href="{% url 'admin.sites.views.index' site.id %}">
+                        {{ site.domain }}
+                      </a>
+                    </li>
+                  {% endfor %}
+                  {% for site in sites.kampanje %}
+                    <li class="submenu{% if active_entry == 'sites' %} visible{% endif %}{% if active_site == site %} active{% endif %}" data-type="sites">
+                      <a href="{% url 'admin.sites.views.index' site.id %}">
+                        {{ site.domain }}
+                      </a>
+                    </li>
+                  {% endfor %}
 
                 {% endif %}
+              {% endwith %}
 
-              {% else %}
+              <li{% if active_entry == 'aktiviteter' %} class="active"{% endif %}><a href="{% url 'admin.aktiviteter.views.index' %}"><i class="fa fa-globe"></i> Aktiviteter (prototype)</a></li>
+              <li{% if active_entry == 'publications' %} class="active"{% endif %}><a href="{% url 'admin.publications.views.index' %}"><i class="fa fa-font"></i> Publikasjoner</a></li>
 
-                {# More than one site which is not homepage - use a dropdown #}
-                <li{% if active_entry == 'sites.setup_site' %} class="active"{% endif %}>
-                  <a href="javascript:undefined" data-toggle="sites">
-                    <i class="fa fa-file"></i> Nettsteder
-                    <span class="pull-right">
-                      <i class="fa fa-toggle-down"></i>
-                    </span>
-                  </a>
-                </li>
-
-                {% for site in sites.forening %}
-                  <li class="submenu{% if active_entry == 'sites' %} visible{% endif %}{% if active_site == site %} active{% endif %}" data-type="sites">
-                    <a href="{% url 'admin.sites.views.index' site.id %}">
-                      {{ site.domain }}
-                    </a>
-                  </li>
-                {% endfor %}
-                {% for site in sites.hytte %}
-                  <li class="submenu{% if active_entry == 'sites' %} visible{% endif %}{% if active_site == site %} active{% endif %}" data-type="sites">
-                    <a href="{% url 'admin.sites.views.index' site.id %}">
-                      {{ site.domain }}
-                    </a>
-                  </li>
-                {% endfor %}
-                {% for site in sites.kampanje %}
-                  <li class="submenu{% if active_entry == 'sites' %} visible{% endif %}{% if active_site == site %} active{% endif %}" data-type="sites">
-                    <a href="{% url 'admin.sites.views.index' site.id %}">
-                      {{ site.domain }}
-                    </a>
-                  </li>
-                {% endfor %}
-
+              {# Explicitly hide images for non-central users for now #}
+              {% if active_forening.id == 56 %}{# DNT Central #}
+                <li{% if active_entry == 'images' %} class="active"{% endif %}><a href="{% url 'admin.images.views.index' %}"><i class="fa fa-picture-o"></i> Bildearkiv</a></li>
               {% endif %}
-            {% endwith %}
 
-            <li{% if active_entry == 'aktiviteter' %} class="active"{% endif %}><a href="{% url 'admin.aktiviteter.views.index' %}"><i class="fa fa-globe"></i> Aktiviteter (prototype)</a></li>
-            <li{% if active_entry == 'publications' %} class="active"{% endif %}><a href="{% url 'admin.publications.views.index' %}"><i class="fa fa-font"></i> Publikasjoner</a></li>
+              <li{% if active_entry == 'users' %} class="active"{% endif %}><a href="{% url 'admin.users.views.index' %}"><i class="fa fa-user"></i> Medlemmer og brukere</a></li>
+              <li{% if active_entry == 'turledere' %} class="active"{% endif %}><a href="{% url 'admin.turledere.views.index' %}"><i class="fa fa-users"></i> Turledere og instruktører</a></li>
 
-            {# Explicitly hide images for non-central users for now #}
-            {% if active_forening.id == 56 %}{# DNT Central #}
-              <li{% if active_entry == 'images' %} class="active"{% endif %}><a href="{% url 'admin.images.views.index' %}"><i class="fa fa-picture-o"></i> Bildearkiv</a></li>
-            {% endif %}
+              {# Applies only to DNT Central #}
+              {% if active_forening.id == 56 %}
+                <li{% if active_entry == 'enrollment' %} class="active"{% endif %}><a href="{% url 'admin.enrollment.views.index' %}"><i class="fa fa-pencil"></i> Innmelding</a></li>
+              {% endif %}
 
-            <li{% if active_entry == 'users' %} class="active"{% endif %}><a href="{% url 'admin.users.views.index' %}"><i class="fa fa-user"></i> Medlemmer og brukere</a></li>
-            <li{% if active_entry == 'turledere' %} class="active"{% endif %}><a href="{% url 'admin.turledere.views.index' %}"><i class="fa fa-users"></i> Turledere og instruktører</a></li>
+              {% if user.perms.sherpa_admin %}
+                <li{% if active_entry == 'memberid_sms' %} class="active"{% endif %}><a href="{% url 'admin.memberid_sms.views.list' %}"><i class="fa fa-phone"></i> SMS-tjenester</a></li>
+              {% endif %}
 
-            {# Applies only to DNT Central #}
-            {% if active_forening.id == 56 %}
-              <li{% if active_entry == 'enrollment' %} class="active"{% endif %}><a href="{% url 'admin.enrollment.views.index' %}"><i class="fa fa-pencil"></i> Innmelding</a></li>
-            {% endif %}
-
-            {% if user.perms.sherpa_admin %}
-              <li{% if active_entry == 'memberid_sms' %} class="active"{% endif %}><a href="{% url 'admin.memberid_sms.views.list' %}"><i class="fa fa-phone"></i> SMS-tjenester</a></li>
             {% endif %}
 
           {% endblock %}
