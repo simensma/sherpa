@@ -72,7 +72,10 @@ div.cms-editor {
       }
     }
 
-    div.image:hover:not(.moving), div.widget:not(.moving):not(.static):hover {
+    div.image:hover:not(.moving),
+    div.image.hover:not(.moving),
+    div.widget:not(.moving):not(.static):hover,
+    div.widget.hover:not(.moving):not(.static) {
       opacity: 0.5;
       filter: alpha(opacity=50);
       cursor: alias;
@@ -82,7 +85,8 @@ div.cms-editor {
       background-color: rgb(235, 235, 235);
     }
 
-    div[contenteditable='true']:hover:not(.selected):not(.moving) {
+    div[contenteditable='true']:hover:not(.selected):not(.moving),
+    div[contenteditable='true'].hover:not(.selected):not(.moving) {
       background-color: rgb(240, 240, 240);
     }
 
