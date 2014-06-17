@@ -58,7 +58,6 @@
 
         // Reset contents to their normal state
         article.find("div.content").removeClass('moving');
-        // article.find("div.add-content,div.add-content-row").removeClass('moving');
 
         // Explicitly remove the content-controls from the dragged content since its mouseover
         // was ignored during the moving session
