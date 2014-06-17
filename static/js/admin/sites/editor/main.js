@@ -236,13 +236,13 @@ $(function() {
 
     // Add CSS class hover to the content belonging to content control on mouseover
     $(document).on('mouseover', 'div.content-control', function (e) {
-        var $content = $(this).nextAll('.content').first();
+        var $content = $(this).nextAll('div.content').first();
         $content.addClass('hover');
     });
 
     // Remove CSS class hover to the content belonging to content control on mouseout
     $(document).on('mouseout', 'div.content-control', function (e) {
-        var $content = $(this).nextAll('.content').first();
+        var $content = $(this).nextAll('div.content').first();
         $content.removeClass('hover');
     });
 
