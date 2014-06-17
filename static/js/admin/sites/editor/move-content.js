@@ -63,7 +63,8 @@
         // was ignored during the moving session
         moved_content.find("div.content-control").remove();
 
-        // And call our given endCallback
+        // And call our given endCallback. It's the callback's responsibility to clean up
+        // moving states on controls etc.
         endCallback();
     };
 
