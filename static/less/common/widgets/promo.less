@@ -690,6 +690,82 @@ div.widget.promo {
     }
   }
 
+  div.cover.main.rotation-favoritthytter {
+    background-image: url('/static/img/widgets/promo/favoritthytter.png');
+
+    div.content {
+      @width: 940px;
+      @padding-right: 0;
+      padding-left: 940px - @width - @padding-right;
+      padding-top: 0;
+      width: @width;
+      padding-right: @padding-right;
+      color: white;
+
+      div.wrapper {
+        display: block;
+        height: 480px;
+        color: white !important;
+      }
+
+      h1 {
+        color: rgb(0, 173, 239);
+        position: absolute;
+        top: 40px;
+        right: 30px;
+        font-size: 50px;
+        text-transform: none;
+        text-align: left;
+      }
+
+      p.lede {
+        position: absolute;
+        top: 260px;
+        right: 30px;
+        font-size: 25px;
+        font-weight: bold;
+      }
+
+      p.double-button-hack {
+        position: absolute;
+        bottom: 20px;
+        right: 30px;
+        text-align: right;
+        margin-right: 8px;
+      }
+
+      p.credits {
+        position: absolute;
+        bottom: 5px;
+        left: 5px;
+        font-size: 16px;
+        margin-bottom: 0;
+      }
+
+      @media(max-width: 767px) {
+        div.wrapper {
+          height: auto;
+        }
+
+        h1, p.lede {
+          color: white;
+          position: static;
+          text-align: center;
+          width: auto;
+        }
+
+        p.credits {
+          display: none;
+        }
+
+        p.double-button-hack {
+          position: static;
+          text-align: center;
+        }
+      }
+    }
+  }
+
   div.cover.main.rotation-gjensidige {
     background-image: url('/static/img/widgets/promo/gjensidigerabatt.jpg');
 
@@ -1178,7 +1254,7 @@ div.widget.promo {
   /* Other cover-promos */
 
   div.cover.ung {
-    background-image: url('/static/img/widgets/promo/dntung_2014.jpg');
+    background-image: url('/static/img/widgets/promo/DNTung_sommerbanner2014.png');
 
     div.content {
       @width: 500px;
@@ -1192,31 +1268,66 @@ div.widget.promo {
       color: white;
       text-align: left;
 
+      h1 {
+        color: rgb(46, 101, 170);
+        position: absolute;
+        top: 20px;
+        right: 65px;
+        text-transform: none;
+        font-size: 48px;
+      }
+
+      p.lede {
+        position: absolute;
+        top: 250px;
+        right: 10px;
+        width: 220px;
+      }
+
+      p.lede2 {
+        position: absolute;
+        top: 360px;
+        right: 10px;
+        width: 180px;
+      }
+
+      p.lede,
+      p.lede2 {
+        text-align: right;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 0;
+      }
+
       p.credits {
-        color: black;
+        color: white;
         position: absolute;
         bottom: 4px;
         left: 6px;
         margin-bottom: 0 !important;
-        .font();
-
-        .font() {
-          font-size: 13px !important;
-          font-weight: normal !important;
-        }
-
-        a {
-          .font();
-        }
-      }
-
-      p:not(.double-button-hack) {
-        font-size: 26px;
-        font-weight: bold;
-        margin-bottom: 20px;
+        font-size: 13px !important;
+        font-weight: normal !important;
       }
 
       @media(max-width: 767px) {
+        h1 {
+          margin-bottom: 20px;
+        }
+
+        h1,
+        p.lede,
+        p.lede2 {
+          color: white;
+          position: static;
+          text-align: center;
+          width: auto;
+        }
+
+        p.lede,
+        p.lede2 {
+          margin-bottom: 10px;
+        }
+
         p.credits {
           display: none;
         }
@@ -1225,54 +1336,71 @@ div.widget.promo {
   }
 
   div.cover.fjellsport {
-    background-image: url('/static/img/widgets/promo/fjellsport_skredkurs.jpg');
+    background-image: url('/static/img/widgets/promo/fjellsport_sommerbanner_2014.png');
 
     div.content {
-      @width: 500px;
-      @padding-right: 30px;
-      padding-left: 940px - @width - @padding-right;
-      padding-top: 30px;
-      padding-right: @padding-right;
-      width: @width;
+      position: absolute;
+      top: 190px;
+      right: 0;
 
       color: black;
       text-align: right;
 
       h1 {
-        margin-bottom: 20px;
-        font-size: 50px;
+        font-size: 56px;
         color: white;
+        margin-bottom: 0;
+        line-height: 0.7em;
+        text-align: right;
       }
 
-      p {
-        margin-bottom: 25px;
-        color: rgb(43, 62, 145);
-      }
-
-      p.photo {
+      .text-container {
         position: absolute;
-        bottom: 4px;
-        right: 6px;
-        font-size: 15px;
-        color: black;
+        right: 0;
+        background-color: white;
+        padding: 20px 30px;
+        filter: alpha(opacity=80);
+        opacity: 0.8;
+        text-align: left;
+        font-size: 26px;
+        width: 333px;
+      }
+
+      p:first-of-type {
+        margin-bottom: 25px;
+      }
+
+      p:last-of-type {
         margin-bottom: 0;
       }
 
-      p.double-button-hack {
-        margin-top: 160px;
-      }
-
       @media(max-width: 767px) {
+        & {
+          position: static;
+        }
+
+        h1 {
+          margin-top: 20px;
+        }
+
+        h1, .text-container, p {
+          text-align: center;
+          position: static;
+          color: white;
+          background-color: transparent;
+          filter: alpha(opacity=100);
+          opacity: 1.0;
+          width: auto;
+        }
+
         p {
           color: white;
         }
 
-        p.double-button-hack {
-          margin-top: 20px;
-        }
-
-        p.photo {
-          display: none;
+        a,
+        a:hover {
+          color: white;
+          text-decoration: underline;
         }
       }
     }
