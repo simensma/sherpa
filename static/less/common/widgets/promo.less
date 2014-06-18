@@ -1254,7 +1254,7 @@ div.widget.promo {
   /* Other cover-promos */
 
   div.cover.ung {
-    background-image: url('/static/img/widgets/promo/dntung_2014.jpg');
+    background-image: url('/static/img/widgets/promo/DNTung_sommerbanner2014.png');
 
     div.content {
       @width: 500px;
@@ -1268,31 +1268,66 @@ div.widget.promo {
       color: white;
       text-align: left;
 
+      h1 {
+        color: rgb(46, 101, 170);
+        position: absolute;
+        top: 20px;
+        right: 65px;
+        text-transform: none;
+        font-size: 48px;
+      }
+
+      p.lede {
+        position: absolute;
+        top: 250px;
+        right: 10px;
+        width: 220px;
+      }
+
+      p.lede2 {
+        position: absolute;
+        top: 360px;
+        right: 10px;
+        width: 180px;
+      }
+
+      p.lede,
+      p.lede2 {
+        text-align: right;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 0;
+      }
+
       p.credits {
-        color: black;
+        color: white;
         position: absolute;
         bottom: 4px;
         left: 6px;
         margin-bottom: 0 !important;
-        .font();
-
-        .font() {
-          font-size: 13px !important;
-          font-weight: normal !important;
-        }
-
-        a {
-          .font();
-        }
-      }
-
-      p:not(.double-button-hack) {
-        font-size: 26px;
-        font-weight: bold;
-        margin-bottom: 20px;
+        font-size: 13px !important;
+        font-weight: normal !important;
       }
 
       @media(max-width: 767px) {
+        h1 {
+          margin-bottom: 20px;
+        }
+
+        h1,
+        p.lede,
+        p.lede2 {
+          color: white;
+          position: static;
+          text-align: center;
+          width: auto;
+        }
+
+        p.lede,
+        p.lede2 {
+          margin-bottom: 10px;
+        }
+
         p.credits {
           display: none;
         }
