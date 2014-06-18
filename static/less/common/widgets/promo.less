@@ -1336,54 +1336,71 @@ div.widget.promo {
   }
 
   div.cover.fjellsport {
-    background-image: url('/static/img/widgets/promo/fjellsport_skredkurs.jpg');
+    background-image: url('/static/img/widgets/promo/fjellsport_sommerbanner_2014.png');
 
     div.content {
-      @width: 500px;
-      @padding-right: 30px;
-      padding-left: 940px - @width - @padding-right;
-      padding-top: 30px;
-      padding-right: @padding-right;
-      width: @width;
+      position: absolute;
+      top: 190px;
+      right: 0;
 
       color: black;
       text-align: right;
 
       h1 {
-        margin-bottom: 20px;
-        font-size: 50px;
+        font-size: 56px;
         color: white;
+        margin-bottom: 0;
+        line-height: 0.7em;
+        text-align: right;
       }
 
-      p {
-        margin-bottom: 25px;
-        color: rgb(43, 62, 145);
-      }
-
-      p.photo {
+      .text-container {
         position: absolute;
-        bottom: 4px;
-        right: 6px;
-        font-size: 15px;
-        color: black;
+        right: 0;
+        background-color: white;
+        padding: 20px 30px;
+        filter: alpha(opacity=80);
+        opacity: 0.8;
+        text-align: left;
+        font-size: 26px;
+        width: 333px;
+      }
+
+      p:first-of-type {
+        margin-bottom: 25px;
+      }
+
+      p:last-of-type {
         margin-bottom: 0;
       }
 
-      p.double-button-hack {
-        margin-top: 160px;
-      }
-
       @media(max-width: 767px) {
+        & {
+          position: static;
+        }
+
+        h1 {
+          margin-top: 20px;
+        }
+
+        h1, .text-container, p {
+          text-align: center;
+          position: static;
+          color: white;
+          background-color: transparent;
+          filter: alpha(opacity=100);
+          opacity: 1.0;
+          width: auto;
+        }
+
         p {
           color: white;
         }
 
-        p.double-button-hack {
-          margin-top: 20px;
-        }
-
-        p.photo {
-          display: none;
+        a,
+        a:hover {
+          color: white;
+          text-decoration: underline;
         }
       }
     }
