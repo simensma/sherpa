@@ -421,6 +421,82 @@ div.widget.promo {
     }
   }
 
+  div.cover.main.rotation-sommerapning {
+    background-image: url('/static/img/widgets/promo/sommerapning_2014.png');
+
+    div.content {
+      @width: 940px;
+      @padding-right: 0;
+      padding-left: 940px - @width - @padding-right;
+      padding-top: 0;
+      width: @width;
+      padding-right: @padding-right;
+      color: white;
+
+      div.wrapper {
+        display: block;
+        height: 480px;
+        color: white !important;
+      }
+
+      h1 {
+        color: rgb(255, 255, 255);
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 43px;
+        text-transform: none;
+        text-align: left;
+      }
+
+      p.lede {
+        position: absolute;
+        top: 80px;
+        right: 30px;
+        font-size: 25px;
+        font-weight: bold;
+      }
+
+      p.double-button-hack {
+        position: absolute;
+        bottom: 20px;
+        right: 30px;
+        text-align: right;
+        margin-right: 8px;
+      }
+
+      p.credits {
+        position: absolute;
+        bottom: 5px;
+        left: 5px;
+        font-size: 16px;
+        margin-bottom: 0;
+      }
+
+      @media(max-width: 767px) {
+        div.wrapper {
+          height: auto;
+        }
+
+        h1, p.lede {
+          color: white;
+          position: static;
+          text-align: center;
+          width: auto;
+        }
+
+        p.credits {
+          display: none;
+        }
+
+        p.double-button-hack {
+          position: static;
+          text-align: center;
+        }
+      }
+    }
+  }
+
   div.cover.main.rotation-kom-deg-ut {
     background-image: url('/static/img/widgets/promo/rotation-kom-deg-ut-2.jpg');
 
