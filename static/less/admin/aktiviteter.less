@@ -80,6 +80,40 @@ div.admin-aktivitet-edit {
     div.images-initiate {
       font-weight: normal;
     }
+
+    // Difficulty: color coding buttons
+    div.form-group.difficulty {
+      div.btn-group {
+        .easy {
+          color: #00984a;
+          &.active {
+            color: #fff;
+            background-color: #00984a;
+          }
+        }
+        .medium {
+          color: #0067af;
+          &.active {
+            color: #fff;
+            background-color: #0067af;
+          }
+        }
+        .hard {
+          color: #ed1c2e;
+          &.active {
+            color: #fff;
+            background-color: #ed1c2e;
+          }
+        }
+        .expert {
+          color: #000;
+          &.active {
+            color: #fff;
+            background-color: #000;
+          }
+        }
+      }
+    }
   }
 
   div.section.position {

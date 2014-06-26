@@ -105,16 +105,18 @@ $(function() {
     function DifficultyValidator() {
         var that = this;
         var form_group = form.find("div.form-group.difficulty");
-        var select = form_group.find("select[name='difficulty']");
         var error = form_group.find("div.error");
+        var radios = form_group.find("input[type='radio']");
+
         this.scrollTo = form_group;
 
         this.validate = function() {
-            var valid = select.find("option:selected").val() !== '';
-            if(!valid) {
-                that.markError();
+            if(radios.filter(":checked") && radios.filter(":checked").length) {
+                return true;
             }
-            return valid;
+
+            this.markError();
+            return false;
         };
 
         this.markError = function() {
@@ -127,7 +129,7 @@ $(function() {
             error.hide();
         };
 
-        select.change(this.clearError);
+        radios.change(this.clearError);
     }
 
     function AudienceValidator() {

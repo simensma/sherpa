@@ -216,17 +216,19 @@
           </div><!-- /.form-group -->
 
           <div class="form-group difficulty">
-            <label class="col-md-2 control-label" for="difficulty">Vanskelighetsgrad</label>
+            <label class="col-md-2 control-label" for="difficulty">Gradering</label>
             <div class="col-md-10">
-              <select name="difficulty" id="difficulty" class="chosen" data-placeholder="Velg vanskelighetsgrad...">
-                <option value=""></option>
+              <div data-toggle="buttons" class="btn-group">
                 {% for difficulty in difficulties %}
-                  <option value="{{ difficulty.0 }}"{% if aktivitet.difficulty == difficulty.0 %} selected{% endif %}>{{ difficulty.1 }}</option>
+                  <label class="btn btn-default {{ difficulty.0 }}{% if aktivitet.difficulty == difficulty.0 %} active{% endif %}">
+                    <input type="radio" value="{{ difficulty.0 }}" name="difficulty"{% if aktivitet.difficulty == difficulty.0 %} checked{% endif %}>{{ difficulty.1 }}
+                  </label>
                 {% endfor %}
-              </select>
+              </div>
               <div class="hints error jq-hide">
                 Du må velge vanskelighetsgraden for turen.
               </div>
+              <p class="help-block">Angi hvor krevende aktiviteten er.</p>
             </div>
           </div><!-- /.form-group -->
 
