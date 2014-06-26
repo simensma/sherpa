@@ -16,26 +16,31 @@ from user.models import User
 from focus.models import Actor
 from foreninger.models import Forening
 
-from datetime import datetime
+from datetime import datetime, date
 import json
 import re
 
 def index(request):
-    aktiviteter = Aktivitet.objects.all()
+    #aktiviteter = Aktivitet.objects.all()
 
-    if not (request.GET.get('forening') == 'alle' and request.user.has_perm('sherpa_admin')):
-        aktiviteter = aktiviteter.filter(
-            Q(forening=request.active_forening) |
-            Q(co_forening=request.active_forening)
-        )
-        exclude_filter = False
-    else:
-        exclude_filter = True
+    #if not (request.GET.get('forening') == 'alle' and request.user.has_perm('sherpa_admin')):
+    #    aktiviteter = aktiviteter.filter(
+    #        Q(forening=request.active_forening) |
+    #        Q(co_forening=request.active_forening)
+    #    )
+    #    exclude_filter = False
+    #else:
+    #    exclude_filter = True
 
-    aktiviteter = aktiviteter.order_by('-pub_date')
+    #aktiviteter = aktiviteter.order_by('-pub_date')
+
+    exclude_filter = True
+    datoer = AktivitetDate.objects.all()
+    datoer = datoer.filter(start_date__gte=date.today())
+    datoer = datoer.order_by('start_date')
 
     context = {
-        'aktiviteter': aktiviteter,
+        'datoer': datoer,
         'exclude_filter': exclude_filter,
     }
     return render(request, 'common/admin/aktiviteter/index.html', context)
