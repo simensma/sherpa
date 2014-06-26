@@ -88,7 +88,7 @@
       <table class="table table-striped">
         <thead>
           <tr>
-            <th>[ ]</th>
+            <th><input type="checkbox"></th>
             <th>Tittel</th>
             <th>Turkode</th>
             <th>Dato fra</th>
@@ -101,7 +101,7 @@
         <tbody>
         {% for aktivitet in aktiviteter %}
           <tr>
-            <td>[ ]</td>
+            <td><input type="checkbox"></td>
             <td>
               {{ aktivitet.title|default:"(Mangler navn)" }}
               <br>
