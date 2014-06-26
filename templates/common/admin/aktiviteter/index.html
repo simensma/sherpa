@@ -106,7 +106,7 @@
               {{ aktivitet.title|default:"(Mangler navn)" }}
               <br>
               <ul class="list-inline">
-                <li><a href="#">Rediger</a></li>
+                <li><a href="{% url 'admin.aktiviteter.views.edit' aktivitet.id %}">Rediger</a></li>
                 <li><a href="#">Deltakere</a></li>
                 <li><a href="#">Kopi</a></li>
                 <li><a href="#">Vis</a></li>
