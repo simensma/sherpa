@@ -106,10 +106,16 @@
               {{ dato.aktivitet.title|default:"(Mangler navn)" }}
               <br>
               <ul class="list-inline">
-                <li><a href="{% url 'admin.aktiviteter.views.edit' aktivitet.id %}">Rediger</a></li>
-                <li><a href="#">Deltakere</a></li>
+                <li><a href="{% url 'admin.aktiviteter.views.edit' dato.aktivitet.id %}">Rediger</a></li>
+                <li><a href="{% url 'admin.aktiviteter.views.participants' dato.aktivitet.id %}">Deltakere</a></li>
                 <li><a href="#">Kopi</a></li>
-                <li><a href="#">Vis</a></li>
+                <li>
+                  {% if dato.aktivitet.published %}
+                    <a href="{% url 'aktiviteter.views.show' dato.id %}">Vis</a>
+                  {% else %}
+                    Vis
+                  {% endif %}
+                </li>
                 <li><a href="#">Slett</a></li>
               </ul>
             </td>
