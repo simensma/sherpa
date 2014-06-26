@@ -99,11 +99,11 @@
           </tr>
         </thead>
         <tbody>
-        {% for aktivitet in aktiviteter %}
+        {% for dato in datoer %}
           <tr>
             <td><input type="checkbox"></td>
             <td>
-              {{ aktivitet.title|default:"(Mangler navn)" }}
+              {{ dato.aktivitet.title|default:"(Mangler navn)" }}
               <br>
               <ul class="list-inline">
                 <li><a href="{% url 'admin.aktiviteter.views.edit' aktivitet.id %}">Rediger</a></li>
