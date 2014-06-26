@@ -119,12 +119,24 @@
                 <li><a href="#">Slett</a></li>
               </ul>
             </td>
-            <td>{{ aktivitet.code }}</td>
-            <td>dd.mm.yyyy</td>
-            <td>dd.mm.yyyy</td>
-            <td>Ingen deltakere</td>
-            <td><a href="#">Arrangør</a></td>
-            <td>Status</td>
+            <td>{{ dato.aktivitet.code }}</td>
+            <td>{{ dato.start_date|date:"Y-m-d" }}</td>
+            <td>{{ dato.end_date|date:"Y-m-d" }}</td>
+            <td>
+              {% if dato.signup_enabled %}
+                {{ dato.total_signup_count }} av X
+              {% else %}
+                Ingen påmelding
+              {% endif %}
+            </td>
+            <td><a href="#">{{ dato.aktivitet.forening.name }}</a></td>
+            <td>
+              {% if dato.aktivitet.published %}
+                <span class="label label-success">Publisert</span>
+              {% else %}
+                <span class="label label-default">Kladd</span>
+              {% endif %}
+            </td>
           </tr>
         {% endfor %}
         </tbody>
