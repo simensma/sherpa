@@ -40,6 +40,8 @@ def index(request):
     datoer = datoer.order_by('start_date')
 
     context = {
+        'forening': request.active_forening,
+        'children': request.active_forening.get_children_sorted(),
         'datoer': datoer,
         'exclude_filter': exclude_filter,
     }
