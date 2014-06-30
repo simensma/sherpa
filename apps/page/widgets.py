@@ -280,7 +280,13 @@ def get_static_promo_context(path):
             'id': 'sommerapning',
             'name': 'Sommeråpning',
             'start_date': date(year=2014, month=6, day=24),
-            'end_date': date(year=2014, month=6, day=24),
+            'end_date': date(year=2014, month=6, day=28),
+        },
+        {
+            'id': 'favoritthytter',
+            'name': 'Favoritthytter',
+            'start_date': date(year=2014, month=6, day=29),
+            'end_date': date(year=2014, month=6, day=29),
         },
     ]
 
