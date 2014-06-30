@@ -3,20 +3,24 @@
 div.membership-entry {
 
   div.entry-box-wrapper {
-    @padding-top: 100px;
+    @padding-top: 0px;
     @image-height: 474px;
-    background-image: url('/static/img/membership/zipcode_search.png');
+    background-image: url('/static/img/membership/barn-med-geit-2014.png');
     height: @image-height - @padding-top;
     margin-bottom: 40px;
-    padding-top: @padding-top;
+    padding-top: padding-top;
 
     div.entry-box {
-      background-color: white;
-      margin-left: auto;
-      margin-right: auto;
-      width: 470px;
-      padding: 20px;
+      background-color: #d82d20;
+      margin-left: 50px;
+      width: 430px;
+      padding: 50px 10px 10px 10px;
       text-align: center;
+      color: white;
+
+      h1.title {
+        border: 0;
+      }
 
       p.intro {
         font-family: "DTL Nobel" !important;
@@ -27,17 +31,33 @@ div.membership-entry {
       p.enrollment-button {
         text-align: center;
 
-        margin-bottom: 20px;
-        margin-top: 20px;
+        margin: 30px 0;
 
-        a.enrollment {
-          .enrollment-button;
+        a {
+          border: 1px solid white;
+          padding: 10px 30px;
+          color: white;
+          text-transform: uppercase;
+          font-family: "DTL Nobel" !important;
+          font-size: 20px;
         }
+
+        a:hover {
+          text-decoration: none;
+          color: #d82d20;
+          background-color: white;
+        }
+
       }
 
       p.show-benefits {
-        font-size: 20px;
+        font-size: 18px;
         font-family: "DTL Nobel" !important;
+        color: white;
+
+        a {
+          color: white;
+        }
       }
 
       div.benefits {
@@ -57,6 +77,28 @@ div.membership-entry {
         }
       }
     }
+
+    div.subentry-box {
+      margin-left: 50px;
+      margin-top: 15px;
+      padding: 0 10px;
+      width: 430px;
+      background-color: #d82d20;
+
+      p {
+        padding: 10px 0;
+        font-size: 18px;
+        font-family: "DTL Nobel" !important;
+        color: white;
+
+        a.action {
+          margin-left: 10px;
+          text-transform: uppercase;
+          text-decoration: underline;
+          color: white;
+        }
+      }
+    }
   }
 
   @media (max-width: 767px) {
@@ -66,7 +108,7 @@ div.membership-entry {
       height: auto;
       padding-top: 0;
 
-      div.entry-box {
+      div.entry-box, div.subentry-box {
         margin: 0;
         width: auto;
         border: 1px solid rgb(158, 158, 158);
