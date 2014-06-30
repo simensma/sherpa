@@ -55,17 +55,40 @@
         <div class="input-group-btn">
           <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Arrangør <span class="caret"></span></button>
           <ul class="dropdown-menu pull-right">
-            <li><a href="#">Bergen og Hordaland Turlag</a></li>
-            <li class="divider"></li>
-            <li role="presentation" class="dropdown-header">Grupper</li>
-            <li><a href="#">Barnas Turlag Bergen</a></li>
-            <li><a href="#">DNT ung Bergen</a></li>
-            <li><a href="#">DNT Fjellsport Bergen</a></li>
-            <li><a href="#">Seniorgruppen i Bergen</a></li>
-            <li class="divider"></li>
-            <li role="presentation" class="dropdown-header">Lokallag</li>
-            <li><a href="#">Kvam Turlag</a></li>
-            <li><a href="#">OS Turlag</a></li>
+            <li><a href="#">{{ forening.name }}</a></li>
+
+            {% if children.sentral %}
+              <li class="divider"></li>
+              <li role="presentation" class="dropdown-header">Sentral</li>
+              {% for g in children.sentral %}
+                <li><a href="#">{{ g.name }}</a></li>
+              {% endfor %}
+            {% endif %}
+
+            {% if children.forening %}
+              <li class="divider"></li>
+              <li role="presentation" class="dropdown-header">Foreninger</li>
+              {% for g in children.forening %}
+                <li><a href="#">{{ g.name }}</a></li>
+              {% endfor %}
+            {% endif %}
+
+            {% if children.turlag %}
+              <li class="divider"></li>
+              <li role="presentation" class="dropdown-header">Lokallag</li>
+              {% for g in children.turlag %}
+                <li><a href="#">{{ g.name }}</a></li>
+              {% endfor %}
+            {% endif %}
+
+            {% if children.turgruppe %}
+              <li class="divider"></li>
+              <li role="presentation" class="dropdown-header">Grupper</li>
+              {% for g in children.turgruppe %}
+                <li><a href="#">{{ g.name }}</a></li>
+              {% endfor %}
+            {% endif %}
+
           </ul>
         </div>
       </div>
