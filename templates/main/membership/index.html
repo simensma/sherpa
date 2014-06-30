@@ -12,7 +12,10 @@
 <div class="membership-entry">
   {% if focus_downtime.is_currently_down %}
     <div class="alert alert-info">
-      <strong>Merk:</strong> Medlemsfordeler og innmelding vil i perioder være utilgjengelige {{ focus_downtime.period_message }}, grunnet planlagt vedlikeholdsarbeid hos vår leverandør. Hvis du opplever melding om "teknisk feil", vær vennlig og prøv på nytt i morgen. Vi beklager eventuelle ulemper dette medfører.
+      <strong>Merk:</strong> Medlemsfordeler og innmelding vil i perioder være utilgjengelige {{
+      focus_downtime.period_message }}, grunnet planlagt vedlikeholdsarbeid hos vår leverandør. Hvis du
+      opplever melding om "teknisk feil", vær vennlig og prøv på nytt i morgen. Vi beklager eventuelle ulemper
+      dette medfører.
     </div>
   {% endif %}
 
@@ -20,30 +23,26 @@
     <div class="span12">
       <div class="entry-box-wrapper">
         <div class="entry-box">
+          <h1 class="title">500 HYTTER<br>LIGGER I VÅR NATUR</h1>
           <p class="intro">
-            Som medlem får du medlemspris på DNTs 490 hytter, rabatt på turutstyr, medlemsbladet Fjell og Vidde, tilbud om turer og kurs over hele landet, og mye mer.
+            Meld deg inn før 15. august, få alle våre medlemsfordeler og vær med i trekningen av en
+            utstyrspakke til en verdi av 10 000,-.
           </p>
 
           <p class="enrollment-button">
-            <a href="{% url 'enrollment.views.index' %}" class="btn btn-danger enrollment">Bli medlem!</a>
+            <a href="{% url 'enrollment.views.index' %}">Bli medlem</a>
           </p>
 
           <p class="show-benefits">
-            <a href="javascript:undefined">Medlemsfordeler og priser</a>
+            <a href="{% url 'membership.views.benefits' %}">Medlemsfordeler og priser</a>
           </p>
-
-          <div class="benefits hide">
-            <p class="info">
-              Skriv inn ditt postnummer for å se medlemsfordeler og priser der du bor:
-            </p>
-
-            <input type="text" name="zipcode" class="input-medium" placeholder="Ditt postnummer...">
-            <button class="btn btn-danger zipcode-search input-button-align" data-zipcode-url="{% url 'membership.views.zipcode_search' %}">OK</button>
-            <img class="hide ajaxloader zipcode-search" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
-            <br>
-            <a href="{% url 'membership.views.benefits' %}">Jeg bor ikke i Norge</a>
-          </div>
         </div>
+
+        <div class="subentry-box">
+          <p>Nå kåres Artigste Barnehytte på ut.no <a class="action" href="http://artikkel.ut.no/1.11774610">stem her</a></p>
+        </div>
+
+        <p class="credit">Foto: Julie Maske</p>
       </div>
     </div>
   </div>
