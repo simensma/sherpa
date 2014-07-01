@@ -67,7 +67,7 @@ $(function() {
 
 // The escape key seems to only work for IE, not Opera or Firefox, so simulate
 // the modal close upon escape keypress.
-$(document).keypress(function() {
+$(document).keypress(function(e) {
     if(e.which === 27) {
         $(".modal").modal('hide');
     }
