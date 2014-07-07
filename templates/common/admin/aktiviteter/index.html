@@ -57,37 +57,15 @@
           <ul class="dropdown-menu pull-right">
             <li><a href="#">{{ forening.name }}</a></li>
 
-            {% if children.sentral %}
-              <li class="divider"></li>
-              <li role="presentation" class="dropdown-header">Sentral</li>
-              {% for g in children.sentral %}
-                <li><a href="#">{{ g.name }}</a></li>
-              {% endfor %}
-            {% endif %}
-
-            {% if children.forening %}
-              <li class="divider"></li>
-              <li role="presentation" class="dropdown-header">Foreninger</li>
-              {% for g in children.forening %}
-                <li><a href="#">{{ g.name }}</a></li>
-              {% endfor %}
-            {% endif %}
-
-            {% if children.turlag %}
-              <li class="divider"></li>
-              <li role="presentation" class="dropdown-header">Lokallag</li>
-              {% for g in children.turlag %}
-                <li><a href="#">{{ g.name }}</a></li>
-              {% endfor %}
-            {% endif %}
-
-            {% if children.turgruppe %}
-              <li class="divider"></li>
-              <li role="presentation" class="dropdown-header">Grupper</li>
-              {% for g in children.turgruppe %}
-                <li><a href="#">{{ g.name }}</a></li>
-              {% endfor %}
-            {% endif %}
+            {% for type, groups in children.items %}
+              {% if groups %}
+                <li class="divider"></li>
+                <li role="presentation" class="dropdown-header">{{ type | capfirst }}</li>
+                {% for group in groups %}
+                  <li><a href="#">{{ group.name }}</a></li>
+                {% endfor %}
+              {% endif %}
+            {% endfor %}
 
           </ul>
         </div>
