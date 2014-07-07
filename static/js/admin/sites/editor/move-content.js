@@ -20,18 +20,22 @@
         // Mark the current icon as active
         moved_content.find("div.move-content").addClass('moving');
 
+        // Disable the drop areas adjacent to the content being moved
+        moved_content.prevAll('div.add-content').first().addClass('disabled');
+        moved_content.nextAll('div.add-content').first().addClass('disabled');
+
         // Disable most of the hover effects
         article.find("div.edit-structure button").tooltip('destroy');
         article.find("div.add-content,div.add-content-row").addClass('moving').tooltip('destroy');
         article.find("div.content").addClass('moving');
 
         // Add hover effect to add-content elements
-        article.find("div.add-content").on('mouseover.EditorMoveContent', function() {
+        article.find("div.add-content:not(.disabled)").on('mouseover.EditorMoveContent', function() {
             $(this).addClass('droparea');
         });
 
         // An insertable add-content element was clicked, move the content there
-        article.find("div.add-content").click(function() {
+        article.find("div.add-content:not(.disabled)").click(function() {
             moved_content.detach().insertAfter($(this));
         });
 
@@ -54,13 +58,13 @@
 
         // Reset contents to their normal state
         article.find("div.content").removeClass('moving');
-        // article.find("div.add-content,div.add-content-row").removeClass('moving');
 
         // Explicitly remove the content-controls from the dragged content since its mouseover
         // was ignored during the moving session
         moved_content.find("div.content-control").remove();
 
-        // And call our given endCallback
+        // And call our given endCallback. It's the callback's responsibility to clean up
+        // moving states on controls etc.
         endCallback();
     };
 
