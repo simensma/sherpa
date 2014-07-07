@@ -52,17 +52,21 @@ def new(request, site):
     return redirect('admin.sites.articles.views.edit', active_site.id, version.id)
 
 def confirm_delete(request, site, article):
-    active_site = Site.objects.get(id=site)
-    version = Version.objects.get(variant__article=article, variant__segment__isnull=True, active=True)
-    context = {
-        'active_site': active_site,
-        'version': version,
-    }
-    return render(request, 'common/admin/sites/articles/confirm-delete.html', context)
+    try:
+        active_site = Site.objects.get(id=site)
+        version = Version.objects.get(variant__article=article, variant__segment__isnull=True, active=True)
+        context = {
+            'active_site': active_site,
+            'version': version,
+        }
+        return render(request, 'common/admin/sites/articles/confirm-delete.html', context)
+    except Version.DoesNotExist:
+        # Probably not a code error but a double-click or something, ignore
+        return redirect('admin.sites.articles.views.list', active_site.id)
 
 def delete(request, site, article):
-    active_site = Site.objects.get(id=site)
     try:
+        active_site = Site.objects.get(id=site)
         Article.objects.get(id=article).delete()
     except Article.DoesNotExist:
         # Probably not a code error but a double-click or something, ignore
