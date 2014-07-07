@@ -174,14 +174,25 @@ class Actor(models.Model):
         ).exists()
 
     def membership_type(self):
-        # Supposedly, there should only be one service in this range.
-        # Note that we're filtering on stop_date; some members have multiple services with one of them stopped.
-        code = int(self.get_services().get(
-            Q(stop_date__isnull=True) |
-            Q(stop_date__gt=datetime.now()),
-            code__gte=min([t['code'] for t in MEMBERSHIP_TYPES]),
-            code__lte=max([t['code'] for t in MEMBERSHIP_TYPES]),
-        ).code.strip())
+        # Supposedly, there should only be one service in the range of membership types.
+        try:
+            # Try filtering on stop_date; some members have multiple services with only one of them not stopped
+            membership_type_service = self.get_services().get(
+                Q(stop_date__isnull=True) | Q(stop_date__gt=datetime.now()),
+                code__gte=min([t['code'] for t in MEMBERSHIP_TYPES]),
+                code__lte=max([t['code'] for t in MEMBERSHIP_TYPES]),
+            )
+        except ActorService.DoesNotExist:
+            # No service with stop_date not set, try ignoring the stop_date; that would be a member who hasn't paid.
+            # If there's more than one, we have no way of knowing which service is relevant.
+            # If there's no such service, this isn't a personal membership and this method should never have been
+            # called for this Actor.
+            membership_type_service = self.get_services().get(
+                code__gte=min([t['code'] for t in MEMBERSHIP_TYPES]),
+                code__lte=max([t['code'] for t in MEMBERSHIP_TYPES]),
+            )
+
+        code = int(membership_type_service.code.strip())
         return get_membership_type_by_code(code)
 
     def has_membership_type(self, codename):
