@@ -1,5 +1,5 @@
 {% if forening_for_address.post_address %}
-  <p>Postadresse: {{ forening_for_address.post_address }}, {{ forening_for_address.zipcode }} {{ forening_for_address.ziparea }}</p>
+  <p>Postadresse: {{ forening_for_address.post_address }}, {{ forening_for_address.zipcode.zipcode }} {{ forening_for_address.zipcode.area|title }}</p>
 {% endif %}
 {% if forening_for_address.visit_address %}
   <p>
