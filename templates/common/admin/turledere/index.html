@@ -60,7 +60,7 @@
                 <select name="forening_active" data-chosen multiple data-placeholder="følgende forening(er)...">
                   <option value=""></option>
                   <optgroup label="Medlemsforeninger">
-                    {% for forening in user.all_foreninger_sorted.foreninger %}
+                    {% for forening in user.all_foreninger_sorted.forening %}
                       <option value="{{ forening.id }}">{{ forening.name }}</option>
                     {% endfor %}
                   </optgroup>
@@ -103,12 +103,12 @@
                 <select name="forening_approved" class="chosen" data-placeholder="følgende forening...">
                   <option value=""></option>
                   <optgroup label="Sentralt/nasjonalt">
-                    {% for forening in user.all_foreninger_sorted.central %}
+                    {% for forening in user.all_foreninger_sorted.sentral %}
                       <option value="{{ forening.id }}">{{ forening.name }}</option>
                     {% endfor %}
                   </optgroup>
                   <optgroup label="Medlemsforeninger">
-                    {% for forening in user.all_foreninger_sorted.foreninger %}
+                    {% for forening in user.all_foreninger_sorted.forening %}
                       <option value="{{ forening.id }}">{{ forening.name }}</option>
                     {% endfor %}
                   </optgroup>

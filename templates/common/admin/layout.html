@@ -122,7 +122,7 @@
               <li{% if active_entry == 'aktiviteter' %} class="active"{% endif %}><a href="{% url 'admin.aktiviteter.views.index' %}"><i class="fa fa-globe"></i> Aktiviteter (prototype)</a></li>
               <li{% if active_entry == 'publications' %} class="active"{% endif %}><a href="{% url 'admin.publications.views.index' %}"><i class="fa fa-font"></i> Publikasjoner</a></li>
 
-              {# Explicitly hide images for non-central users for now #}
+              {# Explicitly hide images for non-sentral users for now #}
               {% if active_forening.id == 56 %}{# DNT Central #}
                 <li{% if active_entry == 'images' %} class="active"{% endif %}><a href="{% url 'admin.images.views.index' %}"><i class="fa fa-picture-o"></i> Bildearkiv</a></li>
               {% endif %}
@@ -191,16 +191,16 @@
             <li class="dropdown forening-dropdown">
               <select name="user_forening" data-placeholder="Velg aktiv forening...">
                 <option value=""></option>
-                {% if user.all_foreninger_sorted.central|length > 0 %}
+                {% if user.all_foreninger_sorted.sentral|length > 0 %}
                   <optgroup label="Sentralt/nasjonalt">
-                    {% for forening in user.all_foreninger_sorted.central %}
+                    {% for forening in user.all_foreninger_sorted.sentral %}
                       <option value="{{ forening.id }}" data-href="/sherpa/aktiv-forening/{{ forening.id }}/"{% if active_forening == forening %} selected{% endif %}>{{ forening.name }}</option>
                     {% endfor %}
                   </optgroup>
                 {% endif %}
-                {% if user.all_foreninger_sorted.foreninger|length > 0 %}
+                {% if user.all_foreninger_sorted.forening|length > 0 %}
                   <optgroup label="Medlemsforeninger">
-                    {% for forening in user.all_foreninger_sorted.foreninger %}
+                    {% for forening in user.all_foreninger_sorted.forening %}
                       <option value="{{ forening.id }}" data-href="/sherpa/aktiv-forening/{{ forening.id }}/"{% if active_forening == forening %} selected{% endif %}>{{ forening.name }}</option>
                     {% endfor %}
                   </optgroup>
@@ -212,9 +212,9 @@
                     {% endfor %}
                   </optgroup>
                 {% endif %}
-                {% if user.all_foreninger_sorted.turgrupper|length > 0 %}
+                {% if user.all_foreninger_sorted.turgruppe|length > 0 %}
                   <optgroup label="Turgrupper">
-                  {% for forening in user.all_foreninger_sorted.turgrupper %}
+                  {% for forening in user.all_foreninger_sorted.turgruppe %}
                       <option value="{{ forening.id }}" data-href="/sherpa/aktiv-forening/{{ forening.id }}/"{% if active_forening == forening %} selected{% endif %}>{{ forening.name }}</option>
                     {% endfor %}
                   </optgroup>

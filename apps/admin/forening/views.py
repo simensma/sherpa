@@ -51,7 +51,7 @@ def index(request, forening_id):
     # The parent choices are tricky to define in the forms API, so do it here
     all_sorted = request.user.all_foreninger_sorted()
     parents_choices = {
-        'foreninger': all_sorted['foreninger'],
+        'forening': all_sorted['forening'],
         'turlag': all_sorted['turlag'],
     }
 

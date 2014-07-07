@@ -26,13 +26,13 @@
       <select name="active_foreninger" data-chosen data-placeholder="Velg foreninger som denne turlederen er aktiv i..." multiple>
         <option value=""></option>
         <optgroup label="Medlemsforeninger">
-          {% for forening in all_foreninger.foreninger %}
-            <option value="{{ forening.id }}"{% if forening in other_user.turleder_active_foreninger.all and other_user.turleder_active_foreninger.count != all_foreninger.foreninger|length %} selected{% endif %}>{{ forening.name }}</option>
+          {% for forening in all_foreninger.forening %}
+            <option value="{{ forening.id }}"{% if forening in other_user.turleder_active_foreninger.all and other_user.turleder_active_foreninger.count != all_foreninger.forening|length %} selected{% endif %}>{{ forening.name }}</option>
           {% endfor %}
         </optgroup>
       </select>
       <label class="checkbox">
-        <input type="checkbox" name="active_foreninger_all_checkbox"{% if other_user.turleder_active_foreninger.count == all_foreninger.foreninger|length %} checked{% endif %}>
+        <input type="checkbox" name="active_foreninger_all_checkbox"{% if other_user.turleder_active_foreninger.count == all_foreninger.forening|length %} checked{% endif %}>
         Aktiv i <strong>alle</strong> foreninger
       </label>
       <button type="submit" class="btn btn-default">Lagre aktive foreninger</button>
@@ -162,12 +162,12 @@
                       <select name="forening_approved" data-chosen data-placeholder="Velg foreningen som godkjente turledersertifikatet...">
                         <option value=""></option>
                         <optgroup label="Sentralt/nasjonalt">
-                          {% for forening in all_foreninger.central %}
+                          {% for forening in all_foreninger.sentral %}
                             <option value="{{ forening.id }}"{% if turleder_role.forening_approved == forening %} selected{% endif %}>{{ forening.name }}</option>
                           {% endfor %}
                         </optgroup>
                         <optgroup label="Medlemsforeninger">
-                          {% for forening in all_foreninger.foreninger %}
+                          {% for forening in all_foreninger.forening %}
                             <option value="{{ forening.id }}"{% if turleder_role.forening_approved == forening %} selected{% endif %}>{{ forening.name }}</option>
                           {% endfor %}
                         </optgroup>

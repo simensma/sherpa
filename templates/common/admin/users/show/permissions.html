@@ -33,11 +33,11 @@
   {% else %}
 
     <table class="table user-permissions">
-      {% if other_user.all_foreninger_sorted.central|length > 0 %}
+      {% if other_user.all_foreninger_sorted.sentral|length > 0 %}
         <tr>
           <th colspan="2" class="group">Sentralt</th>
         </tr>
-        {% for forening in other_user.all_foreninger_sorted.central %}
+        {% for forening in other_user.all_foreninger_sorted.sentral %}
           <tr>
             <td>{{ forening.name }}</td>
             <td>
@@ -49,11 +49,11 @@
         {% endfor %}
       {% endif %}
 
-      {% if other_user.all_foreninger_sorted.foreninger|length > 0 %}
+      {% if other_user.all_foreninger_sorted.forening|length > 0 %}
         <tr>
           <th colspan="2" class="group">Foreninger</th>
         </tr>
-        {% for forening in other_user.all_foreninger_sorted.foreninger %}
+        {% for forening in other_user.all_foreninger_sorted.forening %}
           <tr>
             <td>{{ forening.name }}</td>
             <td>
@@ -81,11 +81,11 @@
         {% endfor %}
       {% endif %}
 
-      {% if other_user.all_foreninger_sorted.turgrupper|length > 0 %}
+      {% if other_user.all_foreninger_sorted.turgruppe|length > 0 %}
         <tr>
           <th colspan="2" class="group">Turgrupper</th>
         </tr>
-        {% for forening in other_user.all_foreninger_sorted.turgrupper %}
+        {% for forening in other_user.all_foreninger_sorted.turgruppe %}
           <tr>
             <td>{{ forening.name }}</td>
             <td>
@@ -153,16 +153,16 @@
   <div class="forening-permission">
     <select name="forening-permission" class="chosen" data-placeholder="Gi tilgang til en forening...">
       <option value=""></option>
-      {% if assignable_foreninger.central|length > 0 %}
+      {% if assignable_foreninger.sentral|length > 0 %}
         <optgroup label="Sentralt/nasjonalt">
-          {% for forening in assignable_foreninger.central %}
+          {% for forening in assignable_foreninger.sentral %}
             <option value="{{ forening.id }}" data-role="{{ forening.role }}">{{ forening.name }}</option>
           {% endfor %}
         </optgroup>
       {% endif %}
-      {% if assignable_foreninger.foreninger|length > 0 %}
+      {% if assignable_foreninger.forening|length > 0 %}
         <optgroup label="Medlemsforeninger">
-          {% for forening in assignable_foreninger.foreninger %}
+          {% for forening in assignable_foreninger.forening %}
             <option value="{{ forening.id }}" data-role="{{ forening.role }}">{{ forening.name }}</option>
           {% endfor %}
         </optgroup>
@@ -174,9 +174,9 @@
           {% endfor %}
         </optgroup>
       {% endif %}
-      {% if assignable_foreninger.turgrupper|length > 0 %}
+      {% if assignable_foreninger.turgruppe|length > 0 %}
         <optgroup label="Turgrupper">
-          {% for forening in assignable_foreninger.turgrupper %}
+          {% for forening in assignable_foreninger.turgruppe %}
             <option value="{{ forening.id }}" data-role="{{ forening.role }}">{{ forening.name }}</option>
           {% endfor %}
         </optgroup>
@@ -219,20 +219,20 @@
     </form>
   </div>
 
-  {% if revokable_foreninger.central|length > 0 or revokable_foreninger.foreninger|length > 0 or revokable_foreninger.turlag|length > 0 or revokable_foreninger.turgrupper|length > 0 %}
+  {% if revokable_foreninger.sentral|length > 0 or revokable_foreninger.forening|length > 0 or revokable_foreninger.turlag|length > 0 or revokable_foreninger.turgruppe|length > 0 %}
     <div class="forening-permission-revoke">
       <select name="forening-permission-revoke" class="chosen" data-placeholder="Ta bort tilgangen til en forening...">
         <option value=""></option>
-        {% if revokable_foreninger.central|length > 0 %}
+        {% if revokable_foreninger.sentral|length > 0 %}
           <optgroup label="Sentralt/nasjonalt">
-            {% for forening in revokable_foreninger.central %}
+            {% for forening in revokable_foreninger.sentral %}
               <option value="{{ forening.id }}" data-role="{{ forening.role }}">{{ forening.name }}</option>
             {% endfor %}
           </optgroup>
         {% endif %}
-        {% if revokable_foreninger.foreninger|length > 0 %}
+        {% if revokable_foreninger.forening|length > 0 %}
           <optgroup label="Medlemsforeninger">
-            {% for forening in revokable_foreninger.foreninger %}
+            {% for forening in revokable_foreninger.forening %}
               <option value="{{ forening.id }}" data-role="{{ forening.role }}">{{ forening.name }}</option>
             {% endfor %}
           </optgroup>
@@ -244,9 +244,9 @@
             {% endfor %}
           </optgroup>
         {% endif %}
-        {% if revokable_foreninger.turgrupper|length > 0 %}
+        {% if revokable_foreninger.turgruppe|length > 0 %}
           <optgroup label="Turgrupper">
-            {% for forening in revokable_foreninger.turgrupper %}
+            {% for forening in revokable_foreninger.turgruppe %}
               <option value="{{ forening.id }}" data-role="{{ forening.role }}">{{ forening.name }}</option>
             {% endfor %}
           </optgroup>

@@ -31,16 +31,16 @@
       <div class="col-lg-12">
         <select name="forening" id="publication_forening" data-chosen data-placeholder="Velg tilhørende forening...">
           <option value=""></option>
-          {% if user.all_foreninger_sorted.central|length > 0 %}
+          {% if user.all_foreninger_sorted.sentral|length > 0 %}
             <optgroup label="Sentralt/nasjonalt">
-              {% for forening in user.all_foreninger_sorted.central %}
+              {% for forening in user.all_foreninger_sorted.sentral %}
                 <option value="{{ forening.id }}" data-type="sentral"{% if publication.forening == forening %} selected{% endif %}{% if not publication and active_forening == forening %} selected{% endif %}>{{ forening.name }}</option>
               {% endfor %}
             </optgroup>
           {% endif %}
-          {% if user.all_foreninger_sorted.foreninger|length > 0 %}
+          {% if user.all_foreninger_sorted.forening|length > 0 %}
             <optgroup label="Medlemsforeninger">
-              {% for forening in user.all_foreninger_sorted.foreninger %}
+              {% for forening in user.all_foreninger_sorted.forening %}
                 <option value="{{ forening.id }}"{% if publication.forening == forening %} selected{% endif %}{% if not publication and active_forening == forening %} selected{% endif %}>{{ forening.name }}</option>
               {% endfor %}
             </optgroup>
@@ -52,9 +52,9 @@
               {% endfor %}
             </optgroup>
           {% endif %}
-          {% if user.all_foreninger_sorted.turgrupper|length > 0 %}
+          {% if user.all_foreninger_sorted.turgruppe|length > 0 %}
             <optgroup label="Turgrupper">
-              {% for forening in user.all_foreninger_sorted.turgrupper %}
+              {% for forening in user.all_foreninger_sorted.turgruppe %}
                 <option value="{{ forening.id }}"{% if publication.forening == forening %} selected{% endif %}{% if not publication and active_forening == forening %} selected{% endif %}>{{ forening.name }}</option>
               {% endfor %}
             </optgroup>

@@ -18,9 +18,9 @@
 
         <select id="id_create-parents" name="create-parents" data-chosen data-placeholder="Velg moderforening..." multiple>
           <option value=""></option>
-          {% if parents_choices.foreninger|length > 0 %}
+          {% if parents_choices.forening|length > 0 %}
             <optgroup label="Foreninger">
-              {% for forening in parents_choices.foreninger %}
+              {% for forening in parents_choices.forening %}
                 {# The following stringformat hack is kind of ugly, why doesn't djangos form value return a list of ID ints? #}
                 <option value="{{ forening.id }}"{% if forening.id in create_form.parents.value or forening.id|stringformat:"s" in create_form.parents.value %} selected{% endif %}>{{ forening.name }}</option>
               {% endfor %}

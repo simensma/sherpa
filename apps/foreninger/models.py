@@ -172,10 +172,10 @@ class Forening(models.Model):
     def sort(foreninger):
         foreninger = sorted(foreninger, key=lambda f: f.name.lower())
         return {
-            'central': [f for f in foreninger if f.type == 'sentral'],
-            'foreninger': [f for f in foreninger if f.type == 'forening'],
+            'sentral': [f for f in foreninger if f.type == 'sentral'],
+            'forening': [f for f in foreninger if f.type == 'forening'],
             'turlag': [f for f in foreninger if f.type == 'turlag'],
-            'turgrupper': [f for f in foreninger if f.type == 'turgruppe'],
+            'turgruppe': [f for f in foreninger if f.type == 'turgruppe'],
         }
 
     def validate_relationships(self, simulate_type=None, simulate_parents=None):

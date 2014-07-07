@@ -41,18 +41,18 @@
         Du kan endre aktiv forening når som helst i lista oppe til høyre.
       </p>
 
-      {% if user.all_foreninger_sorted.central|length > 0 %}
+      {% if user.all_foreninger_sorted.sentral|length > 0 %}
         <h2>Sentralt/nasjonalt</h2>
         <ul class="active-forening-list">
-        {% for forening in user.all_foreninger_sorted.central %}
+        {% for forening in user.all_foreninger_sorted.sentral %}
           <li><a href="/sherpa/aktiv-forening/{{ forening.id }}/?next={{ next }}">{{ forening.name }}</a></li>
         {% endfor %}
         </ul>
       {% endif %}
-      {% if user.all_foreninger_sorted.foreninger|length > 0 %}
+      {% if user.all_foreninger_sorted.forening|length > 0 %}
         <h2>Medlemsforeninger</h2>
         <ul class="active-forening-list">
-        {% for forening in user.all_foreninger_sorted.foreninger %}
+        {% for forening in user.all_foreninger_sorted.forening %}
           <li><a href="/sherpa/aktiv-forening/{{ forening.id }}/?next={{ next }}">{{ forening.name }}</a></li>
         {% endfor %}
         </ul>
@@ -65,10 +65,10 @@
         {% endfor %}
         </ul>
       {% endif %}
-      {% if user.all_foreninger_sorted.turgrupper|length > 0 %}
+      {% if user.all_foreninger_sorted.turgruppe|length > 0 %}
         <h2>Turgrupper</h2>
         <ul class="active-forening-list">
-        {% for forening in user.all_foreninger_sorted.turgrupper %}
+        {% for forening in user.all_foreninger_sorted.turgruppe %}
           <li><a href="/sherpa/aktiv-forening/{{ forening.id }}/?next={{ next }}">{{ forening.name }}</a></li>
         {% endfor %}
         </ul>

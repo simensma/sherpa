@@ -109,16 +109,16 @@
             <div class="col-md-10">
               <select name="forening" id="forening" class="chosen" data-placeholder="Velg arrangør...">
                 <option value=""></option>
-                {% if user.children_foreninger_sorted.central|length > 0 %}
+                {% if user.children_foreninger_sorted.sentral|length > 0 %}
                   <optgroup label="Sentralt/nasjonalt">
-                    {% for forening in user.children_foreninger_sorted.central %}
+                    {% for forening in user.children_foreninger_sorted.sentral %}
                       <option value="{{ forening.id }}"{% if aktivitet.forening == forening %} selected{% endif %}>{{ forening.name }}</option>
                     {% endfor %}
                   </optgroup>
                 {% endif %}
-                {% if user.children_foreninger_sorted.foreninger|length > 0 %}
+                {% if user.children_foreninger_sorted.forening|length > 0 %}
                   <optgroup label="Medlemsforeninger">
-                    {% for forening in user.children_foreninger_sorted.foreninger %}
+                    {% for forening in user.children_foreninger_sorted.forening %}
                       <option value="{{ forening.id }}"{% if aktivitet.forening == forening %} selected{% endif %}>{{ forening.name }}</option>
                     {% endfor %}
                   </optgroup>
@@ -130,9 +130,9 @@
                     {% endfor %}
                   </optgroup>
                 {% endif %}
-                {% if user.children_foreninger_sorted.turgrupper|length > 0 %}
+                {% if user.children_foreninger_sorted.turgruppe|length > 0 %}
                   <optgroup label="Turgrupper">
-                    {% for forening in user.children_foreninger_sorted.turgrupper %}
+                    {% for forening in user.children_foreninger_sorted.turgruppe %}
                       <option value="{{ forening.id }}"{% if aktivitet.forening == forening %} selected{% endif %}>{{ forening.name }}</option>
                     {% endfor %}
                   </optgroup>
@@ -146,16 +146,16 @@
             <div class="col-md-10">
               <select name="co_forening" id="co_forening" class="chosen" data-placeholder="Ingen medarrangør">
                 <option value=""></option>
-                {% if all_foreninger.central|length > 0 %}
+                {% if all_foreninger.sentral|length > 0 %}
                   <optgroup label="Sentralt/nasjonalt">
-                    {% for forening in all_foreninger.central %}
+                    {% for forening in all_foreninger.sentral %}
                       <option value="{{ forening.id }}"{% if aktivitet.co_forening == forening %} selected{% endif %}>{{ forening.name }}</option>
                     {% endfor %}
                   </optgroup>
                 {% endif %}
-                {% if all_foreninger.foreninger|length > 0 %}
+                {% if all_foreninger.forening|length > 0 %}
                   <optgroup label="Medlemsforeninger">
-                    {% for forening in all_foreninger.foreninger %}
+                    {% for forening in all_foreninger.forening %}
                       <option value="{{ forening.id }}"{% if aktivitet.co_forening == forening %} selected{% endif %}>{{ forening.name }}</option>
                     {% endfor %}
                   </optgroup>
@@ -167,9 +167,9 @@
                     {% endfor %}
                   </optgroup>
                 {% endif %}
-                {% if all_foreninger.turgrupper|length > 0 %}
+                {% if all_foreninger.turgruppe|length > 0 %}
                   <optgroup label="Turgrupper">
-                    {% for forening in all_foreninger.turgrupper %}
+                    {% for forening in all_foreninger.turgruppe %}
                       <option value="{{ forening.id }}"{% if aktivitet.co_forening == forening %} selected{% endif %}>{{ forening.name }}</option>
                     {% endfor %}
                   </optgroup>
