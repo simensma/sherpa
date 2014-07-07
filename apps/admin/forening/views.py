@@ -159,7 +159,7 @@ def index(request, forening_id):
                 cache.delete('foreninger.full_list')
                 cache.delete('forening.%s' % forening.id)
                 cache.delete('forening.main_forenings.%s' % forening.id)
-                return redirect('admin.forening.views.index', current_forening)
+                return redirect('admin.forening.views.index', current_forening.id)
             else:
                 context.update({'edit_form': edit_form})
                 return render(request, 'common/admin/forening/index.html', context)
@@ -225,7 +225,7 @@ def index(request, forening_id):
                 return render(request, 'common/admin/forening/index.html', context)
 
         else:
-            return redirect('admin.forening.views.index', current_forening)
+            return redirect('admin.forening.views.index', current_forening.id)
 
 def contact_person_search(request, forening_id):
     current_forening = Forening.objects.get(id=forening_id)
