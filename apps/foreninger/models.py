@@ -77,13 +77,7 @@ class Forening(models.Model):
 
     def get_children_sorted(self):
         """Get children foreninger, sorted by type in form of a dict"""
-        children = self.children.all()
-        return {
-            'sentral': children.filter(type='sentral'),
-            'forening': children.filter(type='forening'),
-            'turlag': children.filter(type='turlag'),
-            'turgruppe': children.filter(type='turgruppe'),
-        }
+        return Forening.sort(self.children.all())
 
     def get_with_children_deep(self):
         """Return a deep search of this forenings children and all their (deep-searched) children,
