@@ -63,10 +63,6 @@ def update_account(request):
         elif request.method == 'POST':
             errors = False
 
-            if not validator.name(request.POST['name']):
-                messages.error(request, 'no_name_provided')
-                errors = True
-
             if not validator.email(request.POST['email']):
                 messages.error(request, 'invalid_email_address')
                 errors = True
@@ -89,7 +85,6 @@ def update_account(request):
 
             request.user.identifier = request.POST['email']
             request.user.email = request.POST['email']
-            request.user.first_name, request.user.last_name = request.POST['name'].rsplit(' ', 1)
             request.user.save()
             messages.info(request, 'update_success')
             return redirect('user.views.account')
@@ -102,10 +97,6 @@ def update_account(request):
 
         elif request.method == 'POST':
             errors = False
-
-            if not validator.name(request.POST['name']):
-                messages.error(request, 'no_name_provided')
-                errors = True
 
             if not validator.email(request.POST['email']):
                 messages.error(request, 'invalid_email_address')
@@ -146,10 +137,7 @@ def update_account(request):
                 user.sherpa_email = request.POST['sherpa-email']
                 user.save()
 
-            first_name, last_name = request.POST['name'].rsplit(' ', 1)
             attributes = {
-                'first_name': first_name,
-                'last_name': last_name,
                 'email': request.POST['email'],
                 'phone_home': request.POST['phone_home'],
                 'phone_mobile': request.POST['phone_mobile']

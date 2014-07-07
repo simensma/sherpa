@@ -1,13 +1,6 @@
 $(function() {
 
     Validator.validate({
-        method: 'full_name',
-        control_group: $("div.control-group.name"),
-        input: $("input[name='name']"),
-        req: true
-    });
-
-    Validator.validate({
         method: 'email',
         control_group: $("div.control-group.email"),
         input: $("input[name='email']"),

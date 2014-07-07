@@ -3,13 +3,6 @@ $(function() {
     var form = $("form.account-info");
 
     Validator.validate({
-        method: 'full_name',
-        control_group: form.find("div.control-group.name"),
-        input: form.find("input[name='name']"),
-        req: true
-    });
-
-    Validator.validate({
         method: 'email',
         control_group: form.find("div.control-group.email"),
         input: form.find("input[name='email']"),
