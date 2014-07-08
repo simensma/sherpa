@@ -55,14 +55,16 @@
         <div class="input-group-btn">
           <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Arrangør <span class="caret"></span></button>
           <ul class="dropdown-menu pull-right">
-            <li><a href="#">{{ forening.name }}</a></li>
+            <li><a href="#">{{ active_forening.name }}</a></li>
 
-            {% for type, groups in children.items %}
+            {% for type, groups in active_forening_children.items %}
               {% if groups %}
                 <li class="divider"></li>
                 <li role="presentation" class="dropdown-header">{{ type | capfirst }}</li>
                 {% for group in groups %}
-                  <li><a href="#">{{ group.name }}</a></li>
+                <li{% if selected_forening.id == group.id %} class="active"{% endif %}>
+                  <a href="?forening={{ group.id }}">{{ group.name }}</a>
+                </li>
                 {% endfor %}
               {% endif %}
             {% endfor %}
@@ -139,7 +141,7 @@
                 Ingen påmelding
               {% endif %}
             </td>
-            <td><a href="#">{{ dato.aktivitet.forening.name }}</a></td>
+            <td><a href="?forening={{ dato.aktivitet.forening.id }}">{{ dato.aktivitet.forening.name }}</a></td>
             <td>
               {% if dato.aktivitet.published %}
                 <span class="label label-success">Publisert</span>
