@@ -210,6 +210,7 @@ class AktivitetDate(models.Model):
     end_date = models.DateTimeField()
     signup_enabled = models.BooleanField(default=True)
     signup_simple_allowed = models.BooleanField()
+    signup_max_allowed = models.PositiveIntegerField(default=0)
 
     # Signup start/deadline/cancel should only be null when signup_enabled is False
     signup_start = models.DateField(null=True)
