@@ -6,6 +6,8 @@ $(function() {
     var chosen_image_ajaxloader = wrapper.find('img.chosen-image-ajaxloader');
     var cropped_image_container = wrapper.find('div.cropped-image-container');
     var cropped_image = cropped_image_container.find('img.cropped-image');
+    var text_areas = wrapper.find('div.text-areas');
+    var text_area_template = wrapper.find('div.text-area-template');
 
     var JcropApi;
     var crop_ratio = [940, 480];
@@ -111,6 +113,12 @@ $(function() {
         cropped_image_container.css('height', selection_height * scaled_height + 'px');
     }
 
+    function addText() {
+        var text_area = text_area_template.clone();
+        text_area.removeClass('text-area-template').addClass('text-area').show();
+        text_area.appendTo(text_areas);
+    }
+
     function enableStep(step) {
         section_progress.find('li').removeClass('active');
         section_progress.find('li').eq(step - 1).addClass('active');
@@ -119,6 +127,11 @@ $(function() {
 
         if(step === 3) {
             cropImage();
+
+            // Add an initial text area if it's empty
+            if(text_areas.children().length === 0) {
+                addText();
+            }
         }
     }
 

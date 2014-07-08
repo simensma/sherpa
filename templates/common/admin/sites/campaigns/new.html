@@ -96,26 +96,27 @@
         </div>
 
         <div class="text-areas">
-          <div class="text-area">
-            <input type="text" class="form-control" value="Tittel">
-            <select name="font-sizes">
-              {% for font_size in font_sizes %}
-                <option value="{{ font_size }}">{{ font_size }}px</option>
-              {% endfor %}
-            </select>
-            <div class="colorpicker">
-              TBD
-            </div>
-            <button class="btn btn-danger remove">
-              <i class="fa fa-times"></i> Fjern
-            </button>
-          </div>
+          {# Will be filled out with jquery #}
         </div>
 
       </div>
     </div>
   </div>
 
+  <div class="text-area-template jq-hide">
+    <input type="text" class="form-control" value="Tittel">
+    <select name="font-sizes">
+      {% for font_size in font_sizes %}
+        <option value="{{ font_size }}">{{ font_size }}px</option>
+      {% endfor %}
+    </select>
+    <div class="colorpicker">
+      TBD
+    </div>
+    <button class="btn btn-danger remove">
+      <i class="fa fa-times"></i> Fjern
+    </button>
+  </div>
 </div>
 
 {% include 'common/admin/images/util/image-archive-picker.html' %}
