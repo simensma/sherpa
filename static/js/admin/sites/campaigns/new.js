@@ -143,6 +143,14 @@ $(function() {
         text_area.find('select').change(function() {
             text.css('font-size', $(this).find('option:selected').val());
         });
+
+        text_area.find('input[name="bold"]').change(function() {
+            if($(this).is(':checked')) {
+                text.css('font-weight', 'bold');
+            } else {
+                text.css('font-weight', 'normal');
+            }
+        });
     }
 
     function enableStep(step) {
