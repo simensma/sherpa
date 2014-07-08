@@ -129,11 +129,20 @@ $(function() {
         var text = text_template.clone();
         text.removeClass('text-template').addClass('text').show();
         text.attr('data-id', id);
-        text.text(text_area.find('input').val());
+        text.text(text_area.find('input[name="content"]').val());
         text.css('font-size', text_area.find('select option:selected').val());
         text.css('top', 0);
         text.css('left', 0);
         text.appendTo(cropped_image_container);
+
+        // Add events on text area changes
+        text_area.find('input[name="content"]').keyup(function() {
+            text.text($(this).val());
+        });
+
+        text_area.find('select').change(function() {
+            text.css('font-size', $(this).find('option:selected').val());
+        });
     }
 
     function enableStep(step) {
