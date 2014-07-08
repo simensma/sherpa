@@ -6,6 +6,8 @@ $(function() {
     var chosen_image_ajaxloader = wrapper.find('img.chosen-image-ajaxloader');
     var step2 = wrapper.find('div.step2');
     var step3 = wrapper.find('div.step3');
+
+    var JcropApi;
     var crop_ratio = [940, 480];
 
     section_progress.find('a').click(function() {
@@ -27,6 +29,11 @@ $(function() {
     });
 
     function showImage(image_url) {
+        if(JcropApi !== undefined) {
+            JcropApi.destroy();
+        }
+        chosen_image.css('width', 'auto');
+        chosen_image.css('height', 'auto');
         chosen_image.off('load.image');
         chosen_image.on('load.image', function() {
             chosen_image_ajaxloader.hide();
@@ -47,6 +54,8 @@ $(function() {
             chosen_image.Jcrop({
                 aspectRatio: crop_ratio[0] / crop_ratio[1],
                 setSelect: [0, 0, x2, y2],
+            }, function() {
+                JcropApi = this;
             });
 
         });
