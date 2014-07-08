@@ -71,16 +71,8 @@ $(function() {
     function enableStep(step) {
         section_progress.find('li').removeClass('active');
         section_progress.find('li').eq(step - 1).addClass('active');
-        if(step === 1) {
-            wrapper.find('div.step2').hide();
-            wrapper.find('div.step3').hide();
-        } else if(step === 2) {
-            wrapper.find('div.step2').show();
-            wrapper.find('div.step3').hide();
-        } else if(step === 3) {
-            wrapper.find('div.step2').show();
-            wrapper.find('div.step3').show();
-        }
+        wrapper.find('div.step').hide();
+        wrapper.find('div.step[data-step="' + step + '"]').show();
     }
 
 });
