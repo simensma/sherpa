@@ -18,12 +18,12 @@
           {% if forening_url %}
             <a class="logo-url double noexternal" href="{{ forening_url }}">
               <span class="main">{{ forening.name }}</span>
-              <span class="parent">{{ forening.get_main_forenings.0.name }}</span>
+              <span class="parent">{{ forening.get_main_foreninger.0.name }}</span>
             </a>
           {% else %}
             <span class="double">
               <span class="main">{{ forening.name }}</span>
-              <span class="parent">{{ forening.get_main_forenings.0.name }}</span>
+              <span class="parent">{{ forening.get_main_foreninger.0.name }}</span>
             </span>
           {% endif %}
         {% endif %}
@@ -43,7 +43,7 @@
       {% endif %}
 
       {% if forening.post_address == '' and forening.type != 'forening' %}
-        {% include 'main/foreninger/result_address.html' with forening=forening forening_for_address=forening.get_main_forenings.0 %}
+        {% include 'main/foreninger/result_address.html' with forening=forening forening_for_address=forening.get_main_foreninger.0 %}
       {% else %}
         {% include 'main/foreninger/result_address.html' with forening=forening forening_for_address=forening %}
       {% endif %}
@@ -53,7 +53,7 @@
           <br>
           <em>
             Tilknyttet
-            {% for parent in forening.get_main_forenings %}
+            {% for parent in forening.get_main_foreninger %}
               {# Ugly long line to avoid spacing between word and punctuation #}
               <a href="{{ parent.get_active_url }}">{{ parent.name }}</a>{% if forloop.last %}.{% else %} og {% endif %}
             {% endfor %}

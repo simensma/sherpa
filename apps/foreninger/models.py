@@ -115,16 +115,16 @@ class Forening(models.Model):
             'senior': [g for g in turgrupper if g.group_type == 'senior'],
         }
 
-    def get_main_forenings(self):
-        mains = cache.get('forening.main_forenings.%s' % self.id)
+    def get_main_foreninger(self):
+        mains = cache.get('forening.main_foreninger.%s' % self.id)
         if mains is None:
             if self.type == 'sentral' or self.type == 'forening':
                 mains = [self]
             else:
                 mains = []
                 for parent in self.parents.all():
-                    mains += parent.get_main_forenings()
-            cache.set('forening.main_forenings.%s' % self.id, mains, 60 * 60 * 24)
+                    mains += parent.get_main_foreninger()
+            cache.set('forening.main_foreninger.%s' % self.id, mains, 60 * 60 * 24)
         return mains
 
     def get_active_url(self):

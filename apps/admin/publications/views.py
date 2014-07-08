@@ -150,7 +150,7 @@ def get_forening_main_mappings():
     forening_main_mappings = cache.get('forening_main_mappings')
     if forening_main_mappings is None:
         forening_main_mappings = {
-            a.id: u' og '.join([m.name for m in a.get_main_forenings()])
+            a.id: u' og '.join([m.name for m in a.get_main_foreninger()])
             for a in Forening.objects.all()
         }
         cache.set('forening_main_mappings', forening_main_mappings, 60 * 60 * 24)

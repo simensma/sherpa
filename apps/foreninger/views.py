@@ -17,7 +17,7 @@ def index(request):
     full_list = cache.get('foreninger.full_list')
     if full_list is None:
         full_list = [
-            (f.name, f.get_active_url() or f.get_main_forenings()[0].get_active_url())
+            (f.name, f.get_active_url() or f.get_main_foreninger()[0].get_active_url())
             for f in Forening.objects.order_by('name')
         ]
         cache.set('foreninger.full_list', full_list, 60 * 60 * 24 * 7)
