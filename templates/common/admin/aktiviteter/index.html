@@ -125,7 +125,16 @@
             <td>{{ dato.end_date|date:"Y-m-d" }}</td>
             <td>
               {% if dato.signup_enabled %}
-                {{ dato.total_signup_count }} av X
+                {% if dato.is_full %}
+                  {{ dato.signup_max_allowed }} av {{ dato.signup_max_allowed }}<br>
+                  {% if dato.is_waitinglist %}
+                    <span class="label label-warning">{{ dato.total_waitinglist_count }} på venteliste</span>
+                  {% else %}
+                    <span class="label label-primary">Ingen ledig plass</span>
+                  {% endif %}
+                {% else %}
+                  {{ dato.total_signup_count }} av {{ dato.signup_max_allowed }}<br>
+                {% endif %}
               {% else %}
                 Ingen påmelding
               {% endif %}
