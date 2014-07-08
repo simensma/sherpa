@@ -2,11 +2,11 @@
 
 {% block title %}Kampanjer — {{ block.super }}{% endblock %}
 
-{% block admin_menu %}{% with 'campaigns' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
+{% block admin_menu %}{% with 'sites' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/images/util/image-upload-dialog.js"></script>
-  <script src="{{ STATIC_URL }}js/admin/campaigns/new.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/sites/campaigns/new.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -18,8 +18,10 @@
       <h1>Ny kampanje <small>sett opp en ny kampanje</small></h1>
       <ol class="breadcrumb">
         <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
-        <li><a href="{% url 'admin.campaigns.views.index' %}">Kampanjer</a></li>
-        <li><a href="{% url 'admin.campaigns.views.new' %}">Sett opp ny kampanje</a></li>
+        <li><a href="{% url 'admin.sites.views.index' active_site.id %}">Nettsteder</a></li>
+        <li><a href="{% url 'admin.sites.views.index' active_site.id %}">{{ active_site.domain }}</a></li>
+        <li><a href="{% url 'admin.sites.campaigns.views.index' active_site.id %}">Kampanjer</a></li>
+        <li><a href="{% url 'admin.sites.campaigns.views.new' active_site.id %}">Sett opp ny kampanje</a></li>
       </ol>
     </div>
   </div><!-- /.row -->
