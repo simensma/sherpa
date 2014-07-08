@@ -153,6 +153,54 @@ $(function() {
         });
     }
 
+    /**
+     * Dragging text elements
+     */
+    var dragged_text;
+
+    $(document.body).on('mousemove', function(e) {
+        e.preventDefault();
+        if(dragged_text !== undefined) {
+            dragged_text.offset({
+                top: e.pageY,
+                left: e.pageX
+            });
+
+            // Check boundaries (keep the text inside the container)
+            var top_css = dragged_text.css('top');
+            var top = Number(top_css.substring(0, top_css.length - 2));
+            var left_css = dragged_text.css('left');
+            var left = Number(left_css.substring(0, left_css.length - 2));
+
+            if(top < 0) {
+                dragged_text.css('top', '0px');
+                console.log('HIGH');
+            }
+            if(left < 0) {
+                dragged_text.css('left', '0px');
+                console.log('LEFT');
+            }
+            if(top > cropped_image_container.height() - dragged_text.height()) {
+                dragged_text.css('top', cropped_image_container.height() - dragged_text.height() + 'px');
+                console.log('LOW');
+            }
+            if(left > cropped_image_container.width() - dragged_text.width()) {
+                dragged_text.css('left', cropped_image_container.width() - dragged_text.width() + 'px');
+                console.log('RIGHT');
+            }
+        }
+    });
+
+    $(document.body).on('mousedown', '.cropped-image-container .text', function(e) {
+        e.preventDefault();
+        dragged_text = $(e.target);
+    });
+
+    $(document.body).on('mouseup', function(e) {
+        e.preventDefault();
+        dragged_text = undefined;
+    });
+
     function enableStep(step) {
         section_progress.find('li').removeClass('active');
         section_progress.find('li').eq(step - 1).addClass('active');
