@@ -117,6 +117,7 @@ $(function() {
         var text_area = text_area_template.clone();
         text_area.removeClass('text-area-template').addClass('text-area').show();
         text_area.appendTo(text_areas);
+        text_area.find('select').chosen();
     }
 
     function enableStep(step) {
