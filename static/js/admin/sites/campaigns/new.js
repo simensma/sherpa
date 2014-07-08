@@ -8,9 +8,11 @@ $(function() {
     var cropped_image = cropped_image_container.find('img.cropped-image');
     var text_areas = wrapper.find('div.text-areas');
     var text_area_template = wrapper.find('div.text-area-template');
+    var text_template = wrapper.find('div.text-template');
 
     var JcropApi;
     var crop_ratio = [940, 480];
+    var text_area_id = 0; // Will be incremented for each created text area (see below)
 
     section_progress.find('a').click(function() {
         if(Number($(this).attr('data-step')) > 1 && chosen_image.attr('src') === '') {
@@ -114,10 +116,24 @@ $(function() {
     }
 
     function addText() {
+        var id = text_area_id++;
+
+        // Clone and insert the text area
         var text_area = text_area_template.clone();
         text_area.removeClass('text-area-template').addClass('text-area').show();
+        text_area.attr('data-id', id);
         text_area.appendTo(text_areas);
         text_area.find('select').chosen();
+
+        // Clone and insert the actual text
+        var text = text_template.clone();
+        text.removeClass('text-template').addClass('text').show();
+        text.attr('data-id', id);
+        text.text(text_area.find('input').val());
+        text.css('font-size', text_area.find('select option:selected').val());
+        text.css('top', 0);
+        text.css('left', 0);
+        text.appendTo(cropped_image_container);
     }
 
     function enableStep(step) {
