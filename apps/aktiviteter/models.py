@@ -260,6 +260,15 @@ class AktivitetDate(models.Model):
     def total_signup_count(self):
         return self.participants.count() + self.simple_participants.count()
 
+    def is_full(self):
+        return self.total_signup_count() >= self.signup_max_allowed
+
+    def is_waitinglist(self):
+        return self.total_signup_count() > self.signup_max_allowed
+
+    def total_waitinglist_count(self):
+        return self.total_signup_count() - self.signup_max_allowed
+
     @staticmethod
     def get_published():
         today = date.today()
