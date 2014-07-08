@@ -13,6 +13,10 @@ $(function() {
     var crop_ratio = [940, 480];
 
     section_progress.find('a').click(function() {
+        if(Number($(this).attr('data-step')) > 1 && chosen_image.attr('src') === '') {
+            alert(section_progress.attr('data-choose-image-warning'));
+            return $(this);
+        }
         enableStep(Number($(this).attr('data-step')));
     });
 
