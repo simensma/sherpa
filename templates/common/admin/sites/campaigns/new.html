@@ -5,6 +5,7 @@
 {% block admin_menu %}{% with 'sites' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
 
 {% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/images/util/image-archive-picker.js"></script>
   <script src="{{ STATIC_URL }}js/admin/images/util/image-upload-dialog.js"></script>
   <script src="{{ STATIC_URL }}js/admin/sites/campaigns/new.js"></script>
 {% endblock %}
@@ -30,13 +31,15 @@
     <div class="col-lg-12">
 
       <h2>1. Last opp bilde (minst 940x480 piksler)</h2>
-      <button class="btn btn-default upload-image"><i class="fa fa-upload"></i> Last opp bilde</button>
+      <button class="btn btn-default pick-from-image-archive"><i class="fa fa-picture-o"></i> Hent fra bildearkivet</button>
+      <button class="btn btn-default upload-new-image"><i class="fa fa-upload"></i> Last opp nytt</button>
 
     </div>
   </div>
 
 </div>
 
+{% include 'common/admin/images/util/image-archive-picker.html' %}
 {% include 'common/admin/images/util/image-upload-dialog.html' %}
 
 {% endblock %}
