@@ -28,6 +28,10 @@ $(function() {
         });
     });
 
+    wrapper.find('button.accept-crop').click(function() {
+        enableStep(3);
+    });
+
     function showImage(image_url) {
         if(JcropApi !== undefined) {
             JcropApi.destroy();
