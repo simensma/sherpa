@@ -17,6 +17,6 @@ def new(request, site):
     active_site = Site.objects.get(id=site)
     context = {
         'active_site': active_site,
-        'font_sizes': range(20, 76),
+        'font_sizes': range(20, 77),
     }
     return render(request, 'common/admin/sites/campaigns/new.html', context)
