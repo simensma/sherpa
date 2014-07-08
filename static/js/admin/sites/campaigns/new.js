@@ -30,6 +30,25 @@ $(function() {
         chosen_image.on('load.image', function() {
             chosen_image_ajaxloader.hide();
             chosen_image.show();
+
+            var image_ratio = chosen_image.width() / chosen_image.height();
+            var crop_ratio = 940 / 480;
+
+            // Set the default selection as large as possible, but within the crop ratio
+            var x2, y2;
+            if(image_ratio > crop_ratio) {
+                x2 = chosen_image.width();
+                y2 = (chosen_image.width() / 940) * 480;
+            } else {
+                x2 = (chosen_image.height() / 480) * 940;
+                y2 = chosen_image.height();
+            }
+
+            chosen_image.Jcrop({
+                aspectRatio: crop_ratio,
+                setSelect: [0, 0, x2, y2],
+            });
+
         });
         chosen_image.hide();
         chosen_image_ajaxloader.show();
