@@ -143,3 +143,8 @@ def delete_release_pdf(sender, **kwargs):
 
 class Campaign(models.Model):
     title = models.CharField(max_length=255)
+    site = models.ForeignKey('core.Site')
+
+    @staticmethod
+    def on(site):
+        return Campaign.objects.filter(site=site)
