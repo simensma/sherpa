@@ -35,8 +35,21 @@ def index(request):
     #aktiviteter = aktiviteter.order_by('-pub_date')
 
     exclude_filter = True
+
     datoer = AktivitetDate.objects.all()
     datoer = datoer.filter(start_date__gte=date.today())
+    datoer = datoer.filter(
+        Q(aktivitet__forening=request.active_forening) |
+        Q(aktivitet__co_forening=request.active_forening) |
+        Q(
+            aktivitet__forening__parents=request.active_forening,
+            aktivitet__forening__type='turgruppe',
+        ) |
+        Q(
+            aktivitet__co_forening__parents=request.active_forening,
+            aktivitet__co_forening__type='turgruppe',
+        )
+    )
     datoer = datoer.order_by('start_date')
 
     context = {
