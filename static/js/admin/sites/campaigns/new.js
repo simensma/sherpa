@@ -6,8 +6,6 @@ $(function() {
     var chosen_image_ajaxloader = wrapper.find('img.chosen-image-ajaxloader');
     var cropped_image_container = wrapper.find('div.cropped-image-container');
     var cropped_image = cropped_image_container.find('img.cropped-image');
-    var step2 = wrapper.find('div.step2');
-    var step3 = wrapper.find('div.step3');
 
     var JcropApi;
     var crop_ratio = [940, 480];
