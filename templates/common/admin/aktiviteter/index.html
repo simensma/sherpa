@@ -62,9 +62,9 @@
                 <li class="divider"></li>
                 <li role="presentation" class="dropdown-header">{{ type | capfirst }}</li>
                 {% for group in groups %}
-                <li{% if selected_forening.id == group.id %} class="active"{% endif %}>
-                  <a href="?forening={{ group.id }}">{{ group.name }}</a>
-                </li>
+                  <li{% if selected_forening.id == group.id %} class="active"{% endif %}>
+                    <a href="?forening={{ group.id }}">{{ group.name }}</a>
+                  </li>
                 {% endfor %}
               {% endif %}
             {% endfor %}
