@@ -6,6 +6,17 @@ $(function() {
         $("header nav#menus"),
         $("div.widget.promo div.menu"),
         $("header form.search-mobile"));
+
+    // Add cropping to cropped images
+    $("div.content.image[data-crop]").each(function() {
+        ImageCropper.cropImage(
+            JSON.parse($(this).attr('data-crop')),
+            $(this).find('img'),
+            $(this),
+            $(this).parent().width()
+        );
+    });
+
 });
 
 var MobileMenu = function(control, mainMenu, widgetMenu, search) {
