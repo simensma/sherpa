@@ -10,6 +10,11 @@ $(function() {
     var text_area_template = wrapper.find('div.text-area-template');
     var text_template = wrapper.find('div.text-template');
 
+    var button_wrapper = wrapper.find('[data-wrapper="campaign-button"]');
+    var include_button = button_wrapper.find('input[name="include-button"]');
+    var button_label = button_wrapper.find('input[name="button-label"]');
+    var button_anchor = button_wrapper.find('input[name="button-anchor"]');
+
     var JcropApi;
     var crop_ratio = [940, 480];
     var text_area_id = 0; // Will be incremented for each created text area (see below)
@@ -159,6 +164,11 @@ $(function() {
         var id = text_area.attr('data-id');
         text_area.remove();
         cropped_image_container.find('.text[data-id="' + id + '"]').remove();
+    });
+
+    include_button.change(function() {
+        button_label.prop('disabled', !$(this).is(':checked'));
+        button_anchor.prop('disabled', !$(this).is(':checked'));
     });
 
     /**

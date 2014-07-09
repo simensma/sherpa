@@ -103,6 +103,34 @@
           {# Will be filled out with jquery #}
         </div>
 
+        <div class="form-default form-border form-horizontal" data-wrapper="campaign-button">
+
+          <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+              <div class="checkbox">
+                <label>
+                   <input type="checkbox" name="include-button"> Inkludér knapp
+                 </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-md-2 control-label">Tekst</label>
+            <div class="col-md-10">
+              <input type="text" name="button-label" class="form-control" value="Klikk på meg" disabled>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-md-2 control-label">Lenker til</label>
+            <div class="col-md-10">
+              <input type="text" name="button-anchor" class="form-control" value="http://www.turistforeningen.no/" disabled>
+            </div>
+          </div>
+
+        </div><!-- /.form-default -->
+
         <p>
           <button class="btn btn-default add-text-area"><i class="fa fa-text-width"></i> Legg til en ny linje med tekst</button>
         </p>
