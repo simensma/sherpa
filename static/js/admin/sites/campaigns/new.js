@@ -15,6 +15,7 @@ $(function() {
     var button_label = button_wrapper.find('input[name="button-label"]');
     var button_anchor = button_wrapper.find('input[name="button-anchor"]');
     var large_button = button_wrapper.find('input[name="large-button"]');
+    var custom_button = cropped_image_container.find('.button');
 
     var JcropApi;
     var crop_ratio = [940, 480];
@@ -174,18 +175,26 @@ $(function() {
         large_button.prop('disabled', !checked);
 
         if(checked) {
-            cropped_image_container.find('.button').show();
+            custom_button.show();
         } else {
-            cropped_image_container.find('.button').hide();
+            custom_button.hide();
         }
     });
 
     large_button.change(function() {
         if($(this).is(':checked')) {
-            cropped_image_container.find('.button a').addClass('btn-lg');
+            custom_button.find('a').addClass('btn-lg');
         } else {
-            cropped_image_container.find('.button a').removeClass('btn-lg');
+            custom_button.find('a').removeClass('btn-lg');
         }
+    });
+
+    button_label.keyup(function() {
+        custom_button.find('a').text($(this).val());
+    });
+
+    button_anchor.keyup(function() {
+        custom_button.find('a').attr('href', $(this).val());
     });
 
     /**
