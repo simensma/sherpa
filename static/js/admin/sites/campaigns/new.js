@@ -135,6 +135,13 @@ $(function() {
         });
     }
 
+    $(document).on('click', '.text-area button.remove', function() {
+        var text_area = $(this).parents('.text-area');
+        var id = text_area.attr('data-id');
+        text_area.remove();
+        cropped_image_container.find('.text[data-id="' + id + '"]').remove();
+    });
+
     /**
      * Dragging text elements
      */
