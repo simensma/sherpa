@@ -113,7 +113,7 @@
     <input type="text" name="content" class="form-control" value="Tittel">
     <select name="font-sizes">
       {% for font_size in font_sizes %}
-        <option value="{{ font_size }}px">{{ font_size }}px</option>
+        <option value="{{ font_size }}px"{% if font_size == 48 %} selected{% endif %}>{{ font_size }}px</option>
       {% endfor %}
     </select>
     <label>
