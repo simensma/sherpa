@@ -107,6 +107,23 @@ $(function() {
         input.val(input.val() + ' ' + (id+1));
         text_area.attr('data-id', id);
         text_area.appendTo(text_areas);
+        var colorpicker = text_area.find('.colorselector');
+        colorpicker.ColorPicker({
+            color: '#0000ff',
+            onShow: function(picker) {
+                $(picker).fadeIn('fast');
+                return false;
+            },
+            onHide: function(picker) {
+                $(picker).fadeOut('fast');
+                return false;
+            },
+            onChange: function (hsb, hex, rgb) {
+                colorpicker.children('div').css('background-color', '#' + hex);
+                var id = colorpicker.parents('.text-area').attr('data-id');
+                cropped_image_container.find('.text[data-id="' + id + '"]').css('color', '#' + hex);
+            }
+        });
         text_area.find('select').chosen();
 
         // Clone and insert the actual text
