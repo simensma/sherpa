@@ -2,6 +2,7 @@
 
 {% load rowiterator %}
 {% load date_fromto %}
+{% load query_transform %}
 
 {% block title %}Aktiviteter — {{ block.super }}{% endblock %}
 
@@ -63,7 +64,7 @@
                 <li role="presentation" class="dropdown-header">{{ type | capfirst }}</li>
                 {% for group in groups %}
                   <li{% if selected_forening.id == group.id %} class="active"{% endif %}>
-                    <a href="?forening={{ group.id }}">{{ group.name }}</a>
+                    <a href="?{% query_transform request forening=group.id %}">{{ group.name }}</a>
                   </li>
                 {% endfor %}
               {% endif %}
@@ -141,7 +142,11 @@
                 Ingen påmelding
               {% endif %}
             </td>
-            <td><a href="?forening={{ dato.aktivitet.forening.id }}">{{ dato.aktivitet.forening.name }}</a></td>
+            <td>
+              <a href="?{% query_transform request forening=dato.aktivitet.forening.id %}">
+                {{ dato.aktivitet.forening.name }}
+              </a>
+            </td>
             <td>
               {% if dato.aktivitet.published %}
                 <span class="label label-success">Publisert</span>
