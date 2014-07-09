@@ -14,6 +14,7 @@ $(function() {
     var include_button = button_wrapper.find('input[name="include-button"]');
     var button_label = button_wrapper.find('input[name="button-label"]');
     var button_anchor = button_wrapper.find('input[name="button-anchor"]');
+    var large_button = button_wrapper.find('input[name="large-button"]');
 
     var JcropApi;
     var crop_ratio = [940, 480];
@@ -170,11 +171,20 @@ $(function() {
         var checked = $(this).is(':checked');
         button_label.prop('disabled', !checked);
         button_anchor.prop('disabled', !checked);
+        large_button.prop('disabled', !checked);
 
         if(checked) {
             cropped_image_container.find('.button').show();
         } else {
             cropped_image_container.find('.button').hide();
+        }
+    });
+
+    large_button.change(function() {
+        if($(this).is(':checked')) {
+            cropped_image_container.find('.button a').addClass('btn-lg');
+        } else {
+            cropped_image_container.find('.button a').removeClass('btn-lg');
         }
     });
 
