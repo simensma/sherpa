@@ -16,7 +16,8 @@ from user.models import User
 from focus.models import Actor
 from foreninger.models import Forening
 
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
+
 import json
 import re
 
@@ -27,7 +28,28 @@ def index(request):
         forening = request.active_forening
 
     datoer = AktivitetDate.objects.all()
-    datoer = datoer.filter(start_date__gte=date.today())
+
+    today = date.today()
+    if request.GET.get('t') in ['this_week', 'next_week', 'next_month']:
+        if request.GET.get('t') == 'this_week':
+            start = today - timedelta(days=today.weekday())
+            end = today + timedelta(days=-start.weekday(), weeks=1)
+
+        elif request.GET.get('t') == 'next_week':
+            start = today + timedelta(days=-today.weekday(), weeks=1)
+            end = today + timedelta(days=-today.weekday(), weeks=2)
+
+        else:
+            (start_year, start_month) = divmod(today.month, 12)
+            (end_year, end_month) = divmod(today.month + 1, 12)
+
+            start = today.replace(year=today.year+start_year, month=start_month + 1, day=1)
+            end = today.replace(year=today.year+end_year, month=end_month + 1, day=1)
+
+        datoer = datoer.filter(start_date__gte=start, start_date__lt=end)
+    else:
+        datoer = datoer.filter(start_date__gte=today)
+
     datoer = datoer.filter(
         Q(aktivitet__forening=forening) |
         Q(aktivitet__co_forening=forening) |

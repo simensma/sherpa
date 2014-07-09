@@ -44,10 +44,10 @@
     </div>
     <div class="col-md-5">
       <div class="btn-group">
-        <button type="button" class="btn btn-default">Alle</button>
-        <button type="button" class="btn btn-default">Denne uken</button>
-        <button type="button" class="btn btn-default">Neste uke</button>
-        <button type="button" class="btn btn-default">Neste måned</button>
+        <a class="btn btn-default{% if not request.GET.t %} active{% endif %}" href="?{% query_transform t="" %}">Alle</a>
+        <a class="btn btn-default{% if request.GET.t == "this_week" %} active{% endif %}" href="?{% query_transform t="this_week" %}">Denne uken</a>
+        <a class="btn btn-default{% if request.GET.t == "next_week" %} active{% endif %}" href="?{% query_transform t="next_week" %}">Neste uke</a>
+        <a class="btn btn-default{% if request.GET.t == "next_month" %} active{% endif %}" href="?{% query_transform t="next_month" %}">Neste måned</a>
       </div>
     </div>
     <div class="col-md-4">
