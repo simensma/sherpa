@@ -78,88 +78,101 @@
 
   <hr>
 
-  <div class="row">
-    <div class="col-md-12">
-      <ul class="list-inline">
-        <li><a href="#">Vis tidligere aktiviteter</a></li>
-        <li><a href="#">Skjul kladd</a></li>
-      </ul>
+  {% if datoer %}
+    <div class="row">
+      <div class="col-md-12">
+        <ul class="list-inline">
+          <li><a href="#">Vis tidligere aktiviteter</a></li>
+          <li><a href="#">Skjul kladd</a></li>
+        </ul>
+      </div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="table-responsive">
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th><input type="checkbox"></th>
-            <th>Tittel</th>
-            <th>Turkode</th>
-            <th>Dato fra</th>
-            <th>Dato til</th>
-            <th>Deltakere</th>
-            <th>Arrangeres av</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-        {% for dato in datoer %}
-          <tr>
-            <td><input type="checkbox"></td>
-            <td>
-              {{ dato.aktivitet.title|default:"(Mangler navn)" }}
-              <br>
-              <ul class="list-inline">
-                <li><a href="{% url 'admin.aktiviteter.views.edit' dato.aktivitet.id %}">Rediger</a></li>
-                <li><a href="{% url 'admin.aktiviteter.views.participants' dato.aktivitet.id %}">Deltakere</a></li>
-                <li><a href="#">Kopi</a></li>
-                <li>
-                  {% if dato.aktivitet.published %}
-                    <a href="{% url 'aktiviteter.views.show' dato.id %}">Vis</a>
+    <div class="row">
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th><input type="checkbox"></th>
+              <th>Tittel</th>
+              <th>Turkode</th>
+              <th>Dato fra</th>
+              <th>Dato til</th>
+              <th>Deltakere</th>
+              <th>Arrangeres av</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for dato in datoer %}
+            <tr>
+              <td><input type="checkbox"></td>
+              <td>
+                {{ dato.aktivitet.title|default:"(Mangler navn)" }}
+                <br>
+                <ul class="list-inline">
+                  <li><a href="{% url 'admin.aktiviteter.views.edit' dato.aktivitet.id %}">Rediger</a></li>
+                  <li><a href="{% url 'admin.aktiviteter.views.participants' dato.aktivitet.id %}">Deltakere</a></li>
+                  <li><a href="#">Kopi</a></li>
+                  <li>
+                    {% if dato.aktivitet.published %}
+                      <a href="{% url 'aktiviteter.views.show' dato.id %}">Vis</a>
+                    {% else %}
+                      Vis
+                    {% endif %}
+                  </li>
+                  <li><a href="#">Slett</a></li>
+                </ul>
+              </td>
+              <td>{{ dato.aktivitet.code }}</td>
+              <td>{{ dato.start_date|date:"Y-m-d" }}</td>
+              <td>{{ dato.end_date|date:"Y-m-d" }}</td>
+              <td>
+                {% if dato.signup_enabled %}
+                  {% if dato.is_full %}
+                    {{ dato.signup_max_allowed }} av {{ dato.signup_max_allowed }}<br>
+                    {% if dato.is_waitinglist %}
+                      <span class="label label-warning">{{ dato.total_waitinglist_count }} på venteliste</span>
+                    {% else %}
+                      <span class="label label-primary">Ingen ledig plass</span>
+                    {% endif %}
                   {% else %}
-                    Vis
-                  {% endif %}
-                </li>
-                <li><a href="#">Slett</a></li>
-              </ul>
-            </td>
-            <td>{{ dato.aktivitet.code }}</td>
-            <td>{{ dato.start_date|date:"Y-m-d" }}</td>
-            <td>{{ dato.end_date|date:"Y-m-d" }}</td>
-            <td>
-              {% if dato.signup_enabled %}
-                {% if dato.is_full %}
-                  {{ dato.signup_max_allowed }} av {{ dato.signup_max_allowed }}<br>
-                  {% if dato.is_waitinglist %}
-                    <span class="label label-warning">{{ dato.total_waitinglist_count }} på venteliste</span>
-                  {% else %}
-                    <span class="label label-primary">Ingen ledig plass</span>
+                    {{ dato.total_signup_count }} av {{ dato.signup_max_allowed }}<br>
                   {% endif %}
                 {% else %}
-                  {{ dato.total_signup_count }} av {{ dato.signup_max_allowed }}<br>
+                  Ingen påmelding
                 {% endif %}
-              {% else %}
-                Ingen påmelding
-              {% endif %}
-            </td>
-            <td>
-              <a href="?{% query_transform forening=dato.aktivitet.forening.id %}">
-                {{ dato.aktivitet.forening.name }}
-              </a>
-            </td>
-            <td>
-              {% if dato.aktivitet.published %}
-                <span class="label label-success">Publisert</span>
-              {% else %}
-                <span class="label label-default">Kladd</span>
-              {% endif %}
-            </td>
-          </tr>
-        {% endfor %}
-        </tbody>
-      </table>
+              </td>
+              <td>
+                <a href="?{% query_transform forening=dato.aktivitet.forening.id %}">
+                  {{ dato.aktivitet.forening.name }}
+                </a>
+              </td>
+              <td>
+                {% if dato.aktivitet.published %}
+                  <span class="label label-success">Publisert</span>
+                {% else %}
+                  <span class="label label-default">Kladd</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
+  {% else %}
+    <div class="well">
+      {% if not request.GET %}
+        Hei, og velkommen til det nye aktivitetssystemet! Du kan legge inn turer,
+        kurs, og andre arrangementer
+        <a href="{% url 'admin.aktiviteter.views.new' %}">her</a>.
+      {% else %}
+        Ingen turer, kurs, eller arrangmenter ble funnet.
+        <a href="{% url 'admin.aktiviteter.views.index' %}">Tilbakestill søk og filter</a>.
+      {% endif %}
+    </div>
+  {% endif %}
 
   <hr>
 
