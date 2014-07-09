@@ -102,7 +102,9 @@ $(function() {
 
         // Clone and insert the text area
         var text_area = text_area_template.clone();
+        var input = text_area.find('input[name="content"]');
         text_area.removeClass('text-area-template').addClass('text-area').show();
+        input.val(input.val() + ' ' + (id+1));
         text_area.attr('data-id', id);
         text_area.appendTo(text_areas);
         text_area.find('select').chosen();
