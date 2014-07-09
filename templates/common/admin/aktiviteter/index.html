@@ -64,7 +64,7 @@
                 <li role="presentation" class="dropdown-header">{{ type | capfirst }}</li>
                 {% for group in groups %}
                   <li{% if selected_forening.id == group.id %} class="active"{% endif %}>
-                    <a href="?{% query_transform request forening=group.id %}">{{ group.name }}</a>
+                    <a href="?{% query_transform forening=group.id %}">{{ group.name }}</a>
                   </li>
                 {% endfor %}
               {% endif %}
@@ -143,7 +143,7 @@
               {% endif %}
             </td>
             <td>
-              <a href="?{% query_transform request forening=dato.aktivitet.forening.id %}">
+              <a href="?{% query_transform forening=dato.aktivitet.forening.id %}">
                 {{ dato.aktivitet.forening.name }}
               </a>
             </td>

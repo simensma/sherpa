@@ -46,7 +46,6 @@ def index(request):
         'active_forening_children': request.active_forening.get_children_sorted(),
         'selected_forening': forening,
         'datoer': datoer,
-        'request': request,
     }
     return render(request, 'common/admin/aktiviteter/index.html', context)
 
