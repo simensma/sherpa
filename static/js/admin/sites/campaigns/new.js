@@ -199,19 +199,15 @@ $(function() {
 
             if(top < 0) {
                 dragged_text.css('top', '0px');
-                console.log('HIGH');
             }
             if(left < 0) {
                 dragged_text.css('left', '0px');
-                console.log('LEFT');
             }
             if(top > cropped_image_container.height() - dragged_text.height()) {
                 dragged_text.css('top', cropped_image_container.height() - dragged_text.height() + 'px');
-                console.log('LOW');
             }
             if(left > cropped_image_container.width() - dragged_text.width()) {
                 dragged_text.css('left', cropped_image_container.width() - dragged_text.width() + 'px');
-                console.log('RIGHT');
             }
         }
     });
