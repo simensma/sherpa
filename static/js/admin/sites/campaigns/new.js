@@ -40,6 +40,10 @@ $(function() {
         enableStep(3);
     });
 
+    wrapper.find('button.add-text-area').click(function() {
+        addText();
+    });
+
     function showImage(image_url) {
         if(JcropApi !== undefined) {
             JcropApi.destroy();
