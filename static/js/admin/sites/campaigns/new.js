@@ -166,7 +166,7 @@ $(function() {
      */
     var dragged_text;
 
-    $(document.body).on('mousemove', function(e) {
+    $(document.body).on('mousemove', '.cropped-image-container', function(e) {
         e.preventDefault();
         if(dragged_text !== undefined) {
             dragged_text.offset({
