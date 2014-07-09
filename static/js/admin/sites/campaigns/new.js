@@ -197,6 +197,10 @@ $(function() {
         custom_button.find('a').attr('href', $(this).val());
     });
 
+    custom_button.find('a').click(function(e) {
+        e.preventDefault();
+    });
+
     /**
      * Dragging text elements
      */
