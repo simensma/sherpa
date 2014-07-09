@@ -167,8 +167,15 @@ $(function() {
     });
 
     include_button.change(function() {
-        button_label.prop('disabled', !$(this).is(':checked'));
-        button_anchor.prop('disabled', !$(this).is(':checked'));
+        var checked = $(this).is(':checked');
+        button_label.prop('disabled', !checked);
+        button_anchor.prop('disabled', !checked);
+
+        if(checked) {
+            cropped_image_container.find('.button').show();
+        } else {
+            cropped_image_container.find('.button').hide();
+        }
     });
 
     /**

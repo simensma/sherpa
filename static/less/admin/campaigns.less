@@ -33,18 +33,20 @@
       max-width: none !important;
     }
 
-    .text {
+    .text, .button {
       position: absolute;
       // Top, left is just the initial value which will be overriden when the user moves the element
       top: 0;
       left: 0;
 
-      // Short line-height makes it easier to place the text when dragging
-      line-height: 0.9em;
-
       &:hover {
         cursor: move;
       }
+    }
+
+    .text {
+      // Short line-height makes it easier to place the text when dragging
+      line-height: 0.9em;
     }
   }
 
