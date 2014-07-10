@@ -37,7 +37,8 @@ class Aktivitet(models.Model):
     # and probably faster.
     audiences = models.CharField(max_length=1023)
     CATEGORY_CHOICES = (
-        ('trip', 'Tur/Aktivitet'),
+        # ('trip', 'Tur/Aktivitet'),
+        ('organizedhike', 'Fellestur'),
         ('course', 'Kurs'),
         ('event', 'Arrangement'),
         ('volunteerwork', 'Dugnad'),)
@@ -166,6 +167,14 @@ class Aktivitet(models.Model):
             u'naturlos',
             u'utenlandstur',
             u'orientering',
+        ],
+        'organizedhike': [
+            u'fottur',
+            u'skitur',
+            u'sykkeltur',
+            u'padletur',
+            u'klatretur',
+            u'bretur'
         ],
         'course': [
             u'turlederkurs',
