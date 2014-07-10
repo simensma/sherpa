@@ -19,7 +19,9 @@
   <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap-modal/css/bootstrap-modal.css" media="screen">
   <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap-datepicker/css/datepicker3.css" media="screen">
   <link rel="stylesheet" href="{{ STATIC_URL }}lib/sb-admin/css/sb-admin.css">
-  <link rel="stylesheet" href="{{ STATIC_URL }}lib/chosen/chosen.css" media="screen">
+  {# <link rel="stylesheet" href="{{ STATIC_URL }}lib/chosen/chosen.css" media="screen"> #}
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/chosen_v1/chosen.min.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/chosen_v1/chosen-bootstrap.css" media="screen">
   <link rel="stylesheet" href="{{ STATIC_URL }}lib/font-awesome/css/font-awesome.min.css">
 
   {# Our libs #}
@@ -275,7 +277,8 @@
 
   {# Other 3rd party libs #}
   <script src="{{ STATIC_URL }}lib/typeahead/typeahead.min.js"></script>
-  <script src="{{ STATIC_URL }}lib/chosen/chosen.jquery.min.js"></script>
+  {# <script src="{{ STATIC_URL }}lib/chosen/chosen.jquery.min.js"></script> #}
+  <script src="{{ STATIC_URL }}lib/chosen_v1/chosen.jquery.min.js"></script>
   <script src="{{ STATIC_URL }}lib/imagesloaded/imagesloaded.pkgd.min.js"></script>
   <script>
     window.User = {
