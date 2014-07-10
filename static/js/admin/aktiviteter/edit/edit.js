@@ -15,7 +15,7 @@ $(function() {
     var forening_select = form.find("select[name='forening']");
     var co_forening_select = form.find("select[name='co_forening']");
     var images_input = form.find("input[name='images']");
-    var turforslag = form.find("div.form-group.turforslag");
+    var turforslag = form.find("div.find-turforslag");
     var turforslag_input = turforslag.find("input[name='turforslag']");
     var turforslag_id_input = turforslag.find("input[name='turforslag_id']");
     var turforslag_result = turforslag.find("div.result");
@@ -24,7 +24,6 @@ $(function() {
     var preview_buttons = form.find("div.submit-header button.preview,div.submit-footer button.preview");
     var preview_input = form.find("input[name='preview']");
     var submit_buttons = form.find("button[type='submit']");
-
     var images = form.find("div.form-group.images");
     var images_initiate = images.find("div.images-initiate");
     var images_container = images.find("div.images");
@@ -342,6 +341,156 @@ $(function() {
                 scrollTop: validation.scrollTo.offset().top
             }, 300);
         }
+    });
+
+
+    /**
+     * DEMO: Code below is work in progress.
+     * Simple toggling of fields, for demo purposes only
+     */
+
+    // DEMO: Images
+
+    $("button.pick-from-image-archive").click(function() {
+        ImageArchivePicker.pick(function(url, description, photographer) {
+            $('.activity-picture-wrapper').removeClass('jq-hide');
+            // TODO: Add to images container
+        });
+    });
+
+    $("button.upload-new-image").click(function() {
+        ImageUploadDialog.open(function(url, description, photographer) {
+            $('.activity-picture-wrapper').removeClass('jq-hide');
+            // TODO: Add to images container
+        });
+    });
+
+    $("#fileupload").change(function() {
+        $('.activity-picture-wrapper').removeClass('jq-hide');
+    });
+
+
+    // DEMO: Categories
+
+    var category_inputs = category.find("input[type='radio']");
+
+    var subcategory_main_select = $(".select-subcategory select");
+    var subcategory_other_select = $(".select-tags select");
+
+    category_inputs.change(function() {
+
+        var new_category = category_inputs.filter(":checked").val();
+
+        // subcategory_labels.find("h3").hide();
+        // subcategory_labels.find("h3." + new_category).show();
+
+        if (new_category == 'organizedhike') {
+            $('.form-group.select-tags').removeClass('jq-hide');
+            $('.form-group.select-organizedhikesubcategory').removeClass('jq-hide');
+            $('.form-group.select-subcategory').addClass('jq-hide');
+
+        } else {
+            $('.form-group.select-tags').removeClass('jq-hide');
+            $('.form-group.select-organizedhikesubcategory').addClass('jq-hide');
+            $('.form-group.select-subcategory').removeClass('jq-hide');
+            subcategory_main_select.find("option.subcategory").each(function() {
+                $(this).detach();
+                subcategory_other_select.append($(this));
+            });
+
+            $('.form-group.select-subcategory .labels > span').addClass('jq-hide');
+            $('.form-group.select-subcategory .labels .' + new_category).removeClass('jq-hide');
+        }
+
+        subcategory_other_select.find("option.subcategory." + new_category).each(function() {
+            $(this).detach();
+            subcategory_main_select.append($(this));
+        });
+
+        $(".select-subcategory select").trigger('chosen:updated');
+        $(".select-tags select").trigger('chosen:updated');
+
+    });
+
+
+    /**
+     * DEMO: Acitivity dates
+     * Simple toggling of fields, for demo purposes only
+     * Functionality are to be implemented in aktiviteter/edit/dates.js
+     */
+
+    // Signup simple or not simple
+    $('input[name="signup-methods"]').change(function (e) {
+        var val = e.currentTarget.value,
+            $formGroupMaxSignups = $('.form-group.max-signups'),
+            $formGroupSignupStartCheckbox = $('.form-group.signup-start.set-checkbox'),
+            $formGroupSignupDeadlineCheckbox = $('.form-group.signup-deadline.set-checkbox'),
+            $formGroupCancellationDeadlineCheckbox = $('.form-group.cancellation-deadline.set-checkbox');
+
+        if (val === 'signup-method-no') {
+            $formGroupMaxSignups.addClass('jq-hide');
+            $formGroupSignupStartCheckbox.addClass('jq-hide');
+            $formGroupSignupDeadlineCheckbox.addClass('jq-hide');
+            $formGroupCancellationDeadlineCheckbox.addClass('jq-hide');
+
+        } else {
+            $formGroupMaxSignups.removeClass('jq-hide');
+            $formGroupSignupStartCheckbox.removeClass('jq-hide');
+            $formGroupSignupDeadlineCheckbox.removeClass('jq-hide');
+            $formGroupCancellationDeadlineCheckbox.removeClass('jq-hide');
+        }
+
+    });
+
+    // DEMO: Set signup date or no date
+    $('.form-group.signup-deadline.set-checkbox input').change(function (e) {
+        var noDeadline = e.currentTarget.checked,
+            $formGroupSignupDeadlineDate = $('.form-group.signup-deadline.set-date');
+
+        if (noDeadline === true) {
+            $formGroupSignupDeadlineDate.addClass('jq-hide');
+        } else {
+            $formGroupSignupDeadlineDate.removeClass('jq-hide');
+        }
+
+    });
+
+    // DEMO: Set cancellation date or not
+    $('.form-group.cancellation-deadline.set-checkbox input').change(function (e) {
+        var val = e.currentTarget.checked,
+            $formGroupCancellationDeadlineDate = $('.form-group.cancellation-deadline.set-date');
+
+        if (val === true) {
+            $formGroupCancellationDeadlineDate.addClass('jq-hide');
+        } else {
+            $formGroupCancellationDeadlineDate.removeClass('jq-hide');
+        }
+
+    });
+
+
+    // DEMO: Add turleder
+    $('[data-action="add-turleder"]').click(function() {
+        AdminAktivitetTurlederSearch.enable({
+            callback: function(opts) {
+                $('table.turledere').removeClass('jq-hide');
+            }
+        });
+    });
+
+
+    // DEMO: Contact nformation
+    $('input[name="contact-radios"]').change(function (e) {
+        var val = e.currentTarget.value,
+            $formGroupContactInfoCustom = $('.form-group.contact-info-custom');
+
+        if (val === 'other') {
+            $formGroupContactInfoCustom.removeClass('jq-hide');
+
+        } else {
+            $formGroupContactInfoCustom.addClass('jq-hide');
+        }
+
     });
 
 });

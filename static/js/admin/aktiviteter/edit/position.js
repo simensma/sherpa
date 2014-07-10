@@ -6,19 +6,19 @@ $(function() {
     var map_element = position_section.find("div.leaflet-map");
     var popup_content = position_section.find("div.popup-content").html();
     var show_on_map = position_section.find("p.intro.show-on-map");
-    var show_map = position_section.find("p.intro a.show-map");
+    var show_map_button = position_section.find("a.show-map");
 
     var counties_select = position_section.find("select[name='counties']");
-    var counties_ajaxloader = position_section.find("div.form-group.counties img.ajaxloader");
+    var counties_ajaxloader = counties_select.nextAll("img.ajaxloader");
     var municipalities_select = position_section.find("select[name='municipalities']");
-    var municipalities_ajaxloader = position_section.find("div.form-group.municipalities img.ajaxloader");
+    var municipalities_ajaxloader = municipalities_select.nextAll("img.ajaxloader");
     var locations_select = position_section.find("select[name='locations']");
-    var locations_ajaxloader = position_section.find("div.form-group.locations img.ajaxloader");
+    var locations_ajaxloader = locations_select.nextAll("img.ajaxloader");
 
     var marker;
 
     var initiate_map = function() {
-        var map = L.map('map').setView([65, 12], 5);
+        var map = L.map('map', {scrollWheelZoom: false}).setView([65, 12], 5);
         L.tileLayer('http://opencache.statkart.no/gatekeeper/gk/gk.open_gmaps?layers=topo2&zoom={z}&x={x}&y={y}', {
             attribution: 'Kartverket'
         }).addTo(map);
@@ -49,11 +49,16 @@ $(function() {
                 e.marker.bindPopup(popup_content).addTo(map);
                 marker = e.marker;
             }
+
             marker.openPopup();
 
             county_lookup(e.marker.getLatLng().lat, e.marker.getLatLng().lng);
             municipality_lookup(e.marker.getLatLng().lat, e.marker.getLatLng().lng);
             location_lookup(e.marker.getLatLng().lat, e.marker.getLatLng().lng);
+
+            // DEMO: Show locations
+            $('.areas-and-positions-output').removeClass('jq-hide');
+
         });
 
         map_element.find("a.leaflet-control-draw-marker").tooltip({
@@ -61,12 +66,24 @@ $(function() {
         });
     };
 
-    // Show the map
-    show_map.click(function() {
-        $(this).parent().remove();
-        show_on_map.show();
-        map_element.slideDown(initiate_map);
+    // Show location autocomplete
+    $(document).on('click', '[data-toggle="location-select-show"]', function (e) {
+        $('.find-location').removeClass('jq-hide');
+        $('.find-location select').chosen().change(function (e, params) {
+            show_map();
+        });
     });
+
+    // Set position in map by typing location
+    function show_map() {
+        show_on_map.show();
+        map_element.show(initiate_map);
+        var map_top = $(map_element).offset().top;
+        $('html, body').animate({scrollTop:(map_top - 80)}, '500', 'swing', function() {
+
+        });
+    };
+
 
     form.submit(function() {
         if(marker !== undefined) {
@@ -89,7 +106,7 @@ $(function() {
             for(var i=0; i<result.length; i++) {
                 counties_select.find("option[value='" + result[i] + "']").prop('selected', true);
             }
-            counties_select.trigger("liszt:updated"); // Update chosen
+            counties_select.trigger("chosen:updated");
         }).fail(function() {
             // TODO
         }).always(function() {
@@ -111,7 +128,7 @@ $(function() {
             for(var i=0; i<result.length; i++) {
                 municipalities_select.find("option[value='" + result[i] + "']").prop('selected', true);
             }
-            municipalities_select.trigger("liszt:updated"); // Update chosen
+            municipalities_select.trigger("chosen:updated");
         }).fail(function() {
             // TODO
         }).always(function() {
@@ -133,12 +150,33 @@ $(function() {
             for(var i=0; i<result.length; i++) {
                 locations_select.find("option[value='" + result[i] + "']").prop('selected', true);
             }
-            locations_select.trigger("liszt:updated"); // Update chosen
+            locations_select.trigger("chosen:updated");
         }).fail(function() {
             // TODO
         }).always(function() {
             locations_ajaxloader.hide();
         });
     }
+
+    // DEMO: Simple toggling of fields, for demo purposes only
+
+    $(document).on('click', '[data-toggle="counties-edit-show"]', function () {
+        position_section.find('.counties-static').addClass('jq-hide');
+        position_section.find('.counties-edit').removeClass('jq-hide');
+    });
+
+    $(document).on('click', '[data-toggle="municipalities-edit-show"]', function () {
+        position_section.find('.municipalities-static').addClass('jq-hide');
+        position_section.find('.municipalities-edit').removeClass('jq-hide');
+    });
+
+    $(document).on('click', '[data-toggle="locations-edit-show"]', function () {
+        position_section.find('.locations-static').addClass('jq-hide');
+        position_section.find('.locations-edit').removeClass('jq-hide');
+    });
+
+    $(document).on('click', '[data-toggle="turforslag-select-show"]', function () {
+        position_section.find('.find-turforslag').removeClass('jq-hide');
+    });
 
 });
