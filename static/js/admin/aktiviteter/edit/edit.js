@@ -365,11 +365,6 @@ $(function() {
         });
     });
 
-    $("#fileupload").change(function() {
-        $('.activity-picture-wrapper').removeClass('jq-hide');
-    });
-
-
     // DEMO: Categories
 
     var category_inputs = category.find("input[type='radio']");
@@ -398,6 +393,7 @@ $(function() {
                 subcategory_other_select.append($(this));
             });
 
+            // Hide labels that are not relevant
             $('.form-group.select-subcategory .labels > span').addClass('jq-hide');
             $('.form-group.select-subcategory .labels .' + new_category).removeClass('jq-hide');
         }
