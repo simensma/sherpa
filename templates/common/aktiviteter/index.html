@@ -101,18 +101,6 @@
         </div>
       </div>
 
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="span12">
-
-      <h1>Turer og aktiviteter</h1>
-
-      <p class="lede">
-        DNTs lokale medlemsforeninger og turlag over hele landet arrangerer årlig flere tusen aktiviteter og fellesturer både med og uten turledere - alt fra klassiske hytte til hytte-turer, klatrekvelder, villmarksleire, brevandring, toppturer, fjellklatring, ulike typer kurs, BaseCamp for ungdom og trilleturer i nærområdet der du bor.
-      </p>
-
       <div class="results" data-filter-url="{% url 'aktiviteter.views.filter' %}">
 
         <div class="content" data-current-page="{{ aktivitet_dates.number }}">
@@ -130,6 +118,18 @@
         </div>
 
       </div>
+
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="span12">
+
+      <h1>Turer og aktiviteter</h1>
+
+      <p class="lede">
+        DNTs lokale medlemsforeninger og turlag over hele landet arrangerer årlig flere tusen aktiviteter og fellesturer både med og uten turledere - alt fra klassiske hytte til hytte-turer, klatrekvelder, villmarksleire, brevandring, toppturer, fjellklatring, ulike typer kurs, BaseCamp for ungdom og trilleturer i nærområdet der du bor.
+      </p>
 
       <div id="map" class="leaflet-map"></div>
       <div class="popups hide">
