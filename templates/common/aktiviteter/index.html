@@ -87,7 +87,21 @@
       </div>
 
     </div>
-    <div class="span8"></div>
+
+    <div class="span8">
+
+      <div class="search-filters">
+        <div class="section">
+          <h3>Hva slags tur?</h3>
+          <div class="button-selections categories">
+            {% for category in categories %}
+              <button class="btn category" data-category="{{ category.0 }}">{{ category.1 }}</button>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
 
   <div class="row">
@@ -98,24 +112,6 @@
       <p class="lede">
         DNTs lokale medlemsforeninger og turlag over hele landet arrangerer årlig flere tusen aktiviteter og fellesturer både med og uten turledere - alt fra klassiske hytte til hytte-turer, klatrekvelder, villmarksleire, brevandring, toppturer, fjellklatring, ulike typer kurs, BaseCamp for ungdom og trilleturer i nærområdet der du bor.
       </p>
-
-      <div class="search-filters">
-
-        <div class="row-fluid">
-          <div class="span6">
-
-            <div class="section">
-              <h3>Hva slags tur?</h3>
-              <div class="button-selections categories">
-                {% for category in categories %}
-                  <button class="btn category" data-category="{{ category.0 }}">{{ category.1 }}</button>
-                {% endfor %}
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
 
       <div class="results" data-filter-url="{% url 'aktiviteter.views.filter' %}">
 
