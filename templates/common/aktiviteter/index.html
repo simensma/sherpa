@@ -68,6 +68,15 @@
         </select>
       </div>
 
+      <div class="section">
+        <h3>Passer for</h3>
+        <div class="button-selections audiences">
+          {% for audience in audiences %}
+            <button class="btn audience" data-audience="{{ audience.0 }}">{{ audience.1 }}</button>
+          {% endfor %}
+        </div>
+      </div>
+
     </div>
     <div class="span8">
 
