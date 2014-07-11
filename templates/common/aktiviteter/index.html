@@ -77,12 +77,17 @@
         </div>
       </div>
 
+      <div class="section">
+        <h3>Gradering</h3>
+        <div class="button-selections difficulties">
+          {% for difficulty in difficulties %}
+            <button class="btn difficulty" data-difficulty="{{ difficulty.0 }}">{{ difficulty.1 }}</button>
+          {% endfor %}
+        </div>
+      </div>
+
     </div>
-    <div class="span8">
-
-
-
-    </div>
+    <div class="span8"></div>
   </div>
 
   <div class="row">
@@ -106,14 +111,6 @@
                   <button class="btn category" data-category="{{ category.0 }}">{{ category.1 }}</button>
                 {% endfor %}
               </div>
-            </div>
-
-          </div>
-          <div class="span6">
-            <div class="button-selections difficulties">
-              {% for difficulty in difficulties %}
-                <button class="btn difficulty" data-difficulty="{{ difficulty.0 }}">{{ difficulty.1 }}</button>
-              {% endfor %}
             </div>
           </div>
         </div>
