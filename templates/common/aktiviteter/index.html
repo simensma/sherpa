@@ -30,95 +30,103 @@
 <div class="aktivitet-listing">
 
   <div class="row">
-    <div class="span4 search-filters">
-      <h2>Finn en tur</h2>
+    <div class="span4">
+      <div class="column-query-parameters">
+        <h2>Finn en tur</h2>
 
-      <form class="form-search">
-        <input type="text" class="input-medium search-query">
-        <button type="submit" class="btn">Søk</button>
-      </form>
+        <form class="form-search">
+          <input type="text" class="input-medium search-query">
+          <button type="submit" class="btn">Søk</button>
+        </form>
 
-      <div class="section">
-        <div class="row">
-          <div class="span2">
-            <h3>Fra dato</h3>
-            <div class="input-append date">
-              <input type="text" name="travel_date_from" class="input-small date" placeholder="">
-              <span class="add-on"><i class="icon-th"></i></span>
+        <div class="search-filters">
+
+          <div class="section">
+            <div class="row">
+              <div class="span2">
+                <h3>Fra dato</h3>
+                <div class="input-append date">
+                  <input type="text" name="travel_date_from" class="input-small date" placeholder="">
+                  <span class="add-on"><i class="icon-th"></i></span>
+                </div>
+              </div>
+              <div class="span2">
+                <h3>Til dato</h3>
+                <div class="input-append date">
+                  <input type="text" name="travel_date_to" class="input-small date" placeholder="" disabled>
+                  <span class="add-on"><i class="icon-th"></i></span>
+                </div>
+                <span class="help-block">Ikke implementert.</span>
+              </div>
             </div>
           </div>
-          <div class="span2">
-            <h3>Til dato</h3>
-            <div class="input-append date">
-              <input type="text" name="travel_date_to" class="input-small date" placeholder="" disabled>
-              <span class="add-on"><i class="icon-th"></i></span>
-            </div>
-            <span class="help-block">Ikke implementert.</span>
+
+          <div class="section">
+            <h3>Turområde</h3>
+            <select name="location" data-chosen data-placeholder="Velg turområder..." multiple>
+              <option value=""></option>
+              {% for location in locations %}
+                <option value="{{ location.id }}">{{ location.name }}</option>
+              {% endfor %}
+            </select>
           </div>
-        </div>
-      </div>
 
-      <div class="section">
-        <h3>Turområde</h3>
-        <select name="location" data-chosen data-placeholder="Velg turområder..." multiple>
-          <option value=""></option>
-          {% for location in locations %}
-            <option value="{{ location.id }}">{{ location.name }}</option>
-          {% endfor %}
-        </select>
-      </div>
+          <div class="section">
+            <h3>Passer for</h3>
+            <div class="button-selections audiences">
+              {% for audience in audiences %}
+                <button class="btn audience" data-audience="{{ audience.0 }}">{{ audience.1 }}</button>
+              {% endfor %}
+            </div>
+          </div>
 
-      <div class="section">
-        <h3>Passer for</h3>
-        <div class="button-selections audiences">
-          {% for audience in audiences %}
-            <button class="btn audience" data-audience="{{ audience.0 }}">{{ audience.1 }}</button>
-          {% endfor %}
-        </div>
-      </div>
+          <div class="section">
+            <h3>Gradering</h3>
+            <div class="button-selections difficulties">
+              {% for difficulty in difficulties %}
+                <button class="btn difficulty" data-difficulty="{{ difficulty.0 }}">{{ difficulty.1 }}</button>
+              {% endfor %}
+            </div>
+          </div>
 
-      <div class="section">
-        <h3>Gradering</h3>
-        <div class="button-selections difficulties">
-          {% for difficulty in difficulties %}
-            <button class="btn difficulty" data-difficulty="{{ difficulty.0 }}">{{ difficulty.1 }}</button>
-          {% endfor %}
-        </div>
+        </div><!-- /.search-filters -->
+
       </div>
 
     </div>
 
     <div class="span8">
+      <div class="column-results">
 
-      <div class="search-filters">
-        <div class="section">
-          <h3>Hva slags tur?</h3>
-          <div class="button-selections categories">
-            {% for category in categories %}
-              <button class="btn category" data-category="{{ category.0 }}">{{ category.1 }}</button>
-            {% endfor %}
+        <div class="search-filters">
+          <div class="section">
+            <h3>Velg turtype:</h3>
+            <div class="button-selections categories">
+              {% for category in categories %}
+                <button class="btn category" data-category="{{ category.0 }}">{{ category.1 }}</button>
+              {% endfor %}
+            </div>
           </div>
         </div>
+
+        <div class="results" data-filter-url="{% url 'aktiviteter.views.filter' %}">
+
+          <div class="content" data-current-page="{{ aktivitet_dates.number }}">
+            {% include 'common/aktiviteter/listing.html' %}
+          </div>
+
+          <div class="loading hide">
+            <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+            Laster, vennligst vent...
+          </div>
+
+          <div class="fail hide alert alert-error">
+            <strong>Beklager, det oppstod en teknisk feil!</strong><br>
+            Feilen har blitt logget i vårt system, og vi vil rette den så snart som mulig. I mellomtiden kan du forsøke å <a href="javascript:document.location.reload(true);">oppdatere siden</a>.
+          </div>
+
+        </div>
       </div>
-
-      <div class="results" data-filter-url="{% url 'aktiviteter.views.filter' %}">
-
-        <div class="content" data-current-page="{{ aktivitet_dates.number }}">
-          {% include 'common/aktiviteter/listing.html' %}
-        </div>
-
-        <div class="loading hide">
-          <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" alt="Laster, vennligst vent...">
-          Laster, vennligst vent...
-        </div>
-
-        <div class="fail hide alert alert-error">
-          <strong>Beklager, det oppstod en teknisk feil!</strong><br>
-          Feilen har blitt logget i vårt system, og vi vil rette den så snart som mulig. I mellomtiden kan du forsøke å <a href="javascript:document.location.reload(true);">oppdatere siden</a>.
-        </div>
-
-      </div>
-
     </div>
   </div>
 
