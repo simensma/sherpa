@@ -33,12 +33,12 @@
       {% for campaign in campaigns %}
 
         <div class="campaign-preview media">
-          <a class="pull-left" href="">
+          <a class="pull-left" href="{% url 'admin.sites.campaigns.views.edit' active_site.id campaign.id %}">
             <img class="media-object" src="{{ campaign.image_url }}" alt="{{ campaign.title }}">
           </a>
           <div class="media-body">
             <h2 class="media-heading">
-              <a href="">{{ campaign.title }}</a>
+              <a href="{% url 'admin.sites.campaigns.views.edit' active_site.id campaign.id %}">{{ campaign.title }}</a>
             </h2>
             {% for text in campaign.text.all %}
               <div>
