@@ -29,6 +29,9 @@ def index(request):
 
     datoer = AktivitetDate.objects.all()
 
+    if request.GET.get('q'):
+        datoer = datoer.filter(aktivitet__title__contains=request.GET.get('q'))
+
     today = date.today()
     if request.GET.get('t') in ['this_week', 'next_week', 'next_month']:
         if request.GET.get('t') == 'this_week':

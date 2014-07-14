@@ -51,28 +51,30 @@
       </div>
     </div>
     <div class="col-md-4">
-      <div class="input-group">
-        <input type="text" class="form-control" placeholder="Hurtigsøk">
-        <div class="input-group-btn">
-          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Arrangør <span class="caret"></span></button>
-          <ul class="dropdown-menu pull-right">
-            <li><a href="#">{{ active_forening.name }}</a></li>
+      <form method="get">
+        <div class="input-group">
+          <input type="text" class="form-control" name="q" placeholder="Hurtigsøk" value="{{ request.GET.q }}">
+          <div class="input-group-btn">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Arrangør <span class="caret"></span></button>
+            <ul class="dropdown-menu pull-right">
+              <li><a href="#">{{ active_forening.name }}</a></li>
 
-            {% for type, groups in active_forening_children.items %}
-              {% if groups %}
-                <li class="divider"></li>
-                <li role="presentation" class="dropdown-header">{{ type | capfirst }}</li>
-                {% for group in groups %}
-                  <li{% if selected_forening.id == group.id %} class="active"{% endif %}>
-                    <a href="?{% query_transform forening=group.id %}">{{ group.name }}</a>
-                  </li>
-                {% endfor %}
-              {% endif %}
-            {% endfor %}
+              {% for type, groups in active_forening_children.items %}
+                {% if groups %}
+                  <li class="divider"></li>
+                  <li role="presentation" class="dropdown-header">{{ type | capfirst }}</li>
+                  {% for group in groups %}
+                    <li{% if selected_forening.id == group.id %} class="active"{% endif %}>
+                      <a href="?{% query_transform forening=group.id %}">{{ group.name }}</a>
+                    </li>
+                  {% endfor %}
+                {% endif %}
+              {% endfor %}
 
-          </ul>
+            </ul>
+          </div>
         </div>
-      </div>
+      </form>
     </div>
   </div>
 
