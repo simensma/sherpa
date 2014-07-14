@@ -114,7 +114,7 @@ $(function() {
         text_area.appendTo(text_areas);
         var colorpicker = text_area.find('.colorselector');
         colorpicker.ColorPicker({
-            color: '#0000ff',
+            color: '#000000',
             onShow: function(picker) {
                 $(picker).fadeIn('fast');
                 return false;
