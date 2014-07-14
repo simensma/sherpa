@@ -40,6 +40,9 @@ def index(request):
             Q(aktivitet__code=request.GET.get('q'))
         )
 
+    if request.GET.get('kladd') == "false":
+        datoer = datoer.filter(aktivitet__published=True)
+
     today = date.today()
     if request.GET.get('t') in ['this_week', 'next_week', 'next_month']:
         if request.GET.get('t') == 'this_week':
