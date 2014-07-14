@@ -143,8 +143,21 @@ def delete_release_pdf(sender, **kwargs):
 
 class Campaign(models.Model):
     title = models.CharField(max_length=255)
+
+    image_url = models.CharField(max_length=2048)
+    image_crop = models.CharField(max_length=1024) # JSON
+    button_enabled = models.BooleanField()
+    button_label = models.CharField(max_length=1024)
+    button_anchor = models.CharField(max_length=2048)
+    button_large = models.BooleanField()
+
     site = models.ForeignKey('core.Site')
 
     @staticmethod
     def on(site):
         return Campaign.objects.filter(site=site)
+
+class CampaignText(models.Model):
+    campaign = models.ForeignKey(Campaign, related_name='text')
+    content = models.CharField(max_length=1024)
+    style = models.CharField(max_length=1024) # JSON
