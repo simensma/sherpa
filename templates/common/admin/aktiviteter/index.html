@@ -43,14 +43,14 @@
     </div>
     <div class="col-md-5">
       <div class="btn-group">
-        <a class="btn btn-default{% if not params.t %} active{% endif %}"
-          href="?{% query_transform t="" page="" %}">Alle</a>
-        <a class="btn btn-default{% if params.t == "this_week" %} active{% endif %}"
-          href="?{% query_transform t="this_week" page="" %}">Denne uken</a>
-        <a class="btn btn-default{% if params.t == "next_week" %} active{% endif %}"
-          href="?{% query_transform t="next_week" page="" %}">Neste uke</a>
-        <a class="btn btn-default{% if params.t == "next_month" %} active{% endif %}"
-          href="?{% query_transform t="next_month" page="" %}">Neste måned</a>
+        <a class="btn btn-default{% if not params.tid %} active{% endif %}"
+          href="?{% query_transform tid="" page="" %}">Alle</a>
+        <a class="btn btn-default{% if params.tid == "this_week" %} active{% endif %}"
+          href="?{% query_transform tid="this_week" page="" %}">Denne uken</a>
+        <a class="btn btn-default{% if params.tid == "next_week" %} active{% endif %}"
+          href="?{% query_transform tid="next_week" page="" %}">Neste uke</a>
+        <a class="btn btn-default{% if params.tid == "next_month" %} active{% endif %}"
+          href="?{% query_transform tid="next_month" page="" %}">Neste måned</a>
       </div>
     </div>
     <div class="col-md-4">
@@ -88,10 +88,10 @@
       <ul class="list-inline">
         <li><a href="{% url "admin.aktiviteter.views.index" %}">Resett filter</a></li>
         <li>
-          {% if params.t == "all" %}
-            <a href="?{% query_transform t="" page="" %}">Skjul tidligere aktiviteter</a>
+          {% if params.tid == "all" %}
+            <a href="?{% query_transform tid="" page="" %}">Skjul tidligere aktiviteter</a>
           {% else %}
-            <a href="?{% query_transform t="all" page="" %}">Vis tidligere aktiviteter</a>
+            <a href="?{% query_transform tid="all" page="" %}">Vis tidligere aktiviteter</a>
           {% endif %}
         </li>
         <li>
