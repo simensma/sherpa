@@ -62,7 +62,7 @@
           <div class="input-group-btn">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Arrangør <span class="caret"></span></button>
             <ul class="dropdown-menu pull-right">
-              <li><a href="#">{{ active_forening.name }}</a></li>
+              <li><a href="?{% query_transform forening=active_forening.id page="" %}">{{ active_forening.name }}</a></li>
 
               {% for type, groups in active_forening_children.items %}
                 {% if groups %}
