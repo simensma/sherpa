@@ -89,6 +89,7 @@ def index(request):
     context = {
         'active_forening_children': children,
         'selected_forening': forening,
+        'search_query': request.GET.get('q'),
         'datoer': datoer,
     }
     return render(request, 'common/admin/aktiviteter/index.html', context)

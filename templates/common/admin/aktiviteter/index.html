@@ -111,7 +111,7 @@
             <tr>
               <td><input type="checkbox"></td>
               <td>
-                {{ dato.aktivitet.title|default:"(Mangler navn)"|highlight:request.GET.q }}
+                {{ dato.aktivitet.title|default:"(Mangler navn)"|highlight:search_query }}
                 <br>
                 <ul class="list-inline">
                   <li><a href="{% url 'admin.aktiviteter.views.edit' dato.aktivitet.id %}">Rediger</a></li>
@@ -127,7 +127,7 @@
                   <li><a href="#">Slett</a></li>
                 </ul>
               </td>
-              <td>{{ dato.aktivitet.code|highlight:request.GET.q }}</td>
+              <td>{{ dato.aktivitet.code|highlight:search_query }}</td>
               <td>{{ dato.start_date|date:"Y-m-d" }}</td>
               <td>{{ dato.end_date|date:"Y-m-d" }}</td>
               <td>
