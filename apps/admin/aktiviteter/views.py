@@ -101,8 +101,12 @@ def index(request):
     context = {
         'active_forening_children': children,
         'selected_forening': forening,
-        'search_query': request.GET.get('q'),
         'datoer': datoer,
+        'params': {
+            'q': request.GET.get('q'),
+            't': request.GET.get('t'),
+            'kladd': request.GET.get('kladd')
+        },
     }
     return render(request, 'common/admin/aktiviteter/index.html', context)
 

@@ -45,20 +45,20 @@
     </div>
     <div class="col-md-5">
       <div class="btn-group">
-        <a class="btn btn-default{% if not request.GET.t %} active{% endif %}"
+        <a class="btn btn-default{% if not params.t %} active{% endif %}"
           href="?{% query_transform t="" page="" %}">Alle</a>
-        <a class="btn btn-default{% if request.GET.t == "this_week" %} active{% endif %}"
+        <a class="btn btn-default{% if params.t == "this_week" %} active{% endif %}"
           href="?{% query_transform t="this_week" page="" %}">Denne uken</a>
-        <a class="btn btn-default{% if request.GET.t == "next_week" %} active{% endif %}"
+        <a class="btn btn-default{% if params.t == "next_week" %} active{% endif %}"
           href="?{% query_transform t="next_week" page="" %}">Neste uke</a>
-        <a class="btn btn-default{% if request.GET.t == "next_month" %} active{% endif %}"
+        <a class="btn btn-default{% if params.t == "next_month" %} active{% endif %}"
           href="?{% query_transform t="next_month" page="" %}">Neste måned</a>
       </div>
     </div>
     <div class="col-md-4">
       <form method="get">
         <div class="input-group">
-          <input type="text" class="form-control" name="q" placeholder="Hurtigsøk" value="{{ request.GET.q }}">
+          <input type="text" class="form-control" name="q" placeholder="Hurtigsøk" value="{{ params.q }}">
           <div class="input-group-btn">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Arrangør <span class="caret"></span></button>
             <ul class="dropdown-menu pull-right">
@@ -90,14 +90,14 @@
       <ul class="list-inline">
         <li><a href="{% url "admin.aktiviteter.views.index" %}">Resett filter</a></li>
         <li>
-          {% if request.GET.t == "all" %}
+          {% if params.t == "all" %}
             <a href="?{% query_transform t="" page="" %}">Skjul tidligere aktiviteter</a>
           {% else %}
             <a href="?{% query_transform t="all" page="" %}">Vis tidligere aktiviteter</a>
           {% endif %}
         </li>
         <li>
-          {% if request.GET.kladd == "false" %}
+          {% if params.kladd == "false" %}
             <a href="?{% query_transform kladd="" page="" %}">Vis kladd</a></li>
           {% else %}
             <a href="?{% query_transform kladd="false" page="" %}">Skjul kladd</a></li>
@@ -127,7 +127,7 @@
             <tr>
               <td><input type="checkbox"></td>
               <td>
-                {{ dato.aktivitet.title|default:"(Mangler navn)"|highlight:search_query }}
+                {{ dato.aktivitet.title|default:"(Mangler navn)"|highlight:params.q }}
                 <br>
                 <ul class="list-inline">
                   <li><a href="{% url 'admin.aktiviteter.views.edit' dato.aktivitet.id %}">Rediger</a></li>
@@ -143,7 +143,7 @@
                   <li><a href="#">Slett</a></li>
                 </ul>
               </td>
-              <td>{{ dato.aktivitet.code|highlight:search_query }}</td>
+              <td>{{ dato.aktivitet.code|highlight:params.q }}</td>
               <td>{{ dato.start_date|date:"Y-m-d" }}</td>
               <td>{{ dato.end_date|date:"Y-m-d" }}</td>
               <td>
