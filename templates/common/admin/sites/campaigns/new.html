@@ -102,43 +102,33 @@
           </div>
         </div>
 
-        <div class="form-default form-border form-horizontal" data-wrapper="campaign-button">
+        <div class="edit-button" data-wrapper="campaign-button">
 
-          <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" name="exclude-button"> Skjul knapp
-                </label>
-              </div>
-            </div>
-          </div>
+          <h2>Knapp og tekster</h2>
 
-          <div class="form-group">
-            <label class="col-md-2 control-label">Lenker til</label>
-            <div class="col-md-10">
+          <div class="form-inline">
+            <label class="checkbox-inline">
+              <input type="checkbox" name="exclude-button"> Skjul knapp
+            </label>
+
+            <label class="checkbox-inline">
+              <input type="checkbox" name="large-button"> Ekstra stor
+            </label>
+
+            <div class="form-group">
+              <label>Lenker til:</label>
               <input type="text" name="button-anchor" class="form-control" value="http://www.turistforeningen.no/">
             </div>
           </div>
 
-          <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-              <div class="checkbox">
-                <label>
-                   <input type="checkbox" name="large-button"> Ekstra stor
-                 </label>
-              </div>
-            </div>
-          </div>
-
-        </div><!-- /.form-default -->
+        </div><!-- /[data-wrapper='campaign-button'] -->
 
         <div class="text-areas">
           {# Will be filled out with jquery #}
         </div>
 
         <p>
-          <button class="btn btn-default add-text-area"><i class="fa fa-text-width"></i> Legg til en ny linje med tekst</button>
+          <button class="btn btn-default add-text-area"><i class="fa fa-text-width"></i> Legg til mer tekst</button>
         </p>
 
       </div>
@@ -151,39 +141,34 @@
 
   <div class="text-area-template jq-hide">
 
-    <div class="form-default form-border form-horizontal">
+    <div class="form-inline">
 
       <div class="form-group">
-        <label class="col-md-2 control-label">Skrift</label>
-        <div class="col-md-10">
-          <select name="font-sizes">
-            {% for font_size in font_sizes %}
-              <option value="{{ font_size }}px"{% if font_size == 48 %} selected{% endif %}>{{ font_size }}px</option>
-            {% endfor %}
-          </select>
-          <div class="checkbox">
-            <label>
-               <input type="checkbox" name="bold"> Fet tekst
-             </label>
-          </div>
+        <label>Skrift:</label>
+        <select name="font-sizes">
+          {% for font_size in font_sizes %}
+            <option value="{{ font_size }}px"{% if font_size == 48 %} selected{% endif %}>{{ font_size }}px</option>
+          {% endfor %}
+        </select>
+      </div>
+
+
+      <label>Farge:</label>
+
+      <div class="form-group">
+        <div class="colorselector">
+          <div style="background-color: #333"></div>
         </div>
       </div>
 
-      <div class="form-group">
-        <label class="col-md-2 control-label">Farge</label>
-        <div class="col-md-10">
-          <div class="colorselector">
-            <div style="background-color: #333"></div>
-          </div>
-        </div>
-      </div>
+      <label class="checkbox-inline">
+        <input type="checkbox" name="bold"> Fet tekst
+      </label>
 
       <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-          <button class="btn btn-danger remove">
-            <i class="fa fa-times"></i> Fjern
-          </button>
-        </div>
+        <button class="btn btn-danger remove">
+          <i class="fa fa-times"></i> Fjern
+        </button>
       </div>
 
     </div>
