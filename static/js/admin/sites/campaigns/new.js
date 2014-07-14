@@ -10,6 +10,7 @@ $(function() {
     var text_areas = wrapper.find('div.text-areas');
     var text_area_template = wrapper.find('div.text-area-template');
     var text_template = wrapper.find('div.text-template');
+    var campaign_title = wrapper.find('input[name="campaign-title"]');
 
     var button_wrapper = wrapper.find('[data-wrapper="campaign-button"]');
     var exclude_button = button_wrapper.find('input[name="exclude-button"]');
@@ -196,6 +197,34 @@ $(function() {
 
     custom_button.find('a').click(function(e) {
         e.preventDefault();
+    });
+
+    save_form.submit(function() {
+        var form_data = {
+            title: campaign_title.val(),
+            image_url: chosen_image.attr('src'),
+            image_crop: chosen_image.data('crop'),
+            button_enabled: !exclude_button.is(':checked'),
+            button_label: custom_button.find('a').html(),
+            button_anchor: button_anchor.val(),
+            button_large: large_button.is(':checked'),
+            text: [],
+        };
+
+        cropped_image_container.find('.text').each(function() {
+            form_data.text.push({
+                content: $(this).html(),
+                style: {
+                    'top': $(this).css('top'),
+                    'left': $(this).css('left'),
+                    'font-size': $(this).css('font-size'),
+                    'font-weight': $(this).css('font-weight'),
+                    'color': $(this).css('color'),
+                },
+            });
+        });
+
+        save_form.find('input[name="campaign"]').val(JSON.stringify(form_data));
     });
 
     /**

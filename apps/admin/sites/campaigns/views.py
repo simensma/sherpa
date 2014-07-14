@@ -20,3 +20,6 @@ def new(request, site):
         'font_sizes': range(20, 77),
     }
     return render(request, 'common/admin/sites/campaigns/new.html', context)
+
+def save(request, site):
+    pass # TBD
