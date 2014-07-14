@@ -45,10 +45,14 @@
     </div>
     <div class="col-md-5">
       <div class="btn-group">
-        <a class="btn btn-default{% if not request.GET.t %} active{% endif %}" href="?{% query_transform t="" %}">Alle</a>
-        <a class="btn btn-default{% if request.GET.t == "this_week" %} active{% endif %}" href="?{% query_transform t="this_week" %}">Denne uken</a>
-        <a class="btn btn-default{% if request.GET.t == "next_week" %} active{% endif %}" href="?{% query_transform t="next_week" %}">Neste uke</a>
-        <a class="btn btn-default{% if request.GET.t == "next_month" %} active{% endif %}" href="?{% query_transform t="next_month" %}">Neste måned</a>
+        <a class="btn btn-default{% if not request.GET.t %} active{% endif %}"
+          href="?{% query_transform t="" page="" %}">Alle</a>
+        <a class="btn btn-default{% if request.GET.t == "this_week" %} active{% endif %}"
+          href="?{% query_transform t="this_week" page="" %}">Denne uken</a>
+        <a class="btn btn-default{% if request.GET.t == "next_week" %} active{% endif %}"
+          href="?{% query_transform t="next_week" page="" %}">Neste uke</a>
+        <a class="btn btn-default{% if request.GET.t == "next_month" %} active{% endif %}"
+          href="?{% query_transform t="next_month" page="" %}">Neste måned</a>
       </div>
     </div>
     <div class="col-md-4">
@@ -66,7 +70,7 @@
                   <li role="presentation" class="dropdown-header">{{ type | capfirst }}</li>
                   {% for group in groups %}
                     <li{% if selected_forening.id == group.id %} class="active"{% endif %}>
-                      <a href="?{% query_transform forening=group.id %}">{{ group.name }}</a>
+                      <a href="?{% query_transform forening=group.id page="" %}">{{ group.name }}</a>
                     </li>
                   {% endfor %}
                 {% endif %}
@@ -87,16 +91,16 @@
         <li><a href="{% url "admin.aktiviteter.views.index" %}">Resett filter</a></li>
         <li>
           {% if request.GET.t == "all" %}
-            <a href="?{% query_transform t="" %}">Skjul tidligere aktiviteter</a>
+            <a href="?{% query_transform t="" page="" %}">Skjul tidligere aktiviteter</a>
           {% else %}
-            <a href="?{% query_transform t="all" %}">Vis tidligere aktiviteter</a>
+            <a href="?{% query_transform t="all" page="" %}">Vis tidligere aktiviteter</a>
           {% endif %}
         </li>
         <li>
           {% if request.GET.kladd == "false" %}
-            <a href="?{% query_transform kladd="" %}">Vis kladd</a></li>
+            <a href="?{% query_transform kladd="" page="" %}">Vis kladd</a></li>
           {% else %}
-            <a href="?{% query_transform kladd="false" %}">Skjul kladd</a></li>
+            <a href="?{% query_transform kladd="false" page="" %}">Skjul kladd</a></li>
           {% endif %}
       </ul>
     </div>
@@ -159,7 +163,7 @@
                 {% endif %}
               </td>
               <td>
-                <a href="?{% query_transform forening=dato.aktivitet.forening.id %}">
+                <a href="?{% query_transform forening=dato.aktivitet.forening.id page="" %}">
                   {{ dato.aktivitet.forening.name }}
                 </a>
               </td>
