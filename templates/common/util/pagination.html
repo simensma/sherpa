@@ -1,0 +1,29 @@
+{% load query_transform %}
+
+{% comment %}Django paginator is documented here
+https://docs.djangoproject.com/en/dev/topics/pagination/{% endcomment %}
+
+<ul class="pagination">
+  {% if items.has_previous %}
+    <li><a href="#">&laquo;</a></li>
+  {% else %}
+    <li class="disabled"><span>&laquo;</span></li>
+  {% endif %}
+
+  {% comment %}This will not look good when you have a ton of pages. Remember to
+  close SHERPA-329 when this is fixed.{% endcomment %}
+  {% for i in items.paginator.page_range %}
+    {% if items.number == i %}
+      <li class="active"><span>{{ i }}</span></li>
+    {% else %}
+      <li><a href="?{% query_transform page=i %}">{{ i }}</a></li>
+    {% endif %}
+  {% endfor %}
+
+  {% if items.has_next %}
+    <li><a href="#">&raquo;</a></li>
+  {% else %}
+    <li class="disabled"><span>&raquo;</span></li>
+  {% endif %}
+</ul>
+

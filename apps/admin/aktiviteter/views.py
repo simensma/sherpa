@@ -8,6 +8,7 @@ from django.conf import settings
 from django.db.models import Q
 from django.contrib.gis.geos import Point
 from django.contrib import messages
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from aktiviteter.models import Aktivitet, AktivitetDate, AktivitetImage
 from core.models import Tag, County, Municipality
@@ -16,27 +17,96 @@ from user.models import User
 from focus.models import Actor
 from foreninger.models import Forening
 
-from datetime import datetime
+from datetime import datetime, date, timedelta
+
 import json
 import re
 
 def index(request):
-    aktiviteter = Aktivitet.objects.all()
+    try:
+        forening = Forening.objects.get(id=request.GET.get('forening'))
+    except (ValueError, Forening.DoesNotExist):
+        forening = request.active_forening
 
-    if not (request.GET.get('forening') == 'alle' and request.user.has_perm('sherpa_admin')):
-        aktiviteter = aktiviteter.filter(
-            Q(forening=request.active_forening) |
-            Q(co_forening=request.active_forening)
+    # Check if user has access to the chosen forening. If not we set it to
+    # current forening.
+    if forening not in request.user.all_foreninger():
+        forening = request.active_forening
+
+    datoer = AktivitetDate.objects.all()
+
+    if request.GET.get('sok'):
+        datoer = datoer.filter(
+            Q(aktivitet__title__contains=request.GET.get('sok')) |
+            Q(aktivitet__code=request.GET.get('sok'))
         )
-        exclude_filter = False
-    else:
-        exclude_filter = True
 
-    aktiviteter = aktiviteter.order_by('-pub_date')
+    if request.GET.get('kladd') == "false":
+        datoer = datoer.filter(aktivitet__published=True)
+
+    today = date.today()
+    if request.GET.get('tid') in ['denne_uke', 'neste_uke', 'neste_maned']:
+        if request.GET.get('tid') == 'denne_uke':
+            start = today - timedelta(days=today.weekday())
+            end = today + timedelta(days=-start.weekday(), weeks=1)
+
+        elif request.GET.get('tid') == 'neste_uke':
+            start = today + timedelta(days=-today.weekday(), weeks=1)
+            end = today + timedelta(days=-today.weekday(), weeks=2)
+
+        else:
+            (start_year, start_month) = divmod(today.month, 12)
+            (end_year, end_month) = divmod(today.month + 1, 12)
+
+            start = today.replace(year=today.year+start_year, month=start_month + 1, day=1)
+            end = today.replace(year=today.year+end_year, month=end_month + 1, day=1)
+
+        datoer = datoer.filter(start_date__gte=start, start_date__lt=end)
+    elif request.GET.get('tid') != 'alle':
+        datoer = datoer.filter(start_date__gte=today)
+
+    datoer = datoer.order_by('start_date')
+
+    # Only admin should have access to children groups. This will potentially be
+    # confusing for users who have access to several groups without being admin.
+    if request.user.is_admin_in_forening(request.active_forening):
+        children = request.active_forening.get_children_sorted()
+        datoer = datoer.filter(
+            Q(aktivitet__forening=forening) |
+            Q(aktivitet__co_forening=forening) |
+            Q(
+                aktivitet__forening__parents=forening,
+                aktivitet__forening__type='turgruppe',
+            ) |
+            Q(
+                aktivitet__co_forening__parents=forening,
+                aktivitet__co_forening__type='turgruppe',
+            )
+        )
+    else:
+        children = dict()
+        datoer = datoer.filter(
+            Q(aktivitet__forening=forening) |
+            Q(aktivitet__co_forening=forening)
+        )
+
+    paginator = Paginator(datoer, 25)
+    try:
+        datoer = paginator.page(request.GET.get('page'))
+    except PageNotAnInteger:
+        datoer = paginator.page(1)
+    except EmptyPage:
+        datoer = paginator.page(paginator.num_pages)
 
     context = {
-        'aktiviteter': aktiviteter,
-        'exclude_filter': exclude_filter,
+        'active_forening_children': children,
+        'selected_forening': forening,
+        'datoer': datoer,
+        'params': {
+            'sok': request.GET.get('sok'),
+            'tid': request.GET.get('tid'),
+            'kladd': request.GET.get('kladd')
+        },
     }
     return render(request, 'common/admin/aktiviteter/index.html', context)
 

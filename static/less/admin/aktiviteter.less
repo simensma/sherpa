@@ -4,20 +4,27 @@
 }
 
 div.aktivitet-listing {
-  div.new-aktivitet {
-    a.btn {
-      font-size: 20px !important;
-      padding-top: 15px;
-      padding-bottom: 15px;
-      width: 300px;
-      margin-bottom: 20px;
+  table.table {
+    ul.list-inline {
+      opacity: 0;
+    }
+
+    ul.list-inline:hover {
+      opacity: 1;
+    }
+
+    tr:hover ul.list-inline {
+      opacity: 1;
     }
   }
 
- table.aktivitet-listing {
-    td.aktivitet-container {
-      padding: 20px 10px;
-    }
+  span.highlight {
+    background-color: #FFFF00;
+  }
+
+  ul.pagination {
+    margin-top: 0;
+    margin-bottom: 0;
   }
 }
 

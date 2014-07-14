@@ -2,6 +2,8 @@
 
 {% load rowiterator %}
 {% load date_fromto %}
+{% load query_transform %}
+{% load highlight %}
 
 {% block title %}Aktiviteter — {{ block.super }}{% endblock %}
 
@@ -25,11 +27,10 @@
 
 <div class="row">
   <div class="col-md-12">
-    <div class="alert alert-info">
+    <div class="alert alert-warning">
       <a class="close">x</a>
-      <strong>Dette er en prototype som ikke er i bruk.</strong><br>
-      Vi sikter på å lansere det nye systemet <s>høsten 2013</s> våren/sommeren 2014, men <strong>i mellomtiden må du <a href="http://{{ old_site }}/admin/activity.php">bruke gamle Sherpa</a></strong> om du vil behandle aktiviteter som publiseres på nettsidene.<br>
-      Du kan imidlertid gjerne prøve ut det nye systemet, men vær obs på at aktiviteter som legges inn <strong>vil bli slettet</strong> før den offentlige lanseringen. Du kan besøke test-visningen av disse på <a href="http://{{ site.domain }}/aktiviteter-beta/">http://{{ site.domain }}/aktiviteter-beta/</a>.
+      <strong>Dette er testsystem</strong><br>
+      Du må benytte <a href="http://{{ old_site }}/admin/activity.php">gamle Sherpa</a></strong> om du vil behandle aktiviteter som skal publiseres på nettsidene.<br>
     </div>
   </div>
 </div>
@@ -37,92 +38,190 @@
 <div class="aktivitet-listing">
 
   <div class="row">
-    <div class="col-md-12">
-      <div class="new-aktivitet">
-        <a href="{% url 'admin.aktiviteter.views.new' %}" class="btn btn-default btn-lg">Opprett en ny aktivitet</a>
+    <div class="col-md-3">
+      <a href="{% url 'admin.aktiviteter.views.new' %}" class="btn btn-success">Opprett en ny aktivitet</a>
+    </div>
+    <div class="col-md-5">
+      <div class="btn-group">
+        <a class="btn btn-default{% if not params.tid %} active{% endif %}"
+          href="?{% query_transform tid="" page="" %}">Alle</a>
+        <a class="btn btn-default{% if params.tid == "denne_uke" %} active{% endif %}"
+          href="?{% query_transform tid="denne_uke" page="" %}">Denne uken</a>
+        <a class="btn btn-default{% if params.tid == "neste_uke" %} active{% endif %}"
+          href="?{% query_transform tid="neste_uke" page="" %}">Neste uke</a>
+        <a class="btn btn-default{% if params.tid == "neste_maned" %} active{% endif %}"
+          href="?{% query_transform tid="neste_maned" page="" %}">Neste måned</a>
       </div>
+    </div>
+    <div class="col-md-4">
+      <form method="get">
+        <div class="input-group">
+          <input type="text" class="form-control" name="sok" placeholder="Hurtigsøk"{% if params.sok %} value="{{ params.sok }}"{% endif %}>
+          <div class="input-group-btn">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Arrangør <span class="caret"></span></button>
+            <ul class="dropdown-menu pull-right">
+              <li><a href="?{% query_transform forening=active_forening.id page="" %}">{{ active_forening.name }}</a></li>
+
+              {% for type, groups in active_forening_children.items %}
+                {% if groups %}
+                  <li class="divider"></li>
+                  <li role="presentation" class="dropdown-header">{{ type | capfirst }}</li>
+                  {% for group in groups %}
+                    <li{% if selected_forening.id == group.id %} class="active"{% endif %}>
+                      <a href="?{% query_transform forening=group.id page="" %}">{{ group.name }}</a>
+                    </li>
+                  {% endfor %}
+                {% endif %}
+              {% endfor %}
+
+            </ul>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 
-  <div class="list-wrapper">
+  <hr>
 
-    <p>
-      <em>
-        {% if not exclude_filter %}
-
-          Viser aktiviteter tilhørende {{ active_forening.name }}.<br>
-          {% if user.perms.sherpa_admin %}
-            <a href="{% url 'admin.aktiviteter.views.index' %}?forening=alle">Vis alle aktiviteter</a> (kun Sherpa-administratorer har tilgang til dette)
+  <div class="row">
+    <div class="col-md-12">
+      <ul class="list-inline">
+        <li><a href="{% url "admin.aktiviteter.views.index" %}">Resett filter</a></li>
+        <li>
+          {% if params.tid == "alle" %}
+            <a href="?{% query_transform tid="" page="" %}">Skjul tidligere aktiviteter</a>
+          {% else %}
+            <a href="?{% query_transform tid="alle" page="" %}">Vis tidligere aktiviteter</a>
           {% endif %}
+        </li>
+        <li>
+          {% if params.kladd == "false" %}
+            <a href="?{% query_transform kladd="" page="" %}">Vis kladd</a></li>
+          {% else %}
+            <a href="?{% query_transform kladd="false" page="" %}">Skjul kladd</a></li>
+          {% endif %}
+      </ul>
+    </div>
+  </div>
 
-        {% else %}
-
-          Viser alle aktiviteter. <a href="{% url 'admin.aktiviteter.views.index' %}">Vis kun for {{ active_forening.name }}</a>
-
-        {% endif %}
-      </em>
-    </p>
-
+  {% if datoer %}
     <div class="row">
-      <div class="col-md-12">
-        <table class="table table-striped aktivitet-listing">
-          {% for aktivitet in aktiviteter %}
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
             <tr>
-              <td class="aktivitet-container">
-                <h3>
-                  <a href="{% url 'admin.aktiviteter.views.edit' aktivitet.id %}">{{ aktivitet.title|default:"(Mangler navn)" }}</a>
-                  {{ aktivitet.code }}
-                </h3>
-
-                <p>
-                  {% if not aktivitet.published %}
-                    <span class="label label-important">Ikke publisert</span>
-                  {% elif aktivitet.private %}
-                    <span class="label label-important">Privat aktivitet</span>
-                  {% elif not aktivitet.is_published %}
-                    <span class="label label-warning">Publiseres {{ aktivitet.pub_date|date:"j. F Y" }}</span>
-                  {% else %}
-                    <span class="label label-success">Publisert {{ aktivitet.pub_date|date:"j. F Y" }}</span>
+              <th><input type="checkbox"></th>
+              <th>Tittel</th>
+              <th>Turkode</th>
+              <th>Dato fra</th>
+              <th>Dato til</th>
+              <th>Deltakere</th>
+              <th>Arrangeres av</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for dato in datoer %}
+            <tr>
+              <td><input type="checkbox"></td>
+              <td>
+                {{ dato.aktivitet.title|default:"(Mangler navn)"|highlight:params.sok }}
+                <br>
+                <ul class="list-inline">
+                  <li><a href="{% url 'admin.aktiviteter.views.edit' dato.aktivitet.id %}">Rediger</a></li>
+                  {% if dato.signup_enabled %}
+                    <li>
+                      <a href="{% url 'admin.aktiviteter.views.participants' dato.aktivitet.id %}">
+                        Deltakere
+                      </a>
+                    </li>
                   {% endif %}
-                </p>
-
-
-                {% for date in aktivitet.get_dates_ordered %}
-                  <div class="row">
-                    <div class="col-md-6">
-
-                      {{ date.start_date|date_fromto:date.end_date }}
-                      <a href="{% url 'aktiviteter.views.show' date.id %}">(direkte lenke)</a>
-
-                    </div>
-                    <div class="col-md-6">
-                      <a href="{% url 'admin.aktiviteter.views.participants' aktivitet.id %}">{{ date.total_signup_count }} påmeldte</a>
-
-                      {% if date.accepts_signups %}
-                        <span class="label label-success">Åpen til {{ date.signup_deadline|date:"j. F Y" }}</span>
-                      {% elif date.will_accept_signups %}
-                        <span class="label label-warning">Åpner {{ date.signup_start|date:"j. F Y" }}</span>
-                      {% elif date.signup_deadline_passed %}
-                        <span class="label label-important">Frist utløpt</span>
-                      {% endif %}
-                    </div>
-                  </div>
-
-                {% empty %}
-
-                  <p>
-                    <em>Ingen turdatoer er registrert på denne aktiviteten! Den kommer ikke frem i søket før minst én turdato registreres.</em>
-                  </p>
-
-                {% endfor %}
+                  <li>Kopi</li>
+                  <li>
+                    {% if dato.aktivitet.published %}
+                      <a href="{% url 'aktiviteter.views.show' dato.id %}">Vis</a>
+                    {% else %}
+                      Vis
+                    {% endif %}
+                  </li>
+                  <li>Avlys</li>
+                </ul>
+              </td>
+              <td>{{ dato.aktivitet.code|highlight:params.sok }}</td>
+              <td>{{ dato.start_date|date:"Y-m-d" }}</td>
+              <td>{{ dato.end_date|date:"Y-m-d" }}</td>
+              <td>
+                {% if dato.signup_enabled %}
+                  {% if dato.is_full %}
+                    {{ dato.signup_max_allowed }} av {{ dato.signup_max_allowed }}<br>
+                    {% if dato.is_waitinglist %}
+                      <span class="label label-warning">{{ dato.total_waitinglist_count }} på venteliste</span>
+                    {% else %}
+                      <span class="label label-primary">Ingen ledig plass</span>
+                    {% endif %}
+                  {% else %}
+                    {{ dato.total_signup_count }} av {{ dato.signup_max_allowed }}<br>
+                  {% endif %}
+                {% else %}
+                  Ingen påmelding
+                {% endif %}
+              </td>
+              <td>
+                <a href="?{% query_transform forening=dato.aktivitet.forening.id page="" %}">
+                  {{ dato.aktivitet.forening.name }}
+                </a>
+              </td>
+              <td>
+                {% if dato.aktivitet.published %}
+                  <span class="label label-success">Publisert</span>
+                {% else %}
+                  <span class="label label-default">Kladd</span>
+                {% endif %}
               </td>
             </tr>
           {% endfor %}
+          </tbody>
         </table>
       </div>
     </div>
-  </div>
+
+    <hr>
+
+    <div class="row">
+      <div class="col-md-2">
+        <div class="btn-group">
+          <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+            Endre merkede <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#">Action</a></li>
+            <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-10 text-center">
+        {% if datoer.has_other_pages %}
+          {% include 'common/util/pagination.html' with items=datoer %}
+        {% endif %}
+      </div>
+    </div>
+  {% else %}
+    <div class="well">
+      {% if not request.GET %}
+        Hei, og velkommen til det nye aktivitetssystemet! Du kan legge inn turer,
+        kurs, og andre arrangementer
+        <a href="{% url 'admin.aktiviteter.views.new' %}">her</a>.
+      {% else %}
+        Ingen turer, kurs, eller arrangmenter ble funnet.
+        <a href="{% url 'admin.aktiviteter.views.index' %}">Tilbakestill søk og filter</a>.
+      {% endif %}
+    </div>
+  {% endif %}
 
 </div>
 
 {% endblock %}
+
