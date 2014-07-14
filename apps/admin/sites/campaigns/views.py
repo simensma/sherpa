@@ -34,6 +34,7 @@ def save(request, site):
         button_label=post_data['button_label'],
         button_anchor=post_data['button_anchor'],
         button_large=post_data['button_large'],
+        button_position=json.dumps(post_data['button_position']),
         site=active_site,
     )
     campaign.save()

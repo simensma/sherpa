@@ -208,6 +208,10 @@ $(function() {
             button_label: custom_button.find('a').html(),
             button_anchor: button_anchor.val(),
             button_large: large_button.is(':checked'),
+            button_position: {
+                top: custom_button.css('top'),
+                left: custom_button.css('left'),
+            },
             text: [],
         };
 
