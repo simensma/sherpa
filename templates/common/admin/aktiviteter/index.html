@@ -58,7 +58,7 @@
     <div class="col-md-4">
       <form method="get">
         <div class="input-group">
-          <input type="text" class="form-control" name="q" placeholder="Hurtigsøk" value="{{ params.q }}">
+          <input type="text" class="form-control" name="q" placeholder="Hurtigsøk"{% if params.q %} value="{{ params.q }}"{% endif %}>
           <div class="input-group-btn">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Arrangør <span class="caret"></span></button>
             <ul class="dropdown-menu pull-right">
