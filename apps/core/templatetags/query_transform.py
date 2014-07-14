@@ -6,11 +6,11 @@ register = template.Library()
 @register.simple_tag(takes_context=True)
 def query_transform(context, **kwargs):
     updated = context['request'].GET.copy()
-    for key in kwargs:
+    for key, value in kwargs.items():
         if updated.get(key):
             updated.pop(key)
 
-        if kwargs[key] != '':
-            updated.__setitem__(key, kwargs[key])
+        if value != '':
+            updated[key] = value
     return updated.urlencode()
 
