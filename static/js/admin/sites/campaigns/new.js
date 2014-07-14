@@ -109,9 +109,7 @@ $(function() {
 
         // Clone and insert the text area
         var text_area = text_area_template.clone();
-        var input = text_area.find('input[name="content"]');
         text_area.removeClass('text-area-template').addClass('text-area').show();
-        input.val(input.val() + ' ' + (id+1));
         text_area.attr('data-id', id);
         text_area.appendTo(text_areas);
         var colorpicker = text_area.find('.colorselector');
@@ -137,17 +135,13 @@ $(function() {
         var text = text_template.clone();
         text.removeClass('text-template').addClass('text').show();
         text.attr('data-id', id);
-        text.text(text_area.find('input[name="content"]').val());
+        text.text(text.text() + ' ' + (id+1));
         text.css('font-size', text_area.find('select option:selected').val());
         text.css('top', 0);
         text.css('left', 0);
         text.appendTo(cropped_image_container);
 
         // Add events on text area changes
-        text_area.find('input[name="content"]').keyup(function() {
-            text.text($(this).val());
-        });
-
         text_area.find('select').change(function() {
             text.css('font-size', $(this).find('option:selected').val());
         });
@@ -236,12 +230,14 @@ $(function() {
     });
 
     $(document.body).on('mousedown', '.cropped-image-container .campaign-element', function(e) {
-        e.preventDefault();
-        dragged_text = $(e.target);
+        if($(e.target).is('.campaign-element')) {
+            dragged_text = $(e.target);
+        } else {
+            dragged_text = $(e.target).parents('.campaign-element');
+        }
     });
 
     $(document.body).on('mouseup', function(e) {
-        e.preventDefault();
         dragged_text = undefined;
     });
 
