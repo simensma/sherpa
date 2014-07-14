@@ -235,7 +235,7 @@ $(function() {
         }
     });
 
-    $(document.body).on('mousedown', '.cropped-image-container .text, .cropped-image-container .button', function(e) {
+    $(document.body).on('mousedown', '.cropped-image-container .campaign-element', function(e) {
         e.preventDefault();
         dragged_text = $(e.target);
     });
