@@ -85,7 +85,11 @@
     <div class="row">
       <div class="col-md-12">
         <ul class="list-inline">
-          <li><a href="#">Vis tidligere aktiviteter</a></li>
+          {% if request.GET.t == "all" %}
+            <li><a href="?{% query_transform t="" %}">Skjul tidligere aktiviteter</a></li>
+          {% else %}
+            <li><a href="?{% query_transform t="all" %}">Vis tidligere aktiviteter</a></li>
+          {% endif %}
           <li><a href="#">Skjul kladd</a></li>
         </ul>
       </div>

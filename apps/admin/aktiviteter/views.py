@@ -58,7 +58,7 @@ def index(request):
             end = today.replace(year=today.year+end_year, month=end_month + 1, day=1)
 
         datoer = datoer.filter(start_date__gte=start, start_date__lt=end)
-    else:
+    elif request.GET.get('t') != 'all':
         datoer = datoer.filter(start_date__gte=today)
 
     datoer = datoer.order_by('start_date')
