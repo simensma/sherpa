@@ -1,10 +1,10 @@
 # encoding: utf-8
 from django.shortcuts import render, redirect
 
+import json
+
 from admin.models import Campaign, CampaignText
 from core.models import Site
-
-import json
 
 def index(request, site):
     active_site = Site.objects.get(id=site)
