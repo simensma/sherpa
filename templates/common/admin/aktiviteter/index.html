@@ -199,7 +199,9 @@
         </div>
       </div>
       <div class="col-md-10 text-center">
-        {% include 'common/util/pagination.html' with items=datoer %}
+        {% if datoer.has_other_pages %}
+          {% include 'common/util/pagination.html' with items=datoer %}
+        {% endif %}
       </div>
     </div>
   {% else %}
