@@ -166,3 +166,7 @@ class CampaignText(models.Model):
     campaign = models.ForeignKey(Campaign, related_name='text')
     content = models.CharField(max_length=1024)
     style = models.CharField(max_length=1024) # JSON
+
+    class Meta:
+        # The order isn't important but getting a *consistent* ordering can be helpful
+        ordering = ['id']
