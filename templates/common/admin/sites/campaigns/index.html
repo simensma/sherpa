@@ -45,6 +45,9 @@
                 {{ text.content|safe }}
               </div>
             {% endfor %}
+            <div>
+              {{ campaign.created|date:"j. F Y" }}
+            </div>
           </div>
         </div>
 
