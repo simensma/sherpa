@@ -45,12 +45,12 @@ def index(request):
         datoer = datoer.filter(aktivitet__published=True)
 
     today = date.today()
-    if request.GET.get('tid') in ['this_week', 'next_week', 'next_month']:
-        if request.GET.get('tid') == 'this_week':
+    if request.GET.get('tid') in ['denne_uke', 'neste_uke', 'neste_maned']:
+        if request.GET.get('tid') == 'denne_uke':
             start = today - timedelta(days=today.weekday())
             end = today + timedelta(days=-start.weekday(), weeks=1)
 
-        elif request.GET.get('tid') == 'next_week':
+        elif request.GET.get('tid') == 'neste_uke':
             start = today + timedelta(days=-today.weekday(), weeks=1)
             end = today + timedelta(days=-today.weekday(), weeks=2)
 
@@ -62,7 +62,7 @@ def index(request):
             end = today.replace(year=today.year+end_year, month=end_month + 1, day=1)
 
         datoer = datoer.filter(start_date__gte=start, start_date__lt=end)
-    elif request.GET.get('tid') != 'all':
+    elif request.GET.get('tid') != 'alle':
         datoer = datoer.filter(start_date__gte=today)
 
     datoer = datoer.order_by('start_date')
