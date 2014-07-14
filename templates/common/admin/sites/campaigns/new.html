@@ -50,6 +50,16 @@
         </li>
         <li>
           <a href="javascript:undefined" data-step="3">Sett inn tekst/knapp</a>
+          <span class="divider">
+            <i class="fa fa-angle-right"></i>
+          </span>
+        </li>
+        <li>
+          <form action="" method="post" class="save">
+            {% csrf_token %}
+            <input type="hidden" name="campaign">
+            <button class="btn btn-success" type="submit">Lagre</button>
+          </form>
         </li>
       </ol>
 
