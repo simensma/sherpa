@@ -90,7 +90,7 @@ def index(request):
             Q(aktivitet__co_forening=forening)
         )
 
-    paginator = Paginator(datoer, 2)
+    paginator = Paginator(datoer, 25)
     try:
         datoer = paginator.page(request.GET.get('page'))
     except PageNotAnInteger:
