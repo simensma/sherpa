@@ -27,6 +27,11 @@ def index(request):
     except (ValueError, Forening.DoesNotExist):
         forening = request.active_forening
 
+    # Check if user has access to the chosen forening. If not we set it to
+    # current forening.
+    if forening not in request.user.all_foreninger():
+        forening = request.active_forening
+
     datoer = AktivitetDate.objects.all()
 
     if request.GET.get('q'):
@@ -56,22 +61,33 @@ def index(request):
     else:
         datoer = datoer.filter(start_date__gte=today)
 
-    datoer = datoer.filter(
-        Q(aktivitet__forening=forening) |
-        Q(aktivitet__co_forening=forening) |
-        Q(
-            aktivitet__forening__parents=forening,
-            aktivitet__forening__type='turgruppe',
-        ) |
-        Q(
-            aktivitet__co_forening__parents=forening,
-            aktivitet__co_forening__type='turgruppe',
-        )
-    )
     datoer = datoer.order_by('start_date')
 
+    # Only admin should have access to children groups. This will potentially be
+    # confusing for users who have access to several groups without being admin.
+    if request.user.is_admin_in_forening(request.active_forening):
+        children = request.active_forening.get_children_sorted()
+        datoer = datoer.filter(
+            Q(aktivitet__forening=forening) |
+            Q(aktivitet__co_forening=forening) |
+            Q(
+                aktivitet__forening__parents=forening,
+                aktivitet__forening__type='turgruppe',
+            ) |
+            Q(
+                aktivitet__co_forening__parents=forening,
+                aktivitet__co_forening__type='turgruppe',
+            )
+        )
+    else:
+        children = dict()
+        datoer = datoer.filter(
+            Q(aktivitet__forening=forening) |
+            Q(aktivitet__co_forening=forening)
+        )
+
     context = {
-        'active_forening_children': request.active_forening.get_children_sorted(),
+        'active_forening_children': children,
         'selected_forening': forening,
         'datoer': datoer,
     }
