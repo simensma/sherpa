@@ -11,7 +11,7 @@ $(function() {
     var text_template = wrapper.find('div.text-template');
 
     var button_wrapper = wrapper.find('[data-wrapper="campaign-button"]');
-    var include_button = button_wrapper.find('input[name="include-button"]');
+    var exclude_button = button_wrapper.find('input[name="exclude-button"]');
     var button_anchor = button_wrapper.find('input[name="button-anchor"]');
     var large_button = button_wrapper.find('input[name="large-button"]');
     var custom_button = cropped_image_container.find('.button');
@@ -161,15 +161,15 @@ $(function() {
         cropped_image_container.find('.text[data-id="' + id + '"]').remove();
     });
 
-    include_button.change(function() {
+    exclude_button.change(function() {
         var checked = $(this).is(':checked');
-        button_anchor.prop('disabled', !checked);
-        large_button.prop('disabled', !checked);
+        button_anchor.prop('disabled', checked);
+        large_button.prop('disabled', checked);
 
         if(checked) {
-            custom_button.show();
-        } else {
             custom_button.hide();
+        } else {
+            custom_button.show();
         }
     });
 
