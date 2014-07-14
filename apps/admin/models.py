@@ -150,6 +150,7 @@ class Campaign(models.Model):
     button_label = models.CharField(max_length=1024)
     button_anchor = models.CharField(max_length=2048)
     button_large = models.BooleanField()
+    button_position = models.CharField(max_length=512) # JSON
 
     site = models.ForeignKey('core.Site')
 
