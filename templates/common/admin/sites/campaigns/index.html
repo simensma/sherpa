@@ -32,9 +32,21 @@
 
       {% for campaign in campaigns %}
 
-        <p>
-          {{ campaign.title }}
-        </p>
+        <div class="campaign-preview media">
+          <a class="pull-left" href="">
+            <img class="media-object" src="{{ campaign.image_url }}" alt="{{ campaign.title }}">
+          </a>
+          <div class="media-body">
+            <h2 class="media-heading">
+              <a href="">{{ campaign.title }}</a>
+            </h2>
+            {% for text in campaign.text.all %}
+              <div>
+                {{ text.content|safe }}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
 
       {% empty %}
 
