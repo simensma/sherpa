@@ -81,27 +81,27 @@
 
   <hr>
 
-  {% if datoer %}
-    <div class="row">
-      <div class="col-md-12">
-        <ul class="list-inline">
-          <li>
-            {% if request.GET.t == "all" %}
-              <a href="?{% query_transform t="" %}">Skjul tidligere aktiviteter</a>
-            {% else %}
-              <a href="?{% query_transform t="all" %}">Vis tidligere aktiviteter</a>
-            {% endif %}
-          </li>
-          <li>
-            {% if request.GET.kladd == "false" %}
-              <a href="?{% query_transform kladd="" %}">Vis kladd</a></li>
-            {% else %}
-              <a href="?{% query_transform kladd="false" %}">Skjul kladd</a></li>
-            {% endif %}
-        </ul>
-      </div>
+  <div class="row">
+    <div class="col-md-12">
+      <ul class="list-inline">
+        <li>
+          {% if request.GET.t == "all" %}
+            <a href="?{% query_transform t="" %}">Skjul tidligere aktiviteter</a>
+          {% else %}
+            <a href="?{% query_transform t="all" %}">Vis tidligere aktiviteter</a>
+          {% endif %}
+        </li>
+        <li>
+          {% if request.GET.kladd == "false" %}
+            <a href="?{% query_transform kladd="" %}">Vis kladd</a></li>
+          {% else %}
+            <a href="?{% query_transform kladd="false" %}">Skjul kladd</a></li>
+          {% endif %}
+      </ul>
     </div>
+  </div>
 
+  {% if datoer %}
     <div class="row">
       <div class="table-responsive">
         <table class="table table-striped">
