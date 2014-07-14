@@ -27,7 +27,7 @@
       </p>
 
       <p>
-        <a href="{% url 'admin.sites.campaigns.views.new' active_site.id %}" class="btn btn-default btn-lg">Opprett ny kampanje</a>
+        <a href="{% url 'admin.sites.campaigns.views.edit' active_site.id %}" class="btn btn-default btn-lg">Opprett ny kampanje</a>
       </p>
 
       {% for campaign in campaigns %}

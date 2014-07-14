@@ -1,6 +1,6 @@
 $(function() {
 
-    var wrapper = $('div.new-campaign');
+    var wrapper = $('div.edit-campaign');
     var section_progress = wrapper.find('.section-progress');
     var save_form = section_progress.find('form.save');
     var chosen_image = wrapper.find('img.chosen-image');

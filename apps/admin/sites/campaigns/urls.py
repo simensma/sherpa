@@ -3,6 +3,6 @@ from django.conf.urls.defaults import patterns, include, url
 
 urlpatterns = patterns('admin.sites.campaigns.views',
     url(r'^$', 'index'),
-    url(r'^ny/$', 'new'),
+    url(r'^rediger/$', 'edit'),
     url(r'^lagre/$', 'save'),
 )

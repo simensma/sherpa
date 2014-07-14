@@ -8,7 +8,7 @@
   <script src="{{ STATIC_URL }}lib/jcrop/js/jquery.Jcrop.min.js"></script>
   <script src="{{ STATIC_URL }}js/admin/images/util/image-archive-picker.js"></script>
   <script src="{{ STATIC_URL }}js/admin/images/util/image-upload-dialog.js"></script>
-  <script src="{{ STATIC_URL }}js/admin/sites/campaigns/new.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/sites/campaigns/edit.js"></script>
 {% endblock %}
 
 {% block extra_css %}
@@ -17,7 +17,7 @@
 
 {% block body %}
 
-<div class="new-campaign">
+<div class="edit-campaign">
 
   <div class="row">
     <div class="col-lg-12">
@@ -27,7 +27,7 @@
         <li><a href="{% url 'admin.sites.views.index' active_site.id %}">Nettsteder</a></li>
         <li><a href="{% url 'admin.sites.views.index' active_site.id %}">{{ active_site.domain }}</a></li>
         <li><a href="{% url 'admin.sites.campaigns.views.index' active_site.id %}">Kampanjer</a></li>
-        <li><a href="{% url 'admin.sites.campaigns.views.new' active_site.id %}">Ny kampanje</a></li>
+        <li><a href="{% url 'admin.sites.campaigns.views.edit' active_site.id %}">Ny kampanje</a></li>
       </ol>
     </div>
   </div><!-- /.row -->
