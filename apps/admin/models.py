@@ -152,6 +152,7 @@ class Campaign(models.Model):
     button_large = models.BooleanField()
     button_position = models.CharField(max_length=512) # JSON
 
+    created = models.DateField(auto_now_add=True)
     site = models.ForeignKey('core.Site')
 
     @staticmethod
