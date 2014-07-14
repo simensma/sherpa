@@ -129,7 +129,13 @@
                 <br>
                 <ul class="list-inline">
                   <li><a href="{% url 'admin.aktiviteter.views.edit' dato.aktivitet.id %}">Rediger</a></li>
-                  <li><a href="{% url 'admin.aktiviteter.views.participants' dato.aktivitet.id %}">Deltakere</a></li>
+                  {% if dato.signup_enabled %}
+                    <li>
+                      <a href="{% url 'admin.aktiviteter.views.participants' dato.aktivitet.id %}">
+                        Deltakere
+                      </a>
+                    </li>
+                  {% endif %}
                   <li>Kopi</li>
                   <li>
                     {% if dato.aktivitet.published %}
