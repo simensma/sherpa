@@ -155,12 +155,12 @@ class Campaign(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     site = models.ForeignKey('core.Site')
 
-    class Meta:
-        ordering = ['-created']
-
     @staticmethod
     def on(site):
         return Campaign.objects.filter(site=site)
+
+    class Meta:
+        ordering = ['-created']
 
 class CampaignText(models.Model):
     campaign = models.ForeignKey(Campaign, related_name='text')
