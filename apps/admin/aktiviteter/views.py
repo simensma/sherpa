@@ -35,10 +35,10 @@ def index(request):
 
     datoer = AktivitetDate.objects.all()
 
-    if request.GET.get('q'):
+    if request.GET.get('sok'):
         datoer = datoer.filter(
-            Q(aktivitet__title__contains=request.GET.get('q')) |
-            Q(aktivitet__code=request.GET.get('q'))
+            Q(aktivitet__title__contains=request.GET.get('sok')) |
+            Q(aktivitet__code=request.GET.get('sok'))
         )
 
     if request.GET.get('kladd') == "false":
@@ -103,7 +103,7 @@ def index(request):
         'selected_forening': forening,
         'datoer': datoer,
         'params': {
-            'q': request.GET.get('q'),
+            'sok': request.GET.get('sok'),
             't': request.GET.get('t'),
             'kladd': request.GET.get('kladd')
         },

@@ -56,7 +56,7 @@
     <div class="col-md-4">
       <form method="get">
         <div class="input-group">
-          <input type="text" class="form-control" name="q" placeholder="Hurtigsøk"{% if params.q %} value="{{ params.q }}"{% endif %}>
+          <input type="text" class="form-control" name="sok" placeholder="Hurtigsøk"{% if params.sok %} value="{{ params.sok }}"{% endif %}>
           <div class="input-group-btn">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Arrangør <span class="caret"></span></button>
             <ul class="dropdown-menu pull-right">
@@ -125,7 +125,7 @@
             <tr>
               <td><input type="checkbox"></td>
               <td>
-                {{ dato.aktivitet.title|default:"(Mangler navn)"|highlight:params.q }}
+                {{ dato.aktivitet.title|default:"(Mangler navn)"|highlight:params.sok }}
                 <br>
                 <ul class="list-inline">
                   <li><a href="{% url 'admin.aktiviteter.views.edit' dato.aktivitet.id %}">Rediger</a></li>
@@ -147,7 +147,7 @@
                   <li>Avlys</li>
                 </ul>
               </td>
-              <td>{{ dato.aktivitet.code|highlight:params.q }}</td>
+              <td>{{ dato.aktivitet.code|highlight:params.sok }}</td>
               <td>{{ dato.start_date|date:"Y-m-d" }}</td>
               <td>{{ dato.end_date|date:"Y-m-d" }}</td>
               <td>
