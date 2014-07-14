@@ -8,6 +8,7 @@ from django.conf import settings
 from django.db.models import Q
 from django.contrib.gis.geos import Point
 from django.contrib import messages
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from aktiviteter.models import Aktivitet, AktivitetDate, AktivitetImage
 from core.models import Tag, County, Municipality
@@ -88,6 +89,14 @@ def index(request):
             Q(aktivitet__forening=forening) |
             Q(aktivitet__co_forening=forening)
         )
+
+    paginator = Paginator(datoer, 2)
+    try:
+        datoer = paginator.page(request.GET.get('page'))
+    except PageNotAnInteger:
+        datoer = paginator.page(1)
+    except EmptyPage:
+        datoer = paginator.page(paginator.num_pages)
 
     context = {
         'active_forening_children': children,
