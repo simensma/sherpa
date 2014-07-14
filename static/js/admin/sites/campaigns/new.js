@@ -2,6 +2,7 @@ $(function() {
 
     var wrapper = $('div.new-campaign');
     var section_progress = wrapper.find('.section-progress');
+    var save_form = section_progress.find('form.save');
     var chosen_image = wrapper.find('img.chosen-image');
     var chosen_image_ajaxloader = wrapper.find('img.chosen-image-ajaxloader');
     var cropped_image_container = wrapper.find('div.cropped-image-container');
@@ -26,6 +27,14 @@ $(function() {
             return $(this);
         }
         enableStep(Number($(this).attr('data-step')));
+    });
+
+    save_form.submit(function(e) {
+        if(chosen_image.attr('src') === '') {
+            alert(section_progress.attr('data-choose-image-warning'));
+            e.preventDefault();
+            return $(this);
+        }
     });
 
     wrapper.find('button.pick-from-image-archive').click(function() {
