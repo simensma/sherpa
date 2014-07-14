@@ -84,6 +84,7 @@
   <div class="row">
     <div class="col-md-12">
       <ul class="list-inline">
+        <li><a href="{% url "admin.aktiviteter.views.index" %}">Resett filter</a></li>
         <li>
           {% if request.GET.t == "all" %}
             <a href="?{% query_transform t="" %}">Skjul tidligere aktiviteter</a>
