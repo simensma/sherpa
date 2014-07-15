@@ -160,16 +160,6 @@ $(function() {
         user_image.attr('src', image_url);
     }
 
-    function cropImage() {
-        user_image_cropped.attr('src', user_image.attr('src'));
-        ImageCropper.cropImage(
-            user_image.data('crop'),
-            user_image_cropped,
-            campaign_container,
-            crop_ratio[0]
-        );
-    }
-
     function addText(options) {
         var id = text_editor_id++;
 
@@ -363,7 +353,13 @@ $(function() {
         wrapper.find('div.step[data-step="' + step + '"]').show();
 
         if(step === 3) {
-            cropImage();
+            user_image_cropped.attr('src', user_image.attr('src'));
+            ImageCropper.cropImage(
+                user_image.data('crop'),
+                user_image_cropped,
+                campaign_container,
+                crop_ratio[0]
+            );
 
             // Add an initial text editor if it's empty
             if(user_text_editors.children().length === 0) {
