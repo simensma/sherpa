@@ -77,7 +77,14 @@
     <div class="radio">
       <label for="publication_access_forening">
         <input type="radio" name="access" id="publication_access_forening" value="forening" {% if publication.access == 'forening' %} checked{% endif %}>
-        Kun medlemmer i <span class="forening-name">{% firstof publication.forening|join_main_foreninger active_forening|join_main_foreninger %}</span>
+        Kun medlemmer i
+        <span class="forening-name">
+          {% if publication.forening %}
+            {{ publication.forening|join_main_foreninger }}
+          {% else %}
+            {{ active_forening|join_main_foreninger }}
+          {% endif %}
+        </span>
       </label>
     </div>
   </div>
