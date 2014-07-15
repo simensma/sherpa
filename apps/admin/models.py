@@ -1,5 +1,6 @@
 from datetime import date
 import simples3 # TODO: Replace with boto
+import json
 
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
@@ -154,6 +155,21 @@ class Campaign(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     site = models.ForeignKey('core.Site')
+
+    def to_json(self):
+        return json.dumps({
+            'image_url': self.image_url,
+            'image_crop': json.loads(self.image_crop),
+            'button_enabled': self.button_enabled,
+            'button_label': self.button_label,
+            'button_anchor': self.button_anchor,
+            'button_large': self.button_large,
+            'button_position': json.loads(self.button_position),
+            'text': [{
+                'content': t.content,
+                'style': json.loads(t.style),
+            } for t in self.text.all()],
+        })
 
     @staticmethod
     def on(site):

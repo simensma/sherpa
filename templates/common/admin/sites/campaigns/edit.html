@@ -21,13 +21,17 @@
 
   <div class="row">
     <div class="col-lg-12">
-      <h1>Ny kampanje <small>sett opp en ny kampanje</small></h1>
+      <h1>Kampanjer <small>opprett eller rediger en kampanje</small></h1>
       <ol class="breadcrumb">
         <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
         <li><a href="{% url 'admin.sites.views.index' active_site.id %}">Nettsteder</a></li>
         <li><a href="{% url 'admin.sites.views.index' active_site.id %}">{{ active_site.domain }}</a></li>
         <li><a href="{% url 'admin.sites.campaigns.views.index' active_site.id %}">Kampanjer</a></li>
-        <li><a href="{% url 'admin.sites.campaigns.views.edit' active_site.id %}">Ny kampanje</a></li>
+        {% if campaign %}
+          <li><a href="{% url 'admin.sites.campaigns.views.edit' active_site.id campaign.id %}">{{ campaign.title }}</a></li>
+        {% else %}
+          <li><a href="{% url 'admin.sites.campaigns.views.edit' active_site.id %}">Ny kampanje</a></li>
+        {% endif %}
       </ol>
     </div>
   </div><!-- /.row -->
@@ -58,7 +62,7 @@
           <form action="{% url 'admin.sites.campaigns.views.save' active_site.id %}" method="post" class="save">
             {% csrf_token %}
             <input type="hidden" name="campaign">
-            <input type="hidden" name="existing_campaign" value="{{ campaign.id }}">
+            <input type="hidden" name="existing_campaign" value="{{ campaign.id }}" data-campaign="{{ campaign.to_json }}">
             <button class="btn btn-success" type="submit">Lagre</button>
           </form>
         </li>
@@ -154,7 +158,6 @@
   </div>
 
   <div class="text-template campaign-element jq-hide" contenteditable="true">
-    Tittel
   </div>
 
   <div class="text-area-template jq-hide">
@@ -165,7 +168,7 @@
         <label>Skrift:</label>
         <select name="font-sizes">
           {% for font_size in font_sizes %}
-            <option value="{{ font_size }}px"{% if font_size == 48 %} selected{% endif %}>{{ font_size }}px</option>
+            <option value="{{ font_size }}px">{{ font_size }}px</option>
           {% endfor %}
         </select>
       </div>

@@ -3,6 +3,7 @@ $(function() {
     var wrapper = $('div.edit-campaign');
     var section_progress = wrapper.find('.section-progress');
     var save_form = section_progress.find('form.save');
+    var existing_campaign = save_form.find('input[name="existing_campaign"]');
     var chosen_image = wrapper.find('img.chosen-image');
     var chosen_image_ajaxloader = wrapper.find('img.chosen-image-ajaxloader');
     var cropped_image_container = wrapper.find('div.cropped-image-container');
@@ -21,6 +22,49 @@ $(function() {
     var JcropApi;
     var crop_ratio = [940, 480];
     var text_area_id = 0; // Will be incremented for each created text area (see below)
+
+    // Load existing campaign data, if there
+    if(existing_campaign.attr('data-campaign') !== '') {
+        var campaign = JSON.parse(existing_campaign.attr('data-campaign'));
+
+        showImage(campaign.image_url, [
+            campaign.image_crop.selection.x,
+            campaign.image_crop.selection.y,
+            campaign.image_crop.selection.x2,
+            campaign.image_crop.selection.y2,
+        ]);
+        chosen_image.data('crop', campaign.image_crop);
+
+        // Add text
+        for(var i=0; i<campaign.text.length; i++) {
+            addText(campaign.text[i]);
+        }
+
+        // Reset button state
+
+        // - Reset the editor
+        exclude_button.prop('checked', !campaign.button_enabled);
+        large_button.prop('checked', campaign.button_large);
+        button_anchor.val(campaign.button_anchor);
+
+        // - Disable editor controls if already disabled
+        button_anchor.prop('disabled', !campaign.button_enabled);
+        large_button.prop('disabled', !campaign.button_enabled);
+
+        // - Set the styling on the actual buttno
+        if(!campaign.button_enabled) {
+            custom_button.hide();
+        }
+        custom_button.css('top', campaign.button_position.top);
+        custom_button.css('left', campaign.button_position.left);
+        custom_button.find('a').text(campaign.button_label);
+        if(campaign.button_large) {
+            custom_button.find('a').addClass('btn-lg');
+        }
+
+        // And default to the final step
+        enableStep(3);
+    }
 
     section_progress.find('a').click(function() {
         if(Number($(this).attr('data-step')) > 1 && chosen_image.attr('src') === '') {
@@ -60,7 +104,7 @@ $(function() {
         addText();
     });
 
-    function showImage(image_url) {
+    function showImage(image_url, predefined_selection) {
         if(JcropApi !== undefined) {
             JcropApi.destroy();
         }
@@ -97,6 +141,9 @@ $(function() {
                 JcropApi = this;
             });
 
+            if(predefined_selection !== undefined) {
+                JcropApi.setSelect(predefined_selection);
+            }
         });
         chosen_image.hide();
         chosen_image_ajaxloader.show();
@@ -113,17 +160,37 @@ $(function() {
         );
     }
 
-    function addText() {
+    function addText(options) {
         var id = text_area_id++;
+
+        options = $.extend({
+            content: 'Tittel ' + (id+1),
+            style: {
+                top: '0',
+                left: '0',
+                'font-size': '48px',
+                'font-weight': 'normal',
+                color: '#000000',
+            },
+        }, options);
 
         // Clone and insert the text area
         var text_area = text_area_template.clone();
         text_area.removeClass('text-area-template').addClass('text-area').show();
         text_area.attr('data-id', id);
+
+        // Reset states based on options
+        text_area.find('option[value="' + options.style['font-size'] + '"]').prop('selected', true);
+        var bold = options.style['font-weight'] === 'bold';
+        text_area.find('input[name="bold"]').prop('checked', bold);
+        text_area.find('.colorselector div').css('background-color', options.style.color);
+
+        // We need to append it to DOM before we initialize the color selector and chosen-select
         text_area.appendTo(text_areas);
+
         var colorpicker = text_area.find('.colorselector');
         colorpicker.ColorPicker({
-            color: '#000000',
+            color: options.style.color,
             onShow: function(picker) {
                 $(picker).fadeIn('fast');
                 return false;
@@ -144,10 +211,12 @@ $(function() {
         var text = text_template.clone();
         text.removeClass('text-template').addClass('text').show();
         text.attr('data-id', id);
-        text.text(text.text() + ' ' + (id+1));
-        text.css('font-size', text_area.find('select option:selected').val());
-        text.css('top', 0);
-        text.css('left', 0);
+        text.html(options.content);
+        text.css('top', options.style.top);
+        text.css('left', options.style.left);
+        text.css('font-size', options.style['font-size']);
+        text.css('font-weight', options.style['font-weight']);
+        text.css('color', options.style.color);
         text.appendTo(cropped_image_container);
 
         // Add events on text area changes
