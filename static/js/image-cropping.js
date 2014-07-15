@@ -7,8 +7,10 @@
      *
      * @param  {object} crop            an object with the following properties:
      *                                  - selection: the crop selection (x, y, x2, y2)
-     *                                  - width: the original image width
-     *                                  - height: the original image height
+     *                                  - width: the image width at time of cropping (can be less
+     *                                    than the original)
+     *                                  - height: the image height at time of cropping (can be less
+     *                                    than the original)
      * @param  {jquery} $image          the image element to be cropped
      * @param  {jquery} $container      the container of the image
      * @param  {Number} column_width    the width of the containing element
