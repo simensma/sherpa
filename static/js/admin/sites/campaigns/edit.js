@@ -2,26 +2,33 @@ $(function() {
 
     var wrapper = $('div.edit-campaign');
     var section_progress = wrapper.find('.section-progress');
+
     var save_form = section_progress.find('form.save');
     var existing_campaign = save_form.find('input[name="existing_campaign"]');
-    var chosen_image = wrapper.find('img.chosen-image');
-    var chosen_image_ajaxloader = wrapper.find('img.chosen-image-ajaxloader');
-    var cropped_image_container = wrapper.find('div.cropped-image-container');
-    var cropped_image = cropped_image_container.find('img.cropped-image');
-    var text_areas = wrapper.find('div.text-areas');
-    var text_area_template = wrapper.find('div.text-area-template');
-    var text_template = wrapper.find('div.text-template');
+
+    var campaign_container = wrapper.find('div.campaign-container');
+
+    var user_image = wrapper.find('img.chosen-image');
+    var user_image_ajaxloader = wrapper.find('img.chosen-image-ajaxloader');
+    var user_image_cropped = campaign_container.find('img.cropped-image');
+
+    var user_text_editors = wrapper.find('div.text-editors');
+    var user_text_editor_template = wrapper.find('div.text-editor-template');
+    var user_text_template = wrapper.find('div.text-template');
+
     var campaign_title = wrapper.find('input[name="campaign-title"]');
 
-    var button_wrapper = wrapper.find('[data-wrapper="campaign-button"]');
-    var exclude_button = button_wrapper.find('input[name="exclude-button"]');
-    var button_anchor = button_wrapper.find('input[name="button-anchor"]');
-    var large_button = button_wrapper.find('input[name="large-button"]');
-    var custom_button = cropped_image_container.find('.button');
+    var user_button_editor = wrapper.find('[data-wrapper="campaign-button"]');
+    var user_button_exclude = user_button_editor.find('input[name="exclude-button"]');
+    var user_button_anchor_input = user_button_editor.find('input[name="button-anchor"]');
+    var user_button_large_input = user_button_editor.find('input[name="large-button"]');
+
+    var user_button = campaign_container.find('.button');
+    var user_button_anchor = user_button.find('a');
 
     var JcropApi;
     var crop_ratio = [940, 480];
-    var text_area_id = 0; // Will be incremented for each created text area (see below)
+    var text_editor_id = 0; // Will be incremented for each created text editor (see below)
 
     // Load existing campaign data, if there
     if(existing_campaign.attr('data-campaign') !== '') {
@@ -33,7 +40,7 @@ $(function() {
             campaign.image_crop.selection.x2,
             campaign.image_crop.selection.y2,
         ]);
-        chosen_image.data('crop', campaign.image_crop);
+        user_image.data('crop', campaign.image_crop);
 
         // Add text
         for(var i=0; i<campaign.text.length; i++) {
@@ -43,23 +50,23 @@ $(function() {
         // Reset button state
 
         // - Reset the editor
-        exclude_button.prop('checked', !campaign.button_enabled);
-        large_button.prop('checked', campaign.button_large);
-        button_anchor.val(campaign.button_anchor);
+        user_button_exclude.prop('checked', !campaign.button_enabled);
+        user_button_large_input.prop('checked', campaign.button_large);
+        user_button_anchor_input.val(campaign.button_anchor);
 
         // - Disable editor controls if already disabled
-        button_anchor.prop('disabled', !campaign.button_enabled);
-        large_button.prop('disabled', !campaign.button_enabled);
+        user_button_anchor_input.prop('disabled', !campaign.button_enabled);
+        user_button_large_input.prop('disabled', !campaign.button_enabled);
 
         // - Set the styling on the actual buttno
         if(!campaign.button_enabled) {
-            custom_button.hide();
+            user_button.hide();
         }
-        custom_button.css('top', campaign.button_position.top);
-        custom_button.css('left', campaign.button_position.left);
-        custom_button.find('a').text(campaign.button_label);
+        user_button.css('top', campaign.button_position.top);
+        user_button.css('left', campaign.button_position.left);
+        user_button_anchor.text(campaign.button_label);
         if(campaign.button_large) {
-            custom_button.find('a').addClass('btn-lg');
+            user_button_anchor.addClass('btn-lg');
         }
 
         // And default to the final step
@@ -67,7 +74,7 @@ $(function() {
     }
 
     section_progress.find('a').click(function() {
-        if(Number($(this).attr('data-step')) > 1 && chosen_image.attr('src') === '') {
+        if(Number($(this).attr('data-step')) > 1 && user_image.attr('src') === '') {
             alert(section_progress.attr('data-choose-image-warning'));
             return $(this);
         }
@@ -75,7 +82,7 @@ $(function() {
     });
 
     save_form.submit(function(e) {
-        if(chosen_image.attr('src') === '') {
+        if(user_image.attr('src') === '') {
             alert(section_progress.attr('data-choose-image-warning'));
             e.preventDefault();
             return $(this);
@@ -100,7 +107,7 @@ $(function() {
         enableStep(3);
     });
 
-    wrapper.find('button.add-text-area').click(function() {
+    wrapper.find('button.add-text-editor').click(function() {
         addText();
     });
 
@@ -108,33 +115,33 @@ $(function() {
         if(JcropApi !== undefined) {
             JcropApi.destroy();
         }
-        chosen_image.css('width', 'auto');
-        chosen_image.css('height', 'auto');
-        chosen_image.off('load.image');
-        chosen_image.on('load.image', function() {
-            chosen_image_ajaxloader.hide();
-            chosen_image.show();
+        user_image.css('width', 'auto');
+        user_image.css('height', 'auto');
+        user_image.off('load.image');
+        user_image.on('load.image', function() {
+            user_image_ajaxloader.hide();
+            user_image.show();
 
-            var image_ratio = chosen_image.width() / chosen_image.height();
+            var image_ratio = user_image.width() / user_image.height();
 
             // Set the default selection as large as possible, but within the crop ratio
             var x2, y2;
             if(image_ratio > crop_ratio) {
-                x2 = chosen_image.width();
-                y2 = (chosen_image.width() / crop_ratio[0]) * crop_ratio[1];
+                x2 = user_image.width();
+                y2 = (user_image.width() / crop_ratio[0]) * crop_ratio[1];
             } else {
-                x2 = (chosen_image.height() / crop_ratio[1]) * crop_ratio[0];
-                y2 = chosen_image.height();
+                x2 = (user_image.height() / crop_ratio[1]) * crop_ratio[0];
+                y2 = user_image.height();
             }
 
-            chosen_image.Jcrop({
+            user_image.Jcrop({
                 aspectRatio: crop_ratio[0] / crop_ratio[1],
                 setSelect: [0, 0, x2, y2],
                 onSelect: function(selection) {
-                    chosen_image.data('crop', {
+                    user_image.data('crop', {
                         selection: selection,
-                        width: chosen_image.width(),
-                        height: chosen_image.height(),
+                        width: user_image.width(),
+                        height: user_image.height(),
                     });
                 },
             }, function() {
@@ -145,23 +152,23 @@ $(function() {
                 JcropApi.setSelect(predefined_selection);
             }
         });
-        chosen_image.hide();
-        chosen_image_ajaxloader.show();
-        chosen_image.attr('src', image_url);
+        user_image.hide();
+        user_image_ajaxloader.show();
+        user_image.attr('src', image_url);
     }
 
     function cropImage() {
-        cropped_image.attr('src', chosen_image.attr('src'));
+        user_image_cropped.attr('src', user_image.attr('src'));
         ImageCropper.cropImage(
-            chosen_image.data('crop'),
-            cropped_image,
-            cropped_image_container,
+            user_image.data('crop'),
+            user_image_cropped,
+            campaign_container,
             crop_ratio[0]
         );
     }
 
     function addText(options) {
-        var id = text_area_id++;
+        var id = text_editor_id++;
 
         options = $.extend({
             content: 'Tittel ' + (id+1),
@@ -174,21 +181,21 @@ $(function() {
             },
         }, options);
 
-        // Clone and insert the text area
-        var text_area = text_area_template.clone();
-        text_area.removeClass('text-area-template').addClass('text-area').show();
-        text_area.attr('data-id', id);
+        // Clone and insert the text editor
+        var text_editor = user_text_editor_template.clone();
+        text_editor.removeClass('text-editor-template').addClass('text-editor').show();
+        text_editor.attr('data-id', id);
 
         // Reset states based on options
-        text_area.find('option[value="' + options.style['font-size'] + '"]').prop('selected', true);
+        text_editor.find('option[value="' + options.style['font-size'] + '"]').prop('selected', true);
         var bold = options.style['font-weight'] === 'bold';
-        text_area.find('input[name="bold"]').prop('checked', bold);
-        text_area.find('.colorselector div').css('background-color', options.style.color);
+        text_editor.find('input[name="bold"]').prop('checked', bold);
+        text_editor.find('.colorselector div').css('background-color', options.style.color);
 
         // We need to append it to DOM before we initialize the color selector and chosen-select
-        text_area.appendTo(text_areas);
+        text_editor.appendTo(user_text_editors);
 
-        var colorpicker = text_area.find('.colorselector');
+        var colorpicker = text_editor.find('.colorselector');
         colorpicker.ColorPicker({
             color: options.style.color,
             onShow: function(picker) {
@@ -201,14 +208,14 @@ $(function() {
             },
             onChange: function (hsb, hex, rgb) {
                 colorpicker.children('div').css('background-color', '#' + hex);
-                var id = colorpicker.parents('.text-area').attr('data-id');
-                cropped_image_container.find('.text[data-id="' + id + '"]').css('color', '#' + hex);
+                var id = colorpicker.parents('.text-editor').attr('data-id');
+                campaign_container.find('.text[data-id="' + id + '"]').css('color', '#' + hex);
             }
         });
-        text_area.find('select').chosen();
+        text_editor.find('select').chosen();
 
         // Clone and insert the actual text
-        var text = text_template.clone();
+        var text = user_text_template.clone();
         text.removeClass('text-template').addClass('text').show();
         text.attr('data-id', id);
         text.html(options.content);
@@ -217,14 +224,14 @@ $(function() {
         text.css('font-size', options.style['font-size']);
         text.css('font-weight', options.style['font-weight']);
         text.css('color', options.style.color);
-        text.appendTo(cropped_image_container);
+        text.appendTo(campaign_container);
 
-        // Add events on text area changes
-        text_area.find('select').change(function() {
+        // Add events on text editor changes
+        text_editor.find('select').change(function() {
             text.css('font-size', $(this).find('option:selected').val());
         });
 
-        text_area.find('input[name="bold"]').change(function() {
+        text_editor.find('input[name="bold"]').change(function() {
             if($(this).is(':checked')) {
                 text.css('font-weight', 'bold');
             } else {
@@ -233,58 +240,58 @@ $(function() {
         });
     }
 
-    $(document).on('click', '.text-area button.remove', function() {
-        var text_area = $(this).parents('.text-area');
-        var id = text_area.attr('data-id');
-        text_area.remove();
-        cropped_image_container.find('.text[data-id="' + id + '"]').remove();
+    $(document).on('click', '.text-editor button.remove', function() {
+        var text_editor = $(this).parents('.text-editor');
+        var id = text_editor.attr('data-id');
+        text_editor.remove();
+        campaign_container.find('.text[data-id="' + id + '"]').remove();
     });
 
-    exclude_button.change(function() {
+    user_button_exclude.change(function() {
         var checked = $(this).is(':checked');
-        button_anchor.prop('disabled', checked);
-        large_button.prop('disabled', checked);
+        user_button_anchor_input.prop('disabled', checked);
+        user_button_large_input.prop('disabled', checked);
 
         if(checked) {
-            custom_button.hide();
+            user_button.hide();
         } else {
-            custom_button.show();
+            user_button.show();
         }
     });
 
-    large_button.change(function() {
+    user_button_large_input.change(function() {
         if($(this).is(':checked')) {
-            custom_button.find('a').addClass('btn-lg');
+            user_button_anchor.addClass('btn-lg');
         } else {
-            custom_button.find('a').removeClass('btn-lg');
+            user_button_anchor.removeClass('btn-lg');
         }
     });
 
-    button_anchor.keyup(function() {
-        custom_button.find('a').attr('href', $(this).val());
+    user_button_anchor_input.keyup(function() {
+        user_button_anchor.attr('href', $(this).val());
     });
 
-    custom_button.find('a').click(function(e) {
+    user_button_anchor.click(function(e) {
         e.preventDefault();
     });
 
     save_form.submit(function() {
         var form_data = {
             title: campaign_title.val(),
-            image_url: chosen_image.attr('src'),
-            image_crop: chosen_image.data('crop'),
-            button_enabled: !exclude_button.is(':checked'),
-            button_label: custom_button.find('a').html(),
-            button_anchor: button_anchor.val(),
-            button_large: large_button.is(':checked'),
+            image_url: user_image.attr('src'),
+            image_crop: user_image.data('crop'),
+            button_enabled: !user_button_exclude.is(':checked'),
+            button_label: user_button_anchor.html(),
+            button_anchor: user_button_anchor_input.val(),
+            button_large: user_button_large_input.is(':checked'),
             button_position: {
-                top: custom_button.css('top'),
-                left: custom_button.css('left'),
+                top: user_button.css('top'),
+                left: user_button.css('left'),
             },
             text: [],
         };
 
-        cropped_image_container.find('.text').each(function() {
+        campaign_container.find('.text').each(function() {
             form_data.text.push({
                 content: $(this).html(),
                 style: {
@@ -305,7 +312,7 @@ $(function() {
      */
     var dragged_text;
 
-    $(document.body).on('mousemove', '.cropped-image-container', function(e) {
+    $(document.body).on('mousemove', '.campaign-container', function(e) {
         e.preventDefault();
         if(dragged_text !== undefined) {
             dragged_text.offset({
@@ -325,16 +332,16 @@ $(function() {
             if(left < 0) {
                 dragged_text.css('left', '0px');
             }
-            if(top > cropped_image_container.height() - dragged_text.height()) {
-                dragged_text.css('top', cropped_image_container.height() - dragged_text.height() + 'px');
+            if(top > campaign_container.height() - dragged_text.height()) {
+                dragged_text.css('top', campaign_container.height() - dragged_text.height() + 'px');
             }
-            if(left > cropped_image_container.width() - dragged_text.width()) {
-                dragged_text.css('left', cropped_image_container.width() - dragged_text.width() + 'px');
+            if(left > campaign_container.width() - dragged_text.width()) {
+                dragged_text.css('left', campaign_container.width() - dragged_text.width() + 'px');
             }
         }
     });
 
-    $(document.body).on('mousedown', '.cropped-image-container .campaign-element', function(e) {
+    $(document.body).on('mousedown', '.campaign-container .campaign-element', function(e) {
         if($(e.target).is('.campaign-element')) {
             dragged_text = $(e.target);
         } else {
@@ -355,8 +362,8 @@ $(function() {
         if(step === 3) {
             cropImage();
 
-            // Add an initial text area if it's empty
-            if(text_areas.children().length === 0) {
+            // Add an initial text editor if it's empty
+            if(user_text_editors.children().length === 0) {
                 addText();
             }
         }
