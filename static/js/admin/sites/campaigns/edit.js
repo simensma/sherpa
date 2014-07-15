@@ -154,6 +154,9 @@ $(function() {
         });
         user_image.hide();
         user_image_ajaxloader.show();
+
+        // Empty the src first to guarantee that the load.image event is thrown
+        user_image.attr('src', '');
         user_image.attr('src', image_url);
     }
 
