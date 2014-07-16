@@ -299,6 +299,20 @@ $(function() {
         e.preventDefault();
     });
 
+    user_photographer_editor.find('input[name="photographer-alignment"]').change(function() {
+        if($(this).val() === 'left') {
+            user_photographer.css('left', '5px');
+            user_photographer.css('right', 'auto');
+        }  else {
+            user_photographer.css('left', 'auto');
+            user_photographer.css('right', '5px');
+        }
+    });
+
+    user_photographer_editor.find('input[name="photographer-color"]').change(function() {
+        user_photographer.css('color', $(this).val());
+    });
+
     save_form.submit(function() {
         var form_data = {
             title: campaign_title.val(),
