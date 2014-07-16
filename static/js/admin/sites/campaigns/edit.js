@@ -402,12 +402,23 @@ $(function() {
             user_photographer.show();
             user_photographer_name.text(photographer);
             user_photographer_editor.show();
-            var alignment = user_photographer_editor.find('input[name="photographer-alignment"][value="' + alignment + '"]');
-            var color = user_photographer_editor.find('input[name="photographer-color"][value="' + color + '"]');
-            alignment.prop('checked', true);
-            alignment.parent().addClass('active');
-            color.prop('checked', true);
-            color.parent().addClass('active');
+            var alignment_input = user_photographer_editor.find('input[name="photographer-alignment"][value="' + alignment + '"]');
+            var color_input = user_photographer_editor.find('input[name="photographer-color"][value="' + color + '"]');
+            alignment_input.prop('checked', true);
+            alignment_input.parent().addClass('active');
+            color_input.prop('checked', true);
+            color_input.parent().addClass('active');
+
+            // Update actual state
+            if(alignment === 'left') {
+                user_photographer.css('left', '5px');
+                user_photographer.css('right', 'auto');
+            }  else {
+                user_photographer.css('left', 'auto');
+                user_photographer.css('right', '5px');
+            }
+            user_photographer.css('color', color);
+
         }
     }
 
