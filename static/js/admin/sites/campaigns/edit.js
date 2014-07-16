@@ -29,6 +29,7 @@ $(function() {
 
     var user_photographer = wrapper.find('.photographer');
     var user_photographer_name = user_photographer.find('span.name');
+    var user_photographer_editor = wrapper.find('[data-edit="photographer"]');
 
     var JcropApi;
     var crop_ratio = [940, 480];
@@ -376,9 +377,11 @@ $(function() {
         photographer_input.val(photographer);
         if(photographer === '') {
             user_photographer.hide();
+            user_photographer_editor.hide();
         } else {
             user_photographer.show();
             user_photographer_name.text(photographer);
+            user_photographer_editor.show();
         }
     }
 
