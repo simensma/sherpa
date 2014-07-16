@@ -46,12 +46,15 @@
       max-width: none !important;
     }
 
-    .text, .button {
-      position: absolute;
-
+    .campaign-element.movable {
       &:hover {
         cursor: move;
       }
+    }
+
+    .text, .button, .photographer {
+      position: absolute;
+
     }
 
     .text {
@@ -63,6 +66,12 @@
       // Top, left is just the initial value which will be overriden when the user moves the element
       top: 110px;
       left: 750px;
+    }
+
+    .photographer {
+      bottom: 5px;
+      left: 5px;
+      font-size: 14px;
     }
   }
 

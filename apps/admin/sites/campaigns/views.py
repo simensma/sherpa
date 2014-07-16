@@ -37,6 +37,7 @@ def save(request, site):
     campaign.title = post_data['title']
     campaign.image_url = post_data['image_url']
     campaign.image_crop = json.dumps(post_data['image_crop'])
+    campaign.photographer = request.POST['photographer']
     campaign.button_enabled = post_data['button_enabled']
     campaign.button_label = post_data['button_label']
     campaign.button_anchor = post_data['button_anchor']

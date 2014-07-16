@@ -147,6 +147,7 @@ class Campaign(models.Model):
 
     image_url = models.CharField(max_length=2048)
     image_crop = models.CharField(max_length=1024) # JSON
+    photographer = models.CharField(max_length=255)
     button_enabled = models.BooleanField()
     button_label = models.CharField(max_length=1024)
     button_anchor = models.CharField(max_length=2048)
@@ -160,6 +161,7 @@ class Campaign(models.Model):
         return json.dumps({
             'image_url': self.image_url,
             'image_crop': json.loads(self.image_crop),
+            'photographer': self.photographer,
             'button_enabled': self.button_enabled,
             'button_label': self.button_label,
             'button_anchor': self.button_anchor,

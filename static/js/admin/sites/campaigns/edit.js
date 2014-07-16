@@ -5,6 +5,7 @@ $(function() {
 
     var save_form = section_progress.find('form.save');
     var existing_campaign = save_form.find('input[name="existing_campaign"]');
+    var photographer_input = save_form.find('input[name="photographer"]');
 
     var campaign_container = wrapper.find('div.campaign-container');
 
@@ -25,6 +26,9 @@ $(function() {
 
     var user_button = campaign_container.find('.button');
     var user_button_anchor = user_button.find('a');
+
+    var user_photographer = wrapper.find('.photographer');
+    var user_photographer_name = user_photographer.find('span.name');
 
     var JcropApi;
     var crop_ratio = [940, 480];
@@ -69,6 +73,9 @@ $(function() {
             user_button_anchor.addClass('btn-lg');
         }
 
+        // Set the photographer state
+        setPhotographer(campaign.photographer);
+
         // And default to the final step
         enableStep(3);
     }
@@ -92,6 +99,7 @@ $(function() {
     wrapper.find('button.pick-from-image-archive').click(function() {
         ImageArchivePicker.pick(function(url, description, photographer) {
             showImage(url);
+            setPhotographer(photographer.trim());
             enableStep(2);
         });
     });
@@ -99,6 +107,7 @@ $(function() {
     wrapper.find('button.upload-new-image').click(function() {
         ImageUploadDialog.open(function(url, description, photographer) {
             showImage(url);
+            setPhotographer(photographer.trim());
             enableStep(2);
         });
     });
@@ -334,17 +343,27 @@ $(function() {
         }
     });
 
-    $(document.body).on('mousedown', '.campaign-container .campaign-element', function(e) {
-        if($(e.target).is('.campaign-element')) {
+    $(document.body).on('mousedown', '.campaign-container .movable', function(e) {
+        if($(e.target).is('.movable')) {
             dragged_text = $(e.target);
         } else {
-            dragged_text = $(e.target).parents('.campaign-element');
+            dragged_text = $(e.target).parents('.movable');
         }
     });
 
     $(document.body).on('mouseup', function(e) {
         dragged_text = undefined;
     });
+
+    function setPhotographer(photographer) {
+        photographer_input.val(photographer);
+        if(photographer === '') {
+            user_photographer.hide();
+        } else {
+            user_photographer.show();
+            user_photographer_name.text(photographer);
+        }
+    }
 
     function enableStep(step, checkScale) {
         section_progress.find('li').removeClass('active');

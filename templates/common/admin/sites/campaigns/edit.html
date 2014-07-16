@@ -63,6 +63,7 @@
             {% csrf_token %}
             <input type="hidden" name="campaign">
             <input type="hidden" name="existing_campaign" value="{{ campaign.id }}" data-campaign="{{ campaign.to_json }}">
+            <input type="hidden" name="photographer" value="{{ campaign.photographer }}">
             <button class="btn btn-success" type="submit">Lagre</button>
           </form>
         </li>
@@ -119,8 +120,11 @@
 
         <div class="campaign-container">
           <img src="" alt="" class="cropped-image">
-          <div class="button campaign-element">
+          <div class="button campaign-element movable">
             <a href="http://www.turistforeningen.no/" class="btn btn-danger" contenteditable="true">Klikk på meg</a>
+          </div>
+          <div class="photographer campaign-element jq-hide">
+            Foto: <span class="name"></span>
           </div>
         </div>
 
@@ -157,7 +161,7 @@
     </div>
   </div>
 
-  <div class="text-template campaign-element jq-hide" contenteditable="true">
+  <div class="text-template campaign-element movable jq-hide" contenteditable="true">
   </div>
 
   <div class="text-editor-template jq-hide">
