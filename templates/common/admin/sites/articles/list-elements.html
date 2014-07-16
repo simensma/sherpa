@@ -49,7 +49,7 @@
         <tr>
           <th>Forfattere:</th>
           <td>
-            {% for publisher in version.publishers.all %}
+            {% for publisher in version.get_publishers %}
               {{ publisher.get_full_name }}
               {% if not forloop.last %}<br>{% endif %}
             {% endfor %}

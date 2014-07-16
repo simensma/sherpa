@@ -23,7 +23,7 @@
           {% endwith %}
         {% else %}
           <p>Skrevet {{ version.variant.article.pub_date|date:"j. F Y" }} av:</p>
-          {% for publisher in version.publishers.all %}
+          {% for publisher in version.get_publishers %}
             <div class="multiple-authors">
               <a href="mailto:{{ publisher.get_sherpa_email }}">
                 <img src="{% gravatar publisher.get_sherpa_email %}">

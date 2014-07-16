@@ -162,6 +162,9 @@ class Version(models.Model):
     def get_children_count(self):
         return Version.objects.filter(variant__page__parent=self.variant.page, active=True).count()
 
+    def get_publishers(self):
+        return sorted(self.publishers.all(), key=lambda u: u.get_full_name())
+
 @receiver(post_delete, sender=Version, dispatch_uid="page.models")
 def delete_page_version(sender, **kwargs):
     Row.objects.filter(version=kwargs['instance']).delete()
