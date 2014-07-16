@@ -133,6 +133,13 @@ $(function() {
         user_image.css('height', 'auto');
         user_image.off('load.image');
         user_image.on('load.image', function() {
+            // The image needs to be visible in the DOM for jcrop to base its wrapper on the correct image dimensions,
+            // so display the step2 wrapper (which might be hidden) in the DOM (but hide its visibility) for the
+            // duration of this function
+            var step2 = wrapper.find('.step[data-step="2"]');
+            var display = step2.css('display');
+            step2.css('display', 'block');
+
             user_image_ajaxloader.hide();
             user_image.show();
 
@@ -167,6 +174,9 @@ $(function() {
             }, function() {
                 JcropApi = this;
             });
+
+            // And reset the wrapper display to whatever it was before
+            step2.css('display', display);
         });
         user_image.hide();
         user_image_ajaxloader.show();
