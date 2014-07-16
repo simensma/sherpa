@@ -136,21 +136,27 @@ $(function() {
             user_image_ajaxloader.hide();
             user_image.show();
 
-            var image_ratio = user_image.width() / user_image.height();
-
-            // Set the default selection as large as possible, but within the crop ratio
-            var x2, y2;
-            if(image_ratio > crop_ratio) {
-                x2 = user_image.width();
-                y2 = (user_image.width() / crop_ratio[0]) * crop_ratio[1];
+            var setSelect;
+            if(predefined_selection !== undefined) {
+                setSelect = predefined_selection;
             } else {
-                x2 = (user_image.height() / crop_ratio[1]) * crop_ratio[0];
-                y2 = user_image.height();
+                var image_ratio = user_image.width() / user_image.height();
+
+                // Set the default selection as large as possible, but within the crop ratio
+                var x2, y2;
+                if(image_ratio > crop_ratio) {
+                    x2 = user_image.width();
+                    y2 = (user_image.width() / crop_ratio[0]) * crop_ratio[1];
+                } else {
+                    x2 = (user_image.height() / crop_ratio[1]) * crop_ratio[0];
+                    y2 = user_image.height();
+                }
+                setSelect = [0, 0, x2, y2];
             }
 
             user_image.Jcrop({
                 aspectRatio: crop_ratio[0] / crop_ratio[1],
-                setSelect: [0, 0, x2, y2],
+                setSelect: setSelect,
                 onSelect: function(selection) {
                     user_image.data('crop', {
                         selection: selection,
@@ -161,10 +167,6 @@ $(function() {
             }, function() {
                 JcropApi = this;
             });
-
-            if(predefined_selection !== undefined) {
-                JcropApi.setSelect(predefined_selection);
-            }
         });
         user_image.hide();
         user_image_ajaxloader.show();
