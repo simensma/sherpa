@@ -11,7 +11,7 @@
 
       {% else %}
 
-        {% if version.publishers.all|length == 1 %}
+        {% if version.publishers.count == 1 %}
           {% with publisher=version.publishers.all.0 %}
             <a href="mailto:{{ publisher.get_sherpa_email }}">
               <img src="{% gravatar publisher.get_sherpa_email %}">
