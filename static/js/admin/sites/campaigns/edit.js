@@ -166,8 +166,8 @@ $(function() {
         options = $.extend({
             content: 'Tittel ' + (id+1),
             style: {
-                top: '0',
-                left: '0',
+                top: '35px',
+                left: '720px',
                 'font-size': '48px',
                 'font-weight': 'normal',
                 color: '#000000',
