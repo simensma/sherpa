@@ -92,9 +92,11 @@
           <p>
             Forfattere:
             <select name="authors" multiple="multiple">
-              {% for user in users %}
-                <option value="{{ user.id }}"{% if user in version.publishers.all %} selected="selected"{% endif %}>{{ user.get_full_name }}</option>
-              {% endfor %}
+              {% with version.publishers.all as publishers %}
+                {% for user in users %}
+                  <option value="{{ user.id }}"{% if user in publishers %} selected="selected"{% endif %}>{{ user.get_full_name }}</option>
+                {% endfor %}
+              {% endwith %}
             </select>
           </p>
         </div>
