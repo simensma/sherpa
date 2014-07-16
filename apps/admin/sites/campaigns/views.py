@@ -38,6 +38,8 @@ def save(request, site):
     campaign.image_url = post_data['image_url']
     campaign.image_crop = json.dumps(post_data['image_crop'])
     campaign.photographer = request.POST['photographer']
+    campaign.photographer_alignment = post_data['photographer_alignment']
+    campaign.photographer_color = post_data['photographer_color']
     campaign.button_enabled = post_data['button_enabled']
     campaign.button_label = post_data['button_label']
     campaign.button_anchor = post_data['button_anchor']

@@ -75,7 +75,11 @@ $(function() {
         }
 
         // Set the photographer state
-        setPhotographer(campaign.photographer);
+        setPhotographer(
+            campaign.photographer,
+            campaign.photographer_alignment,
+            campaign.photographer_color
+        );
 
         // And default to the final step
         enableStep(3);
@@ -100,7 +104,7 @@ $(function() {
     wrapper.find('button.pick-from-image-archive').click(function() {
         ImageArchivePicker.pick(function(url, description, photographer) {
             setOriginalImage(url);
-            setPhotographer(photographer.trim());
+            setPhotographer(photographer.trim(), 'left', 'black'); // Default alignment/color
             enableStep(2);
         });
     });
@@ -108,7 +112,7 @@ $(function() {
     wrapper.find('button.upload-new-image').click(function() {
         ImageUploadDialog.open(function(url, description, photographer) {
             setOriginalImage(url);
-            setPhotographer(photographer.trim());
+            setPhotographer(photographer.trim(), 'left', 'black'); // Default alignment/color
             enableStep(2);
         });
     });
@@ -300,6 +304,8 @@ $(function() {
             title: campaign_title.val(),
             image_url: user_image.attr('src'),
             image_crop: user_image.data('crop'),
+            photographer_alignment: user_photographer_editor.find('input[name="photographer-alignment"]:checked').val(),
+            photographer_color: user_photographer_editor.find('input[name="photographer-color"]:checked').val(),
             button_enabled: !user_button_exclude.is(':checked'),
             button_label: user_button_anchor.html(),
             button_anchor: user_button_anchor_input.val(),
@@ -373,7 +379,7 @@ $(function() {
         dragged_text = undefined;
     });
 
-    function setPhotographer(photographer) {
+    function setPhotographer(photographer, alignment, color) {
         photographer_input.val(photographer);
         if(photographer === '') {
             user_photographer.hide();
@@ -382,6 +388,12 @@ $(function() {
             user_photographer.show();
             user_photographer_name.text(photographer);
             user_photographer_editor.show();
+            var alignment = user_photographer_editor.find('input[name="photographer-alignment"][value="' + alignment + '"]');
+            var color = user_photographer_editor.find('input[name="photographer-color"][value="' + color + '"]');
+            alignment.prop('checked', true);
+            alignment.parent().addClass('active');
+            color.prop('checked', true);
+            color.parent().addClass('active');
         }
     }
 
