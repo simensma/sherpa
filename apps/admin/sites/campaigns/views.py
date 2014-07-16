@@ -19,7 +19,7 @@ def edit(request, site, campaign):
     active_site = Site.objects.get(id=site)
     context = {
         'active_site': active_site,
-        'font_sizes': range(20, 77),
+        'font_sizes': range(16, 77),
     }
     if campaign is not None:
         context['campaign'] = Campaign.objects.get(id=campaign)
