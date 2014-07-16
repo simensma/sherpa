@@ -38,7 +38,7 @@ $(function() {
     if(existing_campaign.attr('data-campaign') !== '') {
         var campaign = JSON.parse(existing_campaign.attr('data-campaign'));
 
-        showImage(campaign.image_url, [
+        setOriginalImage(campaign.image_url, [
             campaign.image_crop.selection.x,
             campaign.image_crop.selection.y,
             campaign.image_crop.selection.x2,
@@ -98,7 +98,7 @@ $(function() {
 
     wrapper.find('button.pick-from-image-archive').click(function() {
         ImageArchivePicker.pick(function(url, description, photographer) {
-            showImage(url);
+            setOriginalImage(url);
             setPhotographer(photographer.trim());
             enableStep(2);
         });
@@ -106,7 +106,7 @@ $(function() {
 
     wrapper.find('button.upload-new-image').click(function() {
         ImageUploadDialog.open(function(url, description, photographer) {
-            showImage(url);
+            setOriginalImage(url);
             setPhotographer(photographer.trim());
             enableStep(2);
         });
@@ -120,7 +120,12 @@ $(function() {
         addText();
     });
 
-    function showImage(image_url, predefined_selection) {
+    /**
+     * Change the original image and make it ready for cropping.
+     * @param {string} image_url            the URL to the chosen image
+     * @param {list}   predefined_selection an optional predefined crop-selection for this image
+     */
+    function setOriginalImage(image_url, predefined_selection) {
         if(JcropApi !== undefined) {
             JcropApi.destroy();
         }
