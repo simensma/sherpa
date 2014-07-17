@@ -212,6 +212,10 @@ class Campaign(models.Model):
         return Campaign.cropped_image_key(self.image_cropped_hash)
 
     def delete_cropped_image(self):
+        # Verify that the hash isn't in use by other campaigns; can happen if they use the exact same image/selection
+        if Campaign.objects.exclude(id=self.id).filter(image_cropped_hash=self.image_cropped_hash).exists():
+            return
+
         conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
         bucket = conn.get_bucket(settings.AWS_BUCKET)
         bucket.delete_key(self.get_cropped_image_key())
