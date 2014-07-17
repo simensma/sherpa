@@ -38,10 +38,11 @@ def save(request, site):
     post_data = json.loads(request.POST['campaign'])
     crop = post_data['image_crop']
 
-    # Download the supplied image, crop/resize it, and save it to S3
+    # Download the supplied image
     r = requests.get(post_data['image_original'])
     image = Image.open(StringIO(r.content))
 
+    # Crop and resize the original image
     width_ratio = float(image.size[0]) / crop['width']
     height_ratio = float(image.size[1]) / crop['height']
 
@@ -57,20 +58,25 @@ def save(request, site):
     campaign_image.save(campaign_image_file, "JPEG")
     campaign_image_file = campaign_image_file.getvalue()
 
-    hash_ = sha1(campaign_image_file).hexdigest()
+    # Retrieve or create the campaign object
+    try:
+        campaign = Campaign.objects.get(id=request.POST['existing_campaign'])
 
+        # This is an existing campaign, delete the previous cropped image
+        campaign.delete_cropped_image()
+    except (ValueError, Campaign.DoesNotExist):
+        campaign = Campaign()
+
+    # Save the prepared image to S3
     conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
     bucket = conn.get_bucket(settings.AWS_BUCKET)
 
+    hash_ = sha1(campaign_image_file).hexdigest()
     key = bucket.new_key("%s/%s.jpg" % (settings.AWS_CAMPAIGNS_PREFIX, hash_))
     key.set_contents_from_string(campaign_image_file)
     key.set_acl('public-read')
 
-    try:
-        campaign = Campaign.objects.get(id=request.POST['existing_campaign'])
-    except (ValueError, Campaign.DoesNotExist):
-        campaign = Campaign()
-
+    # And finally save the rest of the campaign data
     campaign.title = post_data['title']
     campaign.image_original = post_data['image_original']
     campaign.image_cropped_hash = hash_

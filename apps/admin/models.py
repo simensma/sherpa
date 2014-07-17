@@ -1,6 +1,7 @@
 # encoding: utf-8
 from datetime import date
 import simples3 # TODO: Replace with boto
+import boto
 import json
 
 from django.db.models.signals import post_delete
@@ -203,6 +204,13 @@ class Campaign(models.Model):
                 'style': json.loads(t.style),
             } for t in self.text.all()],
         })
+
+    def delete_cropped_image(self):
+        conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+        bucket = conn.get_bucket(settings.AWS_BUCKET)
+        key = bucket.get_key("%s/%s.jpg" % (settings.AWS_CAMPAIGNS_PREFIX, self.image_cropped_hash))
+        if key is not None:
+            key.delete()
 
     @staticmethod
     def on(site):
