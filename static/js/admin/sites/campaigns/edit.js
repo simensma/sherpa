@@ -45,7 +45,9 @@ $(function() {
             campaign.image_crop.selection.x2,
             campaign.image_crop.selection.y2,
         ], function() {
-            user_image.data('crop', campaign.image_crop);
+            user_image.data('crop.selection', campaign.image_crop.selection);
+            user_image.data('crop.width', campaign.image_crop.width);
+            user_image.data('crop.height', campaign.image_crop.height);
 
             // Add text
             for(var i=0; i<campaign.text.length; i++) {
@@ -171,14 +173,15 @@ $(function() {
                 aspectRatio: crop_ratio[0] / crop_ratio[1],
                 setSelect: setSelect,
                 onSelect: function(selection) {
-                    user_image.data('crop', {
-                        selection: selection,
-                        width: user_image.width(),
-                        height: user_image.height(),
-                    });
+                    user_image.data('crop.selection', selection);
                 },
             }, function() {
                 JcropApi = this;
+
+                // This will be overriden when going to step 3, but it should be set here as well in case
+                // the user saves the campaign without going to step 3 at all
+                user_image.data('crop.width', JcropApi.getBounds()[0]);
+                user_image.data('crop.height', JcropApi.getBounds()[1]);
             });
 
             // And reset the wrapper display to whatever it was before
@@ -322,7 +325,11 @@ $(function() {
         var form_data = {
             title: campaign_title.val(),
             image_url: user_image.attr('src'),
-            image_crop: user_image.data('crop'),
+            image_crop: {
+                selection: user_image.data('crop.selection'),
+                width: user_image.data('crop.width'),
+                height: user_image.data('crop.height'),
+            },
             photographer_alignment: user_photographer_editor.find('input[name="photographer-alignment"]:checked').val(),
             photographer_color: user_photographer_editor.find('input[name="photographer-color"]:checked').val(),
             button_enabled: !user_button_exclude.is(':checked'),
@@ -435,8 +442,17 @@ $(function() {
 
         if(step === 3) {
             user_image_cropped.attr('src', user_image.attr('src'));
-            ImageCropper.cropImage(
-                user_image.data('crop'),
+
+            // Set the dimensions used for scaling at this point because we need to get it from the Jcrop API
+            // bounds. Calling width() on the jquery element may give wrong results here.
+            user_image.data('crop.width', JcropApi.getBounds()[0]);
+            user_image.data('crop.height', JcropApi.getBounds()[1]);
+
+            ImageCropper.cropImage({
+                    selection: user_image.data('crop.selection'),
+                    width: user_image.data('crop.width'),
+                    height: user_image.data('crop.selection'),
+                },
                 user_image_cropped,
                 campaign_container,
                 crop_ratio[0]
