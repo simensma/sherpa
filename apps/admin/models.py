@@ -4,7 +4,7 @@ import simples3 # TODO: Replace with boto
 import boto
 import json
 
-from django.db.models.signals import post_delete
+from django.db.models.signals import pre_delete, post_delete
 from django.dispatch import receiver
 from django.db import models
 from django.conf import settings
@@ -229,7 +229,7 @@ class Campaign(models.Model):
     class Meta:
         ordering = ['-created']
 
-@receiver(post_delete, sender=Campaign, dispatch_uid="admin.models")
+@receiver(pre_delete, sender=Campaign, dispatch_uid="admin.models")
 def delete_cropped_image(sender, **kwargs):
     # Delete cropped image from S3 on delete
     kwargs['instance'].delete_cropped_image()
