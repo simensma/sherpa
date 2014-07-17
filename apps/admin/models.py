@@ -214,9 +214,7 @@ class Campaign(models.Model):
     def delete_cropped_image(self):
         conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
         bucket = conn.get_bucket(settings.AWS_BUCKET)
-        key = bucket.get_key(self.get_cropped_image_key())
-        if key is not None:
-            key.delete()
+        bucket.delete_key(self.get_cropped_image_key())
 
     @staticmethod
     def cropped_image_key(hash_):
