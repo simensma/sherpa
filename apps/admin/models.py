@@ -205,10 +205,16 @@ class Campaign(models.Model):
             } for t in self.text.all()],
         })
 
+    def get_cropped_image(self):
+        return "http://%s/%s" % (settings.AWS_BUCKET, self.get_cropped_image_key())
+
+    def get_cropped_image_key(self):
+        return "%s/%s.jpg" % (settings.AWS_CAMPAIGNS_PREFIX, self.image_cropped_hash)
+
     def delete_cropped_image(self):
         conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
         bucket = conn.get_bucket(settings.AWS_BUCKET)
-        key = bucket.get_key("%s/%s.jpg" % (settings.AWS_CAMPAIGNS_PREFIX, self.image_cropped_hash))
+        key = bucket.get_key(self.get_cropped_image_key())
         if key is not None:
             key.delete()
 
