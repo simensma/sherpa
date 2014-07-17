@@ -114,7 +114,7 @@
         <div class="form-inline campaign-title">
           <div class="form-group">
             <label>Kampanjens tittel:</label>
-            <input type="text" name="campaign-title" class="form-control" value="Kampanje">
+            <input type="text" name="campaign-title" class="form-control" value="{{ campaign.title|default:"Kampanje" }}">
           </div>
         </div>
 
