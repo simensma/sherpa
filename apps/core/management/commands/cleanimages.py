@@ -60,15 +60,12 @@ class Command(BaseCommand):
             self.stdout.write("Avbryter.\n")
             return
 
-        def delete_image(key):
-            key.delete()
-            for size in settings.THUMB_SIZES:
-                buck.get_key("%s-%s.%s" % (key.name, size, extension)).delete()
-
         self.stdout.write("Sletter %s bildefiler (inkl. thumbs), vennligst vent...\n" % (len(ghost_keys) * (len(settings.THUMB_SIZES) + 1)))
 
         for key in ghost_keys:
-            delete_image(key)
+            key.delete()
+            for size in settings.THUMB_SIZES:
+                buck.get_key("%s-%s.%s" % (key.name, size, extension)).delete()
 
         self.stdout.write("\n")
         self.stdout.write("Done.\n")
