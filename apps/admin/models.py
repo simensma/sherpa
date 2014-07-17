@@ -146,7 +146,7 @@ def delete_release_pdf(sender, **kwargs):
 class Campaign(models.Model):
     title = models.CharField(max_length=255)
 
-    image_url = models.CharField(max_length=2048)
+    image_original = models.CharField(max_length=2048) # URL to the original image, anywhere on the interweb
 
     # image_crop is in JSON format and contains the following:
     # selection: {
@@ -187,7 +187,7 @@ class Campaign(models.Model):
 
     def to_json(self):
         return json.dumps({
-            'image_url': self.image_url,
+            'image_original': self.image_original,
             'image_crop': json.loads(self.image_crop),
             'photographer': self.photographer,
             'photographer_alignment': self.photographer_alignment,

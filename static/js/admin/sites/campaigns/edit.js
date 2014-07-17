@@ -39,7 +39,7 @@ $(function() {
     if(existing_campaign.attr('data-campaign') !== '') {
         var campaign = JSON.parse(existing_campaign.attr('data-campaign'));
 
-        setOriginalImage(campaign.image_url, [
+        setOriginalImage(campaign.image_original, [
             campaign.image_crop.selection.x,
             campaign.image_crop.selection.y,
             campaign.image_crop.selection.x2,
@@ -324,7 +324,7 @@ $(function() {
     save_form.submit(function() {
         var form_data = {
             title: campaign_title.val(),
-            image_url: user_image.attr('src'),
+            image_original: user_image.attr('src'),
             image_crop: {
                 selection: user_image.data('crop.selection'),
                 width: user_image.data('crop.width'),

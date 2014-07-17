@@ -35,7 +35,7 @@ def save(request, site):
 
     post_data = json.loads(request.POST['campaign'])
     campaign.title = post_data['title']
-    campaign.image_url = post_data['image_url']
+    campaign.image_original = post_data['image_original']
     campaign.image_crop = json.dumps(post_data['image_crop'])
     campaign.photographer = request.POST['photographer']
     campaign.photographer_alignment = post_data['photographer_alignment']
