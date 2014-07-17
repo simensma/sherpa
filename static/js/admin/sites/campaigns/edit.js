@@ -44,45 +44,46 @@ $(function() {
             campaign.image_crop.selection.y,
             campaign.image_crop.selection.x2,
             campaign.image_crop.selection.y2,
-        ]);
-        user_image.data('crop', campaign.image_crop);
+        ], function() {
+            user_image.data('crop', campaign.image_crop);
 
-        // Add text
-        for(var i=0; i<campaign.text.length; i++) {
-            addText(campaign.text[i]);
-        }
+            // Add text
+            for(var i=0; i<campaign.text.length; i++) {
+                addText(campaign.text[i]);
+            }
 
-        // Reset button state
+            // Reset button state
 
-        // - Reset the editor
-        user_button_exclude.prop('checked', !campaign.button_enabled);
-        user_button_large_input.prop('checked', campaign.button_large);
-        user_button_anchor_input.val(campaign.button_anchor);
+            // - Reset the editor
+            user_button_exclude.prop('checked', !campaign.button_enabled);
+            user_button_large_input.prop('checked', campaign.button_large);
+            user_button_anchor_input.val(campaign.button_anchor);
 
-        // - Disable editor controls if already disabled
-        user_button_anchor_input.prop('disabled', !campaign.button_enabled);
-        user_button_large_input.prop('disabled', !campaign.button_enabled);
+            // - Disable editor controls if already disabled
+            user_button_anchor_input.prop('disabled', !campaign.button_enabled);
+            user_button_large_input.prop('disabled', !campaign.button_enabled);
 
-        // - Set the styling on the actual buttno
-        if(!campaign.button_enabled) {
-            user_button.hide();
-        }
-        user_button.css('top', campaign.button_position.top);
-        user_button.css('left', campaign.button_position.left);
-        user_button_anchor.text(campaign.button_label);
-        if(campaign.button_large) {
-            user_button_anchor.addClass('btn-lg');
-        }
+            // - Set the styling on the actual buttno
+            if(!campaign.button_enabled) {
+                user_button.hide();
+            }
+            user_button.css('top', campaign.button_position.top);
+            user_button.css('left', campaign.button_position.left);
+            user_button_anchor.text(campaign.button_label);
+            if(campaign.button_large) {
+                user_button_anchor.addClass('btn-lg');
+            }
 
-        // Set the photographer state
-        setPhotographer(
-            campaign.photographer,
-            campaign.photographer_alignment,
-            campaign.photographer_color
-        );
+            // Set the photographer state
+            setPhotographer(
+                campaign.photographer,
+                campaign.photographer_alignment,
+                campaign.photographer_color
+            );
 
-        // And default to the final step
-        enableStep(3);
+            // And default to the final step
+            enableStep(3);
+        });
     }
 
     section_progress.find('a').click(function() {
@@ -130,7 +131,7 @@ $(function() {
      * @param {string} image_url            the URL to the chosen image
      * @param {list}   predefined_selection an optional predefined crop-selection for this image
      */
-    function setOriginalImage(image_url, predefined_selection) {
+    function setOriginalImage(image_url, predefined_selection, imageLoadedCallback) {
         if(JcropApi !== undefined) {
             JcropApi.destroy();
         }
@@ -182,6 +183,10 @@ $(function() {
 
             // And reset the wrapper display to whatever it was before
             step2.css('display', display);
+
+            if(imageLoadedCallback !== undefined) {
+                imageLoadedCallback();
+            }
         });
         user_image.hide();
         user_image_ajaxloader.show();
