@@ -63,7 +63,9 @@ class Command(BaseCommand):
         for key in ghost_keys:
             key.delete()
             for size in settings.THUMB_SIZES:
-                buck.get_key("%s-%s.%s" % (key.name, size, extension)).delete()
+                name, extension = key.name.rsplit('.', 1)
+                thumb_key = "%s-%s.%s" % (name, size, extension)
+                buck.get_key(thumb_key).delete()
 
         self.stdout.write("\n")
         self.stdout.write("Done.\n")
