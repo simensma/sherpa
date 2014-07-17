@@ -30,12 +30,10 @@ class Command(BaseCommand):
                 continue
 
             # Filter out thumbs
-            filename, extension = key.name.rsplit('.', 1)
-            if any(filename.endswith('-%s' % thumb) for thumb in settings.THUMB_SIZES):
+            if any(key.name.find('-%s.' % thumb) != -1 for thumb in settings.THUMB_SIZES):
                 continue
 
-            image_key = re.sub(settings.AWS_IMAGEGALLERY_PREFIX, '', filename)
-
+            image_key = re.sub(settings.AWS_IMAGEGALLERY_PREFIX, '', key.name[:key.name.rfind('.')])
             if not Image.objects.filter(key=image_key).exists():
                 ghost_keys.append(key)
 
