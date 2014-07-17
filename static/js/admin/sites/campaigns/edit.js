@@ -443,7 +443,7 @@ $(function() {
             );
 
             // checkScale is true when we're explicitly cropping and want to warn the user when applicable
-            if(checkScale && user_image_cropped.width() > user_image.get(0).naturalWidth) {
+            if(checkScale && user_image.get(0).naturalWidth !== undefined && user_image_cropped.width() > user_image.get(0).naturalWidth) {
                 if(!confirm(user_image.attr('data-image-scale-warning'))) {
                     enableStep(2);
                     return;
