@@ -147,7 +147,24 @@ class Campaign(models.Model):
     title = models.CharField(max_length=255)
 
     image_url = models.CharField(max_length=2048)
-    image_crop = models.CharField(max_length=1024) # JSON
+
+    # image_crop is in JSON format and contains the following:
+    # selection: {
+    #   x: left coordinate
+    #   x2: right coordinate
+    #   y: top coordinate
+    #   y2: bottom coordinate
+    #   w: total width of cropped area (x2 - x)
+    #   h: total height of cropped area (y2 - y)
+    # }
+    # width: the total width of the image dimension in which the cropping selection was made
+    # height: cropped total height (like width)
+    #
+    # Note that:
+    # - selection is in the Jcrop format: http://www.deepliquid.com/content/Jcrop_Manual.html
+    # - width and height is NOT necessarily the full size of the image
+    image_crop = models.CharField(max_length=1024)
+
     photographer = models.CharField(max_length=255)
     PHOTOGRAPHER_ALIGNMENT_CHOICES = (
         (u'left', u'Venstre'),
