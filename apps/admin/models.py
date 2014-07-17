@@ -229,6 +229,11 @@ class Campaign(models.Model):
     class Meta:
         ordering = ['-created']
 
+@receiver(post_delete, sender=Campaign, dispatch_uid="admin.models")
+def delete_cropped_image(sender, **kwargs):
+    # Delete cropped image from S3 on delete
+    kwargs['instance'].delete_cropped_image()
+
 class CampaignText(models.Model):
     campaign = models.ForeignKey(Campaign, related_name='text')
     content = models.CharField(max_length=1024)
