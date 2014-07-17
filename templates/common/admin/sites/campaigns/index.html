@@ -34,7 +34,7 @@
 
         <div class="campaign-preview media">
           <a class="pull-left" href="{% url 'admin.sites.campaigns.views.edit' active_site.id campaign.id %}">
-            <img class="media-object" src="{{ campaign.image_original }}" alt="{{ campaign.title }}">
+            <img class="media-object" src="{{ campaign.get_cropped_image }}" alt="{{ campaign.title }}">
           </a>
           <div class="media-body">
             <h2 class="media-heading">
