@@ -64,6 +64,7 @@ def save(request, site):
 
     key = bucket.new_key("%s/%s.jpg" % (settings.AWS_CAMPAIGNS_PREFIX, hash_))
     key.set_contents_from_string(campaign_image_file)
+    key.set_acl('public-read')
 
     try:
         campaign = Campaign.objects.get(id=request.POST['existing_campaign'])
