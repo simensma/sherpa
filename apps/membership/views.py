@@ -152,6 +152,9 @@ def memberid_sms(request):
     user = User.get_or_create_inactive(memberid=actor.memberid)
     sms_request.memberid = user.memberid
     sms_request.save()
+
+    # Delete the actor cache in case the number was recently updated; the cache may differ from our raw lookup above
+    cache.delete('actor.%s' % actor.memberid)
     return send_sms_receipt(request, user)
 
 @user_requires_login()
