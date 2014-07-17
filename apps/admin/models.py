@@ -147,6 +147,7 @@ class Campaign(models.Model):
     title = models.CharField(max_length=255)
 
     image_original = models.CharField(max_length=2048) # URL to the original image, anywhere on the interweb
+    image_cropped_hash = models.CharField(max_length=255) # Hash of the same image, cropped/resized and saved on our S3
 
     # image_crop is in JSON format and contains the following:
     # selection: {
