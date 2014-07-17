@@ -58,7 +58,7 @@ class Command(BaseCommand):
             self.stdout.write("Avbryter.\n")
             return
 
-        self.stdout.write("Sletter %s bildefiler (inkl. thumbs), vennligst vent...\n" % (len(ghost_keys) * (len(settings.THUMB_SIZES) + 1)))
+        self.stdout.write("Sletter %s bilder (%s filer inkl. thumbs), vennligst vent...\n" % (len(ghost_keys), len(ghost_keys) * (len(settings.THUMB_SIZES) + 1)))
 
         for key in ghost_keys:
             key.delete()
