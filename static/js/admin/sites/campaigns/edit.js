@@ -405,6 +405,10 @@ $(function() {
         dragged_text = undefined;
     });
 
+    $(document.body).on('dragover drop', '.campaign-container', function(e) {
+        e.preventDefault();
+    });
+
     function setPhotographer(photographer, alignment, color) {
         photographer_input.val(photographer);
         if(photographer === '') {
