@@ -72,7 +72,7 @@ def save(request, site):
     bucket = conn.get_bucket(settings.AWS_BUCKET)
 
     hash_ = sha1(campaign_image_file).hexdigest()
-    key = bucket.new_key("%s/%s.jpg" % (settings.AWS_CAMPAIGNS_PREFIX, hash_))
+    key = bucket.new_key(Campaign.cropped_image_key(hash_))
     key.set_contents_from_string(campaign_image_file)
     key.set_acl('public-read')
 
