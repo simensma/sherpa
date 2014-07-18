@@ -5,6 +5,7 @@ from django.conf import settings
 import json
 from StringIO import StringIO
 from hashlib import sha1
+import re
 
 import requests
 import boto
@@ -91,6 +92,10 @@ def save(request, site):
     campaign.button_large = post_data['button_large']
     campaign.button_position = json.dumps(post_data['button_position'])
     campaign.site = active_site
+    campaign.save()
+
+    # Set utm_campaign AFTER save because we need the db id, which is undefined for new campaigns until first save
+    campaign.utm_campaign = '%s-%s' % (re.sub('\s', '_', campaign.title), campaign.id)
     campaign.save()
 
     campaign.text.all().delete()

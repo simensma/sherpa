@@ -147,6 +147,9 @@ def delete_release_pdf(sender, **kwargs):
 class Campaign(models.Model):
     title = models.CharField(max_length=255)
 
+    # UTM campaign name is saved because it can't be changed after the first save
+    utm_campaign = models.CharField(max_length=255)
+
     image_original = models.CharField(max_length=2048) # URL to the original image, anywhere on the interweb
     image_cropped_hash = models.CharField(max_length=255) # Hash of the same image, cropped/resized and saved on our S3
 
@@ -210,6 +213,14 @@ class Campaign(models.Model):
         for item, value in json.loads(self.button_position).items():
             style_string += '%s:%s;' % (item, value)
         return style_string
+
+    def get_button_anchor(self):
+        """Returns the button anchor with utm campaign parameters"""
+        if '?' not in self.button_anchor:
+            start_char = '?'
+        else:
+            start_char = '&'
+        return '%s%sutm_campaign=%s&utm_source=kampanje&utm_medium=kampanjeknapp' % (self.button_anchor, start_char, self.utm_campaign)
 
     def get_cropped_image(self):
         return "http://%s/%s" % (settings.AWS_BUCKET, self.get_cropped_image_key())

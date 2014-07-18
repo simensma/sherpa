@@ -9,7 +9,7 @@
 
     {% if widget.campaign.button_enabled %}
       <div class="button" style="{{ widget.campaign.render_button_style }}">
-        <a href="{{ widget.campaign.button_anchor }}" class="btn btn-danger{% if widget.campaign.button_large %} btn-large{% endif %}">
+        <a href="{{ widget.campaign.get_button_anchor }}" class="btn btn-danger{% if widget.campaign.button_large %} btn-large{% endif %}">
           {{ widget.campaign.button_label }}
         </a>
       </div>
