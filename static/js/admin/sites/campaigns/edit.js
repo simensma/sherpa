@@ -438,6 +438,24 @@ $(function() {
         }
     }
 
+    $(document.body).on('keypress', '.campaign-container .movable', function(e) {
+        // Largest character is about this size
+        var minimum_buffer = 60;
+
+        var left = $(this).css('left');
+        left = Number(left.substring(0, left.length - 2));
+        var right_offset = left + $(this).width();
+
+        if(campaign_container.width() - right_offset <= minimum_buffer) {
+            if(left <= minimum_buffer) {
+                alert(campaign_container.attr('data-too-long-sentence-warning'));
+                e.preventDefault();
+            } else {
+                $(this).css('left', (left - minimum_buffer) + 'px');
+            }
+        }
+    });
+
     function enableStep(step, checkScale) {
         section_progress.find('li').removeClass('active');
         section_progress.find('li').eq(step - 1).addClass('active');
