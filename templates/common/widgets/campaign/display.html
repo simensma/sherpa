@@ -1,0 +1,25 @@
+{% if widget.campaign %}
+  <div class="campaign" style="background-image: url({{ widget.campaign.get_cropped_image }});">
+
+    {% for text in widget.campaign.text.all %}
+      <div class="text" style="{{ text.render_style }}">
+        {{ text.content|safe }}
+      </div>
+    {% endfor %}
+
+    {% if widget.campaign.button_enabled %}
+      <div class="button" style="{{ widget.campaign.render_button_style }}">
+        <a href="{{ widget.campaign.button_anchor }}" class="btn btn-danger{% if widget.campaign.button_large %} btn-large{% endif %}">
+          {{ widget.campaign.button_label }}
+        </a>
+      </div>
+    {% endif %}
+
+    {% if widget.campaign.photographer %}
+      <div class="photographer" style="{{ widget.campaign.photographer_alignment }}: 5px; color: {{ widget.campaign.photographer_color }};">
+        Foto: {{ widget.campaign.photographer }}
+      </div>
+    {% endif %}
+
+  </div>
+{% endif %}

@@ -11,6 +11,7 @@ from lxml import etree
 import requests
 
 from page.models import Version
+from admin.models import Campaign
 
 # Note: This is also imported by some views in admin, and a view in articles
 def parse_widget(request, widget, current_site):
@@ -118,6 +119,24 @@ def parse_widget(request, widget, current_site):
             'header': widget['table'][0],
             'body': widget['table'][1:],
         }
+    elif widget['widget'] == "campaign":
+        now = datetime.now()
+        active_campaign = None
+        for campaign in widget['campaigns']:
+            start_date = datetime.strptime(campaign['start_date'], "%d.%m.%Y")
+            stop_date = datetime.strptime("%s 23:59:59" % campaign['stop_date'], "%d.%m.%Y %H:%M:%S")
+
+            if widget['hide_when_expired'] and now >= start_date and now <= stop_date:
+                active_campaign = campaign
+            elif not widget['hide_when_expired'] and now >= start_date:
+                active_campaign = campaign
+
+        if active_campaign is None:
+            data = {}
+        else:
+            data = {
+                'campaign': Campaign.objects.get(id=active_campaign['campaign_id']),
+            }
 
     data.update({
         'json': json.dumps(widget),
@@ -148,7 +167,8 @@ def widget_admin_context():
         return categories
 
     return {
-        'blog': {'categories': blog_category_list()}
+        'blog': {'categories': blog_category_list()},
+        'campaigns': Campaign.objects.all(),
     }
 
 # Used temporary for static promo content

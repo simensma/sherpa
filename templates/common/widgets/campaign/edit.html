@@ -1,0 +1,99 @@
+<div class="modal hide widget-editor" data-widget="campaign" data-width="auto">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h3>Sett inn kampanje</h3>
+  </div>
+  <div class="modal-body">
+
+    <p>
+      En kampanje lar deg vise et stort bilde med en kort tekst på, og en knapp som sender brukeren videre til det kampanjen omhandler.
+      <br>
+      Her kan du legge til et sett med kampanjer, og velge hvor lenge hver av dem skal vises.
+      <br>
+      Kampanjene må lages på forhånd, under <strong>Hjemmeside &gt; Kampanjer</strong> i Sherpa.
+    </p>
+
+    <p>
+      <strong>Viktig: Du må kun bruke kampanjer i en fullbredde-kolonne!</strong>
+    </p>
+
+    <div class="campaigns form-default form-horizontal" data-invalid-date-format="Ugyldig datoformat. Vennligst sjekk at datoene ser slik ut: dd.mm.yyyy (for eksempel: 21.03.2014)" data-missing-campaign="Sett inn minst én kampanje før du lagrer!">
+      {# Will be filled out with javascript #}
+    </div>
+
+    <div class="form-default form-horizontal">
+      <div class="control-group">
+        <div class="controls">
+          <button class="btn btn-default add-campaign" data-toggle="add-campaign">
+            <i class="icon-plus"></i> Legg til en kampanje...
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-default form-horizontal">
+      <div class="control-group">
+        <div class="controls">
+          <div class="control-as-text">
+            Når slutt-dato for siste kampanje er passert, vil jeg at:
+          </div>
+          <label class="radio">
+            <input type="radio" name="hide-when-expired" value="true">
+            Kampanjen forsvinner av seg selv når datoen passeres
+          </label>
+          <label class="radio">
+            <input type="radio" name="hide-when-expired" value="false">
+            Siste kampanje blir liggende selv om datoen er passert
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="campaign-template jq-hide">
+
+      <div class="control-group">
+        <label class="control-label">Kampanje</label>
+        <div class="controls">
+          <select name="campaign" class="chosen" data-placeholder="Velg blant eksisterende kampanjer...">
+            <option value=""></option>
+            {% for campaign in widget_data.campaigns %}
+              <option value="{{ campaign.id }}">{{ campaign.title }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">Periode</label>
+        <div class="controls">
+          <div class="input-append date">
+            <input type="text" class="input-medium" name="start-date" value="{{ now|date:"d.m.Y" }}">
+            <span class="add-on">
+              <i class="icon-th"></i>
+            </span>
+          </div>
+          til og med
+          <div class="input-append date">
+            <input type="text" class="input-medium" name="stop-date" value="{{ now|date:"d.m.Y" }}">
+            <span class="add-on">
+              <i class="icon-th"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <div class="controls">
+          <button class="btn btn-danger" data-toggle="remove-campaign">
+            <i class="icon-remove icon-white"></i> Ta bort
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  <div class="modal-footer" style="clear: both;">
+    <button class="btn btn-success save"><i class="icon-ok"></i> Lagre kampanjene</button>
+  </div>
+</div>

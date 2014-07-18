@@ -205,6 +205,12 @@ class Campaign(models.Model):
             } for t in self.text.all()],
         })
 
+    def render_button_style(self):
+        style_string = ''
+        for item, value in json.loads(self.button_position).items():
+            style_string += '%s:%s;' % (item, value)
+        return style_string
+
     def get_cropped_image(self):
         return "http://%s/%s" % (settings.AWS_BUCKET, self.get_cropped_image_key())
 
@@ -240,6 +246,12 @@ class CampaignText(models.Model):
     campaign = models.ForeignKey(Campaign, related_name='text')
     content = models.CharField(max_length=1024)
     style = models.CharField(max_length=1024) # JSON
+
+    def render_style(self):
+        style_string = ''
+        for item, value in json.loads(self.style).items():
+            style_string += '%s:%s;' % (item, value)
+        return style_string
 
     class Meta:
         # The order isn't important but getting a *consistent* ordering can be helpful
