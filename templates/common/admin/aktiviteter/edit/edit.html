@@ -481,6 +481,7 @@
                     </a>
                     <p class="help-block">Er dette et turforslag som ligger på UT.no? Da kan du legge det til her og så
                     viser vi ruten i kartet på aktivitetssiden.</p>
+                    <!-- ntb search input -->
                     <div class="find-turforslag jq-hide" data-turforslag-search-url="{% url 'admin.aktiviteter.views.turforslag_search' %}">
                       <input type="text" name="turforslag" class="form-control" placeholder="Søk etter turforslag...">
                       <input type="hidden" name="turforslag_id" value="{{ aktivitet.turforslag|default:"" }}">
