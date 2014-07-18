@@ -128,6 +128,10 @@ def parse_widget(request, widget, current_site):
 
 
 def widget_admin_context():
+    """
+    Returns a dict for each widget which needs database in the admin-editor context. Will be available in the editors
+    through 'widget_data.<widget>'
+    """
     def blog_category_list():
         # The list of categories available in the blogwidget
         categories = cache.get('widgets.blog.category_list')
