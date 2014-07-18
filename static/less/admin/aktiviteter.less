@@ -121,9 +121,23 @@ div.admin-aktivitet-edit {
   }
 
   div.section.position {
-    div.leaflet-map {
-      height: 600px;
+    margin-bottom: 30px;
+
+    div.map-container {
       margin-bottom: 30px;
+
+      div.map-shadow {
+        padding: 3px 0px;
+        margin: 0px -25px;
+
+        -moz-box-shadow: inset 0 0 5px #888;
+        -webkit-box-shadow: inset 0 0 5px#888;
+        box-shadow: inner 0 0 5px #888;
+
+        div.leaflet-map {
+          height: 400px;
+        }
+      }
     }
 
     div.control-as-text p.intro {

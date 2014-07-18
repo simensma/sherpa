@@ -9,10 +9,10 @@
 
 {% block extra_css %}
   <link rel="stylesheet" href="{{ STATIC_URL }}lib/leaflet/leaflet.css" media="screen">
-  <link rel="stylesheet" href="{{ STATIC_URL }}lib/leaflet.draw/leaflet.draw.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/select2/select2.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/select2/select2-bootstrap.css" media="screen">
   <!--[if lte IE 8]>
       <link rel="stylesheet" href="{{ STATIC_URL }}lib/leaflet/leaflet.ie.css" media="screen">
-      <link rel="stylesheet" href="{{ STATIC_URL }}lib/leaflet.draw/leaflet.draw.ie.css" media="screen">
   <![endif]-->
 {% endblock %}
 
@@ -20,8 +20,12 @@
   <script src="{{ STATIC_URL }}js/admin/images/util/image-archive-picker.js"></script>
   <script src="{{ STATIC_URL }}js/admin/images/util/image-upload-dialog.js"></script>
   <script src="{{ STATIC_URL }}js/admin/images/util/image-carousel-picker.js"></script>
+
   <script src="{{ STATIC_URL }}lib/leaflet/leaflet.js"></script>
-  <script src="{{ STATIC_URL }}lib/leaflet.draw/leaflet.draw.js"></script>
+
+  <script src="{{ STATIC_URL }}lib/xmlToJSON/xmlToJSON.js"></script>
+  <script src="{{ STATIC_URL }}lib/jQuery.SSR/jQuery.SSR.js"></script>
+  <script src="{{ STATIC_URL }}lib/select2/select2.min.js"></script>
 
   <script src="{{ STATIC_URL }}js/admin/aktiviteter/edit/turleder_search.js"></script>
   <script src="{{ STATIC_URL }}js/admin/aktiviteter/edit/dates.js"></script>
@@ -458,14 +462,7 @@
                     <a href="javascript:undefined" class="btn btn-primary btn-block" data-toggle="location-select-show"><span class="glyphicon glyphicon-pushpin"></span> Sett posisjon i kart</a>
                     <p class="help-block">Her kan du bestemme hvor aktiviteten starter med utgangspunkt i et sted.</p>
                     <div class="find-location jq-hide">
-                      <select class="form-control" data-placeholder="Finn sted">
-                        <option value=""></option>
-                        <option value="">Andenes</option>
-                        <option value="">Geiranger</option>
-                        <option value="">Lofoten</option>
-                        <option value="">Valdres</option>
-                      </select>
-                      <p class="help-block">Finn stedet som er utgangspunkt for aktiviteten. Etter at du har valgt sted kan du flytte på stedsmarkøren</p>
+                      <input type="hidden" style="width:100%">
                     </div>
                   </div>
                   <div class="col-sm-1">
@@ -493,8 +490,10 @@
             </div>
           </div>
 
-          <div class="map-container">
-            <div id="map" class="leaflet-map jq-hide"></div>
+          <div class="map-container jq-hide">
+            <div class="map-shadow">
+              <div id="map" class="leaflet-map"></div>
+            </div>
           </div>
 
           <div class="popup-content jq-hide">
