@@ -343,12 +343,7 @@ def publication(request, publication):
 @user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def norway_bus_tickets(request):
-    now = datetime.now()
-
-    context = {
-        'now': now,
-    }
-    return render(request, 'common/user/account/norway_bus_tickets.html', context)
+    return render(request, 'common/user/account/norway_bus_tickets.html')
 
 @user_requires_login()
 @user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')

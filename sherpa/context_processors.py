@@ -78,3 +78,9 @@ def membership_year_start(request):
 
 def do_not_track(request):
     return {'donottrack': 'HTTP_DNT' in request.META and request.META['HTTP_DNT'] == '1'}
+
+def current_time(request):
+    return {
+        'now': datetime.now(),
+        'today': date.today(),
+    }
