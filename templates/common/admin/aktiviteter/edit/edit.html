@@ -446,7 +446,10 @@
 
         </div><!-- /.section.pictures -->
 
-        <div class="section position" data-county-lookup-url="{% url 'core.views.county_lookup' %}" data-municipality-lookup-url="{% url 'core.views.municipality_lookup' %}" data-location-lookup-url="{% url 'sherpa2.views.location_lookup' %}">
+        <div class="section position"
+          data-county-lookup-url="{% url 'core.views.county_lookup' %}"
+          data-municipality-lookup-url="{% url 'core.views.municipality_lookup' %}"
+          data-location-lookup-url="{% url 'sherpa2.views.location_lookup' %}">
 
           <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
@@ -459,8 +462,12 @@
               <div class="alert alert-info">
                 <div class="row">
                   <div class="col-sm-4 col-sm-offset-2 position-in-map">
-                    <a href="javascript:undefined" class="btn btn-primary btn-block" data-toggle="location-select-show"><span class="glyphicon glyphicon-pushpin"></span> Sett posisjon i kart</a>
-                    <p class="help-block">Her kan du bestemme hvor aktiviteten starter med utgangspunkt i et sted.</p>
+                    <a href="javascript:undefined" class="btn btn-primary btn-block" data-toggle="location-select-show">
+                      <span class="glyphicon glyphicon-pushpin"></span> Sett posisjon i kart
+                    </a>
+                    <p class="help-block">Søk etter det stedet der denne aktiviteten finner sted. På denne måten kan vi
+                    sikre at aktiviteten posisjoneres riktig i kartet.</p>
+                    <!-- ssr search input -->
                     <div class="find-location jq-hide">
                       <input type="hidden" style="width:100%">
                     </div>
@@ -469,8 +476,11 @@
                     <p style="text-align: center; line-height: 30px; margin-bottom: 0;">eller</p>
                   </div>
                   <div class="col-sm-4">
-                    <a href="javascript:undefined" class="btn btn-primary btn-block" data-toggle="turforslag-select-show"><span class="glyphicon glyphicon-link"></span> Koble til turforslag fra UT.no</a>
-                    <p class="help-block">Hvis dere skal gå en tur som ligger som turforslag på UT.no kan dere henvise til denne. Ruten til turforslaget vil da bli brukt for å bestemme område.</p>
+                    <a href="javascript:undefined" class="btn btn-primary btn-block" data-toggle="turforslag-select-show">
+                      <span class="glyphicon glyphicon-link"></span> Koble til turforslag fra UT.no
+                    </a>
+                    <p class="help-block">Er dette et turforslag som ligger på UT.no? Da kan du legge det til her og så
+                    viser vi ruten i kartet på aktivitetssiden.</p>
                     <div class="find-turforslag jq-hide" data-turforslag-search-url="{% url 'admin.aktiviteter.views.turforslag_search' %}">
                       <input type="text" name="turforslag" class="form-control" placeholder="Søk etter turforslag...">
                       <input type="hidden" name="turforslag_id" value="{{ aktivitet.turforslag|default:"" }}">
