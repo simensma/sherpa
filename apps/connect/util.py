@@ -30,7 +30,7 @@ def get_request_data(request):
 
     # Check the transmit datestamp
     request_time = datetime.fromtimestamp(request_data['timestamp'])
-    if datetime.now() - request_time > timedelta(seconds=settings.DNT_CONNECT_TIMEOUT):
+    if not client['ignore_timestamp_validation'] and datetime.now() - request_time > timedelta(seconds=settings.DNT_CONNECT_TIMEOUT):
         raise PermissionDenied
 
     # Redirect to provided url, or the default if none provided
