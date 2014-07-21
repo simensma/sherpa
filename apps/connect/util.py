@@ -28,7 +28,10 @@ def get_request_data(request):
     request_data, auth_index = try_keys(decrypt, client['auths'], request.GET['data'], request.GET.get('hmac'))
     request_data = json.loads(request_data)
 
-    # Note that the transmitted datestamp is now ignored and all requests are accepted
+    # Check the transmit datestamp
+    request_time = datetime.fromtimestamp(request_data['timestamp'])
+    if datetime.now() - request_time > timedelta(seconds=settings.DNT_CONNECT_TIMEOUT):
+        raise PermissionDenied
 
     # Redirect to provided url, or the default if none provided
     redirect_url = request_data['redirect_url'] if 'redirect_url' in request_data else client['default_redirect_url']
