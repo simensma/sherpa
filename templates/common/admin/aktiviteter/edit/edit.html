@@ -496,7 +496,11 @@
                     viser vi ruten i kartet på aktivitetssiden.</p>
                     <!-- ntb search input -->
                     <div class="find-turforslag jq-hide" data-turforslag-search-url="{% url 'admin.aktiviteter.views.turforslag_search' %}">
-                      <div class="alert alert-warning" role="alert">Hva forventet du her? <a href="#">Send oss ditt forslag</a>.</div>
+                      <div class="alert alert-warning" role="alert">
+                        Hva forventet du her? <a href="http://dnt.uservoice.com"
+                          data-uv-trigger="feedback"
+                          data-uv-screenshot_enabled="false">Send oss ditt forslag</a>.
+                      </div>
                       {% comment %}
                       <input type="text" name="turforslag" class="form-control" placeholder="Søk etter turforslag...">
                       <input type="hidden" name="turforslag_id" value="{{ aktivitet.turforslag|default:"" }}">
