@@ -70,9 +70,13 @@ $(function() {
         map_container.show(function() {
             init_map({set_default_view: false});
             set_map_marker(sted);
+
+            position_section.find('[data-container="metadata-select"]').removeClass('jq-hide');
+
+            var map_top = $(map_container).offset().top;
+            $('html, body').animate({scrollTop:(map_top - 80)}, '500', 'swing', function() {
+            });
         });
-        var map_top = $(map_container).offset().top;
-        $('html, body').animate({scrollTop:(map_top - 80)}, '500', 'swing', function() {});
     };
 
     function location_select() {
