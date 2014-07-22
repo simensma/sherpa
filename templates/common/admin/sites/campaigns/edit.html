@@ -59,7 +59,7 @@
           </span>
         </li>
         <li>
-          <form action="{% url 'admin.sites.campaigns.views.save' active_site.id %}" method="post" class="save">
+          <form action="{% url 'admin.sites.campaigns.views.save' active_site.id %}" method="post" class="save" data-intro="Når du er ferdig, klikker du her for å lagre kampanjen." data-step="6">
             {% csrf_token %}
             <input type="hidden" name="campaign">
             <input type="hidden" name="existing_campaign" value="{{ campaign.id }}" data-campaign="{{ campaign.to_json }}">
@@ -110,7 +110,12 @@
         <div class="form-default form-horizontal">
 
           <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
+            <div class="col-md-2 control-label">
+              <button class="btn btn-default btn-lg" data-trigger="introjs">
+                <i class="fa fa-question"></i> Slik gjør du
+              </button>
+            </div>
+            <div class="col-md-10" data-intro="Her ser du en hvordan kampanjen kommer til å se ut!<br><br><strong>Klikk på tittelen</strong>, og begynn å skrive, for å endre hva som står der.<br><br><strong>Dra tittelen rundt</strong> for å plassere den der du vil ha den.<br><br>Det samme gjelder for knappen." data-position="left" data-step="1">
               <div class="campaign-container" data-too-long-sentence-warning="Du har ikke plass til en så lang setning! Ta bort et ord eller to, og bruk 'enter' for å få en ny linje.">
                 <img src="" alt="" class="cropped-image">
                 <div class="button campaign-element movable">
@@ -123,7 +128,7 @@
             </div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" data-intro="Her gir du kampanjen et navn. Denne blir ikke synlig på kampanjen men brukes bare for å finne kampanjen igjen i Sherpa." data-position="top" data-step="2">
             <label class="col-md-2 control-label">Tittel</label>
             <div class="col-md-10">
               <input type="text" name="campaign-title" class="form-control" value="{{ campaign.title|default:"Kampanje" }}">
@@ -133,7 +138,7 @@
             </div>
           </div>
 
-          <div class="edit-button" data-container="edit-button">
+          <div class="edit-button" data-container="edit-button" data-intro="Her velger du hvordan knappen ser ut og hvilken adresse den peker til.<br><br>Kampanjen bør peke til en landingsside som er relevant for det kampanjen handler om, og knappen bør oppfordre til noe, for eksempel: <strong>Les mer på UT.no</strong>." data-position="top" data-step="3">
 
             <div class="form-group">
               <div class="col-md-offset-2 col-md-10">
@@ -195,7 +200,7 @@
 
           </div><!-- /[data-edit='photographer'] -->
 
-          <div class="text-editors">
+          <div class="text-editors" data-intro="Her velger du hvordan teksten på bildet <strong>ser ut</strong>, altså størrelse, farge og tykkelse.<br><br>Det er også her du kan <strong>ta bort</strong> tekst som du ikke vil ha på kampanjen likevel.<br><br>Når du endrer noe her, må du scrolle opp til forhåndsvisningen for å se hvordan det ser ut." data-position="top" data-step="4">
             {# Will be filled out by javascript... #}
           </div>
 
@@ -245,7 +250,7 @@
           </div>
 
           <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
+            <div class="col-md-offset-2 col-md-10" data-intro="Denne knappen lar deg legge til flere tekstelementer.<br><br>Kanskje du vil ha både en <strong>tittel</strong>, samt en <strong>liten, kort tekst</strong> litt under." data-position="top" data-step="5">
               <button class="btn btn-default add-text-editor"><i class="fa fa-text-width"></i> Legg til et nytt tekstelement</button>
             </div>
           </div>

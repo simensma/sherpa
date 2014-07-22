@@ -3,6 +3,8 @@ $(function() {
     var wrapper = $('div.edit-campaign');
     var section_progress = wrapper.find('.section-progress');
 
+    var button_introjs = wrapper.find('button[data-trigger="introjs"]');
+
     var save_form = section_progress.find('form.save');
     var existing_campaign = save_form.find('input[name="existing_campaign"]');
     var photographer_input = save_form.find('input[name="photographer"]');
@@ -34,6 +36,10 @@ $(function() {
     var JcropApi;
     var crop_ratio = [940, 480];
     var text_editor_id = 0; // Will be incremented for each created text editor (see below)
+
+    button_introjs.click(function() {
+        introJs.start();
+    });
 
     // Load existing campaign data, if there
     if(existing_campaign.attr('data-campaign') !== '') {
