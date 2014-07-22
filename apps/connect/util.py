@@ -115,7 +115,6 @@ def decrypt(auth, encoded, hmac_):
         if auth['iv'] and calc_hmac(auth['key'], iv + plaintext) != hmac_:
             logger.warning(u"DNT Connect: Forespurt hmac matchet ikke egenkalkulert hmac",
                 extra={
-                    'request': request,
                     'our_hmac': calc_hmac(auth['key'], iv + plaintext),
                     'their_hmac': hmac_,
                     'encoded': encoded,
