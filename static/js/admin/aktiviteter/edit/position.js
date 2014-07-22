@@ -4,7 +4,6 @@ $(function() {
     var form = editor.find("form.edit-aktivitet");
     var position_section = editor.find("div.section.position");
     var map_container = position_section.find("div.map-container");
-    // var popup_content = position_section.find("div.popup-content").html();
     var show_map_button = position_section.find("a.show-map");
 
     var counties_select = position_section.find("select[name='counties']");
@@ -16,113 +15,109 @@ $(function() {
 
     var marker, map;
 
-    var init_map = function(opts) {
-      if (map) { return; }
-
-      map = L.map('map', {
-        dragging: false,
-        zoomControl: false,
-        scrollWheelZoom: false,
-        closePopupOnClick: false,
-        layers: [
-          L.tileLayer('http://opencache.statkart.no/gatekeeper/gk/gk.open_gmaps?layers=topo2&zoom={z}&x={x}&y={y}', {
-              attribution: 'Kartverket'
-          })
-        ]
-      });
-
-      if (opts && opts.set_default_view) { map.setView([65, 12], 5); }
+    function sted_to_html(sted) {
+        return [
+            '<label>' + sted.text + '</label><br>',
+            '<small>' + [sted.navnetype, sted.kommunenavn, sted.fylkesnavn].join(' i ') + '</small>'
+        ].join('');
     };
 
-    var set_map_marker = function(sted) {
-      if (!map || (marker && marker.ssr_id === sted.id)) { return; }
+    function init_map(opts) {
+        if (map) { return; }
 
-      //lat = lat || Turistforeningen.start_point_lat;
-      //lon = lon || Turistforeningen.start_point_lng;
+        var tile_url = [
+            'http://opencache.statkart.no/gatekeeper/gk/',
+            'gk.open_gmaps?layers=topo2&zoom={z}&x={x}&y={y}'
+        ].join('');
 
-      if (sted.nord && sted.aust) {
-        var latlng = new L.LatLng(sted.nord, sted.aust);
-
-        if (marker) {
-          marker.setLatLng(latlng);
-        } else {
-          marker = L.marker(latlng, {title: 'Turern starter her'}).addTo(map);
-        }
-
-        marker.ssr_id = sted.id
-        marker.bindPopup(
-          '<strong>' + sted.text + '</strong><br>' +
-          '<small>' + sted.navnetype + ' i ' + sted.kommunenavn + ' i ' + sted.fylkesnavn + '</small>'
-        , {
-          closeOnClick: false,
-          closeButton: false
+        map = L.map('map', {
+            dragging: false,
+            zoomControl: false,
+            scrollWheelZoom: false,
+            closePopupOnClick: false,
+            layers: [L.tileLayer(tile_url, {attribution: 'Kartverket'})]
         });
-        map.setView(latlng, 12, {reset: true});
-        marker.openPopup()
 
-        set_map_marker_dom(marker);
-      }
+        if (opts && opts.set_default_view) { map.setView([65, 12], 5); }
     };
 
-    var set_map_marker_dom = function(marker) {
-      form.find("input[name='position_lat']").val(marker.getLatLng().lat);
-      form.find("input[name='position_lng']").val(marker.getLatLng().lng);
-    };
+    function set_map_marker(sted) {
+        if (!map || (marker && marker.ssr_id === sted.id)) { return; }
 
-    var show_location_picker = function(e) {
-      $('.find-location').removeClass('jq-hide');
-      $('.find-location input').select2({
-        placeholder: 'Hvor starter turen?',
-        minimumInputLength: 2,
-        escapeMarkup: function (m) { return m; },
-        formatSearching: function () { return 'Søker'; },
-        formatInputTooShort: function (term, minLength) { return 'Minimum to bokstaver'; },
-        formatResult: function(obj) {
-          return '<label>' + obj.text + '</label><br>'
-               + '<small>' + obj.navnetype + ' i ' + obj.kommunenavn + ' i ' + obj.fylkesnavn + '</small>';
-        },
-        query: location_picker_query
-      }).on('change', function(e) {
-        if (e.added) { show_and_set_map_marker(e.added); }
+        //lat = lat || Turistforeningen.start_point_lat;
+        //lon = lon || Turistforeningen.start_point_lng;
 
-      }).select2('open');
-    };
+        if (sted.nord && sted.aust) {
+            var latlng = new L.LatLng(sted.nord, sted.aust);
 
-    var location_picker_query = function(options) {
-      var req, res;
+            if (marker) {
+                marker.setLatLng(latlng);
+            } else {
+                marker = L.marker(latlng, {title: 'Turern starter her'}).addTo(map);
+            }
 
-      res = [];
+            marker.ssr_id = sted.id
+            marker.bindPopup(sted_to_html(sted), { closeButton: false });
+            map.setView(latlng, 12, {reset: true});
+            marker.openPopup()
 
-      req = $.fn.SSR(options.term);
-
-      req.done(function(steder) {
-        if (steder.stedsnavn && steder.stedsnavn.length > 0) {
-          for (var i = 0; i < steder.stedsnavn.length; i++) {
-            steder.stedsnavn[i].id = steder.stedsnavn[i].ssrId;
-            steder.stedsnavn[i].text = steder.stedsnavn[i].stedsnavn;
-          }
-
-          res = steder.stedsnavn;
+            form.find("input[name='position_lat']").val(marker.getLatLng().lat);
+            form.find("input[name='position_lng']").val(marker.getLatLng().lng);
         }
-      });
-
-      req.always(function() {
-        options.callback({results: res});
-      });
     };
 
     function show_and_set_map_marker(sted) {
-      map_container.show(function() {
-        init_map({set_default_view: false});
-        set_map_marker(sted);
-      });
-      var map_top = $(map_container).offset().top;
-      $('html, body').animate({scrollTop:(map_top - 80)}, '500', 'swing', function() {});
+        map_container.show(function() {
+            init_map({set_default_view: false});
+            set_map_marker(sted);
+        });
+        var map_top = $(map_container).offset().top;
+        $('html, body').animate({scrollTop:(map_top - 80)}, '500', 'swing', function() {});
     };
 
-    // Show location autocomplete
-    $(document).on('click', '[data-toggle="location-select-show"]', show_location_picker);
+    function location_select() {
+        var select;
 
+        select = $('[data-container="location-select"] input').select2({
+            placeholder: 'Hvor starter turen?',
+            minimumInputLength: 2,
+            escapeMarkup: function (m) { return m; },
+            formatSearching: function () { return 'Søker'; },
+            formatInputTooShort: function (term, minLength) { return 'Minimum to bokstaver'; },
+            formatResult: sted_to_html,
+            query: location_select_query
+        });
+
+        select.on('change', function(e) {
+            if (e.added) { show_and_set_map_marker(e.added); }
+        });
+
+        select.select2('open');
+    };
+
+    function location_select_query(options) {
+        var res = []
+          , ssr = $.fn.SSR(options.term);
+
+        ssr.done(function(steder) {
+            if (steder.stedsnavn && steder.stedsnavn.length > 0) {
+                for (var i = 0; i < steder.stedsnavn.length; i++) {
+                    steder.stedsnavn[i].id = steder.stedsnavn[i].ssrId;
+                    steder.stedsnavn[i].text = steder.stedsnavn[i].stedsnavn;
+                }
+
+                res = steder.stedsnavn;
+            }
+        });
+
+        ssr.always(function() {
+            options.callback({results: res});
+        });
+    };
+
+    function turforslag_select() {
+
+    };
 
     function county_lookup(lat, lng) {
         counties_ajaxloader.show();
@@ -190,14 +185,27 @@ $(function() {
         });
     }
 
-    // DEMO: Simple toggling of fields, for demo purposes only
+    $(document).on('click', '[data-show="location-select"]', function (e) {
+        e.preventDefault();
+        position_section.find('[data-container="location-select"]').removeClass('jq-hide');
+        location_select();
+    });
 
-    $(document).on('click', '[data-toggle="counties-edit-show"]', function () {
+    $(document).on('click', '[data-show="turforslag-select"]', function (e) {
+        e.preventDefault();
+        position_section.find('[data-container="turforslag-select"]').removeClass('jq-hide');
+        turforslag_select();
+    });
+
+    // DEMO: Simple toggling of fields, for demo purposes only
+    $(document).on('click', '[data-toggle="counties-edit-show"]', function (e) {
+        e.preventDefault();
         position_section.find('.counties-static').addClass('jq-hide');
         position_section.find('.counties-edit').removeClass('jq-hide');
     });
 
-    $(document).on('click', '[data-toggle="municipalities-edit-show"]', function () {
+    $(document).on('click', '[data-toggle="municipalities-edit-show"]', function (e) {
+        e.preventDefault();
         position_section.find('.municipalities-static').addClass('jq-hide');
         position_section.find('.municipalities-edit').removeClass('jq-hide');
     });
@@ -206,9 +214,4 @@ $(function() {
         position_section.find('.locations-static').addClass('jq-hide');
         position_section.find('.locations-edit').removeClass('jq-hide');
     });
-
-    $(document).on('click', '[data-toggle="turforslag-select-show"]', function () {
-        position_section.find('.find-turforslag').removeClass('jq-hide');
-    });
-
 });
