@@ -55,6 +55,7 @@
 </div>
 
 <div class="alert alert-info metadata-container jq-hide"
+  data-container="metadata-select"
   data-county-lookup-url="{% url 'core.views.county_lookup' %}"
   data-municipality-lookup-url="{% url 'core.views.municipality_lookup' %}"
   data-location-lookup-url="{% url 'sherpa2.views.location_lookup' %}">
@@ -73,7 +74,7 @@
       <strong>Fylke: </strong><br />
       <div data-container="activity-county">
         <div class="counties-static">
-          <span data-placeholder-for="county">Sør-Trøndelag</span>
+          <span data-placeholder-for="county">Ikke valgt</span>
           <a class="btn btn-default btn-xs" data-toggle="counties-edit-show">
             <span class="glyphicon glyphicon-plus"></span> Flere fylker
           </a>
@@ -82,9 +83,9 @@
           <div class="counties-edit jq-hide">
             <select multiple name="counties" data-chosen data-placeholder="Velg fylke...">
               <option value=""></option>
-              {% for county in counties %}
-                <option value="{{ county.id }}"{% if county in selected %} selected{% endif %}>
-                  {{ county.name }}
+              {% for item in counties %}
+                <option value="{{ item.id }}"{% if item in selected %} selected{% endif %}>
+                  {{ item.name }}
                 </option>
               {% endfor %}
             </select>
@@ -100,37 +101,47 @@
       <strong>Kommune: </strong><br />
       <div data-container="activity-municipality">
         <div class="municipalities-static">
-          <span data-placeholder-for="municipality">Trondheim</span>
+          <span data-placeholder-for="municipality">Ikke valgt</span>
           <a class="btn btn-default btn-xs" data-toggle="municipalities-edit-show">
             <span class="glyphicon glyphicon-plus"></span> Flere kommuner
           </a>
         </div>
-        <div class="municipalities-edit jq-hide">
-          <select multiple name="municipalities" data-chosen data-placeholder="Velg kommune...">
-            <option value=""></option>
-            {% for municipality in municipalities %}
-              <option value="{{ municipality.id }}"{% if municipality in aktivitet.municipalities.all %} selected{% endif %}>{{ municipality.name }}</option>
-            {% endfor %}
-          </select>
-          <img class="ajaxloader jq-hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
-        </div>
+        {% with selected=aktivitet.municipalities %}
+          <div class="municipalities-edit jq-hide">
+            <select multiple name="municipalities" data-chosen data-placeholder="Velg kommune...">
+              <option value=""></option>
+              {% for item in municipalities %}
+                <option value="{{ item.id }}"{% if item in selected %} selected{% endif %}>
+                  {{ item.name }}
+                </option>
+              {% endfor %}
+            </select>
+            <img class="ajaxloader jq-hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif"
+              alt="Laster, vennligst vent...">
+          </div>
+        {% endwith %}
       </div>
     </div>
+
+    <!-- location -->
     <div class="col-lg-4 col-md-4 col-sm-4">
       <strong>Område: </strong><br />
       <div data-container="activity-locations">
         <div class="locations-static">
-          <span data-placeholder-for="location">Trondheimsmarka</span>
-          <a class="btn btn-default btn-xs" data-toggle="locations-edit-show"><span class="glyphicon glyphicon-plus"></span> Flere områder</a>
+          <span data-placeholder-for="location">Ikke valgt</span>
+          <a class="btn btn-default btn-xs" data-toggle="locations-edit-show">
+            <span class="glyphicon glyphicon-plus"></span> Flere områder
+          </a>
         </div>
         <div class="locations-edit jq-hide">
           <select multiple name="locations" data-chosen data-placeholder="Velg område...">
             <option value=""></option>
-            {% for location in locations %}
-              <option value="{{ location.id }}"{% if aktivitet|aktivitet_has_location:location %} selected{% endif %}>{{ location.name }}</option>
+            {% for item in locations %}
+              <option value="{{ item.id }}"{% if aktivitet|aktivitet_has_location:item %} selected{% endif %}>{{ item.name }}</option>
             {% endfor %}
           </select>
-          <img class="ajaxloader jq-hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+          <img class="ajaxloader jq-hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif"
+            alt="Laster, vennligst vent...">
         </div>
       </div>
     </div>

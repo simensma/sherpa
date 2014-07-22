@@ -70,8 +70,7 @@ $(function() {
         map_container.show(function() {
             init_map({set_default_view: false});
             set_map_marker(sted);
-
-            position_section.find('[data-container="metadata-select"]').removeClass('jq-hide');
+            init_metadata(sted);
 
             var map_top = $(map_container).offset().top;
             $('html, body').animate({scrollTop:(map_top - 80)}, '500', 'swing');
@@ -122,10 +121,37 @@ $(function() {
 
     };
 
+    function update_metadata_placeholder(e) {
+        var html = $.map($(e.target).find('option:selected'), function(option) {
+            return $(option).html().trim();
+        }).join(', ');
+        $(this).html(html || 'Ingen funnet');
+    }
+
+    function init_metadata(sted) {
+        var placeholder = position_section.find('[data-placeholder-for="municipality"]');
+        municipalities_select.on("chosen:updated", update_metadata_placeholder.bind(placeholder));
+
+        var placeholder = position_section.find('[data-placeholder-for="county"]');
+        counties_select.on("chosen:updated", update_metadata_placeholder.bind(placeholder));
+
+        var placeholder = position_section.find('[data-placeholder-for="location"]');
+        locations_select.on("chosen:updated", update_metadata_placeholder.bind(placeholder));
+
+        // Look up conties, municipalities, and location based on sted
+        county_lookup(sted.nord, sted.aust);
+        municipality_lookup(sted.nord, sted.aust);
+        location_lookup(sted.nord, sted.aust);
+
+        position_section.find('[data-container="metadata-select"]').removeClass('jq-hide');
+    };
+
     function county_lookup(lat, lng) {
+        var url = position_section.find('[data-county-lookup-url]').data('countyLookupUrl');
+
         counties_ajaxloader.show();
         $.ajaxQueue({
-            url: position_section.attr('data-county-lookup-url'),
+            url: url,
             data: {
                 lat: JSON.stringify(lat),
                 lng: JSON.stringify(lng)
@@ -145,9 +171,11 @@ $(function() {
     }
 
     function municipality_lookup(lat, lng) {
+        var url = position_section.find('[data-municipality-lookup-url]').data('municipalityLookupUrl');
+
         municipalities_ajaxloader.show();
         $.ajaxQueue({
-            url: position_section.attr('data-municipality-lookup-url'),
+            url: url,
             data: {
                 lat: JSON.stringify(lat),
                 lng: JSON.stringify(lng)
@@ -167,9 +195,11 @@ $(function() {
     }
 
     function location_lookup(lat, lng) {
+        var url = position_section.find('[data-location-lookup-url]').data('locationLookupUrl');
+
         locations_ajaxloader.show();
         $.ajaxQueue({
-            url: position_section.attr('data-location-lookup-url'),
+            url: url,
             data: {
                 lat: JSON.stringify(lat),
                 lng: JSON.stringify(lng)
