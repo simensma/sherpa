@@ -1,0 +1,139 @@
+{% load aktivitet_has_location %}
+
+<div class="alert alert-info search-container"
+  data-turforslag-search-url="{% url 'admin.aktiviteter.views.turforslag_search' %}">
+
+  <div class="row">
+
+    <!-- ssr-search -->
+    <div class="col-md-4 col-md-offset-2">
+      <a class="btn btn-primary btn-block" data-show="location-select" href="#">
+        <span class="glyphicon glyphicon-pushpin"></span> Sett posisjon i kart
+      </a>
+      <p class="help-block">Søk etter det stedet der denne aktiviteten finner sted. På denne
+      måten kan vi sikre at aktiviteten posisjoneres riktig i kartet.</p>
+      <div class="jq-hide" data-container="location-select">
+        <input type="hidden" style="width:100%">
+      </div>
+    </div>
+
+    <div class="col-md-1">
+      <p style="text-align: center; line-height: 30px; margin-bottom: 0;">eller</p>
+    </div>
+
+    <!-- ntb-search -->
+    <div class="col-md-4">
+      <a class="btn btn-primary btn-block" data-show="turforslag-select" href="#">
+        <span class="glyphicon glyphicon-link"></span> Koble til turforslag fra UT.no
+      </a>
+      <p class="help-block">Er dette et turforslag som ligger på UT.no? Da kan du legge det til
+      her og så viser vi ruten i kartet på aktivitetssiden.</p>
+
+      <div class="jq-hide" data-container="turforslag-select">
+        <div class="alert alert-warning">
+          Hva forventet du her? <a href="http://dnt.uservoice.com" data-uv-trigger="feedback"
+            data-uv-screenshot_enabled="false">Send oss ditt forslag</a>.
+        </div>
+
+        {% comment %}
+        <input type="text" name="turforslag" class="form-control" placeholder="Søk etter turforslag...">
+        <input type="hidden" name="turforslag_id" value="{{ aktivitet.turforslag|default:"" }}">
+        <div class="result {% if not aktivitet.turforslag %} jq-hide{% endif %}">
+          <a href="javascript:undefined" class="remove">[x]</a>
+          <span class="name">{{ aktivitet.get_turforslag.name|safe }}</span>
+        </div>
+        {% endcomment %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="map-container jq-hide">
+  <div class="map-shadow">
+    <div id="map" class="leaflet-map"></div>
+  </div>
+</div>
+
+<div class="alert alert-info metadata-container jq-hide"
+  data-county-lookup-url="{% url 'core.views.county_lookup' %}"
+  data-municipality-lookup-url="{% url 'core.views.municipality_lookup' %}"
+  data-location-lookup-url="{% url 'sherpa2.views.location_lookup' %}">
+
+  <div class="row">
+    <div class="col-sm-12">
+      <p>Basert på [ posisjonen i kartet | turforslaget ] har vi plassert
+      aktiviteten i kommune, område og fylke. Klikk på "Legg til" for å tilføye
+      flere kommuner, fylker eller områder.</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- county -->
+    <div class="col-lg-4 col-md-4 col-sm-4">
+      <strong>Fylke: </strong><br />
+      <div data-container="activity-county">
+        <div class="counties-static">
+          <span data-placeholder-for="county">Sør-Trøndelag</span>
+          <a class="btn btn-default btn-xs" data-toggle="counties-edit-show">
+            <span class="glyphicon glyphicon-plus"></span> Flere fylker
+          </a>
+        </div>
+        {% with selected=aktivitet.counties %}
+          <div class="counties-edit jq-hide">
+            <select multiple name="counties" data-chosen data-placeholder="Velg fylke...">
+              <option value=""></option>
+              {% for county in counties %}
+                <option value="{{ county.id }}"{% if county in selected %} selected{% endif %}>
+                  {{ county.name }}
+                </option>
+              {% endfor %}
+            </select>
+            <img class="ajaxloader jq-hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif"
+              alt="Laster, vennligst vent...">
+          </div>
+        {% endwith %}
+      </div>
+    </div>
+
+    <!-- municipaly -->
+    <div class="col-lg-4 col-md-4 col-sm-4">
+      <strong>Kommune: </strong><br />
+      <div data-container="activity-municipality">
+        <div class="municipalities-static">
+          <span data-placeholder-for="municipality">Trondheim</span>
+          <a class="btn btn-default btn-xs" data-toggle="municipalities-edit-show">
+            <span class="glyphicon glyphicon-plus"></span> Flere kommuner
+          </a>
+        </div>
+        <div class="municipalities-edit jq-hide">
+          <select multiple name="municipalities" data-chosen data-placeholder="Velg kommune...">
+            <option value=""></option>
+            {% for municipality in municipalities %}
+              <option value="{{ municipality.id }}"{% if municipality in aktivitet.municipalities.all %} selected{% endif %}>{{ municipality.name }}</option>
+            {% endfor %}
+          </select>
+          <img class="ajaxloader jq-hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-4">
+      <strong>Område: </strong><br />
+      <div data-container="activity-locations">
+        <div class="locations-static">
+          <span data-placeholder-for="location">Trondheimsmarka</span>
+          <a class="btn btn-default btn-xs" data-toggle="locations-edit-show"><span class="glyphicon glyphicon-plus"></span> Flere områder</a>
+        </div>
+        <div class="locations-edit jq-hide">
+          <select multiple name="locations" data-chosen data-placeholder="Velg område...">
+            <option value=""></option>
+            {% for location in locations %}
+              <option value="{{ location.id }}"{% if aktivitet|aktivitet_has_location:location %} selected{% endif %}>{{ location.name }}</option>
+            {% endfor %}
+          </select>
+          <img class="ajaxloader jq-hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- /alert.areas-and-positions-output -->
+
