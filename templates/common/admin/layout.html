@@ -23,6 +23,7 @@
   <link rel="stylesheet" href="{{ STATIC_URL }}lib/font-awesome-4.1.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="{{ STATIC_URL }}lib/outdatedBrowser/outdatedBrowser.min.css" media="screen">
   <link rel="stylesheet" href="{{ STATIC_URL }}lib/colorpicker/css/colorpicker.css">
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/intro.js/introjs.min.css">
 
   {# Our libs #}
   <link rel="stylesheet" href="{{ STATIC_URL }}lib/imgareaselect/css/imgareaselect-default.css">
@@ -294,6 +295,16 @@
   <script src="{{ STATIC_URL }}lib/chosen/chosen.jquery.min.js"></script>
   <script src="{{ STATIC_URL }}lib/imagesloaded/imagesloaded.pkgd.min.js"></script>
   <script src="{{ STATIC_URL }}lib/colorpicker/js/colorpicker.js"></script>
+  <script src="{{ STATIC_URL }}lib/intro.js/intro.min.js"></script>
+  <script>
+  window.introJs = introJs().setOptions({
+      nextLabel: "Neste",
+      prevLabel: "Forrige",
+      skipLabel: "Lukk",
+      doneLabel: "Ferdig!",
+    });
+  </script>
+
   <script>
     window.User = {
       email: '{{ user.get_sherpa_email }}',
