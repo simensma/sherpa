@@ -96,22 +96,24 @@
   }
 
   .text-editors {
-    margin-bottom: 20px;
+    .text-editor {
+      border-top: 1px solid rgb(200, 200, 200);
+      margin-top: 20px;
+      padding-top: 20px;
 
-    input[name='content'], button.remove {
-      display: inline;
-    }
+      &:last-of-type {
+        border-bottom: 1px solid rgb(200, 200, 200);
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+      }
 
-    input[type='text'] {
-      width: 300px;
-    }
+      p.content, button.remove {
+        display: inline;
+      }
 
-    label:hover {
-      cursor: pointer;
-    }
-
-    select {
-      width: 80px;
+      select {
+        width: 80px;
+      }
     }
   }
 }

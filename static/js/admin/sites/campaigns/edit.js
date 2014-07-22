@@ -19,7 +19,7 @@ $(function() {
 
     var campaign_title = wrapper.find('input[name="campaign-title"]');
 
-    var user_button_editor = wrapper.find('[data-wrapper="campaign-button"]');
+    var user_button_editor = wrapper.find('[data-container="edit-button"]');
     var user_button_exclude = user_button_editor.find('input[name="exclude-button"]');
     var user_button_anchor_input = user_button_editor.find('input[name="button-anchor"]');
     var user_button_large_input = user_button_editor.find('input[name="large-button"]');
@@ -219,6 +219,7 @@ $(function() {
         text_editor.attr('data-id', id);
 
         // Reset states based on options
+        text_editor.find('p[data-trigger="content"]').text(options.content);
         text_editor.find('option[value="' + options.style['font-size'] + '"]').prop('selected', true);
         var bold = options.style['font-weight'] === 'bold';
         text_editor.find('input[name="bold"]').prop('checked', bold);
@@ -269,6 +270,11 @@ $(function() {
             } else {
                 text.css('font-weight', 'normal');
             }
+        });
+
+        // Add events on text-change to update text-editor content
+        text.keyup(function() {
+            text_editor.find('p[data-trigger="content"]').text($(this).text());
         });
     }
 

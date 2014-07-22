@@ -107,81 +107,150 @@
     <div class="row">
       <div class="col-lg-12">
 
-        <p>
-          Her kan du sette inn tekst og knapp. Trykk på teksten for å endre den, og dra den rundt for å plassere den der du vil.
-        </p>
+        <div class="form-default form-horizontal">
 
-        <div class="form-inline campaign-title">
           <div class="form-group">
-            <label>Kampanjens tittel:</label>
-            <input type="text" name="campaign-title" class="form-control" value="{{ campaign.title|default:"Kampanje" }}">
+            <div class="col-md-offset-2 col-md-10">
+              <div class="campaign-container" data-too-long-sentence-warning="Du har ikke plass til en så lang setning! Ta bort et ord eller to, og bruk 'enter' for å få en ny linje.">
+                <img src="" alt="" class="cropped-image">
+                <div class="button campaign-element movable">
+                  <a href="http://www.turistforeningen.no/" class="btn btn-danger" contenteditable="true">Klikk på meg</a>
+                </div>
+                <div class="photographer campaign-element jq-hide">
+                  Foto: <span class="name"></span>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div class="campaign-container" data-too-long-sentence-warning="Du har ikke plass til en så lang setning! Ta bort et ord eller to, og bruk 'enter' for å få en ny linje.">
-          <img src="" alt="" class="cropped-image">
-          <div class="button campaign-element movable">
-            <a href="http://www.turistforeningen.no/" class="btn btn-danger" contenteditable="true">Klikk på meg</a>
+          <div class="form-group">
+            <label class="col-md-2 control-label">Tittel</label>
+            <div class="col-md-10">
+              <input type="text" name="campaign-title" class="form-control" value="{{ campaign.title|default:"Kampanje" }}">
+              <div class="form-hints">
+                Denne vises ikke på selve kampanjen, det er bare en intern tittel du kan bruke til å finne tilbake til denne kampanjen senere
+              </div>
+            </div>
           </div>
-          <div class="photographer campaign-element jq-hide">
-            Foto: <span class="name"></span>
-          </div>
-        </div>
 
-        <div class="edit-button" data-wrapper="campaign-button">
-
-          <h2>Knapp og tekster</h2>
-
-          <div class="form-inline">
-            <label class="checkbox-inline">
-              <input type="checkbox" name="exclude-button"> Skjul knapp
-            </label>
-
-            <label class="checkbox-inline">
-              <input type="checkbox" name="large-button"> Ekstra stor
-            </label>
+          <div class="edit-button" data-container="edit-button">
 
             <div class="form-group">
-              <label>Lenker til:</label>
-              <input type="text" name="button-anchor" class="form-control" value="http://www.turistforeningen.no/">
+              <div class="col-md-offset-2 col-md-10">
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" name="exclude-button"> Ikke vis knapp
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="col-md-offset-2 col-md-10">
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" name="large-button"> Ekstra stor knapp
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-md-2 control-label">Knapp lenker til</label>
+              <div class="col-md-10">
+                <input type="text" name="button-anchor" class="form-control" value="http://www.turistforeningen.no/">
+              </div>
+            </div>
+
+          </div><!-- /[data-container='edit-button'] -->
+
+          <div class="edit-photographer" data-edit="photographer">
+
+            <div class="form-group">
+              <label class="col-md-2 control-label">Fotograftekst</label>
+              <div class="col-md-10">
+
+                <div class="form-inline">
+                  <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-default">
+                      <input type="radio" name="photographer-alignment" value="left"> Venstrestilt
+                    </label>
+                    <label class="btn btn-default">
+                      <input type="radio" name="photographer-alignment" value="right"> Høyrestilt
+                    </label>
+                  </div>
+
+                  <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-default">
+                      <input type="radio" name="photographer-color" value="white"> Hvit
+                    </label>
+                    <label class="btn btn-default">
+                      <input type="radio" name="photographer-color" value="black"> Sort
+                    </label>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div><!-- /[data-edit='photographer'] -->
+
+          <div class="text-editors">
+            {# Will be filled out by javascript... #}
+          </div>
+
+          {# ... with these #}
+          <div class="text-editor-template jq-hide">
+
+            <div class="form-group">
+              <label class="col-md-2 control-label">Tekst</label>
+              <div class="col-md-10">
+                <p class="form-control-static content" data-trigger="content"></p>
+                <button class="btn btn-danger remove">
+                  <i class="fa fa-times"></i> Fjern
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-md-2 control-label">Størrelse</label>
+              <div class="col-md-10">
+                <select name="font-sizes">
+                  {% for font_size in font_sizes %}
+                    <option value="{{ font_size }}px">{{ font_size }}px</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-md-2 control-label">Farge</label>
+              <div class="col-md-10">
+                <div class="colorselector">
+                  <div style="background-color: #333"></div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="form-group">
+              <div class="col-md-offset-2 col-md-10">
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" name="bold"> Fet tekst
+                  </label>
+                </div>
+              </div>
             </div>
           </div>
 
-        </div><!-- /[data-wrapper='campaign-button'] -->
-
-        <div class="edit-photographer" data-edit="photographer">
-
-          <div class="form-inline">
-            <label>Fotograftekst:</label>
-
-            <div class="btn-group" data-toggle="buttons">
-              <label class="btn btn-default">
-                <input type="radio" name="photographer-alignment" value="left"> Venstre
-              </label>
-              <label class="btn btn-default">
-                <input type="radio" name="photographer-alignment" value="right"> Høyre
-              </label>
-            </div>
-
-            <div class="btn-group" data-toggle="buttons">
-              <label class="btn btn-default">
-                <input type="radio" name="photographer-color" value="white"> Hvit
-              </label>
-              <label class="btn btn-default">
-                <input type="radio" name="photographer-color" value="black"> Sort
-              </label>
+          <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+              <button class="btn btn-default add-text-editor"><i class="fa fa-text-width"></i> Legg til et nytt tekstelement</button>
             </div>
           </div>
 
-        </div><!-- /[data-edit='photographer'] -->
-
-        <div class="text-editors">
-          {# Will be filled out with jquery #}
         </div>
-
-        <p>
-          <button class="btn btn-default add-text-editor"><i class="fa fa-text-width"></i> Legg til mer tekst</button>
-        </p>
 
       </div>
     </div>
@@ -190,40 +259,6 @@
   <div class="text-template campaign-element movable jq-hide" contenteditable="true">
   </div>
 
-  <div class="text-editor-template jq-hide">
-
-    <div class="form-inline">
-
-      <div class="form-group">
-        <label>Skrift:</label>
-        <select name="font-sizes">
-          {% for font_size in font_sizes %}
-            <option value="{{ font_size }}px">{{ font_size }}px</option>
-          {% endfor %}
-        </select>
-      </div>
-
-
-      <label>Farge:</label>
-
-      <div class="form-group">
-        <div class="colorselector">
-          <div style="background-color: #333"></div>
-        </div>
-      </div>
-
-      <label class="checkbox-inline">
-        <input type="checkbox" name="bold"> Fet tekst
-      </label>
-
-      <div class="form-group">
-        <button class="btn btn-danger remove">
-          <i class="fa fa-times"></i> Fjern
-        </button>
-      </div>
-
-    </div>
-  </div>
 </div>
 
 {% include 'common/admin/images/util/image-archive-picker.html' %}
