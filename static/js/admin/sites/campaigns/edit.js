@@ -284,7 +284,7 @@ $(function() {
         });
     }
 
-    $(document).on('click', '.text-editor button.remove', function() {
+    $(document).on('click', '.text-editor a[data-trigger="remove"]', function() {
         var text_editor = $(this).parents('.text-editor');
         var id = text_editor.attr('data-id');
         text_editor.remove();
