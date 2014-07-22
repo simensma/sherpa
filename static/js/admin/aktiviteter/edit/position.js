@@ -74,8 +74,7 @@ $(function() {
             position_section.find('[data-container="metadata-select"]').removeClass('jq-hide');
 
             var map_top = $(map_container).offset().top;
-            $('html, body').animate({scrollTop:(map_top - 80)}, '500', 'swing', function() {
-            });
+            $('html, body').animate({scrollTop:(map_top - 80)}, '500', 'swing');
         });
     };
 
