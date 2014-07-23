@@ -9,7 +9,7 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 
 from admin.sites.pages.util import slug_is_unique, create_template
-from page.widgets import widget_admin_context, get_static_promo_context
+from page.widgets.util import widget_admin_context, get_static_promo_context
 from page.models import Page, Variant, Version, Row, Column, Content
 from core.models import Site
 

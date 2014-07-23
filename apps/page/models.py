@@ -229,7 +229,7 @@ class Content(models.Model):
 
     def render_widget(self, request, current_site, admin_context=False):
         """Render this widget (obviously only applicable for widget-content) in the context of the given site"""
-        from page.widgets import render_widget
+        from page.widgets.util import render_widget
         if self.type != 'widget':
             raise Exception("render_widget called on Content of type '%s'" % self.type)
 

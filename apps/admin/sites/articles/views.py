@@ -10,7 +10,7 @@ from django.template.loader import render_to_string
 from admin.sites.articles.util import BULK_COUNT, list_bulk, create_template
 from articles.models import Article
 from page.models import Variant, Version
-from page.widgets import widget_admin_context
+from page.widgets.util import widget_admin_context
 from user.models import User
 from core.models import Site
 

@@ -14,7 +14,7 @@ from django.core.cache import cache
 from page.models import AdPlacement, Ad, Page, Variant, Version
 from articles.models import OldArticle
 from analytics.models import Search, NotFound
-from page.widgets import get_static_promo_context
+from page.widgets.util import get_static_promo_context
 from sherpa2.models import Cabin as Sherpa2Cabin
 from core.models import Site
 
