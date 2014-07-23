@@ -70,10 +70,6 @@ class Variant(models.Model):
     # probability
     owner = models.ForeignKey('user.User', related_name='+')
     # change_comment = models.TextField()
-    # The active field can be set by the view in order to get a reference to
-    # the active version in the template. Not sure if there exists a better
-    # way to do this?
-    active = None
 
     def __unicode__(self):
         return u'%s' % self.pk
