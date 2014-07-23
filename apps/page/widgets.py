@@ -6,12 +6,20 @@ import random
 
 from django.core.cache import cache
 from django.conf import settings
+from django.template import RequestContext
+from django.template.loader import render_to_string
 
 from lxml import etree
 import requests
 
 from page.models import Version
 from admin.models import Campaign
+
+def render_widget(request, widget_options, current_site):
+    """Returns a string with the given widget rendered, ready for display"""
+    widget = parse_widget(request, widget_options, current_site)
+    context = RequestContext(request, {'widget': widget})
+    return render_to_string(widget['template'], context)
 
 def parse_widget(request, widget, current_site):
     """
