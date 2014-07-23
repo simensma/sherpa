@@ -10,7 +10,7 @@ from django.template.loader import render_to_string
 
 from admin.sites.pages.util import slug_is_unique, create_template
 from page.widgets.util import widget_admin_context, get_static_promo_context
-from page.models import Page, Variant, Version, Row, Column, Content
+from page.models import Page, Variant, Version
 from core.models import Site
 
 def list(request, site):
