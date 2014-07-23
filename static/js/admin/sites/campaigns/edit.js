@@ -22,6 +22,7 @@ $(function() {
     var campaign_title = wrapper.find('input[name="campaign-title"]');
 
     var user_button_editor = wrapper.find('[data-container="edit-button"]');
+    var user_button_controls = user_button_editor.find('div[data-container="button-controls"]');
     var user_button_exclude = user_button_editor.find('input[name="exclude-button"]');
     var user_button_anchor_input = user_button_editor.find('input[name="button-anchor"]');
     var user_button_large_input = user_button_editor.find('input[name="large-button"]');
@@ -67,9 +68,10 @@ $(function() {
             user_button_large_input.prop('checked', campaign.button_large);
             user_button_anchor_input.val(campaign.button_anchor);
 
-            // - Disable editor controls if already disabled
-            user_button_anchor_input.prop('disabled', !campaign.button_enabled);
-            user_button_large_input.prop('disabled', !campaign.button_enabled);
+            // - Hide button editor controls if already disabled
+            if(!campaign.button_enabled) {
+                user_button_controls.hide();
+            }
 
             // - Set the styling on the actual buttno
             if(!campaign.button_enabled) {
@@ -300,13 +302,11 @@ $(function() {
     });
 
     user_button_exclude.change(function() {
-        var checked = $(this).is(':checked');
-        user_button_anchor_input.prop('disabled', checked);
-        user_button_large_input.prop('disabled', checked);
-
-        if(checked) {
+        if($(this).is(':checked')) {
+            user_button_controls.slideUp('fast');
             user_button.hide();
         } else {
+            user_button_controls.slideDown('fast');
             user_button.show();
         }
     });
