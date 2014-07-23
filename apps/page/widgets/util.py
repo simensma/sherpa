@@ -1,19 +1,37 @@
 # encoding: utf-8
 from datetime import datetime, date
 import json
-import re
-import random
 
 from django.core.cache import cache
 from django.conf import settings
 from django.template import RequestContext
 from django.template.loader import render_to_string
 
-from lxml import etree
 import requests
 
-from page.models import Version
 from admin.models import Campaign
+
+from page.widgets.quote import QuoteWidget
+from page.widgets.carousel import CarouselWidget
+from page.widgets.articles import ArticlesWidget
+from page.widgets.blog import BlogWidget
+from page.widgets.embed import EmbedWidget
+from page.widgets.fact import FactWidget
+from page.widgets.button import ButtonWidget
+from page.widgets.table import TableWidget
+from page.widgets.campaign import CampaignWidget
+
+WIDGETS = {
+    'quote': QuoteWidget(),
+    'carousel': CarouselWidget(),
+    'articles': ArticlesWidget(),
+    'blog': BlogWidget(),
+    'embed': EmbedWidget(),
+    'fact': FactWidget(),
+    'button': ButtonWidget(),
+    'table': TableWidget(),
+    'campaign': CampaignWidget(),
+}
 
 def render_widget(request, widget_options, current_site, admin_context=False, raw=False, content_id=None):
     """Returns a string with the given widget rendered, ready for display.
@@ -36,166 +54,26 @@ def render_widget(request, widget_options, current_site, admin_context=False, ra
     })
     return render_to_string('common/widgets/container.html', context)
 
-def parse_widget(request, widget, current_site):
+def parse_widget(request, widget_options, site):
     """
     Parse the supplied widget, perform the server-side view logic and return the final widget
     data context for rendering in its template
     """
-    if widget['widget'] == "quote":
-        data = {'quote': widget['quote'], 'author': widget['author']}
-    elif widget['widget'] == 'carousel':
-        # NO! BAD HAVARD, dont use hax, create an id(but not now)
-        data = {'id':random.randint(0,10000), 'images':widget['images']}
-    elif widget['widget'] == "articles":
-        versions = Version.objects.filter(
-            variant__article__isnull=False,
-            variant__segment__isnull=True,
-            variant__article__published=True,
-            active=True,
-            variant__article__pub_date__lt=datetime.now(),
-            variant__article__site=current_site,
-        ).order_by('-variant__article__pub_date')
-
-        if len(widget['tags']) == 0:
-            version_matches = versions
-        else:
-            # Filter on tags. We'll have to do multiple queries, since we can't make list-lookups with 'icontains'.
-            # The alternative would be some sort of advanced regex.
-            version_matches = []
-            for tag in widget['tags']:
-                for version in versions.filter(tags__name__icontains=tag):
-                    # Drop duplicates manually
-                    if not version in version_matches:
-                        version_matches.append(version)
-
-            # Now re-apply the date sorting, since picking out matches in the order of the tags will mess that up
-            version_matches = sorted(version_matches, key=lambda v: v.variant.article.pub_date, reverse=True)
-
-        if widget['layout'] == 'medialist':
-            version_matches = version_matches[:int(widget['count'])]
-            span = None
-        else:
-            version_matches = version_matches[:int(widget['columns'])]
-            span = 12 / int(widget['columns'])
-
-        data = {
-            'layout': widget['layout'],
-            'title': widget['title'],
-            'display_images': widget['display_images'],
-            'tag_link': widget['tag_link'],
-            'versions': version_matches,
-            'span': span,
-        }
-    elif widget['widget'] == "blog":
-        # This is a pretty heavy query, so cache it for a while
-        data = cache.get('widgets.blog.category.' + widget['category'])
-        if data is None:
-
-            feed_url = "http://%s/" % settings.BLOG_URL;
-
-            if widget['category'] != 'Alle':
-                feed_url += 'tema/' + widget['category'].lower() + '/'
-            feed_url += 'feed/'
-
-            try:
-                r = requests.get(feed_url)
-                channel = etree.fromstring(r.content).find('channel')
-            except requests.ConnectionError:
-                channel = None
-
-            entries = []
-            entries_matched = 0;
-            if channel is not None:
-                for item in channel.findall('item'):
-
-                    item_categories = []
-                    for item_category in item.findall('category'):
-                        item_categories.append(item_category.text)
-
-                    if (widget['category'] in item_categories or widget['category'] == 'Alle'):
-                        entries_matched += 1;
-
-                        content = item.find('{http://purl.org/rss/1.0/modules/content/}encoded').text
-                        image = None
-                        m = re.search('<img.*?src="(.*?)" ', content)
-                        if m is not None:
-                            image = m.group(1)
-                        entries.append({
-                            'title': item.find('title').text,
-                            'link': item.find('link').text,
-                            'content': content,
-                            'image': image})
-                    if entries_matched >= int(widget['count']):
-                        break
-            data = {'entries':entries}
-            cache.set('widgets.blog.category.' + widget['category'], data, 60 * 30)
-    elif widget['widget'] == "embed":
-        data = {'code': widget['code']}
-    elif widget['widget'] == "fact":
-        data = {'content': widget['content']}
-    elif widget['widget'] == "button":
-        data = {
-            'text': widget['text'],
-            'url': widget['url'],
-            'color': widget['color'],
-            'size': widget['size'],
-        }
-    elif widget['widget'] == "table":
-        data = {
-            'header': widget['table'][0],
-            'body': widget['table'][1:],
-        }
-    elif widget['widget'] == "campaign":
-        now = datetime.now()
-        active_campaign = None
-        for campaign in widget['campaigns']:
-            start_date = datetime.strptime(campaign['start_date'], "%d.%m.%Y")
-            stop_date = datetime.strptime("%s 23:59:59" % campaign['stop_date'], "%d.%m.%Y %H:%M:%S")
-
-            if widget['hide_when_expired'] and now >= start_date and now <= stop_date:
-                active_campaign = campaign
-            elif not widget['hide_when_expired'] and now >= start_date:
-                active_campaign = campaign
-
-        if active_campaign is None:
-            data = {}
-        else:
-            data = {
-                'campaign': Campaign.objects.get(id=active_campaign['campaign_id']),
-            }
-
+    widget = WIDGETS[widget_options['widget']]
+    data = widget.parse(widget_options, site)
     data.update({
-        'json': json.dumps(widget),
-        'template': 'common/widgets/%s/display.html' % widget['widget'],
-        'widget': widget['widget'],
+        'json': json.dumps(widget_options),
+        'template': 'common/widgets/%s/display.html' % widget_options['widget'],
+        'widget': widget_options['widget'],
     })
     return data
 
-
-def widget_admin_context():
+def admin_context():
     """
-    Returns a dict for each widget which needs database in the admin-editor context. Will be available in the editors
-    through 'widget_data.<widget>'
+    Returns a dict with data context for each widget which needs it in the admin-editor. Will be available in the
+    editors through 'widget_data.<widget>'
     """
-    def blog_category_list():
-        # The list of categories available in the blogwidget
-        categories = cache.get('widgets.blog.category_list')
-        if categories is None:
-            r = requests.get("http://%s/%s" % (settings.BLOG_URL, settings.BLOG_CATEGORY_API))
-            response = json.loads(r.text)
-            categories = ['Alle']
-            for category in response['categories']:
-                if category['id'] == 1:
-                    # Uncategorized
-                    continue
-                categories.append(category['title'])
-            cache.set('widgets.blog.category_list', categories, 60 * 60 * 24 * 7)
-        return categories
-
-    return {
-        'blog': {'categories': blog_category_list()},
-        'campaigns': Campaign.objects.all(),
-    }
+    return {widget_name: widget.admin_context() for widget_name, widget in WIDGETS.items()}
 
 # Used temporary for static promo content
 def get_static_promo_context(path):

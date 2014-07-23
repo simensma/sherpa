@@ -9,7 +9,7 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 
 from admin.sites.pages.util import slug_is_unique, create_template
-from page.widgets.util import widget_admin_context, get_static_promo_context
+from page.widgets.util import admin_context, get_static_promo_context
 from page.models import Page, Variant, Version
 from core.models import Site
 
@@ -92,7 +92,7 @@ def edit(request, site, version):
     context = {
         'active_site': active_site,
         'version': version,
-        'widget_data': widget_admin_context(),
+        'widget_data': admin_context(),
         'pages': pages,
         'image_search_length': settings.IMAGE_SEARCH_LENGTH
     }

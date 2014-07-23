@@ -10,7 +10,7 @@ from django.template.loader import render_to_string
 from admin.sites.articles.util import BULK_COUNT, list_bulk, create_template
 from articles.models import Article
 from page.models import Variant, Version
-from page.widgets.util import widget_admin_context
+from page.widgets.util import admin_context
 from user.models import User
 from core.models import Site
 
@@ -82,7 +82,7 @@ def edit(request, site, version):
         'version': version,
         'users': users,
         'image_search_length': settings.IMAGE_SEARCH_LENGTH,
-        'widget_data': widget_admin_context()
+        'widget_data': admin_context(),
     }
 
     # Fake request.site to the edited site; this will make context processors behave accordingly

@@ -56,7 +56,7 @@
         <div class="controls">
           <select name="campaign" class="chosen" data-placeholder="Velg blant eksisterende kampanjer...">
             <option value=""></option>
-            {% for campaign in widget_data.campaigns %}
+            {% for campaign in widget_data.campaign.campaigns %}
               <option value="{{ campaign.id }}">{{ campaign.title }}</option>
             {% endfor %}
           </select>
