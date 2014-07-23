@@ -210,12 +210,22 @@ $(function() {
     function addText(options) {
         var id = text_editor_id++;
 
+        // Vary position and font size if this is the first or second text item; assume first is title
+        var top = '35px';
+        var left = '720px';
+        var font_size = '48px';
+        if(campaign_container.find('.text').length > 0) {
+            top = '100px';
+            left = '801px';
+            font_size = '24px';
+        }
+
         options = $.extend({
             content: 'Tittel ' + (id+1),
             style: {
-                top: '35px',
-                left: '720px',
-                'font-size': '48px',
+                top: top,
+                left: left,
+                'font-size': font_size,
                 'font-weight': 'normal',
                 color: '#000000',
             },
