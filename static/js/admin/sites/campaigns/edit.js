@@ -282,6 +282,14 @@ $(function() {
         text.keyup(function() {
             text_editor.find('p[data-trigger="content"]').text($(this).text());
         });
+
+        // Remove the element if disfocused when it's empty. Note that we don't remove it just after the
+        // keypress as the user may be removing the existing text but planning to enter new text.
+        text.focusout(function() {
+            if($(this).text().trim() === '') {
+                user_text_editors.find('.text-editor[data-id="' + $(this).attr('data-id') + '"] a[data-trigger="remove"]').click();
+            }
+        });
     }
 
     $(document).on('click', '.text-editor a[data-trigger="remove"]', function() {
