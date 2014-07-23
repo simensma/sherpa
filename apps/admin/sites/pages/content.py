@@ -19,6 +19,7 @@ def reload_raw_widget(request, site):
         json.loads(request.POST['content']),
         active_site,
         raw=True,
+        admin_context=True,
     ))
 
 def save(request, site, version):
