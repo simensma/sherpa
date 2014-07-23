@@ -19,8 +19,6 @@ class Menu(models.Model):
     # Even though this should be unique, it's not enforced because
     # when swapping, two orders will temporarily clash.
     order = models.IntegerField()
-    # Used to mark the current active menu page
-    active = None
     site = models.ForeignKey('core.Site')
 
     def __unicode__(self):

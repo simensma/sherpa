@@ -1,5 +1,4 @@
 from datetime import datetime, date
-import re
 
 from django.conf import settings
 from django.core.cache import cache
@@ -16,14 +15,6 @@ def menus(request):
         if menus is None:
             menus = Menu.on(request.site).all().order_by('order')
             cache.set('main.menu.%s' % request.site.id, menus, 60 * 60 * 24)
-        for menu in menus:
-            url = re.sub('https?:\/\/', '', menu.url) # Strip protocol
-            # Add final slash if missing
-            if len(url) == 0 or url[-1] != '/':
-                url = "%s/" % url
-            if "%s%s" % (request.site.domain, request.path) == url:
-                menu.active = True
-                break
         return {'menus': menus}
 
 def main_site(request):
