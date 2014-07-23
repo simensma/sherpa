@@ -15,11 +15,26 @@ import requests
 from page.models import Version
 from admin.models import Campaign
 
-def render_widget(request, widget_options, current_site):
-    """Returns a string with the given widget rendered, ready for display"""
+def render_widget(request, widget_options, current_site, admin_context=False, include_container=True, content_id=None):
+    """Returns a string with the given widget rendered, ready for display.
+
+    admin_context can be set to True to wrap the rendered widget in the appropriate container, and to tell
+    the widget to display extra information to the admin-user if appropriate.
+
+    include_container can be set to False to exclude the containing element from the rendered html if
+    the caller wants to handle that manually (typically when a widget is saved in the admin UI)
+
+    content_id needs to be set if both admin_context and include_container is True as the admin container needs access
+    to the content id
+    """
     widget = parse_widget(request, widget_options, current_site)
-    context = RequestContext(request, {'widget': widget})
-    return render_to_string(widget['template'], context)
+    context = RequestContext(request, {
+        'widget': widget,
+        'admin_context': admin_context,
+        'include_container': include_container,
+        'content_id': content_id,
+    })
+    return render_to_string('common/widgets/container.html', context)
 
 def parse_widget(request, widget, current_site):
     """

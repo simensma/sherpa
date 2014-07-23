@@ -3,7 +3,6 @@ import json
 from django.conf import settings
 
 from page.models import Version, Row, Column, Content
-from page.widgets import parse_widget
 from core.models import Site
 
 BULK_COUNT = 8
@@ -22,11 +21,7 @@ def parse_version_content(request, version, active_site):
     for row in rows:
         columns = Column.objects.filter(row=row).order_by('order')
         for column in columns:
-            contents = Content.objects.filter(column=column).order_by('order')
-            for content in contents:
-                if content.type == 'widget':
-                    content.content = parse_widget(request, json.loads(content.content), active_site)
-            column.contents = contents
+            column.contents = Content.objects.filter(column=column).order_by('order')
         row.columns = columns
     return rows, version
 

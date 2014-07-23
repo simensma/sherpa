@@ -9,7 +9,7 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 
 from admin.sites.pages.util import slug_is_unique, create_template
-from page.widgets import parse_widget, widget_admin_context, get_static_promo_context
+from page.widgets import widget_admin_context, get_static_promo_context
 from page.models import Page, Variant, Version, Row, Column, Content
 from core.models import Site
 
@@ -93,11 +93,7 @@ def edit(request, site, version):
     for row in rows:
         columns = Column.objects.filter(row=row).order_by('order')
         for column in columns:
-            contents = Content.objects.filter(column=column).order_by('order')
-            for content in contents:
-                if content.type == 'widget':
-                    content.content = parse_widget(request, json.loads(content.content), active_site)
-            column.contents = contents
+            column.contents = Content.objects.filter(column=column).order_by('order')
         row.columns = columns
     context = {
         'active_site': active_site,
@@ -119,11 +115,7 @@ def preview(request, site, version):
     for row in rows:
         columns = Column.objects.filter(row=row).order_by('order')
         for column in columns:
-            contents = Content.objects.filter(column=column).order_by('order')
-            for content in contents:
-                if content.type == 'widget':
-                    content.content = parse_widget(request, json.loads(content.content), active_site)
-            column.contents = contents
+            column.contents = Content.objects.filter(column=column).order_by('order')
         row.columns = columns
     context = {
         'active_site': active_site,

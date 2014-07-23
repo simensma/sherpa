@@ -1,6 +1,5 @@
 # encoding: utf-8
 from datetime import datetime
-import json
 
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect
@@ -15,7 +14,7 @@ from django.core.cache import cache
 from page.models import AdPlacement, Ad, Page, Variant, Version, Row, Column, Content
 from articles.models import OldArticle
 from analytics.models import Search, NotFound
-from page.widgets import parse_widget, get_static_promo_context
+from page.widgets import get_static_promo_context
 from sherpa2.models import Cabin as Sherpa2Cabin
 from core.models import Site
 
@@ -61,11 +60,7 @@ def parse_content(request, version):
         for row in rows:
             columns = Column.objects.filter(row=row).order_by('order')
             for column in columns:
-                contents = Content.objects.filter(column=column).order_by('order')
-                for content in contents:
-                    if content.type == 'widget':
-                        content.content = parse_widget(request, json.loads(content.content), request.site)
-                column.contents = contents
+                column.contents = Content.objects.filter(column=column).order_by('order')
             row.columns = columns
         # If parents, generate page hierarchy for breadcrumb path
         page_hierarchy = []

@@ -226,13 +226,13 @@ class Content(models.Model):
         else:
             return None
 
-    def render_widget(self, request, current_site):
+    def render_widget(self, request, current_site, admin_context=False):
         """Render this widget (obviously only applicable for widget-content) in the context of the given site"""
         from page.widgets import render_widget
         if self.type != 'widget':
             raise Exception("render_widget called on Content of type '%s'" % self.type)
 
-        return render_widget(request, self.get_content(), current_site)
+        return render_widget(request, self.get_content(), current_site, admin_context=admin_context, content_id=self.id)
 
 @receiver(pre_delete, sender=Content, dispatch_uid="page.models")
 def delete_content(sender, **kwargs):

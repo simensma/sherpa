@@ -1,0 +1,23 @@
+{# This container is used to wrap the widget when rendering #}
+
+{% if not include_container %}
+
+  {% include widget.template %}
+
+{% else %}
+
+  {% if not admin_context %}
+
+    <div class="content widget {{ widget.widget }}">
+      {% include widget.template %}
+    </div>
+
+  {% else %}
+
+    <div class="content widget {{ widget.widget }}" data-json="{{ widget.json }}" data-id="{{ content_id }}">
+      {% include widget.template %}
+    </div>
+
+  {% endif %}
+
+{% endif %}

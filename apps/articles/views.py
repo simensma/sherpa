@@ -9,7 +9,6 @@ from django.template.loader import render_to_string
 
 from articles.models import Article, OldArticle
 from page.models import Variant, Version, Row, Column, Content
-from page.widgets import parse_widget
 from core.models import Site
 
 TAG_SEARCH_LENGTH = 3
@@ -76,11 +75,7 @@ def show(request, article, text):
         for row in rows:
             columns = Column.objects.filter(row=row).order_by('order')
             for column in columns:
-                contents = Content.objects.filter(column=column).order_by('order')
-                for content in contents:
-                    if content.type == 'widget':
-                        content.content = parse_widget(request, json.loads(content.content), request.site)
-                column.contents = contents
+                column.contents = Content.objects.filter(column=column).order_by('order')
             row.columns = columns
         context = {'rows': rows, 'version': version}
         cache.set('articles.%s' % article.id, context, 60 * 10)

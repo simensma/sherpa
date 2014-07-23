@@ -1,3 +1,5 @@
+{% load render_widget %}
+
 <div class="row">
   <div class="offset3 span6">
     <div class="no-save-warning alert alert-danger jq-hide">
@@ -8,7 +10,7 @@
   </div>
 </div>
 
-<article data-save-url="{% url 'admin.sites.pages.content.save' active_site.id version.id %}" data-render-widget-url="{% url 'admin.sites.pages.content.render_widget' active_site.id %}">
+<article data-save-url="{% url 'admin.sites.pages.content.save' active_site.id version.id %}" data-render-widget-url="{% url 'admin.sites.pages.content.reload_widget_inline' active_site.id %}">
 
   {% for row in rows %}
     {# Rows are recognized by their data-row attribute, not their class #}
@@ -55,9 +57,7 @@
 
             {% elif content.type == 'widget' %}
 
-              <div class="content widget {{ content.content.widget }}" data-json="{{ content.content.json }}" data-id="{{ content.id }}">
-                {% include content.content.template with widget=content.content %}
-              </div>
+              {% render_widget content admin_context=True %}
 
             {% endif %}
           {% endfor %}

@@ -1,3 +1,5 @@
+{% load render_widget %}
+
 <article>
   {% for row in rows %}
     <div class="row-fluid">
@@ -31,9 +33,7 @@
 
             {% elif content.type == 'widget' %}
 
-              <div class="content widget {{ content.content.widget }}">
-                {% include content.content.template with widget=content.content %}
-              </div>
+              {% render_widget content %}
 
             {% endif %}
 
