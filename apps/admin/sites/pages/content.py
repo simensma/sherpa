@@ -12,13 +12,13 @@ from page.widgets import render_widget
 from user.models import User
 from core.models import Tag, Site
 
-def reload_widget_inline(request, site):
+def reload_raw_widget(request, site):
     active_site = Site.objects.get(id=site)
     return HttpResponse(render_widget(
         request,
         json.loads(request.POST['content']),
         active_site,
-        include_container=False
+        raw=True,
     ))
 
 def save(request, site, version):

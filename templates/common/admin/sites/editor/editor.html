@@ -10,7 +10,7 @@
   </div>
 </div>
 
-<article data-save-url="{% url 'admin.sites.pages.content.save' active_site.id version.id %}" data-render-widget-url="{% url 'admin.sites.pages.content.reload_widget_inline' active_site.id %}">
+<article data-save-url="{% url 'admin.sites.pages.content.save' active_site.id version.id %}" data-render-widget-url="{% url 'admin.sites.pages.content.reload_raw_widget' active_site.id %}">
 
   {% comment %}
     Note that data-id is set on row, column and content elements, but they are never used. This is for ease
