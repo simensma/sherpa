@@ -13,8 +13,11 @@ import requests
 from page.models import Version
 from admin.models import Campaign
 
-# Note: This is also imported by some views in admin, and a view in articles
 def parse_widget(request, widget, current_site):
+    """
+    Parse the supplied widget, perform the server-side view logic and return the final widget
+    data context for rendering in its template
+    """
     if widget['widget'] == "quote":
         data = {'quote': widget['quote'], 'author': widget['author']}
     elif widget['widget'] == 'carousel':
