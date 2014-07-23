@@ -12,6 +12,11 @@
 
 <article data-save-url="{% url 'admin.sites.pages.content.save' active_site.id version.id %}" data-render-widget-url="{% url 'admin.sites.pages.content.reload_widget_inline' active_site.id %}">
 
+  {% comment %}
+    Note that data-id is set on row, column and content elements, but they are never used. This is for ease
+    of debugging, in case there is a need to inspect the DOM, find the element ID and look it up in the db.
+  {% endcomment %}
+
   {% for row in rows %}
     {# Rows are recognized by their data-row attribute, not their class #}
     <div class="row-fluid" data-row data-id="{{ row.id }}">
