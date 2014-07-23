@@ -8,7 +8,7 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 
 from articles.models import Article, OldArticle
-from page.models import Variant, Version, Row, Column, Content
+from page.models import Variant, Version
 from core.models import Site
 
 TAG_SEARCH_LENGTH = 3
@@ -71,13 +71,7 @@ def show(request, article, text):
             version = Version.objects.get(variant=variant, active=True)
         except (Article.DoesNotExist, Variant.DoesNotExist, Version.DoesNotExist):
             raise Http404
-        rows = Row.objects.filter(version=version).order_by('order')
-        for row in rows:
-            columns = Column.objects.filter(row=row).order_by('order')
-            for column in columns:
-                column.contents = Content.objects.filter(column=column).order_by('order')
-            row.columns = columns
-        context = {'rows': rows, 'version': version}
+        context = {'version': version}
         cache.set('articles.%s' % article.id, context, 60 * 10)
     return render(request, 'common/page/article.html', context)
 

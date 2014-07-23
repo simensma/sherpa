@@ -89,15 +89,8 @@ def edit(request, site, version):
     active_site = Site.objects.get(id=site)
     pages = Page.on(active_site).all().order_by('title')
     version = Version.objects.get(id=version)
-    rows = Row.objects.filter(version=version).order_by('order')
-    for row in rows:
-        columns = Column.objects.filter(row=row).order_by('order')
-        for column in columns:
-            column.contents = Content.objects.filter(column=column).order_by('order')
-        row.columns = columns
     context = {
         'active_site': active_site,
-        'rows': rows,
         'version': version,
         'widget_data': widget_admin_context(),
         'pages': pages,
@@ -111,15 +104,8 @@ def edit(request, site, version):
 def preview(request, site, version):
     active_site = Site.objects.get(id=site)
     version = Version.objects.get(id=version)
-    rows = Row.objects.filter(version=version).order_by('order')
-    for row in rows:
-        columns = Column.objects.filter(row=row).order_by('order')
-        for column in columns:
-            column.contents = Content.objects.filter(column=column).order_by('order')
-        row.columns = columns
     context = {
         'active_site': active_site,
-        'rows': rows,
         'version': version,
     }
     if active_site.id == Site.DNT_CENTRAL_ID:

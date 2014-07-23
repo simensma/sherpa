@@ -15,16 +15,6 @@ def list_bulk(request, bulk, active_site):
         variant__article__site=active_site
     ).order_by('-variant__article__created_date')[(bulk * BULK_COUNT) : (bulk * BULK_COUNT) + BULK_COUNT]
 
-def parse_version_content(request, version, active_site):
-    version = Version.objects.get(id=version)
-    rows = Row.objects.filter(version=version).order_by('order')
-    for row in rows:
-        columns = Column.objects.filter(row=row).order_by('order')
-        for column in columns:
-            column.contents = Content.objects.filter(column=column).order_by('order')
-        row.columns = columns
-    return rows, version
-
 def create_template(template, version, title):
     main_site_domain = Site.objects.get(id=Site.DNT_CENTRAL_ID).domain
 

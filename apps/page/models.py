@@ -95,6 +95,9 @@ class Version(models.Model):
     def __unicode__(self):
         return u'%s' % self.pk
 
+    def get_rows(self):
+        return Row.objects.filter(version=self).order_by('order')
+
     def get_title_content(self):
         return Content.objects.get(column__row__version=self, type='title')
 
@@ -175,7 +178,9 @@ def delete_page_version(sender, **kwargs):
 class Row(models.Model):
     version = models.ForeignKey('page.Version', related_name='rows')
     order = models.IntegerField()
-    columns = None
+
+    def get_columns(self):
+        return Column.objects.filter(row=self).order_by('order')
 
     def __unicode__(self):
         return u'%s' % self.pk
@@ -189,7 +194,9 @@ class Column(models.Model):
     span = models.IntegerField()
     offset = models.IntegerField()
     order = models.IntegerField()
-    contents = None
+
+    def get_contents(self):
+        return Content.objects.filter(column=self).order_by('order')
 
     def __unicode__(self):
         return u'%s' % self.pk

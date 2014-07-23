@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from django.core.cache import cache
 
-from page.models import AdPlacement, Ad, Page, Variant, Version, Row, Column, Content
+from page.models import AdPlacement, Ad, Page, Variant, Version
 from articles.models import OldArticle
 from analytics.models import Search, NotFound
 from page.widgets import get_static_promo_context
@@ -56,12 +56,6 @@ def page(request, slug):
 def parse_content(request, version):
     context = cache.get('content.version.%s' % version.id)
     if context is None:
-        rows = Row.objects.filter(version=version).order_by('order')
-        for row in rows:
-            columns = Column.objects.filter(row=row).order_by('order')
-            for column in columns:
-                column.contents = Content.objects.filter(column=column).order_by('order')
-            row.columns = columns
         # If parents, generate page hierarchy for breadcrumb path
         page_hierarchy = []
         if version.variant.page.parent is not None:
@@ -78,7 +72,7 @@ def parse_content(request, version):
                 parent = parent.parent
             page_hierarchy.reverse()
 
-        context = {'rows': rows, 'version': version, 'page_hierarchy': page_hierarchy}
+        context = {'version': version, 'page_hierarchy': page_hierarchy}
         cache.set('content.version.%s' % version.id, context, 60 * 10)
 
     context['request'] = request

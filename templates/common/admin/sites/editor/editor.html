@@ -17,14 +17,14 @@
     of debugging, in case there is a need to inspect the DOM, find the element ID and look it up in the db.
   {% endcomment %}
 
-  {% for row in rows %}
+  {% for row in version.get_rows %}
     {# Rows are recognized by their data-row attribute, not their class #}
     <div class="row-fluid" data-row data-id="{{ row.id }}">
 
-      {% for column in row.columns %}
+      {% for column in row.get_columns %}
         <div class="column offset{{ column.offset }} span{{ column.span }}" data-id="{{ column.id }}">
 
-          {% for content in column.contents %}
+          {% for content in column.get_contents %}
             {% if content.type == 'html' or content.type == 'title' or content.type == 'lede' %}
 
               <div class="content {{ content.type }} editable" {% if content.content != '' %}contenteditable="true"{% else %}data-placeholder{% endif %} data-id="{{ content.id }}">

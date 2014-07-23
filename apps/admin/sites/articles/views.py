@@ -7,7 +7,7 @@ from django.conf import settings
 from django.template import RequestContext
 from django.template.loader import render_to_string
 
-from admin.sites.articles.util import BULK_COUNT, list_bulk, create_template, parse_version_content
+from admin.sites.articles.util import BULK_COUNT, list_bulk, create_template
 from articles.models import Article
 from page.models import Variant, Version
 from page.widgets import widget_admin_context
@@ -75,11 +75,10 @@ def delete(request, site, article):
 
 def edit(request, site, version):
     active_site = Site.objects.get(id=site)
-    rows, version = parse_version_content(request, version, active_site)
+    version = Version.objects.get(id=version)
     users = sorted(User.sherpa_users(), key=lambda u: u.get_first_name())
     context = {
         'active_site': active_site,
-        'rows': rows,
         'version': version,
         'users': users,
         'image_search_length': settings.IMAGE_SEARCH_LENGTH,
@@ -92,12 +91,11 @@ def edit(request, site, version):
 
 def preview(request, site, version):
     active_site = Site.objects.get(id=site)
-    rows, version = parse_version_content(request, version, active_site)
+    version = Version.objects.get(id=version)
     # Pretend publish date is now, just for the preivew
     version.variant.article.pub_date = datetime.now()
     context = {
         'active_site': active_site,
-        'rows': rows,
         'version': version,
     }
 
