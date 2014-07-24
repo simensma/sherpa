@@ -5,5 +5,5 @@ class Widget(object):
         raise NotImplementedError
 
     def admin_context(self):
-        """Optional: Implement to returns context data which is needed in the admin editor when editing the widget"""
+        """Optional: Implement to return context data which is needed in the admin editor when editing the widget"""
         return {}
