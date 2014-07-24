@@ -168,7 +168,11 @@
 
           <option value=""></option>
           {% for item in locations %}
-            <option value="{{ item.id }}"{% if aktivitet|aktivitet_has_location:item %} selected{% endif %}>{{ item.name }}</option>
+            {% if aktivitet|aktivitet_has_location:item %}
+              <option value="{{ item.id }}" selected>{{ item.name }}</option>
+            {% else %}
+              <option value="{{ item.id }}">{{ item.name }}</option>
+            {% endif %}
           {% endfor %}
         </select>
       </div>
