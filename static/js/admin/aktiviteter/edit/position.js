@@ -1,29 +1,44 @@
 $(function() {
 
-    var editor = $("div.admin-aktivitet-edit");
-    var form = editor.find("form.edit-aktivitet");
-    var position_section = editor.find("div.section.position");
-    var map_container = position_section.find("div.map-container");
-    var show_map_button = position_section.find("a.show-map");
-
-    var counties_select = position_section.find("select[name='counties']");
-    var counties_ajaxloader = counties_select.nextAll("img.ajaxloader");
-    var municipalities_select = position_section.find("select[name='municipalities']");
-    var municipalities_ajaxloader = municipalities_select.nextAll("img.ajaxloader");
-    var locations_select = position_section.find("select[name='locations']");
-    var locations_ajaxloader = locations_select.nextAll("img.ajaxloader");
-
     var marker, map;
 
-    function sted_to_html(sted) {
+    function positionSsrSelectShowHandler() {
+        console.log('positionSsrSelectShowHandler');
+
+        $(this).find('input').select2({
+            placeholder: 'Hvor starter turen?',
+            minimumInputLength: 2,
+            escapeMarkup: function (m) { return m; },
+            formatSearching: function () { return 'Søker'; },
+            formatInputTooShort: function (term, minLength) { return 'Minimum to bokstaver'; },
+            formatResult: positionSsrToHtml,
+            query: function(options) {
+                var res = [];
+                $.fn.SSR(options.term).done(function(steder) {
+                    res = $.map(steder.stedsnavn, function(sted) {
+                        sted.id = sted.ssrId;
+                        sted.text = sted.stedsnavn;
+                        return sted;
+                    });
+                }).always(function() { options.callback({results: res}); });
+            }
+        }).select2('open');
+    };
+
+    function positionSsrToHtml(sted) {
         return [
             '<label>' + sted.text + '</label><br>',
             '<small>' + [sted.navnetype, sted.kommunenavn, sted.fylkesnavn].join(' i ') + '</small>'
         ].join('');
     };
 
-    function init_map(opts) {
+    function positionNtbSelectShowHandler() {
+        console.log('positionNtbSelectShowHandler');
+    };
+
+    function positionMapInit() {
         if (map) { return; }
+        console.log('positionMapInit');
 
         var tile_url = [
             'http://opencache.statkart.no/gatekeeper/gk/',
@@ -38,17 +53,19 @@ $(function() {
             layers: [L.tileLayer(tile_url, {attribution: 'Kartverket'})]
         });
 
-        if (opts && opts.set_default_view) { map.setView([65, 12], 5); }
+        //if (/^\d+(\.\d+)?,\d+(\.\d+)?$/.test($('input[name="latlng"]').val())) {
+        //    positionMapMarkerUpdate.apply($('input[name="latlng"]'), []);
+        //}
     };
 
-    function set_map_marker(sted) {
-        if (!map || (marker && marker.ssr_id === sted.id)) { return; }
+    function positionMapMarkerUpdate() {
+        if (!map) { return; }
+        console.log('positionMapMarkerUpdate');
 
-        //lat = lat || Turistforeningen.start_point_lat;
-        //lon = lon || Turistforeningen.start_point_lng;
+        var latlng = $(this).val().split(',');
 
-        if (sted.nord && sted.aust) {
-            var latlng = new L.LatLng(sted.nord, sted.aust);
+        if (latlng[0], latlng[1]) {
+            latlng = new L.LatLng(latlng[0], latlng[1]);
 
             if (marker) {
                 marker.setLatLng(latlng);
@@ -56,195 +73,116 @@ $(function() {
                 marker = L.marker(latlng, {title: 'Turern starter her'}).addTo(map);
             }
 
-            marker.ssr_id = sted.id
-            marker.bindPopup(sted_to_html(sted), { closeButton: false });
+            // @TODO what to put in the popup
+            marker.bindPopup('Her starter turen', {closeButton: false});
             map.setView(latlng, 12, {reset: true});
             marker.openPopup()
-
-            form.find("input[name='position_lat']").val(marker.getLatLng().lat);
-            form.find("input[name='position_lng']").val(marker.getLatLng().lng);
         }
     };
 
-    function show_and_set_map_marker(sted) {
-        map_container.show(function() {
-            init_map({set_default_view: false});
-            set_map_marker(sted);
-            init_metadata(sted);
+    function positionLatlngDomUpdate(e) {
+        console.log('positionLatlngDomUpdate', e.data.type);
 
-            var map_top = $(map_container).offset().top;
-            $('html, body').animate({scrollTop:(map_top - 80)}, '500', 'swing');
-        });
+        var lat, lng;
+        if (e.data.type === 'ssr') {
+            lat = $(this).select2('data').nord;
+            lng = $(this).select2('data').aust;
+        } else {
+            return console.log('Type not supported');
+        }
+
+        $('input[name="latlng"]').val(lat + ',' + lng).trigger("change");
+    }
+
+    function positionMetadataRegenerate(e) {
+        console.log('positionMetadataRegenerate');
+
+        var latlng = $(this).val().split(',');
+        console.log(latlng);
+
+        if (latlng.length === 2) {
+            positionMetadataSelect.apply($('select[name="counties"]'), latlng);
+            positionMetadataSelect.apply($('select[name="municipalities"]'), latlng);
+            positionMetadataSelect.apply($('select[name="locations"]'), latlng);
+        }
     };
 
-    function location_select() {
-        var select;
+    function positionMetadataSelect(lat, lng) {
+        console.log('positionMetdataSelect', lat, lng, this);
 
-        select = $('[data-container="location-select"] input').select2({
-            placeholder: 'Hvor starter turen?',
-            minimumInputLength: 2,
-            escapeMarkup: function (m) { return m; },
-            formatSearching: function () { return 'Søker'; },
-            formatInputTooShort: function (term, minLength) { return 'Minimum to bokstaver'; },
-            formatResult: sted_to_html,
-            query: location_select_query
-        });
+        // @TODO this depends on the dom
+        $(this).parent().parent().find('.ajaxloader').removeClass('jq-hide');
 
-        select.on('change', function(e) {
-            if (e.added) { show_and_set_map_marker(e.added); }
-        });
-
-        select.select2('open');
-    };
-
-    function location_select_query(options) {
-        var res = []
-          , ssr = $.fn.SSR(options.term);
-
-        ssr.done(function(steder) {
-            if (steder.stedsnavn && steder.stedsnavn.length > 0) {
-                for (var i = 0; i < steder.stedsnavn.length; i++) {
-                    steder.stedsnavn[i].id = steder.stedsnavn[i].ssrId;
-                    steder.stedsnavn[i].text = steder.stedsnavn[i].stedsnavn;
-                }
-
-                res = steder.stedsnavn;
+        $.ajaxQueue({
+            url: $(this).data('lookupUrl'),
+            data: {
+                lat: JSON.stringify(lat),
+                lng: JSON.stringify(lng)
             }
-        });
-
-        ssr.always(function() {
-            options.callback({results: res});
-        });
+        }).done(function(result) {
+            $(this).find('option:selected').prop('selected', false);
+            result = JSON.parse(result);
+            for (var i = 0; i < result.length; i++) {
+                $(this).find('option[value="' + result[i] + '"]').prop('selected', true);
+            }
+            $(this).trigger('chosen:updated');
+        }.bind(this)).fail(function() {
+            // @TODO handle this
+        }.bind(this)).always(function() {
+            // @TODO this depends on the dom
+            $(this).parent().parent().find('.ajaxloader').addClass('jq-hide');
+        }.bind(this));
     };
 
-    function turforslag_select() {
+    function positionMetadataPlaceholderUpdate(e) {
+        console.log('positionMetadataPlaceholderUpdate', e.data.placeholder, arguments);
 
-    };
-
-    function update_metadata_placeholder(e) {
-        var html = $.map($(e.target).find('option:selected'), function(option) {
+        var html = $.map($(this).find('option:selected'), function(option) {
             return $(option).html().trim();
         }).join(', ');
-        $(this).html(html || 'Ingen funnet');
-    }
-
-    function init_metadata(sted) {
-        var placeholder = position_section.find('[data-placeholder-for="municipality"]');
-        municipalities_select.on("chosen:updated", update_metadata_placeholder.bind(placeholder));
-
-        var placeholder = position_section.find('[data-placeholder-for="county"]');
-        counties_select.on("chosen:updated", update_metadata_placeholder.bind(placeholder));
-
-        var placeholder = position_section.find('[data-placeholder-for="location"]');
-        locations_select.on("chosen:updated", update_metadata_placeholder.bind(placeholder));
-
-        // Look up conties, municipalities, and location based on sted
-        county_lookup(sted.nord, sted.aust);
-        municipality_lookup(sted.nord, sted.aust);
-        location_lookup(sted.nord, sted.aust);
-
-        position_section.find('[data-container="metadata-select"]').removeClass('jq-hide');
+        $('[data-placeholder-for="' + e.data.placeholder + '"]').html(html || 'Ingen funnet');
     };
 
-    function county_lookup(lat, lng) {
-        var url = position_section.find('[data-county-lookup-url]').data('countyLookupUrl');
+    $.fn.showWithEvents = function() {
+        $(this).trigger('preshow').removeClass('jq-hide').trigger('postshow');
+    };
 
-        counties_ajaxloader.show();
-        $.ajaxQueue({
-            url: url,
-            data: {
-                lat: JSON.stringify(lat),
-                lng: JSON.stringify(lng)
-            }
-        }).done(function(result) {
-            result = JSON.parse(result);
-            counties_select.find("option:selected").prop('selected', false);
-            for(var i=0; i<result.length; i++) {
-                counties_select.find("option[value='" + result[i] + "']").prop('selected', true);
-            }
-            counties_select.trigger("chosen:updated");
-        }).fail(function() {
-            // TODO
-        }).always(function() {
-            counties_ajaxloader.hide();
+    function defaultDataShowClickHandler(e) {
+        e.preventDefault();
+        $.each($(this).data('show').split(' '), function(index, container) {
+            $('[data-container="' + container + '"]').showWithEvents();
         });
-    }
+    };
 
-    function municipality_lookup(lat, lng) {
-        var url = position_section.find('[data-municipality-lookup-url]').data('municipalityLookupUrl');
-
-        municipalities_ajaxloader.show();
-        $.ajaxQueue({
-            url: url,
-            data: {
-                lat: JSON.stringify(lat),
-                lng: JSON.stringify(lng)
-            }
-        }).done(function(result) {
-            result = JSON.parse(result);
-            municipalities_select.find("option:selected").prop('selected', false);
-            for(var i=0; i<result.length; i++) {
-                municipalities_select.find("option[value='" + result[i] + "']").prop('selected', true);
-            }
-            municipalities_select.trigger("chosen:updated");
-        }).fail(function() {
-            // TODO
-        }).always(function() {
-            municipalities_ajaxloader.hide();
+    function defaultDataShowSelectHandler() {
+        $.each($(this).data('show').split(' '), function(index, container) {
+            $('[data-container="' + container + '"]').showWithEvents();
         });
+    };
+
+    $(document).one('click', '[data-show="position-ssr-select"]', defaultDataShowClickHandler);
+    $(document).one('click', '[data-show="position-ntb-select"]', defaultDataShowClickHandler);
+    $(document).one('postshow', '[data-container="position-ssr-select"]', positionSsrSelectShowHandler);
+    $(document).one('postshow', '[data-container="position-ntb-select"]', positionNtbSelectShowHandler);
+
+    $(document).one('select2-selecting', 'input[name="ssr_id"]', defaultDataShowSelectHandler);
+    $(document).one('select2-selecting', 'input[name="ntb_id"]', defaultDataShowSelectHandler);
+
+    $(document).one('postshow', '[data-container="position-map"]', positionMapInit);
+
+    $(document).on('change', 'input[name="ssr_id"]', {type: 'ssr'}, positionLatlngDomUpdate);
+    $(document).on('change', 'input[name="ntb_id"]', {type: 'ntb'}, positionLatlngDomUpdate);
+
+    $(document).on('change', 'input[name="latlng"]', positionMapMarkerUpdate);
+    $(document).on('change', 'input[name="latlng"]', positionMetadataRegenerate);
+
+    $(document).on('chosen:updated', 'select[name="municipalities"]', {placeholder: 'municipality'} , positionMetadataPlaceholderUpdate);
+    $(document).on('chosen:updated', 'select[name="counties"]'      , {placeholder: 'county'}       , positionMetadataPlaceholderUpdate);
+    $(document).on('chosen:updated', 'select[name="locations"]'     , {placeholder: 'location'}     , positionMetadataPlaceholderUpdate);
+
+    if (/^\d+(\.\d+)?,\d+(\.\d+)?$/.test($('input[name="latlng"]').val())) {
+        $(document).one('postshow', '[data-container="position-map"]', positionMapMarkerUpdate.bind($('input[name="latlng"]')));
+        $('[data-container="position-map"]').showWithEvents();
+        $('[data-container="position-metadata"]').showWithEvents();
     }
-
-    function location_lookup(lat, lng) {
-        var url = position_section.find('[data-location-lookup-url]').data('locationLookupUrl');
-
-        locations_ajaxloader.show();
-        $.ajaxQueue({
-            url: url,
-            data: {
-                lat: JSON.stringify(lat),
-                lng: JSON.stringify(lng)
-            }
-        }).done(function(result) {
-            result = JSON.parse(result);
-            locations_select.find("option:selected").prop('selected', false);
-            for(var i=0; i<result.length; i++) {
-                locations_select.find("option[value='" + result[i] + "']").prop('selected', true);
-            }
-            locations_select.trigger("chosen:updated");
-        }).fail(function() {
-            // TODO
-        }).always(function() {
-            locations_ajaxloader.hide();
-        });
-    }
-
-    $(document).on('click', '[data-show="location-select"]', function (e) {
-        e.preventDefault();
-        position_section.find('[data-container="location-select"]').removeClass('jq-hide');
-        location_select();
-    });
-
-    $(document).on('click', '[data-show="turforslag-select"]', function (e) {
-        e.preventDefault();
-        position_section.find('[data-container="turforslag-select"]').removeClass('jq-hide');
-        turforslag_select();
-    });
-
-    // DEMO: Simple toggling of fields, for demo purposes only
-    $(document).on('click', '[data-toggle="counties-edit-show"]', function (e) {
-        e.preventDefault();
-        position_section.find('.counties-static').addClass('jq-hide');
-        position_section.find('.counties-edit').removeClass('jq-hide');
-    });
-
-    $(document).on('click', '[data-toggle="municipalities-edit-show"]', function (e) {
-        e.preventDefault();
-        position_section.find('.municipalities-static').addClass('jq-hide');
-        position_section.find('.municipalities-edit').removeClass('jq-hide');
-    });
-
-    $(document).on('click', '[data-toggle="locations-edit-show"]', function () {
-        position_section.find('.locations-static').addClass('jq-hide');
-        position_section.find('.locations-edit').removeClass('jq-hide');
-    });
 });
