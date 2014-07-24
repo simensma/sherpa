@@ -142,20 +142,22 @@ def edit(request, aktivitet):
         errors = False
 
         aktivitet = Aktivitet.objects.get(id=aktivitet)
-        aktivitet.code = request.POST['code']
-        aktivitet.title = request.POST['title']
-        aktivitet.description = request.POST['description']
-        aktivitet.difficulty = request.POST['difficulty']
-        aktivitet.audiences = json.dumps(request.POST.getlist('audiences'))
-        aktivitet.category = request.POST['category']
-        aktivitet.published = request.POST.get('publish') == 'publish'
-        aktivitet.getting_there = request.POST['getting_there']
-        aktivitet.locations = json.dumps([int(l) for l in request.POST.getlist('locations')])
+        if 'code' in request.POST: aktivitet.code = request.POST['code']
+        if 'title' in request.POST: aktivitet.title = request.POST['title']
+        if 'description' in request.POST: aktivitet.description = request.POST['description']
+        if 'difficulty' in request.POST: aktivitet.difficulty = request.POST['difficulty']
+        if 'audiences' in request.POST:
+            aktivitet.audiences = json.dumps(request.POST.getlist('audiences'))
+        if 'category' in request.POST: aktivitet.category = request.POST['category']
+        if 'publish' in request.POST: aktivitet.published = request.POST.get('publish') == 'publish'
+        if 'getting_there' in request.POST: aktivitet.getting_there = request.POST['getting_there']
+        if 'locations' in request.POST:
+            aktivitet.locations = json.dumps([int(l) for l in request.POST.getlist('locations')])
 
-        if request.POST['turforslag_id'] == '':
+        if 'ntb_id' not in request.POST or request.POST['ntb_id'] == '':
             aktivitet.turforslag = None
         else:
-            aktivitet.turforslag = request.POST['turforslag_id']
+            aktivitet.turforslag = request.POST['ntb_id']
 
         if aktivitet.published:
             # If published, set the extra relevant fields (otherwise ignore them)
@@ -182,88 +184,90 @@ def edit(request, aktivitet):
             if len(latlng) == 2:
                 aktivitet.start_point = Point(float(latlng[0]), float(latlng[1]))
 
-        aktivitet.save()
-
         aktivitet.counties = request.POST.getlist('counties')
         aktivitet.municipalities = request.POST.getlist('municipalities')
 
+        aktivitet.save()
+
         aktivitet.category_tags.clear()
-        for tag in [tag.lower() for tag in json.loads(request.POST['subcategories'])]:
-            obj, created = Tag.objects.get_or_create(name=tag)
-            aktivitet.category_tags.add(obj)
+        if 'subcategories' in request.POST and request.POST['subcategories'] != '':
+            for tag in [tag.lower() for tag in json.loads(request.POST['subcategories'])]:
+                obj, created = Tag.objects.get_or_create(name=tag)
+                aktivitet.category_tags.add(obj)
 
         aktivitet.images.all().delete()
-        for image in json.loads(request.POST['images']):
-            image = AktivitetImage(
-                aktivitet=aktivitet,
-                url=image['url'],
-                text=image['text'],
-                photographer=image['photographer'],
-                order=image['order']
-            )
-            image.save()
+        if 'images' in request.POST and request.POST['images'] != '':
+            for image in json.loads(request.POST['images']):
+                image = AktivitetImage(
+                    aktivitet=aktivitet,
+                    url=image['url'],
+                    text=image['text'],
+                    photographer=image['photographer'],
+                    order=image['order']
+                )
+                image.save()
 
         #
         # Dates
         #
+        if 'dates' in request.POST and request.POST['dates'] != '':
+            dates = json.loads(request.POST['dates'])
 
-        dates = json.loads(request.POST['dates'])
+            # Remove the date objects that were explicitly deleted (checks and verifications are
+            # done client-side). Verify that those that would be implicitly deleted (by not being
+            # POSTed for editing) match those explicitly POSTed.
+            posted_ids = [int(d['id']) for d in dates if d['id'] != '']
+            implicit_to_delete = set([date.id for date in aktivitet.dates.all() if date.id not in posted_ids])
+            explicit_to_delete = set([int(d) for d in json.loads(request.POST['dates_to_delete'])])
 
-        # Remove the date objects that were explicitly deleted (checks and verifications are
-        # done client-side). Verify that those that would be implicitly deleted (by not being
-        # POSTed for editing) match those explicitly POSTed.
-        posted_ids = [int(d['id']) for d in dates if d['id'] != '']
-        implicit_to_delete = set([date.id for date in aktivitet.dates.all() if date.id not in posted_ids])
-        explicit_to_delete = set([int(d) for d in json.loads(request.POST['dates_to_delete'])])
+            if implicit_to_delete != explicit_to_delete:
+                # Better to raise an exception and not delete anything. The user will be confused and
+                # lose edits, but we'll get a report and hopefully be able to fix this, if it ever happens.
+                raise Exception("The explicit and implicit dates to delete did not match.")
 
-        if implicit_to_delete != explicit_to_delete:
-            # Better to raise an exception and not delete anything. The user will be confused and
-            # lose edits, but we'll get a report and hopefully be able to fix this, if it ever happens.
-            raise Exception("The explicit and implicit dates to delete did not match.")
+            AktivitetDate.objects.filter(id__in=explicit_to_delete).delete()
 
-        AktivitetDate.objects.filter(id__in=explicit_to_delete).delete()
-
-        for date_post in dates:
-            if date_post['id'] != '':
-                aktivitet_date = AktivitetDate.objects.get(id=date_post['id'])
-            else:
-                aktivitet_date = AktivitetDate(aktivitet=aktivitet)
-
-            try:
-                aktivitet_date.start_date = datetime.strptime("%s %s" % (date_post['start_date'], date_post['start_time']), "%d.%m.%Y %H:%M")
-                aktivitet_date.end_date = datetime.strptime("%s %s" % (date_post['end_date'], date_post['end_time']), "%d.%m.%Y %H:%M")
-                if date_post['signup_type'] == 'minside' or date_post['signup_type'] == 'simple':
-                    aktivitet_date.signup_enabled = True
-                    aktivitet_date.signup_start = datetime.strptime(date_post['signup_start'], "%d.%m.%Y").date()
-                    if date_post['signup_deadline_until_start']:
-                        aktivitet_date.signup_deadline = aktivitet_date.start_date
-                    else:
-                        aktivitet_date.signup_deadline = datetime.strptime(date_post['signup_deadline'], "%d.%m.%Y").date()
-                    if date_post['signup_cancel_deadline_until_start']:
-                        aktivitet_date.signup_cancel_deadline = aktivitet_date.start_date
-                    else:
-                        aktivitet_date.signup_cancel_deadline = datetime.strptime(date_post['signup_cancel_deadline'], "%d.%m.%Y").date()
-                elif date_post['signup_type'] == 'none':
-                    aktivitet_date.signup_enabled = False
-                    aktivitet_date.signup_start = None
-                    aktivitet_date.signup_deadline = None
-                    aktivitet_date.signup_cancel_deadline = None
+            for date_post in dates:
+                if date_post['id'] != '':
+                    aktivitet_date = AktivitetDate.objects.get(id=date_post['id'])
                 else:
-                    raise Exception("Unrecognized POST value for signup_type field")
-            except ValueError:
-                errors = True
-                messages.error(request, 'invalid_date_format')
+                    aktivitet_date = AktivitetDate(aktivitet=aktivitet)
 
-            aktivitet_date.signup_simple_allowed = date_post['signup_type'] == 'simple'
-            aktivitet_date.meeting_place = date_post['meeting_place']
-            aktivitet_date.contact_type = date_post['contact_type']
-            aktivitet_date.contact_custom_name = date_post['contact_custom_name']
-            aktivitet_date.contact_custom_phone = date_post['contact_custom_phone']
-            aktivitet_date.contact_custom_email = date_post['contact_custom_email']
-            aktivitet_date.save()
+                try:
+                    aktivitet_date.start_date = datetime.strptime("%s %s" % (date_post['start_date'], date_post['start_time']), "%d.%m.%Y %H:%M")
+                    aktivitet_date.end_date = datetime.strptime("%s %s" % (date_post['end_date'], date_post['end_time']), "%d.%m.%Y %H:%M")
+                    if date_post['signup_type'] == 'minside' or date_post['signup_type'] == 'simple':
+                        aktivitet_date.signup_enabled = True
+                        aktivitet_date.signup_start = datetime.strptime(date_post['signup_start'], "%d.%m.%Y").date()
+                        if date_post['signup_deadline_until_start']:
+                            aktivitet_date.signup_deadline = aktivitet_date.start_date
+                        else:
+                            aktivitet_date.signup_deadline = datetime.strptime(date_post['signup_deadline'], "%d.%m.%Y").date()
+                        if date_post['signup_cancel_deadline_until_start']:
+                            aktivitet_date.signup_cancel_deadline = aktivitet_date.start_date
+                        else:
+                            aktivitet_date.signup_cancel_deadline = datetime.strptime(date_post['signup_cancel_deadline'], "%d.%m.%Y").date()
+                    elif date_post['signup_type'] == 'none':
+                        aktivitet_date.signup_enabled = False
+                        aktivitet_date.signup_start = None
+                        aktivitet_date.signup_deadline = None
+                        aktivitet_date.signup_cancel_deadline = None
+                    else:
+                        raise Exception("Unrecognized POST value for signup_type field")
+                except ValueError:
+                    errors = True
+                    messages.error(request, 'invalid_date_format')
 
-            # Turledere
-            aktivitet_date.turledere = date_post['turledere']
+                aktivitet_date.signup_simple_allowed = date_post['signup_type'] == 'simple'
+                aktivitet_date.meeting_place = date_post['meeting_place']
+                aktivitet_date.contact_type = date_post['contact_type']
+                aktivitet_date.contact_custom_name = date_post['contact_custom_name']
+                aktivitet_date.contact_custom_phone = date_post['contact_custom_phone']
+                aktivitet_date.contact_custom_email = date_post['contact_custom_email']
+                aktivitet_date.save()
+
+                # Turledere
+                aktivitet_date.turledere = date_post['turledere']
 
         if not errors:
             messages.info(request, 'save_success')
