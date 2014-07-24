@@ -11,4 +11,11 @@ $(function() {
         nav.find("li[data-type='" + $(this).attr('data-toggle') + "']").slideToggle('fast');
     });
 
+    // Activate outdatedBrowser warning
+    outdatedBrowser({
+        bgColor: '#f25648',
+        color: '#ffffff',
+        lowerThan: 'IE9'
+    });
+
 });
