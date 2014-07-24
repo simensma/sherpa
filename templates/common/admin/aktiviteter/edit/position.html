@@ -70,19 +70,26 @@
   </div>
 
   <div class="row">
+
     <!-- county -->
-    <div class="col-lg-4 col-md-4 col-sm-4">
-      <strong>Fylke: </strong><br />
-      <div data-container="activity-county">
-        <div class="counties-static">
-          <span data-placeholder-for="county">Ikke valgt</span>
-          <a class="btn btn-default btn-xs" data-toggle="counties-edit-show">
-            <span class="glyphicon glyphicon-plus"></span> Flere fylker
-          </a>
-        </div>
-        {% with selected=aktivitet.counties %}
+    {% with selected=aktivitet.counties %}
+      <div class="col-lg-4 col-md-4 col-sm-4">
+        <strong>Fylke: </strong><br />
+        <div data-container="activity-county">
+          <div class="counties-static">
+            <img class="ajaxloader jq-hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+            <span data-placeholder-for="county">
+              {# @TODO how to make this look ok when no selected #}
+              {% for item in counties %}{% if item in selected %}{{ item }} {% endif %}{% endfor %}
+            </span>
+            <a class="btn btn-default btn-xs" data-toggle="counties-edit-show">
+              <span class="glyphicon glyphicon-plus"></span> Flere fylker
+            </a>
+          </div>
           <div class="counties-edit jq-hide">
-            <select multiple name="counties" data-chosen data-placeholder="Velg fylke...">
+            <select multiple name="counties" data-chosen data-placeholder="Velg fylke..."
+              data-lookup-url="{% url 'core.views.county_lookup' %}">
+
               <option value=""></option>
               {% for item in counties %}
                 <option value="{{ item.id }}"{% if item in selected %} selected{% endif %}>
@@ -90,26 +97,30 @@
                 </option>
               {% endfor %}
             </select>
-            <img class="ajaxloader jq-hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif"
-              alt="Laster, vennligst vent...">
           </div>
-        {% endwith %}
+        </div>
       </div>
-    </div>
+    {% endwith %}
 
     <!-- municipaly -->
-    <div class="col-lg-4 col-md-4 col-sm-4">
-      <strong>Kommune: </strong><br />
-      <div data-container="activity-municipality">
-        <div class="municipalities-static">
-          <span data-placeholder-for="municipality">Ikke valgt</span>
-          <a class="btn btn-default btn-xs" data-toggle="municipalities-edit-show">
-            <span class="glyphicon glyphicon-plus"></span> Flere kommuner
-          </a>
-        </div>
-        {% with selected=aktivitet.municipalities %}
+    {% with selected=aktivitet.municipalities %}
+      <div class="col-lg-4 col-md-4 col-sm-4">
+        <strong>Kommune: </strong><br />
+        <div data-container="activity-municipality">
+          <div class="municipalities-static">
+            <img class="ajaxloader jq-hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+            <span data-placeholder-for="municipality">
+              {# @TODO how to make this look ok when no selected #}
+              {% for item in municipalities %}{% if item in selected %}{{ item }} {% endif %}{% endfor %}
+            </span>
+            <a class="btn btn-default btn-xs" data-toggle="municipalities-edit-show">
+              <span class="glyphicon glyphicon-plus"></span> Flere kommuner
+            </a>
+          </div>
           <div class="municipalities-edit jq-hide">
-            <select multiple name="municipalities" data-chosen data-placeholder="Velg kommune...">
+            <select multiple name="municipalities" data-chosen data-placeholder="Velg kommune..."
+              data-lookup-url="{% url 'core.views.municipality_lookup' %}">
+
               <option value=""></option>
               {% for item in municipalities %}
                 <option value="{{ item.id }}"{% if item in selected %} selected{% endif %}>
@@ -117,32 +128,34 @@
                 </option>
               {% endfor %}
             </select>
-            <img class="ajaxloader jq-hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif"
-              alt="Laster, vennligst vent...">
           </div>
-        {% endwith %}
+        </div>
       </div>
-    </div>
+    {% endwith %}
 
     <!-- location -->
     <div class="col-lg-4 col-md-4 col-sm-4">
       <strong>Område: </strong><br />
       <div data-container="activity-locations">
         <div class="locations-static">
-          <span data-placeholder-for="location">Ikke valgt</span>
+          <img class="ajaxloader jq-hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+          <span data-placeholder-for="location">
+              {# @TODO how to make this look ok when no selected #}
+            {% for item in locations %}{% if aktivitet|aktivitet_has_location:item %}{{ item }} {% endif %}{% endfor %}
+          </span>
           <a class="btn btn-default btn-xs" data-toggle="locations-edit-show">
             <span class="glyphicon glyphicon-plus"></span> Flere områder
           </a>
         </div>
         <div class="locations-edit jq-hide">
-          <select multiple name="locations" data-chosen data-placeholder="Velg område...">
+          <select multiple name="locations" data-chosen data-placeholder="Velg område..."
+              data-lookup-url="{% url 'sherpa2.views.location_lookup' %}">
+
             <option value=""></option>
             {% for item in locations %}
               <option value="{{ item.id }}"{% if aktivitet|aktivitet_has_location:item %} selected{% endif %}>{{ item.name }}</option>
             {% endfor %}
           </select>
-          <img class="ajaxloader jq-hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif"
-            alt="Laster, vennligst vent...">
         </div>
       </div>
     </div>
