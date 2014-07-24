@@ -81,7 +81,11 @@
           {% include 'common/util/ajaxloader.html' %}
           <span data-placeholder-for="county">
             {# @TODO how to make this look ok when no selected #}
-            {% for item in counties %}{% if item in selected %}{{ item }} {% endif %}{% endfor %}
+            {% for item in counties %}
+              {% if item in selected %}
+                {{ item.name }}
+              {% endif %}
+            {% endfor %}
           </span>
           <a class="btn btn-xs btn-default"
             data-click-show="position-counties-edit"
@@ -112,7 +116,11 @@
           {% include 'common/util/ajaxloader.html' %}
           <span data-placeholder-for="municipality">
             {# @TODO how to make this look ok when no selected #}
-            {% for item in municipalities %}{% if item in selected %}{{ item }} {% endif %}{% endfor %}
+            {% for item in municipalities %}
+              {% if item in selected %}
+                {{ item.name }}
+              {% endif %}
+            {% endfor %}
           </span>
           <a class="btn btn-default btn-xs"
             data-click-show="position-municipalities-edit"
@@ -141,8 +149,12 @@
       <div data-container="position-locations-placeholder">
         {% include 'common/util/ajaxloader.html' %}
         <span data-placeholder-for="location">
-            {# @TODO how to make this look ok when no selected #}
-          {% for item in locations %}{% if aktivitet|aktivitet_has_location:item %}{{ item }} {% endif %}{% endfor %}
+          {# @TODO how to make this look ok when no selected #}
+          {% for item in locations %}
+            {% if aktivitet|aktivitet_has_location:item %}
+              {{ item.name }}
+            {% endif %}
+          {% endfor %}
         </span>
         <a class="btn btn-default btn-xs"
           data-click-show="position-locations-edit"
