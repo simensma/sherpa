@@ -143,26 +143,37 @@ $(function() {
         $(this).trigger('preshow').removeClass('jq-hide').trigger('postshow');
     };
 
-    function defaultDataShowClickHandler(e) {
+    $.fn.hideWithEvents = function() {
+        $(this).trigger('prehide').addClass('jq-hide').trigger('postshow');
+    };
+
+    function defaultDataClickShowHandler(e) {
         e.preventDefault();
-        $.each($(this).data('show').split(' '), function(index, container) {
+        $.each($(this).data('clickShow').split(' '), function(index, container) {
             $('[data-container="' + container + '"]').showWithEvents();
         });
     };
 
-    function defaultDataShowSelectHandler() {
-        $.each($(this).data('show').split(' '), function(index, container) {
+    function defaultDataClickHideHandler(e) {
+        e.preventDefault();
+        $.each($(this).data('clickHide').split(' '), function(index, container) {
+            $('[data-container="' + container + '"]').hideWithEvents();
+        });
+    };
+
+    function defaultDataSelectShowHandler() {
+        $.each($(this).data('selectShow').split(' '), function(index, container) {
             $('[data-container="' + container + '"]').showWithEvents();
         });
     };
 
-    $(document).one('click', '[data-show="position-ssr-select"]', defaultDataShowClickHandler);
-    $(document).one('click', '[data-show="position-ntb-select"]', defaultDataShowClickHandler);
+    $(document).on('click', '[data-click-show]', defaultDataClickShowHandler);
+    $(document).on('click', '[data-click-hide]', defaultDataClickHideHandler);
     $(document).one('postshow', '[data-container="position-ssr-select"]', positionSsrSelectShowHandler);
     $(document).one('postshow', '[data-container="position-ntb-select"]', positionNtbSelectShowHandler);
 
-    $(document).one('select2-selecting', 'input[name="ssr_id"]', defaultDataShowSelectHandler);
-    $(document).one('select2-selecting', 'input[name="ntb_id"]', defaultDataShowSelectHandler);
+    $(document).one('select2-selecting', 'input[name="ssr_id"]', defaultDataSelectShowHandler);
+    $(document).one('select2-selecting', 'input[name="ntb_id"]', defaultDataSelectShowHandler);
 
     $(document).one('postshow', '[data-container="position-map"]', positionMapInit);
 

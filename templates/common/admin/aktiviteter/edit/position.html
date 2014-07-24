@@ -7,7 +7,7 @@
 
     <!-- ssr-search -->
     <div class="col-md-4 col-md-offset-2">
-      <a class="btn btn-primary btn-block" data-show="position-ssr-select"
+      <a class="btn btn-primary btn-block" data-click-show="position-ssr-select"
         href="javascript:undefined">
         <span class="glyphicon glyphicon-pushpin"></span> Sett posisjon i kart
       </a>
@@ -15,7 +15,7 @@
       måten kan vi sikre at aktiviteten posisjoneres riktig i kartet.</p>
       <div class="jq-hide" data-container="position-ssr-select">
         <input name="ssr_id" type="hidden" style="width:100%"
-          data-show="position-map position-metadata">
+          data-select-show="position-map position-metadata">
       </div>
     </div>
 
@@ -25,7 +25,7 @@
 
     <!-- ntb-search -->
     <div class="col-md-4">
-      <a class="btn btn-primary btn-block" data-show="position-ntb-select"
+      <a class="btn btn-primary btn-block" data-click-show="position-ntb-select"
         href="javascript:undefined">
         <span class="glyphicon glyphicon-link"></span> Koble til turforslag fra UT.no
       </a>
@@ -34,7 +34,7 @@
 
       <div class="jq-hide" data-container="position-ntb-select">
         <input name="ntb_id" type="hidden" style="width:100%"
-          data-show="position-map position-metadata">
+          data-select-show="position-map position-metadata">
 
         <div class="alert alert-warning">
           Hva forventet du her? <a href="http://dnt.uservoice.com" data-uv-trigger="feedback"
@@ -54,6 +54,7 @@
   </div>
 </div>
 
+<!-- position-map -->
 <div class="map-container jq-hide" data-container="position-map">
   <div class="map-shadow">
     <input type="hidden" name="latlng" value="{{ aktiviet.position_lat }},{{ aktivitet.position_lng }}">
@@ -61,12 +62,12 @@
   </div>
 </div>
 
-<div class="alert alert-info metadata-container jq-hide" data-container="position-metadata">
+<!-- position-metadata -->
+<div class="alert alert-info jq-hide" data-container="position-metadata">
   <div class="row">
     <div class="col-sm-12">
-      <p>Basert på [ posisjonen i kartet | turforslaget ] har vi plassert
-      aktiviteten i kommune, område og fylke. Klikk på "Legg til" for å tilføye
-      flere kommuner, fylker eller områder.</p>
+      <p>Basert på valgt posisjon har vi plassert aktiviteten i kommune, område og fylke. Klikk på
+      "Legg til" for å tilføye flere kommuner, fylker eller områder.</p>
     </div>
   </div>
 
@@ -76,29 +77,29 @@
     {% with selected=aktivitet.counties %}
       <div class="col-lg-4 col-md-4 col-sm-4">
         <strong>Fylke: </strong><br />
-        <div data-container="activity-county">
-          <div class="counties-static">
-            <img class="ajaxloader jq-hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
-            <span data-placeholder-for="county">
-              {# @TODO how to make this look ok when no selected #}
-              {% for item in counties %}{% if item in selected %}{{ item }} {% endif %}{% endfor %}
-            </span>
-            <a class="btn btn-default btn-xs" data-toggle="counties-edit-show">
-              <span class="glyphicon glyphicon-plus"></span> Flere fylker
-            </a>
-          </div>
-          <div class="counties-edit jq-hide">
-            <select multiple name="counties" data-chosen data-placeholder="Velg fylke..."
-              data-lookup-url="{% url 'core.views.county_lookup' %}">
+        <div data-container="position-counties-placeholder">
+          {% include 'common/util/ajaxloader.html' %}
+          <span data-placeholder-for="county">
+            {# @TODO how to make this look ok when no selected #}
+            {% for item in counties %}{% if item in selected %}{{ item }} {% endif %}{% endfor %}
+          </span>
+          <a class="btn btn-xs btn-default"
+            data-click-show="position-counties-edit"
+            data-click-hide="position-counties-placeholder">
+            <span class="glyphicon glyphicon-plus"></span> Flere fylker
+          </a>
+        </div>
+        <div class="jq-hide" data-container="position-counties-edit">
+          <select multiple name="counties" data-chosen data-placeholder="Velg fylke..."
+            data-lookup-url="{% url 'core.views.county_lookup' %}">
 
-              <option value=""></option>
-              {% for item in counties %}
-                <option value="{{ item.id }}"{% if item in selected %} selected{% endif %}>
-                  {{ item.name }}
-                </option>
-              {% endfor %}
-            </select>
-          </div>
+            <option value=""></option>
+            {% for item in counties %}
+              <option value="{{ item.id }}"{% if item in selected %} selected{% endif %}>
+                {{ item.name }}
+              </option>
+            {% endfor %}
+          </select>
         </div>
       </div>
     {% endwith %}
@@ -107,29 +108,29 @@
     {% with selected=aktivitet.municipalities %}
       <div class="col-lg-4 col-md-4 col-sm-4">
         <strong>Kommune: </strong><br />
-        <div data-container="activity-municipality">
-          <div class="municipalities-static">
-            <img class="ajaxloader jq-hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
-            <span data-placeholder-for="municipality">
-              {# @TODO how to make this look ok when no selected #}
-              {% for item in municipalities %}{% if item in selected %}{{ item }} {% endif %}{% endfor %}
-            </span>
-            <a class="btn btn-default btn-xs" data-toggle="municipalities-edit-show">
-              <span class="glyphicon glyphicon-plus"></span> Flere kommuner
-            </a>
-          </div>
-          <div class="municipalities-edit jq-hide">
-            <select multiple name="municipalities" data-chosen data-placeholder="Velg kommune..."
-              data-lookup-url="{% url 'core.views.municipality_lookup' %}">
+        <div data-container="position-municipalities-placeholder">
+          {% include 'common/util/ajaxloader.html' %}
+          <span data-placeholder-for="municipality">
+            {# @TODO how to make this look ok when no selected #}
+            {% for item in municipalities %}{% if item in selected %}{{ item }} {% endif %}{% endfor %}
+          </span>
+          <a class="btn btn-default btn-xs"
+            data-click-show="position-municipalities-edit"
+            data-click-hide="position-municipalities-placeholder">
+            <span class="glyphicon glyphicon-plus"></span> Flere kommuner
+          </a>
+        </div>
+        <div data-container="position-municipalities-edit" class="jq-hide">
+          <select multiple name="municipalities" data-chosen data-placeholder="Velg kommune..."
+            data-lookup-url="{% url 'core.views.municipality_lookup' %}">
 
-              <option value=""></option>
-              {% for item in municipalities %}
-                <option value="{{ item.id }}"{% if item in selected %} selected{% endif %}>
-                  {{ item.name }}
-                </option>
-              {% endfor %}
-            </select>
-          </div>
+            <option value=""></option>
+            {% for item in municipalities %}
+              <option value="{{ item.id }}"{% if item in selected %} selected{% endif %}>
+                {{ item.name }}
+              </option>
+            {% endfor %}
+          </select>
         </div>
       </div>
     {% endwith %}
@@ -137,29 +138,29 @@
     <!-- location -->
     <div class="col-lg-4 col-md-4 col-sm-4">
       <strong>Område: </strong><br />
-      <div data-container="activity-locations">
-        <div class="locations-static">
-          <img class="ajaxloader jq-hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
-          <span data-placeholder-for="location">
-              {# @TODO how to make this look ok when no selected #}
-            {% for item in locations %}{% if aktivitet|aktivitet_has_location:item %}{{ item }} {% endif %}{% endfor %}
-          </span>
-          <a class="btn btn-default btn-xs" data-toggle="locations-edit-show">
-            <span class="glyphicon glyphicon-plus"></span> Flere områder
-          </a>
-        </div>
-        <div class="locations-edit jq-hide">
-          <select multiple name="locations" data-chosen data-placeholder="Velg område..."
-              data-lookup-url="{% url 'sherpa2.views.location_lookup' %}">
+      <div data-container="position-locations-placeholder">
+        {% include 'common/util/ajaxloader.html' %}
+        <span data-placeholder-for="location">
+            {# @TODO how to make this look ok when no selected #}
+          {% for item in locations %}{% if aktivitet|aktivitet_has_location:item %}{{ item }} {% endif %}{% endfor %}
+        </span>
+        <a class="btn btn-default btn-xs"
+          data-click-show="position-locations-edit"
+          data-click-hide="position-locations-placeholder">
+          <span class="glyphicon glyphicon-plus"></span> Flere områder
+        </a>
+      </div>
+      <div data-container="position-locations-edit" class="jq-hide">
+        <select multiple name="locations" data-chosen data-placeholder="Velg område..."
+            data-lookup-url="{% url 'sherpa2.views.location_lookup' %}">
 
-            <option value=""></option>
-            {% for item in locations %}
-              <option value="{{ item.id }}"{% if aktivitet|aktivitet_has_location:item %} selected{% endif %}>{{ item.name }}</option>
-            {% endfor %}
-          </select>
-        </div>
+          <option value=""></option>
+          {% for item in locations %}
+            <option value="{{ item.id }}"{% if aktivitet|aktivitet_has_location:item %} selected{% endif %}>{{ item.name }}</option>
+          {% endfor %}
+        </select>
       </div>
     </div>
   </div>
-</div><!-- /alert.areas-and-positions-output -->
+</div>
 
