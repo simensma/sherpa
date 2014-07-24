@@ -38,11 +38,6 @@
     window.Turistforeningen = {
       admin_user_search_char_length: {{ admin_user_search_char_length }}
     };
-
-    {% if aktivitet.start_point %}
-      window.Turistforeningen.start_point_lat = JSON.parse({{ aktivitet.get_start_point_lat_json }});
-      window.Turistforeningen.start_point_lng = JSON.parse({{ aktivitet.get_start_point_lng_json }});
-    {% endif %}
   </script>
 {% endblock %}
 
@@ -83,8 +78,6 @@
       <form action="{% url 'admin.aktiviteter.views.edit' aktivitet.id %}" method="post" class="edit-aktivitet form-default form-horizontal" data-aktivitet-id="{{ aktivitet.id }}">
         {% csrf_token %}
         <input type="hidden" name="images" value="">
-        <input type="hidden" name="position_lat">
-        <input type="hidden" name="position_lng">
         <input type="hidden" name="preview" value="false">
 
         <div class="form-group submit-header">

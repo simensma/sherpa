@@ -177,8 +177,10 @@ def edit(request, aktivitet):
         aktivitet.forening = forening
         aktivitet.co_forening = co_forening
 
-        if request.POST['position_lat'] != '' and request.POST['position_lng'] != '':
-            aktivitet.start_point = Point(float(request.POST['position_lat']), float(request.POST['position_lng']))
+        if request.POST['latlng']:
+            latlng = request.POST['latlng'].split(',')
+            if len(latlng) == 2:
+                aktivitet.start_point = Point(float(latlng[0]), float(latlng[1]))
 
         aktivitet.save()
 
