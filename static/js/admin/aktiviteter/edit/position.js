@@ -52,10 +52,6 @@ $(function() {
             closePopupOnClick: false,
             layers: [L.tileLayer(tile_url, {attribution: 'Kartverket'})]
         });
-
-        //if (/^\d+(\.\d+)?,\d+(\.\d+)?$/.test($('input[name="latlng"]').val())) {
-        //    positionMapMarkerUpdate.apply($('input[name="latlng"]'), []);
-        //}
     };
 
     function positionMapMarkerUpdate() {
