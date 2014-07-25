@@ -65,9 +65,38 @@
         }
       }
     }
+  }
+}
 
-    // Hide menu by default on small screens
-    @media (max-width: 767px) {
+@media (max-width: 767px) {
+  .widget.campaign {
+    .campaign {
+      position: static;
+      background-image: none !important;
+      background-color: @profile-red;
+
+      width: 100% !important;
+      height: auto !important;
+      padding-bottom: 25px;
+
+      .text, .button {
+        position: static !important;
+        margin-top: 20px;
+        color: white !important;
+        text-align: center !important;
+      }
+
+      .button {
+        a {
+          color: #333 !important;
+          background-color: #f5f5f5 !important;
+        }
+      }
+
+      .photographer {
+        display: none;
+      }
+
       div.menu {
         display: none;
         position: static;
