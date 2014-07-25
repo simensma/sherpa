@@ -13,5 +13,67 @@
     .photographer {
       bottom: 5px;
     }
+
+
+    /* Core menu - used only on the main site */
+
+    div.menu {
+      font-family: "DTL Nobel";
+      position: absolute;
+      top: 20px;
+      font-size: 15px;
+      z-index: 200;
+
+      ul {
+        margin: 0;
+        list-style: none;
+
+        li {
+          padding: 5px 20px 5px 10px;
+          background-color: white;
+          border-top: 1px solid rgb(210, 210, 210);
+          font-family: "DTL Nobel" !important;
+          font-size: 15px !important;
+          line-height: 18px;
+
+          &:first-of-type {
+            border-top: none;
+          }
+
+          &.active {
+            background-color: @profile-red;
+            color: white;
+          }
+
+          &:not(.active):hover {
+            background-color: rgb(150, 150, 150);
+            cursor: pointer;
+          }
+
+          a {
+            color: rgb(80, 80, 80);
+          }
+
+          &.active a {
+            color: white;
+          }
+
+          &:not(.active):hover a {
+            color: white;
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+
+    // Hide menu by default on small screens
+    @media (max-width: 767px) {
+      div.menu {
+        display: none;
+        position: static;
+        background-color: white;
+        padding-bottom: 20px;
+      }
+    }
   }
 }

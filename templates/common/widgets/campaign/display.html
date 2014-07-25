@@ -1,6 +1,10 @@
 {% if widget.campaign %}
   <div class="campaign" style="background-image: url({{ widget.campaign.get_cropped_image }});">
 
+    {% if widget.display_core_menu %}
+      {% include 'common/widgets/campaign/menu.html' %}
+    {% endif %}
+
     {% for text in widget.campaign.text.all %}
       <div class="text" style="{{ text.render_style }}">
         {{ text.content|safe }}

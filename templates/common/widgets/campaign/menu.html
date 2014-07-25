@@ -1,0 +1,11 @@
+<div class="menu">
+  <ul>
+    {% for item in widget.core_menu %}
+      {% if request.path == item.url %}
+        <li class="active">{{ item.name|default:widget.campaign.title }}</li>
+      {% else %}
+        <li><a href="{{ item.url }}">{{ item.name|default:widget.campaign.title }}</a></li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+</div>
