@@ -2,9 +2,9 @@
   <ul>
     {% for item in widget.core_menu %}
       {% if request.path == item.url %}
-        <li class="active">{{ item.name|default:widget.campaign.title }}</li>
+        <li class="active">{% firstof item.name widget.main_campaign_title 'Turistforeningen' %}</li>
       {% else %}
-        <li><a href="{{ item.url }}">{{ item.name|default:widget.campaign.title }}</a></li>
+        <li><a href="{{ item.url }}">{% firstof item.name widget.main_campaign_title 'Turistforeningen' %}</a></li>
       {% endif %}
     {% endfor %}
   </ul>

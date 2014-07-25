@@ -59,6 +59,16 @@
             <input type="checkbox" name="display-core-menu">
             Vis meny for kjerneinnhold
           </label>
+
+          {# Inform about potential wrong menu label when editing the front page #}
+          {% if version.variant.page.slug == '' %}
+            <p>
+              <em>
+                Merk: Du redigerer nå forsiden. Det øverste menyfeltet vil settes til tittelen for kampanjen,<br>
+                men den vil vise feil tittel frem til du har lagret siden, og laster kampanjen på nytt.
+              </em>
+            </p>
+          {% endif %}
         </div>
       </div>
     </div>
