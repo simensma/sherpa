@@ -40,7 +40,7 @@
 <!-- Google Analytics -->
 <script>
   var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-266436-2']);
+  _gaq.push(['_setAccount', '{{ analytics_ua }}']);
   {% if donottrack %}
     // Du har aktivert Do Not Track, og i henhold anonymiserer vi din IP-adresse for vår besøksstatistikk.
     _gaq.push(['_gat._anonymizeIp']);

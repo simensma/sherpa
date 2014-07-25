@@ -75,3 +75,14 @@ def current_time(request):
         'now': datetime.now(),
         'today': date.today(),
     }
+
+def analytics_ua(request):
+    """Currently separates the main- and test site based on the DEBUG setting.
+    Should probably be moved to an admin-editable core.Site model field at some point, but overridden with
+    the test-profile if settings.DEBUG is True."""
+    if not settings.DEBUG:
+        # Main profile UA
+        return {'analytics_ua': 'UA-266436-2'}
+    else:
+        # Test-profile UA
+        return {'analytics_ua': 'UA-266436-62'}
