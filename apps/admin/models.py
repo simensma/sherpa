@@ -147,6 +147,9 @@ def delete_release_pdf(sender, **kwargs):
 class Campaign(models.Model):
     title = models.CharField(max_length=255)
 
+    # On Campaign creation, we'll generate a Google Analytics event label which cannot change
+    ga_event_label = models.CharField(max_length=255)
+
     # UTM campaign name is saved because it can't be changed after the first save
     utm_campaign = models.CharField(max_length=255)
 
@@ -236,6 +239,9 @@ class Campaign(models.Model):
         conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
         bucket = conn.get_bucket(settings.AWS_BUCKET)
         bucket.delete_key(self.get_cropped_image_key())
+
+    def generate_ga_event_label(self):
+        return "%s/%s (%s/%s)" % (self.id, self.title, self.site.id, self.site.get_title())
 
     @staticmethod
     def cropped_image_key(hash_):

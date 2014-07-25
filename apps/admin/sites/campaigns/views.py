@@ -63,10 +63,12 @@ def save(request, site):
     try:
         campaign = Campaign.objects.get(id=request.POST['existing_campaign'])
 
-        # This is an existing campaign, delete the previous cropped image
-        campaign.delete_cropped_image()
+        # This is an existing campaign
+        generate_ga_event_label = False
+        campaign.delete_cropped_image() # delete the previous cropped image
     except (ValueError, Campaign.DoesNotExist):
         campaign = Campaign()
+        generate_ga_event_label = True
 
     # Save the prepared image to S3
     conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
@@ -95,8 +97,10 @@ def save(request, site):
     campaign.site = active_site
     campaign.save()
 
-    # Set utm_campaign AFTER save because we need the db id, which is undefined for new campaigns until first save
+    # Set fields that depend on the DB id being set
     campaign.utm_campaign = '%s-%s' % (re.sub('\s', '_', campaign.title), campaign.id)
+    if generate_ga_event_label:
+        campaign.ga_event_label = campaign.generate_ga_event_label()
     campaign.save()
 
     campaign.text.all().delete()
