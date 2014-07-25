@@ -16,12 +16,15 @@ div.widget.promo {
       margin: 0;
       list-style: none;
 
+      .li-padding() {
+        padding: 5px 20px 5px 10px;
+      }
+
       li:first-of-type {
         border-top: none;
       }
 
       li {
-        padding: 5px 20px 5px 10px;
         background-color: white;
         border-top: 1px solid rgb(210, 210, 210);
         font-family: "DTL Nobel" !important;
@@ -30,9 +33,11 @@ div.widget.promo {
       }
 
       li.active {
+        .li-padding; // No anchor-element here, so apply the padding to the li
         background-color: @profile-red;
         color: white;
       }
+
 
       li:not(.active):hover {
         background-color: rgb(150, 150, 150);
@@ -40,6 +45,9 @@ div.widget.promo {
       }
 
       li a {
+        // Ensure the anchor fills the li element, so that clicking anywhere on it triggers the anchor
+        display: block;
+        .li-padding;
         color: rgb(80, 80, 80);
       }
 

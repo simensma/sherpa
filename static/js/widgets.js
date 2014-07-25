@@ -2,7 +2,6 @@
 
 $(function() {
 
-    Widgets.runIfExists('promo', $("div.widget.promo"));
     Widgets.runIfExists('carousel', $("div.widget.carousel"));
     Widgets.runIfExists('articles', $("div.widget.articles"));
 
@@ -17,16 +16,7 @@ $(function() {
     };
 
     Widgets.run = function(type, widget) {
-        if(type === 'promo') {
-
-            //Promo-box
-            $(this).find("div.menu.li").click(function() {
-                if($(this).children("a").length > 0) {
-                    window.location = $(this).children("a").attr('href');
-                }
-            });
-
-        } else if(type === 'carousel') {
+        if(type === 'carousel') {
 
             //carousel, stop spinning
             $(this).find("div.carousel").each(function() {

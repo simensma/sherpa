@@ -28,8 +28,11 @@
         margin: 0;
         list-style: none;
 
-        li {
+        .li-padding() {
           padding: 5px 20px 5px 10px;
+        }
+
+        li {
           background-color: white;
           border-top: 1px solid rgb(210, 210, 210);
           font-family: "DTL Nobel" !important;
@@ -41,6 +44,7 @@
           }
 
           &.active {
+            .li-padding; // No anchor-element here, so apply the padding to the li
             background-color: @profile-red;
             color: white;
           }
@@ -51,6 +55,8 @@
           }
 
           a {
+            display: block; // Ensure the anchor fills out the containing li
+            .li-padding;
             color: rgb(80, 80, 80);
           }
 
