@@ -363,7 +363,7 @@ $(function() {
             photographer_alignment: user_photographer_editor.find('input[name="photographer-alignment"]:checked').val(),
             photographer_color: user_photographer_editor.find('input[name="photographer-color"]:checked').val(),
             button_enabled: !user_button_exclude.is(':checked'),
-            button_label: user_button_anchor.html(),
+            button_label: user_button_anchor.text(),
             button_anchor: user_button_anchor_input.val(),
             button_large: user_button_large_input.is(':checked'),
             button_position: {
