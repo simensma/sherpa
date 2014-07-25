@@ -1,5 +1,5 @@
 {% if widget.campaign %}
-  <div class="campaign" style="background-image: url({{ widget.campaign.get_cropped_image }});">
+  <div class="campaign" style="background-image: url({{ widget.campaign.get_cropped_image }});" data-ga-event-label="{{ widget.campaign.ga_event_label }}">
 
     {% if widget.display_core_menu %}
       {% include 'common/widgets/campaign/menu.html' %}

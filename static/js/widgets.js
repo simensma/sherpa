@@ -4,6 +4,7 @@ $(function() {
 
     Widgets.runIfExists('carousel', $("div.widget.carousel"));
     Widgets.runIfExists('articles', $("div.widget.articles"));
+    Widgets.runIfExists('campaign', $("div.widget.campaign"), true);
 
 });
 
@@ -66,6 +67,18 @@ $(function() {
                     $(this).css('height', height);
                 });
             });
+
+        } else if(type === 'campaign') {
+
+            // Track campaign views and clicks
+            _gaq.push(['_trackEvent', 'Kampanje', 'Visning', widget.find('.campaign').attr('data-ga-event-label')]);
+            var campaign_button = widget.find('.button a');
+            if(campaign_button.length > 0) {
+                campaign_button.click(function() {
+                    _gaq.push(['_trackEvent', 'Kampanje', 'Klikk', widget.find('.campaign').attr('data-ga-event-label')]);
+                });
+            }
+
         }
     };
 
