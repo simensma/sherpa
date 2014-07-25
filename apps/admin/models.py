@@ -241,7 +241,7 @@ class Campaign(models.Model):
         bucket.delete_key(self.get_cropped_image_key())
 
     def generate_ga_event_label(self):
-        return "%s/%s (%s/%s)" % (self.id, self.title, self.site.id, self.site.get_title())
+        return "%s/%s" % (self.id, self.title)
 
     @staticmethod
     def cropped_image_key(hash_):
