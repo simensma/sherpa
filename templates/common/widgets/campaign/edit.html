@@ -49,6 +49,20 @@
       </div>
     </div>
 
+    <div class="form-default form-horizontal{% if site != main_site %} jq-hide{% endif %}">
+      <div class="control-group">
+        <div class="controls">
+          <div class="control-as-text">
+            Kjerneinnhold-meny (kun tilgjengelig for {{ site.domain }})
+          </div>
+          <label class="checkbox">
+            <input type="checkbox" name="display-core-menu">
+            Vis meny for kjerneinnhold
+          </label>
+        </div>
+      </div>
+    </div>
+
     <div class="campaign-template jq-hide">
 
       <div class="control-group">

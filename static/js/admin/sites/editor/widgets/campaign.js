@@ -14,6 +14,7 @@ $(function() {
             $campaign_template = $editor.find('.campaign-template');
             $add_campaign_button = $editor.find('button[data-toggle="add-campaign"]');
             $hide_when_expired = $editor.find('input[name="hide-when-expired"]');
+            $display_core_menu = $editor.find('input[name="display-core-menu"]');
             $add_campaign_button.click(addCampaign);
         },
 
@@ -21,6 +22,7 @@ $(function() {
             $campaigns.empty();
             addCampaign();
             $hide_when_expired.filter('[value="true"]').prop('checked', true);
+            $display_core_menu.prop('checked', false);
         },
 
         onEdit: function($editor, widget_content) {
@@ -40,6 +42,8 @@ $(function() {
             } else {
                 $hide_when_expired.filter('[value="false"]').prop('checked', true);
             }
+
+            $display_core_menu.prop('checked', widget_content.display_core_menu);
         },
 
         onSave: function($editor) {
@@ -82,6 +86,7 @@ $(function() {
                 widget: 'campaign',
                 campaigns: campaigns,
                 hide_when_expired: hide_when_expired,
+                display_core_menu: $display_core_menu.prop('checked'),
             });
             return true;
         }
