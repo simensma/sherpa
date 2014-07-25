@@ -14,7 +14,8 @@
 
   {% else %}
 
-    <div class="content widget {{ widget.widget }}" data-json="{{ widget.json }}" data-id="{{ content_id }}">
+    {# Note that the data-admin-context attr is used by the widget rendering javascript #}
+    <div class="content widget {{ widget.widget }}" data-json="{{ widget.json }}" data-id="{{ content_id }}" data-admin-context>
       {% include widget.template %}
     </div>
 

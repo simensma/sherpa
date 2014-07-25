@@ -9,8 +9,13 @@ $(function() {
 
 (function(Widgets, $, undefined) {
 
-    Widgets.runIfExists = function(type, widget) {
-        if(widget.length > 0) {
+    /**
+     * Run widget script if it exists in the current DOM
+     * @param {bool} exclude_admin set to true if this script should NOT run when the widget is rendered in the
+     *   admin layout.
+     */
+    Widgets.runIfExists = function(type, widget, exclude_admin) {
+        if(widget.length > 0 && (!exclude_admin || widget.attr('data-admin-context') === undefined)) {
             Widgets.run(type, widget);
         }
     };
