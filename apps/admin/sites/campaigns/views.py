@@ -16,7 +16,7 @@ from core.models import Site
 
 def index(request, site):
     active_site = Site.objects.get(id=site)
-    campaigns = Campaign.objects.all()
+    campaigns = Campaign.on(active_site).all()
     context = {
         'active_site': active_site,
         'campaigns': campaigns,

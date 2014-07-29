@@ -77,7 +77,7 @@ class CampaignWidget(Widget):
         return widget_context
 
     def admin_context(self, site):
-        return {'campaigns': Campaign.objects.all()}
+        return {'campaigns': Campaign.on(site).all()}
 
     @staticmethod
     def resolve_active_campaign(widget_options):
