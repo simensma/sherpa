@@ -1,11 +1,11 @@
 # encoding: utf-8
-from django.shortcuts import render, redirect
-from django.conf import settings
-
 import json
 from StringIO import StringIO
 from hashlib import sha1
 import re
+
+from django.shortcuts import render, redirect
+from django.conf import settings
 
 import requests
 import boto

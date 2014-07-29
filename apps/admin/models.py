@@ -1,13 +1,14 @@
 # encoding: utf-8
 from datetime import date
-import simples3 # TODO: Replace with boto
-import boto
 import json
 
 from django.db.models.signals import pre_delete, post_delete
 from django.dispatch import receiver
 from django.db import models
 from django.conf import settings
+
+import simples3 # TODO: Replace with boto
+import boto
 
 from core.util import use_image_thumb
 

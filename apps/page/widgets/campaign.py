@@ -1,7 +1,7 @@
-from django.core.cache import cache
-
 from datetime import datetime
 import json
+
+from django.core.cache import cache
 
 from page.widgets.widget import Widget
 from page.models import Content

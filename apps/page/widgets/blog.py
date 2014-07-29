@@ -1,9 +1,9 @@
-from django.core.cache import cache
-from django.conf import settings
-
 import requests
 import re
 import json
+
+from django.core.cache import cache
+from django.conf import settings
 
 from lxml import etree
 
