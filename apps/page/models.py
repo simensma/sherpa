@@ -1,3 +1,9 @@
+from datetime import date
+import random
+import json
+import re
+import time
+
 from django.db.models.signals import pre_delete, post_delete
 from django.dispatch import receiver
 from django.db import models
@@ -5,12 +11,7 @@ from django.db.models import Q, F
 from django.conf import settings
 from django.core.cache import cache
 
-from datetime import date
-import random
-import json
-import re
 import simples3 # TODO: Replace with boto
-import time
 
 class Menu(models.Model):
     name = models.CharField(max_length=50)

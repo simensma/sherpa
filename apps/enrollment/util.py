@@ -1,14 +1,14 @@
 # encoding: utf-8
-from django.core.mail import send_mail
-from django.template import Context
-from django.template.loader import render_to_string
-from django.utils.translation import ugettext_lazy as _
-
 from datetime import datetime, timedelta
 import sys
 import logging
 from smtplib import SMTPException
 from ssl import SSLError
+
+from django.core.mail import send_mail
+from django.template import Context
+from django.template.loader import render_to_string
+from django.utils.translation import ugettext_lazy as _
 
 # Number of days the temporary membership proof is valid
 TEMPORARY_PROOF_VALIDITY = 14

@@ -1,11 +1,11 @@
+from datetime import datetime
+
 from django.core.cache import cache
 from django.conf import settings
 
 from core.models import County, FocusCountry, Zipcode
 from focus.models import FocusZipcode, Enrollment
 from focus.util import PAYMENT_METHOD_CODES
-
-from datetime import datetime
 
 class ActorAddressClean:
     """

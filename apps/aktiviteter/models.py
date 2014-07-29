@@ -1,8 +1,8 @@
 # encoding: utf-8
-from django.contrib.gis.db import models
-
 from datetime import date
 import json
+
+from django.contrib.gis.db import models
 
 from sherpa2.models import Location, Turforslag
 

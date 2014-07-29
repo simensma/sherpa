@@ -1,4 +1,6 @@
 # encoding: utf-8
+import logging
+
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
@@ -11,8 +13,6 @@ from user.login.util import attempt_login, attempt_registration, attempt_registr
 from user.models import User
 from core.models import FocusCountry
 from core.util import focus_is_down
-
-import logging
 
 logger = logging.getLogger('sherpa')
 

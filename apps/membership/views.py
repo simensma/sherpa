@@ -1,4 +1,9 @@
 # encoding: utf-8
+import json
+import logging
+import sys
+import re
+
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
@@ -14,13 +19,8 @@ from core.models import Zipcode
 from enrollment.models import State
 from enrollment.gift.models import membership_price_by_code
 from membership.models import SMSServiceRequest
-from user.models import User
 from membership.util import send_sms_receipt, memberid_sms_count
-
-import json
-import logging
-import sys
-import re
+from user.models import User
 
 logger = logging.getLogger('sherpa')
 

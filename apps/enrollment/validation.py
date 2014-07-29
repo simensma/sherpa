@@ -1,10 +1,10 @@
+from datetime import datetime
+
 from django.core.urlresolvers import reverse
 
 from core.models import Zipcode, FocusCountry
 from focus.models import Actor
 from enrollment.util import invalid_location, invalid_existing, AGE_YOUTH
-
-from datetime import datetime
 
 def validate(enrollment, require_location, require_existing):
     if enrollment.users.count() == 0:

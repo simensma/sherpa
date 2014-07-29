@@ -1,4 +1,13 @@
 # encoding: utf-8
+from collections import OrderedDict
+from datetime import datetime, date
+import json
+from smtplib import SMTPException
+from ssl import SSLError
+import logging
+import sys
+import hashlib
+
 from django.conf import settings
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail
@@ -8,26 +17,17 @@ from django.db.models import Q
 from django.template import RequestContext
 from django.template.loader import render_to_string
 
-from collections import OrderedDict
-from datetime import datetime, date
-import json
-from smtplib import SMTPException
-from ssl import SSLError
-import logging
-import sys
 import requests
-import hashlib
 
 from user.models import User, NorwayBusTicket
+from user.util import memberid_lookups_exceeded
 from core import validator
 from core.models import Zipcode, FocusCountry
 from focus.models import Actor
+from focus.util import ADDRESS_FIELD_MAX_LENGTH
 from admin.models import Publication
 from aktiviteter.models import AktivitetDate
 from foreninger.models import Forening
-
-from focus.util import ADDRESS_FIELD_MAX_LENGTH
-from user.util import memberid_lookups_exceeded
 from sherpa.decorators import user_requires, user_requires_login
 
 logger = logging.getLogger('sherpa')

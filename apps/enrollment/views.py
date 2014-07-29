@@ -1,4 +1,11 @@
 # encoding: utf-8
+from datetime import datetime, timedelta
+import re
+import json
+import logging
+import sys
+from urllib import quote_plus
+
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
@@ -9,6 +16,9 @@ from django.core.cache import cache
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 
+import requests
+from lxml import etree
+
 from core.models import Zipcode, FocusCountry
 from focus.models import FocusZipcode, Enrollment as FocusEnrollment, Actor, ActorAddress
 from focus.util import get_membership_type_by_codename
@@ -17,15 +27,6 @@ from enrollment.util import current_template_layout, get_or_create_enrollment, p
 from enrollment.validation import validate, validate_location
 from user.models import User
 from foreninger.models import Forening
-
-from datetime import datetime, timedelta
-import requests
-import re
-import json
-import logging
-import sys
-from lxml import etree
-from urllib import quote_plus
 
 logger = logging.getLogger('sherpa')
 

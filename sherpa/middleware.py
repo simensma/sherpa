@@ -1,4 +1,8 @@
 # encoding: utf-8
+import re
+import logging
+import sys
+
 from django.shortcuts import render, redirect
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
@@ -6,10 +10,6 @@ from django.core import urlresolvers
 from django.core.urlresolvers import resolve, Resolver404
 from django.contrib.auth import logout
 from django.utils import translation
-
-import re
-import logging
-import sys
 
 from core.models import Site
 from core.util import focus_is_down

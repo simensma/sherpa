@@ -1,13 +1,12 @@
 # encoding: utf-8
+from datetime import datetime
+
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.core.cache import cache
 
-from datetime import datetime
-
 from page.models import *
 from core.models import Site
-
 from instagram.views import initial_url as instagram_initial_url
 
 def index(request, site):

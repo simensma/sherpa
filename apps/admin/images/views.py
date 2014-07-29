@@ -1,25 +1,25 @@
+from cStringIO import StringIO
+from datetime import datetime
+from hashlib import sha1
+import json
+import logging
+import sys
+import zipfile
+
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.conf import settings
 
+from PIL import Image as pil
+import simples3 # TODO: Replace with boto
+import boto
+import pyexiv2
+
 from core.models import Tag
 from admin.models import Image, Album, Fotokonkurranse
 from user.models import User
-
 from core import xmp
 from admin.images.util import parse_objects, list_parents, list_parents_values, full_archive_search, get_exif_tags, create_thumb, generate_unique_random_image_key
-
-from PIL import Image as pil
-from cStringIO import StringIO
-import json
-import logging
-import sys
-from datetime import datetime
-import simples3 # TODO: Replace with boto
-from hashlib import sha1
-import boto
-import zipfile
-import pyexiv2
 
 logger = logging.getLogger('sherpa')
 

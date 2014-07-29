@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.http import HttpResponse
@@ -8,8 +10,6 @@ from django.core.exceptions import PermissionDenied
 
 from foreninger.models import Forening
 from core.models import County
-
-import json
 
 def index(request):
     counties = County.typical_objects().exclude(code='21').order_by('code') # Exclude Svalbard

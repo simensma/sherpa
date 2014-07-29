@@ -1,13 +1,14 @@
 # encoding: utf-8
+from datetime import datetime, date
+import json
+import re
+import random
+
 from django.core.cache import cache
 from django.conf import settings
 
 from lxml import etree
-from datetime import datetime, date
 import requests
-import json
-import re
-import random
 
 from page.models import Version
 

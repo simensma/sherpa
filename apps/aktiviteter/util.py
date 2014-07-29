@@ -1,7 +1,7 @@
-from django.core.paginator import Paginator, EmptyPage
-
 from datetime import datetime
 import json
+
+from django.core.paginator import Paginator, EmptyPage
 
 from aktiviteter.models import AktivitetDate
 

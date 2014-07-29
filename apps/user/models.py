@@ -1,4 +1,8 @@
 # encoding: utf-8
+from itertools import groupby
+from datetime import date
+import json
+
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.conf import settings
@@ -8,10 +12,6 @@ from django.utils import crypto
 from focus.models import Actor, Enrollment
 from foreninger.models import Forening
 from focus.abstractions import ActorProxy
-
-from itertools import groupby
-from datetime import date
-import json
 
 class User(AbstractBaseUser):
     USERNAME_FIELD = 'identifier'

@@ -1,10 +1,10 @@
+import json
+
 from django.conf import settings
 
 from page.models import Version, Row, Column, Content
 from page.widgets import parse_widget
 from core.models import Site
-
-import json
 
 BULK_COUNT = 8
 

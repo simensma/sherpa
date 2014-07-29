@@ -1,10 +1,11 @@
 # encoding: utf-8
+from datetime import datetime
+import hashlib
+
 from django.shortcuts import render, redirect
 from django.conf import settings
 from django.contrib import messages
 
-from datetime import datetime
-import hashlib
 import simples3 # TODO: Replace with boto
 
 from admin.sites.ads.util import parse_adform_script_destination

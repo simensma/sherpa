@@ -1,9 +1,10 @@
 # encoding: utf-8
+import re
+
 from django.core.management.base import BaseCommand
 from django.conf import settings
 
 import boto
-import re
 
 from admin.models import Image
 from page.models import Content

@@ -1,3 +1,8 @@
+from itertools import cycle, islice
+import json
+import logging
+import sys
+
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
 from django.core.urlresolvers import reverse
@@ -5,11 +10,7 @@ from django.conf import settings
 from django.template import RequestContext, loader
 from django.core.cache import cache
 
-from itertools import cycle, islice
 import requests
-import json
-import logging
-import sys
 
 from page.models import AdPlacement
 from instagram.exceptions import InstagramServerError
