@@ -10,7 +10,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.conf import settings
 
-from PIL import Image as pil
+import PIL.Image
 import simples3 # TODO: Replace with boto
 import boto
 import pyexiv2
@@ -287,7 +287,7 @@ def upload_image(request):
             key = generate_unique_random_image_key()
             data = image.read()
             ext = image.name.split(".")[-1].lower()
-            pil_image = pil.open(StringIO(data))
+            pil_image = PIL.Image.open(StringIO(data))
             exif_json = json.dumps(get_exif_tags(pil_image))
             tags = xmp.find_keywords(data)
             thumbs = [{'size': size, 'data': create_thumb(pil_image, ext, size)} for size in settings.THUMB_SIZES]

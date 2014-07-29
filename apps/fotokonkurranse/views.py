@@ -17,7 +17,7 @@ from django.core.mail import send_mail
 from django.core.cache import cache
 
 import boto
-from PIL import Image as pil
+import PIL.Image
 
 from admin.models import Image, Fotokonkurranse
 from core.models import Tag
@@ -66,7 +66,7 @@ def upload(request):
         image_key = generate_unique_random_image_key()
         data = image_file.read()
         ext = image_file.name.split(".")[-1].lower()
-        pil_image = pil.open(StringIO(data))
+        pil_image = PIL.Image.open(StringIO(data))
         exif_json = json.dumps(get_exif_tags(pil_image))
         image_file_tags = xmp.find_keywords(data)
         thumbs = [{'size': size, 'data': create_thumb(pil_image, ext, size)} for size in settings.THUMB_SIZES]

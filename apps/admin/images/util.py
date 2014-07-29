@@ -13,8 +13,8 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.shortcuts import render
 
-from PIL.ExifTags import TAGS
-from PIL import Image as pil
+import PIL.Image
+import PIL.ExifTags
 import simples3 # TODO: Replace with boto
 
 from core.models import Tag
@@ -86,7 +86,7 @@ def image_upload_dialog(request):
         key = generate_unique_random_image_key()
         data = image.read()
         ext = image.name.split(".")[-1].lower()
-        pil_image = pil.open(StringIO(data))
+        pil_image = PIL.Image.open(StringIO(data))
         exif_json = json.dumps(get_exif_tags(pil_image))
         image_file_tags = xmp.find_keywords(data)
         user_provided_tags = json.loads(request.POST['tags-serialized'])
@@ -243,7 +243,7 @@ def get_exif_tags(pil_image):
                     # Skip this tag, it's not a text string
                     # TODO: Should log a warning with the tag string here.
                     continue
-                exif[TAGS.get(tag, tag)] = value
+                exif[PIL.ExifTags.TAGS.get(tag, tag)] = value
     except IOError:
         # Calling _getexif() on some select images raises IOError("not enough data").
         # Not sure what that means but we'll ignore exif data on those images for now.
@@ -252,7 +252,7 @@ def get_exif_tags(pil_image):
 def create_thumb(pil_image, extension, size):
     fp = StringIO()
     img_copy = pil_image.copy()
-    img_copy.thumbnail([size, size], pil.ANTIALIAS)
+    img_copy.thumbnail([size, size], PIL.Image.ANTIALIAS)
     img_copy.save(fp, standardize_extension(extension))
     return fp.getvalue()
 

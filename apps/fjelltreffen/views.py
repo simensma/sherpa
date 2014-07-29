@@ -15,7 +15,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 
-from PIL import Image as pil
+import PIL.Image
 import simples3 # TODO: Replace with boto
 
 from admin.images.util import standardize_extension
@@ -268,9 +268,9 @@ def save(request):
             extension = standardize_extension(file.name.split(".")[-1])
 
             # Create the thumbnail
-            thumb = pil.open(StringIO(data)).copy()
+            thumb = PIL.Image.open(StringIO(data)).copy()
             fp = StringIO()
-            thumb.thumbnail([settings.FJELLTREFFEN_IMAGE_THUMB_SIZE, settings.FJELLTREFFEN_IMAGE_THUMB_SIZE], pil.ANTIALIAS)
+            thumb.thumbnail([settings.FJELLTREFFEN_IMAGE_THUMB_SIZE, settings.FJELLTREFFEN_IMAGE_THUMB_SIZE], PIL.Image.ANTIALIAS)
             thumb.save(fp, extension)
             thumb_data = fp.getvalue()
 
