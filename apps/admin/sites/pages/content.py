@@ -1,5 +1,8 @@
 from __future__ import absolute_import
 
+from datetime import datetime
+import json
+
 from django.http import HttpResponse
 from django.template import RequestContext
 from django.template.loader import render_to_string
@@ -10,9 +13,6 @@ from page.models import Page, Version, Row, Column, Content
 from page.widgets import parse_widget
 from user.models import User
 from core.models import Tag, Site
-
-from datetime import datetime
-import json
 
 def render_widget(request, site):
     active_site = Site.objects.get(id=site)

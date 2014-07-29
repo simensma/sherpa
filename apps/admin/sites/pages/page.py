@@ -1,5 +1,7 @@
 from __future__ import absolute_import
 
+import json
+
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.conf import settings
@@ -10,8 +12,6 @@ from admin.sites.pages.util import slug_is_unique, create_template
 from page.widgets import parse_widget, widget_admin_context, get_static_promo_context
 from page.models import Page, Variant, Version, Row, Column, Content
 from core.models import Site
-
-import json
 
 def list(request, site):
     active_site = Site.objects.get(id=site)

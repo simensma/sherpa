@@ -1,10 +1,10 @@
 # encoding: utf-8
+import logging
+
 from django.core.management.base import BaseCommand
 
 from focus.models import Actor, Enrollment
 from user.models import User
-
-import logging
 
 logger = logging.getLogger('sherpa')
 

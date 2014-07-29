@@ -1,4 +1,11 @@
 # encoding: utf-8
+from datetime import date, timedelta
+import json
+import sys
+import logging
+from cStringIO import StringIO
+import hashlib
+
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.template import RequestContext
@@ -8,13 +15,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 
-from datetime import date, timedelta
-import json
-import sys
-import logging
 from PIL import Image as pil
-from cStringIO import StringIO
-import hashlib
 import simples3 # TODO: Replace with boto
 
 from admin.images.util import standardize_extension

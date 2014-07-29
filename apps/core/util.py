@@ -1,9 +1,9 @@
 # Core utility methods that aren't views
 
-from django.conf import settings
-
 from datetime import datetime, date
 import re
+
+from django.conf import settings
 
 def use_image_thumb(url, preferred_size):
     if url.find("%s/%s" % (settings.AWS_BUCKET, settings.AWS_IMAGEGALLERY_PREFIX)) == -1:

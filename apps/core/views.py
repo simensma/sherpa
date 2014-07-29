@@ -1,14 +1,15 @@
+from datetime import datetime
+import json
+
 from django.http import HttpResponse
 from django.core import serializers
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
 from django.conf import settings
 
-from core.models import Tag, Zipcode, County, Municipality
-
-from datetime import datetime
-import json
 import requests
+
+from core.models import Tag, Zipcode, County, Municipality
 
 def zipcode(request):
     if not request.is_ajax() or not 'zipcode' in request.POST:

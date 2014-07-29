@@ -1,4 +1,7 @@
 # encoding: utf-8
+from datetime import datetime
+import json
+
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponseNotFound, HttpResponseServerError, HttpResponseForbidden
@@ -8,9 +11,6 @@ from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from django.core.cache import cache
-
-from datetime import datetime
-import json
 
 from page.models import AdPlacement, Ad, Page, Variant, Version, Row, Column, Content
 from articles.models import OldArticle

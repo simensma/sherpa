@@ -1,13 +1,13 @@
 # encoding: utf-8
+from datetime import datetime, date
+import logging
+
 from django.db import models
 from django.core.cache import cache
 from django.db.models import Q
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.conf import settings
-
-from datetime import datetime, date
-import logging
 
 from focus.util import get_membership_type_by_code, get_membership_type_by_codename, FJELLOGVIDDE_SERVICE_CODE, YEARBOOK_SERVICE_CODES, FOREIGN_POSTAGE_SERVICE_CODES, PAYMENT_METHOD_CODES, HOUSEHOLD_MEMBER_SERVICE_CODES, MEMBERSHIP_TYPES
 

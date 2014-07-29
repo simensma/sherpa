@@ -1,5 +1,4 @@
 # encoding: utf-8
-
 from datetime import datetime, date
 
 # Django settings for Sherpa.

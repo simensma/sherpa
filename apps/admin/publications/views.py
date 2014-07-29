@@ -1,3 +1,7 @@
+from datetime import datetime
+import json
+import hashlib
+
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
 from django.core.exceptions import PermissionDenied
@@ -5,14 +9,11 @@ from django.core.cache import cache
 from django.conf import settings
 from django.contrib import messages
 
+import simples3 # TODO: Replace with boto
+
 from foreninger.models import Forening
 from admin.models import Publication, Release
 from core.models import Tag
-
-from datetime import datetime
-import json
-import hashlib
-import simples3 # TODO: Replace with boto
 
 def index(request):
     publications = Publication.objects.filter(forening__in=request.user.all_foreninger()).order_by('title')

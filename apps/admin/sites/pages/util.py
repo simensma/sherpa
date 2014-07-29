@@ -1,11 +1,11 @@
 from __future__ import absolute_import
 
+import json
+
 from django.conf import settings
 from django.core.urlresolvers import resolve, Resolver404
 
 from page.models import Row, Column, Content
-
-import json
 
 def slug_is_unique(slug):
     # Verify against the root 'folder' path

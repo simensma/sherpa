@@ -1,19 +1,17 @@
 # encoding: utf-8
+from datetime import date
+import random
+
 from django.db import models, transaction, connections
 from django.core.cache import cache
 
 from core import validator
+from core.util import membership_year_start
 from core.models import FocusCountry
 from foreninger.models import Forening
-
 from focus.models import Price, Enrollment as FocusEnrollment
-
 from focus.util import PAYMENT_METHOD_CODES, get_membership_type_by_codename
 from enrollment.util import AGE_SENIOR, AGE_MAIN, AGE_YOUTH, AGE_SCHOOL, KEY_PRICE, FOREIGN_SHIPMENT_PRICE
-from core.util import membership_year_start
-
-from datetime import date
-import random
 
 # Has always only *one* row
 class State(models.Model):

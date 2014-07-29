@@ -1,12 +1,4 @@
 # encoding: utf-8
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseBadRequest
-from django.core.exceptions import PermissionDenied
-from django.conf import settings
-from django.template import RequestContext, loader
-from django.core.mail import send_mail
-from django.core.cache import cache
-
 import json
 import sys
 import logging
@@ -15,6 +7,14 @@ from hashlib import sha1
 from datetime import datetime
 from smtplib import SMTPException
 from ssl import SSLError
+
+from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseBadRequest
+from django.core.exceptions import PermissionDenied
+from django.conf import settings
+from django.template import RequestContext, loader
+from django.core.mail import send_mail
+from django.core.cache import cache
 
 import boto
 from PIL import Image as pil

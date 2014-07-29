@@ -1,8 +1,7 @@
 # encoding: utf-8
+import base64
 
 from django.conf import settings
-
-import base64
 
 from core.util import focus_is_down
 from exceptions import BadRequest

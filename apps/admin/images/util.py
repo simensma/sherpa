@@ -1,4 +1,11 @@
 # encoding: utf-8
+from cStringIO import StringIO
+from hashlib import sha1
+import json
+import random
+import logging
+import sys
+
 from django.http import HttpResponse
 from django.conf import settings
 from django.db.models import Q
@@ -6,20 +13,13 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.shortcuts import render
 
-import json
+from PIL.ExifTags import TAGS
+from PIL import Image as pil
+import simples3 # TODO: Replace with boto
 
 from core.models import Tag
 from admin.models import Image, Album
 from core import xmp
-
-from PIL.ExifTags import TAGS
-import random
-from PIL import Image as pil
-from cStringIO import StringIO
-from hashlib import sha1
-import simples3 # TODO: Replace with boto
-import logging
-import sys
 
 logger = logging.getLogger('sherpa')
 

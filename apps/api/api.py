@@ -1,6 +1,6 @@
-from django.http import HttpResponse
-
 import json
+
+from django.http import HttpResponse
 
 from user.models import User
 from focus.models import Actor

@@ -1,4 +1,6 @@
 # encoding: utf-8
+import json
+
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
 from django.contrib import messages
@@ -9,8 +11,6 @@ from django.db.models import Q
 from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.core.exceptions import PermissionDenied
-
-import json
 
 from foreninger.models import Forening
 from .forms import ForeningDataForm, ExistingForeningDataForm

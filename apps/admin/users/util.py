@@ -1,11 +1,11 @@
 # encoding: utf-8
+from smtplib import SMTPException
+from ssl import SSLError
+
 from django.template import Context
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from django.conf import settings
-
-from smtplib import SMTPException
-from ssl import SSLError
 
 def send_access_granted_email(user, forening, user_providing_access):
     try:

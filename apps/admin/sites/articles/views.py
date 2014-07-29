@@ -1,11 +1,11 @@
 # encoding: utf-8
+from datetime import datetime
+
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.conf import settings
 from django.template import RequestContext
 from django.template.loader import render_to_string
-
-from datetime import datetime
 
 from admin.sites.articles.util import BULK_COUNT, list_bulk, create_template, parse_version_content
 from articles.models import Article

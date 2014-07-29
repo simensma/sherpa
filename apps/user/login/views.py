@@ -1,4 +1,9 @@
 # encoding: utf-8
+from datetime import datetime, timedelta
+import json
+import logging
+import hashlib
+
 from django.core.urlresolvers import reverse
 from django.core.mail import send_mail
 from django.conf import settings
@@ -9,11 +14,6 @@ from django.contrib import messages
 from django.template import RequestContext, loader
 from django.utils import crypto
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
-
-from datetime import datetime, timedelta
-import json
-import logging
-import hashlib
 
 from user.models import User
 from user.util import memberid_lookups_exceeded

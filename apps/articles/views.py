@@ -1,3 +1,6 @@
+from datetime import datetime
+import json
+
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
 from django.core.cache import cache
@@ -8,9 +11,6 @@ from articles.models import Article, OldArticle
 from page.models import Variant, Version, Row, Column, Content
 from page.widgets import parse_widget
 from core.models import Site
-
-from datetime import datetime
-import json
 
 TAG_SEARCH_LENGTH = 3
 NEWS_ITEMS_BULK_SIZE = 20 # Needs to be an even number!

@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render, redirect
 from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
@@ -6,8 +8,6 @@ from django.db.models import Max
 
 from page.models import Menu
 from core.models import Site
-
-import json
 
 def index(request, site):
     active_site = Site.objects.get(id=site)

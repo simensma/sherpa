@@ -1,14 +1,7 @@
 # encoding: utf-8
-
-from django.conf import settings
-from django.core.exceptions import PermissionDenied
-from django.shortcuts import redirect
-
-from Crypto.Cipher import AES
-from core import pkcs7
-
 from urllib import quote_plus
 from datetime import datetime, timedelta
+from Crypto.Cipher import AES
 import base64
 import json
 import time
@@ -17,6 +10,12 @@ import sys
 import hmac
 import hashlib
 import logging
+
+from django.conf import settings
+from django.core.exceptions import PermissionDenied
+from django.shortcuts import redirect
+
+from core import pkcs7
 
 logger = logging.getLogger('sherpa')
 

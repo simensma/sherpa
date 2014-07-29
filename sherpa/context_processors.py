@@ -1,12 +1,12 @@
+from datetime import datetime, date
+import re
+
 from django.conf import settings
 from django.core.cache import cache
 
 from page.models import Menu
 from core.models import Site
 from core.util import membership_year_start as membership_year_start_date_set
-
-from datetime import datetime, date
-import re
 
 def menus(request):
     if request.is_ajax():

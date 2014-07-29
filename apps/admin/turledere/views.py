@@ -1,4 +1,7 @@
 # encoding: utf-8
+from datetime import datetime
+import json
+
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
@@ -9,9 +12,6 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.db.models import Q
 from django.core.cache import cache
-
-from datetime import datetime
-import json
 
 from foreninger.models import Forening
 from user.models import User, Turleder, Kursleder, Instruktor

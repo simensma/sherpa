@@ -1,13 +1,14 @@
+from datetime import datetime, date
+import re
+
 from django.shortcuts import render, redirect
 from django.core.cache import cache
 from django.db.models import Q
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 
-from datetime import datetime, date
 from lxml import etree
 import requests
-import re
 
 # This ugly import hack imports the model from views because of namespace collision,
 # should be 'from aktiviteter.models import Aktivitet'

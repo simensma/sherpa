@@ -1,22 +1,21 @@
 # encoding: utf-8
+from smtplib import SMTPException
+from ssl import SSLError
+import logging
+import sys
+
 from django.contrib.auth import authenticate, login as log_user_in
 from django.conf import settings
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.template import RequestContext, loader
 from django.core.mail import send_mail
 
-from smtplib import SMTPException
-from ssl import SSLError
-import logging
-import sys
-
+from core import validator
 from core.models import FocusCountry
 from user.models import User
-from user.util import authenticate_sherpa2_user, authenticate_users
+from user.util import authenticate_sherpa2_user, authenticate_users, memberid_lookups_exceeded
 from focus.models import Actor, Enrollment
 from sherpa25.util import import_fjelltreffen_annonser
-from core import validator
-from user.util import memberid_lookups_exceeded
 
 EMAIL_REGISTERED_SUBJECT = u"Velkommen som bruker på DNTs nettsted"
 
