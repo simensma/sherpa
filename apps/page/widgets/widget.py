@@ -4,6 +4,6 @@ class Widget(object):
         calculated server-side. Must be implemented."""
         raise NotImplementedError
 
-    def admin_context(self):
+    def admin_context(self, site):
         """Optional: Implement to return context data which is needed in the admin editor when editing the widget"""
         return {}

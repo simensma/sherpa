@@ -76,7 +76,7 @@ class CampaignWidget(Widget):
 
         return widget_context
 
-    def admin_context(self):
+    def admin_context(self, site):
         return {'campaigns': Campaign.objects.all()}
 
     @staticmethod

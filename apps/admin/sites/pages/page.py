@@ -92,7 +92,7 @@ def edit(request, site, version):
     context = {
         'active_site': active_site,
         'version': version,
-        'widget_data': admin_context(),
+        'widget_data': admin_context(active_site),
         'pages': pages,
         'image_search_length': settings.IMAGE_SEARCH_LENGTH
     }

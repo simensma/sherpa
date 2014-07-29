@@ -55,7 +55,7 @@ class BlogWidget(Widget):
             cache.set('widgets.blog.category.' + widget_options['category'], data, 60 * 30)
         return data
 
-    def admin_context(self):
+    def admin_context(self, site):
         # The list of categories available in the blogwidget
         categories = cache.get('widgets.blog.category_list')
         if categories is None:

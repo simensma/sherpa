@@ -82,7 +82,7 @@ def edit(request, site, version):
         'version': version,
         'users': users,
         'image_search_length': settings.IMAGE_SEARCH_LENGTH,
-        'widget_data': admin_context(),
+        'widget_data': admin_context(active_site),
     }
 
     # Fake request.site to the edited site; this will make context processors behave accordingly

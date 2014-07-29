@@ -68,12 +68,12 @@ def parse_widget(request, widget_options, site):
     })
     return data
 
-def admin_context():
+def admin_context(site):
     """
     Returns a dict with data context for each widget which needs it in the admin-editor. Will be available in the
     editors through 'widget_data.<widget>'
     """
-    return {widget_name: widget.admin_context() for widget_name, widget in WIDGETS.items()}
+    return {widget_name: widget.admin_context(site) for widget_name, widget in WIDGETS.items()}
 
 # Used temporary for static promo content
 def get_static_promo_context(path):
