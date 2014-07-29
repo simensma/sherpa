@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import patterns, include, url
+from django.conf.urls.defaults import patterns, url
 from django.conf import settings
 
 urlpatterns = patterns('user.login.views',
