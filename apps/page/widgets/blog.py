@@ -53,7 +53,7 @@ class BlogWidget(Widget):
                         break
             data = {'entries':entries}
             cache.set('widgets.blog.category.' + widget_options['category'], data, 60 * 30)
-            return data
+        return data
 
     def admin_context(self):
         # The list of categories available in the blogwidget
