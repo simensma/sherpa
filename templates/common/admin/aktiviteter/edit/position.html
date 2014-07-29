@@ -74,14 +74,14 @@
   <div class="row">
 
     <!-- county -->
-    {% with selected=aktivitet.counties %}
+    {% with selected=aktivitet.counties.all %}
       <div class="col-lg-4 col-md-4 col-sm-4">
         <strong>Fylke: </strong><br />
         <div data-container="position-counties-placeholder">
           {% include 'common/util/ajaxloader.html' %}
           <span data-placeholder-for="county">
             {# @TODO how to make this look ok when no selected #}
-            {% for item in counties %}
+            {% for item in counties.all %}
               {% if item in selected %}
                 {{ item.name }}
               {% endif %}
@@ -98,7 +98,7 @@
             data-lookup-url="{% url 'core.views.county_lookup' %}">
 
             <option value=""></option>
-            {% for item in counties %}
+            {% for item in counties.all %}
               <option value="{{ item.id }}"{% if item in selected %} selected{% endif %}>
                 {{ item.name }}
               </option>
@@ -109,14 +109,14 @@
     {% endwith %}
 
     <!-- municipaly -->
-    {% with selected=aktivitet.municipalities %}
+    {% with selected=aktivitet.municipalities.all %}
       <div class="col-lg-4 col-md-4 col-sm-4">
         <strong>Kommune: </strong><br />
         <div data-container="position-municipalities-placeholder">
           {% include 'common/util/ajaxloader.html' %}
           <span data-placeholder-for="municipality">
             {# @TODO how to make this look ok when no selected #}
-            {% for item in municipalities %}
+            {% for item in municipalities.all %}
               {% if item in selected %}
                 {{ item.name }}
               {% endif %}
@@ -133,7 +133,7 @@
             data-lookup-url="{% url 'core.views.municipality_lookup' %}">
 
             <option value=""></option>
-            {% for item in municipalities %}
+            {% for item in municipalities.all %}
               <option value="{{ item.id }}"{% if item in selected %} selected{% endif %}>
                 {{ item.name }}
               </option>
