@@ -17,7 +17,7 @@
 
 {% block body %}
 
-<div class="edit-campaign">
+<div class="edit-campaign" data-dnt-container="edit-campaign">
 
   <div class="row">
     <div class="col-lg-12">
@@ -39,30 +39,30 @@
   <div class="row">
     <div class="col-lg-12">
 
-      <ol class="section-progress" data-choose-image-warning="Velg bakgrunnsbilde før du går videre!">
+      <ol class="section-progress" data-dnt-container="section-progress" data-dnt-choose-image-warning="Velg bakgrunnsbilde før du går videre!">
         <li class="active">
-          <a href="javascript:undefined" data-step="1">Velg bakgrunnsbilde</a>
+          <a href="javascript:undefined" data-dnt-step-trigger="1">Velg bakgrunnsbilde</a>
           <span class="divider">
             <i class="fa fa-angle-right"></i>
           </span>
         </li>
         <li>
-          <a href="javascript:undefined" data-step="2">Velg utsnitt på bildet</a>
+          <a href="javascript:undefined" data-dnt-step-trigger="2">Velg utsnitt på bildet</a>
           <span class="divider">
             <i class="fa fa-angle-right"></i>
           </span>
         </li>
         <li>
-          <a href="javascript:undefined" data-step="3">Sett inn tekst/knapp</a>
+          <a href="javascript:undefined" data-dnt-step-trigger="3">Sett inn tekst/knapp</a>
           <span class="divider">
             <i class="fa fa-angle-right"></i>
           </span>
         </li>
         <li>
-          <form action="{% url 'admin.sites.campaigns.views.save' active_site.id %}" method="post" class="save" data-intro="Når du er ferdig, klikker du her for å lagre kampanjen." data-step="6">
+          <form action="{% url 'admin.sites.campaigns.views.save' active_site.id %}" method="post" class="save" data-dnt-container="save" data-intro="Når du er ferdig, klikker du her for å lagre kampanjen." data-step="6">
             {% csrf_token %}
             <input type="hidden" name="campaign">
-            <input type="hidden" name="existing_campaign" value="{{ campaign.id }}" data-campaign="{{ campaign.to_json }}">
+            <input type="hidden" name="existing_campaign" value="{{ campaign.id }}" data-dnt-campaign="{{ campaign.to_json }}">
             <input type="hidden" name="photographer" value="{{ campaign.photographer }}">
             <button class="btn btn-success" type="submit">Lagre</button>
           </form>
@@ -73,7 +73,7 @@
     </div>
   </div>
 
-  <div class="step" data-step="1">
+  <div data-dnt-step="1">
     <div class="row">
       <div class="col-lg-12">
         <p>
@@ -91,7 +91,7 @@
     </div>
   </div>
 
-  <div class="step jq-hide" data-step="2">
+  <div class="jq-hide" data-dnt-step="2">
     <div class="row">
       <div class="col-lg-12">
 
@@ -100,14 +100,14 @@
           <button class="btn btn-default accept-crop"><i class="fa fa-check"></i> Ok, dette utsnittet er fint!</button>
         </p>
 
-        <img src="" alt="" class="chosen-image" data-image-scale-warning="Utsnittet du valgte er så lite at bildet kan bli kornete. Vil du ta sjansen på at det ser OK ut?">
-        <img class="chosen-image-ajaxloader jq-hide" src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent...">
+        <img src="" alt="" class="chosen-image" data-dnt-chosen-image data-dnt-image-scale-warning="Utsnittet du valgte er så lite at bildet kan bli kornete. Vil du ta sjansen på at det ser OK ut?">
+        <img class="jq-hide" src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent..." data-dnt-ajaxloader-for="chosen-image">
 
       </div>
     </div>
   </div>
 
-  <div class="step jq-hide" data-step="3">
+  <div class="jq-hide" data-dnt-step="3">
     <div class="row">
       <div class="col-lg-12">
 
@@ -115,18 +115,18 @@
 
           <div class="form-group">
             <div class="col-md-2 control-label">
-              <button class="btn btn-default btn-lg" data-trigger="introjs">
+              <button class="btn btn-default btn-lg" data-dnt-trigger="introjs">
                 <i class="fa fa-question"></i> Slik gjør du
               </button>
             </div>
             <div class="col-md-10" data-intro="Her ser du en hvordan kampanjen kommer til å se ut!<br><br><strong>Klikk på tittelen</strong>, og begynn å skrive, for å endre hva som står der.<br><br><strong>Dra tittelen rundt</strong> for å plassere den der du vil ha den.<br><br>Det samme gjelder for knappen." data-position="left" data-step="1">
-              <div class="campaign-container" data-too-long-sentence-warning="Du har ikke plass til en så lang setning! Ta bort et ord eller to, og bruk 'enter' for å få en ny linje.">
-                <img src="" alt="" class="cropped-image">
-                <div class="button campaign-element movable">
+              <div class="campaign" data-dnt-container="campaign" data-dnt-too-long-sentence-warning="Du har ikke plass til en så lang setning! Ta bort et ord eller to, og bruk 'enter' for å få en ny linje.">
+                <img src="" alt="" data-dnt-cropped-image>
+                <div class="button campaign-element movable" data-dnt-container="button" data-dnt-movable>
                   <a href="http://www.turistforeningen.no/" class="btn btn-danger" contenteditable="true">Klikk på meg</a>
                 </div>
-                <div class="photographer campaign-element jq-hide">
-                  Foto: <span class="name"></span>
+                <div class="photographer campaign-element jq-hide" data-dnt-container="photographer">
+                  Foto: <span class="name" data-dnt-photographer-name></span>
                 </div>
               </div>
             </div>
@@ -142,7 +142,7 @@
             </div>
           </div>
 
-          <div class="edit-button" data-container="edit-button" data-intro="Her velger du hvordan knappen ser ut og hvilken adresse den peker til.<br><br>Kampanjen bør peke til en landingsside som er relevant for det kampanjen handler om, og knappen bør oppfordre til noe, for eksempel: <strong>Les mer på UT.no</strong>." data-position="top" data-step="3">
+          <div class="edit-button" data-dnt-container="edit-button" data-intro="Her velger du hvordan knappen ser ut og hvilken adresse den peker til.<br><br>Kampanjen bør peke til en landingsside som er relevant for det kampanjen handler om, og knappen bør oppfordre til noe, for eksempel: <strong>Les mer på UT.no</strong>." data-position="top" data-step="3">
 
             <div class="form-group">
               <div class="col-md-offset-2 col-md-10">
@@ -154,7 +154,7 @@
               </div>
             </div>
 
-            <div data-container="button-controls">
+            <div data-dnt-container="button-controls">
               <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                   <div class="checkbox">
@@ -171,11 +171,11 @@
                   <input type="text" name="button-anchor" class="form-control" value="http://www.turistforeningen.no/">
                 </div>
               </div>
-            </div><!-- /[data-container='button-controls'] -->
+            </div><!-- /[data-dnt-container='button-controls'] -->
 
-          </div><!-- /[data-container='edit-button'] -->
+          </div><!-- /[data-dnt-container='edit-button'] -->
 
-          <div class="edit-photographer" data-edit="photographer">
+          <div class="edit-photographer" data-dnt-edit="photographer">
 
             <div class="form-group">
               <label class="col-md-2 control-label">Fotograftekst</label>
@@ -204,20 +204,20 @@
               </div>
             </div>
 
-          </div><!-- /[data-edit='photographer'] -->
+          </div><!-- /[data-dnt-edit='photographer'] -->
 
-          <div class="text-editors" data-intro="Her velger du hvordan teksten på bildet <strong>ser ut</strong>, altså størrelse, farge og tykkelse.<br><br>Det er også her du kan <strong>ta bort</strong> tekst som du ikke vil ha på kampanjen likevel.<br><br>Når du endrer noe her, må du scrolle opp til forhåndsvisningen for å se hvordan det ser ut." data-position="top" data-step="4">
+          <div class="text-editors" data-dnt-container="text-editors" data-intro="Her velger du hvordan teksten på bildet <strong>ser ut</strong>, altså størrelse, farge og tykkelse.<br><br>Det er også her du kan <strong>ta bort</strong> tekst som du ikke vil ha på kampanjen likevel.<br><br>Når du endrer noe her, må du scrolle opp til forhåndsvisningen for å se hvordan det ser ut." data-position="top" data-step="4">
             {# Will be filled out by javascript... #}
           </div>
 
           {# ... with these #}
-          <div class="text-editor-template jq-hide">
+          <div class="text-editor jq-hide" data-dnt-container="text-editor" data-dnt-template="text-editor">
 
             <div class="form-group">
               <label class="col-md-2 control-label">Tekst</label>
               <div class="col-md-10">
-                <p class="form-control-static content" data-trigger="content"></p>
-                <a href="javascript:undefined" class="remove" data-trigger="remove">
+                <p class="form-control-static content" data-dnt-trigger="content"></p>
+                <a href="javascript:undefined" class="remove" data-dnt-trigger="remove">
                   <i class="fa fa-times"></i> Ta bort
                 </a>
               </div>
@@ -237,7 +237,7 @@
             <div class="form-group">
               <label class="col-md-2 control-label">Farge</label>
               <div class="col-md-10">
-                <div class="colorselector">
+                <div class="colorselector" data-dnt-container="colorselector">
                   <div style="background-color: #333"></div>
                 </div>
               </div>
@@ -267,7 +267,7 @@
     </div>
   </div>
 
-  <div class="text-template campaign-element movable jq-hide" contenteditable="true">
+  <div class="text campaign-element movable jq-hide" contenteditable="true" data-dnt-container="text" data-dnt-template="text" data-dnt-movable>
   </div>
 
 </div>

@@ -71,11 +71,11 @@ $(function() {
         } else if(type === 'campaign') {
 
             // Track campaign views and clicks
-            _gaq.push(['_trackEvent', 'Kampanje', 'Visning', widget.find('.campaign').attr('data-ga-event-label')]);
-            var campaign_button = widget.find('.button a');
+            _gaq.push(['_trackEvent', 'Kampanje', 'Visning', widget.find('.campaign').attr('data-dnt-ga-event-label')]);
+            var campaign_button = widget.find('[data-dnt-container="button"] a');
             if(campaign_button.length > 0) {
                 campaign_button.click(function() {
-                    _gaq.push(['_trackEvent', 'Kampanje', 'Klikk', widget.find('.campaign').attr('data-ga-event-label')]);
+                    _gaq.push(['_trackEvent', 'Kampanje', 'Klikk', widget.find('.campaign').attr('data-dnt-ga-event-label')]);
                 });
             }
 

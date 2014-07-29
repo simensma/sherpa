@@ -17,14 +17,14 @@
       <strong>Viktig: Du må kun bruke kampanjer i en fullbredde-kolonne!</strong>
     </p>
 
-    <div class="campaigns form-default form-horizontal" data-invalid-date-format="Ugyldig datoformat. Vennligst sjekk at datoene ser slik ut: dd.mm.yyyy (for eksempel: 21.03.2014)" data-missing-campaign="Sett inn minst én kampanje før du lagrer!">
+    <div class="campaigns form-default form-horizontal" data-dnt-container="campaigns" data-dnt-invalid-date-format="Ugyldig datoformat. Vennligst sjekk at datoene ser slik ut: dd.mm.yyyy (for eksempel: 21.03.2014)" data-dnt-missing-campaign="Sett inn minst én kampanje før du lagrer!">
       {# Will be filled out with javascript #}
     </div>
 
     <div class="form-default form-horizontal">
       <div class="control-group">
         <div class="controls">
-          <button class="btn btn-default add-campaign" data-toggle="add-campaign">
+          <button class="btn btn-default add-campaign" data-dnt-toggle="add-campaign">
             <i class="icon-plus"></i> Legg til flere kampanjer...
           </button>
         </div>
@@ -73,7 +73,7 @@
       </div>
     </div>
 
-    <div class="campaign-template jq-hide">
+    <div class="campaign jq-hide" data-dnt-template="campaign">
 
       <div class="control-group">
         <label class="control-label">Kampanje</label>
@@ -90,14 +90,14 @@
       <div class="control-group">
         <label class="control-label">Periode</label>
         <div class="controls">
-          <div class="input-append date">
+          <div class="input-append date" data-dnt-container="datepicker">
             <input type="text" class="input-medium" name="start-date" value="{{ now|date:"d.m.Y" }}">
             <span class="add-on">
               <i class="icon-th"></i>
             </span>
           </div>
           til og med
-          <div class="input-append date">
+          <div class="input-append date" data-dnt-container="datepicker">
             <input type="text" class="input-medium" name="stop-date" value="{{ now|date:"d.m.Y" }}">
             <span class="add-on">
               <i class="icon-th"></i>
@@ -108,7 +108,7 @@
 
       <div class="control-group">
         <div class="controls">
-          <button class="btn btn-danger" data-toggle="remove-campaign">
+          <button class="btn btn-danger" data-dnt-toggle="remove-campaign">
             <i class="icon-remove icon-white"></i> Ta bort
           </button>
         </div>

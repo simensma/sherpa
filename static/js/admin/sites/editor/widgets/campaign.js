@@ -10,9 +10,9 @@ $(function() {
         widget_name: 'campaign',
 
         init: function($editor) {
-            $campaigns = $editor.find('.campaigns');
-            $campaign_template = $editor.find('.campaign-template');
-            $add_campaign_button = $editor.find('button[data-toggle="add-campaign"]');
+            $campaigns = $editor.find('[data-dnt-container="campaigns"]');
+            $campaign_template = $editor.find('[data-dnt-template="campaign"]');
+            $add_campaign_button = $editor.find('button[data-dnt-toggle="add-campaign"]');
             $hide_when_expired = $editor.find('input[name="hide-when-expired"]');
             $display_core_menu = $editor.find('input[name="display-core-menu"]');
             $add_campaign_button.click(addCampaign);
@@ -59,7 +59,7 @@ $(function() {
                 }
                 var date_format = /^\d\d\.\d\d\.\d\d\d\d$/;
                 if(start_date.match(date_format) === null || stop_date.match(date_format === null)) {
-                    alert($campaigns.attr('data-invalid-date-format'));
+                    alert($campaigns.attr('data-dnt-invalid-date-format'));
                     break_ = true;
                 }
 
@@ -76,7 +76,7 @@ $(function() {
             }
 
             if(campaigns.length === 0) {
-                alert($campaigns.attr('data-missing-campaign'));
+                alert($campaigns.attr('data-dnt-missing-campaign'));
                 return false;
             }
 
@@ -94,18 +94,18 @@ $(function() {
 
     function addCampaign() {
         var $campaign = $campaign_template.clone();
-        $campaign.removeClass('campaign-template').addClass('campaign');
+        $campaign.removeAttr('data-dnt-template');
         $campaign.appendTo($campaigns);
 
         $campaign.find('select[name="campaign"]').chosen();
-        $campaign.find('.date').datepicker({
+        $campaign.find('[data-dnt-container="datepicker"]').datepicker({
             format: 'dd.mm.yyyy',
             weekStart: 1,
             autoclose: true,
             forceParse: false
         });
 
-        $campaign.find('button[data-toggle="remove-campaign"]').click(function() {
+        $campaign.find('button[data-dnt-toggle="remove-campaign"]').click(function() {
             $campaign.remove();
         });
 

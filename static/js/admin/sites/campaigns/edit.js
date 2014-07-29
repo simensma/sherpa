@@ -1,38 +1,38 @@
 $(function() {
 
-    var wrapper = $('div.edit-campaign');
-    var section_progress = wrapper.find('.section-progress');
+    var wrapper = $('[data-dnt-container="edit-campaign"]');
+    var section_progress = wrapper.find('[data-dnt-container="section-progress"]');
 
-    var button_introjs = wrapper.find('button[data-trigger="introjs"]');
+    var button_introjs = wrapper.find('button[data-dnt-trigger="introjs"]');
 
-    var save_form = section_progress.find('form.save');
+    var save_form = section_progress.find('form[data-dnt-container="save"]');
     var existing_campaign = save_form.find('input[name="existing_campaign"]');
     var photographer_input = save_form.find('input[name="photographer"]');
 
-    var campaign_container = wrapper.find('div.campaign-container');
+    var campaign_container = wrapper.find('[data-dnt-container="campaign"]');
 
-    var user_image = wrapper.find('img.chosen-image');
-    var user_image_ajaxloader = wrapper.find('img.chosen-image-ajaxloader');
-    var user_image_cropped = campaign_container.find('img.cropped-image');
+    var user_image = wrapper.find('img[data-dnt-chosen-image]');
+    var user_image_ajaxloader = wrapper.find('img[data-dnt-ajaxloader-for="chosen-image"]');
+    var user_image_cropped = campaign_container.find('img[data-dnt-cropped-image]');
 
-    var user_text_editors = wrapper.find('div.text-editors');
-    var user_text_editor_template = wrapper.find('div.text-editor-template');
-    var user_text_template = wrapper.find('div.text-template');
+    var user_text_editors = wrapper.find('[data-dnt-container="text-editors"]');
+    var user_text_editor_template = wrapper.find('[data-dnt-template="text-editor"]');
+    var user_text_template = wrapper.find('[data-dnt-template="text"]');
 
     var campaign_title = wrapper.find('input[name="campaign-title"]');
 
-    var user_button_editor = wrapper.find('[data-container="edit-button"]');
-    var user_button_controls = user_button_editor.find('div[data-container="button-controls"]');
+    var user_button_editor = wrapper.find('[data-dnt-container="edit-button"]');
+    var user_button_controls = user_button_editor.find('div[data-dnt-container="button-controls"]');
     var user_button_exclude = user_button_editor.find('input[name="exclude-button"]');
     var user_button_anchor_input = user_button_editor.find('input[name="button-anchor"]');
     var user_button_large_input = user_button_editor.find('input[name="large-button"]');
 
-    var user_button = campaign_container.find('.button');
-    var user_button_anchor = user_button.find('a');
+    var user_button = campaign_container.find('[data-dnt-container="button"]');
+    var user_button_anchor = user_button.children('a');
 
-    var user_photographer = wrapper.find('.photographer');
-    var user_photographer_name = user_photographer.find('span.name');
-    var user_photographer_editor = wrapper.find('[data-edit="photographer"]');
+    var user_photographer = campaign_container.find('[data-dnt-container="photographer"]');
+    var user_photographer_name = user_photographer.find('span[data-dnt-photographer-name]');
+    var user_photographer_editor = wrapper.find('[data-dnt-edit="photographer"]');
 
     var JcropApi;
     var crop_ratio = [940, 480];
@@ -43,8 +43,8 @@ $(function() {
     });
 
     // Load existing campaign data, if there
-    if(existing_campaign.attr('data-campaign') !== '') {
-        var campaign = JSON.parse(existing_campaign.attr('data-campaign'));
+    if(existing_campaign.attr('data-dnt-campaign') !== '') {
+        var campaign = JSON.parse(existing_campaign.attr('data-dnt-campaign'));
 
         setOriginalImage(campaign.image_original, [
             campaign.image_crop.selection.x,
@@ -96,17 +96,17 @@ $(function() {
         });
     }
 
-    section_progress.find('a').click(function() {
-        if(Number($(this).attr('data-step')) > 1 && user_image.attr('src') === '') {
-            alert(section_progress.attr('data-choose-image-warning'));
+    section_progress.find('[data-dnt-step-trigger]').click(function() {
+        if(Number($(this).attr('data-dnt-step-trigger')) > 1 && user_image.attr('src') === '') {
+            alert(section_progress.attr('data-dnt-choose-image-warning'));
             return $(this);
         }
-        enableStep(Number($(this).attr('data-step')));
+        enableStep(Number($(this).attr('data-dnt-step-trigger')));
     });
 
     save_form.submit(function(e) {
         if(user_image.attr('src') === '') {
-            alert(section_progress.attr('data-choose-image-warning'));
+            alert(section_progress.attr('data-dnt-choose-image-warning'));
             e.preventDefault();
             return $(this);
         }
@@ -152,7 +152,7 @@ $(function() {
             // The image needs to be visible in the DOM for jcrop to base its wrapper on the correct image dimensions,
             // so display the step2 wrapper (which might be hidden) in the DOM (but hide its visibility) for the
             // duration of this function
-            var step2 = wrapper.find('.step[data-step="2"]');
+            var step2 = wrapper.find('[data-dnt-step="2"]');
             var display = step2.css('display');
             step2.css('display', 'block');
 
@@ -214,7 +214,7 @@ $(function() {
         var top = '35px';
         var left = '720px';
         var font_size = '48px';
-        if(campaign_container.find('.text').length > 0) {
+        if(campaign_container.find('[data-dnt-container="text"]').length > 0) {
             top = '100px';
             left = '801px';
             font_size = '24px';
@@ -233,20 +233,21 @@ $(function() {
 
         // Clone and insert the text editor
         var text_editor = user_text_editor_template.clone();
-        text_editor.removeClass('text-editor-template').addClass('text-editor').show();
-        text_editor.attr('data-id', id);
+        text_editor.removeAttr('data-dnt-template');
+        text_editor.show();
+        text_editor.attr('data-dnt-id', id);
 
         // Reset states based on options
-        text_editor.find('p[data-trigger="content"]').text(options.content);
+        text_editor.find('p[data-dnt-trigger="content"]').text(options.content);
         text_editor.find('option[value="' + options.style['font-size'] + '"]').prop('selected', true);
         var bold = options.style['font-weight'] === 'bold';
         text_editor.find('input[name="bold"]').prop('checked', bold);
-        text_editor.find('.colorselector div').css('background-color', options.style.color);
+        text_editor.find('[data-dnt-container="colorselector"] div').css('background-color', options.style.color);
 
         // We need to append it to DOM before we initialize the color selector and chosen-select
         text_editor.appendTo(user_text_editors);
 
-        var colorpicker = text_editor.find('.colorselector');
+        var colorpicker = text_editor.find('[data-dnt-container="colorselector"]');
         colorpicker.ColorPicker({
             color: options.style.color,
             onShow: function(picker) {
@@ -259,16 +260,17 @@ $(function() {
             },
             onChange: function (hsb, hex, rgb) {
                 colorpicker.children('div').css('background-color', '#' + hex);
-                var id = colorpicker.parents('.text-editor').attr('data-id');
-                campaign_container.find('.text[data-id="' + id + '"]').css('color', '#' + hex);
+                var id = colorpicker.parents('[data-dnt-container="text-editor"]').attr('data-dnt-id');
+                campaign_container.find('[data-dnt-container="text"][data-dnt-id="' + id + '"]').css('color', '#' + hex);
             }
         });
         text_editor.find('select').chosen();
 
         // Clone and insert the actual text
         var text = user_text_template.clone();
-        text.removeClass('text-template').addClass('text').show();
-        text.attr('data-id', id);
+        text.removeAttr('data-dnt-template');
+        text.show();
+        text.attr('data-dnt-id', id);
         text.html(options.content);
         text.css('top', options.style.top);
         text.css('left', options.style.left);
@@ -292,23 +294,23 @@ $(function() {
 
         // Add events on text-change to update text-editor content
         text.keyup(function() {
-            text_editor.find('p[data-trigger="content"]').text($(this).text());
+            text_editor.find('p[data-dnt-trigger="content"]').text($(this).text());
         });
 
         // Remove the element if disfocused when it's empty. Note that we don't remove it just after the
         // keypress as the user may be removing the existing text but planning to enter new text.
         text.focusout(function() {
             if($(this).text().trim() === '') {
-                user_text_editors.find('.text-editor[data-id="' + $(this).attr('data-id') + '"] a[data-trigger="remove"]').click();
+                user_text_editors.find('[data-dnt-container="text-editor"][data-dnt-id="' + $(this).attr('data-dnt-id') + '"] a[data-dnt-trigger="remove"]').click();
             }
         });
     }
 
-    $(document).on('click', '.text-editor a[data-trigger="remove"]', function() {
-        var text_editor = $(this).parents('.text-editor');
-        var id = text_editor.attr('data-id');
+    $(document).on('click', '[data-dnt-container="text-editor"] a[data-dnt-trigger="remove"]', function() {
+        var text_editor = $(this).parents('[data-dnt-container="text-editor"]');
+        var id = text_editor.attr('data-dnt-id');
         text_editor.remove();
-        campaign_container.find('.text[data-id="' + id + '"]').remove();
+        campaign_container.find('[data-dnt-container="text"][data-dnt-id="' + id + '"]').remove();
     });
 
     user_button_exclude.change(function() {
@@ -373,7 +375,7 @@ $(function() {
             text: [],
         };
 
-        campaign_container.find('.text').each(function() {
+        campaign_container.find('[data-dnt-container="text"]').each(function() {
             form_data.text.push({
                 content: $(this).html(),
                 style: {
@@ -394,7 +396,7 @@ $(function() {
      */
     var dragged_text;
 
-    $(document.body).on('mousemove', '.campaign-container', function(e) {
+    $(document.body).on('mousemove', campaign_container.selector, function(e) {
         e.preventDefault();
         if(dragged_text !== undefined) {
             dragged_text.offset({
@@ -423,11 +425,11 @@ $(function() {
         }
     });
 
-    $(document.body).on('mousedown', '.campaign-container .movable', function(e) {
-        if($(e.target).is('.movable')) {
+    $(document.body).on('mousedown', campaign_container.selector + ' [data-dnt-movable]', function(e) {
+        if($(e.target).is('[data-dnt-movable]')) {
             dragged_text = $(e.target);
         } else {
-            dragged_text = $(e.target).parents('.movable');
+            dragged_text = $(e.target).parents('[data-dnt-movable]');
         }
     });
 
@@ -435,7 +437,7 @@ $(function() {
         dragged_text = undefined;
     });
 
-    $(document.body).on('dragover drop', '.campaign-container', function(e) {
+    $(document.body).on('dragover drop', campaign_container.selector, function(e) {
         e.preventDefault();
     });
 
@@ -468,7 +470,7 @@ $(function() {
         }
     }
 
-    $(document.body).on('keypress', '.campaign-container .movable', function(e) {
+    $(document.body).on('keypress', campaign_container.selector + ' [data-dnt-movable]', function(e) {
         // Largest character is about this size
         var minimum_buffer = 60;
 
@@ -478,7 +480,7 @@ $(function() {
 
         if(campaign_container.width() - right_offset <= minimum_buffer) {
             if(left <= minimum_buffer) {
-                alert(campaign_container.attr('data-too-long-sentence-warning'));
+                alert(campaign_container.attr('data-dnt-too-long-sentence-warning'));
                 e.preventDefault();
             } else {
                 $(this).css('left', (left - minimum_buffer) + 'px');
@@ -489,8 +491,8 @@ $(function() {
     function enableStep(step, checkScale) {
         section_progress.find('li').removeClass('active');
         section_progress.find('li').eq(step - 1).addClass('active');
-        wrapper.find('div.step').hide();
-        wrapper.find('div.step[data-step="' + step + '"]').show();
+        wrapper.find('[data-dnt-step]').hide();
+        wrapper.find('[data-dnt-step="' + step + '"]').show();
 
         if(step === 3) {
             user_image_cropped.attr('src', user_image.attr('src'));
@@ -512,7 +514,7 @@ $(function() {
 
             // checkScale is true when we're explicitly cropping and want to warn the user when applicable
             if(checkScale && user_image.get(0).naturalWidth !== undefined && user_image_cropped.width() > user_image.get(0).naturalWidth) {
-                if(!confirm(user_image.attr('data-image-scale-warning'))) {
+                if(!confirm(user_image.attr('data-dnt-image-scale-warning'))) {
                     enableStep(2);
                     return;
                 }
