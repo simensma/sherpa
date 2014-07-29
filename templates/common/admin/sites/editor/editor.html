@@ -1,3 +1,5 @@
+{% load render_widget %}
+
 <div class="row">
   <div class="offset3 span6">
     <div class="no-save-warning alert alert-danger jq-hide">
@@ -8,16 +10,21 @@
   </div>
 </div>
 
-<article data-save-url="{% url 'admin.sites.pages.content.save' active_site.id version.id %}" data-render-widget-url="{% url 'admin.sites.pages.content.render_widget' active_site.id %}">
+<article data-save-url="{% url 'admin.sites.pages.content.save' active_site.id version.id %}" data-render-widget-url="{% url 'admin.sites.pages.content.reload_raw_widget' active_site.id %}">
 
-  {% for row in rows %}
+  {% comment %}
+    Note that data-id is set on row, column and content elements, but they are never used. This is for ease
+    of debugging, in case there is a need to inspect the DOM, find the element ID and look it up in the db.
+  {% endcomment %}
+
+  {% for row in version.get_rows %}
     {# Rows are recognized by their data-row attribute, not their class #}
     <div class="row-fluid" data-row data-id="{{ row.id }}">
 
-      {% for column in row.columns %}
+      {% for column in row.get_columns %}
         <div class="column offset{{ column.offset }} span{{ column.span }}" data-id="{{ column.id }}">
 
-          {% for content in column.contents %}
+          {% for content in column.get_contents %}
             {% if content.type == 'html' or content.type == 'title' or content.type == 'lede' %}
 
               <div class="content {{ content.type }} editable" {% if content.content != '' %}contenteditable="true"{% else %}data-placeholder{% endif %} data-id="{{ content.id }}">
@@ -55,9 +62,7 @@
 
             {% elif content.type == 'widget' %}
 
-              <div class="content widget {{ content.content.widget }}" data-json="{{ content.content.json }}" data-id="{{ content.id }}">
-                {% include content.content.template with widget=content.content %}
-              </div>
+              {% render_widget content admin_context=True %}
 
             {% endif %}
           {% endfor %}
@@ -163,6 +168,7 @@
 {% include 'common/widgets/fact/edit.html' %}
 {% include 'common/widgets/button/edit.html' %}
 {% include 'common/widgets/table/edit.html' %}
+{% include 'common/widgets/campaign/edit.html' %}
 
 {# Other dialogs #}
 {% include 'common/admin/images/util/image-archive-picker.html' with bs2compatible=True %}

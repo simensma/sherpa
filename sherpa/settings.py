@@ -18,6 +18,7 @@ AWS_ADS_PREFIX = 'ads/'
 AWS_IMAGEGALLERY_PREFIX = 'images/'
 AWS_FJELLTREFFEN_IMAGES_PREFIX = 'fjelltreffen'
 AWS_PUBLICATIONS_PREFIX = 'publications'
+AWS_CAMPAIGNS_PREFIX = 'campaigns'
 AWS_BUCKET = 'cdn.turistforeningen.no'
 AWS_BUCKET_SSL = 's3-eu-west-1.amazonaws.com/cdn.turistforeningen.no'
 OLD_SITE = 'www2.turistforeningen.no'
@@ -232,6 +233,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "sherpa.context_processors.dntconnect",
     "sherpa.context_processors.membership_year_start",
     "sherpa.context_processors.do_not_track",
+    "sherpa.context_processors.current_time",
+    "sherpa.context_processors.analytics_ua",
 )
 
 MIDDLEWARE_CLASSES = (

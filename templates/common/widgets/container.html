@@ -1,0 +1,24 @@
+{# This container is used to wrap the widget when rendering #}
+
+{% if raw %}
+
+  {% include widget.template %}
+
+{% else %}
+
+  {% if not admin_context %}
+
+    <div class="content widget {{ widget.widget }}">
+      {% include widget.template %}
+    </div>
+
+  {% else %}
+
+    {# Note that the data-admin-context attr is used by the widget rendering javascript #}
+    <div class="content widget {{ widget.widget }}" data-json="{{ widget.json }}" data-id="{{ content_id }}" data-admin-context>
+      {% include widget.template %}
+    </div>
+
+  {% endif %}
+
+{% endif %}

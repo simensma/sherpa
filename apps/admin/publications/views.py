@@ -36,7 +36,6 @@ def edit_publication(request, publication):
         context = {
             'publication': publication,
             'forening_main_mappings': json.dumps(get_forening_main_mappings()),
-            'now': datetime.now()
         }
         return render(request, 'common/admin/publications/edit_publication.html', context)
     elif request.method == 'POST':

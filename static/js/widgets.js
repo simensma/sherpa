@@ -2,31 +2,27 @@
 
 $(function() {
 
-    Widgets.runIfExists('promo', $("div.widget.promo"));
     Widgets.runIfExists('carousel', $("div.widget.carousel"));
     Widgets.runIfExists('articles', $("div.widget.articles"));
+    Widgets.runIfExists('campaign', $("div.widget.campaign"), true);
 
 });
 
 (function(Widgets, $, undefined) {
 
-    Widgets.runIfExists = function(type, widget) {
-        if(widget.length > 0) {
+    /**
+     * Run widget script if it exists in the current DOM
+     * @param {bool} exclude_admin set to true if this script should NOT run when the widget is rendered in the
+     *   admin layout.
+     */
+    Widgets.runIfExists = function(type, widget, exclude_admin) {
+        if(widget.length > 0 && (!exclude_admin || widget.attr('data-admin-context') === undefined)) {
             Widgets.run(type, widget);
         }
     };
 
     Widgets.run = function(type, widget) {
-        if(type === 'promo') {
-
-            //Promo-box
-            $(this).find("div.menu.li").click(function() {
-                if($(this).children("a").length > 0) {
-                    window.location = $(this).children("a").attr('href');
-                }
-            });
-
-        } else if(type === 'carousel') {
+        if(type === 'carousel') {
 
             //carousel, stop spinning
             $(this).find("div.carousel").each(function() {
@@ -71,6 +67,18 @@ $(function() {
                     $(this).css('height', height);
                 });
             });
+
+        } else if(type === 'campaign') {
+
+            // Track campaign views and clicks
+            _gaq.push(['_trackEvent', 'Kampanje', 'Visning', widget.find('.campaign').attr('data-dnt-ga-event-label')]);
+            var campaign_button = widget.find('[data-dnt-container="button"] a');
+            if(campaign_button.length > 0) {
+                campaign_button.click(function() {
+                    _gaq.push(['_trackEvent', 'Kampanje', 'Klikk', widget.find('.campaign').attr('data-dnt-ga-event-label')]);
+                });
+            }
+
         }
     };
 

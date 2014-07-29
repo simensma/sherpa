@@ -44,6 +44,12 @@
       </a>
     </div>
     <div class="col-lg-2">
+      <a class="navigation-block" href="{% url 'admin.sites.campaigns.views.index' active_site.id %}" data-toogle="tooltip" title="Legg ut kampanjer som kan inkluderes på nettsidene">
+        <p><i class="fa fa-picture-o fa-5x"></i></p>
+        <p>Kampanjer</p>
+      </a>
+    </div>
+    <div class="col-lg-2">
       <a class="navigation-block" href="{% url 'admin.sites.ads.views.list' active_site.id %}" data-toogle="tooltip" title="Legg ut reklameannonser som vises på nettisdene">
         <p><i class="fa fa-desktop fa-5x"></i></p>
         <p>Annonser</p>

@@ -20,8 +20,10 @@
   <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap-datepicker/css/datepicker3.css" media="screen">
   <link rel="stylesheet" href="{{ STATIC_URL }}lib/sb-admin/css/sb-admin.css">
   <link rel="stylesheet" href="{{ STATIC_URL }}lib/chosen/chosen.css" media="screen">
-  <link rel="stylesheet" href="{{ STATIC_URL }}lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/font-awesome-4.1.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="{{ STATIC_URL }}lib/outdatedBrowser/outdatedBrowser.min.css" media="screen">
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/colorpicker/css/colorpicker.css">
+  <link rel="stylesheet" href="{{ STATIC_URL }}lib/intro.js/introjs.min.css">
 
   {# Our libs #}
   <link rel="stylesheet" href="{{ STATIC_URL }}lib/imgareaselect/css/imgareaselect-default.css">
@@ -292,6 +294,17 @@
   <script src="{{ STATIC_URL }}lib/typeahead/typeahead.min.js"></script>
   <script src="{{ STATIC_URL }}lib/chosen/chosen.jquery.min.js"></script>
   <script src="{{ STATIC_URL }}lib/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="{{ STATIC_URL }}lib/colorpicker/js/colorpicker.js"></script>
+  <script src="{{ STATIC_URL }}lib/intro.js/intro.min.js"></script>
+  <script>
+  window.introJs = introJs().setOptions({
+      nextLabel: "Neste",
+      prevLabel: "Forrige",
+      skipLabel: "Lukk",
+      doneLabel: "Ferdig!",
+    });
+  </script>
+
   <script>
     window.User = {
       email: '{{ user.get_sherpa_email }}',
@@ -306,7 +319,8 @@
   <script src="{{ STATIC_URL }}js/admin/sites/editor/image-utils.js"></script>
   <script src="{{ STATIC_URL }}lib/imagesloaded/jquery.imagesloaded.min.js"></script>
   <script src="{{ STATIC_URL }}lib/imgareaselect/js/jquery.imgareaselect.min.js"></script>
-  <script src="{{ STATIC_URL }}js/admin/sites/editor/image-cropper.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/sites/editor/image-cropper.js"></script>{# Deprecated - to be removed #}
+  <script src="{{ STATIC_URL }}js/image-cropping.js"></script>
   <script src="{{ STATIC_URL }}js/zipcode.js"></script>
 
   {# Our scripts #}

@@ -27,6 +27,7 @@
 <script src="{{ STATIC_URL }}js/zipcode.js"></script>
 <script src="{{ STATIC_URL }}js/image-cropping.js"></script>
 <script src="{{ STATIC_URL }}js/main.js"></script>
+<script src="{{ STATIC_URL }}js/mobile-menu.js"></script>
 <script src="{{ STATIC_URL }}js/common.js"></script>
 <script src="{{ STATIC_URL }}js/widgets.js"></script>
 <script src="{{ STATIC_URL }}js/validator.js"></script>
@@ -39,7 +40,7 @@
 <!-- Google Analytics -->
 <script>
   var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-266436-2']);
+  _gaq.push(['_setAccount', '{{ analytics_ua }}']);
   {% if donottrack %}
     // Du har aktivert Do Not Track, og i henhold anonymiserer vi din IP-adresse for vår besøksstatistikk.
     _gaq.push(['_gat._anonymizeIp']);

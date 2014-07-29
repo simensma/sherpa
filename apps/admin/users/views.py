@@ -56,7 +56,6 @@ def show(request, other_user):
         'assignable_foreninger': Forening.sort(assignable_foreninger),
         'all_foreninger': Forening.sort(Forening.objects.all()),
         'turleder_roles': Turleder.TURLEDER_CHOICES,
-        'today': today,
         'five_years_from_now': five_years_from_now,
     }
     return render(request, 'common/admin/users/show/index.html', context)

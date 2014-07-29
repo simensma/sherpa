@@ -4,21 +4,23 @@ from datetime import datetime
 import json
 
 from django.http import HttpResponse
-from django.template import RequestContext
-from django.template.loader import render_to_string
 from django.db import transaction
 from django.core.cache import cache
 
 from page.models import Page, Version, Row, Column, Content
-from page.widgets import parse_widget
+from page.widgets.util import render_widget
 from user.models import User
 from core.models import Tag, Site
 
-def render_widget(request, site):
+def reload_raw_widget(request, site):
     active_site = Site.objects.get(id=site)
-    widget = parse_widget(request, json.loads(request.POST['content']), active_site)
-    context = RequestContext(request, {'widget': widget})
-    return HttpResponse(render_to_string(widget['template'], context))
+    return HttpResponse(render_widget(
+        request,
+        json.loads(request.POST['content']),
+        active_site,
+        raw=True,
+        admin_context=True,
+    ))
 
 def save(request, site, version):
     active_site = Site.objects.get(id=site)

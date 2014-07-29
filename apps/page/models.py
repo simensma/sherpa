@@ -19,8 +19,6 @@ class Menu(models.Model):
     # Even though this should be unique, it's not enforced because
     # when swapping, two orders will temporarily clash.
     order = models.IntegerField()
-    # Used to mark the current active menu page
-    active = None
     site = models.ForeignKey('core.Site')
 
     def __unicode__(self):
@@ -70,10 +68,6 @@ class Variant(models.Model):
     # probability
     owner = models.ForeignKey('user.User', related_name='+')
     # change_comment = models.TextField()
-    # The active field can be set by the view in order to get a reference to
-    # the active version in the template. Not sure if there exists a better
-    # way to do this?
-    active = None
 
     def __unicode__(self):
         return u'%s' % self.pk
@@ -94,6 +88,9 @@ class Version(models.Model):
 
     def __unicode__(self):
         return u'%s' % self.pk
+
+    def get_rows(self):
+        return Row.objects.filter(version=self).order_by('order')
 
     def get_title_content(self):
         return Content.objects.get(column__row__version=self, type='title')
@@ -175,7 +172,9 @@ def delete_page_version(sender, **kwargs):
 class Row(models.Model):
     version = models.ForeignKey('page.Version', related_name='rows')
     order = models.IntegerField()
-    columns = None
+
+    def get_columns(self):
+        return Column.objects.filter(row=self).order_by('order')
 
     def __unicode__(self):
         return u'%s' % self.pk
@@ -189,7 +188,9 @@ class Column(models.Model):
     span = models.IntegerField()
     offset = models.IntegerField()
     order = models.IntegerField()
-    contents = None
+
+    def get_contents(self):
+        return Content.objects.filter(column=self).order_by('order')
 
     def __unicode__(self):
         return u'%s' % self.pk
@@ -225,6 +226,14 @@ class Content(models.Model):
             return json.dumps(content['crop'])
         else:
             return None
+
+    def render_widget(self, request, current_site, admin_context=False):
+        """Render this widget (obviously only applicable for widget-content) in the context of the given site"""
+        from page.widgets.util import render_widget
+        if self.type != 'widget':
+            raise Exception("render_widget called on Content of type '%s'" % self.type)
+
+        return render_widget(request, self.get_content(), current_site, admin_context=admin_context, content_id=self.id)
 
 @receiver(pre_delete, sender=Content, dispatch_uid="page.models")
 def delete_content(sender, **kwargs):

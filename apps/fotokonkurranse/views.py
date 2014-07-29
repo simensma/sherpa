@@ -4,7 +4,6 @@ import sys
 import logging
 from cStringIO import StringIO
 from hashlib import sha1
-from datetime import datetime
 from smtplib import SMTPException
 from ssl import SSLError
 
@@ -32,7 +31,6 @@ EMAIL_CONFIRMATION_SUBJECT = "Takk for ditt bidrag til DNTs fotokonkurranse!"
 def default(request):
     context = {
         'destination_album_exists': Fotokonkurranse.objects.get().album is not None,
-        'now': datetime.now(),
     }
     return render(request, 'main/fotokonkurranse/default.html', context)
 

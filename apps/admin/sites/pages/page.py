@@ -9,8 +9,8 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 
 from admin.sites.pages.util import slug_is_unique, create_template
-from page.widgets import parse_widget, widget_admin_context, get_static_promo_context
-from page.models import Page, Variant, Version, Row, Column, Content
+from page.widgets.util import admin_context, get_static_promo_context
+from page.models import Page, Variant, Version
 from core.models import Site
 
 def list(request, site):
@@ -89,21 +89,10 @@ def edit(request, site, version):
     active_site = Site.objects.get(id=site)
     pages = Page.on(active_site).all().order_by('title')
     version = Version.objects.get(id=version)
-    rows = Row.objects.filter(version=version).order_by('order')
-    for row in rows:
-        columns = Column.objects.filter(row=row).order_by('order')
-        for column in columns:
-            contents = Content.objects.filter(column=column).order_by('order')
-            for content in contents:
-                if content.type == 'widget':
-                    content.content = parse_widget(request, json.loads(content.content), active_site)
-            column.contents = contents
-        row.columns = columns
     context = {
         'active_site': active_site,
-        'rows': rows,
         'version': version,
-        'widget_data': widget_admin_context(),
+        'widget_data': admin_context(),
         'pages': pages,
         'image_search_length': settings.IMAGE_SEARCH_LENGTH
     }
@@ -115,19 +104,8 @@ def edit(request, site, version):
 def preview(request, site, version):
     active_site = Site.objects.get(id=site)
     version = Version.objects.get(id=version)
-    rows = Row.objects.filter(version=version).order_by('order')
-    for row in rows:
-        columns = Column.objects.filter(row=row).order_by('order')
-        for column in columns:
-            contents = Content.objects.filter(column=column).order_by('order')
-            for content in contents:
-                if content.type == 'widget':
-                    content.content = parse_widget(request, json.loads(content.content), active_site)
-            column.contents = contents
-        row.columns = columns
     context = {
         'active_site': active_site,
-        'rows': rows,
         'version': version,
     }
     if active_site.id == Site.DNT_CENTRAL_ID:

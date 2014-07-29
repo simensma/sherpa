@@ -1,9 +1,11 @@
+{% load render_widget %}
+
 <article>
-  {% for row in rows %}
+  {% for row in version.get_rows %}
     <div class="row-fluid">
-      {% for column in row.columns %}
+      {% for column in row.get_columns %}
         <div class="offset{{ column.offset }} span{{ column.span }}">
-          {% for content in column.contents %}
+          {% for content in column.get_contents %}
 
             {% if content.type == 'html' or content.type == 'title' or content.type == 'lede' %}
 
@@ -31,9 +33,7 @@
 
             {% elif content.type == 'widget' %}
 
-              <div class="content widget {{ content.content.widget }}">
-                {% include content.content.template with widget=content.content %}
-              </div>
+              {% render_widget content %}
 
             {% endif %}
 

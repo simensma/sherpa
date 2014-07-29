@@ -14,5 +14,5 @@ urlpatterns = patterns('admin.sites.pages',
     url(ur'^forhåndsvisning/(?P<version>\d+)/$', 'page.preview'),
 
     # Content
-    url(r'^widget/$', 'content.render_widget'),
+    url(r'^widget/$', 'content.reload_raw_widget'),
 )

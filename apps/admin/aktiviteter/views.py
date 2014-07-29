@@ -134,7 +134,6 @@ def edit(request, aktivitet):
             'counties': County.typical_objects().order_by('name'),
             'municipalities': Municipality.objects.order_by('name'),
             'locations': Location.get_active().order_by('name'),
-            'now': datetime.now()
         }
         return render(request, 'common/admin/aktiviteter/edit/edit.html', context)
     elif request.method == 'POST':

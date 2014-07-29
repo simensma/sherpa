@@ -1,0 +1,40 @@
+{% if widget.campaign %}
+  <div class="campaign" style="background-image: url({{ widget.campaign.get_cropped_image }});" data-dnt-ga-event-label="{{ widget.campaign.ga_event_label }}">
+
+    {% if widget.display_core_menu %}
+      {% include 'common/widgets/campaign/menu.html' %}
+    {% endif %}
+
+    {% for text in widget.campaign.text.all %}
+      <div class="text" style="{{ text.render_style }}">
+        {{ text.content|safe }}
+      </div>
+    {% endfor %}
+
+    {% if widget.campaign.button_enabled %}
+      <div class="button" style="{{ widget.campaign.render_button_style }}" data-dnt-container="button">
+        <a href="{{ widget.campaign.get_button_anchor }}" class="btn btn-danger{% if widget.campaign.button_large %} btn-large{% endif %}">
+          {{ widget.campaign.button_label }}
+        </a>
+      </div>
+    {% endif %}
+
+    {% if widget.campaign.photographer %}
+      <div class="photographer" style="{{ widget.campaign.photographer_alignment }}: 5px; color: {{ widget.campaign.photographer_color }};">
+        Foto: {{ widget.campaign.photographer }}
+      </div>
+    {% endif %}
+
+  </div>
+{% endif %}
+
+{# If there are no campaigns configured for this widget, display a warning only in the editor #}
+{% if not widget.campaign and admin_context %}
+
+  <div class="alert alert-error">
+    <strong>Denne kampanjen har løpt ut på dato</strong><br><br>
+    Det er ingen kampanjer satt til visning, og du har ikke valgt at siste kampanje skal vises på ubestemt tid. Du bør derfor enten ta bort denne kampanjen, eller endre på datoene du har valgt.<br><br>
+    Merk: Denne meldingen vil ikke være synlig på den publiserte nettsiden.
+  </div>
+
+{% endif %}

@@ -1,0 +1,128 @@
+.list-campaigns {
+  .campaign-preview {
+    img {
+      width: 235px;
+      height: 120px;
+    }
+  }
+}
+
+.edit-campaign {
+  ol.section-progress {
+    margin-bottom: 0;
+    padding-left: 0;
+
+    li {
+      display: inline;
+      font-size: 18px;
+
+      &.active {
+        font-weight: bold;
+      }
+
+      span.divider {
+        margin-left: 20px;
+        margin-right: 20px;
+      }
+
+      form.save {
+        display: inline;
+      }
+    }
+  }
+
+  img.chosen-image {
+    max-width: 100%;
+  }
+
+  .campaign {
+    position: relative;
+    overflow: hidden;
+    width: 940px;
+    height: 480px;
+    margin-bottom: 20px;
+    font-family: "DTL Nobel" !important;
+
+    img {
+      max-width: none !important;
+    }
+
+    .campaign-element.movable {
+      &:hover {
+        cursor: move;
+      }
+
+      // Special case for the button with an anchor child element
+      &:hover a {
+        cursor: move;
+      }
+    }
+
+    .text, .button, .photographer {
+      position: absolute;
+
+    }
+
+    .text {
+      // Short line-height makes it easier to place the text when dragging
+      line-height: 0.9em;
+    }
+
+    .button {
+      // Top, left is just the initial value which will be overriden when the user moves the element
+      top: 110px;
+      left: 750px;
+    }
+
+    .photographer {
+      bottom: 5px;
+      left: 5px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+  }
+
+  .campaign-title {
+    margin-bottom: 12px;
+
+    input[name='campaign-title'] {
+      width: 250px;
+    }
+  }
+
+  .edit-button {
+    .checkbox-inline {
+      margin-right: 12px;
+    }
+
+    input[name='button-anchor'] {
+      width: 400px;
+    }
+  }
+
+  .text-editors {
+    .text-editor {
+      border-top: 1px solid rgb(200, 200, 200);
+      margin-top: 20px;
+      padding-top: 20px;
+
+      &:last-of-type {
+        border-bottom: 1px solid rgb(200, 200, 200);
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+      }
+
+      p.content, a.remove {
+        display: inline;
+      }
+
+      a.remove {
+        color: @profile-red;
+      }
+
+      select {
+        width: 80px;
+      }
+    }
+  }
+}
