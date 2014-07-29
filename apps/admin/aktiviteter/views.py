@@ -184,10 +184,10 @@ def edit(request, aktivitet):
             if len(latlng) == 2:
                 aktivitet.start_point = Point(float(latlng[0]), float(latlng[1]))
 
+        aktivitet.save()
+
         aktivitet.counties = request.POST.getlist('counties')
         aktivitet.municipalities = request.POST.getlist('municipalities')
-
-        aktivitet.save()
 
         aktivitet.category_tags.clear()
         if 'subcategories' in request.POST and request.POST['subcategories'] != '':
