@@ -58,7 +58,7 @@ class Aktivitet(models.Model):
         return [c[1] for c in self.DIFFICULTY_CHOICES if c[0] == self.difficulty][0]
 
     def get_start_point_latlng(self):
-        return ','.join(str(i) for i in self.start_point.get_coords())
+        return ','.join(str(i) for i in self.start_point.get_coords()) if self.start_point else ''
 
     def get_start_point_lat_json(self):
         return json.dumps(self.start_point.get_coords()[0])
