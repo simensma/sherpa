@@ -481,231 +481,7 @@
             </div>
           </div>
 
-          <input type="hidden" name="dates" value="">
-          <input type="hidden" name="dates_to_delete" value="">
-
-          <!-- Date demo -->
-          <div class="panel-group" id="accordion" style="margin-bottom: 20px;">
-            <div class="panel panel-default">
-              <div class="panel-heading" style="overflow: hidden;">
-                <h4 class="panel-title" style="float: left;">
-                  <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" style="line-height: 30px;">
-                    12.06.14-15.06.14
-                  </a>
-                </h4>
-                <a class="btn btn-danger btn-sm" style="float: right;">Slett dato</a>
-              </div>
-              <div id="collapseOne" class="panel-collapse collapse in">
-                <div class="panel-body form-label-left">
-                  <div class="row">
-                    <div class="col-md-6">
-                      <form class="form-horizontal" role="form">
-                        <div class="form-group">
-                          <label for="" class="col-sm-3 control-label">Turen starter</label>
-                          <div class="col-sm-5">
-                            <div class="input-group date">
-                              <input type="text" class="form-control" name="start_date" value="{% firstof date.start_date|date:"d.m.Y" now|date:"d.m.Y" %}">
-                              <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                            </div>
-                          </div>
-                          <label for="" class="col-sm-1 control-label">kl.</label>
-                          <div class="col-sm-3">
-                            <input type="text" class="form-control" id="" placeholder="12:00">
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <label for="" class="col-sm-3 control-label">Turen slutter</label>
-                          <div class="col-sm-5">
-                            <div class="input-group date">
-                              <input type="text" class="form-control" name="start_date" value="{% firstof date.start_date|date:"d.m.Y" now|date:"d.m.Y" %}">
-                              <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                            </div>
-                          </div>
-                          <label for="" class="col-sm-1 control-label">kl.</label>
-                          <div class="col-sm-3">
-                            <input type="text" class="form-control" id="" placeholder="12:00">
-                          </div>
-                        </div>
-
-                        <div class="form-group">
-                          <label for="" class="col-sm-3 control-label">Påmelding</label>
-                          <div class="col-sm-6">
-                            <div class="radio">
-                              <label>
-                                <input type="radio" name="signup-methods" id="signup-method-no" value="signup-method-no" checked>
-                                Ingen påmelding
-                              </label>
-                            </div>
-                            <div class="radio">
-                              <label>
-                                <input type="radio" name="signup-methods" id="signup-method-simple" value="signup-method-simple">
-                                Enkel påmelding
-                              </label>
-                            </div>
-                            <div class="radio">
-                              <label>
-                                <input type="radio" name="signup-methods" id="signup-method-regular" value="signup-method-regular">
-                                Vanlig påmelding
-                              </label>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div class="form-group max-signups jq-hide">
-                          <label for="" class="col-sm-3 control-label">Maks deltakere</label>
-                          <div class="col-sm-5">
-                            <input type="text" class="form-control" id="" placeholder="">
-                          </div>
-                        </div>
-
-                        <div class="form-group signup-start set-checkbox jq-hide">
-                          <label for="" class="col-sm-3 control-label">Påmelding fra</label>
-                          <div class="col-sm-5">
-                            <div class="input-group date">
-                              <input type="text" class="form-control" name="start_date" value="{% firstof date.start_date|date:"d.m.Y" now|date:"d.m.Y" %}">
-                              <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div class="form-group signup-deadline set-checkbox jq-hide">
-                          <label for="" class="col-sm-3 control-label">Påmeldingsfrist</label>
-                          <div class="col-sm-9">
-                            <div class="checkbox">
-                              <label>
-                                <input type="checkbox" checked> Påmelding helt frem til turen starter
-                              </label>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="form-group signup-deadline set-date jq-hide">
-                          <div class="col-sm-5 col-sm-offset-3">
-                            <div class="input-group date">
-                              <input type="text" class="form-control" name="start_date" value="{% firstof date.start_date|date:"d.m.Y" now|date:"d.m.Y" %}">
-                              <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div class="form-group cancellation-deadline set-checkbox jq-hide">
-                          <label for="" class="col-sm-3 control-label">Avmeldingsfrist</label>
-                          <div class="col-sm-9">
-                            <div class="checkbox">
-                              <label>
-                                <input type="checkbox" checked> Avmelding helt frem til turen starter
-                              </label>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="form-group cancellation-deadline set-date jq-hide">
-                          <div class="col-sm-5 col-sm-offset-3">
-                            <div class="input-group date">
-                              <input type="text" class="form-control" name="start_date" value="{% firstof date.start_date|date:"d.m.Y" now|date:"d.m.Y" %}">
-                              <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div class="form-group meetup">
-                          <label for="" class="col-sm-3 control-label">Oppmøte</label>
-                          <div class="col-sm-9">
-                            <textarea class="form-control" rows="6"></textarea>
-                          </div>
-                        </div>
-
-                    </div><!-- /.col-md-6 -->
-
-                    <div class="col-md-5 col-md-offset-1">
-                      <div class="form-group">
-                        <label for="" class="col-sm-4 control-label">Turledere</label>
-                      </div>
-                      <table class="table table-striped table-bordered turledere jq-hide">
-                        <thead>
-                          <tr>
-                            <th>Navn</th>
-                            <th>Kontaktinfo</th>
-                            <th>Fjern</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>Christian Strand</td>
-                            <td>987 65 432<br />christian@strand.com</td>
-                            <td><button class="btn btn-sm btn-danger">Fjern</button></td>
-                          </tr>
-                          <tr>
-                            <td>Hans Kristian Flaatten</td>
-                            <td>987 65 432<br />hans@flaatten.com</td>
-                            <td><button class="btn btn-sm btn-danger">Fjern</button></td>
-                          </tr>
-                        </tbody>
-                      </table>
-
-                      <div class="form-group">
-                        <div class="col-sm-12">
-                          <button type="button" class="btn btn-default" data-action="add-turleder"><span class="glyphicon glyphicon-user"></span> Legg til turleder</button>
-                        </div>
-                      </div>
-
-                      <div class="form-group">
-                        <label for="" class="col-sm-12 control-label">Kontaktinformasjon</label>
-                        <div class="col-sm-8">
-                          <div class="radio">
-                            <label>
-                              <input type="radio" name="contact-radios" id="contact-info-1" value="inherit-organizer" checked>
-                              Arrangørforeningens opplysninger
-                            </label>
-                          </div>
-                          <div class="radio">
-                            <label>
-                              <input type="radio" name="contact-radios" id="contact-info-2" value="inherit-guide">
-                              Turledernes opplysninger
-                            </label>
-                          </div>
-                          <div class="radio">
-                            <label>
-                              <input type="radio" name="contact-radios" id="contact-info-3" value="other">
-                              Annen
-                            </label>
-                          </div>
-                        </div>
-                      </div><!-- /.form-group -->
-                      <div class="form-group contact-info-custom contact-info-custom-name jq-hide">
-                        <label for="" class="col-sm-4 control-label">Navn</label>
-                        <div class="col-sm-8">
-                          <input type="text" class="form-control" id="" placeholder="">
-                        </div>
-                      </div>
-                      <div class="form-group contact-info-custom contact-info-custom-phone jq-hide">
-                        <label for="" class="col-sm-4 control-label">Telefon</label>
-                        <div class="col-sm-8">
-                          <input type="text" class="form-control" id="" placeholder="">
-                        </div>
-                      </div>
-                      <div class="form-group contact-info-custom contact-info-custom-name jq-hide">
-                        <label for="" class="col-sm-4 control-label">E-post</label>
-                        <div class="col-sm-8">
-                          <input type="text" class="form-control" id="" placeholder="">
-                        </div>
-                      </div><!-- /.form-group -->
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {% for date in aktivitet.get_dates_ordered %}
-            {# % include 'common/admin/aktiviteter/edit/dates.html' % #}
-          {% endfor %}
-
-          {# % include 'common/admin/aktiviteter/edit/dates.html' % #}
-
-          <div class="form-group">
-            <div class="col-md-offset-0 col-md-10">
-              <button class="btn btn-default add-date"><i class="fa fa-plus"></i> Legg til enda en turdato</button>
-            </div>
-          </div>
+          {% include 'common/admin/aktiviteter/edit/dates.html' with aktivitet=aktivitet %}
 
         </div><!-- /.section.dates -->
 
@@ -794,77 +570,55 @@
     </div>
   </div>
 
-  <div class="modal container jq-hide turleder-search admin-aktiviteter-turleder-search">
+  <div class="modal container" data-dnt-container="turleder-search" >
     <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
-      <h3>Finn turledere for denne aktiviteten</h3>
+      <button type="button" class="close" data-dismiss="modal">
+        <span aria-hidden="true">&times;</span>
+        <span class="sr-only">Lukk</span>
+      </button>
+      <h4 class="modal-title">Finn turleder</h4>
     </div>
     <div class="modal-body">
+      <form class="form-horizontal" role="form"
+        action="{% url 'admin.aktiviteter.views.turleder_search' %}">
+        <div class="form-group">
+          <label for="" class="col-sm-1 control-label">Søk</label>
+          <div class="col-sm-11">
+            <div class="input-group" style="margin-bottom: 10px;">
+              <input type="search" class="form-control"
+                placeholder="Skriv inn navn eller medlemsnummer">
+              <span class="input-group-btn">
+                <button class="btn btn-primary" type="submit" data-loading-text="Laster...">
+                  <i class="fa fa-search"></i> Finn
+                </button>
+              </span>
+            </div><!-- /input-group -->
+        </form>
+      </div>
 
-      <p>
-        Her kan du velge hvem som skal være turledere for denne turdatoen. Disse vil få tilgang til påmeldtlister på Min side. Du kan kun søke etter brukere som finnes i medlemsregisteret.
-      </p>
+      <div class="table-responsive">
+        <table class="table table-hover table-striped jq-hide">
+          <thead>
+            <tr>
+              <th>Navn</th>
+              <th>Født</th>
+              <th>Forening</th>
+              <th>Adresse</th>
+              <th>Tlf / epost</th>
+              <th>Valg</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
 
-      <p>
-        <strong>Hvis personen mangler kontaktopplysninger, bør du be ham/henne legge dette inn på Min side.</strong>
-      </p>
+    </div><!-- /modal-header -->
 
-      <input type="text" class="form-control" name="turleder-search" placeholder="Søk etter navn eller medlemsnummer for å finne turledere...">
-      <button class="btn btn-default turleder-search input-button-align"><i class="fa fa-search"></i></button>
-
-      <table class="table search-results" data-search-url="{% url 'admin.aktiviteter.views.turleder_search' %}">
-        <tr>
-          <th>Navn</th>
-          <th>Født</th>
-          <th>Medlemsforening</th>
-          <th>Adresse</th>
-          <th>Tlf / e-post</th>
-          <th>Velg turleder</th>
-        </tr>
-
-        <tr class="intro">
-          <td colspan="6">Søk etter turledere i søkeboksen over.</td>
-        </tr>
-
-        <tr class="no-hits jq-hide">
-          <td colspan="6">Fant ingen med navn eller medlemsnummer <span class="result-mirror"></span>.</td>
-        </tr>
-
-        <tr class="short_query jq-hide">
-          <td colspan="6">
-            Du må bruke minst {{ admin_user_search_char_length }} tegn når du søker, ellers vil du få alt for mange treff.
-          </td>
-        </tr>
-
-        <tr class="technical-error jq-hide">
-          <td colspan="6">
-            <div class="alert alert-danger">
-              Beklager, det oppstod en teknisk feil ved oppslag i databasen. Feilen har blitt logget og vi vil se på problemet så snart som mulig.
-            </div>
-          </td>
-        </tr>
-
-        <tr class="max-hits-exceeded jq-hide">
-          <td colspan="6">
-
-            <div class="alert alert-danger">
-              Du fikk veldig mange treff, kun et utvalg vises her.<br>
-              Prøv å søke på noe litt mer spesifikt, som for eksempel medlemsnummeret.
-            </div>
-          </td>
-        </tr>
-
-        <tr class="loader jq-hide">
-          <td colspan="6">
-            Vennligst vent mens vi søker.<br>
-            Medlemsdatabasen er stor, så dette kan ta noen sekunder.<br>
-            <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent...">
-          </td>
-        </tr>
-      </table>
-
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+      <button type="button" class="btn btn-primary" data-dismiss="modal">Lagre endringer</button>
     </div>
-  </div>
+  </div><!-- /.modal -->
 
   <div class="modal container jq-hide delete-date admin-aktiviteter-delete-date">
     <div class="modal-header">

@@ -1,13 +1,7 @@
 {% for user in users %}
-  <tr class="result">
-    <td>
-      {{ user.get_full_name }}
-    </td>
-    <td>
-      {% if user.is_member %}
-        {{ user.get_birth_date|date:"d.m.y" }}
-      {% endif %}
-    </td>
+  <tr>
+    <td>{{ user.get_full_name }}</td>
+    <td>{% if user.is_member %}{{ user.get_birth_date|date:"d.m.y" }}{% endif %}</td>
     <td>
       {% if user.is_member %}
         {{ user.main_forening.name }}<br>
@@ -16,10 +10,7 @@
         <em>Ikke medlem</em>
       {% endif %}
     </td>
-    <td>
-      {% if user.is_member %}
-        {{ user.get_address.format_with_newlines|linebreaksbr }}
-      {% endif %}
+    <td>{% if user.is_member %}{{ user.get_address.format_with_newlines|linebreaksbr }}{% endif %}
     </td>
     <td>
       {% if user.is_member %}
@@ -40,10 +31,17 @@
       {% endif %}
     </td>
     <td>
-      <a href="javascript:undefined" class="btn btn-danger assign-turleder" data-name="{{ user.get_full_name }}" data-id="{{ user.id }}" data-type="user" data-memberid="{{ user.memberid|default:"ikke medlem" }}">Velg</a>
+      <button class="btn btn-small btn-success"
+        data-loading-text="Valgt!"
+        data-dnt-user-id="{{ user.id }}"
+        data-dnt-user-name="{{ user.get_full_name }}"
+        data-dnt-user-phone="{{ user.get_phone_mobile }}"
+        data-dnt-user-email="{{ user.get_email }}"
+        <i class="fa fa-plus"></i> Legg til
+      </button>
     </td>
   </tr>
 
-  {% include 'common/admin/aktiviteter/edit/turleder_display.html' with hide=True %}
+  {#% include 'common/admin/aktiviteter/edit/turleder_display.html' with hide=True %#}
 
 {% endfor %}
