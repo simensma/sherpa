@@ -1,3 +1,28 @@
+<div class="listing-header">
+  <p>
+    Viser {{ aktivitet_dates.object_list|length }} av {{ aktivitet_dates.paginator.count }} aktiviteter
+  </p>
+
+  <div class="pagination pagination-small">
+    <ul>
+      <li{% if aktivitet_dates.number == 1 %} class="disabled"{% endif %}>
+        <a href="javascript:undefined" class="page" data-page="min">«</a>
+      </li>
+
+      {% for number in aktivitet_dates.paginator.page_range %}
+        <li{% if number == aktivitet_dates.number %} class="active"{% endif %}>
+          <a href="javascript:undefined" class="page" data-page="{{ number }}">{{ number }}</a>
+        </li>
+      {% endfor %}
+
+      <li{% if aktivitet_dates.number == aktivitet_dates.paginator.num_pages %} class="disabled"{% endif %}>
+        <a href="javascript:undefined" class="page" data-page="max">»</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+
 <table class="table aktiviteter">
   {% for date in aktivitet_dates %}
     <tr>
@@ -27,10 +52,10 @@
 
 <div class="listing-footer">
   <p>
-    Viser {{ aktivitet_dates.object_list|length }} av totalt {{ aktivitet_dates.paginator.count }} aktiviteter.
+    Viser {{ aktivitet_dates.object_list|length }} av {{ aktivitet_dates.paginator.count }} aktiviteter
   </p>
 
-  <div class="pagination pagination-large">
+  <div class="pagination pagination-small">
     <ul>
       <li{% if aktivitet_dates.number == 1 %} class="disabled"{% endif %}>
         <a href="javascript:undefined" class="page" data-page="min">«</a>
