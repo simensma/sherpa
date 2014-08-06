@@ -1,4 +1,5 @@
 # encoding: utf-8
+from datetime import datetime
 import re
 import logging
 import sys
@@ -57,6 +58,16 @@ class DBConnection():
                         'period_message': "en kort periode", # LIES!
                     }
             cache.set('db_connection_status', request.db_connections, 60 * 15)
+
+        # Override the focus DB's value if we're in a planned downtime period
+        # Note that we don't need to cache this; and shouldn't since it's dependent on the current time
+        now = datetime.now()
+        for downtime in settings.FOCUS_DOWNTIME_PERIODS:
+            if now >= downtime['from'] and now < downtime['to']:
+                request.db_connections[database] = {
+                    'is_available': False,
+                    'period_message': downtime['period_message'],
+                }
 
 class DefaultLanguage():
     def process_request(self, request):
