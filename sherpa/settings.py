@@ -91,6 +91,16 @@ MEMBERSHIP_YEAR_START = [
 # Pixel sizes for thumbnail images generated from uploaded images.
 THUMB_SIZES = [1880, 940, 500, 150]
 
+# Map column count to their minimum size. This will need to be changed if:
+# - The number of available columns in the admin editor changes
+# - The grid layout (column width) in the design changes
+COLUMN_SPAN_MAP = {
+    4: 220,
+    3: 300,
+    2: 460,
+    1: 940,
+}
+
 # Require this many characters for an image search
 IMAGE_SEARCH_LENGTH = 3
 

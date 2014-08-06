@@ -217,6 +217,34 @@ class Content(models.Model):
             self._parsed_content = json.loads(self.content)
         return self._parsed_content
 
+    def get_image_source(self):
+        if self.type != 'image':
+            raise Exception("You can only call this method on image contents, check your code logic")
+
+        source = self.get_content()['src']
+
+        local_image_path = '%s/%s' % (settings.AWS_BUCKET, settings.AWS_IMAGEGALLERY_PREFIX)
+        local_image_path_ssl = '%s/%s' % (settings.AWS_BUCKET_SSL, settings.AWS_IMAGEGALLERY_PREFIX)
+
+        if not local_image_path in source and not local_image_path_ssl in source:
+            # Not an image from the image gallery; don't touch it
+            return source
+
+        for size in settings.THUMB_SIZES:
+            if ('-%s') % size in source:
+                return source
+
+        column_size = settings.COLUMN_SPAN_MAP[12 / self.column.span]
+        if column_size > max(settings.THUMB_SIZES):
+            # No thumbs are large enough, use the original
+            # Not technically possible right now (the largest column is 940px and the largest thumb is 1880)
+            return source
+        else:
+            thumb_size = min([t for t in settings.THUMB_SIZES if t >= column_size])
+
+        name, extension = source.rsplit('.', 1)
+        return '%s-%s.%s' % (name, thumb_size, extension)
+
     def get_cropping_json(self):
         if self.type != 'image':
             raise Exception("You can only call this method on image contents, check your code logic")
