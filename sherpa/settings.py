@@ -55,6 +55,9 @@ ADMIN_USER_SEARCH_CHAR_LENGTH = 4
 
 MSSQL_MAX_PARAMETER_COUNT = 2000 # Actually 2100, but leave room for some other parameters
 
+# Emails to DNT Medlemsservice
+MEMBERSERVICE_EMAIL = 'DNT Medlemsservice <medlem@turistforeningen.no>'
+
 # Define when årskravet is performed each year.
 # We may need to know when the *previous* years årskrav started, so keep a history.
 #

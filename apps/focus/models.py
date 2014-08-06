@@ -8,6 +8,9 @@ from django.db.models import Q
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.conf import settings
+from django.core.mail import send_mail
+from django.template import Context
+from django.template.loader import render_to_string
 
 from focus.util import get_membership_type_by_code, get_membership_type_by_codename, FJELLOGVIDDE_SERVICE_CODE, YEARBOOK_SERVICE_CODES, FOREIGN_POSTAGE_SERVICE_CODES, PAYMENT_METHOD_CODES, HOUSEHOLD_MEMBER_SERVICE_CODES, MEMBERSHIP_TYPES
 
@@ -391,9 +394,27 @@ class Actor(models.Model):
 
     def get_fjellogvidde_service(self):
         services = self.get_services().filter(code=FJELLOGVIDDE_SERVICE_CODE)
+
+        # This assumes that the actor *has* the F&V service, I suspect that assumption
+        # will sometimes be incorrect
         if len(services) == 0:
-            # This assumes that the actor *has* the F&V service, I suspect that assumption
-            # will sometimes be incorrect
+
+            # Yeah, another member without the service. Automatically inform memberservice that they need
+            # to update the record in Focus.
+            context = Context({
+                'actor': self,
+                'service_type': 'Fjell og Vidde',
+            })
+            message = render_to_string('common/user/account/missing_focus_service.txt', context)
+            send_mail(
+                "Medlem %s mangler tjeneste i medlemsregisteret" % self.memberid,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                [settings.MEMBERSERVICE_EMAIL]
+            )
+
+            # Ideally we would display an error message to the user and not log the error here, but
+            # we have to raise an exception and you can't do that without it being recorded.
             raise Exception("Expected at least one Fjell og Vidde-service to exist in Focus")
         elif len(services) == 1:
             return services[0]
@@ -403,9 +424,27 @@ class Actor(models.Model):
 
     def get_yearbook_service(self):
         services = self.get_services().filter(code__in=YEARBOOK_SERVICE_CODES)
+
+        # This assumes that the actor *has* the yearbook service, I suspect that assumption
+        # will sometimes be incorrect
         if len(services) == 0:
-            # This assumes that the actor *has* the yearbook service, I suspect that assumption
-            # will sometimes be incorrect
+
+            # Yeah, another member without the service. Automatically inform memberservice that they need
+            # to update the record in Focus.
+            context = Context({
+                'actor': self,
+                'service_type': 'Årboken',
+            })
+            message = render_to_string('common/user/account/missing_focus_service.txt', context)
+            send_mail(
+                "Medlem %s mangler tjeneste i medlemsregisteret" % self.memberid,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                [settings.MEMBERSERVICE_EMAIL]
+            )
+
+            # Ideally we would display an error message to the user and not log the error here, but
+            # we have to raise an exception and you can't do that without it being recorded.
             raise Exception("Expected at least one Yearbook-service to exist in Focus")
         elif len(services) == 1:
             return services[0]

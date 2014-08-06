@@ -1,0 +1,17 @@
+Hei
+
+Følgende medlem mangler {{ service_type }}-tjenesten i medlemsregisteret:
+
+{{ actor.get_full_name }}, medlemsnummer: {{ actor.memberid }}
+
+Vi ber om at medlemmet får tjenesten opprettet (eventuelt med stopp-dato satt
+dersom de ikke skal motta {{ service_type }}) slik de ikke får feilmelding på
+Min side.
+
+Denne e-posten er automatisk generert og du kan ikke svare direkte. Hvis du
+har spørsmål eller mener at dette medlemmet ikke skal ha denne tjenesten, send
+e-post til hjelp@turistforeningen.no eller se:
+http://hjelp.turistforeningen.no/
+
+Med vennlig hilsen
+Teknologi- og utviklingsavdelingen
