@@ -5,8 +5,9 @@ import sys
 
 from django.shortcuts import render, redirect
 from django.conf import settings
-from django.core.exceptions import PermissionDenied
 from django.core import urlresolvers
+from django.core.cache import cache
+from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import resolve, Resolver404
 from django.contrib.auth import logout
 from django.utils import translation
@@ -33,13 +34,20 @@ class DBConnection():
     """Checks connections to external DBs and saves the state in the request object"""
     def process_request(self, request):
         external_databases = ['focus', 'sherpa-2', 'sherpa-25']
-        request.db_connections = {}
-        for database in external_databases:
-            try:
-                connections[database].cursor() # Will select server version from the DB
-                request.db_connections[database] = {'available': True}
-            except Exception:
-                request.db_connections[database] = {'available': False}
+
+        # Cache the connection status for a few minutes. It's okay to display the 500 page for a few request
+        # if there's a short-lasting problem. It's when a DB goes unavailable for a long while that we want
+        # to give a nicer error message.
+        request.db_connections = cache.get('db_connection_status')
+        if request.db_connections is None:
+            request.db_connections = {}
+            for database in external_databases:
+                try:
+                    connections[database].cursor() # Will select server version from the DB
+                    request.db_connections[database] = {'available': True}
+                except Exception:
+                    request.db_connections[database] = {'available': False}
+            cache.set('db_connection_status', request.db_connections, 60 * 15)
 
 class DefaultLanguage():
     def process_request(self, request):
