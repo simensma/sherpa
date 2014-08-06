@@ -15,7 +15,6 @@ from django.utils import translation
 from django.db import connections
 
 from core.models import Site
-from core.util import focus_is_down
 from foreninger.models import Forening
 from focus.models import Actor, Enrollment
 from enrollment.util import current_template_layout
@@ -216,7 +215,7 @@ class FocusDowntime():
         Use process_view instead of process_request here because some rendered pages need the csrf token,
         which is generated on process_view by the csrf middleware.
         """
-        if focus_is_down():
+        if not request.db_connections['focus']['is_available']:
             # All these paths are hardcoded! :(
             # These are the paths that can be directly accessed and require Focus to function
             focus_required_paths = [
@@ -238,7 +237,7 @@ class FocusDowntime():
 class ActorDoesNotExist():
     def process_request(self, request):
         # Skip this check if Focus is currently down
-        if not focus_is_down() and request.user.is_authenticated() and request.user.is_member():
+        if request.db_connections['focus']['is_available'] and request.user.is_authenticated() and request.user.is_member():
             try:
                 # This call performs the lookup in Focus (or uses the cache if applicable, which is fine)
                 request.user.get_actor()

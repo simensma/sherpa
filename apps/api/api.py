@@ -10,7 +10,7 @@ import error_codes
 
 def members(request, version, format):
     if request.method == 'GET':
-        require_focus()
+        require_focus(request)
 
         try:
             if 'sherpa_id' in request.GET and 'medlemsnummer' in request.GET:
@@ -45,7 +45,7 @@ def members(request, version, format):
 
 def forening(request, version, format):
     if request.method == 'GET':
-        require_focus()
+        require_focus(request)
 
         if 'bruker_sherpa_id' in request.GET or 'bruker_medlemsnummer' in request.GET:
             try:

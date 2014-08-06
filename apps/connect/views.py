@@ -12,7 +12,6 @@ from connect.util import get_request_data, prepare_response, add_signon_session_
 from user.login.util import attempt_login, attempt_registration, attempt_registration_nonmember
 from user.models import User
 from core.models import FocusCountry
-from core.util import focus_is_down
 
 logger = logging.getLogger('sherpa')
 
@@ -22,7 +21,7 @@ def bounce(request):
     # For now, if Focus is down, just say that they're not authenticated.
     # This might not be the best approach, reconsider this.
     response_data = {'er_autentisert': request.user.is_authenticated()}
-    if request.user.is_authenticated() and not focus_is_down():
+    if request.user.is_authenticated() and not request.db_connections['focus']['is_available']:
         response_data.update(get_member_data(request.user))
 
     return prepare_response(client, auth_index, response_data, redirect_url)

@@ -1,6 +1,6 @@
 # Core utility methods that aren't views
 
-from datetime import datetime, date
+from datetime import date
 import re
 
 from django.conf import settings
@@ -46,10 +46,3 @@ def membership_year_start(year=None):
         'actual_date': date(year=year, month=dates['actual_date'].month, day=dates['actual_date'].day),
         'public_date': date(year=year, month=dates['public_date'].month, day=dates['public_date'].day),
     }
-
-def focus_is_down():
-    """
-    Return True if Focus is currently down
-    """
-    now = datetime.now()
-    return any([now >= p['from'] and now < p['to'] for p in settings.FOCUS_DOWNTIME_PERIODS])
