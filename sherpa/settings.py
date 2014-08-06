@@ -229,7 +229,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "sherpa.context_processors.current_site",
     "sherpa.context_processors.old_site",
     "sherpa.context_processors.admin_active_forening",
-    "sherpa.context_processors.focus_downtime",
+    "sherpa.context_processors.db_connections",
     "sherpa.context_processors.dntconnect",
     "sherpa.context_processors.membership_year_start",
     "sherpa.context_processors.do_not_track",
@@ -240,6 +240,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'sherpa.middleware.DBConnection',
     'sherpa.middleware.DefaultLanguage',
     'sherpa.middleware.Sites',
     'sherpa.middleware.CurrentApp',

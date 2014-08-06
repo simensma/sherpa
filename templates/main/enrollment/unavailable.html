@@ -12,9 +12,9 @@
 
     {# This template can be rendered both by a deactivated enrollment, and by Focus being down. Render the status message slightly differently #}
     <p>
-      {% if focus_downtime.is_currently_down %}
+      {% if not db_connections.focus.is_available %}
         <strong>
-          {% blocktrans with period=focus_downtime.period_message %}Online innmeldingsskjema er dessverre utilgjengelig {{ period }} på grunn av midlertidig vedlikehold.{% endblocktrans %}
+          {% blocktrans with period=db_connections.focus.period_message %}Online innmeldingsskjema er dessverre utilgjengelig {{ period }} på grunn av midlertidig vedlikehold.{% endblocktrans %}
         </strong>
       {% else %}
         <strong>{% trans "Online innmeldingsskjema er dessverre ikke tilgjengelig på grunn av midlertidig vedlikehold." %}</strong>

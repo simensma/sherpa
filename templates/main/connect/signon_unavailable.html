@@ -17,7 +17,7 @@
     <h1>{% trans "Midlertidig vedlikehold" %}</h1>
 
     <p class="lede">
-      {% blocktrans with period=focus_downtime.period_message %}Tjenesten er dessverre utilgjengelig {{ period }} på grunn av midlertidig vedlikehold.{% endblocktrans %}
+      {% blocktrans with period=db_connections.focus.period_message %}Tjenesten er dessverre utilgjengelig {{ period }} på grunn av midlertidig vedlikehold.{% endblocktrans %}
     </p>
 
     <p>

@@ -3,7 +3,6 @@ import base64
 
 from django.conf import settings
 
-from core.util import focus_is_down
 from exceptions import BadRequest
 from urls import supported_versions
 import error_codes
@@ -157,8 +156,8 @@ def invalid_version_response(version):
         http_code=400
     ).response()
 
-def require_focus():
-    if focus_is_down():
+def require_focus(request):
+    if not request.db_connections['focus']['is_available']:
         raise BadRequest(
             "Our member system is required by this API call, however it is currently down for maintenance.",
             code=error_codes.FOCUS_IS_DOWN,

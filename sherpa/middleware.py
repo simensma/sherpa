@@ -1,18 +1,20 @@
 # encoding: utf-8
+from datetime import datetime
 import re
 import logging
 import sys
 
 from django.shortcuts import render, redirect
 from django.conf import settings
-from django.core.exceptions import PermissionDenied
 from django.core import urlresolvers
+from django.core.cache import cache
+from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import resolve, Resolver404
 from django.contrib.auth import logout
 from django.utils import translation
+from django.db import connections
 
 from core.models import Site
-from core.util import focus_is_down
 from foreninger.models import Forening
 from focus.models import Actor, Enrollment
 from enrollment.util import current_template_layout
@@ -27,6 +29,44 @@ if not model_cache.loaded:
 
 from django import template
 template.add_to_builtins('core.templatetags.url')
+
+class DBConnection():
+    """Checks connections to external DBs and saves the state in the request object"""
+    def process_request(self, request):
+        # Define the external databases that we want to check here.
+        # Note that the check for sherpa-2 and sherpa-25 does NOT work at the moment. This is because the
+        # postgis engine needs to check the DB version in its init, and if the connection is down it will
+        # raise an exception. We cannot hook into or handle that exception. This is also why the entire site
+        # will go down if one of these databases is unavailable.
+        # Here's an example stacktrace: http://pastie.org/private/ge6yxjymjfyb6nwtj9ug
+        external_databases = ['focus', 'sherpa-2', 'sherpa-25']
+
+        # Cache the connection status for a few minutes. It's okay to display the 500 page for a few request
+        # if there's a short-lasting problem. It's when a DB goes unavailable for a long while that we want
+        # to give a nicer error message.
+        request.db_connections = cache.get('db_connection_status')
+        if request.db_connections is None:
+            request.db_connections = {}
+            for database in external_databases:
+                try:
+                    connections[database].cursor() # Will select server version from the DB
+                    request.db_connections[database] = {'is_available': True}
+                except Exception:
+                    request.db_connections[database] = {
+                        'is_available': False,
+                        'period_message': "en kort periode", # LIES!
+                    }
+            cache.set('db_connection_status', request.db_connections, 60 * 15)
+
+        # Override the focus DB's value if we're in a planned downtime period
+        # Note that we don't need to cache this; and shouldn't since it's dependent on the current time
+        now = datetime.now()
+        for downtime in settings.FOCUS_DOWNTIME_PERIODS:
+            if now >= downtime['from'] and now < downtime['to']:
+                request.db_connections[database] = {
+                    'is_available': False,
+                    'period_message': downtime['period_message'],
+                }
 
 class DefaultLanguage():
     def process_request(self, request):
@@ -175,7 +215,7 @@ class FocusDowntime():
         Use process_view instead of process_request here because some rendered pages need the csrf token,
         which is generated on process_view by the csrf middleware.
         """
-        if focus_is_down():
+        if not request.db_connections['focus']['is_available']:
             # All these paths are hardcoded! :(
             # These are the paths that can be directly accessed and require Focus to function
             focus_required_paths = [
@@ -197,7 +237,7 @@ class FocusDowntime():
 class ActorDoesNotExist():
     def process_request(self, request):
         # Skip this check if Focus is currently down
-        if not focus_is_down() and request.user.is_authenticated() and request.user.is_member():
+        if request.db_connections['focus']['is_available'] and request.user.is_authenticated() and request.user.is_member():
             try:
                 # This call performs the lookup in Focus (or uses the cache if applicable, which is fine)
                 request.user.get_actor()

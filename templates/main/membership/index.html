@@ -10,10 +10,10 @@
 {% block body %}
 
 <div class="membership-entry">
-  {% if focus_downtime.is_currently_down %}
+  {% if not db_connections.focus.is_available %}
     <div class="alert alert-info">
-      <strong>Merk:</strong> Medlemsfordeler og innmelding vil i perioder være utilgjengelige {{
-      focus_downtime.period_message }}, grunnet planlagt vedlikeholdsarbeid hos vår leverandør. Hvis du
+      <strong>Merk:</strong> Medlemsfordeler og innmelding vil i perioder være utilgjengelige
+      {{ db_connections.focus.period_message }}, grunnet planlagt vedlikeholdsarbeid hos vår leverandør. Hvis du
       opplever melding om "teknisk feil", vær vennlig og prøv på nytt i morgen. Vi beklager eventuelle ulemper
       dette medfører.
     </div>
@@ -39,7 +39,7 @@
         </div>
 
         <div class="subentry-box">
-          <p>Nå kåres Mest utilgjengelige hytte på ut.no <a class="action" href="http://artikkel.ut.no/1.11774617?utm_source=turistforeningen&utm_medium=banner&utm_campaign=favoritthytter_2014">stem her</a></p>
+          <p>Nå kåres Mest utilgjengelige hytte på ut.no <a class="action" href="http://artikkel.ut.no/1.11774617?utm_source=turistforeningen&amp;utm_medium=banner&amp;utm_campaign=favoritthytter_2014">stem her</a></p>
         </div>
 
         <p class="credit">Torbjørn Bjelland</p>

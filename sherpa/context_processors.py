@@ -34,17 +34,8 @@ def admin_active_forening(request):
         return {'active_forening': request.active_forening}
     return {}
 
-def focus_downtime(request):
-    now = datetime.now()
-    for downtime in settings.FOCUS_DOWNTIME_PERIODS:
-        if now >= downtime['from'] and now < downtime['to']:
-            return {
-                'focus_downtime': {
-                    'is_currently_down': True,
-                    'period_message': downtime['period_message']
-                }
-            }
-    return {'focus_downtime': {'is_currently_down': False}}
+def db_connections(request):
+    return {'db_connections': request.db_connections}
 
 def dntconnect(request):
     if 'dntconnect' in request.session:
