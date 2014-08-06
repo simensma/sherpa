@@ -52,7 +52,10 @@ class DBConnection():
                     connections[database].cursor() # Will select server version from the DB
                     request.db_connections[database] = {'is_available': True}
                 except Exception:
-                    request.db_connections[database] = {'is_available': False}
+                    request.db_connections[database] = {
+                        'is_available': False,
+                        'period_message': "en kort periode", # LIES!
+                    }
             cache.set('db_connection_status', request.db_connections, 60 * 15)
 
 class DefaultLanguage():
