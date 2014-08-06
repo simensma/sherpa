@@ -401,17 +401,20 @@ class Actor(models.Model):
 
             # Yeah, another member without the service. Automatically inform memberservice that they need
             # to update the record in Focus.
-            context = Context({
-                'actor': self,
-                'service_type': 'Fjell og Vidde',
-            })
-            message = render_to_string('common/user/account/missing_focus_service.txt', context)
-            send_mail(
-                "Medlem %s mangler tjeneste i medlemsregisteret" % self.memberid,
-                message,
-                settings.DEFAULT_FROM_EMAIL,
-                [settings.MEMBERSERVICE_EMAIL]
-            )
+            if cache.get('actor.%s.missing_service' % self.memberid) is None:
+                context = Context({
+                    'actor': self,
+                    'service_type': 'Fjell og Vidde',
+                })
+                message = render_to_string('common/user/account/missing_focus_service.txt', context)
+                send_mail(
+                    "Medlem %s mangler tjeneste i medlemsregisteret" % self.memberid,
+                    message,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [settings.MEMBERSERVICE_EMAIL]
+                )
+                # Ignore repeated errors for 24 hours
+                cache.set('actor.%s.missing_service' % self.memberid, True, 60 * 60 * 24)
 
             # Ideally we would display an error message to the user and not log the error here, but
             # we have to raise an exception and you can't do that without it being recorded.
@@ -431,17 +434,20 @@ class Actor(models.Model):
 
             # Yeah, another member without the service. Automatically inform memberservice that they need
             # to update the record in Focus.
-            context = Context({
-                'actor': self,
-                'service_type': 'Årboken',
-            })
-            message = render_to_string('common/user/account/missing_focus_service.txt', context)
-            send_mail(
-                "Medlem %s mangler tjeneste i medlemsregisteret" % self.memberid,
-                message,
-                settings.DEFAULT_FROM_EMAIL,
-                [settings.MEMBERSERVICE_EMAIL]
-            )
+            if cache.get('actor.%s.missing_service' % self.memberid) is None:
+                context = Context({
+                    'actor': self,
+                    'service_type': 'Årboken',
+                })
+                message = render_to_string('common/user/account/missing_focus_service.txt', context)
+                send_mail(
+                    "Medlem %s mangler tjeneste i medlemsregisteret" % self.memberid,
+                    message,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [settings.MEMBERSERVICE_EMAIL]
+                )
+                # Ignore repeated errors for 24 hours
+                cache.set('actor.%s.missing_service' % self.memberid, True, 60 * 60 * 24)
 
             # Ideally we would display an error message to the user and not log the error here, but
             # we have to raise an exception and you can't do that without it being recorded.
