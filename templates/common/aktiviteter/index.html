@@ -34,6 +34,17 @@
       <div class="column-query-parameters">
         <h2>Finn en tur</h2>
 
+        <div class="search-filters">
+          <div class="section">
+            <h3>Jeg vil se</h3>
+            <div class="button-selections categories">
+              {% for category in categories %}
+                <button class="btn category" data-category="{{ category.0 }}">{{ category.1 }}</button>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
         <form class="form-search">
           <input type="text" class="input-medium search-query">
           <button type="submit" class="btn">Søk</button>
@@ -98,15 +109,8 @@
     <div class="span8">
       <div class="column-results">
 
-        <div class="search-filters">
-          <div class="section">
-            <h3>Velg turtype:</h3>
-            <div class="button-selections categories">
-              {% for category in categories %}
-                <button class="btn category" data-category="{{ category.0 }}">{{ category.1 }}</button>
-              {% endfor %}
-            </div>
-          </div>
+        <div class="showing">
+          <p>Viser <span data-container-for="selected-activity-types"><a href="#">turer med guide</a>, <a href="#">kurs</a>, <a href="#">fellesturer</a> og <a href="#">dugnader</a></span></p>
         </div>
 
         <div class="results" data-filter-url="{% url 'aktiviteter.views.filter' %}">
