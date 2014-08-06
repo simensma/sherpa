@@ -418,7 +418,7 @@ class Actor(models.Model):
 
             # Ideally we would display an error message to the user and not log the error here, but
             # we have to raise an exception and you can't do that without it being recorded.
-            raise Exception("Expected at least one Fjell og Vidde-service to exist in Focus")
+            raise Exception("Medlem mangler tjeneste (medlemsservice er automatisk varslet)")
         elif len(services) == 1:
             return services[0]
         else:
@@ -451,7 +451,7 @@ class Actor(models.Model):
 
             # Ideally we would display an error message to the user and not log the error here, but
             # we have to raise an exception and you can't do that without it being recorded.
-            raise Exception("Expected at least one Yearbook-service to exist in Focus")
+            raise Exception("Medlem mangler tjeneste (medlemsservice er automatisk varslet)")
         elif len(services) == 1:
             return services[0]
         else:
