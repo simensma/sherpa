@@ -10,6 +10,7 @@ from django.core import urlresolvers
 from django.core.urlresolvers import resolve, Resolver404
 from django.contrib.auth import logout
 from django.utils import translation
+from django.db import connections
 
 from core.models import Site
 from core.util import focus_is_down
@@ -27,6 +28,18 @@ if not model_cache.loaded:
 
 from django import template
 template.add_to_builtins('core.templatetags.url')
+
+class DBConnection():
+    """Checks connections to external DBs and saves the state in the request object"""
+    def process_request(self, request):
+        external_databases = ['focus', 'sherpa-2', 'sherpa-25']
+        request.db_connections = {}
+        for database in external_databases:
+            try:
+                connections[database].cursor() # Will select server version from the DB
+                request.db_connections[database] = {'available': True}
+            except Exception:
+                request.db_connections[database] = {'available': False}
 
 class DefaultLanguage():
     def process_request(self, request):
