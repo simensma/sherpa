@@ -10,10 +10,10 @@
 {% block body %}
 
 <div class="membership-entry">
-  {% if focus_downtime.is_currently_down %}
+  {% if not db_connections.focus.is_available %}
     <div class="alert alert-info">
       <strong>Merk:</strong> Medlemsfordeler og innmelding vil i perioder være utilgjengelige
-      {{ focus_downtime.period_message }}, grunnet planlagt vedlikeholdsarbeid hos vår leverandør. Hvis du
+      {{ db_connections.focus.period_message }}, grunnet planlagt vedlikeholdsarbeid hos vår leverandør. Hvis du
       opplever melding om "teknisk feil", vær vennlig og prøv på nytt i morgen. Vi beklager eventuelle ulemper
       dette medfører.
     </div>

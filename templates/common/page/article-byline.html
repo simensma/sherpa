@@ -3,10 +3,10 @@
 <div class="row">
   <div class="span12">
     <div class="byline">
-      {% if focus_downtime.is_currently_down %}
+      {% if not db_connections.focus.is_available %}
 
         <em>
-          Vi kan dessverre ikke vise informasjon om artikkelforfatteren(e) grunnet planlagt vedlikehold i enkelte av våre systemer. Vedlikeholdet foregår {{ focus_downtime.period_message }} &mdash; vennligst sjekk tilbake etter dette.
+          Vi kan dessverre ikke vise informasjon om artikkelforfatteren(e) grunnet planlagt vedlikehold i enkelte av våre systemer. Vedlikeholdet foregår {{ db_connections.focus.period_message }} &mdash; vennligst sjekk tilbake etter dette.
         </em>
 
       {% else %}
