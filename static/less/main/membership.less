@@ -5,7 +5,7 @@ div.membership-entry {
   div.entry-box-wrapper {
     @padding-top: 0px;
     @image-height: 474px;
-    background-image: url('/static/img/membership/hytte-mest-utilgjengelig-2014.png');
+    background-image: url('/static/img/membership/hytte-mest-original-2014.png');
     height: @image-height - @padding-top;
     margin-bottom: 40px;
     padding-top: padding-top;
@@ -14,7 +14,7 @@ div.membership-entry {
       /* background-color: #d82d20; */
       margin-left: 50px;
       width: 430px;
-      padding: 50px 10px 10px 10px;
+      padding: 40px 10px 10px 10px;
       text-align: center;
       color: white;
 
@@ -76,35 +76,35 @@ div.membership-entry {
           height: 40px;
         }
       }
-    }
 
-    div.subentry-box {
-      margin-left: 50px;
-      margin-top: 15px;
-      padding: 0 10px;
-      width: 430px;
-      background-color: #d82d20;
+      .call-to-action {
+        @padding-vertical: 10px;
+        padding: 0 @padding-vertical;
+        margin-left: -@padding-vertical; // because 100% width
+        width: 100%;
+        background-color: #d82d20;
 
-      p {
-        padding: 10px 0;
-        font-size: 16px;
-        font-family: "DTL Nobel" !important;
-        color: white;
-
-        a.action {
-          margin-left: 10px;
-          text-transform: uppercase;
-          text-decoration: underline;
+        p {
+          padding: 10px 0;
+          font-size: 18px;
+          font-family: "DTL Nobel" !important;
           color: white;
+
+          a.action {
+            margin-left: 10px;
+            text-transform: uppercase;
+            text-decoration: underline;
+            color: white;
+          }
         }
       }
-    }
 
-    p.credit {
-      margin-top: -10px;
-      margin-left: 200px;
-      color: white;
-      font-family: "DTL Nobel" !important;
+      p.credit {
+        margin-top: 20px;
+        color: rgb(60, 60, 60);
+        font-family: "DTL Nobel" !important;
+        font-size: 14px;
+      }
     }
   }
 
