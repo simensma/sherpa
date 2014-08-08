@@ -176,7 +176,7 @@ $(function() {
             position = {insertion: 'append', existingElement: prev_row.children("div.column")};
         } else {
             // No previous row or not single-column; create a new row
-            var new_row = $('<div class="row-fluid" data-row><div class="column span12"></div></div>');
+            var new_row = insertion_templates.find('[data-row]').clone();
             new_row.insertAfter($(this).parents("div.row-fluid"));
             position = {insertion: 'prepend', existingElement: new_row.find("div.column")};
         }
