@@ -145,6 +145,26 @@ $(function() {
         var prev = $(this).parents("div.add-content").prevAll("div.content").first();
         var column = $(this).parents("div.column");
 
+        // Special rules for columns
+        if(type === 'columns') {
+            var column_count = column.siblings().length + 1;
+            if(column_count > 1) {
+                alert(
+                    article.attr('data-columns-into-columns-warning')
+                    .replace(/%s/, column_count)
+                    .replace(/\\n/g, '\n')
+                );
+                return $(this);
+            } else {
+                var following_elements = $(this).parents('div.add-content').nextAll('div.content');
+                var new_row = insertion_templates.find('[data-row]').clone();
+                new_row.insertAfter($(this).parents('div.row-fluid'));
+                following_elements.detach().prependTo(new_row.find('div.column'));
+                resetControls();
+                return $(this);
+            }
+        }
+
         var position;
         if(prev.length === 0) {
             position = {insertion: 'prepend', existingElement: column};
@@ -171,11 +191,11 @@ $(function() {
         var prev_row = $(this).parents("div.row-fluid").prev("div[data-row]");
 
         var position;
-        if(prev_row.length > 0 && prev_row.children("div.column").length === 1) {
+        if(type !== 'columns' && prev_row.length > 0 && prev_row.children("div.column").length === 1) {
             // The previous row exists and is a single-column; just add an element to that row
             position = {insertion: 'append', existingElement: prev_row.children("div.column")};
         } else {
-            // No previous row or not single-column; create a new row
+            // Column explicitly chosen, no previous row, or not single-column; create a new row
             var new_row = insertion_templates.find('[data-row]').clone();
             new_row.insertAfter($(this).parents("div.row-fluid"));
             position = {insertion: 'prepend', existingElement: new_row.find("div.column")};
@@ -202,7 +222,8 @@ $(function() {
             }
         }
 
-        if(content.type === 'text') {
+        if(content.type === 'text' || content.type === 'columns') {
+            // Note that when inserting a column, we'll insert a text element into the new column
             content = insertion_templates.find("div.content.html").clone();
             insertItem(content, position);
             content.attr('contenteditable', 'true').focus();
