@@ -431,7 +431,7 @@ $(function() {
     // Change a row's column-structure
     $(document).on('click', article.selector + ' div.edit-structure button', function() {
 
-        var row = $(this).parents("div.row-fluid").next("div[data-row]");
+        var row = $(this).parents("div.row-fluid").nextAll("div[data-row]").first();
 
         if($(this).attr('data-type') === 'single') {
             var first_column = row.children("div.column").first();
@@ -579,21 +579,24 @@ $(function() {
             // Iterate existing rows
             rows.each(function() {
                 var columns = $(this).find("div.column");
-
-                // If there is one great column, no nead for a trailing add column after last content
-                // If there are several, we do want one
-                var trailing_add_content = columns.length > 1;
+                var single_column = columns.length == 1;
 
                 columns.each(function() {
                     insertion_templates.find("div.add-content").clone().prependTo($(this));
                     $(this).find("div.content").each(function() {
                         insertion_templates.find("div.add-content").clone().insertAfter($(this));
                     });
-                    if(!trailing_add_content) {
+                    // If there is one great column, no nead for a trailing add-column after last content
+                    if(single_column) {
                         $(this).children("div.add-content").last().remove();
                     }
                 });
                 insertion_templates.find("div.edit-structure").clone().insertBefore($(this));
+
+                // If this is multiple-column, let user add single row before this row
+                if(!single_column) {
+                    insertion_templates.find("div.add-content-row").clone().insertBefore($(this));
+                }
                 insertion_templates.find("div.add-content-row").clone().insertAfter($(this));
             });
         }
