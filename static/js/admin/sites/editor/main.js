@@ -118,7 +118,13 @@
         // Change a row's column-structure
         $(document).on('click', article.selector + ' div.edit-structure button', function() {
 
-            var row = $(this).parents("div.row-fluid").nextAll("div[data-row]").first();
+            // Find the first row with content elements (since the first row without may be an editor control)
+            var row;
+            $(this).parents("div.edit-structure").nextAll("div[data-row]").each(function() {
+                if(row === undefined && $(this).find('div.content').length !== 0) {
+                    row = $(this);
+                }
+            });
 
             if($(this).attr('data-type') === 'single') {
                 var first_column = row.children("div.column").first();
