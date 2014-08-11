@@ -10,6 +10,7 @@ $(function() {
         },
 
         onEdit: function(editor, widget_content) {
+            // TODO: Reset all editor-controls based on the current widget state
             editor.find("input[name='url']").val(widget_content.url);
         },
 
