@@ -4,11 +4,13 @@
     var endCallback;
     var editor;
     var article;
+    var insertion_templates;
     var is_moving = false;
 
     $(function() {
         editor = $("div.cms-editor");
         article = editor.find("article");
+        insertion_templates = editor.find('div.insertion-templates');
     });
 
     EditorMoveContent.init = function(opts) {
@@ -17,16 +19,25 @@
 
         is_moving = true;
 
-        // Mark the current icon as active
-        moved_content.find("div.move-content").addClass('moving');
+        // Hovered content will have the custom 'hover' class but the mouseover which is supposed to remove
+        // it might not be triggered when moving is initiated, so explicitly remove it here
+        moved_content.removeClass('hover');
 
-        // Disable the drop areas adjacent to the content being moved
-        moved_content.prevAll('div.add-content').first().addClass('disabled');
-        moved_content.nextAll('div.add-content').first().addClass('disabled');
+        // Hide add-content fields and insert drop-areas below
+        article.find('div.add-content').each(function() {
+            // Hide drop-areas adjacent to the content being moved
+            if($(this).prevAll('div.content').first().is(moved_content) || $(this).nextAll('div.content').first().is(moved_content)) {
+                // Just set visibility hidden so nothing jumps, and the controls will re-appear when reset
+                $(this).css('visibility', 'hidden');
+            } else {
+                // Note that add-content and drop-area should always be the same height
+                $(this).hide();
+                insertion_templates.find('div.drop-area').clone().insertAfter($(this));
+            }
+        });
 
         // Disable most of the hover effects
         article.find("div.edit-structure button").tooltip('destroy');
-        article.find("div.add-content").addClass('moving').tooltip('destroy');
         article.find("div.content").addClass('moving');
 
         // Add hover effect to add-content elements
@@ -34,8 +45,8 @@
             $(this).addClass('droparea');
         });
 
-        // An insertable add-content element was clicked, move the content there
-        article.find("div.add-content:not(.disabled)").click(function() {
+        // An insertable drop-area was clicked, move the content there
+        article.find("div.drop-area").click(function() {
             moved_content.detach().insertAfter($(this));
         });
 
@@ -62,6 +73,9 @@
         // Explicitly remove the content-controls from the dragged content since its mouseover
         // was ignored during the moving session
         moved_content.find("div.content-control").remove();
+
+        // Remove the drop-area controls
+        article.find('div.drop-area').remove();
 
         // And call our given endCallback. It's the callback's responsibility to clean up
         // moving states on controls etc.
