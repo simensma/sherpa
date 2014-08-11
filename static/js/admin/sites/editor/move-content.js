@@ -26,7 +26,7 @@
 
         // Disable most of the hover effects
         article.find("div.edit-structure button").tooltip('destroy');
-        article.find("div.add-content,div.add-content-row").addClass('moving').tooltip('destroy');
+        article.find("div.add-content").addClass('moving').tooltip('destroy');
         article.find("div.content").addClass('moving');
 
         // Add hover effect to add-content elements

@@ -120,7 +120,7 @@ $(function() {
     });
 
     // Add content (expand plus-icon into available content items)
-    $(document).on('click', article.selector + ' div.add-content,' + article.selector + ' div.add-content-row', function() {
+    $(document).on('click', article.selector + ' div.add-content', function() {
         $(this).addClass('active');
         // The container may change size, so make sure the tooltip is removed
         // Simply hiding it was buggy, so try destroying and recreating it
@@ -130,83 +130,84 @@ $(function() {
     });
 
     // Cancel add-content on mouse out
-    $(document).on('mouseleave', article.selector + ' div.add-content,' + article.selector + ' div.add-content-row', function() {
+    $(document).on('mouseleave', article.selector + ' div.add-content', function() {
         $(this).removeClass('active');
     });
 
     // Add chosen content-type
     $(document).on('click', article.selector + " div.add-content button", function() {
+        var add_content = $(this).parents('div.add-content');
+
         // Manually hide the tooltips since mouseleave won't be triggered
         $(this).tooltip('hide');
-        $(this).parents("div.add-content,div.add-content-row").tooltip('hide');
+        add_content.tooltip('hide');
 
         var type = $(this).attr('data-type');
         var widget_type = $(this).attr('data-widget');
-        var prev = $(this).parents("div.add-content").prevAll("div.content").first();
-        var column = $(this).parents("div.column");
 
-        // Special rules for columns
-        if(type === 'columns') {
-            var column_count = column.siblings().length + 1;
-            if(column_count > 1) {
-                alert(
-                    article.attr('data-columns-into-columns-warning')
-                    .replace(/%s/, column_count)
-                    .replace(/\\n/g, '\n')
-                );
-                return $(this);
+        if(add_content.attr('data-dnt-row') !== undefined) {
+            // The add-content control is on a separate row without content siblings
+
+            var prev_row = $(this).parents("div.row-fluid").prev("div[data-row]");
+
+            var position;
+            if(type !== 'columns' && prev_row.length > 0 && prev_row.children("div.column").length === 1) {
+                // The previous row exists and is a single-column; just add an element to that row
+                position = {insertion: 'append', existingElement: prev_row.children("div.column")};
             } else {
-                var following_elements = $(this).parents('div.add-content').nextAll('div.content');
+                // Column explicitly chosen, no previous row, or not single-column; create a new row
                 var new_row = insertion_templates.find('[data-row]').clone();
-                new_row.insertAfter($(this).parents('div.row-fluid'));
-                following_elements.detach().prependTo(new_row.find('div.column'));
-                resetControls();
-                return $(this);
+                new_row.insertAfter($(this).parents("div.row-fluid"));
+                position = {insertion: 'prepend', existingElement: new_row.find("div.column")};
             }
-        }
 
-        var position;
-        if(prev.length === 0) {
-            position = {insertion: 'prepend', existingElement: column};
+            if(type !== 'widget') {
+                insertContent({type: type}, position);
+            } else {
+                $(document).trigger('widget.new.' + widget_type, function(widget) {
+                    insertContent({type: type, widget: widget}, position);
+                });
+            }
         } else {
-            position = {insertion: 'after', existingElement: prev};
-        }
+            // The add-content control is in a column with content siblings
 
-        if(type !== 'widget') {
-            insertContent({type: type}, position);
-        } else {
-            $(document).trigger('widget.new.' + widget_type, function(widget) {
-                insertContent({type: type, widget: widget}, position);
-            });
-        }
-    });
+            var prev = $(this).parents("div.add-content").prevAll("div.content").first();
+            var column = $(this).parents("div.column");
 
-    // Add chosen content-type (separate logic for row-based addition)
-    $(document).on('click', article.selector + ' div.add-content-row button', function() {
-        // Trigger mouseout manually so that the tooltip is removed
-        $(this).trigger('mouseout');
+            // Special rules for columns
+            if(type === 'columns') {
+                var column_count = column.siblings().length + 1;
+                if(column_count > 1) {
+                    alert(
+                        article.attr('data-columns-into-columns-warning')
+                        .replace(/%s/, column_count)
+                        .replace(/\\n/g, '\n')
+                    );
+                    return $(this);
+                } else {
+                    var following_elements = $(this).parents('div.add-content').nextAll('div.content');
+                    var new_row = insertion_templates.find('[data-row]').clone();
+                    new_row.insertAfter($(this).parents('div.row-fluid'));
+                    following_elements.detach().prependTo(new_row.find('div.column'));
+                    resetControls();
+                    return $(this);
+                }
+            }
 
-        var type = $(this).attr('data-type');
-        var widget_type = $(this).attr('data-widget');
-        var prev_row = $(this).parents("div.row-fluid").prev("div[data-row]");
+            var position;
+            if(prev.length === 0) {
+                position = {insertion: 'prepend', existingElement: column};
+            } else {
+                position = {insertion: 'after', existingElement: prev};
+            }
 
-        var position;
-        if(type !== 'columns' && prev_row.length > 0 && prev_row.children("div.column").length === 1) {
-            // The previous row exists and is a single-column; just add an element to that row
-            position = {insertion: 'append', existingElement: prev_row.children("div.column")};
-        } else {
-            // Column explicitly chosen, no previous row, or not single-column; create a new row
-            var new_row = insertion_templates.find('[data-row]').clone();
-            new_row.insertAfter($(this).parents("div.row-fluid"));
-            position = {insertion: 'prepend', existingElement: new_row.find("div.column")};
-        }
-
-        if(type !== 'widget') {
-            insertContent({type: type}, position);
-        } else {
-            $(document).trigger('widget.new.' + widget_type, function(widget) {
-                insertContent({type: type, widget: widget}, position);
-            });
+            if(type !== 'widget') {
+                insertContent({type: type}, position);
+            } else {
+                $(document).trigger('widget.new.' + widget_type, function(widget) {
+                    insertContent({type: type, widget: widget}, position);
+                });
+            }
         }
     });
 
@@ -582,6 +583,15 @@ $(function() {
     // Remove all editing-markup and re-build from scratch
     function resetControls() {
 
+        // Create a new row with a single add-content control for rows
+        function cloneAddContentRow() {
+            var new_row = insertion_templates.find('[data-row]').clone();
+            var add_content = insertion_templates.find('div.add-content').clone();
+            add_content.attr('data-dnt-row', '');
+            add_content.prependTo(new_row.find('.column'));
+            return new_row;
+        }
+
         // Remove all rows that are completely empty for content
         article.find("div[data-row]").each(function() {
             if($(this).find("div.column:has(div.content)").length === 0) {
@@ -589,13 +599,13 @@ $(function() {
             }
         });
 
-        // Remove existing editing-markups
-        article.find("div.edit-structure,div.add-content,div.add-content-row").remove();
+        // Remove existing editor-control markup
+        article.find("div.row-fluid:not([data-row]),div.add-content").remove();
 
         var rows = article.find("div[data-row]");
         if(rows.length === 0) {
             // Edge case; if there are *no* rows
-            insertion_templates.find("div.add-content-row").clone().prependTo(article);
+            cloneAddContentRow().prependTo(article);
         } else {
             // Iterate existing rows
             rows.each(function() {
@@ -616,16 +626,16 @@ $(function() {
 
                 // If this is multiple-column, let user add single row before this row
                 if(!single_column) {
-                    insertion_templates.find("div.add-content-row").clone().insertBefore($(this));
+                    cloneAddContentRow().insertBefore($(this));
                 }
-                insertion_templates.find("div.add-content-row").clone().insertAfter($(this));
+                cloneAddContentRow().insertAfter($(this));
             });
         }
 
         // After each reset, add tooltips to the new button elements, the edit-structure buttons and add-content rows
         editor.find("div.content-choices button").tooltip();
         editor.find("div.edit-structure button").tooltip();
-        editor.find("article div.add-content, article div.add-content-row").tooltip({placement: 'bottom'});
+        editor.find("article div.add-content").tooltip({placement: 'bottom'});
     }
 
     // Edit an existing widget

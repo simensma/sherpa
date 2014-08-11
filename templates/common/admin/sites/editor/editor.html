@@ -127,14 +127,27 @@
     </div>
   </div>
 
-  <div class="row-fluid add-content-row" title="Sett inn innhold...">
-    <div class="column span12">
-      {% include 'common/admin/sites/editor/add-content.html' %}
-    </div>
-  </div>
-
   <div class="add-content" title="Sett inn innhold...">
-    {% include 'common/admin/sites/editor/add-content.html' %}
+    <div class="content-choices">
+
+      <button class="btn" data-type="text" title="Sett inn en tittel, ingress, eller vanlig tekst">Tekst</button>
+      <button class="btn" data-type="widget" data-widget="button" title="Sett inn en stor knapp">Knapp</button>
+      <button class="btn" data-type="image" title="Sett inn et bilde. Du kan laste opp selv eller finne et i bildearkivet.">Bilde</button>
+      <button class="btn" data-type="widget" data-widget="carousel" title="Lar deg velge flere bilder som vises i en karusell, som roterer automatisk.">Bildekarusell</button>
+      <button class="btn" data-type="widget" data-widget="embed" title="Video fra YouTube, Vimeo eller liknende. Kan også brukes til å sette inn ren HTML på siden.">Video/embed</button>
+      <button class="btn" data-type="widget" data-widget="quote" title="Et sitat med tilpasset design (litt større tekst, strek foran navnet, etc).">Sitat</button>
+      <button class="btn" data-type="widget" data-widget="fact" title="Som vanlig tekst, men med grå bakgrunn - passer best i sidekolonner.">Faktaboks</button>
+      <button class="btn" data-type="widget" data-widget="articles" title="Liste over siste nyheter, plasseres vanligvis kun på forsiden.">Nyheter</button>
+      <button class="btn" data-type="widget" data-widget="blog" title="Liste over siste innlegg på Turistforeningens blogg.">Blogg</button>
+      <button class="btn" data-type="widget" data-widget="table" title="Tabell med redigerbart antall rader og kolonner.">Tabell</button>
+      <button class="btn" data-type="widget" data-widget="campaign" title="Legg til en kampanje. Disse må lages på forhånd, og så kan du legge dem inn her.">Kampanje</button>
+      <button class="btn" data-type="columns" title="Del opp denne raden, slik at du videre kan dele opp i kolonner. Når den er delt kan du for eksempel la innholdet i raden over være i én kolonne, men la innholdet i raden under deles opp i to kolonner.">Kolonner</button>
+
+    </div>
+
+    <div class="drop-area">
+      Klikk for å flytte hit...
+    </div>
   </div>
 
   <div class="content-control crop-content" title="Beskjær bildet">
