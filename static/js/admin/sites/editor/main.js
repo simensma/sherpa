@@ -5,45 +5,23 @@
     var editor;
     var article;
     var insertion_templates;
-    var toolbar;
-    var toolbarContents;
 
     $(function() {
 
         editor = $("div.cms-editor");
         article = editor.find("article");
         insertion_templates = editor.find("div.insertion-templates");
-        toolbar = editor.find("div.cms-editor-toolbar");
-        toolbarContents = toolbar.find("div.toolbar-contents");
 
         //
         // Initialization
         //
 
-        rangy.init();
-        window.selection = undefined;
         Editor.resetControls();
-
-        // Make toolbar draggable, but not if input-elements are clicked
-        toolbar.draggable();
-        toolbar.find("input,select,button,a").mousedown(function(e) {
-            e.stopPropagation();
-        });
-
-        // Draggable will set position relative, so make sure it is fixed before the user drags it
-        toolbar.css('position', 'fixed');
 
         // Prevent all anchor clicks within the article
         $(document).on('click', article.selector + ' a', function(e) {
             e.preventDefault();
         });
-
-        // Set the selection when appropriate
-        $(document).on('mouseup', 'article div.editable', setSelection);
-        $(document).on('keyup', 'article div.editable', setSelection);
-        function setSelection() {
-            selection = rangy.getSelection();
-        }
 
         // Add content (expand plus-icon into available content items)
         $(document).on('click', article.selector + ' div.add-content', function() {

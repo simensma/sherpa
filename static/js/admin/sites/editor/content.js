@@ -6,6 +6,13 @@ $(function() {
     var article = editor.find("article");
     var insertion_templates = editor.find("div.insertion-templates");
 
+    // Set the selection on mouse/keyup - used in the toolbar for inserting anchors, etc.
+    $(document).on('mouseup', 'article div.editable', setSelection);
+    $(document).on('keyup', 'article div.editable', setSelection);
+    function setSelection() {
+        selection = rangy.getSelection();
+    }
+
     disableIframes(article.find("div.content.widget"));
 
     // Crop cropped images on page load
