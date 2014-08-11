@@ -83,14 +83,18 @@
 
 </article>
 
+{# Hidden templates to be cloned and inserted with javascript #}
 <div class="insertion-templates jq-hide">
 
+  {# The default row with a full-sized column #}
   <div class="row-fluid" data-row>
     <div class="column span12"></div>
   </div>
 
+  {# The default HTML content element #}
   <div class="content html editable" contenteditable="true"></div>
 
+  {# The default image content element #}
   <div class="content image" data-json="{&quot;src&quot;:&quot;http://www.turistforeningen.no/static/img/placeholder.png&quot;,&quot;description&quot;:&quot;&quot;,&quot;photographer&quot;:&quot;&quot;,&quot;anchor&quot;:null}">
     <a href="">
       <img src="http://www.turistforeningen.no/static/img/placeholder.png" alt="">
@@ -103,17 +107,20 @@
     </div>
   </div>
 
+  {# The default widget content element #}
   <div class="content widget">
     <img src="/static/img/ajax-loader-small.gif" alt="Laster...">
     <em>Vennligst vent...</em>
   </div>
 
+  {# Error message to be displayed if widget rendering fails #}
   <div class="alert alert-error widget-rendering-failed">
     <strong>Teknisk feil</strong><br>
     Kunne ikke vise innholdet. Er du sikker på at du har tilgang til internett?<br>
     Klikk her og velg lagre på nytt for å prøve en gang til.
   </div>
 
+  {# Editor-control: The column-structure controls to be shown above each separate row #}
   <div class="row-fluid edit-structure">
     <div class="column span12">
       <div class="edit-structure-inner">
@@ -127,6 +134,7 @@
     </div>
   </div>
 
+  {# Editor-control: Plus-sign to allow user to add content #}
   <div class="add-content" title="Sett inn innhold...">
     <div class="content-choices">
 
@@ -150,15 +158,19 @@
     </div>
   </div>
 
+  {# Editor-control: Button to display on image-content hover to crop images #}
   <div class="content-control crop-content" title="Beskjær bildet">
   </div>
 
+  {# Editor-control: Button to display on content hover to remove content #}
   <div class="content-control remove-content" title="Ta bort dette innholdet" data-confirm="Er du helt sikker på at du vil ta bort dette innholdet?">
   </div>
 
+  {# Editor-control: Button to display on content hover to move content #}
   <div class="content-control move-content" title="Klikk for å flytte innholdet opp, ned eller til en annen kolonne">
   </div>
 
+  {# Editor-control: Cropping controls to display during cropping #}
   <div class="crop-control">
     <div class="submit pull-right">
       <button class="btn btn-success use">
