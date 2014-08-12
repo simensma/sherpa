@@ -10,7 +10,7 @@
     $(function() {
         editor = $("div.cms-editor");
         article = editor.find("article");
-        insertion_templates = editor.find('div.insertion-templates');
+        insertion_templates = editor.find('[data-dnt-container="insertion-templates"]');
     });
 
     EditorMoveContent.init = function(opts) {

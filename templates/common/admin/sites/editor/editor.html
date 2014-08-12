@@ -11,9 +11,9 @@
 </div>
 
 <article
-  data-save-url="{% url 'admin.sites.pages.content.save' active_site.id version.id %}"
-  data-render-widget-url="{% url 'admin.sites.pages.content.reload_raw_widget' active_site.id %}"
-  data-columns-into-columns-warning="Du kan ikke sette inn kolonner her, fordi det er allerede %s kolonner fra før av.\n\nBruk pluss-knappen over eller under som dekker hele kolonne-bredden.">
+  data-dnt-save-url="{% url 'admin.sites.pages.content.save' active_site.id version.id %}"
+  data-dnt-render-widget-url="{% url 'admin.sites.pages.content.reload_raw_widget' active_site.id %}"
+  data-dnt-columns-into-columns-warning="Du kan ikke sette inn kolonner her, fordi det er allerede %s kolonner fra før av.\n\nBruk pluss-knappen over eller under som dekker hele kolonne-bredden.">
 
   {% comment %}
     Note that data-id is set on row, column and content elements, but they are never used. This is for ease
@@ -21,8 +21,8 @@
   {% endcomment %}
 
   {% for row in version.get_rows %}
-    {# Rows are recognized by their data-row attribute, not their class #}
-    <div class="row-fluid" data-row data-id="{{ row.id }}">
+    {# Rows are recognized by their data-dnt-row attribute, not their class #}
+    <div class="row-fluid" data-dnt-row data-id="{{ row.id }}">
 
       {% for column in row.get_columns %}
         <div class="column offset{{ column.offset }} span{{ column.span }}" data-id="{{ column.id }}">
@@ -84,10 +84,10 @@
 </article>
 
 {# Hidden templates to be cloned and inserted with javascript #}
-<div class="insertion-templates jq-hide">
+<div class="jq-hide" data-dnt-container="insertion-templates">
 
   {# The default row with a full-sized column #}
-  <div class="row-fluid" data-row>
+  <div class="row-fluid" data-dnt-row>
     <div class="column span12"></div>
   </div>
 
@@ -108,13 +108,13 @@
   </div>
 
   {# The default widget content element #}
-  <div class="content widget">
+  <div class="content widget" data-dnt-container="content-widget">
     <img src="/static/img/ajax-loader-small.gif" alt="Laster...">
     <em>Vennligst vent...</em>
   </div>
 
   {# Error message to be displayed if widget rendering fails #}
-  <div class="alert alert-error widget-rendering-failed">
+  <div class="alert alert-error" data-dnt-editor-control="widget-rendering-failed">
     <strong>Teknisk feil</strong><br>
     Kunne ikke vise innholdet. Er du sikker på at du har tilgang til internett?<br>
     Klikk her og velg lagre på nytt for å prøve en gang til.

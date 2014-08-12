@@ -4,7 +4,7 @@ $(function() {
 
     var editor = $("div.cms-editor");
     var article = editor.find("article");
-    var insertion_templates = editor.find("div.insertion-templates");
+    var insertion_templates = editor.find('[data-dnt-container="insertion-templates"]');
 
     // Set the selection on mouse/keyup - used in the toolbar for inserting anchors, etc.
     $(document).on('mouseup', 'article div.editable', setSelection);
@@ -13,7 +13,7 @@ $(function() {
         selection = rangy.getSelection();
     }
 
-    disableIframes(article.find("div.content.widget"));
+    disableIframes(article.find('[data-dnt-container="content-widget"]'));
 
     // Crop cropped images on page load
     article.find("div.content.image").each(function() {
@@ -97,7 +97,7 @@ $(function() {
     });
 
     // Edit an existing widget
-    $(document).on('click', 'article div.content.widget', function() {
+    $(document).on('click', article.selector + ' [data-dnt-container="content-widget"]', function() {
         var widget_element = $(this);
         var widget_content = JSON.parse($(this).attr('data-json'));
         $(this).trigger('widget.edit', [widget_content, function(widget) {

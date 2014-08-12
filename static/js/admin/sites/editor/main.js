@@ -10,7 +10,7 @@
 
         editor = $("div.cms-editor");
         article = editor.find("article");
-        insertion_templates = editor.find("div.insertion-templates");
+        insertion_templates = editor.find('[data-dnt-container="insertion-templates"]');
 
         //
         // Initialization
@@ -37,7 +37,7 @@
             if(add_content.attr('data-dnt-row') !== undefined) {
                 // The add-content control is on a separate row without content siblings
 
-                var prev_row = $(this).parents("div.row-fluid").prev("div[data-row]");
+                var prev_row = $(this).parents("div.row-fluid").prev("div[data-dnt-row]");
 
                 var position;
                 if(type !== 'columns' && prev_row.length > 0 && prev_row.children("div.column").length === 1) {
@@ -45,7 +45,7 @@
                     position = {insertion: 'append', existingElement: prev_row.children("div.column")};
                 } else {
                     // Column explicitly chosen, no previous row, or not single-column; create a new row
-                    var new_row = insertion_templates.find('[data-row]').clone();
+                    var new_row = insertion_templates.find('[data-dnt-row]').clone();
                     new_row.insertAfter($(this).parents("div.row-fluid"));
                     position = {insertion: 'prepend', existingElement: new_row.find("div.column")};
                 }
@@ -68,14 +68,14 @@
                     var column_count = column.siblings().length + 1;
                     if(column_count > 1) {
                         alert(
-                            article.attr('data-columns-into-columns-warning')
+                            article.attr('data-dnt-columns-into-columns-warning')
                             .replace(/%s/, column_count)
                             .replace(/\\n/g, '\n')
                         );
                         return $(this);
                     } else {
                         var following_elements = add_content.nextAll('div.content');
-                        var new_row = insertion_templates.find('[data-row]').clone();
+                        var new_row = insertion_templates.find('[data-dnt-row]').clone();
                         new_row.insertAfter($(this).parents('div.row-fluid'));
                         following_elements.detach().prependTo(new_row.find('div.column'));
                         Editor.resetControls();
@@ -105,7 +105,7 @@
 
             // Find the first row with content elements (since the first row without may be an editor control)
             var row;
-            $(this).parents("div.edit-structure").nextAll("div[data-row]").each(function() {
+            $(this).parents("div.edit-structure").nextAll("div[data-dnt-row]").each(function() {
                 if(row === undefined && $(this).find('div.content').length !== 0) {
                     row = $(this);
                 }
@@ -263,7 +263,7 @@
 
         // Create a new row with a single add-content control for rows
         function cloneAddContentRow() {
-            var new_row = insertion_templates.find('[data-row]').clone();
+            var new_row = insertion_templates.find('[data-dnt-row]').clone();
             var add_content = insertion_templates.find('div.add-content').clone();
             add_content.attr('data-dnt-row', '');
             add_content.prependTo(new_row.find('.column'));
@@ -271,16 +271,16 @@
         }
 
         // Remove all rows that are completely empty for content
-        article.find("div[data-row]").each(function() {
+        article.find("div[data-dnt-row]").each(function() {
             if($(this).find("div.column:has(div.content)").length === 0) {
                 $(this).remove();
             }
         });
 
         // Remove existing editor-control markup, and leftover tooltips that for some reason haven't been removed
-        article.find("div.row-fluid:not([data-row]),div.add-content,.tooltip").remove();
+        article.find("div.row-fluid:not([data-dnt-row]),div.add-content,.tooltip").remove();
 
-        var rows = article.find("div[data-row]");
+        var rows = article.find("div[data-dnt-row]");
         if(rows.length === 0) {
             // Edge case; if there are *no* rows
             cloneAddContentRow().prependTo(article);
@@ -318,7 +318,7 @@
         var popover_content_html = popover_content.wrap('<p>').parent().html();
 
         var popover_template = insertion_templates.find('[data-dnt-container="default-popover-template"]').clone();
-        var row_width = article.find('[data-row]').first().width();
+        var row_width = article.find('[data-dnt-row]').first().width();
         popover_template.css('max-width', 'none');
         popover_template.css('width', row_width);
         var popover_template_html = popover_template.wrap('<p>').parent().html();
