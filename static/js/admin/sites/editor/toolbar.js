@@ -9,6 +9,18 @@ $(function() {
     var anchorInsert = toolbar.find("div.anchor-insert");
     var formatting = toolbar.find("div.formatting");
 
+    rangy.init();
+    window.selection = undefined;
+
+    // Make toolbar draggable, but not if input-elements are clicked
+    toolbar.draggable();
+    toolbar.find("input,select,button,a").mousedown(function(e) {
+        e.stopPropagation();
+    });
+
+    // Draggable will set position relative, so make sure it is fixed before the user drags it
+    toolbar.css('position', 'fixed');
+
     /**
      * Toolbar buttons
      */

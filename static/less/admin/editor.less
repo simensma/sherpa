@@ -142,60 +142,67 @@ div.cms-editor {
 
     }
 
-    div.add-content, div.add-content-row {
+    @content-control-height: 30px;
+    @content-control-padding: 10px 0;
+
+    div.add-content {
       text-align: center;
+      min-height: @content-control-height;
       margin: 0;
-      padding-top: 10px;
-      padding-bottom: 10px;
-      min-height: 30px;
+      padding: @content-control-padding;
       background-image: url('/static/img/icons/glyph/original/glyphicons_190_circle_plus.png');
       background-position: center center;
       background-repeat: no-repeat;
+    }
 
-      &.disabled {
-        visibility: hidden;
+    div.drop-area {
+      @height: @content-control-height;
+      @border: 2px;
+      padding: @content-control-padding;
+      height: @height - (@border * 2);
+      border: @border dotted rgb(200, 200, 200);
+
+      font-size: 16px;
+      text-align: center;
+      font-style: italic;
+      color: rgb(160, 160, 160);
+
+      &:hover {
+        cursor: pointer;
+        background-color: rgb(245, 245, 245);
+        border-color: rgb(120, 120, 120);
+      }
+    }
+
+    div.add-content:hover {
+      cursor: pointer;
+      background-color: rgb(240, 240, 240);
+    }
+
+    // The content-item fields are contained within a popover (sibling to add-content)
+    div.content-item {
+      float: left;
+      min-width: 50px;
+      min-height: 65px;
+      margin: 0 5px 10px 5px;
+      padding: 5px 10px 5px 10px;
+      text-align: center;
+      font-family: "DTL Nobel" !important;
+      font-size: 16px;
+
+      &:hover {
+        cursor: pointer;
+        background-color: rgb(240, 240, 240);
       }
 
-      div.drop-area {
-        font-size: 16px;
+      .image-container {
         text-align: center;
-        font-style: italic;
-        color: rgb(160, 160, 160);
+
+        img {
+          width: 40px;
+          height: 40px;
+        }
       }
-    }
-
-    div.add-content.active, div.add-content-row.active {
-      background-color: rgb(240, 240, 240);
-      background-image: none;
-    }
-
-    div.add-content.moving {
-      border: 3px dotted rgb(200, 200, 200);
-      background-image: none;
-      min-height: 0;
-    }
-
-    div.add-content.moving:hover {
-      cursor: pointer;
-      background-color: rgb(245, 245, 245);
-      border-color: rgb(120, 120, 120);
-    }
-
-    div.add-content:not(.active), div.add-content-row:not(.active) {
-      div.content-choices {
-        display: none;
-      }
-    }
-
-    div.add-content:not(.moving), div.add-content-row {
-      div.drop-area {
-        display: none;
-      }
-    }
-
-    div.add-content:hover:not(.moving), div.add-content-row:hover:not(.moving) {
-      cursor: pointer;
-      background-color: rgb(240, 240, 240);
     }
 
     div.content {
@@ -214,7 +221,7 @@ div.cms-editor {
       background-repeat: no-repeat;
     }
 
-    div.content-control:hover, div.content-control.moving {
+    div.content-control:hover {
       cursor: pointer;
       background-color: rgb(52, 224, 194);
     }
@@ -233,7 +240,7 @@ div.cms-editor {
       background-image: url('/static/img/editorbuttons/move-content-inactive.png');
     }
 
-    div.move-content:hover, div.move-content.moving {
+    div.move-content:hover {
       background-image: url('/static/img/editorbuttons/move-content-active.png');
     }
 

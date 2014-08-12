@@ -5,10 +5,12 @@
     var editor;
     var article;
     var editor_callback;
+    var insertion_templates;
 
     $(function() {
         editor = $("div.cms-editor");
         article = editor.find("article");
+        insertion_templates = editor.find('[data-dnt-container="insertion-templates"]');
     });
 
     WidgetEditor.listen = function(opts) {
@@ -48,10 +50,10 @@
     };
 
     WidgetEditor.saveWidget = function(content) {
-        var rendering_failed = editor.find("div.insertion-templates div.widget-rendering-failed").clone();
+        var rendering_failed = insertion_templates.find('[data-dnt-editor-control="widget-rendering-failed"]').clone();
         var content_json = JSON.stringify(content);
 
-        var widget = editor.find("div.insertion-templates div.content.widget").clone();
+        var widget = insertion_templates.find('[data-dnt-container="content-widget"]').clone();
         widget.addClass(content.widget);
         widget.attr('data-json', content_json);
 
@@ -60,7 +62,7 @@
 
         // Now attempt the render, and edit the object in-place
         $.ajaxQueue({
-            url: article.attr('data-render-widget-url'),
+            url: article.attr('data-dnt-render-widget-url'),
             data: { content: content_json }
         }).fail(function(result) {
             widget.empty().append(rendering_failed);

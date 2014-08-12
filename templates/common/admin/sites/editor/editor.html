@@ -10,7 +10,10 @@
   </div>
 </div>
 
-<article data-save-url="{% url 'admin.sites.pages.content.save' active_site.id version.id %}" data-render-widget-url="{% url 'admin.sites.pages.content.reload_raw_widget' active_site.id %}">
+<article
+  data-dnt-save-url="{% url 'admin.sites.pages.content.save' active_site.id version.id %}"
+  data-dnt-render-widget-url="{% url 'admin.sites.pages.content.reload_raw_widget' active_site.id %}"
+  data-dnt-columns-into-columns-warning="Du kan ikke sette inn kolonner her, fordi det er allerede %s kolonner i bredden fra før av.\n\nBruk den lange pluss-knappen som dekker hele kolonne-bredden (du finner den både over og under).">
 
   {% comment %}
     Note that data-id is set on row, column and content elements, but they are never used. This is for ease
@@ -18,8 +21,8 @@
   {% endcomment %}
 
   {% for row in version.get_rows %}
-    {# Rows are recognized by their data-row attribute, not their class #}
-    <div class="row-fluid" data-row data-id="{{ row.id }}">
+    {# Rows are recognized by their data-dnt-row attribute, not their class #}
+    <div class="row-fluid" data-dnt-row data-id="{{ row.id }}">
 
       {% for column in row.get_columns %}
         <div class="column offset{{ column.offset }} span{{ column.span }}" data-id="{{ column.id }}">
@@ -80,10 +83,18 @@
 
 </article>
 
-<div class="insertion-templates jq-hide">
+{# Hidden templates to be cloned and inserted with javascript #}
+<div class="jq-hide" data-dnt-container="insertion-templates">
 
+  {# The default row with a full-sized column #}
+  <div class="row-fluid" data-dnt-row>
+    <div class="column span12"></div>
+  </div>
+
+  {# The default HTML content element #}
   <div class="content html editable" contenteditable="true"></div>
 
+  {# The default image content element #}
   <div class="content image" data-json="{&quot;src&quot;:&quot;http://www.turistforeningen.no/static/img/placeholder.png&quot;,&quot;description&quot;:&quot;&quot;,&quot;photographer&quot;:&quot;&quot;,&quot;anchor&quot;:null}">
     <a href="">
       <img src="http://www.turistforeningen.no/static/img/placeholder.png" alt="">
@@ -96,17 +107,20 @@
     </div>
   </div>
 
-  <div class="content widget">
+  {# The default widget content element #}
+  <div class="content widget" data-dnt-container="content-widget">
     <img src="/static/img/ajax-loader-small.gif" alt="Laster...">
     <em>Vennligst vent...</em>
   </div>
 
-  <div class="alert alert-error widget-rendering-failed">
+  {# Error message to be displayed if widget rendering fails #}
+  <div class="alert alert-error" data-dnt-editor-control="widget-rendering-failed">
     <strong>Teknisk feil</strong><br>
     Kunne ikke vise innholdet. Er du sikker på at du har tilgang til internett?<br>
     Klikk her og velg lagre på nytt for å prøve en gang til.
   </div>
 
+  {# Editor-control: The column-structure controls to be shown above each separate row #}
   <div class="row-fluid edit-structure">
     <div class="column span12">
       <div class="edit-structure-inner">
@@ -120,25 +134,191 @@
     </div>
   </div>
 
-  <div class="row-fluid add-content-row" title="Sett inn innhold...">
-    <div class="column span12">
-      {% include 'common/admin/sites/editor/add-content.html' %}
+  {# Editor-control: Plus-sign to allow user to add content #}
+  <div class="add-content" title="Sett inn innhold...">
+  </div>
+
+  {# Editor-control: Replaces the add-content control when moving content #}
+  <div class="drop-area">
+    Klikk for å flytte hit...
+  </div>
+
+  {# Editor-control: Popover content #}
+  <div data-dnt-container="add-content-popover-content">
+    <div
+      class="content-item"
+      data-dnt-container="content-item"
+      data-type="text"
+      title="Sett inn en tittel, ingress, eller vanlig tekst">
+
+      <div class="image-container">
+        <img src="{{ STATIC_URL }}img/admin/sites/editor/icon_13795/icon_13795.svg" alt="Tekst">
+      </div>
+      Tekst
+    </div>
+
+    <div
+      class="content-item"
+      data-dnt-container="content-item"
+      data-type="widget"
+      data-widget="button"
+      title="Sett inn en stor knapp">
+
+      <div class="image-container">
+        <img src="{{ STATIC_URL }}img/admin/sites/editor/icon_36666/icon_36666.svg" alt="Knapp">
+      </div>
+      Knapp
+    </div>
+
+    <div
+      class="content-item"
+      data-dnt-container="content-item"
+      data-type="image"
+      title="Sett inn et bilde. Du kan laste opp selv eller finne et i bildearkivet.">
+
+      <div class="image-container">
+        <img src="{{ STATIC_URL }}img/admin/sites/editor/icon_3421/icon_3421.svg" alt="Bilde">
+      </div>
+      Bilde
+    </div>
+
+    <div
+        class="content-item"
+        data-dnt-container="content-item"
+        data-type="widget"
+        data-widget="carousel"
+        title="Lar deg velge flere bilder som vises i en karusell, som roterer automatisk.">
+
+      <div class="image-container">
+        <img src="{{ STATIC_URL }}img/admin/sites/editor/icon_3043/icon_3043.svg" alt="Bildekarusell">
+      </div>
+      Bildekarusell
+    </div>
+
+    <div
+      class="content-item"
+      data-dnt-container="content-item"
+      data-type="widget"
+      data-widget="embed"
+      title="Video fra YouTube, Vimeo eller liknende. Kan også brukes til å sette inn ren HTML på siden.">
+
+      <div class="image-container">
+        <img src="{{ STATIC_URL }}img/admin/sites/editor/icon_5068/icon_5068.svg" alt="Video/embed">
+      </div>
+      Video/embed
+    </div>
+
+    <div
+      class="content-item"
+      data-dnt-container="content-item"
+      data-type="widget"
+      data-widget="quote"
+      title="Et sitat med tilpasset design (litt større tekst, strek foran navnet, etc).">
+
+      <div class="image-container">
+        <img src="{{ STATIC_URL }}img/admin/sites/editor/icon_14163/icon_14163.svg" alt="Sitat">
+      </div>
+      Sitat
+    </div>
+
+    <div
+      class="content-item"
+      data-dnt-container="content-item"
+      data-type="widget"
+      data-widget="fact"
+      title="Som vanlig tekst, men med grå bakgrunn - passer best i sidekolonner.">
+
+      <div class="image-container">
+        <img src="{{ STATIC_URL }}img/admin/sites/editor/icon_8324/icon_8324.svg" alt="Faktaboks">
+      </div>
+      Faktaboks
+    </div>
+
+    <div
+      class="content-item"
+      data-dnt-container="content-item"
+      data-type="widget"
+      data-widget="articles"
+      title="Liste over siste nyheter, plasseres vanligvis kun på forsiden.">
+
+      <div class="image-container">
+        <img src="{{ STATIC_URL }}img/admin/sites/editor/icon_6342/icon_6342.svg" alt="Nyheter">
+      </div>
+      Nyheter
+    </div>
+
+    <div
+      class="content-item"
+      data-dnt-container="content-item"
+      data-type="widget"
+      data-widget="blog"
+      title="Liste over siste innlegg på Turistforeningens blogg.">
+
+      <div class="image-container">
+        <img src="{{ STATIC_URL }}img/admin/sites/editor/icon_460/icon_460.svg" alt="Blogg">
+      </div>
+      Blogg
+    </div>
+
+    <div
+      class="content-item"
+      data-dnt-container="content-item"
+      data-type="widget"
+      data-widget="table"
+      title="Tabell med redigerbart antall rader og kolonner.">
+
+      <div class="image-container">
+        <img src="{{ STATIC_URL }}img/admin/sites/editor/icon_4305/icon_4305.svg" alt="Tabell">
+      </div>
+      Tabell
+    </div>
+
+    <div
+      class="content-item"
+      data-dnt-container="content-item"
+      data-type="widget"
+      data-widget="campaign"
+      title="Legg til en kampanje. Disse må lages på forhånd, og så kan du legge dem inn her.">
+
+      <div class="image-container">
+        <img src="{{ STATIC_URL }}img/admin/sites/editor/icon_32227/icon_32227.svg" alt="Kampanje">
+      </div>
+      Kampanje
+    </div>
+
+    <div
+      class="content-item"
+      data-dnt-container="content-item"
+      data-type="columns"
+      title="Del opp denne raden, slik at du videre kan dele opp i kolonner. Når den er delt kan du for   eksempel la innholdet i raden over være i én kolonne, men la innholdet i raden under deles opp i to kolonner.">
+
+      <div class="image-container">
+        <img src="{{ STATIC_URL }}img/admin/sites/editor/icon_18041/icon_18041.svg" alt="Kolonner">
+      </div>
+      Kolonner
     </div>
   </div>
 
-  <div class="add-content" title="Sett inn innhold...">
-    {% include 'common/admin/sites/editor/add-content.html' %}
+  {# Editor-control: Popover template; equal to the default except for the style #}
+  <div class="popover" data-dnt-container="default-popover-template" role="tooltip">
+    <div class="arrow"></div>
+    <h3 class="popover-title"></h3>
+    <div class="popover-content"></div>
   </div>
 
+  {# Editor-control: Button to display on image-content hover to crop images #}
   <div class="content-control crop-content" title="Beskjær bildet">
   </div>
 
+  {# Editor-control: Button to display on content hover to remove content #}
   <div class="content-control remove-content" title="Ta bort dette innholdet" data-confirm="Er du helt sikker på at du vil ta bort dette innholdet?">
   </div>
 
+  {# Editor-control: Button to display on content hover to move content #}
   <div class="content-control move-content" title="Klikk for å flytte innholdet opp, ned eller til en annen kolonne">
   </div>
 
+  {# Editor-control: Cropping controls to display during cropping #}
   <div class="crop-control">
     <div class="submit pull-right">
       <button class="btn btn-success use">

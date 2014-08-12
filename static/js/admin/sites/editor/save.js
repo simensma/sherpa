@@ -67,7 +67,7 @@ $(function() {
 
         // Rows
         var rows = [];
-        article.children("div[data-row]").each(function() {
+        article.children("div[data-dnt-row]").each(function() {
             var row = {
                 order: $(this).prevAll().length
             };
@@ -183,7 +183,7 @@ $(function() {
 
         // Save content
         $.ajaxQueue({
-            url: article.attr('data-save-url'),
+            url: article.attr('data-dnt-save-url'),
             data: data
         }).done(function(result) {
             result = JSON.parse(result);
