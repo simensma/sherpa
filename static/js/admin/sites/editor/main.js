@@ -317,11 +317,18 @@
         var popover_content = insertion_templates.find('[data-dnt-container="add-content-popover-content"]');
         var popover_content_html = popover_content.wrap('<p>').parent().html();
 
+        var popover_template = insertion_templates.find('[data-dnt-container="default-popover-template"]').clone();
+        var row_width = article.find('[data-row]').first().width();
+        popover_template.css('max-width', 'none');
+        popover_template.css('width', row_width);
+        var popover_template_html = popover_template.wrap('<p>').parent().html();
+
         popover_content.find("button").tooltip();
         article.find('.add-content').popover({
             placement: 'top',
             html: true,
             content: popover_content_html,
+            template: popover_template_html,
             trigger: 'click',
         });
     };
