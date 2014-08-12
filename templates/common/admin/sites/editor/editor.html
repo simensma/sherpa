@@ -145,18 +145,158 @@
 
   {# Editor-control: Popover content #}
   <div data-dnt-container="add-content-popover-content">
-    <button class="btn" data-type="text" title="Sett inn en tittel, ingress, eller vanlig tekst">Tekst</button>
-    <button class="btn" data-type="widget" data-widget="button" title="Sett inn en stor knapp">Knapp</button>
-    <button class="btn" data-type="image" title="Sett inn et bilde. Du kan laste opp selv eller finne et i bildearkivet.">Bilde</button>
-    <button class="btn" data-type="widget" data-widget="carousel" title="Lar deg velge flere bilder som vises i en karusell, som roterer automatisk.">Bildekarusell</button>
-    <button class="btn" data-type="widget" data-widget="embed" title="Video fra YouTube, Vimeo eller liknende. Kan også brukes til å sette inn ren HTML på siden.">Video/embed</button>
-    <button class="btn" data-type="widget" data-widget="quote" title="Et sitat med tilpasset design (litt større tekst, strek foran navnet, etc).">Sitat</button>
-    <button class="btn" data-type="widget" data-widget="fact" title="Som vanlig tekst, men med grå bakgrunn - passer best i sidekolonner.">Faktaboks</button>
-    <button class="btn" data-type="widget" data-widget="articles" title="Liste over siste nyheter, plasseres vanligvis kun på forsiden.">Nyheter</button>
-    <button class="btn" data-type="widget" data-widget="blog" title="Liste over siste innlegg på Turistforeningens blogg.">Blogg</button>
-    <button class="btn" data-type="widget" data-widget="table" title="Tabell med redigerbart antall rader og kolonner.">Tabell</button>
-    <button class="btn" data-type="widget" data-widget="campaign" title="Legg til en kampanje. Disse må lages på forhånd, og så kan du legge dem inn her.">Kampanje</button>
-    <button class="btn" data-type="columns" title="Del opp denne raden, slik at du videre kan dele opp i kolonner. Når den er delt kan du for eksempel la innholdet i raden over være i én kolonne, men la innholdet i raden under deles opp i to kolonner.">Kolonner</button>
+    <div
+      class="content-item"
+      data-dnt-container="content-item"
+      data-type="text"
+      title="Sett inn en tittel, ingress, eller vanlig tekst">
+
+      <div class="image-container">
+        <img src="{{ STATIC_URL }}img/admin/sites/editor/icon_13795/icon_13795.svg" alt="Tekst">
+      </div>
+      Tekst
+    </div>
+
+    <div
+      class="content-item"
+      data-dnt-container="content-item"
+      data-type="widget"
+      data-widget="button"
+      title="Sett inn en stor knapp">
+
+      <div class="image-container">
+        <img src="{{ STATIC_URL }}img/admin/sites/editor/icon_36666/icon_36666.svg" alt="Knapp">
+      </div>
+      Knapp
+    </div>
+
+    <div
+      class="content-item"
+      data-dnt-container="content-item"
+      data-type="image"
+      title="Sett inn et bilde. Du kan laste opp selv eller finne et i bildearkivet.">
+
+      <div class="image-container">
+        <img src="{{ STATIC_URL }}img/admin/sites/editor/icon_3421/icon_3421.svg" alt="Bilde">
+      </div>
+      Bilde
+    </div>
+
+    <div
+        class="content-item"
+        data-dnt-container="content-item"
+        data-type="widget"
+        data-widget="carousel"
+        title="Lar deg velge flere bilder som vises i en karusell, som roterer automatisk.">
+
+      <div class="image-container">
+        <img src="{{ STATIC_URL }}img/admin/sites/editor/icon_3043/icon_3043.svg" alt="Bildekarusell">
+      </div>
+      Bildekarusell
+    </div>
+
+    <div
+      class="content-item"
+      data-dnt-container="content-item"
+      data-type="widget"
+      data-widget="embed"
+      title="Video fra YouTube, Vimeo eller liknende. Kan også brukes til å sette inn ren HTML på siden.">
+
+      <div class="image-container">
+        <img src="{{ STATIC_URL }}img/admin/sites/editor/icon_5068/icon_5068.svg" alt="Video/embed">
+      </div>
+      Video/embed
+    </div>
+
+    <div
+      class="content-item"
+      data-dnt-container="content-item"
+      data-type="widget"
+      data-widget="quote"
+      title="Et sitat med tilpasset design (litt større tekst, strek foran navnet, etc).">
+
+      <div class="image-container">
+        <img src="{{ STATIC_URL }}img/admin/sites/editor/icon_14163/icon_14163.svg" alt="Sitat">
+      </div>
+      Sitat
+    </div>
+
+    <div
+      class="content-item"
+      data-dnt-container="content-item"
+      data-type="widget"
+      data-widget="fact"
+      title="Som vanlig tekst, men med grå bakgrunn - passer best i sidekolonner.">
+
+      <div class="image-container">
+        <img src="{{ STATIC_URL }}img/admin/sites/editor/icon_8324/icon_8324.svg" alt="Faktaboks">
+      </div>
+      Faktaboks
+    </div>
+
+    <div
+      class="content-item"
+      data-dnt-container="content-item"
+      data-type="widget"
+      data-widget="articles"
+      title="Liste over siste nyheter, plasseres vanligvis kun på forsiden.">
+
+      <div class="image-container">
+        <img src="{{ STATIC_URL }}img/admin/sites/editor/icon_6342/icon_6342.svg" alt="Nyheter">
+      </div>
+      Nyheter
+    </div>
+
+    <div
+      class="content-item"
+      data-dnt-container="content-item"
+      data-type="widget"
+      data-widget="blog"
+      title="Liste over siste innlegg på Turistforeningens blogg.">
+
+      <div class="image-container">
+        <img src="{{ STATIC_URL }}img/admin/sites/editor/icon_460/icon_460.svg" alt="Blogg">
+      </div>
+      Blogg
+    </div>
+
+    <div
+      class="content-item"
+      data-dnt-container="content-item"
+      data-type="widget"
+      data-widget="table"
+      title="Tabell med redigerbart antall rader og kolonner.">
+
+      <div class="image-container">
+        <img src="{{ STATIC_URL }}img/admin/sites/editor/icon_4305/icon_4305.svg" alt="Tabell">
+      </div>
+      Tabell
+    </div>
+
+    <div
+      class="content-item"
+      data-dnt-container="content-item"
+      data-type="widget"
+      data-widget="campaign"
+      title="Legg til en kampanje. Disse må lages på forhånd, og så kan du legge dem inn her.">
+
+      <div class="image-container">
+        <img src="{{ STATIC_URL }}img/admin/sites/editor/icon_32227/icon_32227.svg" alt="Kampanje">
+      </div>
+      Kampanje
+    </div>
+
+    <div
+      class="content-item"
+      data-dnt-container="content-item"
+      data-type="columns"
+      title="Del opp denne raden, slik at du videre kan dele opp i kolonner. Når den er delt kan du for   eksempel la innholdet i raden over være i én kolonne, men la innholdet i raden under deles opp i to kolonner.">
+
+      <div class="image-container">
+        <img src="{{ STATIC_URL }}img/admin/sites/editor/icon_18041/icon_18041.svg" alt="Kolonner">
+      </div>
+      Kolonner
+    </div>
   </div>
 
   {# Editor-control: Popover template; equal to the default except for the style #}

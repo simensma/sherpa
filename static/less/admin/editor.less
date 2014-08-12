@@ -179,6 +179,32 @@ div.cms-editor {
       background-color: rgb(240, 240, 240);
     }
 
+    // The content-item fields are contained within a popover (sibling to add-content)
+    div.content-item {
+      float: left;
+      min-width: 50px;
+      min-height: 65px;
+      margin: 0 5px 10px 5px;
+      padding: 5px 10px 5px 10px;
+      text-align: center;
+      font-family: "DTL Nobel" !important;
+      font-size: 16px;
+
+      &:hover {
+        cursor: pointer;
+        background-color: rgb(240, 240, 240);
+      }
+
+      .image-container {
+        text-align: center;
+
+        img {
+          width: 40px;
+          height: 40px;
+        }
+      }
+    }
+
     div.content {
       min-height: 70px;
     }

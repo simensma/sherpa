@@ -24,7 +24,12 @@
         });
 
         // Add chosen content-type
-        $(document).on('click', article.selector + ' [data-dnt-container="add-content-popover-content"] button', function() {
+        $(document).on(
+                'click',
+                article.selector +
+                    ' [data-dnt-container="add-content-popover-content"] [data-dnt-container="content-item"]',
+                function() {
+
             var add_content = $(this).parents('.popover').prev();
 
             // Manually hide the tooltips since mouseleave won't be triggered
@@ -258,6 +263,11 @@
         }
     });
 
+    // Enable content-item tooltips when the popover is shown, since that's when the DOM is created
+    $(document.body).on('shown.bs.popover', function() {
+        article.find('.popover [data-dnt-container="content-item"]').tooltip();
+    });
+
     // Remove all editing-markup and re-build from scratch
     Editor.resetControls = function() {
 
@@ -323,7 +333,6 @@
         popover_template.css('width', row_width);
         var popover_template_html = popover_template.wrap('<p>').parent().html();
 
-        popover_content.find("button").tooltip();
         article.find('.add-content').popover({
             placement: 'top',
             html: true,
