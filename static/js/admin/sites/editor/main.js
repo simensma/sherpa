@@ -23,24 +23,9 @@
             e.preventDefault();
         });
 
-        // Add content (expand plus-icon into available content items)
-        $(document).on('click', article.selector + ' div.add-content', function() {
-            $(this).addClass('active');
-            // The container may change size, so make sure the tooltip is removed
-            // Simply hiding it was buggy, so try destroying and recreating it
-            $(this).tooltip('destroy');
-            $(this).tooltip({placement: 'bottom'});
-            $(this).tooltip('show');
-        });
-
-        // Cancel add-content on mouse out
-        $(document).on('mouseleave', article.selector + ' div.add-content', function() {
-            $(this).removeClass('active');
-        });
-
         // Add chosen content-type
-        $(document).on('click', article.selector + " div.add-content button", function() {
-            var add_content = $(this).parents('div.add-content');
+        $(document).on('click', article.selector + ' [data-dnt-container="add-content-popover-content"] button', function() {
+            var add_content = $(this).parents('.popover').prev();
 
             // Manually hide the tooltips since mouseleave won't be triggered
             $(this).tooltip('hide');
@@ -75,7 +60,7 @@
             } else {
                 // The add-content control is in a column with content siblings
 
-                var prev = $(this).parents("div.add-content").prevAll("div.content").first();
+                var prev = add_content.prevAll("div.content").first();
                 var column = $(this).parents("div.column");
 
                 // Special rules for columns
@@ -89,7 +74,7 @@
                         );
                         return $(this);
                     } else {
-                        var following_elements = $(this).parents('div.add-content').nextAll('div.content');
+                        var following_elements = add_content.nextAll('div.content');
                         var new_row = insertion_templates.find('[data-row]').clone();
                         new_row.insertAfter($(this).parents('div.row-fluid'));
                         following_elements.detach().prependTo(new_row.find('div.column'));
@@ -266,6 +251,12 @@
 
     });
 
+    // Remove popovers when clicking on anything else than their trigger button
+    $(document.body).on('click', function(e) {
+        if(!$(e.target).is('.add-content')) {
+            article.find('.add-content').popover('hide');
+        }
+    });
 
     // Remove all editing-markup and re-build from scratch
     Editor.resetControls = function() {
@@ -319,10 +310,20 @@
             });
         }
 
-        // After each reset, add tooltips to the new button elements, the edit-structure buttons and add-content rows
-        editor.find("div.content-choices button").tooltip();
-        editor.find("div.edit-structure button").tooltip();
-        editor.find("article div.add-content").tooltip({placement: 'bottom'});
+        // Re-add tooltips to the new edit-structure buttons
+        editor.find('.edit-structure button').tooltip();
+
+        // Enable popovers on add-content clicks, and tooltips on the contained buttons
+        var popover_content = insertion_templates.find('[data-dnt-container="add-content-popover-content"]');
+        var popover_content_html = popover_content.wrap('<p>').parent().html();
+
+        popover_content.find("button").tooltip();
+        article.find('.add-content').popover({
+            placement: 'top',
+            html: true,
+            content: popover_content_html,
+            trigger: 'click',
+        });
     };
 
     // Insert the specified content at the specified position
