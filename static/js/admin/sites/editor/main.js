@@ -286,8 +286,8 @@
             }
         });
 
-        // Remove existing editor-control markup
-        article.find("div.row-fluid:not([data-row]),div.add-content").remove();
+        // Remove existing editor-control markup, and leftover tooltips that for some reason haven't been removed
+        article.find("div.row-fluid:not([data-row]),div.add-content,.tooltip").remove();
 
         var rows = article.find("div[data-row]");
         if(rows.length === 0) {
