@@ -37,7 +37,7 @@ class Command(BaseCommand):
             # Changed?
             if dev_key.size != prod_key.size or dev_key.etag != prod_key.etag:
                 updated_keys += 1
-                prod_key.copy(dev_bucket.name, prod_key.name)
+                prod_key.copy(dev_bucket.name, prod_key.name, preserve_acl=True)
                 continue
 
         print("\nDone: %s keys updated, %s keys deleted" % (updated_keys, deleted_keys))
@@ -56,7 +56,7 @@ class Command(BaseCommand):
             # New?
             if dev_key is None:
                 new_keys += 1
-                prod_key.copy(dev_bucket.name, prod_key.name)
+                prod_key.copy(dev_bucket.name, prod_key.name, preserve_acl=True)
                 continue
 
             # Don't check for changes if it exists - this has already been checked when iterating the dev-bucket
