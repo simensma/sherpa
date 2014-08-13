@@ -46,3 +46,15 @@ def membership_year_start(year=None):
         'actual_date': date(year=year, month=dates['actual_date'].month, day=dates['actual_date'].day),
         'public_date': date(year=year, month=dates['public_date'].month, day=dates['public_date'].day),
     }
+
+def s3_bucket(ssl=False):
+    if not ssl:
+        if not settings.DEBUG:
+            return settings.AWS_BUCKET
+        else:
+            return settings.AWS_BUCKET_DEV
+    else:
+        if not settings.DEBUG:
+            return settings.AWS_BUCKET_SSL
+        else:
+            return settings.AWS_BUCKET_SSL_DEV
