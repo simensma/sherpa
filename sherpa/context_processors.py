@@ -5,7 +5,7 @@ from django.core.cache import cache
 
 from page.models import Menu
 from core.models import Site
-from core.util import membership_year_start as membership_year_start_date_set
+from core.util import membership_year_start as membership_year_start_date_set, s3_bucket as get_s3_bucket
 
 def menus(request):
     if request.is_ajax():
@@ -77,3 +77,6 @@ def analytics_ua(request):
     else:
         # Test-profile UA
         return {'analytics_ua': 'UA-266436-62'}
+
+def s3_bucket(request):
+    return {'s3_bucket': get_s3_bucket()}

@@ -249,6 +249,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "sherpa.context_processors.do_not_track",
     "sherpa.context_processors.current_time",
     "sherpa.context_processors.analytics_ua",
+    "sherpa.context_processors.s3_bucket",
 )
 
 MIDDLEWARE_CLASSES = (

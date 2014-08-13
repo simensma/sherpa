@@ -42,7 +42,6 @@ def user_images(request, user):
     context = {
         'active_user': user,
         'images': images,
-        'aws_bucket': s3_bucket(),
         'origin': request.get_full_path(),
         'all_users': sorted(User.sherpa_users(), key=lambda u: u.get_first_name()),
         'current_navigation': current_navigation,
@@ -67,7 +66,6 @@ def list_albums(request, album):
         'albumpath': parents,
         'current_album': current_album,
         'images': images,
-        'aws_bucket': s3_bucket(),
         'origin': request.get_full_path(),
         'all_users': sorted(User.sherpa_users(), key=lambda u: u.get_first_name()),
         'current_navigation': 'albums',
@@ -91,7 +89,6 @@ def image_details(request, image):
         'exif': exif,
         'taken': taken,
         'tags': tags,
-        'aws_bucket': s3_bucket(),
         'origin': request.get_full_path(),
         'all_users': sorted(User.sherpa_users(), key=lambda u: u.get_first_name()),
         'current_navigation': 'albums'
@@ -217,7 +214,6 @@ def update_images(request):
     if request.method == 'GET':
         ids = json.loads(request.GET['bilder'])
         context = {
-            'aws_bucket': s3_bucket(),
             'ids': json.dumps(ids),
             'origin': request.GET.get('origin', '')
         }
@@ -388,7 +384,6 @@ def search(request):
     context.update({
         'albums': albums,
         'images': images,
-        'aws_bucket': s3_bucket(),
         'search_query': request.GET['q']})
     return render(request, 'common/admin/images/search.html', context)
 
