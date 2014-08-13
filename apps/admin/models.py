@@ -7,7 +7,6 @@ from django.dispatch import receiver
 from django.db import models
 from django.conf import settings
 
-import simples3 # TODO: Replace with boto
 import boto
 
 from core.util import use_image_thumb, s3_bucket
@@ -34,12 +33,21 @@ class Image(models.Model):
 # Upon image delete, delete the corresponding object from S3
 @receiver(post_delete, sender=Image, dispatch_uid="admin.models")
 def delete_image_post(sender, **kwargs):
-    s3 = simples3.S3Bucket(s3_bucket(), settings.AWS_ACCESS_KEY_ID,
-        settings.AWS_SECRET_ACCESS_KEY, 'https://%s' % s3_bucket())
+    conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+    bucket = conn.get_bucket(s3_bucket())
 
-    s3.delete("%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, kwargs['instance'].key, kwargs['instance'].extension))
+    bucket.delete_key("%s%s.%s" % (
+        settings.AWS_IMAGEGALLERY_PREFIX,
+        kwargs['instance'].key,
+        kwargs['instance'].extension
+    ))
     for size in settings.THUMB_SIZES:
-        s3.delete("%s%s-%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, kwargs['instance'].key, str(size), kwargs['instance'].extension))
+        bucket.delete_key("%s%s-%s.%s" % (
+            settings.AWS_IMAGEGALLERY_PREFIX,
+            kwargs['instance'].key,
+            str(size),
+            kwargs['instance'].extension
+        ))
 
 class Album(models.Model):
     name = models.CharField(max_length=200)
@@ -136,14 +144,11 @@ class Release(models.Model):
 # Upon image delete, delete the corresponding object from S3
 @receiver(post_delete, sender=Release, dispatch_uid="admin.models")
 def delete_release_pdf(sender, **kwargs):
-    s3 = simples3.S3Bucket(
-        s3_bucket(),
-        settings.AWS_ACCESS_KEY_ID,
-        settings.AWS_SECRET_ACCESS_KEY,
-        'https://%s' % s3_bucket())
+    conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+    bucket = conn.get_bucket(s3_bucket())
 
     if kwargs['instance'].pdf_hash != '':
-        s3.delete("%s/%s.pdf" % (settings.AWS_PUBLICATIONS_PREFIX, kwargs['instance'].pdf_hash))
+        bucket.delete_key("%s/%s.pdf" % (settings.AWS_PUBLICATIONS_PREFIX, kwargs['instance'].pdf_hash))
 
 class Campaign(models.Model):
     title = models.CharField(max_length=255)

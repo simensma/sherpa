@@ -11,7 +11,7 @@ from django.db.models import Q, F
 from django.conf import settings
 from django.core.cache import cache
 
-import simples3 # TODO: Replace with boto
+import boto
 
 from core.util import s3_bucket
 
@@ -328,16 +328,16 @@ class Ad(models.Model):
     def delete_file(self):
         # Check that other ads aren't using the same image file
         if not Ad.objects.exclude(id=self.id).filter(sha1_hash=self.sha1_hash).exists():
-            s3 = simples3.S3Bucket(s3_bucket(), settings.AWS_ACCESS_KEY_ID,
-                settings.AWS_SECRET_ACCESS_KEY, 'https://%s' % s3_bucket())
-            s3.delete("%s%s.%s" % (settings.AWS_ADS_PREFIX, self.sha1_hash, self.extension))
+            conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+            bucket = conn.get_bucket(s3_bucket())
+            bucket.delete("%s%s.%s" % (settings.AWS_ADS_PREFIX, self.sha1_hash, self.extension))
 
     def delete_fallback_file(self):
         # Check that other ads aren't using the same image file
         if not Ad.objects.exclude(id=self.id).filter(fallback_sha1_hash=self.fallback_sha1_hash).exists():
-            s3 = simples3.S3Bucket(s3_bucket(), settings.AWS_ACCESS_KEY_ID,
-                settings.AWS_SECRET_ACCESS_KEY, 'https://%s' % s3_bucket())
-            s3.delete("%s%s.%s" % (settings.AWS_ADS_PREFIX, self.fallback_sha1_hash, self.fallback_extension))
+            conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+            bucket = conn.get_bucket(s3_bucket())
+            bucket.delete("%s%s.%s" % (settings.AWS_ADS_PREFIX, self.fallback_sha1_hash, self.fallback_extension))
 
     @staticmethod
     def on(site):

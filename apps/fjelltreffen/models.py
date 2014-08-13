@@ -6,7 +6,7 @@ from django.db import models
 from django.conf import settings
 from django.db.models import Q
 
-import simples3 # TODO: Replace with boto
+import boto
 
 from core.util import s3_bucket
 
@@ -70,18 +70,15 @@ class Annonse(models.Model):
             self.image_thumb = ''
             self.save()
         else:
-            s3 = simples3.S3Bucket(
-                s3_bucket(),
-                settings.AWS_ACCESS_KEY_ID,
-                settings.AWS_SECRET_ACCESS_KEY,
-                'https://%s' % s3_bucket())
+            conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+            bucket = conn.get_bucket(s3_bucket())
 
             if self.image != '':
-                s3.delete("%s/%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image))
+                bucket.delete("%s/%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image))
                 self.image = ''
 
             if self.image_thumb != '':
-                s3.delete("%s/%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image_thumb))
+                bucket.delete("%s/%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image_thumb))
                 self.image_thumb = ''
 
             self.save()
