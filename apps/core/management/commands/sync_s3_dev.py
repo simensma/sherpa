@@ -48,7 +48,7 @@ class Command(BaseCommand):
 
         # Then iterate the production bucket, and copy over any new files
         print()
-        print("Iterating the production-bucket to find new keys...")
+        print("Iterating the production-bucket to find new keys (%s confirmed keys will be skipped)..." % len(confirmed_keys))
         new_keys = 0
         for prod_key in prod_bucket.list():
             # Show progress for each processed key
