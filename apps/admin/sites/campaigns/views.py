@@ -78,8 +78,7 @@ def save(request, site):
     hash_ = sha1(campaign_image_file).hexdigest()
     key = bucket.new_key(Campaign.cropped_image_key(hash_))
     key.content_type = 'image/jpeg'
-    key.set_contents_from_string(campaign_image_file)
-    key.set_acl('public-read')
+    key.set_contents_from_string(campaign_image_file, policy='public-read')
 
     # And finally save the rest of the campaign data
     campaign.title = post_data['title']

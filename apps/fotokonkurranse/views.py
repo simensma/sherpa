@@ -81,14 +81,12 @@ def upload(request):
 
         key = boto.s3.key.Key(bucket, '%s%s.%s' % (settings.AWS_IMAGEGALLERY_PREFIX, image_key, ext))
         key.content_type = image_file.content_type
-        key.set_contents_from_string(data)
-        key.set_acl('public-read')
+        key.set_contents_from_string(data, policy='public-read')
 
         for thumb in thumbs:
             key = boto.s3.key.Key(bucket, '%s%s-%s.%s' % (settings.AWS_IMAGEGALLERY_PREFIX, image_key, thumb['size'], ext))
             key.content_type = image_file.content_type
-            key.set_contents_from_string(thumb['data'])
-            key.set_acl('public-read')
+            key.set_contents_from_string(thumb['data'], policy='public-read')
 
         destination_album = Fotokonkurranse.objects.get().album
         licence_text = "Kan brukes i DNTs egne kommunikasjonskanaler som magasiner, nettsider og sosiale medier, i PR og for bruk av DNTs sponsorer."
