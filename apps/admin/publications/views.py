@@ -9,7 +9,7 @@ from django.core.cache import cache
 from django.conf import settings
 from django.contrib import messages
 
-import simples3 # TODO: Replace with boto
+import boto
 
 from foreninger.models import Forening
 from admin.models import Publication, Release
@@ -84,9 +84,6 @@ def edit_release(request, publication, release):
 
         if 'pdf' in request.FILES:
             file = request.FILES['pdf']
-
-            # TODO: Consider streaming the file instead of reading everything into memory first.
-            # See simples3/htstream.py
             data = file.read()
 
             # Calculate the sha1-hash and file extension
@@ -106,20 +103,16 @@ def edit_release(request, publication, release):
                     return redirect('admin.publications.views.edit_publication', publication.id, release.id)
 
             # Upload to AWS
-            s3 = simples3.S3Bucket(
-                s3_bucket(),
-                settings.AWS_ACCESS_KEY_ID,
-                settings.AWS_SECRET_ACCESS_KEY,
-                'https://%s' % s3_bucket())
+            conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+            bucket = conn.get_bucket(s3_bucket())
 
             if release.pdf_hash != '':
-                s3.delete("%s/%s.pdf" % (settings.AWS_PUBLICATIONS_PREFIX, release.pdf_hash))
+                bucket.delete("%s/%s.pdf" % (settings.AWS_PUBLICATIONS_PREFIX, release.pdf_hash))
 
-            s3.put(
-                "%s/%s.%s" % (settings.AWS_PUBLICATIONS_PREFIX, hash, extension),
-                data,
-                acl='public-read',
-                mimetype=file.content_type)
+            key = bucket.new_key("%s/%s.%s" % (settings.AWS_PUBLICATIONS_PREFIX, hash, extension))
+            key.content_type = file.content_type
+            key.set_contents_from_string(data, policy='public-read')
+
             release.pdf_hash = hash
             release.pdf_file_size = file.size
 

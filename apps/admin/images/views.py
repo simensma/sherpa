@@ -11,7 +11,6 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 
 import PIL.Image
-import simples3 # TODO: Replace with boto
 import boto
 import pyexiv2
 
@@ -272,11 +271,8 @@ def upload_image(request):
             result = json.dumps({'status': 'no_files'})
             return render(request, 'common/admin/images/iframe.html', {'result': result})
 
-        s3 = simples3.S3Bucket(
-            s3_bucket(),
-            settings.AWS_ACCESS_KEY_ID,
-            settings.AWS_SECRET_ACCESS_KEY,
-            'https://%s' % s3_bucket())
+        conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+        bucket = conn.get_bucket(s3_bucket())
 
         ids = []
         album = None if request.POST['album'] == '' else Album.objects.get(id=request.POST['album'])
@@ -289,15 +285,14 @@ def upload_image(request):
             tags = xmp.find_keywords(data)
             thumbs = [{'size': size, 'data': create_thumb(pil_image, ext, size)} for size in settings.THUMB_SIZES]
 
-            s3.put("%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, key, ext),
-                data,
-                acl='public-read',
-                mimetype=image.content_type)
+            key = bucket.new_key("%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, key, ext))
+            key.content_type = image.content_type
+            key.set_contents_from_string(data, policy='public-read')
+
             for thumb in thumbs:
-                s3.put("%s%s-%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, key, thumb['size'], ext),
-                    thumb['data'],
-                    acl='public-read',
-                    mimetype=image.content_type)
+                key = bucket.new_key("%s%s-%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, key, thumb['size'], ext))
+                key.content_type = image.content_type
+                key.set_contents_from_string(thumb['data'], policy='public-read')
 
             image = Image(
                 key=key,

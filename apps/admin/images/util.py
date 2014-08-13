@@ -15,7 +15,7 @@ from django.shortcuts import render
 
 import PIL.Image
 import PIL.ExifTags
-import simples3 # TODO: Replace with boto
+import boto
 
 from core.models import Tag
 from admin.models import Image, Album
@@ -78,11 +78,8 @@ def image_upload_dialog(request):
         return render(request, 'common/admin/images/iframe.html', {'result': result})
 
     try:
-        s3 = simples3.S3Bucket(
-            s3_bucket(),
-            settings.AWS_ACCESS_KEY_ID,
-            settings.AWS_SECRET_ACCESS_KEY,
-            'https://%s' % s3_bucket())
+        conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+        bucket = conn.get_bucket(s3_bucket())
 
         key = generate_unique_random_image_key()
         data = image.read()
@@ -93,15 +90,14 @@ def image_upload_dialog(request):
         user_provided_tags = json.loads(request.POST['tags-serialized'])
         thumbs = [{'size': size, 'data': create_thumb(pil_image, ext, size)} for size in settings.THUMB_SIZES]
 
-        s3.put("%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, key, ext),
-            data,
-            acl='public-read',
-            mimetype=image.content_type)
+        key = bucket.new_key("%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, key, ext))
+        key.content_type = image.content_type
+        key.set_contents_from_string(data, policy='public-read')
+
         for thumb in thumbs:
-            s3.put("%s%s-%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, key, thumb['size'], ext),
-                thumb['data'],
-                acl='public-read',
-                mimetype=image.content_type)
+            key = bucket.new_key("%s%s-%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, key, thumb['size'], ext))
+            key.content_type = image.content_type
+            key.set_contents_from_string(thumb['data'], policy='public-read')
 
         image = Image(
             key=key,
