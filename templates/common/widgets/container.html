@@ -8,14 +8,14 @@
 
   {% if not admin_context %}
 
-    <div class="content widget {{ widget.widget }}">
+    <div class="content widget {{ widget.widget }}" data-dnt-container="content-widget">
       {% include widget.template %}
     </div>
 
   {% else %}
 
     {# Note that the data-admin-context attr is used by the widget rendering javascript #}
-    <div class="content widget {{ widget.widget }}" data-json="{{ widget.json }}" data-id="{{ content_id }}" data-admin-context>
+    <div class="content widget {{ widget.widget }}" data-dnt-container="content-widget" data-json="{{ widget.json }}" data-id="{{ content_id }}" data-admin-context>
       {% include widget.template %}
     </div>
 
