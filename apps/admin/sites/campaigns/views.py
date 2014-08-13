@@ -13,6 +13,7 @@ from PIL import Image
 
 from admin.models import Campaign, CampaignText
 from core.models import Site
+from core.util import s3_bucket
 
 def index(request, site):
     active_site = Site.objects.get(id=site)
@@ -72,7 +73,7 @@ def save(request, site):
 
     # Save the prepared image to S3
     conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
-    bucket = conn.get_bucket(settings.AWS_BUCKET)
+    bucket = conn.get_bucket(s3_bucket())
 
     hash_ = sha1(campaign_image_file).hexdigest()
     key = bucket.new_key(Campaign.cropped_image_key(hash_))

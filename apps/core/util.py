@@ -6,7 +6,7 @@ import re
 from django.conf import settings
 
 def use_image_thumb(url, preferred_size):
-    if url.find("%s/%s" % (settings.AWS_BUCKET, settings.AWS_IMAGEGALLERY_PREFIX)) == -1:
+    if url.find("%s/%s" % (s3_bucket(), settings.AWS_IMAGEGALLERY_PREFIX)) == -1:
         # Not a file from our image archive, don't modify it
         return url
 

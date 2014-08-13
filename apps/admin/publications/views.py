@@ -14,6 +14,7 @@ import simples3 # TODO: Replace with boto
 from foreninger.models import Forening
 from admin.models import Publication, Release
 from core.models import Tag
+from core.util import s3_bucket
 
 def index(request):
     publications = Publication.objects.filter(forening__in=request.user.all_foreninger()).order_by('title')
@@ -106,10 +107,10 @@ def edit_release(request, publication, release):
 
             # Upload to AWS
             s3 = simples3.S3Bucket(
-                settings.AWS_BUCKET,
+                s3_bucket(),
                 settings.AWS_ACCESS_KEY_ID,
                 settings.AWS_SECRET_ACCESS_KEY,
-                'https://%s' % settings.AWS_BUCKET)
+                'https://%s' % s3_bucket())
 
             if release.pdf_hash != '':
                 s3.delete("%s/%s.pdf" % (settings.AWS_PUBLICATIONS_PREFIX, release.pdf_hash))

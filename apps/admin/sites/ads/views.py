@@ -11,6 +11,7 @@ import simples3 # TODO: Replace with boto
 from admin.sites.ads.util import parse_adform_script_destination
 from page.models import Ad, AdPlacement
 from core.models import Site
+from core.util import s3_bucket
 
 def list(request, site):
     active_site = Site.objects.get(id=site)
@@ -165,8 +166,8 @@ def upload(file):
     extension = file.name.split(".")[-1].lower()
 
     # Upload to AWS
-    s3 = simples3.S3Bucket(settings.AWS_BUCKET, settings.AWS_ACCESS_KEY_ID,
-        settings.AWS_SECRET_ACCESS_KEY, 'https://%s' % settings.AWS_BUCKET)
+    s3 = simples3.S3Bucket(s3_bucket(), settings.AWS_ACCESS_KEY_ID,
+        settings.AWS_SECRET_ACCESS_KEY, 'https://%s' % s3_bucket())
     s3.put("%s%s.%s" % (settings.AWS_ADS_PREFIX, hash, extension),
         data, acl='public-read', mimetype=file.content_type)
 

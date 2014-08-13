@@ -8,6 +8,8 @@ from django.db.models import Q
 
 import simples3 # TODO: Replace with boto
 
+from core.util import s3_bucket
+
 # Default annonse-filters
 default_min_age = '18'
 default_max_age = ''    # No limit - empty string is also used in the select box
@@ -40,13 +42,13 @@ class Annonse(models.Model):
         if self.is_image_old:
             return "http://%s/%s" % (settings.OLD_SITE, self.image)
         else:
-            return "http://%s/%s/%s" % (settings.AWS_BUCKET, settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image)
+            return "http://%s/%s/%s" % (s3_bucket(), settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image)
 
     def get_image_thumb_url(self):
         if self.is_image_old:
             return self.get_image_url()
         else:
-            return "http://%s/%s/%s" % (settings.AWS_BUCKET, settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image_thumb)
+            return "http://%s/%s/%s" % (s3_bucket(), settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image_thumb)
 
     def get_age(self):
         age = self.user.get_age()
@@ -69,10 +71,10 @@ class Annonse(models.Model):
             self.save()
         else:
             s3 = simples3.S3Bucket(
-                settings.AWS_BUCKET,
+                s3_bucket(),
                 settings.AWS_ACCESS_KEY_ID,
                 settings.AWS_SECRET_ACCESS_KEY,
-                'https://%s' % settings.AWS_BUCKET)
+                'https://%s' % s3_bucket())
 
             if self.image != '':
                 s3.delete("%s/%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image))

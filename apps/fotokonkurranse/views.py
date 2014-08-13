@@ -22,6 +22,7 @@ from admin.models import Image, Fotokonkurranse
 from core.models import Tag
 from admin.images.util import generate_unique_random_image_key, get_exif_tags, create_thumb
 from core import xmp, validator
+from core.util import s3_bucket
 
 logger = logging.getLogger('sherpa')
 
@@ -59,7 +60,7 @@ def upload(request):
 
     try:
         conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
-        bucket = conn.get_bucket(settings.AWS_BUCKET)
+        bucket = conn.get_bucket(s3_bucket())
 
         image_key = generate_unique_random_image_key()
         data = image_file.read()

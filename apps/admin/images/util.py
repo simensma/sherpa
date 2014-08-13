@@ -20,6 +20,7 @@ import simples3 # TODO: Replace with boto
 from core.models import Tag
 from admin.models import Image, Album
 from core import xmp
+from core.util import s3_bucket
 
 logger = logging.getLogger('sherpa')
 
@@ -78,10 +79,10 @@ def image_upload_dialog(request):
 
     try:
         s3 = simples3.S3Bucket(
-            settings.AWS_BUCKET,
+            s3_bucket(),
             settings.AWS_ACCESS_KEY_ID,
             settings.AWS_SECRET_ACCESS_KEY,
-            'https://%s' % settings.AWS_BUCKET)
+            'https://%s' % s3_bucket())
 
         key = generate_unique_random_image_key()
         data = image.read()
@@ -123,7 +124,7 @@ def image_upload_dialog(request):
 
         result = json.dumps({
             'status': 'success',
-            'url': 'http://%s/%s%s.%s' % (settings.AWS_BUCKET, settings.AWS_IMAGEGALLERY_PREFIX, key, ext)})
+            'url': 'http://%s/%s%s.%s' % (s3_bucket(), settings.AWS_IMAGEGALLERY_PREFIX, key, ext)})
         return render(request, 'common/admin/images/iframe.html', {'result': result})
     except(IOError, KeyError):
         logger.warning(u"Kunne ikke parse opplastet bilde, antar at det er ugyldig bildefil",

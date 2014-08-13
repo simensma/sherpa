@@ -24,6 +24,7 @@ from fjelltreffen.models import Annonse
 from fjelltreffen.forms import ReplyForm, ReplyAnonForm
 from core import validator, librato
 from core.models import County
+from core.util import s3_bucket
 
 logger = logging.getLogger('sherpa')
 
@@ -322,10 +323,10 @@ def save(request):
 
         # Setup AWS connection
         s3 = simples3.S3Bucket(
-            settings.AWS_BUCKET,
+            s3_bucket(),
             settings.AWS_ACCESS_KEY_ID,
             settings.AWS_SECRET_ACCESS_KEY,
-            'https://%s' % settings.AWS_BUCKET)
+            'https://%s' % s3_bucket())
 
         # Upload the original image to AWS
         s3.put(

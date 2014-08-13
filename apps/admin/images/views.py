@@ -19,6 +19,7 @@ from core.models import Tag
 from admin.models import Image, Album, Fotokonkurranse
 from user.models import User
 from core import xmp
+from core.util import s3_bucket
 from admin.images.util import parse_objects, list_parents, list_parents_values, full_archive_search, get_exif_tags, create_thumb, generate_unique_random_image_key
 
 logger = logging.getLogger('sherpa')
@@ -41,7 +42,7 @@ def user_images(request, user):
     context = {
         'active_user': user,
         'images': images,
-        'aws_bucket': settings.AWS_BUCKET,
+        'aws_bucket': s3_bucket(),
         'origin': request.get_full_path(),
         'all_users': sorted(User.sherpa_users(), key=lambda u: u.get_first_name()),
         'current_navigation': current_navigation,
@@ -66,7 +67,7 @@ def list_albums(request, album):
         'albumpath': parents,
         'current_album': current_album,
         'images': images,
-        'aws_bucket': settings.AWS_BUCKET,
+        'aws_bucket': s3_bucket(),
         'origin': request.get_full_path(),
         'all_users': sorted(User.sherpa_users(), key=lambda u: u.get_first_name()),
         'current_navigation': 'albums',
@@ -90,7 +91,7 @@ def image_details(request, image):
         'exif': exif,
         'taken': taken,
         'tags': tags,
-        'aws_bucket': settings.AWS_BUCKET,
+        'aws_bucket': s3_bucket(),
         'origin': request.get_full_path(),
         'all_users': sorted(User.sherpa_users(), key=lambda u: u.get_first_name()),
         'current_navigation': 'albums'
@@ -162,7 +163,7 @@ def download_album(request, album):
     album = Album.objects.get(id=album)
 
     conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
-    bucket = conn.get_bucket(settings.AWS_BUCKET)
+    bucket = conn.get_bucket(s3_bucket())
 
     def set_exif_tag(metadata, key, value):
         if key in metadata:
@@ -216,7 +217,7 @@ def update_images(request):
     if request.method == 'GET':
         ids = json.loads(request.GET['bilder'])
         context = {
-            'aws_bucket': settings.AWS_BUCKET,
+            'aws_bucket': s3_bucket(),
             'ids': json.dumps(ids),
             'origin': request.GET.get('origin', '')
         }
@@ -276,10 +277,10 @@ def upload_image(request):
             return render(request, 'common/admin/images/iframe.html', {'result': result})
 
         s3 = simples3.S3Bucket(
-            settings.AWS_BUCKET,
+            s3_bucket(),
             settings.AWS_ACCESS_KEY_ID,
             settings.AWS_SECRET_ACCESS_KEY,
-            'https://%s' % settings.AWS_BUCKET)
+            'https://%s' % s3_bucket())
 
         ids = []
         album = None if request.POST['album'] == '' else Album.objects.get(id=request.POST['album'])
@@ -387,7 +388,7 @@ def search(request):
     context.update({
         'albums': albums,
         'images': images,
-        'aws_bucket': settings.AWS_BUCKET,
+        'aws_bucket': s3_bucket(),
         'search_query': request.GET['q']})
     return render(request, 'common/admin/images/search.html', context)
 

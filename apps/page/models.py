@@ -13,6 +13,8 @@ from django.core.cache import cache
 
 import simples3 # TODO: Replace with boto
 
+from core.util import s3_bucket
+
 class Menu(models.Model):
     name = models.CharField(max_length=50)
     url = models.CharField(max_length=2048)
@@ -137,7 +139,7 @@ class Version(models.Model):
 
                 # Statically use the 150px version. This should be optimized; save
                 # the available sizes with the model and use the smallest appropriate one.
-                if thumbnail['url'] is not None and settings.AWS_BUCKET in thumbnail['url']:
+                if thumbnail['url'] is not None and s3_bucket() in thumbnail['url']:
                     if size == 'small':
                         size_string = str(min(settings.THUMB_SIZES))
                     else:
@@ -223,8 +225,8 @@ class Content(models.Model):
 
         source = self.get_content()['src']
 
-        local_image_path = '%s/%s' % (settings.AWS_BUCKET, settings.AWS_IMAGEGALLERY_PREFIX)
-        local_image_path_ssl = '%s/%s' % (settings.AWS_BUCKET_SSL, settings.AWS_IMAGEGALLERY_PREFIX)
+        local_image_path = '%s/%s' % (s3_bucket(), settings.AWS_IMAGEGALLERY_PREFIX)
+        local_image_path_ssl = '%s/%s' % (s3_bucket(ssl=True), settings.AWS_IMAGEGALLERY_PREFIX)
 
         if not local_image_path in source and not local_image_path_ssl in source:
             # Not an image from the image gallery; don't touch it
@@ -300,13 +302,13 @@ class Ad(models.Model):
         return u'%s' % self.pk
 
     def url(self):
-        return "//%s/%s%s.%s" % (settings.AWS_BUCKET_SSL, settings.AWS_ADS_PREFIX, self.sha1_hash, self.extension)
+        return "//%s/%s%s.%s" % (s3_bucket(ssl=True), settings.AWS_ADS_PREFIX, self.sha1_hash, self.extension)
 
     def has_fallback(self):
         return self.fallback_sha1_hash is not None and self.fallback_extension is not None
 
     def fallback_url(self):
-        return "//%s/%s%s.%s" % (settings.AWS_BUCKET_SSL, settings.AWS_ADS_PREFIX, self.fallback_sha1_hash, self.fallback_extension)
+        return "//%s/%s%s.%s" % (s3_bucket(ssl=True), settings.AWS_ADS_PREFIX, self.fallback_sha1_hash, self.fallback_extension)
 
     def is_adform_script(self):
         return self.content_type == Ad.ADFORM_SCRIPT_CONTENT_TYPE
@@ -326,15 +328,15 @@ class Ad(models.Model):
     def delete_file(self):
         # Check that other ads aren't using the same image file
         if not Ad.objects.exclude(id=self.id).filter(sha1_hash=self.sha1_hash).exists():
-            s3 = simples3.S3Bucket(settings.AWS_BUCKET, settings.AWS_ACCESS_KEY_ID,
-                settings.AWS_SECRET_ACCESS_KEY, 'https://%s' % settings.AWS_BUCKET)
+            s3 = simples3.S3Bucket(s3_bucket(), settings.AWS_ACCESS_KEY_ID,
+                settings.AWS_SECRET_ACCESS_KEY, 'https://%s' % s3_bucket())
             s3.delete("%s%s.%s" % (settings.AWS_ADS_PREFIX, self.sha1_hash, self.extension))
 
     def delete_fallback_file(self):
         # Check that other ads aren't using the same image file
         if not Ad.objects.exclude(id=self.id).filter(fallback_sha1_hash=self.fallback_sha1_hash).exists():
-            s3 = simples3.S3Bucket(settings.AWS_BUCKET, settings.AWS_ACCESS_KEY_ID,
-                settings.AWS_SECRET_ACCESS_KEY, 'https://%s' % settings.AWS_BUCKET)
+            s3 = simples3.S3Bucket(s3_bucket(), settings.AWS_ACCESS_KEY_ID,
+                settings.AWS_SECRET_ACCESS_KEY, 'https://%s' % s3_bucket())
             s3.delete("%s%s.%s" % (settings.AWS_ADS_PREFIX, self.fallback_sha1_hash, self.fallback_extension))
 
     @staticmethod
