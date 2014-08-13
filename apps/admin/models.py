@@ -7,10 +7,9 @@ from django.dispatch import receiver
 from django.db import models
 from django.conf import settings
 
-import simples3 # TODO: Replace with boto
 import boto
 
-from core.util import use_image_thumb
+from core.util import use_image_thumb, s3_bucket
 
 class Image(models.Model):
     key = models.CharField(max_length=8)
@@ -34,12 +33,21 @@ class Image(models.Model):
 # Upon image delete, delete the corresponding object from S3
 @receiver(post_delete, sender=Image, dispatch_uid="admin.models")
 def delete_image_post(sender, **kwargs):
-    s3 = simples3.S3Bucket(settings.AWS_BUCKET, settings.AWS_ACCESS_KEY_ID,
-        settings.AWS_SECRET_ACCESS_KEY, 'https://%s' % settings.AWS_BUCKET)
+    conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+    bucket = conn.get_bucket(s3_bucket())
 
-    s3.delete("%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, kwargs['instance'].key, kwargs['instance'].extension))
+    bucket.delete_key("%s%s.%s" % (
+        settings.AWS_IMAGEGALLERY_PREFIX,
+        kwargs['instance'].key,
+        kwargs['instance'].extension
+    ))
     for size in settings.THUMB_SIZES:
-        s3.delete("%s%s-%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, kwargs['instance'].key, str(size), kwargs['instance'].extension))
+        bucket.delete_key("%s%s-%s.%s" % (
+            settings.AWS_IMAGEGALLERY_PREFIX,
+            kwargs['instance'].key,
+            str(size),
+            kwargs['instance'].extension
+        ))
 
 class Album(models.Model):
     name = models.CharField(max_length=200)
@@ -112,7 +120,7 @@ class Release(models.Model):
         return use_image_thumb(self.cover_photo, 500)
 
     def get_pdf_url(self):
-        return "http://%s/%s/%s.pdf" % (settings.AWS_BUCKET, settings.AWS_PUBLICATIONS_PREFIX, self.pdf_hash)
+        return "http://%s/%s/%s.pdf" % (s3_bucket(), settings.AWS_PUBLICATIONS_PREFIX, self.pdf_hash)
 
     def get_default_release(self):
         if self.pdf_hash != '':
@@ -136,14 +144,11 @@ class Release(models.Model):
 # Upon image delete, delete the corresponding object from S3
 @receiver(post_delete, sender=Release, dispatch_uid="admin.models")
 def delete_release_pdf(sender, **kwargs):
-    s3 = simples3.S3Bucket(
-        settings.AWS_BUCKET,
-        settings.AWS_ACCESS_KEY_ID,
-        settings.AWS_SECRET_ACCESS_KEY,
-        'https://%s' % settings.AWS_BUCKET)
+    conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+    bucket = conn.get_bucket(s3_bucket())
 
     if kwargs['instance'].pdf_hash != '':
-        s3.delete("%s/%s.pdf" % (settings.AWS_PUBLICATIONS_PREFIX, kwargs['instance'].pdf_hash))
+        bucket.delete_key("%s/%s.pdf" % (settings.AWS_PUBLICATIONS_PREFIX, kwargs['instance'].pdf_hash))
 
 class Campaign(models.Model):
     title = models.CharField(max_length=255)
@@ -227,7 +232,7 @@ class Campaign(models.Model):
         return '%s%sutm_campaign=%s&utm_source=kampanje&utm_medium=kampanjeknapp' % (self.button_anchor, start_char, self.utm_campaign)
 
     def get_cropped_image(self):
-        return "http://%s/%s" % (settings.AWS_BUCKET, self.get_cropped_image_key())
+        return "http://%s/%s" % (s3_bucket(), self.get_cropped_image_key())
 
     def get_cropped_image_key(self):
         return Campaign.cropped_image_key(self.image_cropped_hash)
@@ -238,7 +243,7 @@ class Campaign(models.Model):
             return
 
         conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
-        bucket = conn.get_bucket(settings.AWS_BUCKET)
+        bucket = conn.get_bucket(s3_bucket())
         bucket.delete_key(self.get_cropped_image_key())
 
     def generate_ga_event_label(self):

@@ -22,6 +22,7 @@ from admin.models import Image, Fotokonkurranse
 from core.models import Tag
 from admin.images.util import generate_unique_random_image_key, get_exif_tags, create_thumb
 from core import xmp, validator
+from core.util import s3_bucket
 
 logger = logging.getLogger('sherpa')
 
@@ -59,7 +60,7 @@ def upload(request):
 
     try:
         conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
-        bucket = conn.get_bucket(settings.AWS_BUCKET)
+        bucket = conn.get_bucket(s3_bucket())
 
         image_key = generate_unique_random_image_key()
         data = image_file.read()
@@ -80,14 +81,12 @@ def upload(request):
 
         key = boto.s3.key.Key(bucket, '%s%s.%s' % (settings.AWS_IMAGEGALLERY_PREFIX, image_key, ext))
         key.content_type = image_file.content_type
-        key.set_contents_from_string(data)
-        key.set_acl('public-read')
+        key.set_contents_from_string(data, policy='public-read')
 
         for thumb in thumbs:
             key = boto.s3.key.Key(bucket, '%s%s-%s.%s' % (settings.AWS_IMAGEGALLERY_PREFIX, image_key, thumb['size'], ext))
             key.content_type = image_file.content_type
-            key.set_contents_from_string(thumb['data'])
-            key.set_acl('public-read')
+            key.set_contents_from_string(thumb['data'], policy='public-read')
 
         destination_album = Fotokonkurranse.objects.get().album
         licence_text = "Kan brukes i DNTs egne kommunikasjonskanaler som magasiner, nettsider og sosiale medier, i PR og for bruk av DNTs sponsorer."

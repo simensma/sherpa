@@ -19,9 +19,7 @@
 
 {% block js_globals %}
   <script>
-    window.Turistforeningen = {
-      aktivitet_points: JSON.parse("{{ aktivitet_positions_json|escapejs }}")
-    };
+    Turistforeningen.aktivitet_points = JSON.parse("{{ aktivitet_positions_json|escapejs }}");
   </script>
 {% endblock %}
 

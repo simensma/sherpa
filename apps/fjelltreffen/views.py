@@ -16,7 +16,7 @@ from django.conf import settings
 from django.core.exceptions import PermissionDenied
 
 import PIL.Image
-import simples3 # TODO: Replace with boto
+import boto
 
 from admin.images.util import standardize_extension
 from sherpa.decorators import user_requires, user_requires_login
@@ -24,6 +24,7 @@ from fjelltreffen.models import Annonse
 from fjelltreffen.forms import ReplyForm, ReplyAnonForm
 from core import validator, librato
 from core.models import County
+from core.util import s3_bucket
 
 logger = logging.getLogger('sherpa')
 
@@ -261,8 +262,7 @@ def save(request):
 
     if 'image' in request.FILES:
         try:
-            # Uploading image. TODO: Consider streaming the file instead of reading everything into memory first.
-            # See simples3/htstream.py
+            # Uploading image
             file = request.FILES['image']
             data = file.read()
             extension = standardize_extension(file.name.split(".")[-1])
@@ -321,25 +321,18 @@ def save(request):
         annonse.delete_image()
 
         # Setup AWS connection
-        s3 = simples3.S3Bucket(
-            settings.AWS_BUCKET,
-            settings.AWS_ACCESS_KEY_ID,
-            settings.AWS_SECRET_ACCESS_KEY,
-            'https://%s' % settings.AWS_BUCKET)
+        conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+        bucket = conn.get_bucket(s3_bucket())
 
         # Upload the original image to AWS
-        s3.put(
-            "%s/%s.%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, hash, extension),
-            data,
-            acl='public-read',
-            mimetype=file.content_type)
+        key = bucket.new_key("%s/%s.%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, hash, extension))
+        key.content_type = file.content_type
+        key.set_contents_from_string(data, policy='public-read')
 
         # Upload the thumbnail to AWS
-        s3.put(
-            "%s/%s.%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, thumb_hash, extension),
-            thumb_data,
-            acl='public-read',
-            mimetype=file.content_type)
+        key = bucket.new_key("%s/%s.%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, thumb_hash, extension))
+        key.content_type = file.content_type
+        key.set_contents_from_string(thumb_data, policy='public-read')
 
         # Update the DB fields with new images
         annonse.image = "%s.%s" % (hash, extension)

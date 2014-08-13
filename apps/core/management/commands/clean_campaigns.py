@@ -7,6 +7,7 @@ from django.conf import settings
 import boto
 
 from admin.models import Campaign
+from core.util import s3_bucket
 
 class Command(BaseCommand):
     args = u""
@@ -18,7 +19,7 @@ class Command(BaseCommand):
             return
 
         conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
-        buck = conn.get_bucket(settings.AWS_BUCKET)
+        buck = conn.get_bucket(s3_bucket())
 
         ghost_keys = []
 
@@ -42,7 +43,7 @@ class Command(BaseCommand):
         self.stdout.write("\n")
 
         for key in ghost_keys:
-            self.stdout.write("  http://%s/%s\n" % (settings.AWS_BUCKET, key.name))
+            self.stdout.write("  http://%s/%s\n" % (s3_bucket(), key.name))
         self.stdout.write("\n")
 
         if raw_input("Slett dem? (y/N) ") != 'y':

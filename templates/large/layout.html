@@ -203,6 +203,12 @@
 {# "Global" csrf_token for AJAX-requests #}
 {% csrf_token %}
 
+{# Create the global Turistforeningen object. Note that other scripts will always expect this object to exist #}
+<script>
+  window.Turistforeningen = window.Turistforeningen || {};
+  Turistforeningen.s3_bucket = '{{ s3_bucket }}';
+</script>
+
 {% block js_globals %}{% endblock %}
 {% include 'global_layout/scripts.html' %}
 {% block extra_js %}{% endblock %}

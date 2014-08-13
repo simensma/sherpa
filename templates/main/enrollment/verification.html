@@ -9,29 +9,27 @@
 
 {% block js_globals %}
   <script>
-    window.Turistforeningen = {
-      price_key: {{ keyprice }},
-      price_shipment_yearbook: {{ foreign_shipment_price }},
-      price_main: {{ enrollment.get_prices.main }},
-      price_household: {{ enrollment.get_prices.household }},
-      price_senior: {{ enrollment.get_prices.senior }},
-      price_youth: {{ enrollment.get_prices.youth }},
-      price_school: {{ enrollment.get_prices.school }},
-      price_child: {{ enrollment.get_prices.child }},
+    Turistforeningen.price_key = {{ keyprice }};
+    Turistforeningen.price_shipment_yearbook = {{ foreign_shipment_price }};
+    Turistforeningen.price_main = {{ enrollment.get_prices.main }};
+    Turistforeningen.price_household = {{ enrollment.get_prices.household }};
+    Turistforeningen.price_senior = {{ enrollment.get_prices.senior }};
+    Turistforeningen.price_youth = {{ enrollment.get_prices.youth }};
+    Turistforeningen.price_school = {{ enrollment.get_prices.school }};
+    Turistforeningen.price_child = {{ enrollment.get_prices.child }};
 
-      age_senior: {{ age_senior }},
-      age_main: {{ age_main }},
-      age_youth: {{ age_youth }},
-      age_school: {{ age_school }},
+    Turistforeningen.age_senior = {{ age_senior }};
+    Turistforeningen.age_main = {{ age_main }};
+    Turistforeningen.age_youth = {{ age_youth }};
+    Turistforeningen.age_school = {{ age_school }};
 
-      membership_type_names: {
-        senior: "{{ membership_type_names.senior|escapejs }}",
-        main: "{{ membership_type_names.main|escapejs }}",
-        youth: "{{ membership_type_names.youth|escapejs }}",
-        school: "{{ membership_type_names.school|escapejs }}",
-        child: "{{ membership_type_names.child|escapejs }}",
-        household: "{{ membership_type_names.household|escapejs }}"
-      }
+    Turistforeningen.membership_type_names = {
+      senior: "{{ membership_type_names.senior|escapejs }}",
+      main: "{{ membership_type_names.main|escapejs }}",
+      youth: "{{ membership_type_names.youth|escapejs }}",
+      school: "{{ membership_type_names.school|escapejs }}",
+      child: "{{ membership_type_names.child|escapejs }}",
+      household: "{{ membership_type_names.household|escapejs }}",
     };
   </script>
 {% endblock %}

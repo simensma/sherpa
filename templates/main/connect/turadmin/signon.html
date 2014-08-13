@@ -5,9 +5,7 @@
 
 {% block js_globals %}
   <script>
-    window.Turistforeningen = {
-      user_password_length: {{ user_password_length }}
-    };
+    Turistforeningen.user_password_length = {{ user_password_length }};
   </script>
   {% if prefilled_user %}
     <script>

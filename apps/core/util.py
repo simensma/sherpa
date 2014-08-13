@@ -6,7 +6,7 @@ import re
 from django.conf import settings
 
 def use_image_thumb(url, preferred_size):
-    if url.find("%s/%s" % (settings.AWS_BUCKET, settings.AWS_IMAGEGALLERY_PREFIX)) == -1:
+    if url.find("%s/%s" % (s3_bucket(), settings.AWS_IMAGEGALLERY_PREFIX)) == -1:
         # Not a file from our image archive, don't modify it
         return url
 
@@ -46,3 +46,15 @@ def membership_year_start(year=None):
         'actual_date': date(year=year, month=dates['actual_date'].month, day=dates['actual_date'].day),
         'public_date': date(year=year, month=dates['public_date'].month, day=dates['public_date'].day),
     }
+
+def s3_bucket(ssl=False):
+    if not ssl:
+        if not settings.DEBUG:
+            return settings.AWS_BUCKET
+        else:
+            return settings.AWS_BUCKET_DEV
+    else:
+        if not settings.DEBUG:
+            return settings.AWS_BUCKET_SSL
+        else:
+            return settings.AWS_BUCKET_SSL_DEV

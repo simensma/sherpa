@@ -265,6 +265,12 @@
     {% endif %}
   {% endif %}
 
+  {# Create the global Turistforeningen object. Note that other scripts will always expect this object to exist #}
+  <script>
+    window.Turistforeningen = window.Turistforeningen || {};
+    Turistforeningen.s3_bucket = '{{ s3_bucket }}';
+  </script>
+
   {# Rendered globals may be needed by other scripts #}
   {% block js_globals %}{% endblock %}
 

@@ -66,8 +66,8 @@
 
   <div class="col-md-6">
     <p>
-      <a href="http://{{ aws_bucket }}/images/{{ image.key }}.{{ image.extension }}">
-        <img src="http://{{ aws_bucket }}/images/{{ image.key }}-500.{{ image.extension }}" alt="{{ image.description }}" title="{{ image.description }}">
+      <a href="http://{{ s3_bucket }}/images/{{ image.key }}.{{ image.extension }}">
+        <img src="http://{{ s3_bucket }}/images/{{ image.key }}-500.{{ image.extension }}" alt="{{ image.description }}" title="{{ image.description }}">
       </a>
     </p>
     <div class="alert alert-danger">

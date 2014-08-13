@@ -8,6 +8,7 @@ import boto
 
 from admin.models import Image
 from page.models import Content
+from core.util import s3_bucket
 
 class Command(BaseCommand):
     args = u""
@@ -19,7 +20,7 @@ class Command(BaseCommand):
             return
 
         conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
-        buck = conn.get_bucket(settings.AWS_BUCKET)
+        buck = conn.get_bucket(s3_bucket())
 
         ghost_keys = []
 
@@ -52,7 +53,7 @@ class Command(BaseCommand):
                 list_ids = Content.objects.filter(content__icontains=key.name).values_list('id', flat=True)
                 list_str = ', '.join([str(id) for id in list_ids])
                 content_check = " -- ADVARSEL, bildet er brukt i Content-felter med id: %s" % list_str
-            self.stdout.write("  http://%s/%s%s\n" % (settings.AWS_BUCKET, key.name, content_check))
+            self.stdout.write("  http://%s/%s%s\n" % (s3_bucket(), key.name, content_check))
         self.stdout.write("\n")
 
         if raw_input("Slett dem? (y/N) ") != 'y':

@@ -8,10 +8,9 @@
 
 {% block js_globals %}
   <script>
-    window.Turistforeningen = {
-      phone_required: {% if enrollment.users.count == 0 %}true{% else %}false{% endif %},
-      email_required: {% if enrollment.users.count == 0 %}true{% else %}false{% endif %}
-    };
+    Turistforeningen.phone_required = {% if enrollment.users.count == 0 %}true{% else %}false{% endif %};
+    Turistforeningen.email_required = {% if enrollment.users.count == 0 %}true{% else %}false{% endif %};
+
     {% for message in messages %}
       {% if message.message == 'user_invalid' %}
         Turistforeningen.trigger_form_validations = true;

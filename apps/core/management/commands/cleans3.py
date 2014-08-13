@@ -7,6 +7,8 @@ from django.conf import settings
 
 import boto
 
+from core.util import s3_bucket
+
 class Command(BaseCommand):
     args = u"manual | auto"
     help = u"Fjerner utgåtte versjonsobjekter i S3"
@@ -25,7 +27,7 @@ class Command(BaseCommand):
             sys.stdout.write("Søker etter %s dager gamle objekter...\n\n" % AGE_LIMIT_DAYS)
 
         conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
-        buck = conn.get_bucket(settings.AWS_BUCKET)
+        buck = conn.get_bucket(s3_bucket())
 
         then = datetime.utcnow() - timedelta(hours=(24 * AGE_LIMIT_DAYS))
         versions_to_delete = []

@@ -8,9 +8,8 @@
 
 {% block js_globals %}
   <script>
-    window.Turistforeningen = {
-      existing: {% if enrollment.existing_memberid %}true{% else %}false{% endif %}
-    };
+    Turistforeningen.existing = {% if enrollment.existing_memberid %}true{% else %}false{% endif %};
+
     {% if errors %}
       Turistforeningen.trigger_form_validations = true;
     {% endif %}
