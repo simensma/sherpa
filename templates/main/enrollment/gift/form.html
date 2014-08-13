@@ -4,21 +4,19 @@
 
 {% block js_globals %}
   <script>
-    window.Turistforeningen = {
-      session_receivers: [
-        {% for receiver in receivers %}{
-          'type_index': '{% firstof chosen_type receiver.type_index %}',
-          'name': '{{ receiver.name }}',
-          'dob': '{{ receiver.dob|date:"d.m.Y" }}',
-          'address': '{{ receiver.address }}',
-          'zipcode': '{{ receiver.zipcode }}',
-          'area': '{{ receiver.area }}',
-          'phone': '{{ receiver.phone }}',
-          'email': '{{ receiver.email }}'
-        }
-        {% if not forloop.last %},{% endif %}{% endfor %}
-      ]
-    };
+    Turistforeningen.session_receivers = [
+      {% for receiver in receivers %}{
+        'type_index': '{% firstof chosen_type receiver.type_index %}',
+        'name': '{{ receiver.name }}',
+        'dob': '{{ receiver.dob|date:"d.m.Y" }}',
+        'address': '{{ receiver.address }}',
+        'zipcode': '{{ receiver.zipcode }}',
+        'area': '{{ receiver.area }}',
+        'phone': '{{ receiver.phone }}',
+        'email': '{{ receiver.email }}'
+      }
+      {% if not forloop.last %},{% endif %}{% endfor %}
+    ];
   </script>
 {% endblock %}
 

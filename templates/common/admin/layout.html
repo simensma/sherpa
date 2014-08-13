@@ -265,6 +265,11 @@
     {% endif %}
   {% endif %}
 
+  {# Create the global Turistforeningen object. Note that other scripts will always expect this object to exist #}
+  <script>
+    window.Turistforeningen = window.Turistforeningen || {};
+  </script>
+
   {# Rendered globals may be needed by other scripts #}
   {% block js_globals %}{% endblock %}
 

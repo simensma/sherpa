@@ -6,9 +6,7 @@
 
 {% block js_globals %}
   <script>
-    window.Turistforeningen = {
-      forening_main_mappings: JSON.parse("{{ forening_main_mappings|escapejs }}")
-    };
+    Turistforeningen.forening_main_mappings = JSON.parse("{{ forening_main_mappings|escapejs }}");
   </script>
 {% endblock %}
 

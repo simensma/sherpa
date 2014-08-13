@@ -21,11 +21,9 @@
 
 {% block js_globals %}
   <script>
-    window.Turistforeningen = {};
-
     {% if aktivitet_date.aktivitet.start_point %}
-      window.Turistforeningen.start_point_lat = JSON.parse({{ aktivitet_date.aktivitet.get_start_point_lat_json }});
-      window.Turistforeningen.start_point_lng = JSON.parse({{ aktivitet_date.aktivitet.get_start_point_lng_json }});
+      Turistforeningen.start_point_lat = JSON.parse({{ aktivitet_date.aktivitet.get_start_point_lat_json }});
+      Turistforeningen.start_point_lng = JSON.parse({{ aktivitet_date.aktivitet.get_start_point_lng_json }});
     {% endif %}
     </script>
 {% endblock %}

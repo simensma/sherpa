@@ -2,10 +2,8 @@
 
 {% block js_globals %}
   <script>
-    window.Turistforeningen = {
-      origin: '{{ origin }}',
-      image_search_length: {{ image_search_length }}
-    };
+    Turistforeningen.origin = '{{ origin }}';
+    Turistforeningen.image_search_length = {{ image_search_length }};
   </script>
 {% endblock %}
 
