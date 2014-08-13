@@ -182,12 +182,22 @@ $(function() {
                 setSelect: setSelect,
                 onSelect: function(selection) {
                     $user_image.data('crop.selection', selection);
+
+                    // On new selections, update the dimensions of the cropping container. Note that this will have to
+                    // be set on initialization when loading existing campaigns
+                    if(JcropApi !== undefined) {
+                        // Note that we have to get the crop-width from the Jcrop API bounds. Calling width() on the
+                        // jquery element may give wrong results here.
+                        $user_image.data('crop.width', JcropApi.getBounds()[0]);
+                        $user_image.data('crop.height', JcropApi.getBounds()[1]);
+                    }
                 },
             }, function() {
                 JcropApi = this;
 
-                // This will be overriden when going to step 3, but it should be set here as well in case
-                // the user saves the campaign without going to step 3 at all
+                // Note that onSelect should set the dimensions, but it will be called before this function, hence
+                // JcropApi will not be initialized. So save the dimensions here in case the user doesn't set any
+                // further selections.
                 $user_image.data('crop.width', JcropApi.getBounds()[0]);
                 $user_image.data('crop.height', JcropApi.getBounds()[1]);
             });
@@ -496,11 +506,6 @@ $(function() {
 
         if(step === 3) {
             $user_image_cropped.attr('src', $user_image.attr('src'));
-
-            // Set the dimensions used for scaling at this point because we need to get it from the Jcrop API
-            // bounds. Calling width() on the jquery element may give wrong results here.
-            $user_image.data('crop.width', JcropApi.getBounds()[0]);
-            $user_image.data('crop.height', JcropApi.getBounds()[1]);
 
             ImageCropper.cropImage({
                     selection: $user_image.data('crop.selection'),
