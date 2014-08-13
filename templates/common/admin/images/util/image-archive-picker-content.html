@@ -56,7 +56,7 @@
   {% endif %}
   {% for image in images %}
     <li class="clickable-image" data-path="{{ image.key }}.{{ image.extension }}" data-description="{{ image.description }}" data-photographer="{{ image.photographer }}">
-      <img src="http://cdn.turistforeningen.no/images/{{ image.key }}-150.{{ image.extension }}" alt="Thumbnail">
+      <img src="http://{{ s3_bucket }}/images/{{ image.key }}-150.{{ image.extension }}" alt="Thumbnail">
       <span class="meta">
         <br>
         {{ image.width }} x {{ image.height }}<br>
