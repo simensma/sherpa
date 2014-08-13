@@ -14,6 +14,8 @@ from django.contrib.auth import logout
 from django.utils import translation
 from django.db import connections
 
+import pyodbc
+
 from core.models import Site
 from foreninger.models import Forening
 from focus.models import Actor, Enrollment
@@ -67,6 +69,17 @@ class DBConnection():
                     'is_available': False,
                     'period_message': downtime['period_message'],
                 }
+
+    def process_exception(self, request, exception):
+        """Handle pyodbc exceptions in case Focus is down (which happens often), so that we don't have to wait for
+        the cache to expire. Note that this will only handle exceptions occuring views - not in middleware, which
+        currently will happen for logged-in users. Hence, this cache invalidation is not fail-safe (works only if
+        a not-logged in user trigges the exception), but at least it should help."""
+        if isinstance(exception, pyodbc.Error):
+            # Well, we're seeing a pyodbc Error - we could check its arguments for the error code 08S01 which means
+            # unavailable, but that's probably not important - just assume that Focus is down, and delete the cache
+            # so that the DBConnection middleware can detect it and update its state
+            cache.delete('db_connection_status')
 
 class DefaultLanguage():
     def process_request(self, request):
