@@ -21,6 +21,7 @@ class Command(BaseCommand):
         print("Iterating the dev-bucket to find updated or deleted keys...")
         updated_keys = 0
         deleted_keys = 0
+        confirmed_keys = []
         for dev_key in dev_bucket.list():
             # Show progress for each processed key
             print(".", end="")
@@ -33,6 +34,9 @@ class Command(BaseCommand):
                 deleted_keys += 1
                 dev_key.delete()
                 continue
+
+            # Since we know that this key exists on dev, save it for later
+            confirmed_keys.append(dev_key.name)
 
             # Changed?
             if dev_key.size != prod_key.size or dev_key.etag != prod_key.etag:
@@ -50,6 +54,10 @@ class Command(BaseCommand):
             # Show progress for each processed key
             print(".", end="")
             sys.stdout.flush()
+
+            # If we already confirmed this key in the dev-bucket, skip it
+            if prod_key.name in confirmed_keys:
+                continue
 
             dev_key = dev_bucket.get_key(prod_key.name)
 
