@@ -143,59 +143,62 @@
   <div class="container">
 
     <div class="row">
-      <div class="span6">
+      <div class="span12">
         <div class="contact-information">
           <h2>
-            {{ site.forening.name }}
+            <a href="http://{{ site.domain }}/">
+              {{ site.forening.name }}
+            </a>
           </h2>
 
-          {# TODO - hide fields for foreninger that don't have them #}
-          <table>
-            {% if site.forening.visit_address == site.forening.post_address %}
-              <tr>
-                <th>Post/besøksadresse</th>
-                <td>
-                  {{ site.forening.visit_address }}<br>
-                  {{ site.forening.zipcode.zipcode }} {{ site.forening.zipcode.area }}
-                </td>
-              </tr>
-            {% else %}
-              <tr>
-                <th>Besøksadresse</th>
-                <td>{{ site.forening.visit_address }}</td>
-              </tr>
-              <tr>
-                <th>Postadresse</th>
-                <td>
-                  {{ site.forening.post_address }}<br>
-                  {{ site.forening.zipcode.zipcode }} {{ site.forening.zipcode.area }}
-                </td>
-              </tr>
-            {% endif %}
-            <tr>
-              <th>Telefon:</th>
-              <td>{{ site.forening.phone }}</td>
-            </tr>
-            <tr>
-              <th>E-post:</th>
-              <td><a href="mailto:{{ site.forening.email }}">{{ site.forening.email }}</a></td>
-            </tr>
-            {% if site.forening.organization_no %}
-              <tr>
-                <th>Org. nr.:</th>
-                <td>{{ site.forening.organization_no }}</td>
-              </tr>
-            {% endif %}
-            <tr>
-              <th>Facebook:</th>
-              <td><a href="{{ site.forening.facebook_url }}">{{ site.forening.facebook_url }}</a></td>
-            </tr>
-          </table>
-        </div>
-      </div>
+          {% if site.forening.visit_address == site.forening.post_address %}
+            <p>
+              {{ site.forening.visit_address }}<br>
+              {{ site.forening.zipcode.zipcode }} {{ site.forening.zipcode.area }}
+            </p>
+          {% else %}
+            <p>
+              <strong>Besøksadresse</strong><br>
+              {{ site.forening.visit_address }}
+            </p>
 
-      <div class="span6">
-        <a href="http://www.turistforeningen.no/">Til DNTs hovedside</a>
+            <p>
+              <strong>Postadresse</strong><br>
+              {{ site.forening.post_address }}<br>
+              {{ site.forening.zipcode.zipcode }} {{ site.forening.zipcode.area|title }}
+            </p>
+          {% endif %}
+
+          <p>
+            {% if site.forening.phone %}
+              Tlf: {{ site.forening.phone }}<br>
+            {% endif %}
+
+            <a href="http://{{ site.forening.get_homepage_site.domain }}/" class="noexternal">
+              {{ site.forening.get_homepage_site.domain }}
+            </a><br>
+
+            {% if site.forening.email %}
+              <a href="mailto:{{ site.forening.email }}">{{ site.forening.email }}</a><br>
+            {% endif %}
+
+            {% if site.forening.facebook_url %}
+              <a href="{{ site.forening.facebook_url }}" class="noexternal">Facebook</a><br>
+            {% endif %}
+
+          </p>
+
+          {% if site.forening.organization_no %}
+            <p>
+              <strong>Organisasjonsnummer</strong><br>
+              {{ site.forening.organization_no }}
+            </p>
+          {% endif %}
+
+          <p>
+            <a href="http://www.turistforeningen.no/" class="noexternal">Den Norske Turistforening</a>
+          </p>
+        </div>
       </div>
     </div>
 
