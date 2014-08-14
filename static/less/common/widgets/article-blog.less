@@ -41,30 +41,36 @@ div.widget.articles, div.widget.blog {
   }
 
   div.horizontal {
-    div.image-container {
-      overflow: hidden;
-      position: relative; // Needed to position its children
+    div.item-wrapper {
+      div.image-container {
+        overflow: hidden;
+        position: relative; // Needed to position its children
 
-      img {
-        position: absolute;
-        max-width: none;
+        img {
+          position: absolute;
+          max-width: none;
+        }
       }
-    }
 
-    h2 {
-      font-weight: normal;
-      font-size: 18px;
-      margin-top: 10px;
-      margin-bottom: 10px;
-    }
+      h2 {
+        font-weight: normal;
+        font-size: 18px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
 
-    a.text-anchor {
-      color: rgb(51, 51, 51);
-    }
+      a.text-anchor {
+        color: rgb(51, 51, 51);
+      }
 
-    a.text-anchor:hover {
-      text-decoration: none;
-      color: rgb(110, 110, 110);
+      a.text-anchor:hover {
+        text-decoration: none;
+        color: rgb(110, 110, 110);
+      }
+
+      @media (max-width: 767px) {
+        margin-bottom: 30px;
+      }
     }
   }
 }

@@ -2,28 +2,29 @@
   <div class="row-fluid">
     {% for version in widget.versions %}
       <div class="span{{ widget.span }}">
-        {% if widget.display_images and not version.get_medium_thumbnail.hide %}
-          <div class="image-container">
+        <div class="item-wrapper">
+          {% if widget.display_images and not version.get_medium_thumbnail.hide %}
+            <div class="image-container">
+              <a href="{% url 'articles.views.show' version.variant.article.id version.get_title_content.content|striptags|slugify %}">
+                <img src="{{ version.get_medium_thumbnail.url }}" alt="{{ version.get_title_content.content|striptags }}">
+              </a>
+            </div>
+          {% else %}
+            <div class="image-placeholder"></div>
+          {% endif %}
+
+          <h2>
             <a href="{% url 'articles.views.show' version.variant.article.id version.get_title_content.content|striptags|slugify %}">
-              <img src="{{ version.get_medium_thumbnail.url }}" alt="{{ version.get_title_content.content|striptags }}">
+              {{ version.get_title_content.content|striptags }}
             </a>
-          </div>
-        {% else %}
-          <div class="image-placeholder"></div>
-        {% endif %}
+          </h2>
 
-        <h2>
-          <a href="{% url 'articles.views.show' version.variant.article.id version.get_title_content.content|striptags|slugify %}">
-            {{ version.get_title_content.content|striptags }}
-          </a>
-        </h2>
-
-        <p>
-          <a class="text-anchor" href="{% url 'articles.views.show' version.variant.article.id version.get_title_content.content|striptags|slugify %}">
-            {{ version.get_lede_content.content|striptags|safe|truncatewords:20 }}
-          </a>
-        </p>
-
+          <p>
+            <a class="text-anchor" href="{% url 'articles.views.show' version.variant.article.id version.get_title_content.content|striptags|slugify %}">
+              {{ version.get_lede_content.content|striptags|safe|truncatewords:20 }}
+            </a>
+          </p>
+        </div>
       </div>
     {% endfor %}
   </div>
