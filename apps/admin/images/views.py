@@ -277,7 +277,7 @@ def upload_image(request):
         ids = []
         album = None if request.POST['album'] == '' else Album.objects.get(id=request.POST['album'])
         for image in request.FILES.getlist('files'):
-            key = generate_unique_random_image_key()
+            image_key = generate_unique_random_image_key()
             data = image.read()
             ext = image.name.split(".")[-1].lower()
             pil_image = PIL.Image.open(StringIO(data))
@@ -285,17 +285,17 @@ def upload_image(request):
             tags = xmp.find_keywords(data)
             thumbs = [{'size': size, 'data': create_thumb(pil_image, ext, size)} for size in settings.THUMB_SIZES]
 
-            key = bucket.new_key("%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, key, ext))
+            key = bucket.new_key("%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, image_key, ext))
             key.content_type = image.content_type
             key.set_contents_from_string(data, policy='public-read')
 
             for thumb in thumbs:
-                key = bucket.new_key("%s%s-%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, key, thumb['size'], ext))
+                key = bucket.new_key("%s%s-%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, image_key, thumb['size'], ext))
                 key.content_type = image.content_type
                 key.set_contents_from_string(thumb['data'], policy='public-read')
 
             image = Image(
-                key=key,
+                key=image_key,
                 extension=ext,
                 hash=sha1(data).hexdigest(),
                 description='',
