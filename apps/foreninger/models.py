@@ -126,7 +126,7 @@ class Forening(models.Model):
         foreninger starts to go live with their new sites, this method should return that site domain instead."""
         # Note that we'll need a way to distinguish active sites from test-sites. Something like:
         homepage_site = self.get_homepage_site()
-        if homepage_site.is_published:
+        if homepage_site is not None and homepage_site.is_published:
             return 'http://%s/' % homepage_site.domain
         else:
             return self.get_old_url()
