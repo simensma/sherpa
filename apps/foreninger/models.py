@@ -121,6 +121,11 @@ class Forening(models.Model):
             cache.set('forening.main_foreninger.%s' % self.id, mains, 60 * 60 * 24)
         return mains
 
+    def get_active_domain(self):
+        domain = self.get_active_url()[len('http://'):]
+        domain.rstrip('/')
+        return domain
+
     def get_active_url(self):
         """Returns the currently in-use URL for this forening. Right now this is the old sherpa2 URL, but when
         foreninger starts to go live with their new sites, this method should return that site domain instead."""
