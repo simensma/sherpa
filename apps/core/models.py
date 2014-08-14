@@ -31,6 +31,11 @@ class Site(models.Model):
     forening = models.ForeignKey('foreninger.Forening', related_name='sites')
     title = models.CharField(max_length=255) # Only specified for type='kampanje', empty and unused for other types
 
+    # Most sites should be published, but when new sites are created this can be set to False and a few things will
+    # change accordingly; a warning label will be shown on all pages and foreninger will refer to the old sherpa2 URL
+    # as its homepage instead of the site domain (the latter applies only for type='forening').
+    is_published = models.BooleanField(default=False)
+
     # Hardcoded site IDs that we may need to know
     DNT_CENTRAL_ID = 1
 
