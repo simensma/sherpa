@@ -74,11 +74,11 @@ class Annonse(models.Model):
             bucket = conn.get_bucket(s3_bucket())
 
             if self.image != '':
-                bucket.delete("%s/%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image))
+                bucket.delete_key("%s/%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image))
                 self.image = ''
 
             if self.image_thumb != '':
-                bucket.delete("%s/%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image_thumb))
+                bucket.delete_key("%s/%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image_thumb))
                 self.image_thumb = ''
 
             self.save()

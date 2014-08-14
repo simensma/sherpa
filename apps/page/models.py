@@ -330,14 +330,14 @@ class Ad(models.Model):
         if not Ad.objects.exclude(id=self.id).filter(sha1_hash=self.sha1_hash).exists():
             conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
             bucket = conn.get_bucket(s3_bucket())
-            bucket.delete("%s%s.%s" % (settings.AWS_ADS_PREFIX, self.sha1_hash, self.extension))
+            bucket.delete_key("%s%s.%s" % (settings.AWS_ADS_PREFIX, self.sha1_hash, self.extension))
 
     def delete_fallback_file(self):
         # Check that other ads aren't using the same image file
         if not Ad.objects.exclude(id=self.id).filter(fallback_sha1_hash=self.fallback_sha1_hash).exists():
             conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
             bucket = conn.get_bucket(s3_bucket())
-            bucket.delete("%s%s.%s" % (settings.AWS_ADS_PREFIX, self.fallback_sha1_hash, self.fallback_extension))
+            bucket.delete_key("%s%s.%s" % (settings.AWS_ADS_PREFIX, self.fallback_sha1_hash, self.fallback_extension))
 
     @staticmethod
     def on(site):

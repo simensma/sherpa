@@ -107,7 +107,7 @@ def edit_release(request, publication, release):
             bucket = conn.get_bucket(s3_bucket())
 
             if release.pdf_hash != '':
-                bucket.delete("%s/%s.pdf" % (settings.AWS_PUBLICATIONS_PREFIX, release.pdf_hash))
+                bucket.delete_key("%s/%s.pdf" % (settings.AWS_PUBLICATIONS_PREFIX, release.pdf_hash))
 
             key = bucket.new_key("%s/%s.%s" % (settings.AWS_PUBLICATIONS_PREFIX, hash, extension))
             key.content_type = file.content_type
