@@ -174,8 +174,8 @@
               Tlf: {{ site.forening.phone }}<br>
             {% endif %}
 
-            <a href="http://{{ site.forening.get_homepage_site.domain }}/" class="noexternal">
-              {{ site.forening.get_homepage_site.domain }}
+            <a href="{{ site.forening.get_active_url }}" class="noexternal">
+              {{ site.forening.get_active_domain }}
             </a><br>
 
             {% if site.forening.email %}
