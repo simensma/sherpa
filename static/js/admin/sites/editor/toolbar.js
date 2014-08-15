@@ -44,6 +44,12 @@ $(function() {
             var range = selection.getRangeAt(0);
             var start = $(range.startContainer);
             var container = start.parent();
+
+            // If this is an anchor, the styled container will be its parent
+            if(container.is('a')) {
+                container = container.parent();
+            }
+
             if(container.is("h1") || container.hasClass('h1')) {
                 formatting.find("button[data-format='h1']").addClass('active');
             } else if(container.is("h2") || container.hasClass('h2')) {
