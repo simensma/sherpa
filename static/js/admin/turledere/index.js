@@ -101,7 +101,10 @@ $(function() {
                     InfiniteScroller.end();
                 }
                 table.append($.parseHTML(result.html.trim()));
-            }
+            },
+            fail: function(result) {
+                table.find('tr.technical-error').show();
+            },
         }
     });
     InfiniteScroller.trigger();
