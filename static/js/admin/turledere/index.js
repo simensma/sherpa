@@ -39,7 +39,8 @@ $(function() {
 
     turleder_roles.change(function() {
         if($(this).find("option:selected").val().length > 0) {
-            turleder_include_all_roles_label.show();
+            // Explicitly force block-display; or it would've been set to inline-block
+            turleder_include_all_roles_label.show().css('display', 'block');
         } else {
             turleder_include_all_roles_label.hide();
         }
