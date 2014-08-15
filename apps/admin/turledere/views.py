@@ -168,6 +168,9 @@ def turleder_search(request):
     for role in json.loads(request.POST['instruktor_roles']):
         turledere = turledere.filter(instruktor__role=role)
 
+    if json.loads(request.POST['only_kursledere']):
+        turledere = turledere.filter(kursleder__isnull=False)
+
     # Filter on certificates approved by some forening
     forening_approved = None
     if request.POST['turleder_forening_approved'] != '':
