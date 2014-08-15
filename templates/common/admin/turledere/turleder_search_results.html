@@ -13,15 +13,15 @@
       <p>
         <a href="{% url 'admin.users.views.show' user.id %}#turledersertifikat">{{ user.get_full_name }} ({{ user.memberid }})</a>
       </p>
-      {% if turleder.kursleder %}
+      {% if user.kursleder %}
         <div class="row">
           <div class="col-md-6 no-min-height">
-            {% if turleder.kursleder.is_expired %}<s>{% endif %}
+            {% if user.kursleder.is_expired %}<s>{% endif %}
               Kursleder
-            {% if turleder.kursleder.is_expired %}</s>{% endif %}
+            {% if user.kursleder.is_expired %}</s>{% endif %}
           </div>
-          <div class="col-md-6 no-min-height{% if turleder.kursleder.is_expired %} expired{% endif %}">
-            {{ turleder.kursleder.date_start|date:"Y"|default:"?" }}-{{ turleder.kursleder.date_end|date:"Y"|default:"?" }}
+          <div class="col-md-6 no-min-height{% if user.kursleder.is_expired %} expired{% endif %}">
+            {{ user.kursleder.date_start|date:"Y"|default:"?" }}-{{ user.kursleder.date_end|date:"Y"|default:"?" }}
           </div>
         </div>
       {% endif %}
