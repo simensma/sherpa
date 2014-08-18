@@ -63,37 +63,41 @@
         <li class="{% if current_navigation == 'albums' %} active{% endif %}">
           <a href="{% url 'admin.images.views.list_albums' %}">Alle bilder</a>
         </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+            Søk <span class="caret"></span>
+          </a>
+          <div class="dropdown-menu" role="menu">
+            <div class="image-archive-quicksearch">
+              <form action="{% url 'admin.images.views.search' %}" method="get">
+                <div class="input-group">
+                  <input type="text" name="q" value="{{ search_query }}" class="form-control" placeholder="Søk etter bilder...">
+                  <span class="input-group-btn">
+                    <button class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
+                  </span>
+                </div><!-- /.input-group -->
+              </form>
+            </div>
+            <div class="image-archive-quicksearch other-users">
+              <select name="user-images" class="chosen" data-placeholder="Andre brukeres bilder...">
+                <option></option>
+                {% for user in all_users %}
+                  <option value="{{ user.id }}" data-href="{% url 'admin.images.views.user_images' '0' %}">{{ user.get_full_name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="image-archive-quicksearch other-organizations">
+              <select name="forening-images" class="chosen" data-placeholder="Andre foreningers bilder...">
+                <option></option>
+              </select>
+            </div>
+          </div>
+        </li>
       </ul>
     </div>
   </div>
 
-  <div class="row image-archive-quicksearch">
-    <div class="col-md-4">
-      <form action="{% url 'admin.images.views.search' %}" method="get">
-        <div class="row">
-          <div class="col-md-10">
-            <input type="text" name="q" value="{{ search_query }}" class="form-control" placeholder="Søk etter bilder...">
-          </div>
-          <div class="col-md-2">
-            <button type="submit" class="btn btn-default input-button-align"><i class="fa fa-search"></i></button>
-          </div>
-        </div>
-      </form>
-    </div>
-    <div class="col-md-4">
-      <select name="forening-images" class="chosen" data-placeholder="Andre foreningers bilder...">
-        <option></option>
-      </select>
-    </div>
-    <div class="col-md-4">
-      <select name="user-images" class="chosen" data-placeholder="Andre brukeres bilder...">
-        <option></option>
-        {% for user in all_users %}
-          <option value="{{ user.id }}" data-href="{% url 'admin.images.views.user_images' '0' %}">{{ user.get_full_name }}</option>
-        {% endfor %}
-      </select>
-    </div>
-  </div>
+
 
   {% block imagebody %}{% endblock %}
 
