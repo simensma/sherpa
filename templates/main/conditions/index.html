@@ -25,36 +25,46 @@
         Har du nettopp vært på tur? Del gjerne bilder og førerapport med andre på vår <a href="http://www.facebook.com/turistforeningen">Facebook-side</a>.
       </p>
 
-      <div class="conditions-search form-border">
-        Vis føremelding for:<br>
-        <select name="conditions-filter" data-placeholder="Alle områder">
-          <option value=""></option>
-          {% for location in available_locations %}
-            <option value="{{ location.id }}">{{ location.name }}</option>
-          {% endfor %}
-        </select>
-      </div>
+      {% if conditions|length > 0 %}
 
-      {% for condition in conditions %}
-
-        <div class="conditions" data-locations="{{ condition.get_location_ids_json }}">
-
-          <p class="date pull-right">{{ condition.get_date_observed }}</p>
-          <h2>{{ condition.get_comma_separated_locations }}</h2>
-          <p>
-            {{ condition.content|safe }}
-          </p>
-
-          <p class="author">
-            <span class="author-label">
-              Lagt inn av:
-            </span>
-            {{ condition.author_name.strip }} (<a href="mailto:{{ condition.author_email }}">{{ condition.author_email }}</a>), {{ condition.get_date_observed }}
-          </p>
-
+        <div class="conditions-search form-border">
+          Vis føremelding for:<br>
+          <select name="conditions-filter" data-placeholder="Alle områder">
+            <option value=""></option>
+            {% for location in available_locations %}
+              <option value="{{ location.id }}">{{ location.name }}</option>
+            {% endfor %}
+          </select>
         </div>
 
-      {% endfor %}
+        {% for condition in conditions %}
+
+          <div class="conditions" data-locations="{{ condition.get_location_ids_json }}">
+
+            <p class="date pull-right">{{ condition.get_date_observed }}</p>
+            <h2>{{ condition.get_comma_separated_locations }}</h2>
+            <p>
+              {{ condition.content|safe }}
+            </p>
+
+            <p class="author">
+              <span class="author-label">
+                Lagt inn av:
+              </span>
+              {{ condition.author_name.strip }} (<a href="mailto:{{ condition.author_email }}">{{ condition.author_email }}</a>), {{ condition.get_date_observed }}
+            </p>
+
+          </div>
+
+        {% endfor %}
+
+      {% else %}
+
+        <div class="alert alert-info">
+          Beklager, vi har for tiden ikke fått inn noen føremeldinger. Prøv igjen litt senere.
+        </div>
+
+      {% endif %}
 
     </div>
   </div>
