@@ -483,27 +483,28 @@ def payment(request):
             'orderDescription': description,
             'redirectUrl': "http://%s%s" % (request.site.domain, reverse("enrollment.views.process_card"))
         })
-    except requests.ConnectionError as e:
+
+        # Sweet, almost done, now just send the user to complete the transaction
+        # Consider handling errors here (unexpected XML response or connection error)
+        # We recieved a random "Unable to create setup string" message once, ignoring it for now
+        response = r.text.encode('utf-8')
+        enrollment.transactions.filter(state='register').update(active=False)
+        transaction = Transaction(
+            enrollment=enrollment,
+            transaction_id=etree.fromstring(response).find("TransactionId").text,
+            order_number=order_number,
+            state='register',
+            active=True,
+        )
+        transaction.save()
+    except Exception as e:
+        # Handle any exception that might occur (requests.ConnectionError, invalid response from Nets, etc.)
         logger.warning(e.message,
             exc_info=sys.exc_info(),
             extra={'request': request}
         )
         messages.error(request, 'nets_register_connection_error')
         return redirect('enrollment.views.payment_method')
-
-    # Sweet, almost done, now just send the user to complete the transaction
-    # Consider handling errors here (unexpected XML response or connection error)
-    # We recieved a random "Unable to create setup string" message once, ignoring it for now
-    response = r.text.encode('utf-8')
-    enrollment.transactions.filter(state='register').update(active=False)
-    transaction = Transaction(
-        enrollment=enrollment,
-        transaction_id=etree.fromstring(response).find("TransactionId").text,
-        order_number=order_number,
-        state='register',
-        active=True,
-    )
-    transaction.save()
 
     return redirect("%s?merchantId=%s&transactionId=%s" % (
         settings.NETS_TERMINAL_URL, settings.NETS_MERCHANT_ID, transaction.transaction_id
