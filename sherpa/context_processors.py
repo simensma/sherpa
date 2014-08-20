@@ -68,15 +68,12 @@ def current_time(request):
     }
 
 def analytics_ua(request):
-    """Currently separates the main- and test site based on the DEBUG setting.
-    Should probably be moved to an admin-editable core.Site model field at some point, but overridden with
-    the test-profile if settings.DEBUG is True."""
+    """Override the analytics ua with the test-profile if settings.DEBUG is True"""
     if not settings.DEBUG:
-        # Main profile UA
-        return {'analytics_ua': 'UA-266436-2'}
+        ua = request.site.analytics_ua
     else:
-        # Test-profile UA
-        return {'analytics_ua': 'UA-266436-62'}
+        ua = settings.DEBUG_ANALYTICS_UA
+    return {'analytics_ua': ua}
 
 def s3_bucket(request):
     return {'s3_bucket': get_s3_bucket()}

@@ -30,6 +30,7 @@ class Site(models.Model):
     template = models.CharField(max_length=255, choices=TEMPLATE_CHOICES)
     forening = models.ForeignKey('foreninger.Forening', related_name='sites')
     title = models.CharField(max_length=255) # Only specified for type='kampanje', empty and unused for other types
+    analytics_ua = models.CharField(max_length=255, null=True)
 
     # Most sites should be published, but when new sites are created this can be set to False and a few things will
     # change accordingly; a warning label will be shown on all pages and foreninger will refer to the old sherpa2 URL

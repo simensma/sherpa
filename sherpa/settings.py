@@ -27,6 +27,7 @@ OLD_SITE = 'www2.turistforeningen.no'
 BLOG_URL = 'blogg.turistforeningen.no'
 BLOG_CATEGORY_API = 'api/get_category_index/'
 INSTAGRAM_CLIENT_ID = '9f849b1f6e97480ea58ee989159a597a'
+DEBUG_ANALYTICS_UA = 'UA-266436-62'
 
 # Our SMS-service endpoint
 SMS_URL = "http://admin.telefonkatalogen.no/smsgateway/sendSms?sender=DNT&targetNumbers=%s&sms=%s"

@@ -70,6 +70,11 @@ $(function() {
 
         } else if(type === 'campaign') {
 
+            // Google Analytics isn't available on all sites; the UA needs to be configured
+            if(typeof(_gaq) === 'undefined') {
+                return;
+            }
+
             // Track campaign views and clicks
             _gaq.push(['_trackEvent', 'Kampanje', 'Visning', widget.find('.campaign').attr('data-dnt-ga-event-label')]);
             var campaign_button = widget.find('[data-dnt-container="button"] a');
