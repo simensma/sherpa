@@ -59,10 +59,19 @@
             </p>
           </div>
 
-          <form action="{% url 'admin.sites.settings.analytics.views.analytics_ua' active_site.id %}" method="post">
+          {% if active_site.analytics_ua %}
+
+            <div class="alert alert-info" data-dnt-container="ua-exists-block">
+              <strong>{{ active_site.domain }}</strong> har registrert UA-kode <strong>{{ active_site.analytics_ua }}</strong>.<br>
+              Du kan <a href="javascript:undefined" data-dnt-trigger="show-ua-form">endre denne</a> hvis du vet hva du gjør, men det er veldig sjeldent man endrer UA-koden til et nettsted etter at den er registrert.
+            </div>
+
+          {% endif %}
+
+          <form {% if active_site.analytics_ua %}class="jq-hide" {% endif %} data-dnt-container="analytics-ua-form" action="{% url 'admin.sites.settings.analytics.views.analytics_ua' active_site.id %}" method="post">
             {% csrf_token %}
             <div class="form-group">
-              <label for="analytics-ua">Google Analytics UA</label>
+              <label for="analytics-ua">Google Analytics UA for {{ active_site.domain }}</label>
               <input type="text" class="form-control" id="analytics-ua" name="analytics-ua" placeholder="F.eks.: UA-123456-78" value="{{ active_site.analytics_ua }}">
             </div>
             <button type="submit" class="btn btn-default">Lagre</button>
