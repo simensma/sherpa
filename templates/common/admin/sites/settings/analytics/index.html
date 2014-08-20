@@ -4,69 +4,87 @@
 
 {% block admin_menu %}{% with 'sites' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
 
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/sites/settings/analytics/index.js"></script>
+{% endblock %}
+
 {% block body %}
 
-<div class="row">
-  <div class="col-lg-12">
-    <h1>Analyse og statistikk <small>få innsikt i hvordan medlemmene våre oppfører seg</small></h1>
-    <ol class="breadcrumb">
-      <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
-      <li><a href="{% url 'admin.sites.views.index' active_site.id %}">Nettsteder</a></li>
-      <li><a href="{% url 'admin.sites.views.index' active_site.id %}">{{ active_site.domain }}</a></li>
-      <li><a href="{% url 'admin.sites.settings.views.index' active_site.id %}">Innstillinger</a></li>
-      <li><a href="{% url 'admin.sites.settings.analytics.views.index' active_site.id %}">Analyse og statistikk</a></li>
-    </ol>
-  </div>
-</div><!-- /.row -->
+<div data-dnt-container="admin-analytics-index">
+  <div class="row">
+    <div class="col-lg-12">
+      <h1>Analyse og statistikk <small>få innsikt i hvordan medlemmene våre oppfører seg</small></h1>
+      <ol class="breadcrumb">
+        <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
+        <li><a href="{% url 'admin.sites.views.index' active_site.id %}">Nettsteder</a></li>
+        <li><a href="{% url 'admin.sites.views.index' active_site.id %}">{{ active_site.domain }}</a></li>
+        <li><a href="{% url 'admin.sites.settings.views.index' active_site.id %}">Innstillinger</a></li>
+        <li><a href="{% url 'admin.sites.settings.analytics.views.index' active_site.id %}">Analyse og statistikk</a></li>
+      </ol>
+    </div>
+  </div><!-- /.row -->
 
-<div class="row">
-  <div class="col-lg-12">
-    <p>
-      Lokal analyse (merk at det kan ta lang tid å laste disse sidene):
-    </p>
+  <div class="row">
+    <div class="col-lg-12">
+      <p>
+        Lokal analyse (merk at det kan ta lang tid å laste disse sidene):
+      </p>
 
-    <ul>
-      <li><a href="{% url 'admin.sites.settings.analytics.views.searches' active_site.id %}">Søkestatistikk</a></li>
-      <li><a href="{% url 'admin.sites.settings.analytics.views.not_found' active_site.id %}">404-treff</a></li>
-    </ul>
+      <ul>
+        <li><a href="{% url 'admin.sites.settings.analytics.views.searches' active_site.id %}">Søkestatistikk</a></li>
+        <li><a href="{% url 'admin.sites.settings.analytics.views.not_found' active_site.id %}">404-treff</a></li>
+      </ul>
 
-    <h2>Google Analytics</h2>
-    <p>
-      Google Analytics er et gratis verktøy fra Google som lar oss få innsikt i hva brukerene våre gjør på nettsidene. Verktøyet er svært avansert og når det benyttes på riktig måte kan det hjelpe oss å gjøre de rette valgene. Du kan lese mer på <a href="http://www.google.com/analytics/">Google Analytics' hjemmeside</a>.
-    </p>
+      <h2>Google Analytics</h2>
+      <p>
+        Google Analytics er et gratis verktøy fra Google som lar oss få innsikt i hva brukerene våre gjør på nettsidene. Verktøyet er svært avansert og når det benyttes på riktig måte kan det hjelpe oss å gjøre de rette valgene. Du kan lese mer på <a href="http://www.google.com/analytics/">Google Analytics' hjemmeside</a>.
+      </p>
 
-    <p>
-      Her kan du oppgi Google Analytics-koden (UA) for {{ active_site.domain }} som aktiverer logging av aktivitet på nettsidene:
-    </p>
+      <p>
+        Her kan du oppgi Google Analytics-koden (UA) for {{ active_site.domain }} som aktiverer logging av aktivitet på nettsidene (<a href="javascript:undefined" data-dnt-trigger="analytics-ua-hint">hvor finner jeg denne koden?</a>):
+      </p>
 
-    <form role="form">
-      {% csrf_token %}
-      <div class="form-group">
-        <label for="ua">Google Analytics UA</label>
-        <input type="text" class="form-control" id="ua" placeholder="F.eks.: UA-123456-78">
+      <div class="alert alert-info jq-hide" data-dnt-container="analytics-ua-hint">
+        <p>
+          Koden genereres når du setter opp nettstedet i Google Analytics. Kontakt DNT sentralt dersom du er usikker på om dere har satt opp deres nettsted (bruk den røde firkanten helt til høyre på skjermen).
+        </p>
+
+        <p>Når koden er generert finner du den (blant annet) i lista over nettsteder som vist her:</p>
+
+        <p>
+          <img src="{{ STATIC_URL }}img/admin/sites/settings/analytics/analytics-ua-hint.png" alt="Du finner koden for nettstedet i Google Analytics.">
+        </p>
       </div>
-      <button type="submit" class="btn btn-default">Lagre</button>
-    </form>
 
-    <p>
-      For å få tilgang til Google Analytics gjør du slik:
-    </p>
+      <form role="form">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="ua">Google Analytics UA</label>
+          <input type="text" class="form-control" id="ua" placeholder="F.eks.: UA-123456-78">
+        </div>
+        <button type="submit" class="btn btn-default">Lagre</button>
+      </form>
 
-    <ol>
-      <li>
-        Gå til <a href="http://www.google.com/analytics/">Google Analytics</a>
-      </li>
-      <li>
-        Logg på med følgende konto:<br>
-        Brukernavn: <strong>{{ ga_account_username }}</strong><br>
-        Passord: <strong>{{ ga_account_password }}</strong>
-      </li>
-      <li>
-        Bla deg frem til ditt nettsted, eller søk i feltet oppe til høyre
-      </li>
-    </ol>
+      <p>
+        For å få tilgang til Google Analytics gjør du slik:
+      </p>
 
-  </div>
-</div><!-- /.row -->
+      <ol>
+        <li>
+          Gå til <a href="http://www.google.com/analytics/">Google Analytics</a>
+        </li>
+        <li>
+          Logg på med følgende konto:<br>
+          Brukernavn: <strong>{{ ga_account_username }}</strong><br>
+          Passord: <strong>{{ ga_account_password }}</strong>
+        </li>
+        <li>
+          Bla deg frem til ditt nettsted, eller søk i feltet oppe til høyre
+        </li>
+      </ol>
+
+    </div>
+  </div><!-- /.row -->
+</div><!-- /[data-dnt-container="admin-analytics-index"] -->
 
 {% endblock %}
