@@ -1,12 +1,17 @@
 from django.shortcuts import render
 from django.core.cache import cache
+from django.conf import settings
 
 from analytics.models import Search, NotFound
 from core.models import Site
 
 def index(request, site):
     active_site = Site.objects.get(id=site)
-    context = {'active_site': active_site}
+    context = {
+        'active_site': active_site,
+        'ga_account_username': settings.GA_ACCOUNT_USERNAME,
+        'ga_account_password': settings.GA_ACCOUNT_PASSWORD,
+    }
     return render(request, 'common/admin/sites/settings/analytics/index.html', context)
 
 def searches(request, site):
