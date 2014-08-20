@@ -29,6 +29,43 @@
       <li><a href="{% url 'admin.sites.settings.analytics.views.searches' active_site.id %}">Søkestatistikk</a></li>
       <li><a href="{% url 'admin.sites.settings.analytics.views.not_found' active_site.id %}">404-treff</a></li>
     </ul>
+
+    <h2>Google Analytics</h2>
+    <p>
+      Google Analytics er et gratis verktøy fra Google som lar oss få innsikt i hva brukerene våre gjør på nettsidene. Verktøyet er svært avansert og når det benyttes på riktig måte kan det hjelpe oss å gjøre de rette valgene. Du kan lese mer på <a href="http://www.google.com/analytics/">Google Analytics' hjemmeside</a>.
+    </p>
+
+    <p>
+      Her kan du oppgi Google Analytics-koden (UA) for {{ active_site.domain }} som aktiverer logging av aktivitet på nettsidene:
+    </p>
+
+    <form role="form">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="ua">Google Analytics UA</label>
+        <input type="text" class="form-control" id="ua" placeholder="F.eks.: UA-123456-78">
+      </div>
+      <button type="submit" class="btn btn-default">Lagre</button>
+    </form>
+
+    <p>
+      For å få tilgang til Google Analytics gjør du slik:
+    </p>
+
+    <ol>
+      <li>
+        Gå til <a href="http://www.google.com/analytics/">Google Analytics</a>
+      </li>
+      <li>
+        Logg på med følgende konto:<br>
+        Brukernavn: <strong>{{ ga_account_username }}</strong><br>
+        Passord: <strong>{{ ga_account_password }}</strong>
+      </li>
+      <li>
+        Bla deg frem til ditt nettsted, eller søk i feltet oppe til høyre
+      </li>
+    </ol>
+
   </div>
 </div><!-- /.row -->
 
