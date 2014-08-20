@@ -92,13 +92,22 @@ class Version(models.Model):
         return u'%s' % self.pk
 
     def get_rows(self):
-        return Row.objects.filter(version=self).order_by('order')
+        # Cache the results in a local attribute on this object
+        if not hasattr(self, '_rows'):
+            self._rows = Row.objects.filter(version=self).order_by('order')
+        return self._rows
 
     def get_title_content(self):
-        return Content.objects.get(column__row__version=self, type='title')
+        # Cache the results in a local attribute on this object
+        if not hasattr(self, '_title'):
+            self._title = Content.objects.get(column__row__version=self, type='title')
+        return self._title
 
     def get_lede_content(self):
-        return Content.objects.get(column__row__version=self, type='lede')
+        # Cache the results in a local attribute on this object
+        if not hasattr(self, '_lede'):
+            self._lede = Content.objects.get(column__row__version=self, type='lede')
+        return self._lede
 
     def get_thumbnail(self, size='small'):
         """Return a dict with two keys:
@@ -176,7 +185,10 @@ class Row(models.Model):
     order = models.IntegerField()
 
     def get_columns(self):
-        return Column.objects.filter(row=self).order_by('order')
+        # Cache the results in a local attribute on this object
+        if not hasattr(self, '_columns'):
+            self._columns = Column.objects.filter(row=self).order_by('order')
+        return self._columns
 
     def __unicode__(self):
         return u'%s' % self.pk
@@ -192,7 +204,10 @@ class Column(models.Model):
     order = models.IntegerField()
 
     def get_contents(self):
-        return Content.objects.filter(column=self).order_by('order')
+        # Cache the results in a local attribute on this object
+        if not hasattr(self, '_contents'):
+            self._contents = Content.objects.filter(column=self).order_by('order')
+        return self._contents
 
     def __unicode__(self):
         return u'%s' % self.pk
