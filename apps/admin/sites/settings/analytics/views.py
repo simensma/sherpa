@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.cache import cache
 from django.conf import settings
 
@@ -13,6 +13,15 @@ def index(request, site):
         'ga_account_password': settings.GA_ACCOUNT_PASSWORD,
     }
     return render(request, 'common/admin/sites/settings/analytics/index.html', context)
+
+def analytics_ua(request, site):
+    active_site = Site.objects.get(id=site)
+    ua = request.POST['analytics-ua'].strip()
+    if ua == '':
+        ua = None
+    active_site.analytics_ua = ua
+    active_site.save()
+    return redirect('admin.sites.settings.analytics.views.index', active_site.id)
 
 def searches(request, site):
     active_site = Site.objects.get(id=site)

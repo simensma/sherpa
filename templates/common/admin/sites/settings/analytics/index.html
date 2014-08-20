@@ -59,11 +59,11 @@
             </p>
           </div>
 
-          <form role="form">
+          <form action="{% url 'admin.sites.settings.analytics.views.analytics_ua' active_site.id %}" method="post">
             {% csrf_token %}
             <div class="form-group">
-              <label for="ua">Google Analytics UA</label>
-              <input type="text" class="form-control" id="ua" placeholder="F.eks.: UA-123456-78">
+              <label for="analytics-ua">Google Analytics UA</label>
+              <input type="text" class="form-control" id="analytics-ua" name="analytics-ua" placeholder="F.eks.: UA-123456-78" value="{{ active_site.analytics_ua }}">
             </div>
             <button type="submit" class="btn btn-default">Lagre</button>
           </form>
