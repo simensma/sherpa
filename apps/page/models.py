@@ -91,14 +91,34 @@ class Version(models.Model):
     def __unicode__(self):
         return u'%s' % self.pk
 
+    def fetch_content(self):
+        """
+        This will "prefetch" all structure and content in this Version by calling get_rows(), get_columns() and
+        get_contents() which will store cached references on the local objects. This method should be called
+        before caching a Version object so that further calls to get_rows() on the cached object will used its
+        locally cached data instead of performing new lookups.
+        """
+        for row in self.get_rows():
+            for column in row.get_columns():
+                column.get_contents()
+
     def get_rows(self):
-        return Row.objects.filter(version=self).order_by('order')
+        # Cache the results in a local attribute on this object
+        if not hasattr(self, '_rows'):
+            self._rows = Row.objects.filter(version=self).order_by('order')
+        return self._rows
 
     def get_title_content(self):
-        return Content.objects.get(column__row__version=self, type='title')
+        # Cache the results in a local attribute on this object
+        if not hasattr(self, '_title'):
+            self._title = Content.objects.get(column__row__version=self, type='title')
+        return self._title
 
     def get_lede_content(self):
-        return Content.objects.get(column__row__version=self, type='lede')
+        # Cache the results in a local attribute on this object
+        if not hasattr(self, '_lede'):
+            self._lede = Content.objects.get(column__row__version=self, type='lede')
+        return self._lede
 
     def get_thumbnail(self, size='small'):
         """Return a dict with two keys:
@@ -176,7 +196,10 @@ class Row(models.Model):
     order = models.IntegerField()
 
     def get_columns(self):
-        return Column.objects.filter(row=self).order_by('order')
+        # Cache the results in a local attribute on this object
+        if not hasattr(self, '_columns'):
+            self._columns = Column.objects.filter(row=self).order_by('order')
+        return self._columns
 
     def __unicode__(self):
         return u'%s' % self.pk
@@ -192,7 +215,10 @@ class Column(models.Model):
     order = models.IntegerField()
 
     def get_contents(self):
-        return Content.objects.filter(column=self).order_by('order')
+        # Cache the results in a local attribute on this object
+        if not hasattr(self, '_contents'):
+            self._contents = Content.objects.filter(column=self).order_by('order')
+        return self._contents
 
     def __unicode__(self):
         return u'%s' % self.pk
