@@ -26,6 +26,12 @@ div.membership-entry {
         font-family: "DTL Nobel" !important;
         font-size: 18px;
         line-height: 1.5em;
+
+        // Quickfix to remove the current text but keep the layout
+        visibility: hidden;
+        @media (max-width: 767px) {
+          display: none;
+        }
       }
 
       p.enrollment-button {
