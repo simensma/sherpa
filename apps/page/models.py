@@ -91,6 +91,17 @@ class Version(models.Model):
     def __unicode__(self):
         return u'%s' % self.pk
 
+    def fetch_content(self):
+        """
+        This will "prefetch" all structure and content in this Version by calling get_rows(), get_columns() and
+        get_contents() which will store cached references on the local objects. This method should be called
+        before caching a Version object so that further calls to get_rows() on the cached object will used its
+        locally cached data instead of performing new lookups.
+        """
+        for row in self.get_rows():
+            for column in row.get_columns():
+                column.get_contents()
+
     def get_rows(self):
         # Cache the results in a local attribute on this object
         if not hasattr(self, '_rows'):

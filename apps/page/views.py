@@ -72,6 +72,9 @@ def parse_content(request, version):
                 parent = parent.parent
             page_hierarchy.reverse()
 
+        # Perform DB lookups for all structure and content in this version
+        version.fetch_content()
+
         context = {'version': version, 'page_hierarchy': page_hierarchy}
         cache.set('content.version.%s' % version.id, context, 60 * 10)
 
