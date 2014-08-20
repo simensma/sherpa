@@ -72,7 +72,7 @@
             {% csrf_token %}
             <div class="form-group">
               <label for="analytics-ua">Google Analytics UA for {{ active_site.domain }}</label>
-              <input type="text" class="form-control" id="analytics-ua" name="analytics-ua" placeholder="F.eks.: UA-123456-78" value="{{ active_site.analytics_ua }}">
+              <input type="text" class="form-control" id="analytics-ua" name="analytics-ua" placeholder="F.eks.: UA-123456-78" value="{{ active_site.analytics_ua|default:"" }}">
             </div>
             <button type="submit" class="btn btn-default">Lagre</button>
           </form>
