@@ -9,7 +9,11 @@
                 <img src="{{ version.get_medium_thumbnail.url }}" alt="{{ version.get_title_content.content|striptags }}">
               </a>
             </div>
-          {% else %}
+          {% elif widget.display_images %}
+            {% comment %}
+              If we're configured to display thumbnail but this version doesn't have one, replace it with a
+              placeholder which will be adjusted to be of equal height to other thumbnails
+            {% endcomment %}
             <div class="image-placeholder"></div>
           {% endif %}
 
