@@ -288,7 +288,8 @@
         });
 
         // Remove existing editor-control markup, and leftover tooltips that for some reason haven't been removed
-        article.find("div.row-fluid:not([data-dnt-row]),div.add-content,.tooltip").remove();
+        article.children('div.row-fluid:not([data-dnt-row])').remove();
+        article.find('div.add-content,.tooltip').remove();
 
         var rows = article.find("div[data-dnt-row]");
         if(rows.length === 0) {
