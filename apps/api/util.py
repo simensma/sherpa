@@ -44,6 +44,7 @@ def get_member_data(user):
             'sherpa_id': user.id,
             'er_medlem': True,
             'medlemsnummer': user.memberid,
+            'forening': {'sherpa_id': user.main_forening().id, 'navn': user.main_forening().name},
             'aktivt_medlemskap': user.has_paid(),
             'fornavn': user.get_first_name(),
             'etternavn': user.get_last_name(),
