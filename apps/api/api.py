@@ -45,6 +45,7 @@ def members(request, version, format):
 
 def membership(request, version, format):
     if request.method == 'GET':
+        require_focus(request)
         # TODO
         pass
     else:
