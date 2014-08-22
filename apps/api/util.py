@@ -58,7 +58,7 @@ def get_member_data(user):
             'medlemsnummer': user.memberid,
             'forening': {'sherpa_id': user.main_forening().id, 'navn': user.main_forening().name},
             'aktivt_medlemskap': user.has_paid(),
-            'er_hovedmedlem': not user.is_household_member(),
+            'er_husstandsmedlem': user.is_household_member(),
             'tilknyttet_hovedmedlem': parent_memberid,
             'tilknyttede_husstandsmedlemmer': household_members,
             'fornavn': user.get_first_name(),
