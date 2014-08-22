@@ -40,11 +40,27 @@ def get_member_data(user):
                 'object_id': f.get_ntb_id(),
             } for f in user.all_foreninger()]
 
+        if user.get_parent() is None:
+            parent_memberid = None
+        else:
+            parent_memberid = user.get_parent().memberid
+
+        if not user.is_household_member():
+            # This is a main member - just list all children
+            household_members = [c.memberid for c in user.get_children()]
+        else:
+            # This is a household member - include all "sibling" household members
+            household_members = [c.memberid for c in user.get_parent().get_children()]
+
         return {
             'sherpa_id': user.id,
             'er_medlem': True,
             'medlemsnummer': user.memberid,
+            'forening': {'sherpa_id': user.main_forening().id, 'navn': user.main_forening().name},
             'aktivt_medlemskap': user.has_paid(),
+            'er_husstandsmedlem': user.is_household_member(),
+            'tilknyttet_hovedmedlem': parent_memberid,
+            'tilknyttede_husstandsmedlemmer': household_members,
             'fornavn': user.get_first_name(),
             'etternavn': user.get_last_name(),
             'født': dob,
