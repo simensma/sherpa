@@ -44,8 +44,15 @@ def members(request, version, format):
         )
 
 def membership(request, version, format):
-    # TODO
-    pass
+    if request.method == 'GET':
+        # TODO
+        pass
+    else:
+        raise BadRequest(
+            "Unsupported HTTP verb",
+            code=error_codes.UNSUPPORTED_HTTP_VERB,
+            http_code=400
+        )
 
 def forening(request, version, format):
     if request.method == 'GET':
