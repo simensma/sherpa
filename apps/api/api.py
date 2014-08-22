@@ -1,3 +1,5 @@
+# encoding: utf-8
+from datetime import datetime
 import json
 
 from django.http import HttpResponse
@@ -47,11 +49,41 @@ def membership(request, version, format):
     if request.method == 'GET':
         require_focus(request)
 
-        if not 'medlemsnummer' in request.GET or not 'fødselsnummer' in request.GET:
+        if not 'medlemsnummer' in request.GET or not u'født' in request.GET:
             raise BadRequest(
-                "Missing 'medlemsnummer' or 'fødselsnummer' parameters'",
+                u"Missing 'medlemsnummer' and/or 'født' parameters'",
                 code=error_codes.MISSING_REQUIRED_PARAMETER,
                 http_code=400
+            )
+
+        try:
+            requested_date_of_birth = datetime.strptime(request.GET[u'født'], "%d.%m.%Y").date()
+        except ValueError:
+            raise BadRequest(
+                "Could not parse the 'født' parameter ('%s'), which should be in the following format: 'dd.mm.yyyy'" %
+                    request.GET[u'født'],
+                code=error_codes.MISSING_REQUIRED_PARAMETER,
+                http_code=400
+            )
+
+        try:
+            try:
+                user = User.get_or_create_inactive(memberid=request.GET['medlemsnummer'], include_pending=True)
+            except (Actor.DoesNotExist, ValueError):
+                # No such member
+                raise User.DoesNotExist
+
+            # Verify the requested date of birth
+            if user.get_birth_date() != requested_date_of_birth:
+                raise User.DoesNotExist
+
+            return HttpResponse(json.dumps(get_member_data(user)))
+        except (User.DoesNotExist, ValueError):
+            raise BadRequest(
+                "A membership with member ID '%s' and date of birth '%s' does not exist." %
+                    (request.GET['medlemsnummer'], request.GET[u'født']),
+                code=error_codes.RESOURCE_NOT_FOUND,
+                http_code=404
             )
 
     else:
