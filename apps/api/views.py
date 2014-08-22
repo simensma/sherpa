@@ -8,9 +8,9 @@ from exceptions import BadRequest
 import api
 
 @csrf_exempt
-def header_versioning(request, versions):
+def header_versioning(request, versions, require_authentication=True):
     try:
-        if not authenticate(request):
+        if require_authentication and not authenticate(request):
             raise invalid_authentication_exception()
         version, format = requested_representation_from_header(request)
         try:
@@ -22,9 +22,9 @@ def header_versioning(request, versions):
         return e.response()
 
 @csrf_exempt
-def url_versioning(request, resource, version):
+def url_versioning(request, resource, version, require_authentication=True):
     try:
-        if not authenticate(request):
+        if require_authentication and not authenticate(request):
             raise invalid_authentication_exception()
         format = requested_representation_from_url(request)
         return call_api(request, resource, version, format)
