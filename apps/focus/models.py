@@ -77,7 +77,7 @@ class Actor(models.Model):
     # User data
     first_name = models.CharField(max_length=50, db_column=u'FiNm')
     last_name = models.CharField(max_length=50, db_column=u'Nm')
-    birth_date = models.DateTimeField(null=True, db_column=u'BDt')
+    birth_date = models.DateField(null=True, db_column=u'BDt')
     gender = models.CharField(max_length=1, db_column=u'Sex')
     email = models.CharField(max_length=250, db_column=u'EMail')
     phone_home = models.CharField(max_length=50, db_column=u'Ph')
@@ -250,7 +250,7 @@ class Actor(models.Model):
         return self.birth_date
 
     def get_age(self):
-        return (datetime.now() - self.get_birth_date()).days / 365
+        return (date.today() - self.get_birth_date()).days / 365
 
     def get_gender(self):
         if self.gender.lower() == 'm':
