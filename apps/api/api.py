@@ -46,8 +46,14 @@ def members(request, version, format):
 def membership(request, version, format):
     if request.method == 'GET':
         require_focus(request)
-        # TODO
-        pass
+
+        if not 'medlemsnummer' in request.GET or not 'fødselsnummer' in request.GET:
+            raise BadRequest(
+                "Missing 'medlemsnummer' or 'fødselsnummer' parameters'",
+                code=error_codes.MISSING_REQUIRED_PARAMETER,
+                http_code=400
+            )
+
     else:
         raise BadRequest(
             "Unsupported HTTP verb",
