@@ -32,15 +32,7 @@ def url_versioning(request, resource, version, require_authentication=True):
         return e.response()
 
 def call_api(request, resource, version, format):
-    if resource == 'members':
-        response = api.members(request, version, format)
-    elif resource == 'membership':
-        response = api.membership(request, version, format)
-    elif resource == 'membership_price':
-        response = api.membership_price(request, version, format)
-    elif resource == 'forening':
-        response = api.forening(request, version, format)
-
-    # We'll just let an unhandled KeyError be raised here if we typoed resource or something
+    # We'll just let an unhandled exception be raised here if we ever call a non-existing resource
+    response = getattr(api, resource)(request, version, format)
     response['Content-Type'] = "%s.%s+%s; charset=utf-8" % (vendor_media_type, version, format)
     return response
