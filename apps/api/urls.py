@@ -12,6 +12,11 @@ urlpatterns = patterns('',
             {'version': 'v1', 'resource': 'members'}
         ]}
     ),
+    url(r'^medlemskap/$', 'api.views.header_versioning', kwargs={
+        'versions': [
+            {'version': 'v1', 'resource': 'membership', 'require_authentication': False}
+        ]}
+    ),
     url(r'^forening/$', 'api.views.header_versioning', kwargs={
         'versions': [
             {'version': 'v1', 'resource': 'forening'}
@@ -22,5 +27,6 @@ urlpatterns = patterns('',
 
     url(r'^v0/medlem/$', 'api.views.url_versioning', kwargs={'resource': 'members', 'version': '0'}),
     url(r'^v1/medlem/$', 'api.views.url_versioning', kwargs={'resource': 'members', 'version': '1'}),
+    url(r'^v1/medlemskap/$', 'api.views.url_versioning', kwargs={'resource': 'membership', 'version': '1', 'require_authentication': False}),
     url(r'^v1/forening/$', 'api.views.url_versioning', kwargs={'resource': 'forening', 'version': '1'}),
 )

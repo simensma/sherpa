@@ -43,6 +43,10 @@ def members(request, version, format):
             http_code=400
         )
 
+def membership(request, version, format):
+    # TODO
+    pass
+
 def forening(request, version, format):
     if request.method == 'GET':
         require_focus(request)

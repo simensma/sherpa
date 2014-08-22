@@ -34,6 +34,8 @@ def url_versioning(request, resource, version, require_authentication=True):
 def call_api(request, resource, version, format):
     if resource == 'members':
         response = api.members(request, version, format)
+    elif resource == 'membership':
+        response = api.membership(request, version, format)
     elif resource == 'forening':
         response = api.forening(request, version, format)
 
