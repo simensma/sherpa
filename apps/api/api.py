@@ -77,7 +77,21 @@ def membership(request, version, format):
             if user.get_birth_date() != requested_date_of_birth:
                 raise User.DoesNotExist
 
-            return HttpResponse(json.dumps(get_member_data(user)))
+            if 'hele_husstanden' in request.GET:
+                if not user.is_household_member():
+                    user_data = {
+                        'hovedmedlem': get_member_data(user),
+                        'husstandsmedlemmer': [get_member_data(u) for u in user.get_children()],
+                    }
+                else:
+                    user_data = {
+                        'hovedmedlem': get_member_data(user.get_parent()),
+                        'husstandsmedlemmer': [get_member_data(u) for u in user.get_parent().get_children()],
+                    }
+            else:
+                user_data = get_member_data(user)
+
+            return HttpResponse(json.dumps(user_data))
         except (User.DoesNotExist, ValueError):
             raise BadRequest(
                 "A membership with member ID '%s' and date of birth '%s' does not exist." %
