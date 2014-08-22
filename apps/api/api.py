@@ -1,14 +1,22 @@
 # encoding: utf-8
 from datetime import datetime
 import json
+import logging
+import sys
 
 from django.http import HttpResponse
+from django.core.cache import cache
 
+from core.models import Zipcode
 from user.models import User
-from focus.models import Actor
+from foreninger.models import Forening
+from focus.models import Actor, FocusZipcode, Price
+from focus.util import get_membership_type_by_codename
 from exceptions import BadRequest
 from util import get_member_data, get_forening_data, require_focus
 import error_codes
+
+logger = logging.getLogger('sherpa')
 
 def members(request, version, format):
     if request.method == 'GET':
@@ -96,6 +104,107 @@ def membership(request, version, format):
             raise BadRequest(
                 "A membership with member ID '%s' and date of birth '%s' does not exist." %
                     (request.GET['medlemsnummer'], request.GET[u'født']),
+                code=error_codes.RESOURCE_NOT_FOUND,
+                http_code=404
+            )
+
+    else:
+        raise BadRequest(
+            "Unsupported HTTP verb",
+            code=error_codes.UNSUPPORTED_HTTP_VERB,
+            http_code=400
+        )
+
+def membership_price(request, version, format):
+    if request.method == 'GET':
+        require_focus(request)
+
+        if not 'postnummer' in request.GET:
+            raise BadRequest(
+                u"Missing required 'postnummer' parameter",
+                code=error_codes.MISSING_REQUIRED_PARAMETER,
+                http_code=400
+            )
+
+        try:
+            # Get focus zipcode-forening ID
+            focus_forening_id = cache.get('focus.zipcode_forening.%s' % request.GET['postnummer'])
+            if focus_forening_id is None:
+                focus_forening_id = FocusZipcode.objects.get(zipcode=request.GET['postnummer']).main_forening_id
+                cache.set('focus.zipcode_forening.%s' % request.GET['postnummer'], focus_forening_id, 60 * 60 * 24 * 7)
+
+            # Get forening based on zipcode-ID
+            forening = Forening.objects.get(focus_id=focus_forening_id)
+            price = Price.objects.get(forening_id=forening.focus_id)
+
+            # Success, return the appropriate data
+            return HttpResponse(json.dumps({
+                'forening': {'sherpa_id': forening.id, 'navn': forening.name},
+                'pristabell': {
+                    'main': {
+                        'navn': get_membership_type_by_codename('main')['name'],
+                        'pris': price.main,
+                    },
+                    'youth': {
+                        'navn': get_membership_type_by_codename('youth')['name'],
+                        'pris': price.youth,
+                    },
+                    'senior': {
+                        'navn': get_membership_type_by_codename('senior')['name'],
+                        'pris': price.senior,
+                    },
+                    'lifelong': {
+                        'navn': get_membership_type_by_codename('lifelong')['name'],
+                        'pris': price.lifelong,
+                    },
+                    'child': {
+                        'navn': get_membership_type_by_codename('child')['name'],
+                        'pris': price.child,
+                    },
+                    'school': {
+                        'navn': get_membership_type_by_codename('school')['name'],
+                        'pris': price.school,
+                    },
+                    'household': {
+                        'navn': get_membership_type_by_codename('household')['name'],
+                        'pris': price.household,
+                    },
+                }
+            }))
+
+        except FocusZipcode.DoesNotExist:
+            # The Zipcode doesn't exist in Focus, but if it exists in our Zipcode model, Focus is just not updated
+            if Zipcode.objects.filter(zipcode=request.GET['postnummer']).exists():
+                logger.warning(u"Postnummer finnes i Zipcode, men ikke i Focus!",
+                    exc_info=sys.exc_info(),
+                    extra={
+                        'request': request,
+                        'postnummer': request.GET['postnummer']
+                    }
+                )
+                raise BadRequest(
+                    "The postal code '%s' exists, but isn't connected to a Forening. It should be, and we've logged this occurrence." %
+                        request.GET['postnummer'],
+                    code=error_codes.RESOURCE_NOT_FOUND,
+                    http_code=404
+                )
+            else:
+                # This *could* be an entirely new Zipcode, or just an invalid one.
+                raise BadRequest(
+                    "The postal code '%s' isn't registered in our database." %
+                        request.GET['postnummer'],
+                    code=error_codes.RESOURCE_NOT_FOUND,
+                    http_code=404
+                )
+
+        except Forening.DoesNotExist:
+            logger.warning(u"Focus-postnummer mangler foreningstilknytning!",
+                exc_info=sys.exc_info(),
+                extra={'request': request}
+            )
+            raise BadRequest(
+                "The postal code '%s' exists, but isn't connected to a Forening. It should be, and we've logged this occurrence." %
+                    request.GET['postnummer'],
                 code=error_codes.RESOURCE_NOT_FOUND,
                 http_code=404
             )

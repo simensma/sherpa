@@ -36,6 +36,8 @@ def call_api(request, resource, version, format):
         response = api.members(request, version, format)
     elif resource == 'membership':
         response = api.membership(request, version, format)
+    elif resource == 'membership_price':
+        response = api.membership_price(request, version, format)
     elif resource == 'forening':
         response = api.forening(request, version, format)
 
