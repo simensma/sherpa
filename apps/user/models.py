@@ -34,6 +34,8 @@ class User(AbstractBaseUser):
     # Some users haven't registered but we still have some data relating to them
     # from various sources. They'll be created as inactive users, and registration
     # will if possible use the inactive user and retain the related data.
+    # Note: Don't confuse this with Django's built-in "is_active" field, which we
+    # do not use!
     is_inactive = models.BooleanField(default=False)
 
     # Actors can be deleted from Focus for various reasons. Whenever discovered,
