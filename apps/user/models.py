@@ -688,7 +688,7 @@ class User(AbstractBaseUser):
     def create_inactive_user(memberid):
         Actor.get_personal_members().get(memberid=memberid) # Verify that the Actor exists
         try:
-            # Check if the user already exists first.
+            # Check if the user object already exists first.
             existing_user = User.objects.get(memberid=memberid)
 
             # Note that we don't check if this user is inactive or not.
@@ -696,14 +696,14 @@ class User(AbstractBaseUser):
             # It doesn't matter, let this user pass as the created one.
 
             if existing_user.is_pending:
-                # Well, we saw that they're not pending anymore since we checked the
-                # actor, so fix that and let them pass.
+                # Well, we saw that they're not pending anymore since we checked the actor, so fix that and let them
+                # pass.
                 existing_user.is_pending = False
                 existing_user.save()
 
             if existing_user.is_expired:
-                # Oh, what happened here? Well, they're not expired anymore since we
-                # the actor exists, so fix that and let them pass.
+                # Oh, what happened here? Well, they're not expired anymore since the actor exists, so fix that and
+                # let them pass.
                 existing_user.is_expired = False
                 existing_user.save()
 
@@ -716,30 +716,60 @@ class User(AbstractBaseUser):
 
     @staticmethod
     def create_pending_user(memberid):
+        """Create an inactive pending user. Note that the caller must verify that the memberid does not exist in Actor
+        first. Read the implementation for more details."""
         Enrollment.get_active().get(memberid=memberid) # Ensure that the enrollment exists
-        user = User(
-            identifier='%s' % memberid,
-            memberid=memberid,
-            is_inactive=True,
-            is_pending=True
-        )
-        user.set_unusable_password()
-        key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
-        while User.objects.filter(pending_registration_key=key).exists():
-            # Ensure that the key isn't already in use. With the current key length of 40, we'll have
-            # ~238 bits of entropy which means that this will never ever happen, ever.
-            # You will win the lottery before this happens. And I want to know if it does, so log it.
-            logger.warning(u"Noen fikk en random-generert pending-registration-key som allerede finnes!",
-                extra={
-                    'request': request,
-                    'should_you_play_the_lottery': True,
-                    'key': key
-                }
+        try:
+            # Check if the user object already exists first.
+            existing_user = User.objects.get(memberid=memberid)
+
+            # Note that we don't check if this user is inactive or not.
+            # If they are, maybe someone double-clicked some link or something.
+            # It doesn't matter, let this user pass as the created one.
+
+            if not existing_user.verify_still_pending():
+                # Should never happen - this method should only be called:
+                # - When creating new members, in which case the database should return a memberid which is
+                #   *guaranteed* to be new, unique and NOT used in Actor
+                # - If the caller has verified that the memberid isn't in use in Actor, and needs to create a new
+                #   inactive pending user.
+                # We could ignore this and just return the user, but since the caller expects this to be a pending
+                # user, there's no telling what craziness might happen, so it is (probably) better to raise an
+                # exception here. I don't expect this to happen unless there's been made a code logic mistake
+                # somewhere.
+                raise Exception("Tried to create a pending user with a memberid which exists in the Actor table.")
+
+            if existing_user.is_expired:
+                # Oh, what happened here? Well, they're not expired anymore since the actor exists, so fix that and
+                # let them pass.
+                existing_user.is_expired = False
+                existing_user.save()
+
+            return existing_user
+        except User.DoesNotExist:
+            user = User(
+                identifier='%s' % memberid,
+                memberid=memberid,
+                is_inactive=True,
+                is_pending=True
             )
+            user.set_unusable_password()
             key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
-        user.pending_registration_key = key
-        user.save()
-        return user
+            while User.objects.filter(pending_registration_key=key).exists():
+                # Ensure that the key isn't already in use. With the current key length of 40, we'll have
+                # ~238 bits of entropy which means that this will never ever happen, ever.
+                # You will win the lottery before this happens. And I want to know if it does, so log it.
+                logger.warning(u"Noen fikk en random-generert pending-registration-key som allerede finnes!",
+                    extra={
+                        'request': request,
+                        'should_you_play_the_lottery': True,
+                        'key': key
+                    }
+                )
+                key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
+            user.pending_registration_key = key
+            user.save()
+            return user
 
 class Permission(models.Model):
     """
