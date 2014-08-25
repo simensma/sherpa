@@ -111,7 +111,7 @@ def attempt_registration(request):
             if request.POST['country'] == 'NO':
                 enrollment = enrollment.filter(zipcode=request.POST['zipcode'])
             if enrollment.exists():
-                actor = User.get_users(include_pending=True).get(memberid=request.POST['memberid'])
+                actor = User.get_users(include_pending=True).get(memberid=request.POST['memberid']).get_actor()
             else:
                 # Give up
                 raise ObjectDoesNotExist
