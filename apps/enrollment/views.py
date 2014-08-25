@@ -526,7 +526,7 @@ def process_invoice(request):
         return redirect('enrollment.views.result')
 
     for user in enrollment.users.all():
-        user.pending_user = User.create_pending(user.memberid)
+        user.pending_user = User.create_pending_user(user.memberid)
         user.save()
 
     prepare_and_send_email(request, enrollment)
@@ -642,7 +642,7 @@ def process_card(request):
                     focus_user = FocusEnrollment.objects.get(memberid=user.memberid)
                     focus_user.paid = True
                     focus_user.save()
-                    user.pending_user = User.create_pending(user.memberid)
+                    user.pending_user = User.create_pending_user(user.memberid)
                     user.save()
                 prepare_and_send_email(request, enrollment)
                 enrollment.state = 'complete'

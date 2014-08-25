@@ -698,7 +698,7 @@ class User(AbstractBaseUser):
             return user
 
     @staticmethod
-    def create_pending(memberid):
+    def create_pending_user(memberid):
         Enrollment.get_active().get(memberid=memberid) # Ensure that the enrollment exists
         user = User(
             identifier='%s' % memberid,
