@@ -52,11 +52,19 @@ def get_member_data(user):
             # This is a household member - include all "sibling" household members
             household_members = [c.memberid for c in user.get_parent().get_children()]
 
+        if user.is_pending:
+            forening = None
+        else:
+            forening = {
+                'sherpa_id': user.main_forening().id,
+                'navn': user.main_forening().name,
+            }
+
         return {
             'sherpa_id': user.id,
             'er_medlem': True,
             'medlemsnummer': user.memberid,
-            'forening': {'sherpa_id': user.main_forening().id, 'navn': user.main_forening().name},
+            'forening': forening,
             'aktivt_medlemskap': user.has_paid(),
             'er_husstandsmedlem': user.is_household_member(),
             'tilknyttet_hovedmedlem': parent_memberid,
