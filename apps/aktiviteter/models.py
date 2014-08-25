@@ -246,6 +246,15 @@ class AktivitetDate(models.Model):
     def __unicode__(self):
         return u'%s (%s, aktivitet: <%s>)' % (self.pk, self.start_date, self.aktivitet)
 
+    def signup_method(self):
+        if not self.signup_enabled:
+            return 'none'
+        else:
+            if self.signup_simple_allowed:
+                return 'simple'
+            else:
+                return 'minside'
+
     def accepts_signups(self):
         today = date.today()
         return self.signup_enabled and self.signup_start <= today and self.signup_deadline >= today
