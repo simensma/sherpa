@@ -215,7 +215,13 @@ def get_static_promo_context(path):
             'id': 'favoritthytter',
             'name': 'Favoritthytter',
             'start_date': date(year=2014, month=6, day=29),
-            'end_date': date(year=2014, month=6, day=29),
+            'end_date': date(year=2014, month=8, day=24),
+        },
+        {
+            'id': 'komdegut-sep-2014',
+            'name': 'Kom deg ut-dagen',
+            'start_date': date(year=2014, month=8, day=25),
+            'end_date': date(year=2014, month=8, day=25),
         },
     ]
 

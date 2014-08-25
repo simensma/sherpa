@@ -850,6 +850,80 @@ div.widget.promo {
     }
   }
 
+  div.cover.main.rotation-komdegut-sep-2014 {
+    background-image: url('/static/img/widgets/promo/Turglede_Host_Live_Andrea_Sulheim.jpg');
+
+    div.content {
+      @width: 940px;
+      @padding-right: 0;
+      padding-left: 940px - @width - @padding-right;
+      padding-top: 0;
+      width: @width;
+      padding-right: @padding-right;
+      color: @profile-red;
+
+      div.wrapper {
+        display: block;
+        height: 480px;
+      }
+
+      h1 {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        font-size: 46px;
+        text-align: left;
+      }
+
+      p.lede {
+        position: absolute;
+        top: 80px;
+        right: 30px;
+        font-size: 28px;
+        font-weight: bold;
+      }
+
+      p.double-button-hack {
+        position: absolute;
+        bottom: 20px;
+        right: 30px;
+        text-align: right;
+        margin-right: 8px;
+      }
+
+      p.credits {
+        position: absolute;
+        bottom: 5px;
+        left: 5px;
+        font-size: 16px;
+        margin-bottom: 0;
+        color: white;
+      }
+
+      @media(max-width: 767px) {
+        div.wrapper {
+          height: auto;
+        }
+
+        h1, p.lede {
+          color: white;
+          position: static;
+          text-align: center;
+          width: auto;
+        }
+
+        p.credits {
+          display: none;
+        }
+
+        p.double-button-hack {
+          position: static;
+          text-align: center;
+        }
+      }
+    }
+  }
+
   div.cover.main.rotation-gjensidige {
     background-image: url('/static/img/widgets/promo/gjensidigerabatt.jpg');
 
