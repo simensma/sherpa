@@ -105,7 +105,7 @@ class ActorProxy:
     def __init__(self, memberid):
         enrollment = cache.get('focus.enrollment.%s' % memberid)
         if enrollment is None:
-            enrollment = Enrollment.objects.get(memberid=memberid)
+            enrollment = Enrollment.get_active().get(memberid=memberid)
             cache.set('focus.enrollment.%s' % memberid, enrollment, settings.FOCUS_MEMBER_CACHE_PERIOD)
         self.enrollment = enrollment
 
