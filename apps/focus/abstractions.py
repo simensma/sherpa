@@ -116,6 +116,9 @@ class ActorProxy:
         """Assume that all new enrollments are personal memberships."""
         return True
 
+    def is_household_member(self):
+        return self.get_parent_memberid() != None
+
     def get_first_name(self):
         return self.enrollment.first_name.strip()
 
