@@ -230,6 +230,7 @@ class AktivitetDate(models.Model):
     # Rename to cancel_deadline
     signup_cancel_deadline = models.DateField(null=True)
 
+    should_have_turleder = models.BooleanField(default=False)
     turledere = models.ManyToManyField('user.User', related_name='turleder_aktivitet_dates')
     participants = models.ManyToManyField('user.User', related_name='aktiviteter')
     meeting_place = models.TextField()
