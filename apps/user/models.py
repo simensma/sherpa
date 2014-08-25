@@ -718,6 +718,14 @@ class User(AbstractBaseUser):
     def create_pending_user(memberid):
         """Create an inactive pending user. Note that the caller must verify that the memberid does not exist in Actor
         first. Read the implementation for more details."""
+        # Note that a known bug will result in an exception here, more specifically:
+        # https://sentry.turistforeningen.no/turistforeningen/sherpa/group/1655/
+        # This occurs during enrollment. When saving an enrollment in Focus, the payment_method field should be set to
+        # one of two sentinel values for card or invoice; see focus.util.PAYMENT_METHOD_CODES. However, for some
+        # reason, some of these entries are saved with payment_method=0 (which is NOT one of the sentinel values). This
+        # will occur in an exception where, because Enrollment.get_active() will filter on valid payment codes, not
+        # find the given memberid, and raise an exception which isn't handled in the enrollment view (because it
+        # shouldn't need to be).
         Enrollment.get_active().get(memberid=memberid) # Ensure that the enrollment exists
         try:
             # Check if the user object already exists first.
