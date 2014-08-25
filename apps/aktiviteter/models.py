@@ -52,7 +52,7 @@ class Aktivitet(models.Model):
         return u'%s: %s' % (self.pk, self.title)
 
     def get_dates_ordered(self):
-        return enumerate(self.dates.all().order_by('-start_date'))
+        return enumerate(self.dates.all().order_by('start_date'))
 
     def get_difficulty(self):
         return [c[1] for c in self.DIFFICULTY_CHOICES if c[0] == self.difficulty][0]
