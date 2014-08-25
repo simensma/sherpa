@@ -139,7 +139,10 @@ class User(AbstractBaseUser):
         if children is None:
             children = []
             for actor_child in self.get_actor().get_children():
-                children.append(User.get_or_create_inactive(memberid=actor_child.memberid))
+                # Note that we're including pending children if and only if this is a pending member
+                children.append(
+                    User.get_or_create_inactive(memberid=actor_child.memberid, include_pending=self.is_pending)
+                )
             cache.set('user.%s.children' % self.memberid, children, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return children
 

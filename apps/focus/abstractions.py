@@ -175,6 +175,14 @@ class ActorProxy:
         else:
             return self.enrollment.linked_to
 
+    def get_children(self):
+        # Assuming that there aren't members in the Actor table that could be connected to this member.
+        children = cache.get('focus.enrollment.children.%s' % self.enrollment.memberid)
+        if children is None:
+            children = Enrollment.get_active().filter(linked_to=self.enrollment.memberid).exclude(pk=self.enrollment.pk)
+            cache.set('focus.enrollment.children.%s' % self.enrollment.memberid, children, settings.FOCUS_MEMBER_CACHE_PERIOD)
+        return children
+
     def has_paid(self):
         return self.enrollment.has_paid()
 
