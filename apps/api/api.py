@@ -10,7 +10,7 @@ from django.core.cache import cache
 from core.models import Zipcode
 from user.models import User
 from foreninger.models import Forening
-from focus.models import Actor, FocusZipcode, Price
+from focus.models import Enrollment, FocusZipcode, Price
 from focus.util import get_membership_type_by_codename
 from exceptions import BadRequest
 from util import get_member_data, get_forening_data, require_focus
@@ -30,7 +30,7 @@ def members(request, version, format):
             elif 'medlemsnummer' in request.GET:
                 try:
                     user = User.get_or_create_inactive(memberid=request.GET['medlemsnummer'], include_pending=True)
-                except (Actor.DoesNotExist, ValueError):
+                except (Enrollment.DoesNotExist, ValueError):
                     # No such member
                     raise User.DoesNotExist
             else:
@@ -77,7 +77,7 @@ def membership(request, version, format):
         try:
             try:
                 user = User.get_or_create_inactive(memberid=request.GET['medlemsnummer'], include_pending=True)
-            except (Actor.DoesNotExist, ValueError):
+            except (Enrollment.DoesNotExist, ValueError):
                 # No such member
                 raise User.DoesNotExist
 
@@ -230,7 +230,7 @@ def forening(request, version, format):
                 elif 'bruker_medlemsnummer' in request.GET:
                     try:
                         user = User.get_or_create_inactive(memberid=request.GET['bruker_medlemsnummer'], include_pending=True)
-                    except (Actor.DoesNotExist, ValueError):
+                    except (Enrollment.DoesNotExist, ValueError):
                         # No such member
                         raise User.DoesNotExist
 

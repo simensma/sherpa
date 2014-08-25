@@ -659,13 +659,30 @@ class User(AbstractBaseUser):
         return User.get_users().filter(permissions=permission, is_inactive=False)
 
     @staticmethod
-    def get_or_create_inactive(memberid, **kwargs):
+    def get_or_create_inactive(memberid, include_pending=False):
         """Get or create an inactive user with the specified memberid.
-        Note that further kwargs are passed to User.get_users()"""
+        Typically this shouldn't include pending users (until they're accepted), but the include_pending param is
+        nonetheless available. If set to True, this method will attempt to return or create a pending user with the
+        given memberid as well.
+        This method assumes that an Actor with the specified memberid already exists, and will raise Actor.DoesNotExist
+        if it doesn't. Note that if include_pending is True, Enrollment.DoesNotExist will be raised instead.
+        """
         try:
-            return User.get_users(**kwargs).get(memberid=memberid)
+            # First, check if a user object with that memberid exists
+            return User.get_users(include_pending=include_pending).get(memberid=memberid)
         except User.DoesNotExist:
-            return User.create_inactive_user(memberid)
+            try:
+                # No existing user, try to create an inactive normal member
+                return User.create_inactive_user(memberid)
+            except Actor.DoesNotExist:
+                # No members with that ID
+                if not include_pending:
+                    # Ignoring pending members - just re-raise the Actor.DoesNotExist exception
+                    raise
+                else:
+                    # Checking pending members as well - try to create a pending user. If that fails, it will throw
+                    # an exception which we'll let our caller handle
+                    return User.create_pending_user(memberid)
 
     @staticmethod
     def create_inactive_user(memberid):
