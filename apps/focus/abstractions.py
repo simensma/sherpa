@@ -152,6 +152,23 @@ class ActorProxy:
     def get_phone_mobile(self):
         return self.enrollment.phone_mobile.strip() if self.enrollment.phone_mobile is not None else ''
 
+    def get_parent(self):
+        from user.models import User
+        parent = cache.get('focus.enrollment.%s.parent' % self.enrollment.memberid)
+        if parent is None:
+            parent_memberid = self.get_parent_memberid()
+            if parent_memberid is not None:
+                try:
+                    parent = User.get_or_create_inactive(memberid=parent_memberid, include_pending=True)
+                except Enrollment.DoesNotExist:
+                    # Entirely possible that this member is connected to a parent which isn't active. Ignore it
+                    parent = None
+            else:
+                parent = None
+            cache.set('focus.enrollment.%s.parent' % self.enrollment.memberid, parent, settings.FOCUS_MEMBER_CACHE_PERIOD)
+        return parent
+
+
     def get_parent_memberid(self):
         if self.enrollment.linked_to == 0 or self.enrollment.linked_to == self.enrollment.memberid or self.enrollment.linked_to == '':
             return None

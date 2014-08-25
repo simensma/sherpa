@@ -117,7 +117,11 @@ class User(AbstractBaseUser):
             raise e
 
     def get_parent(self):
-        if not self.is_pending and not self.is_household_member():
+        if self.is_pending:
+            # Pending members have their own implementation in the ActorProxy; delegate
+            return self.get_actor().get_parent()
+
+        if not self.is_household_member():
             return None
 
         parent_memberid = self.get_actor().get_parent_memberid()
