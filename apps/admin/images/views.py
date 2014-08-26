@@ -367,7 +367,8 @@ def album_search_json(request):
 def search(request):
     context = {
         'origin': request.get_full_path(),
-        'all_users': sorted(User.sherpa_users(), key=lambda u: u.get_first_name())
+        'all_users': sorted(User.sherpa_users(), key=lambda u: u.get_first_name()),
+        'current_navigation': 'search'
     }
     if len(request.GET.get('q', '')) < settings.IMAGE_SEARCH_LENGTH:
         context.update({

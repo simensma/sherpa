@@ -63,7 +63,7 @@
         <li class="{% if current_navigation == 'albums' %} active{% endif %}">
           <a href="{% url 'admin.images.views.list_albums' %}">Alle bilder</a>
         </li>
-        <li class="dropdown">
+        <li class="dropdown{% if current_navigation == 'search' %} active{% endif %}">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">
             Søk <span class="caret"></span>
           </a>
