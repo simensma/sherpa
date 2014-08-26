@@ -127,6 +127,8 @@ $(function() {
                     } else if($(this).is('.image')) {
                         content.type = 'image';
                         content.content = $(this).attr('data-json');
+
+                        // Verify that the user isn't saving a placeholder image
                         if(JSON.parse(content.content).src.contains(placeholder_image_path) && !abort) {
                             alert(placeholder_image_warning);
                             abort = true;
@@ -144,15 +146,6 @@ $(function() {
             // And the row into the rows
             rows.push(row);
         });
-
-        if(abort) {
-            updateSaveCount();
-            save_button.prop('disabled', false);
-            if(typeof(fail) == 'function') {
-                fail();
-            }
-            return;
-        }
 
         // Finally add the structure+content as a JSON-string named 'rows' in data
         data.rows = JSON.stringify(rows);
@@ -196,7 +189,22 @@ $(function() {
             } else if(header.find("input[name='thumbnail'][value='new']").is(":checked")) {
                 data.thumbnail = 'specified';
                 data.thumbnail_url = header.find("img.article-thumbnail").attr('src');
+
+                // Verify that the user isn't saving a placeholder image
+                if(data.thumbnail_url.contains(placeholder_image_path) && !abort) {
+                    alert(placeholder_image_warning);
+                    abort = true;
+                }
             }
+        }
+
+        if(abort) {
+            updateSaveCount();
+            save_button.prop('disabled', false);
+            if(typeof(fail) == 'function') {
+                fail();
+            }
+            return;
         }
 
         // Save content
