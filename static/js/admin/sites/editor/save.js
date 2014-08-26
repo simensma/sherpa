@@ -10,6 +10,8 @@ $(function() {
     var save_button = header.find("button.save");
     var no_save_warning = $("div.no-save-warning");
     var article = $("article");
+    var placeholder_image_path = article.attr('data-dnt-placeholder-image-path');
+    var placeholder_image_warning = article.attr('data-dnt-placeholder-image-warning').replace(/\\n/g, '\n');
 
     var lastSaveCount = 0;
     var updateSaveCountID;
@@ -64,6 +66,9 @@ $(function() {
         //
         // Now iterate the client DOM and build the data structure to send to the server
         //
+
+        // We'll use this variable in the loop to be able to abort the saving
+        var abort = false;
 
         // Rows
         var rows = [];
@@ -122,6 +127,10 @@ $(function() {
                     } else if($(this).is('.image')) {
                         content.type = 'image';
                         content.content = $(this).attr('data-json');
+                        if(JSON.parse(content.content).src.contains(placeholder_image_path) && !abort) {
+                            alert(placeholder_image_warning);
+                            abort = true;
+                        }
                     } else if($(this).is('.widget')) {
                         content.type = 'widget';
                         content.content = $(this).attr('data-json');
@@ -135,6 +144,15 @@ $(function() {
             // And the row into the rows
             rows.push(row);
         });
+
+        if(abort) {
+            updateSaveCount();
+            save_button.prop('disabled', false);
+            if(typeof(fail) == 'function') {
+                fail();
+            }
+            return;
+        }
 
         // Finally add the structure+content as a JSON-string named 'rows' in data
         data.rows = JSON.stringify(rows);
