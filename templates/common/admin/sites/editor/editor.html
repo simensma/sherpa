@@ -95,9 +95,9 @@
   <div class="content html editable" contenteditable="true"></div>
 
   {# The default image content element #}
-  <div class="content image" data-json="{&quot;src&quot;:&quot;http://{{ main_site.domain }}/static/img/placeholder.png&quot;,&quot;description&quot;:&quot;&quot;,&quot;photographer&quot;:&quot;&quot;,&quot;anchor&quot;:null}">
+  <div class="content image" data-json="{&quot;src&quot;:&quot;http://{{ main_site.domain }}{{ editor_placeholder_image }}&quot;,&quot;description&quot;:&quot;&quot;,&quot;photographer&quot;:&quot;&quot;,&quot;anchor&quot;:null}">
     <a href="">
-      <img src="http://{{ main_site.domain }}/static/img/placeholder.png" alt="">
+      <img src="http://{{ main_site.domain }}{{ editor_placeholder_image }}" alt="">
     </a>
     <div class="description">
       <span class="description"></span>

@@ -197,6 +197,8 @@ USE_I18N = True
 USE_L10N = True
 STATIC_URL = '/static/'
 
+EDITOR_PLACEHOLDER_IMAGE = '%simg/placeholder.png' % STATIC_URL
+
 DATABASE_ROUTERS = ['sherpa.db_routers.Router']
 AUTHENTICATION_BACKENDS = ('sherpa.auth_backends.CustomBackend',)
 
@@ -251,6 +253,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "sherpa.context_processors.current_time",
     "sherpa.context_processors.analytics_ua",
     "sherpa.context_processors.s3_bucket",
+    "sherpa.context_processors.editor_placeholder_image",
 )
 
 MIDDLEWARE_CLASSES = (

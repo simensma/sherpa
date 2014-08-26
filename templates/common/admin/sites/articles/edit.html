@@ -74,7 +74,7 @@
           <input type="radio" name="thumbnail" value="new"{% if not version.get_thumbnail.hide and version.variant.article.thumbnail %} checked{% endif %}> Bruk et annet bilde<br>
 
           <div style="width:200px; overflow:hidden;">
-          <img class="article-thumbnail" src="{% if not version.variant.article.thumbnail %}{{ STATIC_URL }}img/placeholder.png{% else %}{{ version.variant.article.thumbnail }}{% endif %}" alt="{{ title|striptags }}">
+          <img class="article-thumbnail" src="{% if not version.variant.article.thumbnail %}{{ editor_placeholder_image }}{% else %}{{ version.variant.article.thumbnail }}{% endif %}" alt="{{ title|striptags }}">
           </div>
         </div>
 

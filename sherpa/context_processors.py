@@ -77,3 +77,6 @@ def analytics_ua(request):
 
 def s3_bucket(request):
     return {'s3_bucket': get_s3_bucket()}
+
+def editor_placeholder_image(request):
+    return {'editor_placeholder_image': settings.EDITOR_PLACEHOLDER_IMAGE}
