@@ -123,7 +123,7 @@
               <div class="campaign" data-dnt-container="campaign" data-dnt-too-long-sentence-warning="Du har ikke plass til en så lang setning! Ta bort et ord eller to, og bruk 'enter' for å få en ny linje.">
                 <img src="" alt="" data-dnt-cropped-image>
                 <div class="button campaign-element movable" data-dnt-container="button" data-dnt-movable>
-                  <a href="http://www.turistforeningen.no/" class="btn btn-danger" contenteditable="true">Klikk på meg</a>
+                  <a href="http://{{ main_site.domain }}/" class="btn btn-danger" contenteditable="true">Klikk på meg</a>
                 </div>
                 <div class="photographer campaign-element jq-hide" data-dnt-container="photographer">
                   Foto: <span class="name" data-dnt-photographer-name></span>
@@ -168,7 +168,7 @@
               <div class="form-group">
                 <label class="col-md-2 control-label">Knapp lenker til</label>
                 <div class="col-md-10">
-                  <input type="text" name="button-anchor" class="form-control" value="http://www.turistforeningen.no/">
+                  <input type="text" name="button-anchor" class="form-control" value="http://{{ main_site.domain }}/">
                 </div>
               </div>
             </div><!-- /[data-dnt-container='button-controls'] -->

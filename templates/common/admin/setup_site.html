@@ -70,7 +70,7 @@
                   </div>
                 {% elif message.message == 'prefix_for_disallowed_domain' %}
                   <div class="alert alert-danger">
-                    Kun domener direkte under <strong>www.turistforeningen.no</strong> kan ha undermapper. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.
+                    Kun domener direkte under <strong>{{ main_site.domain }}</strong> kan ha undermapper. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.
                   </div>
                 {% elif message.message == 'site_exists' %}
                   <div class="alert alert-danger">
@@ -78,7 +78,7 @@
                   </div>
                 {% elif message.message == 'prefix_not_supported_yet' %}
                   <div class="alert alert-danger">
-                    Domenet kan ikke være en undermappe under turistforeningen.no (for eksempel: <strong>www.turistforeningen.no/mitt-turlag</strong>) fordi vi ikke har satt opp teknisk støtte for det ennå.
+                    Domenet kan ikke være en undermappe under turistforeningen.no (for eksempel: <strong>{{ main_site.domain }}/mitt-turlag</strong>) fordi vi ikke har satt opp teknisk støtte for det ennå.
                   </div>
                 {% elif message.message == 'test_period_requires_test_domain' %}
                   <div class="alert alert-danger">

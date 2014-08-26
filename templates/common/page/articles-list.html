@@ -36,7 +36,7 @@
         {% endfor %}
       </div>
 
-      {% if site.domain == 'www.turistforeningen.no' %}
+      {% if site == main_site %}
         <div class="old-article-listing hide" data-url="{% url 'articles.views.more_old' %}">
           <div class="alert alert-info">
             <a class="close">x</a>
