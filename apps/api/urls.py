@@ -14,14 +14,16 @@ urlpatterns = patterns('',
     ),
     url(r'^medlemskap/$', 'api.views.header_versioning', kwargs={
         'versions': [
-            {'version': 'v1', 'resource': 'membership', 'require_authentication': False}
-        ]}
-    ),
+            {'version': 'v1', 'resource': 'membership'}
+        ],
+        'require_authentication': False,
+    }),
     url(r'^medlemskapspris/$', 'api.views.header_versioning', kwargs={
         'versions': [
-            {'version': 'v1', 'resource': 'membership_price', 'require_authentication': False}
-        ]}
-    ),
+            {'version': 'v1', 'resource': 'membership_price'}
+        ],
+        'require_authentication': False,
+    }),
     url(r'^forening/$', 'api.views.header_versioning', kwargs={
         'versions': [
             {'version': 'v1', 'resource': 'forening'}
