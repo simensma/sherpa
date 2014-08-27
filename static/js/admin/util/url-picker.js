@@ -57,11 +57,17 @@
 
     /* Public functions */
 
-    UrlPicker.open = function(_callback, _cancel_callback) {
+    UrlPicker.open = function(opts) {
 
-        callback = _callback;
-        cancel_callback = _cancel_callback;
+        callback = opts.done;
+        cancel_callback = opts.cancel;
         url_picker.modal();
+
+        if(opts.disable_email !== true) {
+            choice_controls.find('[data-dnt-choice="email"]').show();
+        } else {
+            choice_controls.find('[data-dnt-choice="email"]').hide();
+        }
 
     };
 
