@@ -8,6 +8,8 @@
     var page_url;
     var article_select;
     var article_url;
+    var forening_select;
+    var forening_url;
     var save_button;
 
     var callback;
@@ -24,6 +26,8 @@
         page_url = pick_choices.find('span[data-dnt-text="page-url"]');
         article_select = pick_choices.find('select[name="article"]');
         article_url = pick_choices.find('span[data-dnt-text="article-url"]');
+        forening_select = pick_choices.find('select[name="forening"]');
+        forening_url = pick_choices.find('span[data-dnt-text="forening-url"]');
         save_button = url_picker.find('[data-dnt-trigger="save-url"]');
 
         /* Define event listeners */
@@ -31,6 +35,7 @@
         choice_controls.find('input').change(changeUrlType);
         page_select.change(displayPageUrl);
         article_select.change(displayArticleUrl);
+        forening_select.change(displayForeningUrl);
         save_button.click(saveUrl);
 
         /* Initiate custom controls */
@@ -66,6 +71,11 @@
         article_url.text(url);
     }
 
+    function displayForeningUrl(e) {
+        var url = e.val;
+        forening_url.text(url);
+    }
+
     function saveUrl() {
         var pick_type = choice_controls.find('input:checked').attr('value');
         var pick_choices = pick_choice_elements.filter('[data-dnt-pick-choice="' + pick_type + '"]');
@@ -79,6 +89,11 @@
             callback({
                 type: 'anchor',
                 url: article_select.find('option:selected').val(),
+            });
+        } else if(pick_type === 'forening') {
+            callback({
+                type: 'anchor',
+                url: forening_select.select2('val'),
             });
         } else if(pick_type === 'email') {
             callback({

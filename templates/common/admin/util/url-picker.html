@@ -90,7 +90,22 @@
       </div>
 
       <div class="jq-hide" data-dnt-container="pick-choice" data-dnt-pick-choice="forening">
-        Velg forening
+        <div class="form-group">
+          <label for="page">Velg forening/turlag:</label>
+
+          {# Explicit line-break - select2 displays as inline-block #}
+          <br>
+
+          {% include 'common/admin/util/forening-select.html' with foreninger=url_picker.foreninger selected_forening=url_picker.foreninger.sentral.0 name="forening" value="active_url" style="width: 100%" %}
+        </div>
+
+        <p class="forening-url">
+          Adresse:
+          <span class="url" data-dnt-text="forening-url">
+            {# Assuming that the select defaults to the initial item #}
+            {{ url_picker.foreninger.sentral.0.get_active_url }}
+          </span>
+        </p>
       </div>
 
       <div class="jq-hide" data-dnt-container="pick-choice" data-dnt-pick-choice="custom">

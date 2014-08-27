@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from page.models import Page, Version
+from foreninger.models import Forening
 
 def url_picker_context(active_site):
     article_versions = Version.objects.filter(
@@ -15,4 +16,5 @@ def url_picker_context(active_site):
     return {'url_picker': {
         'pages': Page.on(active_site).order_by('title'),
         'article_versions': article_versions,
+        'foreninger': Forening.sort(Forening.objects.all()),
     }}
