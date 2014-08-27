@@ -158,6 +158,7 @@ def index(request, forening_id):
                 messages.info(request, 'forening_save_success')
                 cache.delete('foreninger.all.sorted_by_name')
                 cache.delete('foreninger.all.sorted_by_name.with_active_url')
+                cache.delete('foreninger.all.sorted_by_type')
                 cache.delete('forening.%s' % forening.id)
                 cache.delete('forening.main_foreninger.%s' % forening.id)
                 return redirect('admin.forening.views.index', current_forening.id)
@@ -217,6 +218,7 @@ def index(request, forening_id):
                 request.session['active_forening'] = forening.id
                 cache.delete('foreninger.all.sorted_by_name')
                 cache.delete('foreninger.all.sorted_by_name.with_active_url')
+                cache.delete('foreninger.all.sorted_by_type')
                 cache.delete('forening.%s' % forening.id)
                 cache.delete('forening.main_foreninger.%s' % forening.id)
                 # Since GET url == POST url, we need to specifically set the tab hashtag we want, or the existing
