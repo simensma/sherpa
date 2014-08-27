@@ -58,7 +58,7 @@
 
           <select id="page" name="page" style="width: 100%;">
             {% for page in url_picker.pages %}
-              <option value="/{{ page.slug }}/">{{ page.title }}</option>
+              <option value="http://{{ active_site.domain }}/{{ page.slug }}{% if page.slug != '' %}/{% endif %}">{{ page.title }}</option>
             {% endfor %}
           </select>
         </div>
@@ -66,7 +66,7 @@
           Adresse:
           <span class="url" data-dnt-text="page-url">
             {# Assuming that the select defaults to the initial item #}
-            /{{ url_picker.pages.0.slug }}/
+            http://{{ active_site.domain }}/{{ url_picker.pages.0.slug }}/
           </span>
         </p>
       </div>
@@ -80,7 +80,7 @@
 
           <select id="article" name="article" style="width: 100%;">
             {% for version in url_picker.article_versions %}
-              <option value="{% url 'articles.views.show' version.variant.article.id version.get_title_content.content|striptags|slugify %}">
+              <option value="http://{{ active_site.domain }}{% url 'articles.views.show' version.variant.article.id version.get_title_content.content|striptags|slugify %}">
                 {{ version.get_title_content.content|striptags }}
               </option>
             {% endfor %}
@@ -90,7 +90,7 @@
           Adresse:
           <span class="url" data-dnt-text="article-url">
             {# Assuming that the select defaults to the initial item #}
-            {% url 'articles.views.show' url_picker.article_versions.0.variant.article.id url_picker.article_versions.0.get_title_content.content|striptags|slugify %}
+            http://{{ active_site.domain }}{% url 'articles.views.show' url_picker.article_versions.0.variant.article.id url_picker.article_versions.0.get_title_content.content|striptags|slugify %}
           </span>
         </p>
       </div>
