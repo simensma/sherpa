@@ -73,6 +73,16 @@
 
     function displayForeningUrl(e) {
         var url = e.val;
+        if(url === '') {
+            alert(
+                forening_url.parent().attr('data-no-url-warning')
+                .replace(/%s/, $(e.added.element).text().trim())
+                .replace(/\\n/g, '\n')
+            );
+            var first_option_val = $(this).find('option').eq(1).val();
+            forening_select.select2('val', first_option_val, true);
+            return;
+        }
         forening_url.text(url);
     }
 

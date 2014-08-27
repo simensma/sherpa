@@ -99,7 +99,9 @@
           {% include 'common/admin/util/forening-select.html' with foreninger=url_picker.foreninger selected_forening=url_picker.foreninger.sentral.0 name="forening" value="active_url" style="width: 100%" %}
         </div>
 
-        <p class="forening-url">
+        <p
+          class="forening-url"
+          data-no-url-warning="%s har ikke noen hjemmeside! Den er iallefall ikke lagt inn i Sherpa.\n\nHvis du mener det er feil og vet adressen, kan du legge den inn som en ekstern nettadresse.">
           Adresse:
           <span class="url" data-dnt-text="forening-url">
             {# Assuming that the select defaults to the initial item #}
