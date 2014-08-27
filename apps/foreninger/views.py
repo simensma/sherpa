@@ -14,13 +14,19 @@ from core.models import County
 def index(request):
     counties = County.typical_objects().exclude(code='21').order_by('code') # Exclude Svalbard
 
-    full_list = cache.get('foreninger.full_list')
+
+    full_list = cache.get('foreninger.all.sorted_by_name.with_active_url')
     if full_list is None:
+        all_foreninger_by_name = cache.get('foreninger.all.sorted_by_name')
+        if all_foreninger_by_name is None:
+            all_foreninger_by_name = list(Forening.objects.order_by('name'))
+            cache.set('foreninger.all.sorted_by_name', all_foreninger_by_name, 60 * 60 * 24 * 7)
+
         full_list = [
             (f.name, f.get_active_url() or f.get_main_foreninger()[0].get_active_url())
-            for f in Forening.objects.order_by('name')
+            for f in all_foreninger_by_name
         ]
-        cache.set('foreninger.full_list', full_list, 60 * 60 * 24 * 7)
+        cache.set('foreninger.all.sorted_by_name.with_active_url', full_list, 60 * 60 * 24 * 7)
 
     context = {
         'categories': Forening.PUBLIC_CATEGORIES,
