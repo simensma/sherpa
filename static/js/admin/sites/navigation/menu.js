@@ -34,6 +34,7 @@ $(function() {
     edit_address.click(function() {
         UrlPicker.open({
             disable_email: true,
+            existing_url: address.text().trim(),
             done: function(result) {
                 address.text(result.url);
             },
