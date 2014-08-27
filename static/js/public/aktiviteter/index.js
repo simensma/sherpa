@@ -104,4 +104,32 @@ $(function() {
             travel_date: travel_date_from,
         };
     }
+
+
+    $('input[name="ssr_id"]').select2({
+        placeholder: 'Finn sted',
+        minimumInputLength: 2,
+        escapeMarkup: function (m) { return m; },
+        formatSearching: function () { return 'Søker'; },
+        formatInputTooShort: function (term, minLength) { return 'Minimum to bokstaver'; },
+        formatResult: positionSsrToHtml,
+        query: function(options) {
+            var res = [];
+            $.fn.SSR(options.term).done(function(steder) {
+                res = $.map(steder.stedsnavn, function(sted) {
+                    sted.id = sted.ssrId;
+                    sted.text = sted.stedsnavn;
+                    return sted;
+                });
+            }).always(function() { options.callback({results: res}); });
+        }
+    });
+
+    function positionSsrToHtml(sted) {
+        return [
+            '<label>' + sted.text + '</label><br>',
+            '<small>' + [sted.navnetype, sted.kommunenavn, sted.fylkesnavn].join(' i ') + '</small>'
+        ].join('');
+    };
+
 });
