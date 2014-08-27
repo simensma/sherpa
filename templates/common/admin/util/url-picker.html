@@ -1,0 +1,70 @@
+<div class="modal jq-hide url-picker" data-dnt-container="url-picker">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h3>Velg/rediger lenke...</h3>
+  </div>
+
+  <div class="modal-body">
+
+    <p>
+      Hva slags lenke vil du sette inn?
+    </p>
+
+    <div data-dnt-container="url-type-choices">
+      <div class="radio">
+        <label>
+          <input type="radio" name="url-type" value="page">
+          En side under {{ active_site.domain }}
+        </label>
+      </div>
+      <div class="radio">
+        <label>
+          <input type="radio" name="url-type" value="article">
+          En artikkel under {{ active_site.domain }}
+        </label>
+      </div>
+      <div class="radio">
+        <label>
+          <input type="radio" name="url-type" value="forening">
+          Lenke til en forening eller et turlag
+        </label>
+      </div>
+      <div class="radio">
+        <label>
+          <input type="radio" name="url-type" value="custom">
+          En ekstern nettadresse
+        </label>
+      </div>
+      <div class="radio">
+        <label>
+          <input type="radio" name="url-type" value="email">
+          En e-postadresse
+        </label>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="jq-hide" data-dnt-container="url-type" data-dnt-url-type="page">
+      Velg side
+    </div>
+    <div class="jq-hide" data-dnt-container="url-type" data-dnt-url-type="article">
+      Velg artikkel
+    </div>
+    <div class="jq-hide" data-dnt-container="url-type" data-dnt-url-type="forening">
+      Velg forening
+    </div>
+    <div class="jq-hide" data-dnt-container="url-type" data-dnt-url-type="custom">
+      Velg custom
+    </div>
+    <div class="jq-hide" data-dnt-container="url-type" data-dnt-url-type="email">
+      Velg email
+    </div>
+
+  </div>
+
+  <div class="modal-footer">
+    <button class="btn btn-primary" data-dnt-trigger="save-url">Velg lenke</a>
+    <button class="btn btn-default" data-dismiss="modal">Avbryt</a>
+  </div>
+</div>
