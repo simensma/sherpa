@@ -168,16 +168,6 @@ class Forening(models.Model):
     def get_sites_sorted(self):
         return Site.sort(self.sites.all())
 
-    @staticmethod
-    def sort(foreninger):
-        foreninger = sorted(foreninger, key=lambda f: f.name.lower())
-        return {
-            'sentral': [f for f in foreninger if f.type == 'sentral'],
-            'forening': [f for f in foreninger if f.type == 'forening'],
-            'turlag': [f for f in foreninger if f.type == 'turlag'],
-            'turgruppe': [f for f in foreninger if f.type == 'turgruppe'],
-        }
-
     def validate_relationships(self, simulate_type=None, simulate_parents=None):
         """Validate a forening's relationships based on its type and its relationships types
         See https://turistforeningen.atlassian.net/wiki/pages/viewpage.action?pageId=1540233"""
@@ -235,6 +225,16 @@ class Forening(models.Model):
                 exc = ForeningParentIsChild()
                 exc.parent = parent
                 raise exc
+
+    @staticmethod
+    def sort(foreninger):
+        foreninger = sorted(foreninger, key=lambda f: f.name.lower())
+        return {
+            'sentral': [f for f in foreninger if f.type == 'sentral'],
+            'forening': [f for f in foreninger if f.type == 'forening'],
+            'turlag': [f for f in foreninger if f.type == 'turlag'],
+            'turgruppe': [f for f in foreninger if f.type == 'turgruppe'],
+        }
 
     class Meta:
         ordering = ['name']
