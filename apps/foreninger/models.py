@@ -160,10 +160,19 @@ class Forening(models.Model):
     def get_homepage_site(self):
         """A forening can have multiple related sites but only one homepage, this method returns the homepage site,
         or None if it doesn't have a homepage."""
-        try:
-            return self.sites.get(type='forening')
-        except Site.DoesNotExist:
+        # Use an empty list as sentinel value for no homepage site, since None is already used for cache miss
+        NO_HOMEPAGE_SITE = []
+        homepage_site = cache.get('forening.homepage_site.%s' % self.id)
+        if homepage_site is None:
+            try:
+                homepage_site = self.sites.get(type='forening')
+            except Site.DoesNotExist:
+                homepage_site = NO_HOMEPAGE_SITE
+            cache.set('forening.homepage_site.%s' % self.id, homepage_site, 60 * 60 * 24 * 7)
+        if homepage_site == NO_HOMEPAGE_SITE:
             return None
+        else:
+            return homepage_site
 
     def get_sites_sorted(self):
         return Site.sort(self.sites.all())
