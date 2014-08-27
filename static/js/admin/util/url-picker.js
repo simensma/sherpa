@@ -105,6 +105,11 @@
                 type: 'anchor',
                 url: forening_select.select2('val'),
             });
+        } else if(pick_type === 'custom') {
+            callback({
+                type: 'anchor',
+                url: pick_choices.find('input[name="url"]').val(),
+            });
         } else if(pick_type === 'email') {
             callback({
                 type: 'email',
