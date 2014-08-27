@@ -42,6 +42,7 @@
     <hr>
 
     <div class="pick-choice-wrapper" data-dnt-container="pick-choices">
+
       <div class="jq-hide" data-dnt-container="pick-choice" data-dnt-pick-choice="page">
         <div class="form-group">
           <label for="page">Velg nettside fra {{ active_site.domain }}:</label>
@@ -58,26 +59,51 @@
         <p class="page-url">
           Adresse:
           <span class="url" data-dnt-text="page-url">
-            {# Assuming that the select defaults to the initial page #}
+            {# Assuming that the select defaults to the initial item #}
             /{{ url_picker.pages.0.slug }}/
           </span>
         </p>
       </div>
+
       <div class="jq-hide" data-dnt-container="pick-choice" data-dnt-pick-choice="article">
-        Velg artikkel
+        <div class="form-group">
+          <label for="page">Velg artikkel fra {{ active_site.domain }}:</label>
+
+          {# Explicit line-break - select2 displays as inline-block #}
+          <br>
+
+          <select id="article" name="article" style="width: 100%;">
+            {% for version in url_picker.article_versions %}
+              <option value="{% url 'articles.views.show' version.variant.article.id version.get_title_content.content|striptags|slugify %}">
+                {{ version.get_title_content.content|striptags }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+        <p class="article-url">
+          Adresse:
+          <span class="url" data-dnt-text="article-url">
+            {# Assuming that the select defaults to the initial item #}
+            {% url 'articles.views.show' url_picker.article_versions.0.variant.article.id url_picker.article_versions.0.get_title_content.content|striptags|slugify %}
+          </span>
+        </p>
       </div>
+
       <div class="jq-hide" data-dnt-container="pick-choice" data-dnt-pick-choice="forening">
         Velg forening
       </div>
+
       <div class="jq-hide" data-dnt-container="pick-choice" data-dnt-pick-choice="custom">
         Velg custom
       </div>
+
       <div class="jq-hide" data-dnt-container="pick-choice" data-dnt-pick-choice="email">
         <div class="form-group">
           <label for="email">Legg inn e-postadressen:</label>
           <input type="email" class="form-control" id="email" name="email" placeholder="F.eks: kari.nordmann@hotmail.com...">
         </div>
       </div>
+
     </div>
 
   </div>

@@ -6,6 +6,8 @@
     var pick_choice_elements;
     var page_select;
     var page_url;
+    var article_select;
+    var article_url;
     var save_button;
 
     var callback;
@@ -20,12 +22,15 @@
         pick_choice_elements = url_picker.find('[data-dnt-container="pick-choice"]');
         page_select = pick_choices.find('select[name="page"]');
         page_url = pick_choices.find('span[data-dnt-text="page-url"]');
+        article_select = pick_choices.find('select[name="article"]');
+        article_url = pick_choices.find('span[data-dnt-text="article-url"]');
         save_button = url_picker.find('[data-dnt-trigger="save-url"]');
 
         /* Define event listeners */
 
         choice_controls.find('input').change(changeUrlType);
         page_select.change(displayPageUrl);
+        article_select.change(displayArticleUrl);
         save_button.click(saveUrl);
 
         /* Initiate custom controls */
@@ -56,6 +61,11 @@
         page_url.text(url);
     }
 
+    function displayArticleUrl() {
+        var url = $(this).find('option:selected').val();
+        article_url.text(url);
+    }
+
     function saveUrl() {
         var pick_type = choice_controls.find('input:checked').attr('value');
         var pick_choices = pick_choice_elements.filter('[data-dnt-pick-choice="' + pick_type + '"]');
@@ -64,6 +74,11 @@
             callback({
                 type: 'anchor',
                 url: page_select.find('option:selected').val(),
+            });
+        } else if(pick_type === 'article') {
+            callback({
+                type: 'anchor',
+                url: article_select.find('option:selected').val(),
             });
         } else if(pick_type === 'email') {
             callback({
