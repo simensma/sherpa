@@ -38,6 +38,13 @@
         forening_select.change(displayForeningUrl);
         save_button.click(saveUrl);
 
+        // Trigger save on enter keypress in text inputs
+        pick_choices.find('input[name="url"],input[name="email"]').keyup(function(e) {
+            if(e.which == 13) { // Enter
+                save_button.click();
+            }
+        });
+
         /* Initiate custom controls */
 
         url_picker.find('select').select2();
