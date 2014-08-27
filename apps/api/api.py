@@ -35,20 +35,20 @@ def members(request, version, format):
                     raise User.DoesNotExist
             else:
                 raise BadRequest(
-                    "You must supply either an 'sherpa_id' or 'medlemsnummer' parameter for member lookup",
+                    u"You must supply either an 'sherpa_id' or 'medlemsnummer' parameter for member lookup",
                     code=error_codes.MISSING_REQUIRED_PARAMETER,
                     http_code=400
                 )
             return HttpResponse(json.dumps(get_member_data(user)))
         except (User.DoesNotExist, ValueError):
             raise BadRequest(
-                "A member matching that 'sherpa_id', 'medlemsnummer', or both if both were provided, does not exist.",
+                u"A member matching that 'sherpa_id', 'medlemsnummer', or both if both were provided, does not exist.",
                 code=error_codes.RESOURCE_NOT_FOUND,
                 http_code=404
             )
     else:
         raise BadRequest(
-            "Unsupported HTTP verb",
+            u"Unsupported HTTP verb",
             code=error_codes.UNSUPPORTED_HTTP_VERB,
             http_code=400
         )
@@ -68,7 +68,7 @@ def membership(request, version, format):
             requested_date_of_birth = datetime.strptime(request.GET[u'født'], "%d.%m.%Y").date()
         except ValueError:
             raise BadRequest(
-                "Could not parse the 'født' parameter ('%s'), which should be in the following format: 'dd.mm.yyyy'" %
+                u"Could not parse the 'født' parameter ('%s'), which should be in the following format: 'dd.mm.yyyy'" %
                     request.GET[u'født'],
                 code=error_codes.MISSING_REQUIRED_PARAMETER,
                 http_code=400
@@ -102,7 +102,7 @@ def membership(request, version, format):
             return HttpResponse(json.dumps(user_data))
         except (User.DoesNotExist, ValueError):
             raise BadRequest(
-                "A membership with member ID '%s' and date of birth '%s' does not exist." %
+                u"A membership with member ID '%s' and date of birth '%s' does not exist." %
                     (request.GET['medlemsnummer'], request.GET[u'født']),
                 code=error_codes.RESOURCE_NOT_FOUND,
                 http_code=404
@@ -110,7 +110,7 @@ def membership(request, version, format):
 
     else:
         raise BadRequest(
-            "Unsupported HTTP verb",
+            u"Unsupported HTTP verb",
             code=error_codes.UNSUPPORTED_HTTP_VERB,
             http_code=400
         )
@@ -183,7 +183,7 @@ def membership_price(request, version, format):
                     }
                 )
                 raise BadRequest(
-                    "The postal code '%s' exists, but isn't connected to a Forening. It should be, and we've logged this occurrence." %
+                    u"The postal code '%s' exists, but isn't connected to a Forening. It should be, and we've logged this occurrence." %
                         request.GET['postnummer'],
                     code=error_codes.RESOURCE_NOT_FOUND,
                     http_code=404
@@ -191,7 +191,7 @@ def membership_price(request, version, format):
             else:
                 # This *could* be an entirely new Zipcode, or just an invalid one.
                 raise BadRequest(
-                    "The postal code '%s' isn't registered in our database." %
+                    u"The postal code '%s' isn't registered in our database." %
                         request.GET['postnummer'],
                     code=error_codes.RESOURCE_NOT_FOUND,
                     http_code=404
@@ -203,7 +203,7 @@ def membership_price(request, version, format):
                 extra={'request': request}
             )
             raise BadRequest(
-                "The postal code '%s' exists, but isn't connected to a Forening. It should be, and we've logged this occurrence." %
+                u"The postal code '%s' exists, but isn't connected to a Forening. It should be, and we've logged this occurrence." %
                     request.GET['postnummer'],
                 code=error_codes.RESOURCE_NOT_FOUND,
                 http_code=404
@@ -211,7 +211,7 @@ def membership_price(request, version, format):
 
     else:
         raise BadRequest(
-            "Unsupported HTTP verb",
+            u"Unsupported HTTP verb",
             code=error_codes.UNSUPPORTED_HTTP_VERB,
             http_code=400
         )
@@ -239,19 +239,19 @@ def forening(request, version, format):
 
             except (User.DoesNotExist, ValueError):
                 raise BadRequest(
-                    "A member matching that 'sherpa_id', 'bruker_medlemsnummer', or both if both were provided, does not exist.",
+                    u"A member matching that 'sherpa_id', 'bruker_medlemsnummer', or both if both were provided, does not exist.",
                     code=error_codes.RESOURCE_NOT_FOUND,
                     http_code=404
                 )
         else:
             raise BadRequest(
-                "You must supply either a 'bruker_sherpa_id' or 'bruker_medlemsnummer' parameter for forening lookup by member. Only this form of forening-lookup is implemented in this version.",
+                u"You must supply either a 'bruker_sherpa_id' or 'bruker_medlemsnummer' parameter for forening lookup by member. Only this form of forening-lookup is implemented in this version.",
                 code=error_codes.MISSING_REQUIRED_PARAMETER,
                 http_code=400
             )
     else:
         raise BadRequest(
-            "Unsupported HTTP verb",
+            u"Unsupported HTTP verb",
             code=error_codes.UNSUPPORTED_HTTP_VERB,
             http_code=400
         )
