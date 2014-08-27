@@ -11,8 +11,10 @@
     var forening_select;
     var forening_url;
     var save_button;
+    var cancel_button;
 
     var callback;
+    var cancel_callback;
 
     $(function() {
 
@@ -29,6 +31,7 @@
         forening_select = pick_choices.find('select[name="forening"]');
         forening_url = pick_choices.find('span[data-dnt-text="forening-url"]');
         save_button = url_picker.find('[data-dnt-trigger="save-url"]');
+        cancel_button = url_picker.find('[data-dnt-trigger="cancel"]');
 
         /* Define event listeners */
 
@@ -37,6 +40,7 @@
         article_select.change(displayArticleUrl);
         forening_select.change(displayForeningUrl);
         save_button.click(saveUrl);
+        cancel_button.click(cancel);
 
         // Trigger save on enter keypress in text inputs
         pick_choices.find('input[name="url"],input[name="email"]').keyup(function(e) {
@@ -53,9 +57,10 @@
 
     /* Public functions */
 
-    UrlPicker.open = function(_callback) {
+    UrlPicker.open = function(_callback, _cancel_callback) {
 
         callback = _callback;
+        cancel_callback = _cancel_callback;
         url_picker.modal();
 
     };
@@ -134,6 +139,17 @@
                 type: 'email',
                 url: email,
             });
+        } else {
+            if(typeof(_cancel_callback) === 'function') {
+                cancel_callback();
+            }
+        }
+        url_picker.modal('hide');
+    }
+
+    function cancel() {
+        if(typeof(_cancel_callback) === 'function') {
+            cancel_callback();
         }
         url_picker.modal('hide');
     }
