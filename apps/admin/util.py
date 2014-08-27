@@ -4,7 +4,7 @@ from page.models import Page, Version
 from foreninger.models import Forening
 
 def url_picker_context(active_site):
-    article_versions = Version.objects.filter(
+    article_versions = Version.objects.prefetch_related('variant', 'variant__article').filter(
         variant__article__isnull=False,
         variant__segment__isnull=True,
         variant__article__published=True,
