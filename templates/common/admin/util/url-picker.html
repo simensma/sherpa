@@ -10,34 +10,34 @@
       Hva slags lenke vil du sette inn?
     </p>
 
-    <div data-dnt-container="url-type-choices">
+    <div data-dnt-container="choices">
       <div class="radio">
         <label>
-          <input type="radio" name="url-type" value="page">
+          <input type="radio" name="pick-choice" value="page">
           En side under {{ active_site.domain }}
         </label>
       </div>
       <div class="radio">
         <label>
-          <input type="radio" name="url-type" value="article">
+          <input type="radio" name="pick-choice" value="article">
           En artikkel under {{ active_site.domain }}
         </label>
       </div>
       <div class="radio">
         <label>
-          <input type="radio" name="url-type" value="forening">
+          <input type="radio" name="pick-choice" value="forening">
           Lenke til en forening eller et turlag
         </label>
       </div>
       <div class="radio">
         <label>
-          <input type="radio" name="url-type" value="custom">
+          <input type="radio" name="pick-choice" value="custom">
           En ekstern nettadresse
         </label>
       </div>
       <div class="radio">
         <label>
-          <input type="radio" name="url-type" value="email">
+          <input type="radio" name="pick-choice" value="email">
           En e-postadresse
         </label>
       </div>
@@ -45,20 +45,38 @@
 
     <hr>
 
-    <div class="url-type-wrapper">
-      <div class="jq-hide" data-dnt-container="url-type" data-dnt-url-type="page">
-        Velg side
+    <div class="pick-choice-wrapper" data-dnt-container="pick-choices">
+      <div class="jq-hide" data-dnt-container="pick-choice" data-dnt-pick-choice="page">
+        <div class="form-group">
+          <label for="page">Velg nettside fra {{ active_site.domain }}:</label>
+
+          {# Explicit line-break - select2 displays as inline-block #}
+          <br>
+
+          <select id="page" name="page" style="width: 100%;">
+            {% for page in url_picker.pages %}
+              <option value="/{{ page.slug }}/">{{ page.title }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <p>
+          Adresse:
+          <span class="page-url" data-dnt-text="page-url">
+            {# Assuming that the select defaults to the initial page #}
+            /{{ url_picker.pages.0.slug }}/
+          </span>
+        </p>
       </div>
-      <div class="jq-hide" data-dnt-container="url-type" data-dnt-url-type="article">
+      <div class="jq-hide" data-dnt-container="pick-choice" data-dnt-pick-choice="article">
         Velg artikkel
       </div>
-      <div class="jq-hide" data-dnt-container="url-type" data-dnt-url-type="forening">
+      <div class="jq-hide" data-dnt-container="pick-choice" data-dnt-pick-choice="forening">
         Velg forening
       </div>
-      <div class="jq-hide" data-dnt-container="url-type" data-dnt-url-type="custom">
+      <div class="jq-hide" data-dnt-container="pick-choice" data-dnt-pick-choice="custom">
         Velg custom
       </div>
-      <div class="jq-hide" data-dnt-container="url-type" data-dnt-url-type="email">
+      <div class="jq-hide" data-dnt-container="pick-choice" data-dnt-pick-choice="email">
         <div class="form-group">
           <label for="email">Legg inn e-postadressen:</label>
           <input type="email" class="form-control" id="email" name="email" placeholder="F.eks: kari.nordmann@hotmail.com...">

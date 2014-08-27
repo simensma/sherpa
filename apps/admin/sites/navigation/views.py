@@ -8,6 +8,7 @@ from django.db.models import Max
 
 from page.models import Menu
 from core.models import Site
+from admin.util import url_picker_context
 
 def index(request, site):
     active_site = Site.objects.get(id=site)
@@ -16,6 +17,7 @@ def index(request, site):
         'active_site': active_site,
         'menus': menus,
     }
+    context.update(url_picker_context(active_site))
     return render(request, 'common/admin/sites/navigation/index.html', context)
 
 def new_menu(request, site):
