@@ -127,9 +127,8 @@ class Forening(models.Model):
         return domain
 
     def get_active_url(self):
-        """Returns the currently in-use URL for this forening. Right now this is the old sherpa2 URL, but when
-        foreninger starts to go live with their new sites, this method should return that site domain instead."""
-        # Note that we'll need a way to distinguish active sites from test-sites. Something like:
+        """Returns the currently in-use URL for this forening. The homepage-site domain if the site is published,
+        or the old sherpa2 URL if not."""
         homepage_site = self.get_homepage_site()
         if homepage_site is not None and homepage_site.is_published:
             return 'http://%s/' % homepage_site.domain
