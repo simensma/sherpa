@@ -117,9 +117,15 @@
                 url: url,
             });
         } else if(pick_type === 'email') {
+            var email = pick_choice.find('input[name="email"]').val().trim();
+            if(!Validator.check['email'](email, true)) {
+                alert(pick_choices.attr('data-dnt-invalid-email-warning'));
+                return;
+            }
+
             callback({
                 type: 'email',
-                url: pick_choice.find('input[name="email"]').val(),
+                url: email,
             });
         }
         url_picker.modal('hide');
