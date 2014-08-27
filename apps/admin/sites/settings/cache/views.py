@@ -50,6 +50,7 @@ def delete(request, site):
     elif request.POST['key'] == 'article':
         cache.delete('articles.%s' % request.POST['id'])
         version = Version.objects.get(variant__article__id=request.POST['id'])
+        cache.delete('version.%s.title' % version.id)
         cache.delete('version.%s.thumbnail.small' % version.id)
         cache.delete('version.%s.thumbnail.medium' % version.id)
     elif request.POST['key'] == 'blog-widget':

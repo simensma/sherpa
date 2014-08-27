@@ -111,7 +111,11 @@ class Version(models.Model):
     def get_title_content(self):
         # Cache the results in a local attribute on this object
         if not hasattr(self, '_title'):
-            self._title = Content.objects.get(column__row__version=self, type='title')
+            title = cache.get('version.%s.title' % self.id)
+            if title is None:
+                title = Content.objects.get(column__row__version=self, type='title')
+                cache.set('version.%s.title' % self.id, title, 60 * 60 * 24 * 7)
+            self._title = title
         return self._title
 
     def get_lede_content(self):

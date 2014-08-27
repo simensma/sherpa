@@ -186,6 +186,7 @@ def save(request, site, version):
             article.save()
 
             cache.delete('articles.%s' % article.id)
+            cache.delete('version.%s.title' % version.id)
             cache.delete('version.%s.thumbnail.small' % version.id)
             cache.delete('version.%s.thumbnail.medium' % version.id)
 
