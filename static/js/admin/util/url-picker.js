@@ -16,11 +16,7 @@
 
         /* Define event listeners */
 
-        url_type_choices.find('input').change(function() {
-            var url_type = url_type_choices.find('input:checked').attr('value');
-            url_types.hide();
-            url_types.filter('[data-dnt-url-type="' + url_type + '"]').slideDown('fast');
-        });
+        url_type_choices.find('input').change(changeUrlType);
 
     });
 
@@ -31,5 +27,13 @@
         url_picker.modal();
 
     };
+
+    /* Private functions */
+
+    function changeUrlType() {
+        var url_type = url_type_choices.find('input:checked').attr('value');
+        url_types.hide();
+        url_types.filter('[data-dnt-url-type="' + url_type + '"]').slideDown('fast');
+    }
 
 }(window.UrlPicker = window.UrlPicker || {}, jQuery ));
