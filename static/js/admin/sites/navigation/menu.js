@@ -67,7 +67,7 @@ $(function() {
     save_button.click(function() {
         var name = menu_modal.find("input[name='name']").val().trim();
         var url = address.text();
-        if(!url.match(/^https?:\/\//)) {
+        if(!url.match(/^https?:\/\//) && !url.startsWith('/')) {
             url = "http://" + url;
         }
         if(name === '' || url === '') {
