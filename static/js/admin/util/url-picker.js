@@ -88,7 +88,7 @@
 
     function saveUrl() {
         var pick_type = choice_controls.find('input:checked').attr('value');
-        var pick_choices = pick_choice_elements.filter('[data-dnt-pick-choice="' + pick_type + '"]');
+        var pick_choice = pick_choice_elements.filter('[data-dnt-pick-choice="' + pick_type + '"]');
 
         if(pick_type === 'page') {
             callback({
@@ -106,14 +106,20 @@
                 url: forening_select.select2('val'),
             });
         } else if(pick_type === 'custom') {
+            var url = pick_choice.find('input[name="url"]').val().trim();
+            if(!url.startsWith('http://')) {
+                alert(pick_choices.attr('data-dnt-invalid-url-warning').replace(/\\n/g, '\n'));
+                return;
+            }
+
             callback({
                 type: 'anchor',
-                url: pick_choices.find('input[name="url"]').val(),
+                url: url,
             });
         } else if(pick_type === 'email') {
             callback({
                 type: 'email',
-                url: pick_choices.find('input[name="email"]').val(),
+                url: pick_choice.find('input[name="email"]').val(),
             });
         }
         url_picker.modal('hide');
