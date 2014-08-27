@@ -227,6 +227,14 @@ class Forening(models.Model):
                 raise exc
 
     @staticmethod
+    def get_all_sorted():
+        foreninger_sorted = cache.get('foreninger.all.sorted_by_type')
+        if foreninger_sorted is None:
+            foreninger_sorted = Forening.sort(Forening.objects.all())
+            cache.set('foreninger.all.sorted_by_type', foreninger_sorted, 60 * 60 * 24 * 7)
+        return foreninger_sorted
+
+    @staticmethod
     def sort(foreninger):
         foreninger = sorted(foreninger, key=lambda f: f.name.lower())
         return {
