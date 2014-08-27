@@ -4,11 +4,15 @@
     var choice_controls;
     var pick_choices;
     var pick_choice_elements;
+
     var page_select;
     var page_url;
     var article_select;
     var article_url;
     var forening_select;
+    var custom_input;
+    var email_input;
+
     var forening_url;
     var save_button;
     var cancel_button;
@@ -24,12 +28,16 @@
         choice_controls = url_picker.find('[data-dnt-container="choices"]');
         pick_choices = url_picker.find('[data-dnt-container="pick-choices"]');
         pick_choice_elements = url_picker.find('[data-dnt-container="pick-choice"]');
+
         page_select = pick_choices.find('select[name="page"]');
         page_url = pick_choices.find('span[data-dnt-text="page-url"]');
         article_select = pick_choices.find('select[name="article"]');
         article_url = pick_choices.find('span[data-dnt-text="article-url"]');
         forening_select = pick_choices.find('select[name="forening"]');
         forening_url = pick_choices.find('span[data-dnt-text="forening-url"]');
+        custom_input = pick_choices.find('input[name="custom"]');
+        email_input = pick_choices.find('input[name="email"]');
+
         save_button = url_picker.find('[data-dnt-trigger="save-url"]');
         cancel_button = url_picker.find('[data-dnt-trigger="cancel"]');
 
@@ -69,6 +77,50 @@
             choice_controls.find('[data-dnt-choice="email"]').hide();
         }
 
+        // Reset control state
+        choice_controls.find('input').prop('checked', false);
+        pick_choice_elements.hide();
+
+        // If an existing URL is specified, try to figure out what kind of lookup might have been used.
+        if(opts.existing_url !== undefined) {
+
+            // Is it an email address? Note that we'll skip this step if disable_email is true
+            if(opts.existing_url.startsWith('mailto:') && !opts.disable_email) {
+                choice_controls.find('input[value="email"]').click();
+                email_input.val(opts.existing_url.substring("mailto:".length));
+                return;
+            }
+
+            // Search through page URLs
+            var existing_option = page_select.find('option[value="' + opts.existing_url + '"]');
+            if(existing_option.length > 0) {
+                choice_controls.find('input[value="page"]').click();
+                page_select.select2('val', existing_option.val(), true);
+                return;
+            }
+
+            // Search through article URLs
+            existing_option = article_select.find('option[value="' + opts.existing_url + '"]');
+            if(existing_option.length > 0) {
+                choice_controls.find('input[value="article"]').click();
+                article_select.select2('val', existing_option.val(), true);
+                return;
+            }
+
+            // Search through foreninger
+            existing_option = forening_select.find('option[value="' + opts.existing_url + '"]');
+            if(existing_option.length > 0) {
+                choice_controls.find('input[value="forening"]').click();
+                forening_select.select2('val', existing_option.val(), true);
+                return;
+            }
+
+            // Looks like none of the lookup URLs matched - fall back to custom URL
+            choice_controls.find('input[value="custom"]').click();
+            custom_input.val(opts.existing_url);
+            return;
+        }
+        // Note that the above statement returns; if you want to add code here, rewrite the above if-statement.
     };
 
     /* Private functions */
@@ -124,7 +176,7 @@
                 url: forening_select.select2('val'),
             });
         } else if(pick_type === 'custom') {
-            var url = pick_choice.find('input[name="url"]').val().trim();
+            var url = custom_input.val().trim();
             if(!url.startsWith('http://')) {
                 alert(pick_choices.attr('data-dnt-invalid-url-warning').replace(/\\n/g, '\n'));
                 return;
@@ -135,7 +187,7 @@
                 url: url,
             });
         } else if(pick_type === 'email') {
-            var email = pick_choice.find('input[name="email"]').val().trim();
+            var email = email_input.val().trim();
             if(!Validator.check['email'](email, true)) {
                 alert(pick_choices.attr('data-dnt-invalid-email-warning'));
                 return;
