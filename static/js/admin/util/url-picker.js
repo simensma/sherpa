@@ -24,7 +24,7 @@
 
     });
 
-    /* Public methods */
+    /* Public functions */
 
     UrlPicker.open = function() {
 
