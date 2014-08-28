@@ -12,6 +12,7 @@ from foreninger.models import Forening
 from focus.models import Price, Enrollment as FocusEnrollment
 from focus.util import PAYMENT_METHOD_CODES, get_membership_type_by_codename
 from enrollment.util import AGE_SENIOR, AGE_MAIN, AGE_YOUTH, AGE_SCHOOL, KEY_PRICE, FOREIGN_SHIPMENT_PRICE
+from enrollment.exceptions import BirthDateNotDefined
 
 # Has always only *one* row
 class State(models.Model):
@@ -182,6 +183,9 @@ class User(models.Model):
         return u'%s' % self.pk
 
     def get_age(self):
+        if self.dob is None:
+            raise BirthDateNotDefined("User %s does not have a birth date defined" % self)
+
         age = date.today().year - self.dob.year
 
         # After membership year start, the enrollment is really for the next year,
@@ -285,10 +289,19 @@ class User(models.Model):
             return get_membership_type_by_codename('child')['code']
 
     def price(self):
-        if self.is_household_member():
-            return min(self.price_by_age(), self.enrollment.get_prices().household)
-        else:
-            return self.price_by_age()
+        try:
+            if self.is_household_member():
+                return min(self.price_by_age(), self.enrollment.get_prices().household)
+            else:
+                return self.price_by_age()
+        except BirthDateNotDefined as e:
+            if self.enrollment.state in ['payment', 'complete']:
+                # All users should have their birth date defined at this point! Re-raise the exception
+                raise
+            else:
+                # We can't know if this is a household member since not all input data is registered, so just display
+                # the age price for now.
+                return self.price_by_age()
 
     def price_by_age(self):
         if self.get_age() >= AGE_SENIOR:    return self.enrollment.get_prices().senior
