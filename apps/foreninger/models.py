@@ -127,9 +127,8 @@ class Forening(models.Model):
         return domain
 
     def get_active_url(self):
-        """Returns the currently in-use URL for this forening. Right now this is the old sherpa2 URL, but when
-        foreninger starts to go live with their new sites, this method should return that site domain instead."""
-        # Note that we'll need a way to distinguish active sites from test-sites. Something like:
+        """Returns the currently in-use URL for this forening. The homepage-site domain if the site is published,
+        or the old sherpa2 URL if not."""
         homepage_site = self.get_homepage_site()
         if homepage_site is not None and homepage_site.is_published:
             return 'http://%s/' % homepage_site.domain
@@ -161,23 +160,22 @@ class Forening(models.Model):
     def get_homepage_site(self):
         """A forening can have multiple related sites but only one homepage, this method returns the homepage site,
         or None if it doesn't have a homepage."""
-        try:
-            return self.sites.get(type='forening')
-        except Site.DoesNotExist:
+        # Use an empty list as sentinel value for no homepage site, since None is already used for cache miss
+        NO_HOMEPAGE_SITE = []
+        homepage_site = cache.get('forening.homepage_site.%s' % self.id)
+        if homepage_site is None:
+            try:
+                homepage_site = self.sites.get(type='forening')
+            except Site.DoesNotExist:
+                homepage_site = NO_HOMEPAGE_SITE
+            cache.set('forening.homepage_site.%s' % self.id, homepage_site, 60 * 60 * 24 * 7)
+        if homepage_site == NO_HOMEPAGE_SITE:
             return None
+        else:
+            return homepage_site
 
     def get_sites_sorted(self):
         return Site.sort(self.sites.all())
-
-    @staticmethod
-    def sort(foreninger):
-        foreninger = sorted(foreninger, key=lambda f: f.name.lower())
-        return {
-            'sentral': [f for f in foreninger if f.type == 'sentral'],
-            'forening': [f for f in foreninger if f.type == 'forening'],
-            'turlag': [f for f in foreninger if f.type == 'turlag'],
-            'turgruppe': [f for f in foreninger if f.type == 'turgruppe'],
-        }
 
     def validate_relationships(self, simulate_type=None, simulate_parents=None):
         """Validate a forening's relationships based on its type and its relationships types
@@ -236,6 +234,24 @@ class Forening(models.Model):
                 exc = ForeningParentIsChild()
                 exc.parent = parent
                 raise exc
+
+    @staticmethod
+    def get_all_sorted():
+        foreninger_sorted = cache.get('foreninger.all.sorted_by_type')
+        if foreninger_sorted is None:
+            foreninger_sorted = Forening.sort(Forening.objects.all())
+            cache.set('foreninger.all.sorted_by_type', foreninger_sorted, 60 * 60 * 24 * 7)
+        return foreninger_sorted
+
+    @staticmethod
+    def sort(foreninger):
+        foreninger = sorted(foreninger, key=lambda f: f.name.lower())
+        return {
+            'sentral': [f for f in foreninger if f.type == 'sentral'],
+            'forening': [f for f in foreninger if f.type == 'forening'],
+            'turlag': [f for f in foreninger if f.type == 'turlag'],
+            'turgruppe': [f for f in foreninger if f.type == 'turgruppe'],
+        }
 
     class Meta:
         ordering = ['name']

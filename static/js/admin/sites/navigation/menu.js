@@ -10,10 +10,13 @@ $(function() {
     var save_button = menu_modal.find("button.save-menu");
     var delete_button = menu_modal.find("button.delete-menu");
 
+    var address = menu_modal.find('[data-dnt-text="address"]');
+    var edit_address = menu_modal.find('[data-trigger="edit-address"]');
+
     menu_add.click(function() {
         activeMenu = undefined;
         menu_modal.find("input[name='name']").val('');
-        menu_modal.find("input[name='url']").val('');
+        address.text('');
         delete_button.hide();
         menu_modal.modal();
     });
@@ -23,10 +26,20 @@ $(function() {
     function edit() {
         activeMenu = $(this);
         menu_modal.find("input[name='name']").val($(this).text());
-        menu_modal.find("input[name='url']").val($(this).attr('data-href'));
+        address.text($(this).attr('data-href'));
         delete_button.show();
         menu_modal.modal();
     }
+
+    edit_address.click(function() {
+        UrlPicker.open({
+            disable_email: true,
+            existing_url: address.text().trim(),
+            done: function(result) {
+                address.text(result.url);
+            },
+        });
+    });
 
     menus.find("ul").sortable({
         vertical: false,
@@ -54,11 +67,11 @@ $(function() {
 
     save_button.click(function() {
         var name = menu_modal.find("input[name='name']").val().trim();
-        var url = menu_modal.find("input[name='url']").val().trim();
-        if(!url.match(/^https?:\/\//)) {
+        var url = address.text();
+        if(!url.match(/^https?:\/\//) && !url.startsWith('/')) {
             url = "http://" + url;
         }
-        if(name === '' || url == '') {
+        if(name === '' || url === '') {
             alert("Skriv inn både navn og adresse for lenken.");
             return;
         }

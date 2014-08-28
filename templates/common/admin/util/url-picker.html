@@ -1,0 +1,147 @@
+{# Note that any views including this template must add admin.util.url_picker_context to its context #}
+
+<div class="modal jq-hide url-picker" data-dnt-container="url-picker">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h3>Hva slags lenke vil du sette inn?</h3>
+  </div>
+
+  <div class="modal-body">
+
+    <div data-dnt-container="choices">
+      <div class="radio" data-dnt-choice="page">
+        <label>
+          <input type="radio" name="pick-choice" value="page">
+          En side under {{ active_site.domain }}
+        </label>
+      </div>
+      <div class="radio" data-dnt-choice="article">
+        <label>
+          <input type="radio" name="pick-choice" value="article">
+          En artikkel under {{ active_site.domain }}
+        </label>
+      </div>
+      <div class="radio" data-dnt-choice="forening">
+        <label>
+          <input type="radio" name="pick-choice" value="forening">
+          Lenke til en forening eller et turlag
+        </label>
+      </div>
+      <div class="radio" data-dnt-choice="custom">
+        <label>
+          <input type="radio" name="pick-choice" value="custom">
+          En ekstern nettadresse
+        </label>
+      </div>
+      <div class="radio" data-dnt-choice="email">
+        <label>
+          <input type="radio" name="pick-choice" value="email">
+          En e-postadresse
+        </label>
+      </div>
+    </div>
+
+    <hr>
+
+    <div
+      class="pick-choice-wrapper"
+      data-dnt-container="pick-choices"
+      data-dnt-invalid-url-warning="Dette er ikke en ordentlig nettadresse.\n\nSjekk at du har fått med deg hele adressen når du kopierte den.\n\nHusk at den må begynne slik: http://"
+      data-dnt-invalid-email-warning="Dette er ikke en gyldig e-postadresse. Sjekk at du har skrevet adressen riktig.">
+
+      <div class="jq-hide" data-dnt-container="pick-choice" data-dnt-pick-choice="page">
+        <div class="form-group">
+          <label for="page">Velg nettside fra {{ active_site.domain }}:</label>
+
+          {# Explicit line-break - select2 displays as inline-block #}
+          <br>
+
+          <select id="page" name="page" style="width: 100%;">
+            {% for page in url_picker.pages %}
+              <option value="http://{{ active_site.domain }}/{{ page.slug }}{% if page.slug != '' %}/{% endif %}">{{ page.title }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <p class="page-url">
+          Adresse:
+          <span class="url" data-dnt-text="page-url">
+            {# Assuming that the select defaults to the initial item #}
+            http://{{ active_site.domain }}/{{ url_picker.pages.0.slug }}/
+          </span>
+        </p>
+      </div>
+
+      <div class="jq-hide" data-dnt-container="pick-choice" data-dnt-pick-choice="article">
+        <div class="form-group">
+          <label for="page">Velg artikkel fra {{ active_site.domain }}:</label>
+
+          {# Explicit line-break - select2 displays as inline-block #}
+          <br>
+
+          <select id="article" name="article" style="width: 100%;">
+            {% for version in url_picker.article_versions %}
+              <option value="http://{{ active_site.domain }}{% url 'articles.views.show' version.variant.article.id version.get_title_content.content|striptags|slugify %}">
+                {{ version.get_title_content.content|striptags }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+        <p class="article-url">
+          Adresse:
+          <span class="url" data-dnt-text="article-url">
+            {# Assuming that the select defaults to the initial item #}
+            http://{{ active_site.domain }}{% url 'articles.views.show' url_picker.article_versions.0.variant.article.id url_picker.article_versions.0.get_title_content.content|striptags|slugify %}
+          </span>
+        </p>
+      </div>
+
+      <div class="jq-hide" data-dnt-container="pick-choice" data-dnt-pick-choice="forening">
+        <div class="form-group">
+          <label for="page">Velg forening/turlag:</label>
+
+          {# Explicit line-break - select2 displays as inline-block #}
+          <br>
+
+          {% include 'common/admin/util/forening-select.html' with foreninger=url_picker.foreninger selected_forening=url_picker.foreninger.sentral.0 name="forening" value="active_url" style="width: 100%" %}
+        </div>
+
+        <p
+          class="forening-url"
+          data-no-url-warning="%s har ikke noen hjemmeside! Den er iallefall ikke lagt inn i Sherpa.\n\nHvis du mener det er feil og vet adressen, kan du legge den inn som en ekstern nettadresse.">
+          Adresse:
+          <span class="url" data-dnt-text="forening-url">
+            {# Assuming that the select defaults to the initial item #}
+            {{ url_picker.foreninger.sentral.0.get_active_url }}
+          </span>
+        </p>
+      </div>
+
+      <div class="jq-hide" data-dnt-container="pick-choice" data-dnt-pick-choice="custom">
+        <div class="form-group">
+          <label for="url">Legg inn ekstern nettadresse:</label>
+          <input type="text" class="form-control" id="url" name="custom" placeholder="http://...">
+        </div>
+        <p class="custom-url">
+          <strong>Her kan du legge inn en nettadresse som peker hvor som helst.</strong> Først finner du nettsiden du vil lenke til. Så må du kopiere nettadressen fra adresselinjen i nettleseren, og lime den inn her.
+        </p>
+        <p>
+          For eksempel: <strong>http://www.youtube.com/watch?v=dQw4w9WgXcQ</strong>
+        </p>
+      </div>
+
+      <div class="jq-hide" data-dnt-container="pick-choice" data-dnt-pick-choice="email">
+        <div class="form-group">
+          <label for="email">Legg inn e-postadressen:</label>
+          <input type="email" class="form-control" id="email" name="email" placeholder="F.eks: kari.nordmann@hotmail.com...">
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="modal-footer">
+    <button class="btn btn-success" data-dnt-trigger="save-url">Velg lenke</a>
+    <button class="btn btn-default" data-dnt-trigger="cancel">Avbryt</a>
+  </div>
+</div>

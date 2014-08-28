@@ -143,6 +143,9 @@ def setup_site(request):
                 site.title = request.POST['title'].strip()
             site.save()
 
+            # Invalidate the forening's homepage site cache
+            cache.delete('forening.homepage_site.%s' % request.active_forening.id)
+
             page = Page(
                 title='Forside',
                 slug='',

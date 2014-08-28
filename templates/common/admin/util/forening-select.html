@@ -1,0 +1,54 @@
+{% comment %}
+  A generic select element to be used with a sorted list of foreninger. Recognizes the following variables:
+  - foreninger: A sorted list of foreninger, like returned by apps.foreninger.Forening.sort
+  - name: The name for the select box
+  - value: A sentinel value for what to display in the option value attribute.
+    - id: The forenings DB id
+    - active_url: The forenings active URL in
+  - selected_forening (optional): If set to a forening instance, that forening will be preselected
+  - placeholder (optional): A placeholder value to show when no forening is selected
+  - style (optional): Explicit css styles
+
+  Note that there's quite a few places where this type of element is duplicated and those should be rewritten to
+  include this template.
+{% endcomment %}
+
+<select name="{{ name }}"{% if placeholder %} data-placeholder="{{ placeholder }}"{% endif %}{% if style %} style="{{ style }}"{% endif %}>
+  <option value=""></option>
+  {% if foreninger.sentral|length > 0 %}
+    <optgroup label="Sentralt/nasjonalt">
+      {% for forening in foreninger.sentral %}
+        <option value="{% if value == "id" %}{{ forening.id }}{% elif value == "active_url" %}{{ forening.get_active_url }}{% endif %}" {% if selected_forening == forening %} selected{% endif %}>
+          {{ forening.name }}
+        </option>
+      {% endfor %}
+    </optgroup>
+  {% endif %}
+  {% if foreninger.forening|length > 0 %}
+    <optgroup label="Medlemsforeninger">
+      {% for forening in foreninger.forening %}
+        <option value="{% if value == "id" %}{{ forening.id }}{% elif value == "active_url" %}{{ forening.get_active_url }}{% endif %}" {% if selected_forening == forening %} selected{% endif %}>
+          {{ forening.name }}
+        </option>
+      {% endfor %}
+    </optgroup>
+  {% endif %}
+  {% if foreninger.turlag|length > 0 %}
+    <optgroup label="Lokale turlag">
+    {% for forening in foreninger.turlag %}
+        <option value="{% if value == "id" %}{{ forening.id }}{% elif value == "active_url" %}{{ forening.get_active_url }}{% endif %}" {% if selected_forening == forening %} selected{% endif %}>
+          {{ forening.name }}
+        </option>
+      {% endfor %}
+    </optgroup>
+  {% endif %}
+  {% if foreninger.turgruppe|length > 0 %}
+    <optgroup label="Turgrupper">
+    {% for forening in foreninger.turgruppe %}
+        <option value="{% if value == "id" %}{{ forening.id }}{% elif value == "active_url" %}{{ forening.get_active_url }}{% endif %}" {% if selected_forening == forening %} selected{% endif %}>
+          {{ forening.name }}
+        </option>
+      {% endfor %}
+    </optgroup>
+  {% endif %}
+</select>
