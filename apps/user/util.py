@@ -41,22 +41,56 @@ def authenticate_users(email, password):
     # Add matching local users that aren't members
     matches = [u for u in User.get_users().filter(memberid__isnull=True, email=email) if u.check_password(password)]
 
-    # Add matching members with active User
-    actor_candidates = Actor.get_personal_members().filter(email=email)
-    for a in actor_candidates:
+    # Add matching members in Actor
+    for actor in Actor.get_personal_members().filter(email=email):
         try:
-            u = User.get_users().get(memberid=a.memberid, is_inactive=False)
-            if u.check_password(password):
-                matches.append(u)
+            # Ok, look for any matching active user
+            user = User.get_users(
+                include_pending=True,
+                include_expired=True
+            ).get(
+                memberid=actor.memberid,
+                is_inactive=False # ignore inactive users; these need to register first
+            )
+
+            # Reset state if this user was previously pending but is now a proper member
+            if user.is_pending:
+                user.is_pending = False
+                user.save()
+
+            # Reset state if this user was previously marked as expired for some reason
+            if user.is_expired:
+                user.is_expired = False
+                user.save()
+
+            # Now perform the password check for authentication
+            if user.check_password(password):
+                matches.append(user)
         except User.DoesNotExist:
             pass
 
-    # Add matching members with pending User
-    for e in get_enrollment_email_matches(email):
+    # Add matching pending members
+    for enrollment in get_enrollment_email_matches(email):
         try:
-            u = User.get_users(include_pending=True).get(memberid=e.memberid, is_inactive=False)
-            if u.check_password(password):
-                matches.append(u)
+            # Ok, look for any matching active AND pending user
+            user = User.get_users(
+                include_pending=True,
+                include_expired=True
+            ).get(
+                memberid=enrollment.memberid,
+                is_pending=True,
+                is_inactive=False # ignore inactive users; these need to register first
+            )
+
+            # Reset state if this user was previously marked as expired for some reason
+            if user.is_expired:
+                user.is_expired = False
+                user.save()
+
+            # Now perform the password check for authentication
+            # Check that the user isn't already matched as an Actor since this theoretically could be a duplicate
+            if user.check_password(password) and user not in matches:
+                matches.append(user)
         except User.DoesNotExist:
             pass
 

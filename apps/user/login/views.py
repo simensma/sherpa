@@ -210,20 +210,60 @@ def send_restore_password_email(request):
     if not validator.email(request.POST['email']):
         return HttpResponse(json.dumps({'status': 'invalid_email'}))
 
-    # The address will match only one non-member, but may match several members, registered or not
-    local_matches = list(User.objects.filter(email=request.POST['email']))
+    # The address might match one non-member, check it:
+    local_matches = list(User.objects.filter(memberid__isnull=True, email=request.POST['email']))
+
+    # The address might match several members, registered or not
     focus_unregistered_matches = False
-    for a in Actor.get_personal_members().filter(email=request.POST['email']):
+
+    # Search through matching Actors
+    for actor in Actor.get_personal_members().filter(email=request.POST['email']):
         try:
-            # Include pending users in case they're resetting it *after* verification (i.e. Actor created),
-            # but *before* we've checked if they should still be pending.
-            local_matches.append(User.get_users(include_pending=True).get(memberid=a.memberid, is_inactive=False))
+            # Ok, look for any matching active user
+            user = User.get_users(
+                include_pending=True,
+                include_expired=True
+            ).get(
+                memberid=actor.memberid,
+                is_inactive=False # ignore inactive users; these need to register first
+            )
+
+            # Reset state if this user was previously pending but is now a proper member
+            if user.is_pending:
+                user.is_pending = False
+                user.save()
+
+            # Reset state if this user was previously marked as expired for some reason
+            if user.is_expired:
+                user.is_expired = False
+                user.save()
+
+            local_matches.append(user)
         except User.DoesNotExist:
+            # There is an actor but no corresponding user - inform the user that they need to register
             focus_unregistered_matches = True
 
-    for e in get_enrollment_email_matches(request.POST['email']):
+    # Now search through matching active enrollments
+    for enrollment in get_enrollment_email_matches(request.POST['email']):
         try:
-            local_matches.append(User.get_users(include_pending=True).get(memberid=e.memberid, is_pending=True, is_inactive=False))
+            # Ok, look for any matching active AND pending user
+            user = User.get_users(
+                include_pending=True,
+                include_expired=True
+            ).get(
+                memberid=enrollment.memberid,
+                is_pending=True,
+                is_inactive=False # ignore inactive users; these need to register first
+            )
+
+            # Reset state if this user was previously marked as expired for some reason
+            if user.is_expired:
+                user.is_expired = False
+                user.save()
+
+            # Check that the user isn't already matched as an Actor since this theoretically could be a duplicate
+            if user not in local_matches:
+                local_matches.append(user)
         except User.DoesNotExist:
             pass
 
