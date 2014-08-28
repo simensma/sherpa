@@ -294,7 +294,7 @@ class User(models.Model):
                 return min(self.price_by_age(), self.enrollment.get_prices().household)
             else:
                 return self.price_by_age()
-        except BirthDateNotDefined as e:
+        except BirthDateNotDefined:
             if self.enrollment.state in ['payment', 'complete']:
                 # All users should have their birth date defined at this point! Re-raise the exception
                 raise
