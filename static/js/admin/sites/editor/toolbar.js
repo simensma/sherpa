@@ -5,8 +5,6 @@ $(function() {
     var FORMATTER_ELEMENTS = "abbr,acronym,b,bdi,bdo,big,blink,cite,code,dfn,em,font,h1,h2,h3,h4,h5,h6,i,ins,kbd,mark,nobr,q,s,samp,small,span,strike,strong,sub,sup,tt,u,var";
 
     var toolbar = $("div.cms-editor-toolbar");
-    var toolbarContents = toolbar.find("div.toolbar-contents");
-    var anchorInsert = toolbar.find("div.anchor-insert");
     var formatting = toolbar.find("div.formatting");
 
     rangy.init();
@@ -151,54 +149,24 @@ $(function() {
         selection.refresh();
     });
 
-    function addAnchor(anchorType) {
-        anchorInsert.find("input[name='url']").val("");
-        if(anchorType === 'url') {
-            anchorInsert.find("span.url").show();
-            anchorInsert.find("span.email").hide();
-        } else if(anchorType === 'email') {
-            anchorInsert.find("span.url").hide();
-            anchorInsert.find("span.email").show();
-        }
-        anchorInsert.data('type', anchorType);
-        toolbarContents.hide();
-        anchorInsert.show();
-    }
-
-    anchorInsert.find("div.anchor-buttons button.anchor-add").click(function() {
-        var range = selection.getRangeAt(0);
-        // Trim the selection for whitespace (actually, just the last char, since that's most common)
-        if($(range.endContainer).text().substring(range.endOffset - 1, range.endOffset) == ' ') {
-            range.setEnd(range.endContainer, range.endOffset - 1);
-        }
-        selection.setSingleRange(range);
-        var url = anchorInsert.find("input[name='url']").val().trim();
-        if(url !== "") {
-            if(anchorInsert.data('type') === 'url') {
-                if(!url.match(/^https?:\/\//)) {
-                    url = "http://" + url;
-                }
-            } else if(anchorInsert.data('type') === 'email') {
-                if(!url.match(/^mailto:/)) {
-                    url = "mailto:" + url;
-                }
-            }
-            document.execCommand('createLink', false, url);
-        }
-        anchorInsert.hide();
-        toolbarContents.show();
-    });
-
-    anchorInsert.find("div.anchor-buttons button.anchor-cancel").click(function() {
-        anchorInsert.hide();
-        toolbarContents.show();
-    });
-
     toolbar.find("a.button.anchor-add").click(function(event) {
-        addAnchor('url');
-    });
-    toolbar.find("a.button.email-add").click(function(event) {
-        addAnchor('email');
+        var ancestor = $(selection.getRangeAt(0).commonAncestorContainer).parent();
+        var existing_url;
+        if(ancestor.is('a')) {
+            existing_url = ancestor.attr('href');
+        }
+        UrlPicker.open({
+            existing_url: existing_url,
+            done: function(result) {
+                var range = selection.getRangeAt(0);
+                // Trim the selection for whitespace (actually, just the last char, since that's most common)
+                if($(range.endContainer).text().substring(range.endOffset - 1, range.endOffset) == ' ') {
+                    range.setEnd(range.endContainer, range.endOffset - 1);
+                }
+                selection.setSingleRange(range);
+                document.execCommand('createLink', false, result.url);
+            },
+        });
     });
     toolbar.find("a.anchor-remove").click(function(event) {
         document.execCommand('unlink', false, null);
