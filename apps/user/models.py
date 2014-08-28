@@ -651,13 +651,13 @@ class User(AbstractBaseUser):
     #
 
     @staticmethod
-    def get_users(include_pending=False):
-        """
-        Filter on what we consider the 'current' userbase, i.e. not expired users.
-        Typically this shouldn't include pending users (until they're accepted), but
-        in some rare cases we *do* want them too, hence the include_pending parameter.
-        """
-        users = User.objects.filter(is_expired=False)
+    def get_users(include_pending=False, include_expired=False):
+        """Filter on what we consider the 'current' userbase, i.e. not expired or pending users. The include_pending
+        and include_expired parameters are available for the rare cases where these users shouldn't be excluded.
+        Each of these cases will have to be considered separately."""
+        users = User.objects.all()
+        if not include_expired:
+            users = users.exclude(is_expired=True)
         if not include_pending:
             users = users.exclude(is_pending=True)
         return users
