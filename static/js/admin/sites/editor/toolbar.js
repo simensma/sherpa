@@ -36,6 +36,11 @@ $(function() {
 
     // Button-group formatting
     $(document).mouseup(function() {
+        // Don't reset the formatting buttons if one of the buttons were clicked
+        if($(e.target).parents('.formatting').length > 0) {
+            return;
+        }
+
         var selection = rangy.getSelection();
         formatting.find('button').prop('disabled', false).removeClass('active');
 
@@ -49,7 +54,7 @@ $(function() {
         var container = $(selection.getRangeAt(0).startContainer).parent();
 
         // Ensure it's within an editable
-        if(container.parents('.editable').length === 0) {
+        if(!container.is('.editable') && container.parents('.editable').length === 0) {
             formatting.find('button').prop('disabled', true);
             return;
         }
