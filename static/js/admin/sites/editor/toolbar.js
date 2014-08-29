@@ -35,7 +35,7 @@ $(function() {
     });
 
     // Button-group formatting
-    $(document).mouseup(function() {
+    $(document).mouseup(function(e) {
         // Don't reset the formatting buttons if one of the buttons were clicked
         if($(e.target).parents('.formatting').length > 0) {
             return;
@@ -79,6 +79,17 @@ $(function() {
     });
 
     formatting.find("button").click(function() {
+        function resetSelection(text_node) {
+            // After the DOM has been manipulated, call this with the new text node which was changed to reselect it
+            setTimeout(function() {
+                var selection = rangy.getSelection();
+                var range = rangy.createRange();
+                range.selectNodeContents(text_node);
+                selection.setSingleRange(range);
+                selection.refresh();
+            }, 0);
+        }
+
         var styleClass = $(this).attr('data-format');
         formatting.find("button").removeClass('active');
         $(this).addClass('active');
@@ -114,7 +125,9 @@ $(function() {
                 mozillaMadness(container, ['<span class="' + styleClass + '">', '</span>']);
             } else {
                 // The element isn't contained by a formatting element. Ignore parents and mozilla madness, just wrap the contents in a span.
-                start.replaceWith('<span class="' + styleClass + '">' + start.text() + '</span>');
+                var replacement = $('<span class="' + styleClass + '">' + start.text() + '</span>');
+                start.replaceWith(replacement);
+                resetSelection(replacement.contents().get(0));
             }
         }
 
@@ -132,6 +145,7 @@ $(function() {
                         match[2] = content[0] + match[2] + content[1];
                     }
                     container.html(match[1]).after('<br>', match[2], '<br>', clone);
+                    resetSelection(container.contents().get(0));
                 } else {
                     // Breaks are *only* before
                     var match = /(.*)<.*?data-special-case-tmp.*?>(.*)/.exec(container.html());
@@ -139,6 +153,7 @@ $(function() {
                         match[2] = content[0] + match[2] + content[1];
                     }
                     container.html(match[1]).after('<br>', match[2]);
+                    resetSelection(container.contents().get(0));
                 }
             } else if(start.next().is("br")) {
                 // Breaks are *only* after
@@ -148,18 +163,23 @@ $(function() {
                     match[1] = content[0] + match[1] + content[1];
                 }
                 container.html(match[2]).before(match[1], '<br>');
+                resetSelection(container.contents().get(0));
             } else {
                 // No mozilla madness, just remove the containernode <3
-                var text = container.text();
+                var wrapper;
+                var text_element;
                 if(content !== undefined) {
-                    text = content[0] + text + content[1];
+                    wrapper = $(content[0] + content[1]);
+                    text_element = container.contents().get(0);
+                    wrapper.append(text_element);
+                } else {
+                    wrapper = container.contents();
+                    text_element = wrapper.get(0);
                 }
-                container.replaceWith(text);
+                container.replaceWith(wrapper);
+                resetSelection(text_element);
             }
         }
-
-        // This refresh *might* make a second select.formatting change trigger work, even without reselecting the text.
-        selection.refresh();
     });
 
     toolbar.find("a.button.anchor-add").click(function(event) {
