@@ -37,32 +37,39 @@ $(function() {
 
     // Button-group formatting
     $(document).mouseup(function() {
-        formatting.find("button").prop('disabled', false).removeClass('active');
-        if(selection !== undefined && selection.rangeCount !== 0) {
-            var range = selection.getRangeAt(0);
-            var start = $(range.startContainer);
-            var container = start.parent();
+        formatting.find('button').prop('disabled', false).removeClass('active');
 
-            // If this is an anchor, the styled container will be its parent
-            if(container.is('a')) {
-                container = container.parent();
-            }
+        // No selection or range?
+        if(selection === undefined || selection.rangeCount === 0) {
+            formatting.find('button').prop('disabled', true);
+            return;
+        }
 
-            if(container.is("h1") || container.hasClass('h1')) {
-                formatting.find("button[data-format='h1']").addClass('active');
-            } else if(container.is("h2") || container.hasClass('h2')) {
-                formatting.find("button[data-format='h2']").addClass('active');
-            } else if(container.is("h3") || container.hasClass('h3')) {
-                formatting.find("button[data-format='h3']").addClass('active');
-            } else if(container.hasClass('lede')) {
-                formatting.find("button[data-format='lede']").addClass('active');
-            } else if(container.is("div") || container.is("p")) {
-                formatting.find("button[data-format='bread']").addClass('active');
-            } else {
-                formatting.find("button").prop('disabled', true);
-            }
-        } else {
-            formatting.find("button").prop('disabled', true);
+        // Look up the containing element
+        var container = $(selection.getRangeAt(0).startContainer).parent();
+
+        // Ensure it's within an editable
+        if(container.parents('.editable').length === 0) {
+            formatting.find('button').prop('disabled', true);
+            return;
+        }
+
+        // If this is an anchor, the styled container will be its parent
+        if(container.is('a')) {
+            container = container.parent();
+        }
+
+        // Now figure out what kind of styling it has, and mark the appropriate button as active
+        if(container.is('h1') || container.hasClass('h1')) {
+            formatting.find('button[data-format="h1"]').addClass('active');
+        } else if(container.is('h2') || container.hasClass('h2')) {
+            formatting.find('button[data-format="h2"]').addClass('active');
+        } else if(container.is('h3') || container.hasClass('h3')) {
+            formatting.find('button[data-format="h3"]').addClass('active');
+        } else if(container.hasClass('lede')) {
+            formatting.find('button[data-format="lede"]').addClass('active');
+        } else if(container.is('div') || container.is('p')) {
+            formatting.find('button[data-format="bread"]').addClass('active');
         }
     });
 
