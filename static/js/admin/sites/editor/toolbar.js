@@ -8,7 +8,6 @@ $(function() {
     var formatting = toolbar.find("div.formatting");
 
     rangy.init();
-    window.selection = undefined;
 
     // Make toolbar draggable, but not if input-elements are clicked
     toolbar.draggable();
@@ -37,6 +36,7 @@ $(function() {
 
     // Button-group formatting
     $(document).mouseup(function() {
+        var selection = rangy.getSelection();
         formatting.find('button').prop('disabled', false).removeClass('active');
 
         // No selection or range?
@@ -78,6 +78,7 @@ $(function() {
         formatting.find("button").removeClass('active');
         $(this).addClass('active');
 
+        var selection = rangy.getSelection();
         if(selection === undefined || selection.rangeCount === 0) {
             alert("Du har ikke merket noen tekst!\n\n" +
                   "Da vet jeg ikke hvilken tekst jeg skal endre skrifttype på. Klikk på teksten du vil ha endret først.");
@@ -157,6 +158,7 @@ $(function() {
     });
 
     toolbar.find("a.button.anchor-add").click(function(event) {
+        var selection = rangy.getSelection();
         var ancestor = $(selection.getRangeAt(0).commonAncestorContainer).parent();
         var existing_url;
         if(ancestor.is('a')) {
@@ -212,7 +214,7 @@ $(function() {
         document.execCommand('removeformat', false, null);
 
         // Also do some extra custom cleanup:
-
+        var selection = rangy.getSelection();
         if(selection === undefined || selection.rangeCount === 0) {
             alert("Du har ikke merket noen tekst!\n\n" +
                   "Da vet jeg ikke hvilken tekst jeg skal fjerne formatering for. Klikk på teksten du vil ha fikset først.");
