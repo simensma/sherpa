@@ -108,13 +108,32 @@ class User(AbstractBaseUser):
                     actor = Actor.get_personal_members().get(memberid=self.memberid)
                     cache.set('actor.%s' % self.memberid, actor, settings.FOCUS_MEMBER_CACHE_PERIOD)
                 return actor
-        except (Enrollment.DoesNotExist, Actor.DoesNotExist) as e:
+        except Enrollment.DoesNotExist:
+            if not self.is_pending:
+                raise Exception("Didn't expect Enrollment.DoesNotExist to be thrown for a non-pending member")
+
+            # Expired pending-member. This is very unusual. Verify that they're still pending.
+            if self.verify_still_pending(ignore_cache=True):
+                # Seems this user is expired. Since this could be called from anywhere, we can't give a
+                # proper error message, we'll just have to re-raise the exception. But we can at least
+                # set is_expired to True, so it hopefully doesn't happen again with this user.
+                self.is_expired = True
+                self.save()
+                raise
+            else:
+                # Ah, they're not pending anymore. Recursion! This should work because when verify_still_pending
+                # returns False, is_pending will be set to True and the new Actor will be fetched instead.
+                return self.get_actor()
+        except Actor.DoesNotExist:
+            if self.is_pending:
+                raise Exception("Didn't expect Actor.DoesNotExist to be thrown for a pending member")
+
             # Seems this user is expired. Since this could be called from anywhere, we can't give a
             # proper error message, we'll just have to re-raise the exception. But we can at least
             # set is_expired to True, so it hopefully doesn't happen again with this user.
             self.is_expired = True
             self.save()
-            raise e
+            raise
 
     def get_parent(self):
         if self.is_pending:
