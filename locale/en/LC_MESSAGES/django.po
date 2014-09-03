@@ -1966,8 +1966,8 @@ msgid "kl. 09.00 - 16.00"
 msgstr "09.00 - 16.00"
 
 #: templates/main/membership/infobox.html:11
-msgid "Tirsdager kl. 10.00 - 16.00"
-msgstr "Tuesdays 10.00 - 16.00"
+msgid "Torsdager kl. 10.00 - 16.00"
+msgstr "Thursdays 10.00 - 16.00"
 
 #: templates/main/membership/infobox.html:12
 msgid "Eller"
