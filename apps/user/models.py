@@ -278,33 +278,37 @@ class User(AbstractBaseUser):
         return self.get_actor().get_phone_mobile()
 
     def has_paid(self):
+        """
+        Returns True if the users' membership is currently paid, regardless of where in the membership year we are.
+        """
         return self.get_actor().has_paid()
 
-    def get_payment_years(self):
+    def get_payment_status(self):
+        """
+        Returns a dict explaining the users' payment status.
+        'new_membership_year' will be False before årskravet, and True after.
+        'current_year' is always included and is True if the user has paid their membership for the current year.
+        'next_year' is ONLY included if 'new_membership_year' is True, and will be True if the user has paid for the
+          next years' membership.
+        """
         from core.util import membership_year_start
         start_date = membership_year_start()['actual_date']
         today = date.today()
-        years = {
-            'current': today.year,
-            'next': today.year + 1
+
+        status = {
+            'new_membership_year': today >= start_date,
+            'current_year': self.get_actor().has_paid_this_year(),
         }
-        if today >= start_date:
-            if self.get_actor().has_paid_next_year():
-                years['code'] = 'both'
-                return years
-            elif self.get_actor().has_paid_this_year():
-                years['code'] = 'current_not_next'
-                return years
-            else:
-                years['code'] = 'neither_years'
-                return years
+        if status['new_membership_year']:
+            status['next_year'] = self.get_actor().has_paid_next_year()
+
+            # Business rule: If they've paid for next year, it includes the current year regardless of whether or not
+            # that was paid previously. So override it to True.
+            status['current_year'] = True
         else:
-            if self.get_actor().has_paid_this_year():
-                years['code'] = 'current'
-                return years
-            else:
-                years['code'] = 'not_this_year'
-                return years
+            status['next_year'] = None
+
+        return status
 
     def is_eligible_for_publications(self):
         return self.get_actor().is_eligible_for_publications()

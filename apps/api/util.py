@@ -66,6 +66,7 @@ def get_member_data(user):
             'medlemsnummer': user.memberid,
             'forening': forening,
             'aktivt_medlemskap': user.has_paid(),
+            'medlemskap_status': translate_user_payment_status(user.get_payment_status()),
             'er_husstandsmedlem': user.is_household_member(),
             'tilknyttet_hovedmedlem': parent_memberid,
             'tilknyttede_husstandsmedlemmer': household_members,
@@ -88,6 +89,14 @@ def get_member_data(user):
             },
             'foreningstilganger': forening_permissions,
         }
+
+def translate_user_payment_status(payment_status):
+    translated_status = {
+        'nytt_medlemsår': payment_status['new_membership_year'],
+        'inneværende_år': payment_status['current_year'],
+        'neste_år': payment_status['next_year'],
+    }
+    return translated_status
 
 def get_forening_data(forening):
     return {

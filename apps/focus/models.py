@@ -300,14 +300,19 @@ class Actor(models.Model):
         """
         from core.util import membership_year_start
         if date.today() >= membership_year_start()['actual_date']:
+            # Note that even if this_year is False and next_year is True, we should return True - this is a business
+            # rule as payments for the next year will include the rest of the current year.
             return self.has_paid_this_year() or self.has_paid_next_year()
         else:
             return self.has_paid_this_year()
 
     def has_paid_this_year(self):
         """
-        Checks if the membership is paid for the current year. This is how we find out that
-        a membership is valid after årskravet/before new years for the remainder of the year.
+        Checks if the membership is paid for the current year. This is how we find out that a membership is valid
+        after årskravet/before new years for the remainder of the year, for those who haven't yet paid for the next
+        year.
+        Note that the membership may be still valid for this year even though this method returns False, IF they have
+        paid for the next year.
         """
         from core.util import membership_year_start
         if date.today() >= membership_year_start()['actual_date']:
@@ -317,8 +322,8 @@ class Actor(models.Model):
 
     def has_paid_next_year(self):
         """
-        Checks if this member has paid for the next membership year. Can only be called after
-        årskravet. A False result doesn't mean they're not a valid member right now.
+        Checks if this member has paid for the next membership year. Can only be called after årskravet. A False
+        result doesn't mean they're not a valid member right now.
         """
         from core.util import membership_year_start
         if not date.today() >= membership_year_start()['actual_date']:
@@ -327,8 +332,8 @@ class Actor(models.Model):
 
     def balance_is_paid(self):
         """
-        Checks if the balance view says that the membership is paid. Means different things
-        before and after årskravet, you usually want to check has_paid_{this,next}_year instead.
+        Checks if the balance view says that the membership is paid. Means different things before and after
+        årskravet, you usually want to check has_paid_{this,next}_year instead.
         """
         has_paid = cache.get('actor.balance.%s' % self.memberid)
         if has_paid is None:
@@ -342,8 +347,8 @@ class Actor(models.Model):
 
     def has_paid_this_year_after_arskrav(self):
         """
-        In the period after årskravet but before year's end, members who have paid for the current
-        year (but not the next) should apparently have no end_date (and those who haven't, do).
+        In the period after årskravet but before year's end, members who have paid for the current year (but not
+        the next) should apparently have no end_date (and those who haven't, do).
         """
         from core.util import membership_year_start
         if not date.today() >= membership_year_start()['actual_date']:
