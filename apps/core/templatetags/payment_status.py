@@ -18,18 +18,21 @@ def payment_status(user, prefix='Betalt,Ikke betalt'):
     current_year = today.year
     next_year = today.year + 1
 
-    payment_status = user.get_payment_status()
+    status = user.get_payment_status()
     if user.is_lifelong_member():
         return '%s (livsvarig)'% (prefix_paid)
-    elif payment_status == 'both':
-        return '%s for %s, samt ut %s'% (prefix_paid, next_year, current_year)
-    elif payment_status == 'current_not_next':
-        return '%s ut %s, men ikke for %s' % (prefix_paid, current_year, next_year)
-    elif payment_status == 'neither_years':
-        return '%s for %s eller %s' % (prefix_not_paid, current_year, next_year)
-    elif payment_status == 'current':
-        return '%s for %s' % (prefix_paid, current_year)
-    elif payment_status == 'not_this_year':
-        return '%s for %s' % (prefix_not_paid, current_year)
+
+    if status['new_membership_year']:
+        if status['current_year'] and status['next_year']:
+            return '%s for %s, samt ut %s'% (prefix_paid, next_year, current_year)
+        elif status['current_year'] and not status['next_year']:
+            return '%s ut %s, men ikke for %s' % (prefix_paid, current_year, next_year)
+        elif not status['current_year'] and status['next_year']:
+            raise Exception("Illegal state: current_year should always be paid when next_year is. Go debug!")
+        elif not status['current_year'] and not status['next_year']:
+            return '%s for %s eller %s' % (prefix_not_paid, current_year, next_year)
     else:
-        raise Exception("Unknown user payment_years status_code")
+        if status['current_year']:
+            return '%s for %s' % (prefix_paid, current_year)
+        else:
+            return '%s for %s' % (prefix_not_paid, current_year)

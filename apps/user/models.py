@@ -284,18 +284,19 @@ class User(AbstractBaseUser):
         from core.util import membership_year_start
         start_date = membership_year_start()['actual_date']
         today = date.today()
-        if today >= start_date:
-            if self.get_actor().has_paid_next_year():
-                return 'both'
-            elif self.get_actor().has_paid_this_year():
-                return 'current_not_next'
-            else:
-                return 'neither_years'
-        else:
-            if self.get_actor().has_paid_this_year():
-                return 'current'
-            else:
-                return 'not_this_year'
+
+        status = {
+            'new_membership_year': today >= start_date,
+            'current_year': self.get_actor().has_paid_this_year(),
+        }
+        if status['new_membership_year']:
+            status['next_year'] = self.get_actor().has_paid_next_year()
+
+            # Business rule: If they've paid for next year, it includes the current year regardless of whether or not
+            # that was paid previously. So override it to True.
+            status['current_year'] = True
+
+        return status
 
     def is_eligible_for_publications(self):
         return self.get_actor().is_eligible_for_publications()
