@@ -94,9 +94,8 @@ def translate_user_payment_status(payment_status):
     translated_status = {
         'nytt_medlemsår': payment_status['new_membership_year'],
         'inneværende_år': payment_status['current_year'],
+        'neste_år': payment_status['next_year'],
     }
-    if 'next_year' in payment_status:
-        translated_status['neste_år'] = payment_status['next_year']
     return translated_status
 
 def get_forening_data(forening):
