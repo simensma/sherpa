@@ -288,8 +288,8 @@ class User(AbstractBaseUser):
         Returns a dict explaining the users' payment status.
         'new_membership_year' will be False before årskravet, and True after.
         'current_year' is always included and is True if the user has paid their membership for the current year.
-        'next_year' is ONLY included if 'new_membership_year' is True, and will be True if the user has paid for the
-          next years' membership.
+        'next_year' is always None if 'new_membership_year' is False, otherwise it will be True if the user has paid
+          for the next years' membership
         """
         from core.util import membership_year_start
         start_date = membership_year_start()['actual_date']
