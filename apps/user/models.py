@@ -278,6 +278,9 @@ class User(AbstractBaseUser):
         return self.get_actor().get_phone_mobile()
 
     def has_paid(self):
+        """
+        Returns True if the users' membership is currently paid, regardless of where in the membership year we are.
+        """
         return self.get_actor().has_paid()
 
     def get_payment_status(self):
