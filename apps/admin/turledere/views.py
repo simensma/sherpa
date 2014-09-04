@@ -21,7 +21,8 @@ def index(request):
     context = {
         'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH,
         'turleder_roles': Turleder.TURLEDER_CHOICES,
-        'instruktor_roles': Instruktor.ROLE_CHOICES
+        'instruktor_roles': Instruktor.ROLE_CHOICES,
+        'all_foreninger_sorted': Forening.get_all_sorted(),
     }
     return render(request, 'common/admin/turledere/index.html', context)
 
