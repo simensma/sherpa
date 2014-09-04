@@ -2,54 +2,55 @@ div.fotokonkurranse-root {
   div.intro-image {
     position: relative;
     width: 940px;
-    height: 540px;
-    background-image: url('/static/img/fotokonkurranse/intro-sommer-hytteliv.jpg');
+    height: 561px;
     margin-bottom: 20px;
+    background-image: url('/static/img/fotokonkurranse/intro-host-2014-hverdagstur.jpg');
 
     h1 {
-      color: black;
-      text-align: center;
-      padding-top: 40px;
-      margin-left: 350px;
+      padding-top: 15px;
+      margin-left: 270px;
       margin-bottom: 0;
+      color: black;
       border-bottom: none;
     }
 
-    p {
-      color: black;
-      text-align: center;
-      margin-left: 350px;
-      padding-top: 10px;
-      font-family: "DTL Nobel" !important;
+    p.lede {
+      padding-top: 0px;
+      margin-left: 260px;
       font-size: 20px;
+      color: black;
     }
 
     p.credits {
       position: absolute;
-      color: white;
-      right: 6px;
       bottom: 6px;
-      font-size: 12px;
+      left: 6px;
       margin-bottom: 0;
+      font-family: "DTL Nobel" !important;
+      font-size: 12px;
+      color: white;
     }
   }
 
   @media (max-width: 767px) {
     div.intro-image {
+      .form-border;
+
       width: auto;
       height: auto;
       background-image: none;
-      .form-border;
 
       h1 {
-        margin-left: auto;
         padding-top: 0;
+        margin-left: auto;
         color: #333;
+        text-align: center;
       }
 
-      p {
+      p.lede {
         margin-left: auto;
         color: #333;
+        text-align: center;
       }
 
       p.credits {
