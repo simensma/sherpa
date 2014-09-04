@@ -9,15 +9,17 @@ from user.models import User
 from focus.models import Actor
 from focus.util import get_enrollment_email_matches
 
-# Checks whether the given IP address has performed more than the allowed amount of lookups
-# on memberid + zipcode. This is because since there are a relatively low amount of total zipcodes
-# (< 10000), this can easily be bruteforced, given the memberid.
-# Notes:
-# 1. The odds for someone wanting to do this are extremely low, but since the security hole does exist
-#    we should account for it, however simply.
-# 2. This "authentication method" (memberid + zipcode) is not very secure anyway, since it's easy
-#    to get that information from someone.
 def memberid_lookups_exceeded(ip_address):
+    """
+    Checks whether the given IP address has performed more than the allowed amount of lookups
+    on memberid + zipcode. This is because since there are a relatively low amount of total zipcodes
+    (< 10000), this can easily be bruteforced, given the memberid.
+    Notes:
+    1. The odds for someone wanting to do this are extremely low, but since the security hole does exist
+       we should account for it, however simply.
+    2. This "authentication method" (memberid + zipcode) is not very secure anyway, since it's easy
+       to get that information from someone.
+    """
     lookups = cache.get('memberid_zipcode_lookups.%s' % ip_address)
     if lookups is None:
         cache.set('memberid_zipcode_lookups.%s' % ip_address, 1, settings.MEMBERID_LOOKUPS_BAN)
@@ -28,11 +30,13 @@ def memberid_lookups_exceeded(ip_address):
             return True
     return False
 
-# Yup, this is a 'util' method instead of a proper authentication backend.
-# The reason for this is that as our membersystem allows duplicate email fields, a user can
-# potentially authenticate herself for multiple accounts, and the Django auth backend system
-# doesn't account for that (it returns exactly one user, or None).
 def authenticate_users(email, password):
+    """
+    Yup, this is a 'util' method instead of a proper authentication backend.
+    The reason for this is that as our membersystem allows duplicate email fields, a user can
+    potentially authenticate herself for multiple accounts, and the Django auth backend system
+    doesn't account for that (it returns exactly one user, or None).
+    """
     # Support this special case explicitly because it will hit a lot of Actors and
     # check for a matching User for each of them, which takes a long time
     if email.strip() == '':
