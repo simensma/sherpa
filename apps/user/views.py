@@ -11,6 +11,7 @@ import hashlib
 from django.conf import settings
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 from django.contrib import messages
 from django.db.models import Q
@@ -20,10 +21,10 @@ from django.template.loader import render_to_string
 import requests
 
 from user.models import User, NorwayBusTicket
-from user.util import memberid_lookups_exceeded
+from user.util import verify_memberid
+from user.exceptions import MemberidLookupsExceeded, CountryDoesNotExist, NoMatchingMemberid, ActorIsNotPersonalMember
 from core import validator
 from core.models import Zipcode, FocusCountry
-from focus.models import Actor
 from focus.util import ADDRESS_FIELD_MAX_LENGTH
 from admin.models import Publication
 from aktiviteter.models import AktivitetDate
@@ -189,11 +190,12 @@ def register_membership(request):
         return render(request, 'common/user/account/register_membership.html', context)
     elif request.method == 'POST':
         try:
-            # Check that the memberid is correct (and retrieve the Actor-entry)
-            if memberid_lookups_exceeded(request.META['REMOTE_ADDR']):
-                messages.error(request, 'memberid_lookups_exceeded')
-                return redirect('user.views.register_membership')
-            actor = Actor.get_personal_members().get(memberid=request.POST['memberid'], address__zipcode=request.POST['zipcode'])
+            actor = verify_memberid(
+                ip_address=request.META['REMOTE_ADDR'],
+                memberid=request.POST['memberid'],
+                country_code=request.POST['country'],
+                zipcode=request.POST['zipcode'],
+            )
 
             if request.POST['email-equal'] == 'true':
                 # Focus-email is empty, or equal to this email, so just use it
@@ -255,7 +257,15 @@ def register_membership(request):
             request.user.save()
 
             return redirect('user.views.home')
-        except (Actor.DoesNotExist, ValueError):
+
+        except MemberidLookupsExceeded:
+            messages.error(request, 'memberid_lookups_exceeded')
+            return redirect('user.views.register_membership')
+
+        except CountryDoesNotExist:
+            raise PermissionDenied
+
+        except (NoMatchingMemberid, ActorIsNotPersonalMember, ValueError):
             messages.error(request, 'invalid_memberid')
             return redirect('user.views.register_membership')
 

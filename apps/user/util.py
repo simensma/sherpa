@@ -4,9 +4,11 @@ from django.conf import settings
 
 import hashlib
 
+from core.models import FocusCountry
 from sherpa25.models import Member
 from user.models import User
-from focus.models import Actor
+from user.exceptions import MemberidLookupsExceeded, CountryDoesNotExist, NoMatchingMemberid, ActorIsNotPersonalMember
+from focus.models import Actor, Enrollment
 from focus.util import get_enrollment_email_matches
 
 def memberid_lookups_exceeded(ip_address):
@@ -29,6 +31,47 @@ def memberid_lookups_exceeded(ip_address):
         else:
             return True
     return False
+
+def verify_memberid(ip_address, memberid, country_code, zipcode):
+    # Check that the memberid is correct (and retrieve the Actor-entry)
+    if memberid_lookups_exceeded(ip_address):
+        raise MemberidLookupsExceeded
+
+    if not FocusCountry.objects.filter(code=country_code).exists():
+        raise CountryDoesNotExist
+
+    # Not filtering on Actor.get_personal_members() in order to raise explicit exception for non-personal-membership
+    # matches; see below
+    actor = Actor.objects.filter(
+        memberid=memberid,
+        address__country_code=country_code,
+    )
+
+    # Require correct zipcode for domestic members
+    if country_code == 'NO':
+        actor = actor.filter(address__zipcode=zipcode)
+
+    if actor.exists():
+        actor = actor.get()
+
+        # Check that it's a proper member object (note that we didn't filter the query on Actor.get_personal_members())
+        if not actor.is_personal_member():
+            raise ActorIsNotPersonalMember
+
+        return actor
+
+    # No matching actors, check for pending users
+    enrollment = Enrollment.get_active().filter(memberid=memberid)
+
+    # Require correct zipcode for domestic members
+    if country_code == 'NO':
+        enrollment = enrollment.filter(zipcode=zipcode)
+
+    if enrollment.exists():
+        return User.get_or_create_inactive(memberid=memberid, include_pending=True).get_actor()
+
+    # No matches
+    raise NoMatchingMemberid
 
 def authenticate_users(email, password):
     """

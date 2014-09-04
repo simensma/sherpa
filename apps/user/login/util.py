@@ -6,15 +6,15 @@ import sys
 
 from django.contrib.auth import authenticate, login as log_user_in
 from django.conf import settings
-from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
+from django.core.exceptions import PermissionDenied
 from django.template import RequestContext, loader
 from django.core.mail import send_mail
 
 from core import validator
-from core.models import FocusCountry
 from user.models import User
-from user.util import authenticate_sherpa2_user, authenticate_users, memberid_lookups_exceeded
-from focus.models import Actor, Enrollment
+from user.util import authenticate_sherpa2_user, authenticate_users, verify_memberid
+from user.exceptions import MemberidLookupsExceeded, CountryDoesNotExist, NoMatchingMemberid, ActorIsNotPersonalMember
+from focus.models import Actor
 from sherpa25.util import import_fjelltreffen_annonser
 
 EMAIL_REGISTERED_SUBJECT = u"Velkommen som bruker på DNTs nettsted"
@@ -83,38 +83,21 @@ def attempt_login(request):
             return matches, 'invalid_credentials'
 
 def attempt_registration(request):
+    # Check that the password is long enough
+    if len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
+        return None, 'too_short_password'
+
+    # Check that the email address is valid
+    if not validator.email(request.POST['email']):
+        return None, 'invalid_email'
+
     try:
-        # Check that the password is long enough
-        if len(request.POST['password']) < settings.USER_PASSWORD_LENGTH:
-            return None, 'too_short_password'
-
-        # Check that the email address is valid
-        if not validator.email(request.POST['email']):
-            return None, 'invalid_email'
-
-        # Check that the memberid is correct (and retrieve the Actor-entry)
-        if memberid_lookups_exceeded(request.META['REMOTE_ADDR']):
-            return None, 'memberid_lookups_exceeded'
-        if not FocusCountry.objects.filter(code=request.POST['country']).exists():
-            raise PermissionDenied
-        actor = Actor.get_personal_members().filter(
+        actor = verify_memberid(
+            ip_address=request.META['REMOTE_ADDR'],
             memberid=request.POST['memberid'],
-            address__country_code=request.POST['country']
+            country_code=request.POST['country'],
+            zipcode=request.POST['zipcode'],
         )
-        if request.POST['country'] == 'NO':
-            actor = actor.filter(address__zipcode=request.POST['zipcode'])
-        if actor.exists():
-            actor = actor.get()
-        else:
-            # No matching actors, check for pending users
-            enrollment = Enrollment.get_active().filter(memberid=request.POST['memberid'])
-            if request.POST['country'] == 'NO':
-                enrollment = enrollment.filter(zipcode=request.POST['zipcode'])
-            if enrollment.exists():
-                actor = User.get_or_create_inactive(memberid=request.POST['memberid'], include_pending=True).get_actor()
-            else:
-                # Give up
-                raise ObjectDoesNotExist
 
         # Check that the user doesn't already have an account
         if User.get_users(include_pending=True).filter(memberid=request.POST['memberid'], is_inactive=False).exists():
@@ -156,7 +139,13 @@ def attempt_registration(request):
 
         return user, None
 
-    except (ObjectDoesNotExist, ValueError):
+    except MemberidLookupsExceeded:
+        return None, 'memberid_lookups_exceeded'
+
+    except CountryDoesNotExist:
+        raise PermissionDenied
+
+    except (NoMatchingMemberid, ActorIsNotPersonalMember, ValueError):
         return None, 'invalid_memberid'
 
 def attempt_registration_nonmember(request):

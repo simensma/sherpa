@@ -13,12 +13,13 @@ from django.contrib.auth import authenticate, login as log_user_in, logout as lo
 from django.contrib import messages
 from django.template import RequestContext, loader
 from django.utils import crypto
-from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
+from django.core.exceptions import PermissionDenied
 
 from user.models import User
-from user.util import memberid_lookups_exceeded
+from user.util import verify_memberid as verify_memberid_util
 from user.login.util import attempt_login, attempt_registration, attempt_registration_nonmember
-from focus.models import Actor, Enrollment
+from user.exceptions import MemberidLookupsExceeded, CountryDoesNotExist, NoMatchingMemberid, ActorIsNotPersonalMember
+from focus.models import Actor
 from focus.util import get_enrollment_email_matches
 from core import validator
 from core.models import FocusCountry
@@ -154,36 +155,14 @@ def verify_memberid(request):
         # Some clients seem to send empty query dicts, see e.g.:
         # https://sentry.turistforeningen.no/turistforeningen/sherpa/group/1173/
         raise PermissionDenied
-    if memberid_lookups_exceeded(request.META['REMOTE_ADDR']):
-        return HttpResponse(json.dumps({'memberid_lookups_exceeded': True}))
-    if not FocusCountry.objects.filter(code=request.POST['country']).exists():
-        raise PermissionDenied
-    try:
-        # Not filtering on Actor.get_personal_members(), see below
-        actor = Actor.objects.filter(
-            memberid=request.POST['memberid'],
-            address__country_code=request.POST['country']
-        )
-        if request.POST['country'] == 'NO':
-            actor = actor.filter(address__zipcode=request.POST['zipcode'])
-        if actor.exists():
-            actor = actor.get()
-        else:
-            # No matching actors, check for pending users
-            enrollment = Enrollment.get_active().filter(memberid=request.POST['memberid'])
-            if request.POST['country'] == 'NO':
-                enrollment = enrollment.filter(zipcode=request.POST['zipcode'])
-            if enrollment.exists():
-                actor = User.get_or_create_inactive(memberid=request.POST['memberid'], include_pending=True).get_actor()
-            else:
-                # Give up
-                raise ObjectDoesNotExist
 
-        # Check that it's a proper member object (note that we didn't filter the query on Actor.get_personal_members())
-        if not actor.is_personal_member():
-            return HttpResponse(json.dumps({
-                'actor_is_not_member': True,
-            }))
+    try:
+        actor = verify_memberid_util(
+            ip_address=request.META['REMOTE_ADDR'],
+            memberid=request.POST['memberid'],
+            country_code=request.POST['country'],
+            zipcode=request.POST['zipcode'],
+        )
 
         try:
             user = User.objects.get(memberid=request.POST['memberid'], is_inactive=False)
@@ -200,7 +179,21 @@ def verify_memberid(request):
             'user_exists': user_exists,
             'user_is_expired': user_is_expired
         }))
-    except (ValueError, ObjectDoesNotExist):
+
+    except MemberidLookupsExceeded:
+        return HttpResponse(json.dumps({
+            'memberid_lookups_exceeded': True,
+        }))
+
+    except CountryDoesNotExist:
+        raise PermissionDenied
+
+    except ActorIsNotPersonalMember:
+        return HttpResponse(json.dumps({
+            'actor_is_not_member': True,
+        }))
+
+    except (NoMatchingMemberid, ValueError):
         return HttpResponse(json.dumps({'exists': False}))
 
 def send_restore_password_email(request):
