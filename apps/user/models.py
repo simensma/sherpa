@@ -101,11 +101,24 @@ class User(AbstractBaseUser):
 
         try:
             if self.is_pending:
-                return ActorProxy(self.memberid)
+                actor_proxy = ActorProxy(self.memberid)
+
+                # Do a quick check and reset in case this user was previously marked as expired for some reason
+                if self.is_expired:
+                    self.is_expired = False
+                    self.save()
+
+                return actor_proxy
             else:
                 actor = cache.get('actor.%s' % self.memberid)
                 if actor is None:
                     actor = Actor.get_personal_members().get(memberid=self.memberid)
+
+                    # Do a quick check and reset in case this user was previously marked as expired for some reason
+                    if self.is_expired:
+                        self.is_expired = False
+                        self.save()
+
                     cache.set('actor.%s' % self.memberid, actor, settings.FOCUS_MEMBER_CACHE_PERIOD)
                 return actor
         except Enrollment.DoesNotExist:
