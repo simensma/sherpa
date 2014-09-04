@@ -106,11 +106,6 @@
   <a href="javascript:undefined" class="toggle-login-tab">{% trans "Logg inn her" %}</a>. {% trans "Hvis du har glemt passordet kan du gjenopprette det der." %}
 </div>
 
-<div class="hide alert alert-error user-is-expired">
-  <strong>{% trans "Du har allerede en bruker, men den er markert som inaktiv!" %}</strong><br>
-  {% trans "Dette kan være en feil i vårt medlemsregister. Vennligst ta kontakt med" %} <a href="{% url 'membership.views.service' %}">{% trans "medlemsservice" %}</a>.
-</div>
-
 <div class="hide alert alert-error no-memberid-match">
   <strong>{% trans "Ukjent bruker" %}</strong><br>
   {% trans "Beklager, vi har ingen medlemmer med disse opplysningene. Vennligst prøv igjen, eller kontakt" %} <a href="{% url 'membership.views.service' %}">{% trans "medlemsservice" %}</a> {% trans "hvis du mener at dette skal være rett." %}
@@ -147,11 +142,6 @@
     <div class="alert alert-error">
       <strong>{% trans "Hmmm... det ser ut som om du allerede har en bruker!" %}</strong><br>
       <a href="javascript:undefined" class="toggle-login-tab">{% trans "Logg inn her" %}</a>. {% trans "Hvis du har glemt passordet kan du gjenopprette det der." %}
-    </div>
-  {% elif message.message == 'expired_user_exists' %}
-    <div class="alert alert-error">
-      <strong>{% trans "Du har allerede en bruker, men den er markert som inaktiv!" %}</strong><br>
-      {% trans "Dette kan være en feil i vårt medlemsregister. Vennligst ta kontakt med" %} <a href="{% url 'membership.views.service' %}">{% trans "medlemsservice" %}</a>.
     </div>
   {% elif message.message == 'invalid_email' %}
     <div class="alert alert-error">

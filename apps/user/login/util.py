@@ -99,21 +99,34 @@ def attempt_registration(request):
             zipcode=request.POST['zipcode'],
         )
 
-        # Check that the user doesn't already have an account
-        if User.get_users(include_pending=True).filter(memberid=request.POST['memberid'], is_inactive=False).exists():
+        # Check that the user doesn't already have an account.
+        # Note that we're treating expired users as regular users here because the Actor lookup above
+        # confirmed that they're not expired anymore.
+        if User.get_users(
+            include_pending=True,
+            include_expired=True,
+        ).filter(
+            memberid=request.POST['memberid'],
+            is_inactive=False,
+        ).exists():
             return None, 'user_exists'
-
-        # Check that the memberid isn't expired.
-        # Expired memberids shouldn't exist in Focus, so this is an error and should never happen,
-        # but we'll check for it anyway.
-        if User.objects.filter(memberid=request.POST['memberid'], is_expired=True).exists():
-            return None, 'expired_user_exists'
 
         actor.set_email(request.POST['email'].strip())
 
         try:
             # Check if the user's already created as inactive
-            user = User.get_users(include_pending=True).get(memberid=request.POST['memberid'], is_inactive=True)
+            user = User.get_users(
+                include_pending=True,
+                include_expired=True,
+            ).get(
+                memberid=request.POST['memberid'],
+                is_inactive=True,
+            )
+
+            # This user is not expired, fix it if current state happens to be incorrect
+            if user.is_expired:
+                user.is_expired = False
+
             user.is_inactive = False
             user.set_password(request.POST['password'])
             user.save()

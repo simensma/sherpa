@@ -69,11 +69,7 @@ $(function() {
                         email.find("span.preselected-email.focus").text(result.email);
                     }
                 } else {
-                    if(!result.user_is_expired) {
-                        form.find("div.user-exists").slideDown();
-                    } else {
-                        form.find("div.user-is-expired").slideDown();
-                    }
+                    form.find("div.user-exists").slideDown();
                 }
                 form.find("button[type='submit']").show();
             } else if(result.memberid_lookups_exceeded) {

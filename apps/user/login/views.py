@@ -164,20 +164,32 @@ def verify_memberid(request):
             zipcode=request.POST['zipcode'],
         )
 
+        # Check whether or not the user already has an account.
+        # Note that we're treating expired users as regular users here because the Actor lookup above
+        # confirmed that they're not expired anymore.
         try:
-            user = User.objects.get(memberid=request.POST['memberid'], is_inactive=False)
+            user = User.get_users(
+                include_pending=True,
+                include_expired=True,
+            ).get(
+                memberid=request.POST['memberid'],
+                is_inactive=False,
+            )
+
+            # This user is not expired, fix it if current state happens to be incorrect
+            if user.is_expired:
+                user.is_expired = False
+                user.save()
+
             user_exists = True
-            user_is_expired = user.is_expired
         except User.DoesNotExist:
             user_exists = False
-            user_is_expired = False
 
         return HttpResponse(json.dumps({
             'exists': True,
             'name': actor.get_full_name(),
             'email': actor.get_email(),
             'user_exists': user_exists,
-            'user_is_expired': user_is_expired
         }))
 
     except MemberidLookupsExceeded:

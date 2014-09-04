@@ -76,11 +76,7 @@ $(function() {
                     enableStep2(result);
                 } else {
                     registration.find("img.ajaxloader.submit").hide();
-                    if(!result.user_is_expired) {
-                        registration.find("div.user-exists").slideDown();
-                    } else {
-                        registration.find("div.user-is-expired").slideDown();
-                    }
+                    registration.find("div.user-exists").slideDown();
                 }
             } else if(result.memberid_lookups_exceeded) {
                 registration.find("img.ajaxloader.submit").hide();

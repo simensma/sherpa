@@ -214,15 +214,13 @@ def register_membership(request):
                 raise Exception("Missing email-equal / email-choise-parameters")
 
             # Check that the user doesn't already have an account
-            if User.get_users().filter(memberid=request.POST['memberid'], is_inactive=False).exists():
+            if User.get_users(
+                include_expired=True,
+            ).filter(
+                memberid=request.POST['memberid'],
+                is_inactive=False,
+            ).exists():
                 messages.error(request, 'user_exists')
-                return redirect('user.views.register_membership')
-
-            # Check that the memberid isn't expired.
-            # Expired memberids shouldn't exist in Focus, so this is an error and should never happen,
-            # but we'll check for it anyway.
-            if User.objects.filter(memberid=request.POST['memberid'], is_expired=True).exists():
-                messages.error(request, 'expired_user_exists')
                 return redirect('user.views.register_membership')
 
             # Ok, registration successful, update the user
@@ -230,13 +228,24 @@ def register_membership(request):
 
             try:
                 # If this memberid is already an imported inactive member, merge them
-                other_user = User.get_users().get(memberid=request.POST['memberid'], is_inactive=True)
+                other_user = User.get_users(
+                    include_expired=True,
+                ).get(
+                    memberid=request.POST['memberid'],
+                    is_inactive=True,
+                )
                 user.merge_with(other_user, move_password=True) # This will delete the other user
             except User.DoesNotExist:
                 # It could be a pending user. If inactive, that's fine. If active, they already
                 # gave it a password - but they authenticated anyway, so we should still merge them.
                 try:
-                    other_user = User.objects.get(memberid=request.POST['memberid'], is_pending=True)
+                    other_user = User.get_users(
+                        include_pending=True,
+                        include_expired=True,
+                    ).get(
+                        memberid=request.POST['memberid'],
+                        is_pending=True,
+                    )
                     user.merge_with(other_user, move_password=True) # This will delete the other user
                 except User.DoesNotExist:
                     # All right then, the user doesn't exist.
