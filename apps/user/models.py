@@ -290,20 +290,20 @@ class User(AbstractBaseUser):
         }
         if today >= start_date:
             if self.get_actor().has_paid_next_year():
-                years['code'] = 'both'
+                years['status_code'] = 'both'
                 return years
             elif self.get_actor().has_paid_this_year():
-                years['code'] = 'current_not_next'
+                years['status_code'] = 'current_not_next'
                 return years
             else:
-                years['code'] = 'neither_years'
+                years['status_code'] = 'neither_years'
                 return years
         else:
             if self.get_actor().has_paid_this_year():
-                years['code'] = 'current'
+                years['status_code'] = 'current'
                 return years
             else:
-                years['code'] = 'not_this_year'
+                years['status_code'] = 'not_this_year'
                 return years
 
     def is_eligible_for_publications(self):

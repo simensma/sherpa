@@ -15,15 +15,15 @@ def payment_status(user, prefix='Betalt,Ikke betalt'):
     payment_years = user.get_payment_years()
     if user.is_lifelong_member():
         return '%s (livsvarig)'% (prefix_paid)
-    elif payment_years['code'] == 'both':
+    elif payment_years['status_code'] == 'both':
         return '%s for %s, samt ut %s'% (prefix_paid, payment_years['next'], payment_years['current'])
-    elif payment_years['code'] == 'current_not_next':
+    elif payment_years['status_code'] == 'current_not_next':
         return '%s ut %s, men ikke for %s' % (prefix_paid, payment_years['current'], payment_years['next'])
-    elif payment_years['code'] == 'neither_years':
+    elif payment_years['status_code'] == 'neither_years':
         return '%s for %s eller %s' % (prefix_not_paid, payment_years['current'], payment_years['next'])
-    elif payment_years['code'] == 'current':
+    elif payment_years['status_code'] == 'current':
         return '%s for %s' % (prefix_paid, payment_years['current'])
-    elif payment_years['code'] == 'not_this_year':
+    elif payment_years['status_code'] == 'not_this_year':
         return '%s for %s' % (prefix_not_paid, payment_years['current'])
     else:
-        raise Exception("Unknown user payment_years code")
+        raise Exception("Unknown user payment_years status_code")
