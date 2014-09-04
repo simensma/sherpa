@@ -29,11 +29,11 @@ logger = logging.getLogger('sherpa')
 MIN_SIZE = 800 # pixlors
 EMAIL_CONFIRMATION_SUBJECT = "Takk for ditt bidrag til DNTs fotokonkurranse!"
 
-def default(request):
+def index(request):
     context = {
         'destination_album_exists': Fotokonkurranse.objects.get().album is not None,
     }
-    return render(request, 'main/fotokonkurranse/default.html', context)
+    return render(request, 'main/fotokonkurranse/index.html', context)
 
 def upload(request):
     try:
