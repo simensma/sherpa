@@ -280,31 +280,22 @@ class User(AbstractBaseUser):
     def has_paid(self):
         return self.get_actor().has_paid()
 
-    def get_payment_years(self):
+    def get_payment_status(self):
         from core.util import membership_year_start
         start_date = membership_year_start()['actual_date']
         today = date.today()
-        years = {
-            'current': today.year,
-            'next': today.year + 1
-        }
         if today >= start_date:
             if self.get_actor().has_paid_next_year():
-                years['status_code'] = 'both'
-                return years
+                return 'both'
             elif self.get_actor().has_paid_this_year():
-                years['status_code'] = 'current_not_next'
-                return years
+                return 'current_not_next'
             else:
-                years['status_code'] = 'neither_years'
-                return years
+                return 'neither_years'
         else:
             if self.get_actor().has_paid_this_year():
-                years['status_code'] = 'current'
-                return years
+                return 'current'
             else:
-                years['status_code'] = 'not_this_year'
-                return years
+                return 'not_this_year'
 
     def is_eligible_for_publications(self):
         return self.get_actor().is_eligible_for_publications()
