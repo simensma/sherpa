@@ -35,12 +35,12 @@ def index(request):
         'chosen_county': request.GET.get('fylke', ''),
         'full_list': full_list,
     }
-    return render(request, 'main/foreninger/list.html', context)
+    return render(request, 'central/foreninger/list.html', context)
 
 def visit(request):
     foreninger = Forening.objects.filter(type='forening').exclude(visit_address='').order_by('name')
     context = {'foreninger': foreninger}
-    return render(request, 'main/foreninger/visit.html', context)
+    return render(request, 'central/foreninger/visit.html', context)
 
 def filter(request):
     if not 'category' in request.POST or not 'county' in request.POST:
@@ -64,7 +64,7 @@ def filter(request):
 
         foreninger = foreninger.order_by('name')
 
-        result = [render_to_string('main/foreninger/result.html', RequestContext(request, {
+        result = [render_to_string('central/foreninger/result.html', RequestContext(request, {
             'forening': forening,
         })) for forening in foreninger]
 

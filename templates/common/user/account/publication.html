@@ -3,7 +3,7 @@
 {% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <a href="{% url 'user.views.publications' %}">Publikasjoner</a> / <em>{{ publication.title }}</em>{% endblock %}
 
 {% block extra_js %}
-  <script src="{{ STATIC_URL }}js/user/publication.js"></script>
+  <script src="{{ STATIC_URL }}js/public/user/publication.js"></script>
 {% endblock %}
 
 {% load advertisement %}

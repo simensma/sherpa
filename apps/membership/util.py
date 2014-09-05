@@ -34,7 +34,7 @@ def send_sms_receipt(request, user):
             'mob_user': user,
             'all_paid': all(u.has_paid() for u in [user] + list(user.get_children()))
         })
-        sms_message = render_to_string('main/membership/memberid_sms/message.txt', context).encode('utf-8')
+        sms_message = render_to_string('central/membership/memberid_sms/message.txt', context).encode('utf-8')
         r = requests.get(settings.SMS_URL % (quote_plus(number), quote_plus(sms_message)))
         if r.text.find("1 SMS messages added to queue") == -1:
             logger.error(u"Kunne ikke sende medlemsnummer på SMS: Ukjent status",

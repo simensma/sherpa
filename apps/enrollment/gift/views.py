@@ -31,7 +31,7 @@ def index(request):
         'prices': membership_price_by_code,
         'display_christmas_warning': date.today() <= CHRISTMAS_WARNING_END
     }
-    return render(request, 'main/enrollment/gift/index.html', context)
+    return render(request, 'central/enrollment/gift/index.html', context)
 
 def form(request):
     if not 'gift_membership' in request.session:
@@ -65,7 +65,7 @@ def form(request):
         'chosen_type': chosen_type,
         'display_christmas_warning': date.today() <= CHRISTMAS_WARNING_END
     }
-    return render(request, 'main/enrollment/gift/form.html', context)
+    return render(request, 'central/enrollment/gift/form.html', context)
 
 def validate(request):
     # TODO: Use the django form API
@@ -136,13 +136,13 @@ def confirm(request):
         'receivers': request.session['gift_membership']['receivers'],
         'display_christmas_warning': date.today() <= CHRISTMAS_WARNING_END
     }
-    return render(request, 'main/enrollment/gift/confirm.html', context)
+    return render(request, 'central/enrollment/gift/confirm.html', context)
 
 def send(request):
     if not 'gift_membership' in request.session:
         return redirect('enrollment.gift.views.index')
-    t1 = loader.get_template('main/enrollment/gift/email-memberservice.html')
-    t2 = loader.get_template('main/enrollment/gift/email-giver.html')
+    t1 = loader.get_template('central/enrollment/gift/email-memberservice.html')
+    t2 = loader.get_template('central/enrollment/gift/email-giver.html')
     # Note that this context is used for both email templates
     c = RequestContext(request, {
         'giver': request.session['gift_membership']['giver'],
@@ -184,7 +184,7 @@ def receipt(request):
         'receivers': request.session['gift_membership']['receivers'],
         'any_normal_memberships': request.session['gift_membership']['any_normal_memberships']
     }
-    return render(request, 'main/enrollment/gift/receipt.html', context)
+    return render(request, 'central/enrollment/gift/receipt.html', context)
 
 def clear(request):
     del request.session['gift_membership']

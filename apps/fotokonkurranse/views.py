@@ -33,7 +33,7 @@ def index(request):
     context = {
         'destination_album_exists': Fotokonkurranse.objects.get().album is not None,
     }
-    return render(request, 'main/fotokonkurranse/index.html', context)
+    return render(request, 'central/fotokonkurranse/index.html', context)
 
 def upload(request):
     try:
@@ -117,7 +117,7 @@ def upload(request):
             # it's sent, because other upload requests may try to send meanwhile and we don't want them to.
             cache.set('fotokonkurranse.emails.%s' % post_email, True, 60 * 60)
             try:
-                t = loader.get_template('main/fotokonkurranse/email_confirmation.txt')
+                t = loader.get_template('central/fotokonkurranse/email_confirmation.txt')
                 c = RequestContext(request, {
                     'user_name': post_name,
                 })

@@ -23,9 +23,8 @@ class Site(models.Model):
     )
     type = models.CharField(max_length=255, choices=TYPE_CHOICES)
     TEMPLATE_CHOICES = (
-        ('main', 'DNTs nasjonale nettside'),
-        ('small', 'Medlemsforening eller turgruppe med et lite nettsted'),
-        ('large', 'Medlemsforening eller turgruppe med et stort nettsted'),
+        ('central', 'DNTs nasjonale nettsted'),
+        ('local', 'Medlemsforening eller turgruppe sitt nettsted'),
     )
     template = models.CharField(max_length=255, choices=TEMPLATE_CHOICES)
     forening = models.ForeignKey('foreninger.Forening', related_name='sites')

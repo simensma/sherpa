@@ -1,0 +1,26 @@
+{% extends 'central/layout.html' %}
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/public/foreninger/common.js"></script>
+  <script src="{{ STATIC_URL }}js/public/foreninger/visit.js"></script>
+{% endblock %}
+
+{% block title %}DNT der du bor{% endblock %}
+{% block breadcrumb %}<a href="{% url 'foreninger.views.index' %}">DNT der du bor</a> / <em><a href="{% url 'foreninger.views.visit' %}">Utsalgssteder</a></em>{% endblock %}
+
+{% block body %}
+
+<h1>Lokale kontorer og utsalgssteder</h1>
+
+<div class="row">
+  <div class="span12">
+    <p class="lede">Flere av DNTs lokale medlemsforeninger har egne turinformasjoner og utsalgsteder hvor du kan kjøpe medlemskap, turutstyr og kart til medlemspris, samt få gode tips og råd.</p>
+  </div>
+</div>
+
+<table id="results" class="table visits">
+  {% for forening in foreninger %}
+    {% include 'central/foreninger/result.html' with forening=forening parents="" %}
+  {% endfor %}
+</table>
+
+{% endblock %}
