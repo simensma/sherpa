@@ -87,7 +87,7 @@
             <label>{% trans "Postnummer / Poststed" %} <span class="asterisk red">*</span></label>
             <input type="text" class="input-small" name="zipcode" value="{{ enrollment.zipcode }}" maxlength="10">
             <input type="text" class="input-medium" name="area" value="{{ enrollment.area }}" disabled>
-            <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="zip ajaxloader hide" alt="{% trans "Laster poststed..." %}" title="{% trans "Laster poststed..." %}">
+            <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="zip ajaxloader hide" alt="{% trans "Laster poststed..." %}" title="{% trans "Laster poststed..." %}">
           </div>
         </div>
         <div class="world">
@@ -124,7 +124,7 @@
         <p>
           <input type="text" name="existing" value="{{ enrollment.existing_memberid }}" placeholder="{% trans "Oppgi medlemsnummer..." %}">
           <a href="javascript:undefined" class="btn search-existing input-button-align"><i class="icon-search"></i> {% trans "Søk" %}</a>
-          <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="existing ajaxloader hide" alt="{% trans "Laster medlemsinfo..." %}" title="{% trans "Laster medlemsinfo..." %}">
+          <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="existing ajaxloader hide" alt="{% trans "Laster medlemsinfo..." %}" title="{% trans "Laster medlemsinfo..." %}">
         </p>
 
         <div class="existing-result hide">

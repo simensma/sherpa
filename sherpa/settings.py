@@ -197,7 +197,7 @@ USE_I18N = True
 USE_L10N = True
 STATIC_URL = '/static/'
 
-EDITOR_PLACEHOLDER_IMAGE = '%simg/placeholder.png' % STATIC_URL
+EDITOR_PLACEHOLDER_IMAGE = '%simg/admin/sites/editor/placeholder.png' % STATIC_URL
 
 DATABASE_ROUTERS = ['sherpa.db_routers.Router']
 AUTHENTICATION_BACKENDS = ('sherpa.auth_backends.CustomBackend',)

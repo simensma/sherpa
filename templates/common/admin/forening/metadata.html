@@ -125,7 +125,7 @@
       <div class="col-md-10">
         <input type="text" class="form-control" id="id_edit_zipcode" name="edit-zipcode" value="{{ edit_form.zipcode.value }}" maxlength="10">
         <input type="text" class="form-control" id="id_edit_area" name="edit-area" value="{{ edit_form_zipcode_area }}" disabled>
-        <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="zipcode ajaxloader jq-hide" alt="Laster poststed...">
+        <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="zipcode ajaxloader jq-hide" alt="Laster poststed...">
         {% if edit_form.zipcode.errors %}
           {% for error in edit_form.zipcode.errors %}
             <span class="help-block error">{{ error }}</span>

@@ -15,7 +15,7 @@
         {% for album in albums_divided.0 %}
           <div class="album">
             <a href="javascript:undefined" class="clickable-album" data-id="{{ album.id }}">
-              <img src="/static/img/icons/imagearchive/folder.png" alt="Album" class="album"> {{ album.name }}
+              <img src="/static/img/admin/images/folder.png" alt="Album" class="album"> {{ album.name }}
             </a>
           </div>
           <div style="clear: both;"></div>
@@ -25,7 +25,7 @@
         {% for album in albums_divided.1 %}
           <div class="album">
             <a href="javascript:undefined" class="clickable-album" data-id="{{ album.id }}">
-              <img src="/static/img/icons/imagearchive/folder.png" alt="Album" class="album"> {{ album.name }}
+              <img src="/static/img/admin/images/folder.png" alt="Album" class="album"> {{ album.name }}
             </a>
           </div>
           <div style="clear: both;"></div>
@@ -35,7 +35,7 @@
         {% for album in albums_divided.2 %}
           <div class="album">
             <a href="javascript:undefined" class="clickable-album" data-id="{{ album.id }}">
-              <img src="/static/img/icons/imagearchive/folder.png" alt="Album" class="album"> {{ album.name }}
+              <img src="/static/img/admin/images/folder.png" alt="Album" class="album"> {{ album.name }}
             </a>
           </div>
           <div style="clear: both;"></div>
@@ -49,7 +49,7 @@
   {% if list_status != 'root_album' %}
     {% for album in albums %}
       <li class="clickable-album" data-id="{{ album.id }}">
-        <img src="/static/img/icons/imagearchive/folder.png" alt="Album"><br>
+        <img src="/static/img/admin/images/folder.png" alt="Album"><br>
         {{ album.name }}
       </li>
     {% endfor %}
