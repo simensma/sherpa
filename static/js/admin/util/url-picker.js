@@ -82,7 +82,7 @@
         pick_choice_elements.hide();
 
         // If an existing URL is specified, try to figure out what kind of lookup might have been used.
-        if(opts.existing_url !== undefined) {
+        if(opts.existing_url !== undefined && opts.existing_url !== '') {
 
             // Is it an email address? Note that we'll skip this step if disable_email is true
             if(opts.existing_url.startsWith('mailto:') && !opts.disable_email) {
