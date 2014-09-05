@@ -18,8 +18,7 @@ from core.util import s3_bucket
 class Menu(models.Model):
     name = models.CharField(max_length=50)
     url = models.CharField(max_length=2048)
-    # Even though this should be unique, it's not enforced because
-    # when swapping, two orders will temporarily clash.
+    # order field is unique only per site, not globally, so don't enforce it on the DB-level
     order = models.IntegerField()
     site = models.ForeignKey('core.Site')
 
