@@ -215,12 +215,12 @@ class DeactivatedEnrollment():
         # However, it's not really likely to change often since it's an important URL.
         if request.path.startswith('/innmelding') and not state.active:
             context = current_template_layout(request)
-            return render(request, 'main/enrollment/unavailable.html', context)
+            return render(request, 'central/enrollment/unavailable.html', context)
 
         # Another issue: If passing through DNT Connect, and card payment is deactivated,
         # there is no means for payment available. Inform them immediately
         if request.path.startswith('/innmelding') and 'dntconnect' in request.session and not state.card:
-            return render(request, 'main/connect/signon_enrollment_card_deactivated.html')
+            return render(request, 'central/connect/signon_enrollment_card_deactivated.html')
 
 class FocusDowntime():
     def process_view(self, request, view_func, view_args, view_kwargs):
@@ -232,12 +232,12 @@ class FocusDowntime():
             # All these paths are hardcoded! :(
             # These are the paths that can be directly accessed and require Focus to function
             focus_required_paths = [
-                ('/innmelding', 'main/enrollment/unavailable.html'),
+                ('/innmelding', 'central/enrollment/unavailable.html'),
                 ('/minside', 'common/user/unavailable.html'),
-                ('/fjelltreffen', 'main/fjelltreffen/unavailable.html'),
-                ('/connect/signon/login', 'main/connect/signon_unavailable.html'),
-                ('/connect/signon/velg-bruker', 'main/connect/signon_unavailable.html'),
-                ('/connect/signon/registrer', 'main/connect/signon_unavailable.html'),
+                ('/fjelltreffen', 'central/fjelltreffen/unavailable.html'),
+                ('/connect/signon/login', 'central/connect/signon_unavailable.html'),
+                ('/connect/signon/velg-bruker', 'central/connect/signon_unavailable.html'),
+                ('/connect/signon/registrer', 'central/connect/signon_unavailable.html'),
             ]
             for path, template in focus_required_paths:
                 if request.path.startswith(path):

@@ -130,12 +130,11 @@ def setup_site(request):
                 context['existing_domain'] = domain
             return render(request, 'common/admin/setup_site.html', context)
         else:
-            # TODO let creator choose template?
             site = Site(
                 domain=result['domain'],
                 prefix=result['prefix'],
                 type=request.POST['type'],
-                template='large',
+                template='local',
                 forening=request.active_forening,
                 title='',
             )

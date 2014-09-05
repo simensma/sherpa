@@ -3,7 +3,7 @@
 {% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <em><a href="{% url 'user.views.register_membership' %}">Registrer medlemskap</a></em>{% endblock %}
 
 {% block extra_js %}
-  <script src="{{ STATIC_URL }}js/user/register_membership.js"></script>
+  <script src="{{ STATIC_URL }}js/public/user/register_membership.js"></script>
 {% endblock %}
 
 {% load advertisement %}
@@ -38,7 +38,7 @@
             <div class="controls">
               <input type="text" class="input-small" name="zipcode" id="zipcode" maxlength="4">
               <input type="text" class="input-medium" name="area" disabled>
-              <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader zipcode hide" alt="Laster poststed..." title="Laster poststed...">
+              <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="ajaxloader zipcode hide" alt="Laster poststed..." title="Laster poststed...">
             </div>
           </div>
 
@@ -91,7 +91,7 @@
         <div class="control-group">
           <div class="controls">
             <button type="submit" class="btn btn-large btn-danger"><i class="icon-ok icon-white"></i> Registrer deg</button>
-            <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader submit hide" alt="Sjekker medlemsnummer, vennligst vent...">
+            <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="ajaxloader submit hide" alt="Sjekker medlemsnummer, vennligst vent...">
           </div>
         </div>
       </div>

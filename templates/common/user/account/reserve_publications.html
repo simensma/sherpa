@@ -3,7 +3,7 @@
 {% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <a href="{% url 'user.views.publications' %}">Publikasjoner</a> / <em>Les magasiner på nett</em>{% endblock %}
 
 {% block extra_js %}
-  <script src="{{ STATIC_URL }}js/user/reservations.js"></script>
+  <script src="{{ STATIC_URL }}js/public/user/reservations.js"></script>
 {% endblock %}
 
 {% load advertisement %}
@@ -44,7 +44,7 @@
           <td></td>
           <td>
             Lagrer ditt valg, vennligst vent...<br>
-            <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent...">
+            <img src="{{ STATIC_URL }}img/common/ajax-loader-large.gif" alt="Laster, vennligst vent...">
           </td>
         </tr>
         <tr class="status success hide">
@@ -90,7 +90,7 @@
           <td></td>
           <td>
             Lagrer ditt valg, vennligst vent...<br>
-            <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent...">
+            <img src="{{ STATIC_URL }}img/common/ajax-loader-large.gif" alt="Laster, vennligst vent...">
           </td>
         </tr>
         <tr class="status success hide">

@@ -1,0 +1,199 @@
+{% extends 'central/enrollment/index.html' %}
+
+{% load i18n %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/public/enrollment/result.js"></script>
+{% endblock %}
+
+{% block enrollment %}
+
+<div class="enrollment-result enrollment-success-card">
+  <div class="row">
+    <div class="span12">
+      <h2>
+        {# Can't use plural blocktrans when a variable is only used in one of the forms #}
+        {% if enrollment.users.count == 1 %}
+          {% blocktrans with name=enrollment.users.all.0.name %}
+            Velkommen som medlem, {{ name }}!
+          {% endblocktrans %}
+        {% else %}
+          {% trans "Velkommen som medlemmer!" %}
+        {% endif %}
+      </h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <div id="result" class="span8">
+
+      <p>
+        {% blocktrans with forening=enrollment.get_actual_forening_if_all.name url=enrollment.get_actual_forening_if_all.get_active_url count users=enrollment.users.count %}
+          Du er nå medlem i DNT og <a href="{{ url }}">{{ forening }}</a>.
+        {% plural %}
+          Dere er nå medlemmer i DNT og <a href="{{ url }}">{{ forening }}</a>.
+        {% endblocktrans %}
+        <br>
+
+        {% if enrollment.is_applicable_for_dnt_ung_oslo == 'some' %}
+
+          {% blocktrans with forening=enrollment.get_actual_forening_if_any.name url=enrollment.get_actual_forening_if_any.get_active_url %}
+            Ungdomsmedlemmer er medlem i DNT og <a href="{{ url }}">{{ forening }}</a>.
+          {% endblocktrans %}
+          <br>
+
+        {% endif %}
+      </p>
+
+      <table class="table">
+        <tr>
+          <th>{% trans "Navn" %}</th>
+          <th>{% trans "Medlemsnummer" %}</th>
+          <th>{% trans "Medlemstype" %}</th>
+          <th>{% trans "Pris" %}</th>
+        </tr>
+      {% for user in enrollment.get_users_by_name %}
+        <tr>
+          <td>{{ user.name }}</td>
+          <td>{{ user.memberid }}</td>
+          <td>{{ user.membership_type }}</td>
+          <td>{{ user.price }},-</td>
+        </tr>
+      {% endfor %}
+      {% if enrollment.users.count > 1 %}
+        <tr>
+          <td class="sum">{% trans "Totalt:" %}</td>
+          <td colspan="2"></td>
+          <td class="sum">{{ enrollment.get_total_price }},-</td>
+        </tr>
+      {% endif %}
+      </table>
+
+      <p>
+        {% if enrollment.users.count == 1 %}
+          {% trans "Du vil i løpet av kort tid motta ditt medlemskort i posten. Inntil da kan du skrive ut denne siden som midlertidig medlemsbevis gyldig frem til" %} {{ proof_validity_end|date:"l j. F" }}{% if enrollment.country == 'NO' %}, {% trans "eller få tilsendt gratis kvittering på SMS" %}{% endif %}. {% trans "Kvittering er også sendt på e-post til" %} <strong>{{ enrollment.users.all.0.email }}</strong>.
+        {% else %}
+          {% trans "Dere vil i løpet av kort tid motta deres medlemskort i posten. Inntil da kan dere skrive ut denne siden som midlertidig medlemsbevis gyldig frem til" %} {{ proof_validity_end|date:"l j. F" }}{% if enrollment.country == 'NO' %}, {% trans "eller få tilsendt gratis kvittering på SMS" %}{% endif %}. {% trans "Kvittering er også sendt på e-post til følgende adresser:" %}
+          {% for email in emails %}
+            <strong>{{ email }}</strong>{% if not forloop.last %}, {% else %}.{% endif %}
+          {% endfor %}
+        {% endif %}
+      </p>
+
+      {% if enrollment.country == 'NO' %}
+        {% for user in enrollment.get_users_by_name %}
+          {% if user.phone != '' and not user.sms_sent %}
+            <div class="sms">
+              <a href="javascript:undefined" class="phone-receipt" data-user="{{ user.id }}" data-number="{{ user.phone }}" data-sms-url="{% url 'enrollment.views.sms' %}">
+                {% trans "Send gratis kvittering på SMS til" %} {{ user.phone }}
+              </a>
+
+              <p class="sending hide">
+                {% trans "Sender SMS, vennligst vent..." %}
+                <img class="ajaxloader" src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+              </p>
+
+              <p class="success hide">
+                {% trans "Kvittering har blitt sendt på SMS til" %} {{ user.phone }}.
+              </p>
+              <p class="technical-error error hide">
+                {% trans "En teknisk feil har oppstått ved utsendelse av SMS." %}
+                {% trans "Dersom du/dere har planlagt å dra på tur i nærmeste fremtid, og ikke rekker å vente på at medlemskortet ankommer, kan dere kontakte medlemsservice for å få tilsendt kvittering på SMS." %}
+              </p>
+              <p class="already-sent error hide">
+                {% trans "SMS-Kvittering har allerede blitt sendt til dette nummeret. Ta kontakt med medlemsservice dersom du mener dette er feil." %}
+              </p>
+              <p class="connection-error service-fail error hide">
+                {% trans "En teknisk feil har oppstått ved kontakt med vår SMS-leverandør." %}
+                {% trans "Dersom du/dere har planlagt å dra på tur i nærmeste fremtid, og ikke rekker å vente på at medlemskortet ankommer, kan dere kontakte medlemsservice for å få tilsendt kvittering på SMS." %}
+              </p>
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+
+      {% if innmelding_aktivitet %}
+
+        <hr>
+
+        <h3>{% trans "Fortsett til påmeldig for tur/aktivitet" %}</h3>
+
+        <p>
+          {% blocktrans count users=enrollment.users.count %}
+            Du er nå innmeldt, og kan fortsette til påmeldingen, først må du bare registrere en bruker på Min side.
+          {% plural %}
+            Dere er nå innmeldt, og du kan fortsette til påmeldingen, først må du bare registrere en bruker på Min side. Velg hvilken bruker du vil registrere:
+          {% endblocktrans %}
+        </p>
+
+        {% if enrollment.users.count == 1 %}
+
+          <p>
+            <a class="btn btn-danger" href="{% url 'connect.views.signon_login' %}?registreringsnokkel={{ enrollment.users.all.0.pending_user.pending_registration_key }}#registrering">{% trans "Gå videre" %} <i class="icon-white icon-share-alt"></i></a>
+          </p>
+
+        {% else %}
+
+          <div class="choose-user">
+
+            <p class="user-list">
+              {% for user in enrollment.get_users_by_name %}
+                <label class="checkbox">
+                  <input type="radio" name="user" value="{{ user.memberid }}"> {{ user.name }}
+                </label>
+              {% endfor %}
+            </p>
+
+            <p>
+              <a class="btn btn-danger user" href="" disabled>{% trans "Gå videre" %} <i class="icon-white icon-share-alt"></i></a>
+              {% for user in enrollment.get_users_by_name %}
+                <a class="btn btn-danger hide user" data-user-id="{{ user.memberid }}" href="{% url 'connect.views.signon_login' %}?registreringsnokkel={{ user.pending_user.pending_registration_key }}#registrering">{% trans "Gå videre" %} <i class="icon-white icon-share-alt"></i></a>
+              {% endfor %}
+            </p>
+
+          </div>
+        {% endif %}
+
+      {% else %}
+
+        {# "Where to go next" - hide if enrolling for an aktivitet #}
+        <div class="next-step">
+
+          {% if enrollment.users.count == 1 %}
+            <h3>{% trans "Registrer deg på Min side" %}</h3>
+            <p>
+              {% url 'user.login.views.login' as login_url %}
+              {% blocktrans with key=enrollment.users.all.0.pending_user.pending_registration_key context "Don't translate URL params (registreringsnokkel and #registrering)" %}
+                Registrer deg på <a href="{{ login_url }}?registreringsnokkel={{ key }}#registrering">Min side</a> og få tilgang til våre medlemstjenester.
+              {% endblocktrans %}
+            </p>
+          {% endif %}
+
+          <h3>{% trans "Planlegg turen på UT.no" %}</h3>
+          <p>
+            {% blocktrans %}
+              På <a href="http://ut.no/">UT.no</a> finner du hytter og turer over hele landet.
+            {% endblocktrans %}
+          </p>
+
+          {% if enrollment.country == 'NO' %}
+            <h3>{% trans "Hva skjer der du bor" %}</h3>
+            <p>
+              {% blocktrans with forening=enrollment.get_actual_forening_if_all.name url=enrollment.get_actual_forening_if_all.get_active_url %}
+                <a href="{{ url }}">{{ forening }}</a> arrangerer fellesturer og aktiviteter hele året.
+              {% endblocktrans %}
+            </p>
+          {% endif %}
+
+        </div>
+
+      {% endif %}
+    </div>
+
+    <div class="span4">
+      {% include 'central/membership/infobox.html' %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

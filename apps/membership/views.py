@@ -26,7 +26,7 @@ logger = logging.getLogger('sherpa')
 
 def index(request):
     context = {'gift_membership_prices': membership_price_by_code}
-    return render(request, 'main/membership/index.html', context)
+    return render(request, 'central/membership/index.html', context)
 
 def benefits(request, forening_id):
     if forening_id is None:
@@ -50,7 +50,7 @@ def benefits(request, forening_id):
         'price': price,
         'enrollment_active': State.objects.all()[0].active,
     }
-    return render(request, 'main/membership/benefits.html', context)
+    return render(request, 'central/membership/benefits.html', context)
 
 def zipcode_search(request):
     if not 'zipcode' in request.POST:
@@ -93,7 +93,7 @@ def zipcode_search(request):
         return HttpResponse(json.dumps({'error': 'unregistered_zipcode', 'zipcode': request.POST['zipcode']}))
 
 def service(request):
-    return render(request, 'main/membership/service.html')
+    return render(request, 'central/membership/service.html')
 
 def memberid_sms(request):
     # This is a membership service that lets you get your memberid by providing your phone number.

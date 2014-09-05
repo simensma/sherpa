@@ -75,7 +75,7 @@ def signon_login(request):
                 pass
 
         if request.method == 'GET':
-            return render(request, 'main/connect/%s/signon.html' % request.session['dntconnect']['client_id'], context)
+            return render(request, 'central/connect/%s/signon.html' % request.session['dntconnect']['client_id'], context)
         else:
             matches, message = attempt_login(request)
 
@@ -91,7 +91,7 @@ def signon_login(request):
             else:
                 messages.error(request, message)
                 context['email'] = request.POST['email']
-                return render(request, 'main/connect/%s/signon.html' % request.session['dntconnect']['client_id'], context)
+                return render(request, 'central/connect/%s/signon.html' % request.session['dntconnect']['client_id'], context)
 
 def signon_choose_authenticated_user(request):
     if not 'authenticated_users' in request.session or not 'dntconnect' in request.session:
@@ -101,7 +101,7 @@ def signon_choose_authenticated_user(request):
     context = {
         'users': sorted(users, key=lambda u: u.get_first_name())
     }
-    return render(request, 'main/connect/signon_choose_authenticated_user.html', context)
+    return render(request, 'central/connect/signon_choose_authenticated_user.html', context)
 
 def signon_login_chosen_user(request):
     if not 'authenticated_users' in request.session or not 'dntconnect' in request.session:

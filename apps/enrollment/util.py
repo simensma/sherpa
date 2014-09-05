@@ -39,9 +39,9 @@ def current_template_layout(request):
     - DNT Connect
     """
     if 'dntconnect' in request.session:
-        return {'current_layout': 'main/connect/%s/layout.html' % request.session['dntconnect']['client_id']}
+        return {'current_layout': 'central/connect/%s/layout.html' % request.session['dntconnect']['client_id']}
     else:
-        return {'current_layout': 'main/layout.html'}
+        return {'current_layout': 'central/layout.html'}
 
 def get_or_create_enrollment(request):
     from enrollment.models import Enrollment
@@ -93,7 +93,7 @@ def prepare_and_send_email(request, enrollment):
                 'enrollment': enrollment,
                 'proof_validity_end': proof_validity_end,
             })
-            message = render_to_string('main/enrollment/result/emails/%s.txt' % template, context)
+            message = render_to_string('central/enrollment/result/emails/%s.txt' % template, context)
             send_mail(subject, message, EMAIL_FROM, [user.email])
         except (SMTPException, SSLError):
             # Silently log and ignore this error. The user will have to do without email receipt.

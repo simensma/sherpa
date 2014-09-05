@@ -16,4 +16,4 @@ def index(request):
         'conditions': conditions,
         'available_locations': available_locations
     }
-    return render(request, 'main/conditions/index.html', context)
+    return render(request, 'central/conditions/index.html', context)

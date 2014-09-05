@@ -112,7 +112,7 @@ def registration(request, user):
         'current_user': user,
     }
     context.update(current_template_layout(request))
-    return render(request, 'main/enrollment/registration.html', context)
+    return render(request, 'central/enrollment/registration.html', context)
 
 def remove(request, user):
     enrollment = get_or_create_enrollment(request)
@@ -200,7 +200,7 @@ def household(request):
         'errors': errors,
     }
     context.update(current_template_layout(request))
-    return render(request, 'main/enrollment/household.html', context)
+    return render(request, 'central/enrollment/household.html', context)
 
 def existing(request):
     if not request.is_ajax():
@@ -349,7 +349,7 @@ def verification(request):
         'foreign_shipment_price': FOREIGN_SHIPMENT_PRICE,
     }
     context.update(current_template_layout(request))
-    return render(request, 'main/enrollment/verification.html', context)
+    return render(request, 'central/enrollment/verification.html', context)
 
 def payment_method(request):
     enrollment = get_or_create_enrollment(request)
@@ -404,7 +404,7 @@ def payment_method(request):
         'card_required': 'innmelding.aktivitet' in request.session,
     }
     context.update(current_template_layout(request))
-    return render(request, 'main/enrollment/payment.html', context)
+    return render(request, 'central/enrollment/payment.html', context)
 
 def payment(request):
     enrollment = get_or_create_enrollment(request)
@@ -467,7 +467,7 @@ def payment(request):
     first_name, last_name = main_or_random_member.name.rsplit(' ', 1)
 
     context = RequestContext(request)
-    description = render_to_string('main/enrollment/payment-terminal.html', context)
+    description = render_to_string('central/enrollment/payment-terminal.html', context)
 
     # Send the transaction registration to Nets
     try:
@@ -594,7 +594,7 @@ def process_card(request):
                 enrollment.state = 'payment'
                 enrollment.save()
                 context = current_template_layout(request)
-                return render(request, 'main/enrollment/payment-process-error.html', context)
+                return render(request, 'central/enrollment/payment-process-error.html', context)
             elif response_code.text == '99' and response_text is not None and response_text.text == 'Transaction already processed':
                 # The transaction might have already been processed if the user resends the process_card
                 # request - recheck nets with a Query request and verify those details
@@ -664,7 +664,7 @@ def process_card(request):
             enrollment.state = 'payment'
             enrollment.save()
             context = current_template_layout(request)
-            return render(request, 'main/enrollment/payment-process-error.html', context)
+            return render(request, 'central/enrollment/payment-process-error.html', context)
 
     else:
         transaction = enrollment.get_active_transaction()
@@ -706,7 +706,7 @@ def result(request):
         'innmelding_aktivitet': request.session.get('innmelding.aktivitet')
     }
     context.update(current_template_layout(request))
-    return render(request, 'main/enrollment/result/%s.html' % enrollment.result, context)
+    return render(request, 'central/enrollment/result/%s.html' % enrollment.result, context)
 
 def sms(request):
     if not request.is_ajax():
@@ -743,7 +743,7 @@ def sms(request):
     context = RequestContext(request, {
         'users': enrollment.get_users_by_name()
     })
-    sms_message = render_to_string('main/enrollment/result/sms.txt', context).encode('utf-8')
+    sms_message = render_to_string('central/enrollment/result/sms.txt', context).encode('utf-8')
 
     # Send the message
     try:

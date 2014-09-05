@@ -12,7 +12,7 @@
     <h2>Fotoprodukter til hyggelige priser</h2>
 
     <div class="pull-right">
-      <img src="{{ STATIC_URL }}img/user/eurofoto.png" alt="Eurofoto.no">
+      <img src="{{ STATIC_URL }}img/public/user/eurofoto.png" alt="Eurofoto.no">
     </div>
 
     {% if not user.has_paid %}
@@ -61,7 +61,7 @@
 
       <div class="fotobok-eurofoto-anchor">
         <a href="{% url 'user.views.fotobok_eurofoto_request' %}">
-          <img src="{{ STATIC_URL }}img/user/eurofoto-fotobok.jpg" alt="Gå til fotobok!">
+          <img src="{{ STATIC_URL }}img/public/user/eurofoto-fotobok.jpg" alt="Gå til fotobok!">
         </a><br>
         <a href="{% url 'user.views.fotobok_eurofoto_request' %}" class="btn btn-danger btn-large">Gå til fotobok!</a>
       </div>

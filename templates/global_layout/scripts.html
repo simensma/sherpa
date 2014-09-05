@@ -14,7 +14,7 @@
 {# HTML5 shiv, json libs and other polyfill #}
 <!--[if lt IE 9]><script src="{{ STATIC_URL }}lib/html5shiv/html5.js"></script><![endif]-->
 <!--[if lt IE 8]><script src="{{ STATIC_URL }}lib/json/json2.js"></script><![endif]-->
-<script src="{{ STATIC_URL }}js/polyfill.js"></script>
+<script src="{{ STATIC_URL }}js/lib/polyfill.js"></script>
 
 {# Core libraries (jquery and bootstrap) #}
 <script src="{{ STATIC_URL }}lib/jquery/jquery-1.9.1.min.js"></script>
@@ -37,14 +37,14 @@
 <script src="{{ STATIC_URL }}lib/select2-3.5.1/select2.min.js"></script>
 
 {# Our lib-ish scripts #}
-<script src="{{ STATIC_URL }}js/zipcode.js"></script>
-<script src="{{ STATIC_URL }}js/image-cropping.js"></script>
-<script src="{{ STATIC_URL }}js/main.js"></script>
-<script src="{{ STATIC_URL }}js/mobile-menu.js"></script>
-<script src="{{ STATIC_URL }}js/common.js"></script>
-<script src="{{ STATIC_URL }}js/widgets.js"></script>
-<script src="{{ STATIC_URL }}js/validator.js"></script>
-<script src="{{ STATIC_URL }}js/infinite-scroller.js"></script>
+<script src="{{ STATIC_URL }}js/lib/zipcode.js"></script>
+<script src="{{ STATIC_URL }}js/lib/image-cropping.js"></script>
+<script src="{{ STATIC_URL }}js/public/main.js"></script>
+<script src="{{ STATIC_URL }}js/public/mobile-menu.js"></script>
+<script src="{{ STATIC_URL }}js/common/common.js"></script>
+<script src="{{ STATIC_URL }}js/public/widgets.js"></script>
+<script src="{{ STATIC_URL }}js/lib/validator.js"></script>
+<script src="{{ STATIC_URL }}js/lib/infinite-scroller.js"></script>
 
 {# Google analytics #}
 {% if analytics_ua %}

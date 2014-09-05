@@ -129,7 +129,7 @@ $(function() {
             var tr = $(this).parents("tr");
             var level = Number($(this).parents("td").attr('data-level')) + 1;
             var id = $(this).attr("data-id");
-            var loader = '<tr class="loader"><td colspan="2"><img src="/static/img/ajax-loader-small.gif" alt="Laster..."></td></tr>';
+            var loader = '<tr class="loader"><td colspan="2"><img src="/static/img/common/ajax-loader-small.gif" alt="Laster..."></td></tr>';
             $(this).parents("tr").after(loader);
             $.ajaxQueue({
                 url: url,
