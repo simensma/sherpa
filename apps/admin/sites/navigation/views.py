@@ -41,7 +41,7 @@ def save_menu(request, site):
         menu.save()
 
     # Reset the cache with the new query set
-    cache.set('main.menu.%s' % active_site.id, Menu.on(request.site).all().order_by('order'), 60 * 60 * 24)
+    cache.set('main.menu.%s' % active_site.id, Menu.on(active_site).all().order_by('order'), 60 * 60 * 24)
 
     # An empty http response will be considered success
     return HttpResponse()
