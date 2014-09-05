@@ -54,7 +54,10 @@
             var email_format = input.match(/^\s*[^\s\,\<\>]+@[^\s,\<\>]+\.[^\s,\<\>]+\s*$/) !== null;
             var no_dotdot = !input.contains("..");
             var no_double_at = input.indexOf("@") == input.lastIndexOf("@");
-            return (email_format && no_dotdot && no_double_at);
+            var input_trimmed = input.trim();
+            var no_leading_dot = input_trimmed[0] !== '.';
+            var no_trailing_dot = input_trimmed[input_trimmed.length-1] !== '.';
+            return (email_format && no_dotdot && no_double_at && no_leading_dot && no_trailing_dot);
         },
         'memberid': function(input, req, opts) {
             if(!req && input === '') { return true; }
