@@ -24,6 +24,14 @@
 <div class="row">
   <div class="col-md-12">
 
+    {% for message in messages %}
+      {% if message.message == 'slug_not_unique' %}
+        <div class="alert alert-danger">
+          Adressen du valgte er allerede i bruk av en annen side! Prøv igjen med en ny adresse.
+        </div>
+      {% endif %}
+    {% endfor %}
+
     <p style="text-align: center;">
       <a id="add-page" class="btn btn-success btn-lg new-page" href="javascript:undefined">
         Opprett ny side
