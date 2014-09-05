@@ -1,142 +1,153 @@
 $(function() {
 
-    // Set when a modal is opened (undefined for new items, or the anchor element for editing)
-    var activeMenu;
+    var $editor = $('[data-dnt-container="menu-editor"]');
 
-    var menus = $("nav#menus");
-    var menu_modal = $("div.modal.menu");
-    var menu_add = $("a.add-menu-element");
-    var loading = menu_modal.find("div.loading");
-    var save_button = menu_modal.find("button.save-menu");
-    var delete_button = menu_modal.find("button.delete-menu");
+    var $menus = $editor.find('[data-dnt-container="main-menu"]');
+    var $menu_list = $menus.find('[data-dnt-container="menu-list"]');
+    var $menu_add = $editor.find('[data-dnt-trigger="add-menu-item"]');
+    var $success = $editor.find('[data-dnt-container="success"]');
+    var $loading = $editor.find('[data-dnt-container="loading"]');
+    var $menu_item_template = $editor.find('[data-dnt-container="menu-item-template"]');
 
-    var address = menu_modal.find('[data-dnt-text="address"]');
-    var edit_address = menu_modal.find('[data-trigger="edit-address"]');
+    var $modal = $editor.find('[data-dnt-container="menu-modal"]');
+    var $modal_name = $modal.find('input[name="name"]');
+    var $modal_save_button = $modal.find('[data-dnt-trigger="save"]');
+    var $modal_cancel_button = $modal.find('[data-dnt-trigger="cancel"]');
+    var $modal_delete_button = $modal.find('[data-dnt-trigger="delete"]');
+    var $modal_address = $modal.find('[data-dnt-text="address"]');
+    var $modal_edit_address = $modal.find('[data-trigger="edit-address"]');
 
-    menu_add.click(function() {
-        activeMenu = undefined;
-        menu_modal.find("input[name='name']").val('');
-        address.text('');
-        delete_button.hide();
-        menu_modal.modal();
+    // Reference to the menu list item being edited in modal, or an empty jquery object if new item
+    var $edited_menu;
+
+    // Add menu item
+    $menu_add.click(function() {
+        // New menu
+        $edited_menu = $();
+
+        // Reset input control state
+        $modal_name.val('');
+        $modal_address.text('');
+
+        // Show only relevant buttons
+        $modal_cancel_button.show();
+        $modal_delete_button.hide();
+
+        $modal.modal();
     });
 
-    menus.find("a.edit").click(edit);
+    // Edit menu item
+    $(document).on('click', $menus.selector + ' [data-dnt-menu-item]', function() {
+        // Editing menu item
+        $edited_menu = $(this).parent();
 
-    function edit() {
-        activeMenu = $(this);
-        menu_modal.find("input[name='name']").val($(this).text());
-        address.text($(this).attr('data-href'));
-        delete_button.show();
-        menu_modal.modal();
-    }
+        // Reset input control states
+        $modal_name.val($(this).text());
+        $modal_address.text($(this).attr('data-dnt-href'));
 
-    edit_address.click(function() {
-        UrlPicker.open({
-            disable_email: true,
-            existing_url: address.text().trim(),
-            done: function(result) {
-                address.text(result.url);
-            },
-        });
+        // Show only relevant buttons
+        $modal_cancel_button.hide();
+        $modal_delete_button.show();
+
+        $modal.modal();
     });
 
-    menus.find("ul").sortable({
+    // Sort menu items
+    $menus.find('ul').sortable({
         vertical: false,
         nested: false,
         onDrop: function ($item, container, _super) {
             _super($item, container);
-            var list = $(this);
-            var i = 0;
-            var items = [];
-            menus.find("a.edit").each(function() {
-                items.push({
-                    "id": $(this).attr('data-id'),
-                    "order": i
-                });
-                i++;
-            });
-            $.ajaxQueue({
-                url: menus.attr('data-reorder-url'),
-                data: { menus: JSON.stringify(items) }
-            }).fail(function(result) {
-                alert("Klarte ikke å lagre ny menyposisjon, vennligst oppdater siden (F5) og prøv igjen.");
-            });
+            save();
         }
     });
 
-    save_button.click(function() {
-        var name = menu_modal.find("input[name='name']").val().trim();
-        var url = address.text();
-        if(!url.match(/^https?:\/\//) && !url.startsWith('/')) {
-            url = "http://" + url;
-        }
-        if(name === '' || url === '') {
-            alert("Skriv inn både navn og adresse for lenken.");
+    // Save current menu state
+    function save() {
+        $success.hide();
+        $loading.show();
+
+        var menu_list = [];
+        var abort = false;
+        $menus.find('[data-dnt-menu-item]').each(function() {
+            menu_list.push({
+                name: $(this).text().trim(),
+                url: $(this).attr('data-dnt-href').trim(),
+            });
+        });
+
+        $.ajaxQueue({
+            url: $menus.attr('data-dnt-save-url'),
+            data: { menus: JSON.stringify(menu_list) },
+        }).done(function(result) {
+            $success.show();
+        }).fail(function(result) {
+            alert($menus.attr('data-dnt-save-failure'));
+        }).always(function(result) {
+            $loading.hide();
+        });
+        return true;
+    }
+
+    /**
+     * Modal logic
+     */
+
+    // Save current item
+    $modal_save_button.click(function() {
+        var name = $modal_name.val().trim();
+        var url = $modal_address.text().trim();
+
+        if(name === '') {
+            alert($menus.attr('data-dnt-empty-name'));
             return;
         }
-        var ajaxUrl;
-        var id;
-        if(activeMenu === undefined) {
-            ajaxUrl = menu_modal.attr('data-new-url');
+
+        if(url === '') {
+            alert($menus.attr('data-dnt-empty-url'));
+            return;
+        }
+
+        var $menu_item;
+
+        if($edited_menu.length === 0) {
+            $menu_item = $menu_item_template.clone();
+            $menu_item.removeAttr('data-dnt-container');
+            $menu_item.appendTo($menu_list);
         } else {
-            ajaxUrl = menu_modal.attr('data-edit-url');
-            id = activeMenu.attr('data-id');
+            $menu_item = $edited_menu;
         }
-        loading.show();
-        save_button.prop('disabled', true);
-        delete_button.prop('disabled', true);
-        $.ajaxQueue({
-            url: ajaxUrl,
-            data: {
-                name: name,
-                url: url,
-                id: id
-            }
-        }).done(function(result) {
-            if(activeMenu === undefined) {
-                result = JSON.parse(result);
-                var item = $('<li><a class="edit" data-id="' + result.id + '" data-href="' + url + '"  href="javascript:undefined">' + name + '</a></li>');
-                item.find("a.edit").click(edit);
-                if(menus.find("li").length > 0) {
-                    menus.find("li").last().after(item);
-                } else {
-                    menus.find("ul").append(item);
-                }
-            } else {
-                activeMenu.text(name);
-                activeMenu.attr('data-href', url);
-            }
-        }).fail(function(result) {
-            alert("Beklager, det oppstod en feil ved lagring av menyen. Vennligst prøv igjen.");
-        }).always(function(result) {
-            save_button.prop('disabled', false);
-            delete_button.prop('disabled', false);
-            loading.hide();
-            menu_modal.modal('hide');
+
+        var anchor = $menu_item.find('[data-dnt-menu-item]');
+        anchor.text(name);
+        anchor.attr('data-dnt-href', url);
+
+        if(save()) {
+            $modal.modal('hide');
+        }
+    });
+
+    // Delete current item
+    $modal_delete_button.click(function() {
+        if(!confirm($menus.attr('data-dnt-confirm-delete-item'))) {
+            return;
+        }
+
+        $edited_menu.remove();
+        if(save()) {
+            $modal.modal('hide');
+        }
+    });
+
+    // Edit URl address
+    $modal_edit_address.click(function() {
+        UrlPicker.open({
+            disable_email: true,
+            existing_url: $modal_address.text().trim(),
+            done: function(result) {
+                $modal_address.text(result.url);
+            },
         });
     });
 
-    delete_button.click(function() {
-        if(!confirm('Er du sikker på at du vil slette denne linken fra hovedmenyen?')) {
-            return;
-        }
-        var url = menu_modal.attr('data-delete-url');
-        loading.show();
-        save_button.prop('disabled', true);
-        delete_button.prop('disabled', true);
-        $.ajaxQueue({
-            url: url,
-            data: { menu: activeMenu.attr('data-id') }
-        }).done(function(result) {
-            activeMenu.parents("li").remove();
-        }).fail(function(result) {
-            alert("Beklager, det oppstod en feil ved sletting av elementet. Vennligst prøv igjen.");
-        }).always(function(result) {
-            save_button.prop('disabled', false);
-            delete_button.prop('disabled', false);
-            loading.hide();
-            menu_modal.modal('hide');
-        });
-    });
 });

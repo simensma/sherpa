@@ -1,10 +1,9 @@
 import json
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
-from django.db.models import Max
 
 from page.models import Menu
 from core.models import Site
@@ -20,47 +19,29 @@ def index(request, site):
     context.update(url_picker_context(active_site))
     return render(request, 'common/admin/sites/navigation/index.html', context)
 
-def new_menu(request, site):
+def save_menu(request, site):
     active_site = Site.objects.get(id=site)
-    if request.POST['name'].strip() == '':
+    menus = json.loads(request.POST['menus'])
+
+    # Empty string should be prevented client-side; enforce it here because it would be impossible to edit that item
+    if any([m['name'].strip() == '' for m in menus]):
         raise PermissionDenied
 
-    max_order = Menu.on(active_site).aggregate(Max('order'))['order__max']
-    if max_order is None:
-        max_order = 0
-    menu = Menu(
-        name=request.POST['name'],
-        url=request.POST['url'],
-        order=(max_order + 1),
-        site=active_site
-    )
-    menu.save()
-    cache.delete('main.menu.%s' % active_site.id)
-    return HttpResponse(json.dumps({'id': menu.id}))
+    # Delete all existing menus
+    Menu.on(active_site).delete()
 
-def edit_menu(request, site):
-    active_site = Site.objects.get(id=site)
-    if request.POST['name'].strip() == '':
-        raise PermissionDenied
+    # Recreate the new menu set
+    for i, menu in enumerate(menus):
+        menu = Menu(
+            name=menu['name'],
+            url=menu['url'],
+            order=i,
+            site=active_site,
+        )
+        menu.save()
 
-    menu = Menu.on(active_site).get(id=request.POST['id'])
-    menu.name = request.POST['name']
-    menu.url = request.POST['url']
-    menu.save()
-    cache.delete('main.menu.%s' % active_site.id)
-    return HttpResponse()
+    # Reset the cache with the new query set
+    cache.set('main.menu.%s' % active_site.id, Menu.on(request.site).all().order_by('order'), 60 * 60 * 24)
 
-def delete_menu(request, site):
-    active_site = Site.objects.get(id=site)
-    Menu.on(active_site).get(id=request.POST['menu']).delete()
-    cache.delete('main.menu.%s' % active_site.id)
-    return redirect('admin.sites.sites.navigation.views.index', active_site.id)
-
-def reorder_menu(request, site):
-    active_site = Site.objects.get(id=site)
-    for menu in json.loads(request.POST['menus']):
-        obj = Menu.on(active_site).get(id=menu['id'])
-        obj.order = menu['order']
-        obj.save()
-    cache.delete('main.menu.%s' % active_site.id)
+    # An empty http response will be considered success
     return HttpResponse()

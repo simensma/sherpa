@@ -393,34 +393,46 @@ def show_mine(request, id):
         messages.error(request, 'membership_not_paid')
         return redirect('fjelltreffen.views.mine')
 
-    # Hide all other annonser that belongs to this user first
-    hidden = Annonse.get_active().filter(user=request.user).update(hidden=True)
-    if hidden > 0:
-        messages.info(request, 'max_one_active_annonse')
-    annonse = Annonse.objects.get(id=id, user=request.user)
-    annonse.hidden = False
-    annonse.save()
-    return redirect('fjelltreffen.views.mine')
+    try:
+        # Hide all other annonser that belongs to this user first
+        hidden = Annonse.get_active().filter(user=request.user).update(hidden=True)
+        if hidden > 0:
+            messages.info(request, 'max_one_active_annonse')
+        annonse = Annonse.objects.get(id=id, user=request.user)
+        annonse.hidden = False
+        annonse.save()
+        return redirect('fjelltreffen.views.mine')
+    except Annonse.DoesNotExist:
+        # Unexpected case; maybe some asynchronous browsing. Ignore and return to the annonse-list
+        return redirect('fjelltreffen.views.mine')
 
 @user_requires_login(message='fjelltreffen_login_required')
 @user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 @user_requires(lambda u: u.get_age() > settings.FJELLTREFFEN_AGE_LIMIT, redirect_to='fjelltreffen.views.too_young')
 def hide_mine(request, id):
-    annonse = Annonse.objects.get(id=id, user=request.user)
-    annonse.hidden = True
-    annonse.save()
-    return redirect('fjelltreffen.views.mine')
+    try:
+        annonse = Annonse.objects.get(id=id, user=request.user)
+        annonse.hidden = True
+        annonse.save()
+        return redirect('fjelltreffen.views.mine')
+    except Annonse.DoesNotExist:
+        # Unexpected case; maybe some asynchronous browsing. Ignore and return to the annonse-list
+        return redirect('fjelltreffen.views.mine')
 
 @user_requires_login(message='fjelltreffen_login_required')
 @user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 @user_requires(lambda u: u.get_age() > settings.FJELLTREFFEN_AGE_LIMIT, redirect_to='fjelltreffen.views.too_young')
 def renew_mine(request, id):
-    annonse = Annonse.objects.get(id=id, user=request.user)
-    annonse.date_renewed = date.today()
-    annonse.save()
-    return redirect('fjelltreffen.views.mine')
+    try:
+        annonse = Annonse.objects.get(id=id, user=request.user)
+        annonse.date_renewed = date.today()
+        annonse.save()
+        return redirect('fjelltreffen.views.mine')
+    except Annonse.DoesNotExist:
+        # Unexpected case; maybe some asynchronous browsing. Ignore and return to the annonse-list
+        return redirect('fjelltreffen.views.mine')
 
 @user_requires_login(message='fjelltreffen_login_required')
 @user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')

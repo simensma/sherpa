@@ -22,63 +22,87 @@
   </div>
 </div><!-- /.row -->
 
-<div class="row">
-  <div class="col-md-12">
+<div class="menu-editor" data-dnt-container="menu-editor">
 
-    <h2>Toppmeny <small>dra for å sortere, klikk for å endre</small></h2>
+  <div class="row">
+    <div class="col-md-12">
 
-    <nav id="menus" data-reorder-url="{% url 'admin.sites.navigation.views.reorder_menu' active_site.id %}">
-      <ul class="sortable horizontal">
-        {% for menu in menus %}
-        <li>
-          <a class="edit" data-id="{{ menu.id }}" data-href="{{ menu.url }}" href="javascript:undefined">{{ menu.name }}</a>
+      <h2>Toppmeny <small>dra for å sortere, klikk for å endre</small></h2>
+
+      <nav
+        id="menus"
+        data-dnt-container="main-menu"
+        data-dnt-save-url="{% url 'admin.sites.navigation.views.save_menu' active_site.id %}"
+        data-dnt-save-failure="Beklager, det oppstod en feil ved lagring av menyen. Vennligst prøv igjen."
+        data-dnt-confirm-delete-item="Er du sikker på at du vil slette denne linken fra hovedmenyen?"
+        data-dnt-empty-name="Du må legge inn lenkens navn/tittel."
+        data-dnt-empty-url="Du må velge hvor lenken skal peke.">
+        <ul class="sortable horizontal" data-dnt-container="menu-list">
+          {% for menu in menus %}
+            <li>
+              <a data-dnt-menu-item data-dnt-href="{{ menu.url }}" href="javascript:undefined">{{ menu.name }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </nav>
+
+      <ul class="jq-hide">
+        <li data-dnt-container="menu-item-template">
+          <a data-dnt-menu-item data-dnt-href="" href="javascript:undefined"></a>
         </li>
-        {% endfor %}
       </ul>
-    </nav>
-    <p>
-      <a class="add-menu-element" href="javascript:undefined">Nytt menyelement</a>
-    </p>
-  </div>
-</div><!-- /.row -->
 
-<div class="modal menu" data-new-url="{% url 'admin.sites.navigation.views.new_menu' active_site.id %}" data-edit-url="{% url 'admin.sites.navigation.views.edit_menu' active_site.id %}" data-delete-url="{% url 'admin.sites.navigation.views.delete_menu' active_site.id %}">
-  <div class="modal-header">
-
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
-    <h3>Endre meny-element</h3>
-
-  </div>
-  <div class="modal-body">
-
-    <div class="form-group">
-      <label>Tittel</label>
-      <input type="text" name="name" class="form-control">
-    </div>
-    <div class="form-group">
-      <label>Adresse</label>
-      <p class="help-block" data-dnt-text="address"></p>
       <p>
-        <a href="javascript:undefined" data-trigger="edit-address">Endre</a>
+        <a data-dnt-trigger="add-menu-item" href="javascript:undefined">Nytt menyelement</a>
       </p>
+
+      <div class="alert alert-success jq-hide" data-dnt-container="success">
+        Endringene i toppmenyen er nå lagret og oppdatert på nettsidene.
+      </div>
+
+      <div class="jq-hide form-border" data-dnt-container="loading">
+        <h2 class="loading-title">Lagrer toppmeny...</h2>
+        <img class="ajaxloader" src="/static/img/ajax-loader-large.gif" alt="Lagrer, vennligst vent...">
+      </div>
     </div>
+  </div><!-- /.row -->
 
-    <div class="loading jq-hide">
-      Vennligst vent...<br>
-      <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" class="ajaxloader" alt="Vennligst vent...">
+  <div class="modal" data-dnt-container="menu-modal">
+    <div class="modal-header">
+
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+      <h3>Endre meny-element</h3>
+
     </div>
+    <div class="modal-body">
 
+      <div class="form-group">
+        <label>Tittel</label>
+        <input type="text" name="name" class="form-control">
+      </div>
+      <div class="form-group">
+        <label>Adresse</label>
+        <p class="help-block" data-dnt-text="address"></p>
+        <p>
+          <a href="javascript:undefined" data-trigger="edit-address">Velg lenke...</a>
+        </p>
+      </div>
+
+      <div class="loading jq-hide">
+        Vennligst vent...<br>
+        <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" class="ajaxloader" alt="Vennligst vent...">
+      </div>
+
+    </div>
+    <div class="modal-footer">
+
+      <button class="btn btn-success" data-dnt-trigger="save">Lagre</button>
+      <button class="btn btn-default" data-dnt-trigger="cancel" data-dismiss="modal">Avbryt</button>
+      <button class="btn btn-danger" data-dnt-trigger="delete">Slett lenken</button>
+
+    </div>
   </div>
-  <div class="modal-footer">
 
-    <button class="btn btn-success save-menu">
-      Lagre
-    </button>
-    <button class="btn btn-danger delete-menu">
-      Slett lenken
-    </button>
-
-  </div>
 </div>
 
 {% include 'common/admin/util/url-picker.html' %}

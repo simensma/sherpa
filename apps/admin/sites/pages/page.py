@@ -5,6 +5,7 @@ import json
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.conf import settings
+from django.contrib import messages
 from django.template import RequestContext
 from django.template.loader import render_to_string
 
@@ -39,9 +40,13 @@ def children(request, site):
 
 def new(request, site):
     active_site = Site.objects.get(id=site)
+
+    if request.method != 'POST':
+        return redirect('admin.sites.pages.page.list', active_site.id)
+
     if not slug_is_unique(request.POST['slug']):
-        # TODO: Error handling
-        raise Exception("Slug is not unique (error handling TBD)")
+        messages.error(request, 'slug_not_unique')
+        return redirect('admin.sites.pages.page.new', active_site.id)
 
     page = Page(
         title=request.POST['title'],
