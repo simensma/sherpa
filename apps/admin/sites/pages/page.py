@@ -39,6 +39,10 @@ def children(request, site):
 
 def new(request, site):
     active_site = Site.objects.get(id=site)
+
+    if request.method != 'POST':
+        return redirect('admin.sites.pages.page.list', active_site.id)
+
     if not slug_is_unique(request.POST['slug']):
         # TODO: Error handling
         raise Exception("Slug is not unique (error handling TBD)")
