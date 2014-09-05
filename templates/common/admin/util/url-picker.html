@@ -47,7 +47,8 @@
       class="pick-choice-wrapper"
       data-dnt-container="pick-choices"
       data-dnt-invalid-url-warning="Dette er ikke en ordentlig nettadresse.\n\nSjekk at du har fått med deg hele adressen når du kopierte den.\n\nHusk at den må begynne slik: http://"
-      data-dnt-invalid-email-warning="Dette er ikke en gyldig e-postadresse. Sjekk at du har skrevet adressen riktig.">
+      data-dnt-invalid-email-warning="Dette er ikke en gyldig e-postadresse. Sjekk at du har skrevet adressen riktig."
+      data-dnt-no-articles-warning="Det er ingen lenke å velge her fordi det ikke finnes noen artikler å velge blant.">
 
       <div class="jq-hide" data-dnt-container="pick-choice" data-dnt-pick-choice="page">
         <div class="form-group">
@@ -72,27 +73,34 @@
       </div>
 
       <div class="jq-hide" data-dnt-container="pick-choice" data-dnt-pick-choice="article">
-        <div class="form-group">
-          <label for="page">Velg artikkel fra {{ active_site.domain }}:</label>
+        {% if url_picker.article_versions|length > 0 %}
+          <div class="form-group">
+            <label for="page">Velg artikkel fra {{ active_site.domain }}:</label>
 
-          {# Explicit line-break - select2 displays as inline-block #}
-          <br>
+            {# Explicit line-break - select2 displays as inline-block #}
+            <br>
 
-          <select id="article" name="article" style="width: 100%;">
-            {% for version in url_picker.article_versions %}
-              <option value="http://{{ active_site.domain }}{% url 'articles.views.show' version.variant.article.id version.get_title_content.content|striptags|slugify %}">
-                {{ version.get_title_content.content|striptags }}
-              </option>
-            {% endfor %}
-          </select>
-        </div>
-        <p class="article-url">
-          Adresse:
-          <span class="url" data-dnt-text="article-url">
-            {# Assuming that the select defaults to the initial item #}
-            http://{{ active_site.domain }}{% url 'articles.views.show' url_picker.article_versions.0.variant.article.id url_picker.article_versions.0.get_title_content.content|striptags|slugify %}
-          </span>
-        </p>
+            <select id="article" name="article" style="width: 100%;">
+              <option></option>
+              {% for version in url_picker.article_versions %}
+                <option value="http://{{ active_site.domain }}{% url 'articles.views.show' version.variant.article.id version.get_title_content.content|striptags|slugify %}">
+                  {{ version.get_title_content.content|striptags }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+          <p class="article-url">
+            Adresse:
+            <span class="url" data-dnt-text="article-url">
+              {# Assuming that the select defaults to the initial item #}
+              http://{{ active_site.domain }}{% url 'articles.views.show' url_picker.article_versions.0.variant.article.id url_picker.article_versions.0.get_title_content.content|striptags|slugify %}
+            </span>
+          </p>
+        {% else %}
+          <p>
+            Det er ikke opprettet noen artikler under {{ active_site.domain }}. Når de blir opprettet vil du kunne finne dem igjen her og lenke til dem.
+          </p>
+        {% endif %}
       </div>
 
       <div class="jq-hide" data-dnt-container="pick-choice" data-dnt-pick-choice="forening">

@@ -166,9 +166,14 @@
                 url: page_select.find('option:selected').val(),
             });
         } else if(pick_type === 'article') {
+            var selected = article_select.find('option:selected');
+            if(selected.length === 0) {
+                alert(pick_choices.attr('data-dnt-no-articles-warning'));
+                return;
+            }
             callback({
                 type: 'anchor',
-                url: article_select.find('option:selected').val(),
+                url: selected.val(),
             });
         } else if(pick_type === 'forening') {
             callback({
