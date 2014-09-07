@@ -29,8 +29,12 @@ def email(email, req=True):
     no_dotdot = '..' not in email
     no_double_at = email.find('@') == email.rfind('@')
     email_stripped = email.strip()
-    no_leading_dot = email_stripped[0] != '.'
-    no_trailing_dot = email_stripped[-1] != '.'
+    if len(email_stripped) > 0:
+        no_leading_dot = email_stripped[0] != '.'
+        no_trailing_dot = email_stripped[-1] != '.'
+    else:
+        no_leading_dot = True
+        no_trailing_dot = True
     return email_format and no_dotdot and no_double_at and no_leading_dot and no_trailing_dot
 
 def memberid(memberid, req=True):

@@ -55,8 +55,15 @@
             var no_dotdot = !input.contains("..");
             var no_double_at = input.indexOf("@") == input.lastIndexOf("@");
             var input_trimmed = input.trim();
-            var no_leading_dot = input_trimmed[0] !== '.';
-            var no_trailing_dot = input_trimmed[input_trimmed.length-1] !== '.';
+            var no_leading_dot;
+            var no_trailing_dot;
+            if(input_trimmed.length > 0) {
+                no_leading_dot = input_trimmed[0] !== '.';
+                no_trailing_dot = input_trimmed[input_trimmed.length-1] !== '.';
+            } else {
+                no_leading_dot = true;
+                no_trailing_dot = true;
+            }
             return (email_format && no_dotdot && no_double_at && no_leading_dot && no_trailing_dot);
         },
         'memberid': function(input, req, opts) {
