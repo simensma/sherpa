@@ -78,7 +78,6 @@ def parse_content(request, version):
         context = {'version': version, 'page_hierarchy': page_hierarchy}
         cache.set('content.version.%s' % version.id, context, 60 * 10)
 
-    context['request'] = request
 
     if request.site.id == Site.DNT_CENTRAL_ID:
         context.update(get_static_promo_context(request.path))
