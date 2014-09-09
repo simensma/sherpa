@@ -56,7 +56,7 @@ class PathURLNode(Node):
         url = ''
         try:
             # [Sherpa] The following line is monkeypatched (edited).
-            url = reverse(view_name, args=args, kwargs=kwargs, current_app=context.current_app, urlconf='sherpa.urls_main')
+            url = reverse(view_name, args=args, kwargs=kwargs, current_app=context.current_app, urlconf=settings.ROOT_URLCONF)
         except NoReverseMatch as e:
             if settings.SETTINGS_MODULE:
                 project_name = settings.SETTINGS_MODULE.split('.')[0]
