@@ -129,90 +129,71 @@
           </div>
 
           <div class="form-group forening">
-            <label class="col-md-2 control-label" for="forening">Arrangør</label>
-            <div class="col-md-10">
-              <select class="form-control" name="forening" id="forening" data-placeholder="Velg arrangør...">
+            <label class="col-md-2 control-label" for="forening">
+              Hovedarrangør <span class="required">*</span>
+            </label>
+            <div class="col-md-4">
+              <select class="form-control" name="forening" id="forening"
+                data-placeholder="Ingen arrangør valgt">
+
                 <option value=""></option>
-                {% if user.children_foreninger_sorted.sentral|length > 0 %}
-                  <optgroup label="Sentralt/nasjonalt">
-                    {% for forening in user.children_foreninger_sorted.sentral %}
-                      <option value="{{ forening.id }}"{% if aktivitet.forening == forening %} selected{% endif %}>{{ forening.name }}</option>
-                    {% endfor %}
-                  </optgroup>
-                {% endif %}
-                {% if user.children_foreninger_sorted.forening|length > 0 %}
-                  <optgroup label="Medlemsforeninger">
-                    {% for forening in user.children_foreninger_sorted.forening %}
-                      <option value="{{ forening.id }}"{% if aktivitet.forening == forening %} selected{% endif %}>{{ forening.name }}</option>
-                    {% endfor %}
-                  </optgroup>
-                {% endif %}
-                {% if user.children_foreninger_sorted.turlag|length > 0 %}
-                  <optgroup label="Lokale turlag">
-                    {% for forening in user.children_foreninger_sorted.turlag %}
-                      <option value="{{ forening.id }}"{% if aktivitet.forening == forening %} selected{% endif %}>{{ forening.name }}</option>
-                    {% endfor %}
-                  </optgroup>
-                {% endif %}
-                {% if user.children_foreninger_sorted.turgruppe|length > 0 %}
-                  <optgroup label="Turgrupper">
-                    {% for forening in user.children_foreninger_sorted.turgruppe %}
-                      <option value="{{ forening.id }}"{% if aktivitet.forening == forening %} selected{% endif %}>{{ forening.name }}</option>
-                    {% endfor %}
-                  </optgroup>
-                {% endif %}
+                {% for type, groups in all_foreninger.items %}
+                  {% if groups %}
+                    <optgroup label="{{ type | capfirst }}">
+                      {% for g in groups %}
+                        {% if aktivitet.forening == g %}
+                          <option value="{{ g.id }}" selected>{{ g.name }}</option>
+                        {% else %}
+                          <option value="{{ g.id }}">{{ g.name }}</option>
+                        {% endif %}
+                      {% endfor %}
+                    </optgroup>
+                  {% endif %}
+                {% endfor %}
+
               </select>
               <div class="help-block">
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p>Velg den gruppen eller foreningen som arrangerer dette arrangentet.</p>
               </div>
             </div>
-          </div>
+          </div><!-- /.form-group.co_forening -->
 
           <div class="form-group co_forening">
             <label class="col-md-2 control-label" for="co_forening">Medarrangør</label>
-            <div class="col-md-10">
-              <select class="form-control" name="co_forening" id="co_forening" data-placeholder="Ingen medarrangør">
+            <div class="col-md-4">
+              <select class="form-control" name="co_forening" id="co_forening"
+                data-placeholder="Ingen medarrangør valgt">
+
                 <option value=""></option>
-                {% if all_foreninger.sentral|length > 0 %}
-                  <optgroup label="Sentralt/nasjonalt">
-                    {% for forening in all_foreninger.sentral %}
-                      <option value="{{ forening.id }}"{% if aktivitet.co_forening == forening %} selected{% endif %}>{{ forening.name }}</option>
-                    {% endfor %}
-                  </optgroup>
-                {% endif %}
-                {% if all_foreninger.forening|length > 0 %}
-                  <optgroup label="Medlemsforeninger">
-                    {% for forening in all_foreninger.forening %}
-                      <option value="{{ forening.id }}"{% if aktivitet.co_forening == forening %} selected{% endif %}>{{ forening.name }}</option>
-                    {% endfor %}
-                  </optgroup>
-                {% endif %}
-                {% if all_foreninger.turlag|length > 0 %}
-                  <optgroup label="Lokale turlag">
-                    {% for forening in all_foreninger.turlag %}
-                      <option value="{{ forening.id }}"{% if aktivitet.co_forening == forening %} selected{% endif %}>{{ forening.name }}</option>
-                    {% endfor %}
-                  </optgroup>
-                {% endif %}
-                {% if all_foreninger.turgruppe|length > 0 %}
-                  <optgroup label="Turgrupper">
-                    {% for forening in all_foreninger.turgruppe %}
-                      <option value="{{ forening.id }}"{% if aktivitet.co_forening == forening %} selected{% endif %}>{{ forening.name }}</option>
-                    {% endfor %}
-                  </optgroup>
-                {% endif %}
+                {% for type, groups in all_foreninger.items %}
+                  {% if groups %}
+                    <optgroup label="{{ type | capfirst }}">
+                      {% for g in groups %}
+                        {% if aktivitet.co_forening == g %}
+                          <option value="{{ g.id }}" selected>{{ g.name }}</option>
+                        {% else %}
+                          <option value="{{ g.id }}">{{ g.name }}</option>
+                        {% endif %}
+                      {% endfor %}
+                    </optgroup>
+                  {% endif %}
+                {% endfor %}
+
               </select>
-              <button class="btn btn-default">Fjern medarrangør</button>
               <div class="help-block">
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p>Her kan du velge medarrangør. Det er <strong>ikke</strong> nødvendig å velge
+                hovedforeningen hvis dette arrangementet arrangeres av en undergruppe!</p>
               </div>
             </div>
-          </div>
-
-        </div>
+            <div class="col-md-6">
+              <button class="btn btn-default" data-dnt-action="remove-co-forening">
+                Fjern medarrangør
+              </button>
+            </div>
+          </div><!-- /.form-group.co_forening -->
+        </div><!-- /.section.forening -->
 
         <div class="section description">
-
           <div class="form-group">
             <div class="col-md-offset-2 col-md-8">
               <h2>Beskrivelse og informasjon</h2>
@@ -222,81 +203,157 @@
           <div class="form-group code">
             <label class="col-md-2 control-label" for="code">Turkode</label>
             <div class="col-md-4">
-              <input type="text" class="form-control" name="code" id="code" value="{{ aktivitet.code }}">
+              <input class="form-control" name="code" id="code" type="text"
+                value="{{ aktivitet.code }}">
+              <div class="help-block">
+                <p>Turkode brukes bare av noen foreninger. Du trenger altså ikke skrive noe her
+                arrangementet ikke bruker turkode.</p>
+              </div>
             </div>
-          </div><!-- /.form-group -->
+          </div><!-- /.form-group.code -->
 
           <div class="form-group title">
-            <label class="col-md-2 control-label" for="title">Tittel</label>
+            <label class="col-md-2 control-label" for="title">
+              Tittel<span class="required">*</span>
+            </label>
             <div class="col-md-8">
-              <input type="text" class="form-control" name="title" id="title" value="{{ aktivitet.title }}">
+              <input class="form-control" name="title" id="title" type="text"
+                value="{{ aktivitet.title }}">
               <div class="hints error jq-hide">
                 Du må jo skrive inn en tittel!
               </div>
             </div>
-          </div><!-- /.form-group -->
+          </div><!-- /.form-group.title -->
 
           <div class="form-group description">
-            <label class="col-md-2 control-label" for="description">Beskrivelse</label>
+            <label class="col-md-2 control-label" for="description">
+              Beskrivelse<span class="required">*</span></label>
             <div class="col-md-8">
-              <textarea rows="6" cols="80" name="description" id="description" class="form-control">{{ aktivitet.description }}</textarea>
+              <textarea class="form-control" name="description" id="description"
+                rows="6" cols="80">{{ aktivitet.description }}</textarea>
               <div class="hints error jq-hide">
                 Du må legge inn noen få ord om turen her.
               </div>
             </div>
-          </div><!-- /.form-group -->
+          </div><!-- /.form-group.description -->
 
           <div class="form-group difficulty">
-            <label class="col-md-2 control-label" for="difficulty">Gradering</label>
+            <label class="col-md-2 control-label" for="difficulty">
+              Gradering<span class="required">*</span></label>
             <div class="col-md-10">
               <div data-toggle="buttons" class="btn-group">
                 {% for difficulty in difficulties %}
-                  <label class="btn btn-default {{ difficulty.0 }}{% if aktivitet.difficulty == difficulty.0 %} active{% endif %}">
-                    <input type="radio" value="{{ difficulty.0 }}" name="difficulty"{% if aktivitet.difficulty == difficulty.0 %} checked{% endif %}>{{ difficulty.1 }}
-                  </label>
+                  {% if aktivitet.difficulty == difficulty.0 %}
+                    <label class="btn btn-default {{ difficulty.0 }} active">
+                      <input type="radio" value="{{ difficulty.0 }}" name="difficulty" checked>
+                      {{ difficulty.1 }}
+                    </label>
+                  {% else %}
+                    <label class="btn btn-default {{ difficulty.0 }}">
+                      <input type="radio" value="{{ difficulty.0 }}" name="difficulty">
+                      {{ difficulty.1 }}
+                    </label>
+                  {% endif %}
                 {% endfor %}
               </div>
               <div class="hints error jq-hide">
                 Du må velge vanskelighetsgraden for turen.
               </div>
-              <p class="help-block">Angi hvor krevende aktiviteten er.</p>
+              <p class="help-block">
+                Angi hvor krevende aktiviteten er i henhold til
+                <a href="http://www.merkehandboka.no" target="_blank">Merkehåndboka</a>.
+              </p>
             </div>
-          </div><!-- /.form-group -->
+          </div><!-- /.form-group.difficulty -->
 
           <div class="form-group audiences">
-            <label class="col-md-2 control-label" for="audiences">Målgruppe</label>
-            <div class="col-md-10">
-              <select name="audiences" id="audiences" multiple class="form-control chosen" data-placeholder="Velg målgruppe...">
+            <label class="col-md-2 control-label" for="audiences">
+              Målgruppe<span class="required">*</span>
+            </label>
+            <div class="col-md-4">
+              <select class="form-control" id="audiences" name="audiences"
+                data-placeholder="Velg målgruppe" multiple>
+
                 <option value=""></option>
                 {% for audience in audiences %}
-                  <option value="{{ audience.0 }}"{% if audience.0 in aktivitet.get_audiences %} selected{% endif %}>{{ audience.1 }}</option>
+                  {% if audience.0 in aktivitet.get_audiences %}
+                    <option value="{{ audience.0 }}" selected>{{ audience.1 }}</option>
+                  {% else %}
+                    <option value="{{ audience.0 }}">{{ audience.1 }}</option>
+                  {% endif %}
                 {% endfor %}
               </select>
               <div class="hints error jq-hide">
                 Du må velge minst én målgruppe.
               </div>
             </div>
-          </div><!-- /.form-group -->
+          </div><!-- /.form-group.audiences -->
 
-          <div class="form-group category">
-            <label class="col-md-2 control-label">Kategori</label>
+          <div class="form-group category" data-dnt-container="category">
+            <label class="col-md-2 control-label">
+              Kategori<span class="required">*</span>
+            </label>
             <div class="col-md-10">
               <div class="btn-group" data-toggle="buttons">
                 {% for category in categories %}
-                  <label class="btn btn-default {% if category.0 == aktivitet.category %} active{% endif %}">
-                  <!-- <label class="btn btn-default{% if category.0 == aktivitet.category %} active{% endif %}"> -->
-                    <input type="radio" name="category" value="{{ category.0 }}"{% if category.0 == aktivitet.category %} checked{% endif %}> {{ category.1 }}
-                  </label>
+                  {% with val=category.0 name=category.1 %}
+                    {% if aktivitet.category == val %}
+                      <label class="btn btn-default active">
+                        <input type="radio" name="category" value="{{ val }}" checked> {{ name }}
+                      </label>
+                    {% else %}
+                      <label class="btn btn-default">
+                        <input type="radio" name="category" value="{{ val }}"> {{ name }}
+                      </label>
+                    {% endif %}
+                  {% endwith %}
                 {% endfor %}
               </div>
             </div>
-          </div><!-- /.form-group -->
+          </div><!-- /.form-group.category -->
 
-          <div class="form-group select-organizedhikesubcategory organizedhike{% if aktivitet.category != 'organizedhike' %} jq-hide{% endif %}">
-            <label for="turtype" class="col-md-2 control-label">
-              Hva slags tur er dette?
+          <div class="form-group subcategory{% if not aktivitet.category %} jq-hide{% endif %}">
+            <label class="col-md-2 control-label">
+
+              <!-- This toggles the correct span -->
+              <div class="selected {{ aktivitet.category }}"
+                data-dnt-container="subcategory-label">
+
+                <span class="organizedhike">
+                  Hva slags tur er dette?<span class="required">*</span>
+                </span>
+
+                <span class="course">
+                  Hva slags kurs er dette?<span class="required">*</span>
+                </span>
+
+                <span class="event">
+                  Hvilket arrangement er dette?<span class="required">*</span>
+                </span>
+
+                <span class="volunteerwork">
+                  Hva slags dugnad er dette?<span class="required">*</span>
+                </span>
+              </div>
             </label>
-            <div class="col-md-10">
+
+            <div class="col-md-4">
+              <select class="form-control" name="category_type"
+                data-placeholder="Velg underkategori">
+
+                <option value=""></option>
+                {% for sub in aktivitet.get_main_subcategories %}
+                  {% if aktivitet.category_type = sub.name %}
+                    <option class="subcategory {{ sub.category }}" selected>{{ sub.name }}</option>
+                  {% else %}
+                    <option class="subcategory {{ sub.category }}">{{ sub.name }}</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+            </div>
+
+            <!-- There is a problem with the name="" being overloaded -->
+            <!-- <div class="col-md-10">
               <div data-toggle="buttons" class="btn-group">
                 {% for sub in aktivitet.get_main_subcategories %}
                   <label class="btn {% if sub.active %}btn-danger{% else %}btn-default{% endif %} subcategory {{ sub.category }} {{ sub.name }}">
@@ -305,118 +362,35 @@
                   </label>
                 {% endfor %}
               </div>
-            </div>
-          </div>
-          <div class="form-group select-subcategory organizedhike{% if aktivitet.category == 'organizedhike' %} jq-hide{% endif %}">
-            <label class="col-md-2 control-label">
-              <div class="labels">
+            </div> -->
+          </div><!-- /.form-group.subcategory -->
 
-                <span class="organizedhike{% if aktivitet.category != 'organizedhike' %} jq-hide{% endif %}">
-                  Hva slags tur er dette?
-                </span>
+          <div class="form-group tags{% if not aktivitet.category %} jq-hide{% endif %}">
+            <label class="col-md-2 control-label">Tagger</label>
+            <div class="col-md-4">
+              <select class="form-control" name="category_tags" multiple
+                data-placeholder="Ingen tagger valgt">
 
-                <span class="trip{% if aktivitet.category != 'trip' %} jq-hide{% endif %}">
-                  Hva slags tur/aktivitet er dette?
-                </span>
-
-                <span class="course{% if aktivitet.category != 'course' %} jq-hide{% endif %}">
-                  Hva slags kurs er dette?
-                </span>
-
-                <span class="event{% if aktivitet.category != 'event' %} jq-hide{% endif %}">
-                  Hva slags arrangement er dette?
-                </span>
-
-                <span class="volunteerwork{% if aktivitet.category != 'volunteerwork' %} jq-hide{% endif %}">
-                  Hva slags dugnad er dette?
-                </span>
-              </div>
-            </label>
-            <div class="col-md-10">
-              <select class="form-control" data-chosen data-chosen data-placeholder="Velg underkategori">
                 <option value=""></option>
-                {% for sub in aktivitet.get_main_subcategories %}
-                  <option class="subcategory {{ sub.category }}">{{ sub.name }}</option>
+                {% for sub in aktivitet.get_other_subcategories %}
+                  {% if category != 'trip' %}
+                    {% if sub.name in aktivitet.get_active_subcategories %}
+                      <option class="subcategory {{ sub.category }}" selected>{{ sub.name }}</option>
+                    {% else %}
+                      <option class="subcategory {{ sub.category }}">{{ sub.name }}</option>
+                    {% endif %}
+                  {% endif %}
                 {% endfor %}
               </select>
+              <div class="help-block">
+                <p>Her kan du ytterligere spesifisere arrangements-aktiviteter!</p>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <button class="btn btn-default">Opprett ny tagg</button>
             </div>
           </div><!-- /.form-group -->
 
-          <div class="form-group select-tags">
-            <label class="col-md-2 control-label">Tagger</label>
-            <div class="col-md-10">
-              <select class="form-control" data-chosen multiple data-chosen data-placeholder="Velg flere relevante kategorier">
-              <option value=""></option>
-              {% for sub in aktivitet.get_other_subcategories %}
-                <option class="subcategory {{ sub.category }}">{{ sub.name }}</option>
-              {% endfor %}
-            </select>
-            </div>
-          </div><!-- /.form-group -->
-
-          <!--<div class="form-group subcategories{% if aktivitet.category == '' %} jq-hide{% endif %}">
-            <div class="col-md-offset-2 col-md-10">
-
-              <div class="hints error jq-hide">
-                Du må velge minst én av de foreslåtte kategoriene. Klikk på de kategoriene du vil velge.
-              </div>
-
-              <div class="square-well">
-
-                <div class="labels">
-
-                  <h3 class="organizedhike{% if aktivitet.category != 'organizedhike' %} jq-hide{% endif %}">
-                    Hva slags tur er dette?
-                  </h3>
-
-                  <h3 class="trip{% if aktivitet.category != 'trip' %} jq-hide{% endif %}">
-                    Hva slags tur/aktivitet er dette?
-                  </h3>
-
-                  <h3 class="course{% if aktivitet.category != 'course' %} jq-hide{% endif %}">
-                    Hva slags kurs er dette?
-                  </h3>
-
-                  <h3 class="event{% if aktivitet.category != 'event' %} jq-hide{% endif %}">
-                    Hva slags arrangement er dette?
-                  </h3>
-
-                  <h3 class="volunteerwork{% if aktivitet.category != 'volunteerwork' %} jq-hide{% endif %}">
-                    Hva slags dugnad er dette?
-                  </h3>
-                </div>
-
-                <div class="main-buttons">
-                  {% for sub in aktivitet.get_main_subcategories %}
-                    <button class="btn {% if sub.active %}btn-danger{% else %}btn-default{% endif %} subcategory {{ sub.category }}">{{ sub.name }}</button>
-                  {% endfor %}
-                </div>
-
-                {% if not aktivitet.has_other_subcategories %}
-                  <p class="show-other-buttons">
-                    <a href="javascript:undefined" class="show-other-buttons">Vis flere kategoriforslag...</a>
-                  </p>
-                {% endif %}
-
-                <div class="other-buttons-wrapper{% if not aktivitet.has_other_subcategories %} jq-hide{% endif %}">
-                  <h4>Flere kategoriforslag</h4>
-                  <div class="other-buttons">
-                    {% for sub in aktivitet.get_other_subcategories %}
-                      <button class="btn {% if sub.active %}btn-danger{% else %}btn-default{% endif %} subcategory {{ sub.category }}">{{ sub.name }}</button>
-                    {% endfor %}
-                  </div>
-                </div>
-
-                <div class="custom">
-                  <button class="btn subcategory btn-danger fake jq-hide"></button>
-                  <strong>Eller finn på egne kategorier:</strong>
-                  <input type="text" class="form-control" name="custom-category" data-tags-url="{% url 'core.views.filter_tags' %}">
-                </div>
-
-                <input type="hidden" name="subcategories">
-              </div>
-            </div>
-          </div>--><!-- /.form-group -->
         </div><!-- /.section.description -->
 
         <div class="section pictures">
