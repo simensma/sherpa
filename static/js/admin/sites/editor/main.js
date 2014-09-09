@@ -39,7 +39,7 @@
             var type = $(this).attr('data-type');
             var widget_type = $(this).attr('data-widget');
 
-            if(add_content.attr('data-dnt-row') !== undefined) {
+            if(add_content.parents('[data-dnt-row]').length === 0) {
                 // The add-content control is on a separate row without content siblings
 
                 var prev_row = $(this).parents("div.row-fluid").prev("div[data-dnt-row]");
