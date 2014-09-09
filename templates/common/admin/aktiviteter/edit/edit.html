@@ -45,11 +45,18 @@
 
 <div class="row">
   <div class="col-lg-12">
-    <h1>{{ aktivitet.title|default:"Ny aktivitet" }} <small>legg inn opplysninger om denne aktiviteten</small></h1>
+    <h1>
+      {{ aktivitet.title|default:"Ny aktivitet" }}
+      <small>legg inn opplysninger om denne aktiviteten</small>
+    </h1>
     <ol class="breadcrumb">
-      <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
+      <li class="active">
+        <i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a>
+      </li>
       <li><a href="{% url 'admin.aktiviteter.views.index' %}">Turer og aktiviteter</a></li>
-      <li><a href="{% url 'admin.aktiviteter.views.edit' aktivitet.id %}">{{ aktivitet.title|default:"Ny aktivitet" }}</a></li>
+      <li><a href="{% url 'admin.aktiviteter.views.edit' aktivitet.id %}">
+        {{ aktivitet.title|default:"Ny aktivitet" }}
+      </a></li>
     </ol>
   </div>
 </div><!-- /.row -->
@@ -62,21 +69,37 @@
       {% for message in messages %}
         {% if message.message == 'save_success' %}
           <div class="alert alert-success">
-            <strong>Endringene har blitt lagret!</strong><br>
+            <p><strong>Endringene har blitt lagret!</strong></p>
             {% if aktivitet.dates.count > 0 %}
-              Se gjennom endringene dine, eller <a href="{% url 'aktiviteter.views.show' aktivitet.get_dates_ordered.0.id %}">vis den publiserte aktiviteten</a>.
+              <ul>
+              {% for i, date in aktivitet.get_dates_ordered %}
+                <li><a href="{% url 'aktiviteter.views.show' date.id %}">
+                  Forhåndsvis "{{ aktivitet.title|default:"aktivitet uten navn" }}" fra
+                  {% firstof date.start_date|date:"d.m.Y" "Ingen dato" %} til
+                  {% firstof date.end_date|date:"d.m.Y" "Ingen dato" %}
+                </a></li>
+              {% endfor %}
             {% endif %}
           </div>
         {% elif message.message == 'invalid_date_format' %}
           <div class="alert alert-danger">
-            <strong>Ugyldig datoformat</strong><br>
-            Vennligst se gjennom datoene du har lagt inn (publiseringsdato, turstart, turslutt, påmeldingsfrister osv). Datoene må legges inn med følgende format: <strong>dd.mm.åååå</strong> (dato, måned, år), for eksempel vil dagens dato se slik ut: <strong>{{ now|date:"d.m.Y" }}</strong>
+            <p><strong>Ugyldig datoformat</strong></p>
+
+            <p>Vennligst se gjennom datoene du har lagt inn (publiseringsdato, turstart, turslutt,
+            påmeldingsfrister osv). Datoene må legges inn med følgende format:
+            <strong>dd.mm.åååå</strong> (dato, måned, år), for eksempel vil dagens dato se slik ut:
+            <strong>{{ now|date:"d.m.Y" }}</strong></p>
           </div>
         {% endif %}
       {% endfor %}
 
-      <form action="{% url 'admin.aktiviteter.views.edit' aktivitet.id %}" method="post" class="edit-aktivitet form-default form-horizontal" data-aktivitet-id="{{ aktivitet.id }}">
+      <form action="{% url 'admin.aktiviteter.views.edit' aktivitet.id %}" method="post"
+        class="edit-aktivitet form-default form-horizontal"
+        data-dnt-container="aktivitet"
+        data-aktivitet-id="{{ aktivitet.id }}">
+
         {% csrf_token %}
+
         <input type="hidden" name="images" value="">
         <input type="hidden" name="preview" value="false">
 
