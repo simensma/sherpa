@@ -1,14 +1,30 @@
 <div class="panel panel-default">
+  <input type="hidden" name="dates[{{ i }}][id]" value="{{ date.id }}">
+  <input type="hidden" name="dates[{{ i }}][status]" value="active">
   <div class="panel-heading">
     <h4 class="panel-title">
-      <a data-toggle="collapse" data-parent="#dates" href="#date-{{ i }}">
-        {% firstof date.start_date|date:"d.m.Y" now|date:"d.m.Y" %} -
-        {% firstof date.end_date|date:"d.m.Y" now|date:"d.m.Y" %}
+      {% if not date.id %}<span class="label label-warning">Ikke lagret</span>{% endif %}
+
+      <a data-toggle="collapse" data-parent="#dates" href="#date-{{ i }}"
+        data-dnt-container="date-title">
+
+        {% firstof date.start_date|date:"d.m.Y" "Ingen startdato" %} -
+        {% firstof date.end_date|date:"d.m.Y" "Ingen sluttdato" %}
       </a>
     </h4>
-    <a class="btn btn-danger btn-sm">Slett dato</a>
+
+    {% if date.total_signup_count > 0 %}
+      <a class="btn btn-warning btn-sm pull-right" data-dnt-action"cancel-date">Avlys dato</a>
+    {% else %}
+      <a class="btn btn-danger btn-sm pull-right" data-dnt-action"delete-date">Slett dato</a>
+    {% endif %}
+
+    {% if date.id %}
+      <a href="{% url 'aktiviteter.views.show' date.id %}" target="_blank"
+        class="btn btn-default btn-sm pull-right" style="margin-right: 5px">Forhåndsvis</a>
+    {% endif %}
   </div>
-  <div id="date-{{ i }}" class="panel-collapse collapse in">
+  <div id="date-{{ i }}" class="panel-collapse collapse{% if i == 0 %} in{% endif %}">
     <div class="panel-body form-label-left">
       <div class="row">
         <div class="col-md-6">
@@ -19,14 +35,17 @@
               <div class="input-group date">
                 <input type="date" class="form-control" name="dates[{{ i }}][start_date]"
                   placeholder="dd.mm.åååå"
-                  value="{% firstof date.start_date|date:"d.m.Y" now|date:"d.m.Y" %}">
+                  data-dnt-update="date-title"
+                  value="{% firstof date.start_date|date:"d.m.Y" "" %}">
+
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
               </div>
             </div>
             <label for="" class="col-sm-1 control-label">kl.</label>
             <div class="col-sm-3">
               <input type="time" class="form-control" name="dates[{{ i }}][start_time]"
-                placeholder="12:00">
+                value="{% firstof date.start_date|date:"H:i" "" %}"
+                placeholder="08:00">
             </div>
           </div>
 
@@ -37,14 +56,17 @@
               <div class="input-group date">
                 <input type="date" class="form-control" name="dates[{{ i }}][end_date]"
                   placeholder="dd.mm.åååå"
-                  value="{% firstof date.end_date|date:"d.m.Y" now|date:"d.m.Y" %}">
+                  data-dnt-update="date-title"
+                  value="{% firstof date.end_date|date:"d.m.Y" "" %}">
+
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
               </div>
             </div>
             <label for="" class="col-sm-1 control-label">kl.</label>
             <div class="col-sm-3">
               <input type="time" class="form-control" name="dates[{{ i }}][end_time]"
-                placeholder="12:00">
+                value="{% firstof date.end_date|date:"H:i" "" %}"
+                placeholder="16:00">
             </div>
           </div>
 
@@ -55,7 +77,7 @@
               <div class="radio">
                 <label>
                   <input type="radio" name="dates[{{ i }}][signup_method]" value="none"
-                    data-dnt-toggle="signup"
+                    data-dnt-toggle="date-signup"
                     {% if date.signup_method|default:"none" == "none" %}checked{% endif %}>
                   Ingen påmelding
                 </label>
@@ -63,16 +85,16 @@
               <div class="radio">
                 <label>
                   <input type="radio" name="dates[{{ i }}][signup_method]" value="simple"
-                    data-dnt-toggle="signup"
+                    data-dnt-toggle="date-signup"
                     {% if date.signup_method == "simple" %}checked{% endif %}>
                   Enkel påmelding
                 </label>
               </div>
               <div class="radio">
                 <label>
-                  <input type="radio" name="dates[{{ i }}][signup_method]" value="regular"
-                    data-dnt-toggle="signup"
-                    {% if date.signup_method == "regular" %}checked{% endif %}>
+                  <input type="radio" name="dates[{{ i }}][signup_method]" value="minside"
+                    data-dnt-toggle="date-signup"
+                    {% if date.signup_method == "minside" %}checked{% endif %}>
                   Vanlig påmelding
                 </label>
               </div>
@@ -80,7 +102,7 @@
           </div>
 
           <!-- signup -->
-          <div data-dnt-container="signup"
+          <div data-dnt-container="date-signup"
             {% if date.signup_method|default:"none" == "none" %}class="jq-hide"{% endif %}>
 
             <!-- signup_max_allowed -->
@@ -111,8 +133,10 @@
               <div class="col-sm-9">
                 <div class="checkbox">
                   <label>
-                    <input type="checkbox" data-dnt-toggle="signup-deadline"
+                    <input type="checkbox" name="dates[{{ i }}][no_signup_deadline]" value="1"
+                      data-dnt-toggle="date-signup-deadline"
                       {% if not date.signup_deadline %}checked{% endif %}>
+
                     Påmelding helt frem til turen starter
                   </label>
                 </div>
@@ -121,12 +145,13 @@
 
             <!-- signup-deadline input -->
             <div class="form-group{% if not date.signup_deadline %} jq-hide{% endif %}"
-              data-dnt-container="signup-deadline">
+              data-dnt-container="date-signup-deadline">
               <div class="col-sm-5 col-sm-offset-3">
                 <div class="input-group date">
                   <input type="date" class="form-control" name="dates[{{ i }}][signup_deadline]"
-                    placeholder="dd.mm.åååå"
-                    value="{% firstof date.signup_deadline|date:"d.m.Y" "" %}">
+                    value="{% firstof date.signup_deadline|date:"d.m.Y" date.end_date|date:"d.m.Y" %}"
+                    placeholder="dd.mm.åååå">
+
                   <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 </div>
               </div>
@@ -138,8 +163,10 @@
               <div class="col-sm-9">
                 <div class="checkbox">
                   <label>
-                    <input type="checkbox" data-dnt-toggle="cancel-deadline"
-                      {% if not date.cancel_deadline %}checked{% endif %}>
+                    <input type="checkbox" name="dates[{{ i }}][no_cancel_deadline]" value="1"
+                      data-dnt-toggle="date-cancel-deadline"
+                      {% if not date.signup_cancel_deadline %}checked{% endif %}>
+
                     Avmelding helt frem til turen starter
                   </label>
                 </div>
@@ -147,18 +174,20 @@
             </div>
 
             <!-- cancel-deadline input -->
-            <div data-dnt-container="cancel-deadline"
-              class="form-group{% if not date.cancel_deadline %} jq-hide{% endif %}">
+            <div data-dnt-container="date-cancel-deadline"
+              class="form-group{% if not date.signup_cancel_deadline %} jq-hide{% endif %}">
               <div class="col-sm-5 col-sm-offset-3">
                 <div class="input-group date">
                   <input type="date" class="form-control" name="dates[{{ i }}][cancel_deadline]"
-                    value="{% firstof date.cancel_deadline|date:"d.m.Y" "" %}">
+                    value="{% firstof date.signup_cancel_deadline|date:"d.m.Y" date.end_date|date:"d.m.Y" %}"
+                    placeholder="dd.mm.åååå">
+
                   <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 </div>
               </div>
             </div>
 
-          </div><!-- [data-dnt-container="signup"] -->
+          </div><!-- [data-dnt-container="date-signup"] -->
 
           <!-- meeting_place -->
           <div class="form-group meetup">
@@ -181,7 +210,8 @@
             <div class="col-sm-9">
               <div class="checkbox">
                 <label>
-                  <input type="checkbox" data-dnt-toggle="turledere"
+                  <input type="checkbox" name="dates[{{ i }}][should_have_turleder]" value="1"
+                    data-dnt-toggle="date-turledere"
                     {% if date.should_have_turleder %}checked{% endif %}>
                   Denne turen skal ha turleder
                 </label>
@@ -189,7 +219,7 @@
             </div>
           </div>
 
-          <div data-dnt-container="turledere"
+          <div data-dnt-container="date-turledere"
             {% if not date.should_have_turleder %}class="jq-hide"{% endif %}>
 
             <table class="table table-striped table-bordered">
@@ -211,7 +241,7 @@
                     </td>
                     <td>
                       <input type="hidden" name="dates[{{ i }}][turledere][]" value="{{ user.id }}">
-                      <button class="btn btn-sm btn-danger" data-dnt-action="turleder-rm">
+                      <button class="btn btn-sm btn-danger" data-dnt-action="date-turleder-rm">
                         Fjern
                       </button>
                     </td>
@@ -222,7 +252,7 @@
 
             <div class="form-group">
               <div class="col-sm-12">
-                <button type="button" class="btn btn-default" data-dnt-action="turleder-add">
+                <button type="button" class="btn btn-default" data-dnt-action="date-turleder-add">
                   <span class="glyphicon glyphicon-user"></span> Legg til turleder
                 </button>
               </div>
@@ -236,16 +266,16 @@
               <div class="radio">
                 <label>
                   <input type="radio" name="dates[{{ i }}][contact_type]" value="arrangør"
-                    data-dnt-toggle="contact-custom"
+                    data-dnt-toggle="date-contact-custom"
                     {% if date.contact_type|default:"arrangør" == "arrangør" %}checked{% endif %}>
                   Arrangør
                 </label>
               </div>
-              <div data-dnt-container="turledere"
+              <div data-dnt-container="date-turledere"
                 class="radio{% if not date.should_have_turleder %} jq-hide{% endif %}">
                 <label>
                   <input type="radio" name="dates[{{ i }}][contact_type]" value="turleder"
-                    data-dnt-toggle="contact-custom"
+                    data-dnt-toggle="date-contact-custom"
                     {% if date.contact_type == "turleder" %}checked{% endif %}>
                   Turleder
                 </label>
@@ -253,7 +283,7 @@
               <div class="radio">
                 <label>
                   <input type="radio" name="dates[{{ i }}][contact_type]" value="custom"
-                    data-dnt-toggle="contact-custom"
+                    data-dnt-toggle="date-contact-custom"
                     {% if date.contact_type == "custom" %}checked{% endif %}>
                   Annet
                 </label>
@@ -262,7 +292,7 @@
           </div><!-- /.form-group -->
 
           <!-- contact-custom -->
-          <div data-dnt-container="contact-custom"
+          <div data-dnt-container="date-contact-custom"
             {% if date.contact_type != "custom" %}class="jq-hide"{% endif %}>
             <div class="form-group">
               <label for="" class="col-sm-3 control-label">Navn</label>

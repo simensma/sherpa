@@ -22,6 +22,32 @@ from datetime import datetime, date, timedelta
 import json
 import re
 
+# http://www.ironzebra.com/code/23/converting-multi-dimensional-form-arrays-in-django
+def parseHtmlArray(post, name):
+    dic = {}
+    for k in post.keys():
+        if k.startswith(name):
+            rest = k[len(name):]
+
+            # Split the string into different components
+            parts = [p[:-1] for p in rest.split('[')][1:]
+
+            # Prevent parsing non integer array keys (such as tmp)
+            try:
+                id = int(parts[0])
+            except ValueError:
+                continue
+
+            # Add a new dictionary if it doesn't exist yet
+            if id not in dic:
+                dic[id] = {}
+
+            # Add the information to the dictionary
+            dic[id][parts[1]] = post.get(k)
+
+    return dic
+    #return sorted(dic.items())
+
 def index(request):
     try:
         forening = Forening.objects.get(id=request.GET.get('forening'))
@@ -208,67 +234,110 @@ def edit(request, aktivitet):
                 )
                 image.save()
 
-        #
-        # Dates
-        #
-        if 'dates' in request.POST and request.POST['dates'] != '':
-            dates = json.loads(request.POST['dates'])
+        dates = parseHtmlArray(request.POST, 'dates').items()
 
-            # Remove the date objects that were explicitly deleted (checks and verifications are
-            # done client-side). Verify that those that would be implicitly deleted (by not being
-            # POSTed for editing) match those explicitly POSTed.
-            posted_ids = [int(d['id']) for d in dates if d['id'] != '']
-            implicit_to_delete = set([date.id for date in aktivitet.dates.all() if date.id not in posted_ids])
-            explicit_to_delete = set([int(d) for d in json.loads(request.POST['dates_to_delete'])])
+        # Remove the date objects that were explicitly deleted (checks and verifications are done
+        # client-side). Verify that those that would be implicitly deleted (by not being POSTed for
+        # editing) match those explicitly POSTed.
+        date_ids = [int(d['id']) for k, d in dates if d['id'] != '']
+        implicit_del = set([date.id for date in aktivitet.dates.all() if date.id not in date_ids])
 
-            if implicit_to_delete != explicit_to_delete:
-                # Better to raise an exception and not delete anything. The user will be confused and
-                # lose edits, but we'll get a report and hopefully be able to fix this, if it ever happens.
-                raise Exception("The explicit and implicit dates to delete did not match.")
+        if len(implicit_del) > 0:
+            # Better to raise an exception and not delete anything. The user will be confused and
+            # lose edits, but we'll get a report and hopefully be able to fix this, if it ever
+            # happens.
+            raise Exception("Implicit delete of AktivitetDate is strictly forbidden!")
 
-            AktivitetDate.objects.filter(id__in=explicit_to_delete).delete()
+        for k, date in dates:
+            if date['id'] != '':
+                # @TODO Check if this can be exploited. Can you hijack another trip's date by
+                # setting an arbitrary ID in the date['id'] field?
+                model = AktivitetDate.objects.get(id=date['id'])
+            else:
+                model = AktivitetDate(aktivitet=aktivitet)
 
-            for date_post in dates:
-                if date_post['id'] != '':
-                    aktivitet_date = AktivitetDate.objects.get(id=date_post['id'])
-                else:
-                    aktivitet_date = AktivitetDate(aktivitet=aktivitet)
+            # Explicit delete of dates
+            if date['status'] == 'delete':
+                if date['id'] != '':
+                    if model.total_signup_count() > 0:
+                        raise Exception("Date with participants can not be deleted!")
+                    model.delete()
+                continue
 
-                try:
-                    aktivitet_date.start_date = datetime.strptime("%s %s" % (date_post['start_date'], date_post['start_time']), "%d.%m.%Y %H:%M")
-                    aktivitet_date.end_date = datetime.strptime("%s %s" % (date_post['end_date'], date_post['end_time']), "%d.%m.%Y %H:%M")
-                    if date_post['signup_type'] == 'minside' or date_post['signup_type'] == 'simple':
-                        aktivitet_date.signup_enabled = True
-                        aktivitet_date.signup_start = datetime.strptime(date_post['signup_start'], "%d.%m.%Y").date()
-                        if date_post['signup_deadline_until_start']:
-                            aktivitet_date.signup_deadline = aktivitet_date.start_date
-                        else:
-                            aktivitet_date.signup_deadline = datetime.strptime(date_post['signup_deadline'], "%d.%m.%Y").date()
-                        if date_post['signup_cancel_deadline_until_start']:
-                            aktivitet_date.signup_cancel_deadline = aktivitet_date.start_date
-                        else:
-                            aktivitet_date.signup_cancel_deadline = datetime.strptime(date_post['signup_cancel_deadline'], "%d.%m.%Y").date()
-                    elif date_post['signup_type'] == 'none':
-                        aktivitet_date.signup_enabled = False
-                        aktivitet_date.signup_start = None
-                        aktivitet_date.signup_deadline = None
-                        aktivitet_date.signup_cancel_deadline = None
+            try:
+                if not date['start_time']: date['start_time'] = '08:00'
+                if not date['end_time']: date['end_time'] = '16:00'
+
+                model.start_date = datetime.strptime(
+                    "%s %s" % (date['start_date'], date['start_time']), "%d.%m.%Y %H:%M"
+                )
+                model.end_date = datetime.strptime(
+                    "%s %s" % (date['end_date'], date['end_time']), "%d.%m.%Y %H:%M"
+                )
+
+                if not date['signup_method'] or date['signup_method'] == 'none':
+                    # Do not think about setting mode.participant to None!
+                    model.signup_enabled = False
+                    model.signup_start = None
+                    model.signup_deadline = None
+                    model.signup_cancel_deadline = None
+
+                elif date['signup_method'] == 'minside' or date['signup_method'] == 'simple':
+                    model.signup_enabled = True
+                    model.signup_max_allowed = date['signup_max_allowed']
+
+                    if 'signup_start' in date and date['signup_start'] != '':
+                        model.signup_start = datetime.strptime(
+                            date['signup_start'], "%d.%m.%Y"
+                        ).date()
                     else:
-                        raise Exception("Unrecognized POST value for signup_type field")
-                except ValueError:
-                    errors = True
-                    messages.error(request, 'invalid_date_format')
+                        model.signup_start = datetime.now()
 
-                aktivitet_date.signup_simple_allowed = date_post['signup_type'] == 'simple'
-                aktivitet_date.meeting_place = date_post['meeting_place']
-                aktivitet_date.contact_type = date_post['contact_type']
-                aktivitet_date.contact_custom_name = date_post['contact_custom_name']
-                aktivitet_date.contact_custom_phone = date_post['contact_custom_phone']
-                aktivitet_date.contact_custom_email = date_post['contact_custom_email']
-                aktivitet_date.save()
+                    if 'no_signup_deadline' in date and date['no_signup_deadline'] == '1':
+                        model.signup_deadline = None
+                    elif 'signup_deadline' in date and date['signup_deadline'] != '':
+                        model.signup_deadline = datetime.strptime(
+                            date['signup_deadline'], "%d.%m.%Y"
+                        ).date()
 
-                # Turledere
-                aktivitet_date.turledere = date_post['turledere']
+                    if 'no_cancel_deadline' in date and date['no_cancel_deadline'] == '1':
+                        model.signup_cancel_deadline = None
+                    elif 'cancel_deadline' in date and date['cancel_deadline'] != '':
+                        model.signup_cancel_deadline = datetime.strptime(
+                            date['cancel_deadline'], "%d.%m.%Y"
+                        ).date()
+
+                else:
+                    raise Exception("Unrecognized POST value for signup_method field")
+
+            except ValueError:
+                errors = True
+                messages.error(request, 'invalid_date_format')
+                return redirect('admin.aktiviteter.views.edit', aktivitet.id)
+
+            model.signup_simple_allowed = date['signup_method'] == 'simple'
+            model.meeting_place = date['meeting_place']
+            model.contact_type = date['contact_type']
+            model.contact_custom_name = date['contact_custom_name']
+            model.contact_custom_phone = date['contact_custom_phone']
+            model.contact_custom_email = date['contact_custom_email']
+
+            # Save the AktivitDate model before attempting to add turledere
+            # (many-to-many relationship)
+            model.save()
+
+            if 'should_have_turleder' in date and date['should_have_turleder'] == '1':
+                model.should_have_turleder = True
+
+                key = 'dates[' + str(k) + '][turleder][]'
+                if key in request.POST and request.POST[key] != '':
+                    model.turledere = request.POST.getlist(key)
+
+            else:
+                model.should_have_turleder = False
+                model.turledere = []
+
+            model.save()
 
         if not errors:
             messages.info(request, 'save_success')

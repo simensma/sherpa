@@ -1,19 +1,18 @@
-
-<div class="panel-group" id="dates">
+<div class="panel-group" id="dates" data-dnt-container="dates">
   {% for i, date in aktivitet.get_dates_ordered %}
     {% include 'common/admin/aktiviteter/edit/date.html' %}
   {% empty %}
-    {% include 'common/admin/aktiviteter/edit/date.html' with i=0 date=Null %}
+    {% include 'common/admin/aktiviteter/edit/date.html' with i=0 date=None %}
   {% endfor %}
 </div>
 
 <div class="jq-hide" data-dnt-template="date">
-  {% include 'common/admin/aktiviteter/edit/date.html' with i="tmp" date=Null %}
+  {% include 'common/admin/aktiviteter/edit/date.html' with i="tmp" date=None %}
 </div>
 
 <div class="form-group">
   <div class="col-md-offset-0 col-md-10">
-    <button class="btn btn-default add-date">
+    <button class="btn btn-default add-date" data-dnt-add="date">
       <i class="fa fa-plus"></i> Legg til enda en turdato
     </button>
   </div>
