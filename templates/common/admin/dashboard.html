@@ -200,6 +200,10 @@
               {{ entry.content|truncatewords:50 }}
             </div>
           </div>
+        {% empty %}
+          <div class="alert alert-danger">
+            Beklager, vi kunne ikke hente blogg-innleggene fra <a href="http://beta.turistforeningen.no/">betabloggen</a>. Det kan hende at bloggen opplever tekniske problemer. Du kan <a href="http://beta.turistforeningen.no/">prøve å gå til bloggen selv</a> eller komme tilbake senere.
+          </div>
         {% endfor %}
       </div>
       <div class="panel-footer">
