@@ -20,7 +20,7 @@ class CampaignWidget(Widget):
         {'name': 'Skole', 'url': '/skole/'},
         {'name': 'Kurs og utdanning', 'url': '/kurs/'},
         {'name': 'Tur for alle', 'url': '/tur-for-alle/'},
-        {'name': 'Turplanlegger', 'url': '/utno/'},
+        {'name': 'Turplanlegger (UT.no)', 'url': 'http://ut.no/'},
         {'name': 'Fjelltreffen', 'url': '/fjelltreffen/'},
     ]
 
