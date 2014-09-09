@@ -403,7 +403,8 @@
           <div class="row">
             <div class="col-lg-12 activity-pictures">
               <div id="noPictures" class="alert alert-warning jq-hide">
-                <strong>Ingen bilder!</strong>&nbsp;Husk å legge inn bilder fra turen din, slik at det blir synlig på forsiden av UT.no
+                <strong>Ingen bilder!</strong>&nbsp;Husk å legge inn bilder fra turen din, slik at
+                det blir synlig på forsiden av UT.no
               </div>
               <div class="row">
                 <div id="" class="route-images-all-container ui-sortable">
@@ -412,7 +413,7 @@
                       <a id="deletePicture" href="#" class="removeItem">
                         <span class="glyphicon glyphicon-remove"></span>
                       </a>
-                      <img src="https://s3-eu-west-1.amazonaws.com/turadmin/images_devnp/R9/0y-small.jpeg" alt="">
+                      <img src="http://gfx.nrk.no/thplIp5SIOaMmEZgIQUi-gDD0AHgY9GshITgUsysl5VA" alt="">
                     </div>
                     <div class="form-group required">
                       <div class="input-group" data-model-validation-field-name="beskrivelse">
@@ -431,10 +432,15 @@
           <div class="form-group">
             <div class="col-md-10 col-md-offset-2">
               <div class="shortcuts">
-                <button class="btn btn-default pick-from-image-archive"><i class="fa fa-search"></i> Finn bilde i arkivet</button>
-                <button class="btn btn-default upload-new-image"><i class="fa fa-upload"></i> Last opp nytt bilde</button>
+                <button class="btn btn-default pick-from-image-archive">
+                  <i class="fa fa-search"></i> Finn bilde i arkivet
+                </button>
+                <button class="btn btn-default upload-new-image">
+                  <i class="fa fa-upload"></i> Last opp nytt bilde
+                </button>
               </div>
-              <p class="help-block">Legg til bilder til arrangementet ved å hente fra bildearkivet eller laste opp fra datamaskinen din.</p>
+              <p class="help-block">Legg til bilder til arrangementet ved å hente fra bildearkivet
+              eller laste opp fra datamaskinen din.</p>
             </div>
           </div>
 
@@ -447,14 +453,15 @@
             </div>
           </div>
 
-          {% with aktivtet=aktivitet municipalities=municipalities counties=counties locations=locations %}
-            {% include 'common/admin/aktiviteter/edit/position.html' %}
+          {% with municipalities=municipalities counties=counties locations=locations %}
+            {% include 'common/admin/aktiviteter/edit/position.html' with aktivtet=aktivitet %}
           {% endwith %}
 
           <div class="form-group">
             <label class="col-md-2 control-label">Adkomst</label>
             <div class="col-md-8">
-              <textarea rows="4" cols="80" name="getting_there" id="getting_there" class="form-control">{{ aktivitet.getting_there }}</textarea>
+              <textarea rows="4" cols="80" name="getting_there" id="getting_there"
+                class="form-control">{{ aktivitet.getting_there }}</textarea>
               <div class="help-block">
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
               </div>
@@ -463,7 +470,6 @@
         </div><!-- /.section.position -->
 
         <div class="section dates">
-
           <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
               <h2 id="turdatoer-og-pamelding">Turdatoer og påmelding</h2>
@@ -471,7 +477,6 @@
           </div>
 
           {% include 'common/admin/aktiviteter/edit/dates.html' with aktivitet=aktivitet %}
-
         </div><!-- /.section.dates -->
 
         <div class="section publish skip-border">
@@ -487,19 +492,23 @@
             <div class="col-md-10">
               <div class="checkbox">
                 <label for="publish">
-                  <input type="checkbox" id="publish" name="publish" value="publish"{% if aktivitet.published %} checked{% endif %}>
+                  <input id="publish" name="publish" type="checkbox" value="publish"
+                    {% if aktivitet.published %} checked{% endif %}>
                   Publiserer turen og gjør den tilgjengelig på nettsidene
                 </label>
               </div>
             </div>
           </div>
 
-          <div class="publish-extras{% if not aktivitet.published %} jq-hide{% endif %}">
+          <div class="{% if not aktivitet.published %} jq-hide{% endif %}"
+            data-dnt-container="published-extras">
+
             <div class="form-group pub_date">
               <label class="col-md-2 control-label" for="pub_date">Publiseringsdato</label>
               <div class="col-md-5">
                 <div class="input-group date">
-                  <input type="text" class="form-control" name="pub_date" id="pub_date" value="{{ aktivitet.pub_date|date:"d.m.Y" }}">
+                  <input class="form-control" id="pub_date" name="pub_date" type="text"
+                    value="{{ aktivitet.pub_date|date:"d.m.Y" }}">
                   <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 </div>
                 <div class="hints">
