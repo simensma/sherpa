@@ -4,7 +4,7 @@
       {% if request.path == item.url %}
         <li class="active">{% firstof item.name widget.main_campaign_title 'Turistforeningen' %}</li>
       {% else %}
-        <li><a href="{{ item.url }}">{% firstof item.name widget.main_campaign_title 'Turistforeningen' %}</a></li>
+        <li><a href="{{ item.url }}" class="noexternal">{% firstof item.name widget.main_campaign_title 'Turistforeningen' %}</a></li>
       {% endif %}
     {% endfor %}
   </ul>
