@@ -43,6 +43,7 @@ class Aktivitet(models.Model):
         ('event', 'Arrangement'),
         ('volunteerwork', 'Dugnad'),)
     category = models.CharField(max_length=255, choices=CATEGORY_CHOICES)
+    category_type = models.CharField(max_length=255, null=True)
     category_tags = models.ManyToManyField('core.Tag', related_name='aktiviteter')
     pub_date = models.DateField()
     published = models.BooleanField(default=False)

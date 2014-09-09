@@ -149,6 +149,7 @@ def edit(request, aktivitet):
         if 'audiences' in request.POST:
             aktivitet.audiences = json.dumps(request.POST.getlist('audiences'))
         if 'category' in request.POST: aktivitet.category = request.POST['category']
+        if 'category_type' in request.POST: aktivitet.category_type = request.POST['category_type']
         if 'publish' in request.POST: aktivitet.published = request.POST.get('publish') == 'publish'
         if 'getting_there' in request.POST: aktivitet.getting_there = request.POST['getting_there']
         if 'locations' in request.POST:
@@ -190,8 +191,8 @@ def edit(request, aktivitet):
         aktivitet.municipalities = request.POST.getlist('municipalities')
 
         aktivitet.category_tags.clear()
-        if 'subcategories' in request.POST and request.POST['subcategories'] != '':
-            for tag in [tag.lower() for tag in json.loads(request.POST['subcategories'])]:
+        if 'category_tags' in request.POST and request.POST['category_tags'] != '':
+            for tag in request.POST.getlist('category_tags'):
                 obj, created = Tag.objects.get_or_create(name=tag)
                 aktivitet.category_tags.add(obj)
 
