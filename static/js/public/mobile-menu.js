@@ -2,7 +2,7 @@ $(function() {
 
     var header = $('header');
     var main_menu = header.find('nav#menus');
-    var core_menu = $('.widget.promo, .widget.campaign').find('.menu');
+    var core_menu = $('.widget.campaign').find('.menu');
     var search_form = header.find('form.search-mobile');
 
     var menu_button = header.find('.mobile-control .display-menu a');

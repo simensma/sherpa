@@ -10,7 +10,7 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 
 from admin.sites.pages.util import slug_is_unique, create_template
-from page.widgets.util import admin_context, get_static_promo_context
+from page.widgets.util import admin_context
 from page.models import Page, Variant, Version
 from core.models import Site
 
@@ -113,9 +113,6 @@ def preview(request, site, version):
         'active_site': active_site,
         'version': version,
     }
-    if active_site.id == Site.DNT_CENTRAL_ID:
-        path = '/' if version.variant.page.slug == '' else '/%s/' % version.variant.page.slug
-        context.update(get_static_promo_context(path))
 
     # Fake request.site to the edited site; this will make context processors behave accordingly
     request.site = active_site
