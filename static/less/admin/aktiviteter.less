@@ -1,8 +1,4 @@
-.subcategory-button() {
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
-
+// Utlisting av aktiviteter
 div.aktivitet-listing {
   table.table {
     ul.list-inline {
@@ -28,11 +24,8 @@ div.aktivitet-listing {
   }
 }
 
+// Opprette / endre aktivitet
 div.admin-aktivitet-edit {
-  .chosen-container-single .chosen-single abbr {
-    top: 11px !important;
-  }
-
   .btn-block {
     margin-bottom: 5px;
   }
@@ -41,55 +34,25 @@ div.admin-aktivitet-edit {
     border-bottom: 1px solid rgb(200, 200, 200);
     padding-bottom: 20px;
 
-    h2 {
-      margin-top: 30px;
-    }
-
-    div.form-group.subcategories {
-
-      h4 {
-        margin-top: 30px;
-        margin-bottom: 0;
-      }
-
-      p.show-other-buttons {
-        font-family: "DTL Nobel" !important;
-        margin-top: 20px;
-      }
-
-      div.main-buttons, div.other-buttons {
-
-        button.subcategory {
-          .subcategory-button;
-        }
-      }
-
-
-      div.custom {
-        font-family: "DTL Nobel" !important;
-      }
-
-    }
-
-    div.form-group.publish {
-      label.radio {
-        padding-left: 0;
-      }
-    }
+    h2 { margin-top: 30px; }
+    span.required { color: red }
   }
 
   div.section.skip-border {
     border-bottom: none !important;
   }
 
-  /* Specific sections */
-
   div.section.description {
-    div.images-initiate {
-      font-weight: normal;
+    div.form-group.subcategory {
+      label.control-label {
+        div.selected > span { display: none; } /* hide all */
+        div.selected.organizedhike > span.organizedhike { display: block; }
+        div.selected.course > span.course { display: block; }
+        div.selected.event > span.event { display: block; }
+        div.selected.volunteerwork > span.volunteerwork { display: block; }
+      }
     }
 
-    // Difficulty: color coding buttons
     div.form-group.difficulty {
       div.btn-group {
         .easy {
@@ -134,6 +97,14 @@ div.admin-aktivitet-edit {
     @import "admin/aktiviteter/edit/dates.less";
   }
 
+  div.section.publish {
+    div.form-group.publish {
+      label.radio {
+        padding-left: 0;
+      }
+    }
+  }
+
   div.form-group.submit-footer {
     // Since there's currently no footer, let the user "scroll past" the button.
     // Should probably be removed when we get some sort of footer for the Sherpa UI.
@@ -141,7 +112,8 @@ div.admin-aktivitet-edit {
   }
 }
 
-// Since the modal is moved to the body element on instantiation, it needs its own top-level selector
+// Since the modal is moved to the body element on instantiation, it needs its
+// own top-level selector
 div.modal.admin-aktiviteter-turleder-search {
 
   table.search-results {
@@ -330,10 +302,3 @@ div.modal.admin-aktiviteter-delete-date {
   }
 }
 
-select.form-control + .chosen-container {
-  max-width: 400px;
-}
-
-.find-turforslag input {
-  background-color: #fff !important;
-}
