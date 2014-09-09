@@ -77,7 +77,7 @@ def index(request):
                     'image': image,
                     'pub_date': pub_date,
                 })
-        except requests.ConnectionError:
+        except (requests.ConnectionError, AttributeError):
             pass
 
         cache.set('admin.betablog', betablog, 60 * 60 * 12)
