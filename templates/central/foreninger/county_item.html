@@ -1,0 +1,8 @@
+{% for county in counties %}
+  <div class="radio">
+    <label>
+      <input type="radio" name="county" value="{{ county.id }}"{% if chosen_county_name|lower == county.name|lower %} checked{% endif %}>
+      {{ county.name }}
+    </label>
+  </div>
+{% endfor %}
