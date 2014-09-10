@@ -4,29 +4,25 @@
 
 {% block body %}
 
-<div class="row">
-  <div class="span12">
-    <h1>Gi bort gavemedlemskap</h1>
-    {% include 'central/enrollment/gift/progress.html' with step=3 %}
-    {% if display_christmas_warning %}
-      {% include 'central/enrollment/gift/christmas_warning.html' %}
-    {% endif %}
+<h1>Gi bort gavemedlemskap</h1>
+{% include 'central/enrollment/gift/progress.html' with step=3 %}
+{% if display_christmas_warning %}
+  {% include 'central/enrollment/gift/christmas_warning.html' %}
+{% endif %}
 
-    {% for message in messages %}
-      {% if message.message == 'email_memberservice_fail' %}
-        <div class="alert alert-error">
-          <strong>Feil ved sending av e-post</strong><br>
-          Vi beklager, det oppstod en teknisk feil når vi forsøkte å sende bestillingen. Vi har logget feilen, og vi vil undersøke hva som har skjedd så snart som mulig.<br>
-          Gavemedlemskapbestillingen har <strong>ikke</strong> blitt sendt.<br>
-          Vennligst prøv igjen, eller kontakt <a href="{% url 'membership.views.service' %}">medlemsservice</a> hvis feilen ikke går bort.
-        </div>
-      {% endif %}
-    {% endfor %}
-  </div>
-</div>
+{% for message in messages %}
+  {% if message.message == 'email_memberservice_fail' %}
+    <div class="alert alert-error">
+      <strong>Feil ved sending av e-post</strong><br>
+      Vi beklager, det oppstod en teknisk feil når vi forsøkte å sende bestillingen. Vi har logget feilen, og vi vil undersøke hva som har skjedd så snart som mulig.<br>
+      Gavemedlemskapbestillingen har <strong>ikke</strong> blitt sendt.<br>
+      Vennligst prøv igjen, eller kontakt <a href="{% url 'membership.views.service' %}">medlemsservice</a> hvis feilen ikke går bort.
+    </div>
+  {% endif %}
+{% endfor %}
 
 <div class="row">
-  <div class="span4">
+  <div class="col-md-4">
 
     <h2 class="gift-from-to">Fra:</h2>
     <div class="form-border">
@@ -67,7 +63,7 @@
     </p>
   </div>
 
-  <div class="span8">
+  <div class="col-md-8">
     <h2 class="gift-from-to">Til:</h2>
 
     {% for receiver in receivers %}

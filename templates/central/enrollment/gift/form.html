@@ -31,34 +31,30 @@
 
 {% block body %}
 
-<div class="row">
-  <div class="span12">
-    <h1>Gi bort gavemedlemskap</h1>
-    {% include 'central/enrollment/gift/progress.html' with step=2 %}
-    {% if display_christmas_warning %}
-      {% include 'central/enrollment/gift/christmas_warning.html' %}
-    {% endif %}
+<h1>Gi bort gavemedlemskap</h1>
+{% include 'central/enrollment/gift/progress.html' with step=2 %}
+{% if display_christmas_warning %}
+  {% include 'central/enrollment/gift/christmas_warning.html' %}
+{% endif %}
 
-    {% if messages %}
-      <div class="alert alert-error">
-        <a class="close">x</a>
-        <strong>Vennligst sjekk følgende:</strong>
-        <ul>
-          {% for message in messages %}
-            <li>{{ message }}</li>
-          {% endfor %}
-        </ul>
-        <p>Felt med feil eller mangler er markert med rødt under.</p>
-      </div>
-    {% endif %}
+{% if messages %}
+  <div class="alert alert-error">
+    <a class="close">x</a>
+    <strong>Vennligst sjekk følgende:</strong>
+    <ul>
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    <p>Felt med feil eller mangler er markert med rødt under.</p>
   </div>
-</div>
+{% endif %}
 
 <form id="gift" method="post" action="{% url 'enrollment.gift.views.validate' %}">
   {% csrf_token %}
   <input type="hidden" name="receivers" value="">
   <div class="row">
-    <div class="span6">
+    <div class="col-md-6">
       <div class="border">
         <h3>Dine opplysninger</h3>
         <p>Faktura, gavekort og medlemskort blir sendt til din adresse.</p>
@@ -91,7 +87,7 @@
       </div>
     </div>
 
-    <div class="span6">
+    <div class="col-md-6">
       <div class="receivers">
       </div>
       <p class="forward-button">
