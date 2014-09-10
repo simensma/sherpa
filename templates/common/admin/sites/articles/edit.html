@@ -65,78 +65,74 @@
 
 <div class="cms-editor">
 
-  <div class="row">
-    <div class="span12">
-      <div class="well editor-header article" data-article-id="{{ version.variant.article.id }}" data-version-id="{{ version.id }}">
-        <div class="preview-image">
-          <h1 class="sherpa">Minibilde til forhåndsvisninger:</h1>
-          <input type="radio" name="thumbnail" value="none"{% if version.get_thumbnail.hide %} checked{% endif %}> Ikke vis minibilde<br>
-          <input type="radio" name="thumbnail" value="default"{% if not version.get_thumbnail.hide and not version.variant.article.thumbnail %} checked{% endif %}> Bruk liten versjon av hovedbildet<br>
-          <input type="radio" name="thumbnail" value="new"{% if not version.get_thumbnail.hide and version.variant.article.thumbnail %} checked{% endif %}> Bruk et annet bilde<br>
+  <div class="well editor-header article" data-article-id="{{ version.variant.article.id }}" data-version-id="{{ version.id }}">
+    <div class="preview-image">
+      <h1 class="sherpa">Minibilde til forhåndsvisninger:</h1>
+      <input type="radio" name="thumbnail" value="none"{% if version.get_thumbnail.hide %} checked{% endif %}> Ikke vis minibilde<br>
+      <input type="radio" name="thumbnail" value="default"{% if not version.get_thumbnail.hide and not version.variant.article.thumbnail %} checked{% endif %}> Bruk liten versjon av hovedbildet<br>
+      <input type="radio" name="thumbnail" value="new"{% if not version.get_thumbnail.hide and version.variant.article.thumbnail %} checked{% endif %}> Bruk et annet bilde<br>
 
-          <div style="width:200px; overflow:hidden;">
-          <img class="article-thumbnail" src="{% if not version.variant.article.thumbnail %}{{ editor_placeholder_image }}{% else %}{{ version.variant.article.thumbnail }}{% endif %}" alt="{{ title|striptags }}">
-          </div>
-        </div>
-
-        <div class="publish">
-          <input type="checkbox" name="publish"{% if version.variant.article.published %} checked="checked"{% endif %}> Publiseres
-          <div class="input-append date">
-            <input type="text" name="date" value="{{ version.variant.article.pub_date|date:"d.m.Y" }}" placeholder="dd.mm.åååå">
-            <span class="add-on"><i class="icon-th"></i></span>
-          </div>
-          kl.
-          <input type="text" name="time" value="{{ version.variant.article.pub_date|date:"H:i" }}" placeholder="tt:mm">
-        </div>
-
-        <div class="author">
-          <p>
-            Forfattere:
-            <select name="authors" multiple="multiple">
-              {% with version.publishers.all as publishers %}
-                {% for user in users %}
-                  <option value="{{ user.id }}"{% if user in publishers %} selected="selected"{% endif %}>{{ user.get_full_name }}</option>
-                {% endfor %}
-              {% endwith %}
-            </select>
-          </p>
-        </div>
-
-        <div class="tags">
-          <table>
-            <tr>
-              <td style="vertical-align: top">
-                Nøkkelord:
-                <input type="text" name="tags" data-tags-url="{% url 'core.views.filter_tags' %}">
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div class="tag-box" data-predefined-tags="{{ version.tags.all|taglist }}"></div>
-              </td>
-            </tr>
-          </table>
-        </div>
-
-        <div style="clear: left;"></div>
-
-        <div class="status">
-          <button class="btn btn-success save"><i class="icon-heart"></i> Lagre</button>
-          <button class="btn btn-success preview" data-href="{% url 'admin.sites.articles.views.preview' active_site.id version.id %}"><i class="icon-search"></i> Forhåndsvisning</button>
-          <a class="btn btn-danger delete-article" href="{% url 'admin.sites.articles.views.confirm_delete' active_site.id version.variant.article.id %}">
-            <i class="icon-warning-sign"></i> Slett
-          </a>
-          <br><br>
-
-          <button class="btn btn-success save-and-quit" data-href="{% url 'admin.sites.articles.views.list' active_site.id %}">Lagre &amp; Tilbake til Sherpa</button>
-          <a href="{% url 'admin.sites.pages.page.list' active_site.id %}" class="btn btn-default quit" data-confirm="Er du sikker på at du vil gå tilbake til Sherpa uten å lagre?">Tilbake til Sherpa UTEN å lagre</a>
-
-        </div>
-
-        <div style="clear: both;"></div>
-
+      <div style="width:200px; overflow:hidden;">
+      <img class="article-thumbnail" src="{% if not version.variant.article.thumbnail %}{{ editor_placeholder_image }}{% else %}{{ version.variant.article.thumbnail }}{% endif %}" alt="{{ title|striptags }}">
       </div>
     </div>
+
+    <div class="publish">
+      <input type="checkbox" name="publish"{% if version.variant.article.published %} checked="checked"{% endif %}> Publiseres
+      <div class="input-append date">
+        <input type="text" name="date" value="{{ version.variant.article.pub_date|date:"d.m.Y" }}" placeholder="dd.mm.åååå">
+        <span class="add-on"><i class="icon-th"></i></span>
+      </div>
+      kl.
+      <input type="text" name="time" value="{{ version.variant.article.pub_date|date:"H:i" }}" placeholder="tt:mm">
+    </div>
+
+    <div class="author">
+      <p>
+        Forfattere:
+        <select name="authors" multiple="multiple">
+          {% with version.publishers.all as publishers %}
+            {% for user in users %}
+              <option value="{{ user.id }}"{% if user in publishers %} selected="selected"{% endif %}>{{ user.get_full_name }}</option>
+            {% endfor %}
+          {% endwith %}
+        </select>
+      </p>
+    </div>
+
+    <div class="tags">
+      <table>
+        <tr>
+          <td style="vertical-align: top">
+            Nøkkelord:
+            <input type="text" name="tags" data-tags-url="{% url 'core.views.filter_tags' %}">
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="tag-box" data-predefined-tags="{{ version.tags.all|taglist }}"></div>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div style="clear: left;"></div>
+
+    <div class="status">
+      <button class="btn btn-success save"><i class="icon-heart"></i> Lagre</button>
+      <button class="btn btn-success preview" data-href="{% url 'admin.sites.articles.views.preview' active_site.id version.id %}"><i class="icon-search"></i> Forhåndsvisning</button>
+      <a class="btn btn-danger delete-article" href="{% url 'admin.sites.articles.views.confirm_delete' active_site.id version.variant.article.id %}">
+        <i class="icon-warning-sign"></i> Slett
+      </a>
+      <br><br>
+
+      <button class="btn btn-success save-and-quit" data-href="{% url 'admin.sites.articles.views.list' active_site.id %}">Lagre &amp; Tilbake til Sherpa</button>
+      <a href="{% url 'admin.sites.pages.page.list' active_site.id %}" class="btn btn-default quit" data-confirm="Er du sikker på at du vil gå tilbake til Sherpa uten å lagre?">Tilbake til Sherpa UTEN å lagre</a>
+
+    </div>
+
+    <div style="clear: both;"></div>
+
   </div>
 
   {% include 'common/admin/sites/editor/editor.html' with toolbar_article=1 %}
