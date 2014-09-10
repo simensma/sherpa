@@ -14,14 +14,10 @@
 
 {% block body %}
 
-<div class="row">
-  <div class="span12">
-    <h1>Fjelltreffen</h1>
-  </div>
-</div>
+<h1>Fjelltreffen</h1>
 
 <div class="row">
-  <div class="span9">
+  <div class="col-md-9">
 
     <div class="fjelltreffen-list">
       <h2>Mine annonser</h2>
@@ -71,7 +67,7 @@
                 {% if not annonse.is_expired %}
                   <span class="label label-{% if not annonse.hidden %}success{% else %}warning{% endif %}">{{ annonse.expires_in_days }} dager igjen</span>
                 {% else %}
-                  <span class="label label-important expired" title="Denne annonsen har ligget ute i over {{ annonse_retention_days }} dager og er derfor ikke lenger aktiv.">Utgått</span><br>
+                  <span class="label label-danger expired" title="Denne annonsen har ligget ute i over {{ annonse_retention_days }} dager og er derfor ikke lenger aktiv.">Utgått</span><br>
                   <a href="{% url 'fjelltreffen.views.renew_mine' annonse.id %}">Forny</a>
                 {% endif %}
               </td>
@@ -91,7 +87,7 @@
     </div>
   </div>
 
-  <div class="span3">
+  <div class="col-md-3">
     {% include 'central/fjelltreffen/navigation.html' with active='mine' %}
   </div>
 </div>

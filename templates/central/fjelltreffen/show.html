@@ -14,14 +14,10 @@
 
 {% block body %}
 
-<div class="row">
-  <div class="span12">
-    <h1>Fjelltreffen</h1>
-  </div>
-</div>
+<h1>Fjelltreffen</h1>
 
 <div class="row">
-  <div class="span9">
+  <div class="col-md-9">
 
     <div class="fjelltreffen-annonse">
       <h2>{{ annonse.title }}</h2>
@@ -89,7 +85,7 @@
         {% endif %}
 
         {# Replies - show if already filled and there were errors #}
-        <div class="reply{% if not form.errors and not email_reply_failure %} hide{% endif %}">
+        <div class="reply{% if not form.errors and not email_reply_failure %} jq-hide{% endif %}">
 
           <h2>Svar på annonsen</h2>
 
@@ -172,7 +168,7 @@
           </p>
         {% endif %}
 
-        <div class="report{% if not report %} hide{% endif %}">
+        <div class="report{% if not report %} jq-hide{% endif %}">
           <p>
             <em>Vi setter pris på at du gir oss beskjed om upassende innhold på Fjelltreffen. Du kan selv velge om du vil oppgi en begrunnelse.</em>
           </p>
@@ -194,7 +190,7 @@
 
   </div>
 
-  <div class="span3">
+  <div class="col-md-3">
     {% include 'central/fjelltreffen/navigation.html' with active='None' %}
   </div>
 
@@ -203,7 +199,7 @@
 {% advertisement %}
 
 {% if annonse.image %}
-  <div class="modal annonse-image-modal hide">
+  <div class="modal annonse-image-modal jq-hide">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal">X</button>
       <h3>Annonsebilde</h3>

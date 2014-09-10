@@ -17,14 +17,10 @@
 
 {% block body %}
 
-<div class="row">
-  <div class="span12">
-    <h1>Fjelltreffen</h1>
-  </div>
-</div>
+<h1>Fjelltreffen</h1>
 
 <div class="row">
-  <div class="span9">
+  <div class="col-md-9">
 
     {% if annonse %}
       <h2>Rediger annonse</h2>
@@ -111,7 +107,7 @@
             </div>
           {% endif %}
           {# We're using double hints and hide here, because we'll want to show this text if the user deletes the image with AJAX. #}
-          <div class="hints default-image-label{% if annonse.image %} hide{% endif %}">
+          <div class="hints default-image-label{% if annonse.image %} jq-hide{% endif %}">
             Bilde er valgfritt og vil vises i annonselistingen.
           </div>
         </div>
@@ -136,7 +132,7 @@
             {{ obscured_age }} år
           </label>
           <a href="javascript:undefined" class="hideage-info">Feil alder?</a>
-          <div class="alert alert-info hideage-info hide">
+          <div class="alert alert-info hideage-info jq-hide">
             Din alder hentes fra medlemsregisteret. Hvis den skulle være feil må du kontakte <a href="{% url 'membership.views.service' %}">medlemsservice</a>.
           </div>
         </div>
@@ -193,8 +189,8 @@
             {% if annonse.is_expired or other_active_annonse_exists or annonse.hidden and not user.has_paid %}
               Lagre annonsen
             {% else %}
-              <span class="save{% if not annonse.hidden %} hide{% endif %}">Lagre annonsen</span>
-              <span class="publish{% if annonse.hidden %} hide{% endif %}">Publiser annonsen</span>
+              <span class="save{% if not annonse.hidden %} jq-hide{% endif %}">Lagre annonsen</span>
+              <span class="publish{% if annonse.hidden %} jq-hide{% endif %}">Publiser annonsen</span>
             {% endif %}
           </button>
           {% if annonse %}
@@ -206,7 +202,7 @@
     </form>
 
   </div>
-  <div class="span3">
+  <div class="col-md-3">
     {% if annonse %}
       {% include 'central/fjelltreffen/navigation.html' %}
     {% else %}
@@ -216,7 +212,7 @@
 </div>
 
 {% if annonse.image %}
-  <div class="modal annonse-image-modal hide">
+  <div class="modal annonse-image-modal jq-hide">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal">X</button>
       <h3>Annonsebilde</h3>
@@ -230,7 +226,7 @@
       <p class="delete pull-left">
         <button class="btn btn-danger delete-image" data-href="{% url 'fjelltreffen.views.delete_image' annonse.id %}"><i class="icon-remove"></i> Slett bildet fra annonsen</button>
       </p>
-      <p class="loading hide">
+      <p class="loading jq-hide">
         <img src="{{ STATIC_URL }}img/common/ajax-loader-large.gif" alt="Laster, vennligst vent...">
       </p>
       <p class="modal-close">
