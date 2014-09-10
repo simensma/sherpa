@@ -3,6 +3,7 @@ $(function() {
     var wrapper = $("div.wrapper");
     var list = wrapper.find("div.article-listing");
     var old_list = wrapper.find("div.old-article-listing");
+    var row_template = wrapper.find('[data-dnt-container="row-template"]').children();
     var loader = wrapper.find("div.infinite-loader");
     var loader_button = loader.find("button");
     var loading = loader.find("div.loading");
@@ -31,7 +32,8 @@ $(function() {
                 var first;
                 for(var i=0; i<result.length; i++) {
                     if(i % 2 === 0) {
-                        first = $('<div class="row-fluid">' + result[i] + '</div>');
+                        first = row_template.clone();
+                        first.html(result[i]);
                     } else {
                         first.append(result[i]).addClass('jq-hide');
                         list.append(first);
