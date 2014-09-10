@@ -6,6 +6,12 @@ $(function() {
     scope.find('select[name="audiences"]').select2({ allowClear: true });
     scope.find('select[name="category_type"]').select2();
     scope.find('select[name="category_tags"]').select2({ allowClear: true });
+    scope.find('[data-dnt-container="pub-date"]').datepicker({
+        format: 'dd.mm.yyyy',
+        language: 'no',
+        autoclose: true,
+        weekStart: 1
+    });
 
     scope.find('button[data-dnt-action="remove-co-forening"]').on('click', function() {
         scope.find('select[name="co_forening"]').select2('val', null);

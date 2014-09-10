@@ -493,13 +493,13 @@
           </div>
 
           <div class="form-group publish">
-            <label class="col-md-2 control-label">Publisering</label>
+            <label class="col-md-2 control-label">Synlig</label>
             <div class="col-md-10">
               <div class="checkbox">
                 <label for="publish">
                   <input id="publish" name="publish" type="checkbox" value="publish"
                     {% if aktivitet.published %} checked{% endif %}>
-                  Publiserer turen og gjør den tilgjengelig på nettsidene
+                  Gjør aktiviteten synlig på nettsiden
                 </label>
               </div>
             </div>
@@ -509,36 +509,44 @@
             data-dnt-container="published-extras">
 
             <div class="form-group pub_date">
-              <label class="col-md-2 control-label" for="pub_date">Publiseringsdato</label>
-              <div class="col-md-5">
-                <div class="input-group date">
-                  <input class="form-control" id="pub_date" name="pub_date" type="text"
-                    value="{{ aktivitet.pub_date|date:"d.m.Y" }}">
+              <label class="col-md-2 control-label" for="pub_date">Synlig fra</label>
+              <div class="col-md-3">
+                <div class="input-group date" data-dnt-container="pub-date">
+                  <input class="form-control" id="pub_date" name="pub_date" type="date"
+                    placeholder="dd.mm.åååå"
+                    value="{% firstof aktivitet.pub_date|date:"d.m.Y" now "d.m.Y" %}">
+
                   <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                </div>
-                <div class="hints">
-                  Aktiviteten vises ikke på nettsidene før publiseringsdatoen.
-                </div>
-                <div class="hints error jq-hide">
-                  Du må legge inn turens publiseringsdato på rett format: dd.mm.åååå (dag, måned, år)
                 </div>
               </div>
             </div>
 
             <div class="form-group private_aktivitet">
               <label class="col-md-2 control-label">Tilgjengelighet</label>
-              <div class="col-md-10">
+              <div class="col-md-6">
                 <input type="hidden" name="private">
                 <div class="btn-group" data-toggle="buttons">
                   <label class="btn btn-default{% if not aktivitet.private %} active{% endif %}">
-                    <input type="radio" name="private" value="public"{% if not aktivitet.private %} checked{% endif %}> Offentlig
+                    {% if not aktivitet.private %}
+                      <input type="radio" name="private" value="public" checked>
+                    {% else %}
+                      <input type="radio" name="private" value="public">
+                    {% endif %}
+                    Offentlig
                   </label>
                   <label class="btn btn-default{% if aktivitet.private %} active{% endif %}">
-                    <input type="radio" name="private" value="private"{% if aktivitet.private %} checked{% endif %}> Privat
+                    {% if aktivitet.private %}
+                      <input type="radio" name="private" value="private" checked>
+                    {% else %}
+                      <input type="radio" name="private" value="private">
+                    {% endif %}
+                    <span class="glyphicon glyphicon-lock"></span> Privat
                   </label>
                 </div>
                 <div class="hints">
-                  En privat aktivitet vises ikke i <a href="{% url 'aktiviteter.views.index' %}">det offentlige søket</a>, men kan likevel sees av hvem som helst hvis adressen besøkes direkte. (Du finner adressen etter at du har lagret.)
+                  En privat aktivitet vises ikke på <a href="{% url 'aktiviteter.views.index'
+                    %}">aktivitetssidene</a>, men kan likevel sees av de som får adressen til
+                  aktiviteten. (Du finner adressen etter at du har lagret.)
                 </div>
               </div>
             </div>
