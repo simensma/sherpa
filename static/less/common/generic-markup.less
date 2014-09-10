@@ -22,10 +22,6 @@
   margin-bottom: 9px;
 }
 
-.well.nav-container {
-  padding: 8px 0;
-}
-
 .square-well {
   background-color: rgb(240, 240, 240);
   padding: 15px 20px;
@@ -199,4 +195,27 @@ ul.nav.nav-tabs {
 // This is for compatibility with show/hide and other jquery effects
 .jq-hide {
   display: none;
+}
+
+// For parts of the site which need its own naviagtion (like the user page, Fjelltreffen etc.)
+// Works well with bootstrap's list-group.
+.submodule-navigation {
+  .header {
+    font-family: "DTL Nobel" !important;
+    font-weight: bold;
+    font-size: 14px;
+    text-transform: uppercase;
+  }
+
+  .list-group {
+    .list-group-item {
+      display: block;
+      font-family: "DTL Nobel" !important;
+        color: @profile-red;
+
+      &.active {
+        color: #fff;
+      }
+    }
+  }
 }

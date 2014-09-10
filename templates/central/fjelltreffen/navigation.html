@@ -1,9 +1,16 @@
-<div class="well nav-container">
-  <ul class="nav nav-list">
-    <li class="nav-header">Fjelltreffen</li>
-    <li{% if active == 'index' %} class="active"{% endif %}><a href="{% url 'fjelltreffen.views.index' %}">Alle annonser</a></li>
-    <li{% if active == 'new' %} class="active"{% endif %}><a href="{% url 'fjelltreffen.views.new' %}">Legg ut annonse</a></li>
-    <li{% if active == 'mine' %} class="active"{% endif %}><a href="{% url 'fjelltreffen.views.mine' %}">Mine annonser</a></li>
-    <li{% if active == 'about' %} class="active"{% endif %}><a href="{% url 'fjelltreffen.views.about' %}">Om Fjelltreffen</a></li>
-  </ul>
+<div class="submodule-navigation">
+  <span class="header">Fjelltreffen</span>
+  <div class="list-group">
+    <a href="{% url 'fjelltreffen.views.index' %}" class="list-group-item{% if active == 'index' %} active{% endif %}">Alle annonser
+    </a>
+    <a href="{% url 'fjelltreffen.views.new' %}" class="list-group-item{% if active == 'new' %} active{% endif %}">
+      Legg ut annonse
+    </a>
+    <a href="{% url 'fjelltreffen.views.mine' %}" class="list-group-item{% if active == 'mine' %} active{% endif %}">
+      Mine annonser
+    </a>
+    <a href="{% url 'fjelltreffen.views.about' %}" class="list-group-item{% if active == 'about' %} active{% endif %}">
+      Om Fjelltreffen
+    </a>
+  </div>
 </div>

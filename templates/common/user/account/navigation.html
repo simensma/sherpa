@@ -1,36 +1,73 @@
-<div class="well nav-container">
-  <ul class="nav nav-list">
-    <li class="nav-header">Meny</li>
-    <li{% if active == 'home' %} class="active"{% endif %}><a href="{% url 'user.views.home' %}">Min side</a></li>
+<div class="submodule-navigation">
+  <span class="header">Meny</span>
+  <div class="list-group">
+    <a href="{% url 'user.views.home' %}" class="list-group-item{% if active == 'home' %} active{% endif %}">
+      Min side
+    </a>
+
     {% if user.perms.sherpa %}
-      <li><a href="{% url 'admin.views.index' %}">Sherpa</a></li>
+      <a href="{% url 'admin.views.index' %}" class="list-group-item{% if active == '' %} active{% endif %}">
+        Sherpa
+      </a>
     {% endif %}
-    <li{% if active == 'account' %} class="active"{% endif %}><a href="{% url 'user.views.account' %}">Dine opplysninger</a></li>
-    <li{% if active == 'account_password' %} class="active"{% endif %}><a href="{% url 'user.views.account_password' %}">Endre passord</a></li>
+
+    <a href="{% url 'user.views.account' %}" class="list-group-item{% if active == 'account' %} active{% endif %}">
+      Dine opplysninger
+    </a>
+    <a href="{% url 'user.views.account_password' %}" class="list-group-item{% if active == 'account_password' %} active{% endif %}">
+      Endre passord
+    </a>
+
     {% if False %}
       {% if user.is_member %}
-        <li{% if active == 'aktiviteter' %} class="active"{% endif %}><a href="{% url 'user.views.aktiviteter' %}">Turer og aktiviteter</a></li>
+        <a href="{% url 'user.views.aktiviteter' %}" class="list-group-item{% if active == 'aktiviteter' %} active{% endif %}">
+          Turer og aktiviteter
+        </a>
       {% endif %}
     {% endif %}
+
     {% if user.turleder_aktivitet_dates.count != 0 %}
-      <li{% if active == 'turleder_aktiviteter' %} class="active"{% endif %}><a href="{% url 'user.views.turleder_aktivitet_dates' %}">Dine arrangerte turer</a></li>
+      <a href="{% url 'user.views.turleder_aktivitet_dates' %}" class="list-group-item{% if active == 'turleder_aktiviteter' %} active{% endif %}">
+        Dine arrangerte turer
+      </a>
     {% endif %}
+
     {% if user.is_member %}
-      <li{% if active == 'publications' %} class="active"{% endif %}><a href="{% url 'user.views.publications' %}">Publikasjoner</a></li>
-      <li{% if active == 'partneroffers' %} class="active"{% endif %}><a href="{% url 'user.views.partneroffers' %}">Motta medlemsfordeler</a></li>
+      <a href="{% url 'user.views.publications' %}" class="list-group-item{% if active == 'publications' %} active{% endif %}">
+        Publikasjoner
+      </a>
+
+      <a href="{% url 'user.views.partneroffers' %}" class="list-group-item{% if active == 'partneroffers' %} active{% endif %}">
+        Motta medlemsfordeler
+      </a>
     {% endif %}
+
     {% if user.is_member and user.show_norway_bus_tickets_menu_item %}
-      <li{% if active == 'norway_bus_tickets' %} class="active"{% endif %}><a href="{% url 'user.views.norway_bus_tickets' %}">Bestill bussbillett</a></li>
+      <a href="{% url 'user.views.norway_bus_tickets' %}" class="list-group-item{% if active == 'norway_bus_tickets' %} active{% endif %}">
+        Bestill bussbillett
+      </a>
     {% endif %}
-    <li><a href="{% url 'enrollment.gift.views.index' %}">Bestill gavemedlemskap</a></li>
+
+    <a href="{% url 'enrollment.gift.views.index' %}" class="list-group-item">
+      Bestill gavemedlemskap
+    </a>
+
     {% if user.fjelltreffen_annonser.count == 0 %}
-      <li><a href="{% url 'fjelltreffen.views.mine' %}">Fjelltreffen</a></li>
+      <a href="{% url 'fjelltreffen.views.mine' %}" class="list-group-item">
+        Fjelltreffen
+      </a>
     {% endif %}
+
     {% if user.is_member %}
-      <li{% if active == 'fotobok' %} class="active"{% endif %}><a href="{% url 'user.views.fotobok' %}">Bestill fotoprodukter</a></li>
+      <a href="{% url 'user.views.fotobok' %}" class="list-group-item{% if active == 'fotobok' %} active{% endif %}">
+        Bestill fotoprodukter
+      </a>
     {% endif %}
+
     {% if not user.is_member %}
-      <li{% if active == 'register_membership' %} class="active"{% endif %}><a href="{% url 'user.views.register_membership' %}">Registrer medlemskap</a></li>
+      <a href="{% url 'user.views.register_membership' %}" class="list-group-item{% if active == 'register_membership' %} active{% endif %}">
+        Registrer medlemskap
+      </a>
     {% endif %}
-  </ul>
+  </div>
 </div>
