@@ -71,11 +71,11 @@
         </div>
 
         <p>
-          <a class="btn btn-default btn-large" href="{% url 'enrollment.views.verification' %}"><i class="icon-arrow-left"></i> {% trans "Tilbake" %}</a>
-          <button type="submit" class="btn btn-danger btn-large payment card{% if not card_available %} jq-hide{% endif %}">
+          <a class="btn btn-default btn-lg" href="{% url 'enrollment.views.verification' %}"><i class="icon-arrow-left"></i> {% trans "Tilbake" %}</a>
+          <button type="submit" class="btn btn-danger btn-lg payment card{% if not card_available %} jq-hide{% endif %}">
             {% trans "Til betaling" %} <i class="icon-arrow-right icon-white"></i>
           </button>
-          <button type="submit" class="btn btn-danger btn-large payment invoice{% if card_available %} jq-hide{% endif %}">
+          <button type="submit" class="btn btn-danger btn-lg payment invoice{% if card_available %} jq-hide{% endif %}">
             {% trans "Send bestilling" %} <i class="icon-ok icon-white"></i>
           </button>
           <img class="ajaxloader jq-hide" src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" alt="{% trans "Laster, vennligst vent..." %}">
