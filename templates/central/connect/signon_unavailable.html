@@ -11,23 +11,17 @@
 
 {% block body %}
 
-<div class="row">
-  <div class="span12">
+<h1>{% trans "Midlertidig vedlikehold" %}</h1>
 
-    <h1>{% trans "Midlertidig vedlikehold" %}</h1>
+<p class="lede">
+  {% blocktrans with period=db_connections.focus.period_message %}Tjenesten er dessverre utilgjengelig {{ period }} på grunn av midlertidig vedlikehold.{% endblocktrans %}
+</p>
 
-    <p class="lede">
-      {% blocktrans with period=db_connections.focus.period_message %}Tjenesten er dessverre utilgjengelig {{ period }} på grunn av midlertidig vedlikehold.{% endblocktrans %}
-    </p>
-
-    <p>
-      {% url 'connect.views.signon_cancel' as previous_url %}
-      {% blocktrans with previous_url=previous_url %}
-        Vi beklager på det sterkeste ulempene dette medfører. Vennligst smør deg inn med tålmodighet, og prøv igjen når vedlikeholdsperioden er over. Innen da kan vi dessverre ikke annet enn å sende deg <a href="{{ previous_url }}">tilbake dit du kom fra</a>.
-      {% endblocktrans %}
-    </p>
-
-  </div>
-</div>
+<p>
+  {% url 'connect.views.signon_cancel' as previous_url %}
+  {% blocktrans with previous_url=previous_url %}
+    Vi beklager på det sterkeste ulempene dette medfører. Vennligst smør deg inn med tålmodighet, og prøv igjen når vedlikeholdsperioden er over. Innen da kan vi dessverre ikke annet enn å sende deg <a href="{{ previous_url }}">tilbake dit du kom fra</a>.
+  {% endblocktrans %}
+</p>
 
 {% endblock %}
