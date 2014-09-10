@@ -39,7 +39,7 @@ class ColumnNode(template.Node):
         else:
             context.render_context['rowiterator_row'] += 1
 
-        output = '<div class="span%s">%s</div>' % ((12 / columns), self.nodelist.render(context))
+        output = '<div class="col-md-%s">%s</div>' % ((12 / columns), self.nodelist.render(context))
         if new_row:
             return '</div><div class="row">%s' % (output)
         else:
