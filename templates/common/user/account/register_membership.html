@@ -38,7 +38,7 @@
             <div class="controls">
               <input type="text" class="input-small" name="zipcode" id="zipcode" maxlength="4">
               <input type="text" class="input-medium" name="area" disabled>
-              <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="ajaxloader zipcode hide" alt="Laster poststed..." title="Laster poststed...">
+              <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="ajaxloader zipcode jq-hide" alt="Laster poststed..." title="Laster poststed...">
             </div>
           </div>
 
@@ -62,7 +62,7 @@
           </div>
         </div>
 
-        <div class="step2 hide">
+        <div class="step2 jq-hide">
           <div class="control-group email" data-email="{{ user.get_email }}">
             <label class="control-label">E-postadresse:</label>
             <div class="controls">
@@ -91,27 +91,27 @@
         <div class="control-group">
           <div class="controls">
             <button type="submit" class="btn btn-large btn-danger"><i class="icon-ok icon-white"></i> Registrer deg</button>
-            <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="ajaxloader submit hide" alt="Sjekker medlemsnummer, vennligst vent...">
+            <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="ajaxloader submit jq-hide" alt="Sjekker medlemsnummer, vennligst vent...">
           </div>
         </div>
       </div>
 
-      <div class="alert alert-error no-memberid-match hide">
+      <div class="alert alert-error no-memberid-match jq-hide">
         <strong>Ukjent bruker</strong><br>
         Beklager, vi har ingen medlemmer med disse opplysningene. Vennligst prøv igjen, eller kontakt <a href="{% url 'membership.views.service' %}">medlemsservice</a> hvis du mener at dette skal være rett.
       </div>
 
-      <div class="alert alert-error memberid-lookups-exceeded hide">
+      <div class="alert alert-error memberid-lookups-exceeded jq-hide">
         <strong>Du kan ikke gjøre flere oppslag på medlemsnummer!</strong><br>
         Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url 'membership.views.service' %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
       </div>
 
-      <div class="alert alert-error user-exists hide">
+      <div class="alert alert-error user-exists jq-hide">
         <strong>Dette medlemmet har allerede en Min side-bruker!</strong><br>
         Hvis du har en annen konto og har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url 'user.login.views.login' %}">innloggingssiden</a> (da må du logge ut først).
       </div>
 
-      <div class="alert alert-error actor-is-not-member hide">
+      <div class="alert alert-error actor-is-not-member jq-hide">
         <strong>Medlemsnummeret er ikke tilknyttet et personlig medlemskap</strong><br>
         Kun personlige medlemmer i DNT kan benytte Min side. Vennligst ta kontakt med <a href="{% url 'membership.views.service' %}">medlemsservice</a> hvis du lurer på noe.
       </div>

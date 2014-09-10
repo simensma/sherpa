@@ -38,19 +38,19 @@
       <div class="controls">
         <input type="text" class="input-small" name="zipcode" id="registration_zipcode" maxlength="4">
         <input type="text" class="input-medium" name="area" disabled>
-        <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="ajaxloader zipcode hide" alt="{% trans "Laster poststed..." %}" title="{% trans "Laster poststed..." %}">
+        <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="ajaxloader zipcode jq-hide" alt="{% trans "Laster poststed..." %}" title="{% trans "Laster poststed..." %}">
       </div>
     </div>
 
     <div class="control-group">
       <div class="controls">
         <button type="submit" class="btn btn-danger">{% trans "Gå videre" %} <i class="icon-arrow-right icon-white"></i></button>
-        <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="ajaxloader submit hide" alt="{% trans "Sjekker medlemsnummer, vennligst vent..." %}">
+        <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="ajaxloader submit jq-hide" alt="{% trans "Sjekker medlemsnummer, vennligst vent..." %}">
       </div>
     </div>
   </div>
 
-  <div class="step2 hide">
+  <div class="step2 jq-hide">
     <div class="control-group">
       <p>{% trans "Velkommen" %}, <span class="name"></span>! {% trans "Nå trenger vi bare e-postadressen din og et passord, så er du ferdig registrert." %}</p>
     </div>
@@ -59,10 +59,10 @@
       <label class="control-label" for="registration_email">{% trans "E-post:" %}</label>
       <div class="controls">
         <input type="text" class="input-xlarge" name="email" id="registration_email">
-        <div class="hints email-found hide">
+        <div class="hints email-found jq-hide">
           {% trans "Er din e-postadresse" %} <a class="email" href=""></a>? {% trans "Hvis ikke kan du endre den i feltet over." %}
         </div>
-        <div class="hints email-not-found hide">
+        <div class="hints email-not-found jq-hide">
           {% trans "Her må du oppgi e-postadressen din." %}
         </div>
       </div>
@@ -75,10 +75,10 @@
         <div class="hints">
           {% blocktrans %}Her må du velge et passord på minst {{ user_password_length }} tegn.{% endblocktrans %}
         </div>
-        <div class="hints error validator short hide">
+        <div class="hints error validator short jq-hide">
           {% blocktrans %}Passordet er for kort, det må være minst {{ user_password_length }} tegn.{% endblocktrans %}
         </div>
-        <div class="hints error validator unequal hide">
+        <div class="hints error validator unequal jq-hide">
           {% trans "Passordene er ikke like, har du skrevet feil?" %}
         </div>
       </div>
@@ -94,29 +94,29 @@
     <div class="control-group">
       <div class="controls">
         <button type="submit" class="btn btn-large btn-danger"><i class="icon-ok icon-white"></i> {% trans "Registrer deg" %}</button>
-        <img class="ajaxloader submit hide" src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" alt="{% trans "Laster, vennligst vent..." %}">
+        <img class="ajaxloader submit jq-hide" src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" alt="{% trans "Laster, vennligst vent..." %}">
       </div>
     </div>
   </div>
 
 </form>
 
-<div class="hide alert alert-error user-exists">
+<div class="jq-hide alert alert-error user-exists">
   <strong>{% trans "Hmmm... det ser ut som om du allerede har en bruker!" %}</strong><br>
   <a href="javascript:undefined" class="toggle-login-tab">{% trans "Logg inn her" %}</a>. {% trans "Hvis du har glemt passordet kan du gjenopprette det der." %}
 </div>
 
-<div class="hide alert alert-error no-memberid-match">
+<div class="jq-hide alert alert-error no-memberid-match">
   <strong>{% trans "Ukjent bruker" %}</strong><br>
   {% trans "Beklager, vi har ingen medlemmer med disse opplysningene. Vennligst prøv igjen, eller kontakt" %} <a href="{% url 'membership.views.service' %}">{% trans "medlemsservice" %}</a> {% trans "hvis du mener at dette skal være rett." %}
 </div>
 
-<div class="hide alert alert-error actor-is-not-member">
+<div class="jq-hide alert alert-error actor-is-not-member">
   <strong>{% trans "Medlemsnummeret er ikke tilknyttet et personlig medlemskap" %}</strong><br>
   {% trans "Kun personlige medlemmer i DNT kan benytte Min side. Vennligst ta kontakt med" %} <a href="{% url 'membership.views.service' %}">{% trans "medlemsservice" %}</a> {% trans "hvis du lurer på noe." %}
 </div>
 
-<div class="hide alert alert-error memberid-lookups-exceeded">
+<div class="jq-hide alert alert-error memberid-lookups-exceeded">
   <strong>{% trans "Du kan ikke gjøre flere oppslag på medlemsnummer!" %}</strong><br>
   {% blocktrans %}Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte{% endblocktrans %} <a href="{% url 'membership.views.service' %}">{% trans "medlemsservice" %}</a>. {% trans "Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen." %}
 </div>

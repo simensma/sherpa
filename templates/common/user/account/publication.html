@@ -58,7 +58,7 @@
               <div class="content-wrapper">
                 <img src="{% firstof release.get_cover_photo '/static/img/admin/publications/turbo-placeholder.png' %}" alt="{{ release.title }}">
 
-                <div class="hover-content hide">
+                <div class="hover-content jq-hide">
                   {% if release.pdf_hash != '' %}
                     <a href="{{ release.get_pdf_url }}" class="cta download">
                       <div class="action-label">

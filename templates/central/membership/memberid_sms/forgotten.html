@@ -10,19 +10,19 @@
 
   <input type="text" name="phone_mobile" class="input-medium" placeholder="{% trans "Ditt mobilnummer..." %}">
   <button class="btn input-button-align" data-href="{% url 'membership.views.memberid_sms' %}">{% trans "Send" %}</button>
-  <img class="hide ajaxloader" src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" alt="{% trans "Laster, vennligst vent..." %}">
+  <img class="jq-hide ajaxloader" src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" alt="{% trans "Laster, vennligst vent..." %}">
 
   <div class="results">
-    <div class="alert alert-success ok hide">
+    <div class="alert alert-success ok jq-hide">
       {% trans "SMS med ditt medlemsnummer har blitt sendt til" %} <span class="number"></span>.
     </div>
-    <div class="alert alert-error no-match hide">
+    <div class="alert alert-error no-match jq-hide">
       {% blocktrans with email='<a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a>' number='<span class="number"></span>' %}Vi fant ikke mobilnummer {{ number }} i vårt medlemssystem. Vennligst kontakt DNTs medlemsservice på {{ email }} for å registrere ditt mobilnummer.{% endblocktrans %}
     </div>
-    <div class="alert alert-error error hide">
+    <div class="alert alert-error error jq-hide">
       {% blocktrans with email='<a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a>' %}Beklager, det oppstod en teknisk feil. Vennligst prøv igjen senere, eller ta kontakt med medlemsservice på {{ email }} dersom feilen vedvarer.{% endblocktrans %}
     </div>
-    <div class="alert alert-error too-high-frequency hide">
+    <div class="alert alert-error too-high-frequency jq-hide">
       {% trans "Du har sendt for mange SMS-forespørsler på kort tid! Vennligst vent en stund før du prøver igjen." %}
     </div>
   </div>

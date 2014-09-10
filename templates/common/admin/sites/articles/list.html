@@ -40,7 +40,7 @@
           </tbody>
         </table>
 
-        <div class="infinite-scroll-loader{% if versions|length < BULK_COUNT %} hide{% endif %}">
+        <div class="infinite-scroll-loader{% if versions|length < BULK_COUNT %} jq-hide{% endif %}">
           <img src="{{ STATIC_URL }}img/common/ajax-loader-large.gif" alt="Laster, vennligst vent..."><br>
           Laster flere elementer, vennligst vent...
         </div>
