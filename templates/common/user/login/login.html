@@ -27,34 +27,30 @@
 
 <div class="loginpage-wrapper">
 
-  <div class="row">
-    <div class="span12">
-      <h2>Min side</h2>
+  <h2>Min side</h2>
 
-      {# Messages sent from views that redirect to login #}
-      {% for message in messages %}
-        {% if message.message == 'fjelltreffen_login_required' %}
-          <div class="alert alert-error">
-            Du må være pålogget Min side for å legge ut annonser på Fjelltreffen.<br>
-            Er du medlem i DNT kan du raskt og enkelt opprette en Min side-bruker her.
-          </div>
-        {% elif message.message == 'fjelltreffen_login_required_for_report' %}
-          <div class="alert alert-error">
-            Du må være pålogget Min side for å rapportere annonser på Fjelltreffen. Dette er for å unngå misbruk av rapporteringstjenesten.<br>
-            Er du medlem i DNT kan du raskt og enkelt opprette en Min side-bruker her.
-          </div>
-        {% elif message.message == 'norway_bus_tickets_login_required' %}
-          <div class="alert alert-error">
-            Du må være pålogget Min side for å benytte deg av NOR-WAYs bussbillettilbud.<br>
-            Er du medlem i DNT kan du raskt og enkelt opprette en Min side-bruker her.
-          </div>
-        {% endif %}
-      {% endfor %}
-    </div>
-  </div>
+  {# Messages sent from views that redirect to login #}
+  {% for message in messages %}
+    {% if message.message == 'fjelltreffen_login_required' %}
+      <div class="alert alert-error">
+        Du må være pålogget Min side for å legge ut annonser på Fjelltreffen.<br>
+        Er du medlem i DNT kan du raskt og enkelt opprette en Min side-bruker her.
+      </div>
+    {% elif message.message == 'fjelltreffen_login_required_for_report' %}
+      <div class="alert alert-error">
+        Du må være pålogget Min side for å rapportere annonser på Fjelltreffen. Dette er for å unngå misbruk av rapporteringstjenesten.<br>
+        Er du medlem i DNT kan du raskt og enkelt opprette en Min side-bruker her.
+      </div>
+    {% elif message.message == 'norway_bus_tickets_login_required' %}
+      <div class="alert alert-error">
+        Du må være pålogget Min side for å benytte deg av NOR-WAYs bussbillettilbud.<br>
+        Er du medlem i DNT kan du raskt og enkelt opprette en Min side-bruker her.
+      </div>
+    {% endif %}
+  {% endfor %}
 
   <div class="row">
-    <div class="span7">
+    <div class="col-md-7">
       <ul class="nav nav-tabs">
         <li class="active"><a href="#login" data-toggle="tab">Logg inn</a></li>
         <li><a href="#registration" data-toggle="tab">Opprett ny bruker</a></li>
@@ -77,7 +73,7 @@
 
     </div>
 
-    <div class="span5">
+    <div class="col-md-5">
       <div class="usersite-benefits">
 
         <p>
