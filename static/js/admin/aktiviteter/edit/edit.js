@@ -11,6 +11,10 @@ $(function() {
         scope.find('select[name="co_forening"]').select2('val', null);
     });
 
+    scope.find('button[data-dnt-action="remove-category-tags"]').on('click', function() {
+        scope.find('select[name="category_tags"]').select2('val', null);
+    });
+
     scope.find('input[name="category"]').on('change', function() {
         var cat = $(this).val();
 
