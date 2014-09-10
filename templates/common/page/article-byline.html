@@ -1,42 +1,38 @@
 {% load gravatar %}
 
-<div class="row">
-  <div class="span12">
-    <div class="byline">
-      {% if not db_connections.focus.is_available %}
+<div class="byline">
+  {% if not db_connections.focus.is_available %}
 
-        <em>
-          Vi kan dessverre ikke vise informasjon om artikkelforfatteren(e) grunnet planlagt vedlikehold i enkelte av våre systemer. Vedlikeholdet foregår {{ db_connections.focus.period_message }} &mdash; vennligst sjekk tilbake etter dette.
-        </em>
+    <em>
+      Vi kan dessverre ikke vise informasjon om artikkelforfatteren(e) grunnet planlagt vedlikehold i enkelte av våre systemer. Vedlikeholdet foregår {{ db_connections.focus.period_message }} &mdash; vennligst sjekk tilbake etter dette.
+    </em>
 
-      {% else %}
+  {% else %}
 
-        {% if version.publishers.count == 1 %}
-          {% with publisher=version.publishers.all.0 %}
-            <a href="mailto:{{ publisher.get_sherpa_email }}">
-              <img src="{% gravatar publisher.get_sherpa_email %}">
-            </a>
-            <p>
-              Skrevet av <a href="mailto:{{ publisher.get_sherpa_email }}">{{ publisher.get_full_name }}</a> {{ version.variant.article.pub_date|date:"j. F Y" }}<br>
-              <a class="email" href="mailto:{{ publisher.get_sherpa_email }}">{{ publisher.get_sherpa_email }}</a>
-            </p>
-          {% endwith %}
-        {% else %}
-          <p>Skrevet {{ version.variant.article.pub_date|date:"j. F Y" }} av:</p>
-          {% for publisher in version.get_publishers %}
-            <div class="multiple-authors">
-              <a href="mailto:{{ publisher.get_sherpa_email }}">
-                <img src="{% gravatar publisher.get_sherpa_email %}">
-              </a>
-              <p>
-                <a href="mailto:{{ publisher.get_sherpa_email }}">{{ publisher.get_full_name }}</a><br>
-                <a class="email" href="mailto:{{ publisher.get_sherpa_email }}">{{ publisher.get_sherpa_email }}</a>
-              </p>
-            </div>
-          {% endfor %}
-        {% endif %}
+    {% if version.publishers.count == 1 %}
+      {% with publisher=version.publishers.all.0 %}
+        <a href="mailto:{{ publisher.get_sherpa_email }}">
+          <img src="{% gravatar publisher.get_sherpa_email %}">
+        </a>
+        <p>
+          Skrevet av <a href="mailto:{{ publisher.get_sherpa_email }}">{{ publisher.get_full_name }}</a> {{ version.variant.article.pub_date|date:"j. F Y" }}<br>
+          <a class="email" href="mailto:{{ publisher.get_sherpa_email }}">{{ publisher.get_sherpa_email }}</a>
+        </p>
+      {% endwith %}
+    {% else %}
+      <p>Skrevet {{ version.variant.article.pub_date|date:"j. F Y" }} av:</p>
+      {% for publisher in version.get_publishers %}
+        <div class="multiple-authors">
+          <a href="mailto:{{ publisher.get_sherpa_email }}">
+            <img src="{% gravatar publisher.get_sherpa_email %}">
+          </a>
+          <p>
+            <a href="mailto:{{ publisher.get_sherpa_email }}">{{ publisher.get_full_name }}</a><br>
+            <a class="email" href="mailto:{{ publisher.get_sherpa_email }}">{{ publisher.get_sherpa_email }}</a>
+          </p>
+        </div>
+      {% endfor %}
+    {% endif %}
 
-      {% endif %}
-    </div>
-  </div>
+  {% endif %}
 </div>

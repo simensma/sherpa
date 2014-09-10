@@ -11,7 +11,7 @@
 {% block body %}
 
 <div class="row">
-  <div class="span12">
+  <div class="col-md-12">
     <div class="wrapper">
       <div class="article-listing" data-initial-count="{{ versions|length }}" data-url="{% url 'articles.views.more' %}">
         <h1>Nyheter{% if tag %} &mdash; {{ tag }}{% endif %}</h1>
@@ -24,7 +24,7 @@
 
         {% for version in versions %}
           {% if forloop.counter0|divisibleby:"2" or forloop.first %}
-            <div class="row-fluid" style="margin-bottom: 20px">
+            <div class="row" style="margin-bottom: 20px">
           {% endif %}
 
             {% include 'common/page/article-list-item.html' with version=version %}
@@ -37,7 +37,7 @@
       </div>
 
       {% if site == main_site %}
-        <div class="old-article-listing hide" data-url="{% url 'articles.views.more_old' %}">
+        <div class="old-article-listing jq-hide" data-url="{% url 'articles.views.more_old' %}">
           <div class="alert alert-info">
             <a class="close">x</a>
             <strong>Eldre artikler</strong><br>
@@ -47,9 +47,9 @@
       {% endif %}
 
       <div class="infinite-loader">
-        <button class="btn btn-large">Se flere nyheter</button>
+        <button class="btn btn-default btn-large">Se flere nyheter</button>
 
-        <div class="loading form-border hide">
+        <div class="loading form-border jq-hide">
           <img src="{{ STATIC_URL }}img/common/ajax-loader-large.gif" alt="Laster, vennligst vent..."><br>
           Henter nyheter, vennligst vent...
         </div>

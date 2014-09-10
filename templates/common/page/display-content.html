@@ -2,9 +2,9 @@
 
 <article>
   {% for row in version.get_rows %}
-    <div class="row-fluid">
+    <div class="row">
       {% for column in row.get_columns %}
-        <div class="offset{{ column.offset }} span{{ column.span }}">
+        <div class="offset-md-{{ column.offset }} col-md-{{ column.span }}">
           {% for content in column.get_contents %}
 
             {% if content.type == 'html' or content.type == 'title' or content.type == 'lede' %}
