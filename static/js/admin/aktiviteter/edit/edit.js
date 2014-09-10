@@ -14,11 +14,13 @@ $(function() {
     });
 
     scope.find('button[data-dnt-action="remove-co-forening"]').on('click', function() {
-        scope.find('select[name="co_forening"]').select2('val', null);
+        // Single selects should be set to empty string ""
+        scope.find('select[name="co_forening"]').select2('val', '');
     });
 
     scope.find('button[data-dnt-action="remove-category-tags"]').on('click', function() {
-        scope.find('select[name="category_tags"]').select2('val', null);
+        // Multi selects should be set to empty array []
+        scope.find('select[name="category_tags"]').select2('val', []);
     });
 
     scope.find('input[name="category"]').on('change', function() {
@@ -42,8 +44,8 @@ $(function() {
         });
 
         // Reset subcategory and tag select
-        $('select[name="category_type"]').select2("data", null);
-        $('select[name="category_tags"]').select2("data", null);
+        $('select[name="category_type"]').select2('val', '');
+        $('select[name="category_tags"]').select2('val', []);
     });
 
     // Show/hide publish details
