@@ -189,93 +189,120 @@
 
 <div class="container social-icons">
   <div class="row">
-    <div class="span3">
-      <a href="/kontakt/">
-        <img class="social" src="{{ STATIC_URL }}img/icons/netlife/social/turistforeningen.png" alt="Kontakt oss">
-      </a>
-      <h1>
-        <a href="/kontakt/">Kontakt oss</a>
-      </h1>
-      <a href="/kontakt/">E-post eller telefon</a>
+
+    <div class="col-md-3">
+      <div class="item">
+        <a href="/kontakt/">
+          <img class="social" src="{{ STATIC_URL }}img/icons/netlife/social/turistforeningen.png" alt="Kontakt oss">
+        </a>
+        <h1>
+          <a href="/kontakt/">Kontakt oss</a>
+        </h1>
+        <a href="/kontakt/">E-post eller telefon</a>
+      </div>
     </div>
-    <div class="span3">
-      <a class="noexternal" href="http://www.facebook.com/turistforeningen">
-        <img class="social" src="{{ STATIC_URL }}img/icons/netlife/social/facebook.png" alt="Facebook">
-      </a>
-      <h1>
-        <a class="noexternal" href="http://www.facebook.com/turistforeningen">Facebook</a>
-      </h1>
-      <a class="noexternal" href="http://www.facebook.com/turistforeningen">Følg oss</a>
+
+    <div class="col-md-3">
+      <div class="item">
+        <a class="noexternal" href="http://www.facebook.com/turistforeningen">
+          <img class="social" src="{{ STATIC_URL }}img/icons/netlife/social/facebook.png" alt="Facebook">
+        </a>
+        <h1>
+          <a class="noexternal" href="http://www.facebook.com/turistforeningen">Facebook</a>
+        </h1>
+        <a class="noexternal" href="http://www.facebook.com/turistforeningen">Følg oss</a>
+      </div>
     </div>
-    <div class="span3">
-      <a class="noexternal" href="https://twitter.com/turistforening">
-        <img class="social" src="{{ STATIC_URL }}img/icons/netlife/social/twitter.png" alt="Twitter">
-      </a>
-      <h1>
-        <a class="noexternal" href="https://twitter.com/turistforening">Twitter</a>
-      </h1>
-      <a class="noexternal" href="https://twitter.com/turistforening">Snakk med oss</a>
+
+    <div class="col-md-3">
+      <div class="item">
+        <a class="noexternal" href="https://twitter.com/turistforening">
+          <img class="social" src="{{ STATIC_URL }}img/icons/netlife/social/twitter.png" alt="Twitter">
+        </a>
+        <h1>
+          <a class="noexternal" href="https://twitter.com/turistforening">Twitter</a>
+        </h1>
+        <a class="noexternal" href="https://twitter.com/turistforening">Snakk med oss</a>
+      </div>
     </div>
-    <div class="span3">
-      <a href="http://www.youtube.com/user/turistforeningen">
-        <img class="social" src="{{ STATIC_URL }}img/icons/netlife/social/youtube.png" alt="Youtube">
-      </a>
-      <h1>
-        <a class="noexternal" href="http://www.youtube.com/user/turistforeningen">Youtube</a>
-      </h1>
-      <a class="noexternal" href="http://www.youtube.com/user/turistforeningen">Se våre filmer</a>
+
+    <div class="col-md-3">
+      <div class="item">
+        <a href="http://www.youtube.com/user/turistforeningen">
+          <img class="social" src="{{ STATIC_URL }}img/icons/netlife/social/youtube.png" alt="Youtube">
+        </a>
+        <h1>
+          <a class="noexternal" href="http://www.youtube.com/user/turistforeningen">Youtube</a>
+        </h1>
+        <a class="noexternal" href="http://www.youtube.com/user/turistforeningen">Se våre filmer</a>
+      </div>
     </div>
+
   </div>
 </div>
 
 <footer class="main">
   <div class="container">
-    <div class="row services">
-      <div class="span3">
-        <h2>Vårt tilbud</h2>
-        <ul>
-          <li><a href="/fellesturer/">Fellesturer</a></li>
-          <li><a href="/hytter/">Hytter og ruter</a></li>
-          <li><a href="/kurs/">Kurs og utdanning</a></li>
-          <li><a href="/skole/">Skole</a></li>
-          <li><a href="http://www.nettbutikken.dntoslo.no/">Turutstyr og kart</a></li>
-          <li><a href="{% url 'fjelltreffen.views.index' %}">Fjelltreffen</a></li>
-          <li><a href="http://ut.no">UT.no</a></li>
-        </ul>
-      </div>
-      <div class="span3">
-        <h2>Turgrupper</h2>
-        <ul>
-          <li><a href="/barn/">Barnas Turlag</a></li>
-          <li><a href="/ung/">DNT ung</a></li>
-          <li><a href="/fjellsport/">DNT fjellsport</a></li>
-          <li><a href="/senior/">DNT senior</a></li>
-          <li><a href="{% url 'foreninger.views.index' %}">DNT der du bor</a></li>
-        </ul>
-      </div>
-      <div class="span3">
-        <h2>Medlemskap</h2>
-        <ul>
-          <li><a href="/medlem/">Bli medlem</a></li>
-          <li><a href="{% url 'membership.views.service' %}">Medlemsservice</a></li>
-          <li><a href="/bedrift/">Bedriftsmedlemskap</a></li>
-          <li><a href="{% url 'enrollment.gift.views.index' %}">Gavemedlemskap</a></li>
-          <li><a href="{% url 'user.views.home' %}">Min side</a></li>
-        </ul>
-      </div>
-      <div class="span3">
-        <h2>Turistforeningen</h2>
-        <ul>
-          <li><a href="/kontakt/">Kontakt oss</a></li>
-          <li><a href="/nyheter/">Nyheter</a></li>
-          <li><a href="/presse/">For presse</a></li>
-          <li><a href="/samfunnsansvar/">Vårt samfunnsansvar</a></li>
-          <li><a href="/organisasjonen/">Organisasjonen</a></li>
-          <li><a href="/jobb/">Ledige stillinger</a></li>
-          <li><a href="/publikasjoner/">Publikasjoner</a></li>
-          <li><a href="/partnere/">Våre partnere</a></li>
-          <li><a href="/personvern/">Personvernerklæring</a></li>
-        </ul>
+    <div class="row">
+      <div class="services">
+
+        <div class="col-md-3">
+          <div class="category">
+            <h2>Vårt tilbud</h2>
+            <ul>
+              <li><a href="/fellesturer/">Fellesturer</a></li>
+              <li><a href="/hytter/">Hytter og ruter</a></li>
+              <li><a href="/kurs/">Kurs og utdanning</a></li>
+              <li><a href="/skole/">Skole</a></li>
+              <li><a href="http://www.nettbutikken.dntoslo.no/">Turutstyr og kart</a></li>
+              <li><a href="{% url 'fjelltreffen.views.index' %}">Fjelltreffen</a></li>
+              <li><a href="http://ut.no">UT.no</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="category">
+            <h2>Turgrupper</h2>
+            <ul>
+              <li><a href="/barn/">Barnas Turlag</a></li>
+              <li><a href="/ung/">DNT ung</a></li>
+              <li><a href="/fjellsport/">DNT fjellsport</a></li>
+              <li><a href="/senior/">DNT senior</a></li>
+              <li><a href="{% url 'foreninger.views.index' %}">DNT der du bor</a></li>
+            </ul>
+          </div>
+
+          </div>
+        <div class="col-md-3">
+          <div class="category">
+            <h2>Medlemskap</h2>
+            <ul>
+              <li><a href="/medlem/">Bli medlem</a></li>
+              <li><a href="{% url 'membership.views.service' %}">Medlemsservice</a></li>
+              <li><a href="/bedrift/">Bedriftsmedlemskap</a></li>
+              <li><a href="{% url 'enrollment.gift.views.index' %}">Gavemedlemskap</a></li>
+              <li><a href="{% url 'user.views.home' %}">Min side</a></li>
+            </ul>
+          </div>
+
+          </div>
+        <div class="col-md-3">
+          <div class="category">
+            <h2>Turistforeningen</h2>
+            <ul>
+              <li><a href="/kontakt/">Kontakt oss</a></li>
+              <li><a href="/nyheter/">Nyheter</a></li>
+              <li><a href="/presse/">For presse</a></li>
+              <li><a href="/samfunnsansvar/">Vårt samfunnsansvar</a></li>
+              <li><a href="/organisasjonen/">Organisasjonen</a></li>
+              <li><a href="/jobb/">Ledige stillinger</a></li>
+              <li><a href="/publikasjoner/">Publikasjoner</a></li>
+              <li><a href="/partnere/">Våre partnere</a></li>
+              <li><a href="/personvern/">Personvernerklæring</a></li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
 
