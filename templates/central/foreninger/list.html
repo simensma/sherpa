@@ -51,7 +51,7 @@
   <p>Velg type:</p>
   <select name="category">
   {% for category in categories %}
-    <option value="{{ category.db }}"{% if category.chosen %} selected{% endif %}>{{ category.name }}</option>
+    <option value="{{ category.0 }}"{% if category == chosen_category %} selected{% endif %}>{{ category.1 }}</option>
   {% endfor %}
   </select>
 
