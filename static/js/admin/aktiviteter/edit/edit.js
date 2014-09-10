@@ -18,22 +18,22 @@ $(function() {
         scope.find('[data-dnt-container="subcategory-label"]').attr('class', 'selected ' + cat);
 
         // Move subcategory options to tag select
-        $('select[name="category_sub"] option').each(function() {
+        $('select[name="category_type"] option').each(function() {
             if ($(this).val() === '') { return; }
 
             $(this).removeAttr('selected');
-            $(this).detach().appendTo('select[name="category_tag"]');
+            $(this).detach().appendTo('select[name="category_tags"]');
         });
 
         // Move correct tags to subcategory select
-        $('select[name="category_tag"] option.' + cat).each(function() {
+        $('select[name="category_tags"] option.' + cat).each(function() {
             $(this).removeAttr('selected');
-            $(this).detach().appendTo('select[name="category_sub"]');
+            $(this).detach().appendTo('select[name="category_type"]');
         });
 
         // Reset subcategory and tag select
-        $('select[name="category_sub"]').select2("data", null);
-        $('select[name="category_tag"]').select2("data", null);
+        $('select[name="category_type"]').select2("data", null);
+        $('select[name="category_tags"]').select2("data", null);
     });
 
     // Show/hide publish details
