@@ -8,11 +8,16 @@ header {
   font-size: 14px !important;
   font-family: "DTL Nobel";
 
-  div.search {
-    text-align: right;
+  .logo-search-bar {
+    margin-bottom: 20px;
 
-    form.form-search {
+    .search {
       margin-top: 20px;
+      text-align: right;
+
+      input {
+        width: 200px;
+      }
     }
   }
 
@@ -35,7 +40,7 @@ header {
 
 @media (max-width: 979px) {
   header {
-    div.border, div.breadcrumb-container, div.language-container {
+    .search, div.border, div.breadcrumb-container, div.language-container {
       display: none;
     }
 
@@ -128,35 +133,18 @@ header {
     text-decoration: none;
   }
 
-  p.display-menu a b.caret {
-    margin-left: 2px;
-  }
-
-  p.display-search a b.caret {
-    margin-right: 2px;
-  }
-
-  p.display-menu a b.caret, p.display-search a b.caret {
-    margin-top: 12px;
-    border-top-color: rgb(30, 30, 30);
-    border-bottom-color: rgb(30, 30, 30);
-  }
-
-  p.display-menu a:hover b.caret, p.display-search a:hover b.caret {
-    border-top-color: rgb(180, 180, 180);
-    border-bottom-color: rgb(180, 180, 180);
-  }
-
   form.search-mobile {
     display: none;
 
     input[type='text'] {
+      display: inline-block;
       width: 65%;
-      margin: 0 1% 0 1%;
+      margin-right: 1%;
     }
 
     button[type='submit'] {
-      margin: 0 1% 0 1%;
+      margin-top: -5px;
+      margin-left: 1%;
     }
   }
 }

@@ -55,49 +55,50 @@
 <div class="container">
 
 <header>
-  <div class="row">
-    <div class="span6">
-      <div class="forening-logo left top">
-        <a href="{% url 'page.views.page' %}" class="single">
-          {{ site.forening.name }}
-        </a>
+
+  <div class="logo-search-bar">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="forening-logo left top">
+          <a href="{% url 'page.views.page' %}" class="single">
+            {{ site.forening.name }}
+          </a>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <form action="{% url 'page.views.search' %}" method="get" class="form-inline search">
+          <div class="form-group">
+            <input type="text" name="q" value="{{ search_query }}" class="form-control">
+            <button type="submit" class="btn btn-default">Søk</button>
+          </div>
+        </form>
       </div>
     </div>
-    <div class="span6 search">
-      <form action="{% url 'page.views.search' %}" method="get" class="form-search">
-        <input type="text" name="q" value="{{ search_query }}" class="input-medium">
-        <button type="submit" class="btn">Søk</button>
-      </form>
-    </div>
   </div>
 
-  <div class="row">
-    <div class="span12 mobile-control">
-      <p class="display-menu">
-        <a href="javascript:undefined">
-          Meny <b class="caret"></b>
-        </a>
-      </p>
-      <p class="display-search">
-        <a href="javascript:undefined">
-          <b class="caret"></b> Søk
-        </a>
-      </p>
-      <div style="clear: both;"></div>
-    </div>
+  <div class="mobile-control">
+    <p class="display-menu">
+      <a href="javascript:undefined">
+        Meny <span class="caret"></span>
+      </a>
+    </p>
+    <p class="display-search">
+      <a href="javascript:undefined">
+        <span class="caret"></span> Søk
+      </a>
+    </p>
+    <div style="clear: both;"></div>
   </div>
 
-  <div class="row">
-    <div class="span12">
-      <form action="{% url 'page.views.search' %}" method="get" class="search-mobile form-search">
-        <input type="text" name="q" value="{{ search_query }}">
-        <button type="submit" class="btn">Søk</button>
-      </form>
+  <form action="{% url 'page.views.search' %}" method="get" class="form-inline search-mobile">
+    <div class="form-group">
+      <input type="text" name="q" value="{{ search_query }}" class="form-control">
+      <button type="submit" class="btn btn-default">Søk</button>
     </div>
-  </div>
+  </form>
 
   <div class="row">
-    <div class="span9 menu-container">
+    <div class="col-md-9 menu-container">
       <nav id="menus">
         <ul>
           {% for menu in menus %}
@@ -108,7 +109,7 @@
         </ul>
       </nav>
     </div>
-    <div class="span3 login-container">
+    <div class="col-md-3 login-container">
       <div class="login">
         {% if user.is_authenticated %}
           {% if user.perms.sherpa %}<a href="{% url 'admin.views.index' %}">Sherpa</a>{% endif %}
@@ -124,9 +125,11 @@
   <div class="border"></div>
 
   <div class="row">
-    <div class="span10 breadcrumb-container">
-      <div class="menu-breadcrumb">
-        <a href="/">Forsiden</a>
+    <div class="col-md-10">
+      <div class="breadcrumb-container">
+        <div class="menu-breadcrumb">
+          <a href="/">Forsiden</a>
+
           {# Too much template logic, but can't see a better way to do this. #}
           {% if page_hierarchy %}
             {% for page in page_hierarchy %}
@@ -149,23 +152,27 @@
             {# Fall back to the static title #}
             / {% block breadcrumb %}<em><a href="">Turistforeningen</a></em>{% endblock %}
           {% endif %}
+
+        </div>
       </div>
     </div>
 
-    <div class="span2 language-container">
-      <ul class="language-bar nav nav-pills">
-        <li class="dropdown" id="menu1">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
-            Language
-            <b class="caret"></b>
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="noexternal" href="http://{{ main_site.domain }}/english">English</a></li>
-            <li><a class="noexternal" href="http://{{ main_site.domain }}/deutsch">Deutsch</a></li>
-            <li><a class="noexternal" href="http://{{ main_site.domain }}/francais">Français</a></li>
-          </ul>
-        </li>
-      </ul>
+    <div class="col-md-2">
+      <div class="language-container">
+        <ul class="language-bar nav nav-pills">
+          <li class="dropdown" id="menu1">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
+              Language
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="noexternal" href="http://{{ main_site.domain }}/english">English</a></li>
+              <li><a class="noexternal" href="http://{{ main_site.domain }}/deutsch">Deutsch</a></li>
+              <li><a class="noexternal" href="http://{{ main_site.domain }}/francais">Français</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </header>
