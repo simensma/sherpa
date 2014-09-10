@@ -1,7 +1,7 @@
 {% load render_widget %}
 
 <div class="row">
-  <div class="offset3 span6">
+  <div class="col-md-6 col-md-offset-3">
     <div class="no-save-warning alert alert-danger jq-hide">
       <a class="close">x</a>
       <strong>Advarsel!</strong><br>
@@ -24,10 +24,10 @@
 
   {% for row in version.get_rows %}
     {# Rows are recognized by their data-dnt-row attribute, not their class #}
-    <div class="row-fluid" data-dnt-row data-id="{{ row.id }}">
+    <div class="row" data-dnt-row data-id="{{ row.id }}">
 
       {% for column in row.get_columns %}
-        <div class="column offset{{ column.offset }} span{{ column.span }}" data-id="{{ column.id }}">
+        <div class="column col-md-{{ column.span }} col-md-offset-{{ column.offset }}" data-id="{{ column.id }}">
 
           {% for content in column.get_contents %}
             {% if content.type == 'html' or content.type == 'title' or content.type == 'lede' %}
@@ -89,8 +89,8 @@
 <div class="jq-hide" data-dnt-container="insertion-templates">
 
   {# The default row with a full-sized column #}
-  <div class="row-fluid" data-dnt-row>
-    <div class="column span12"></div>
+  <div class="row" data-dnt-row>
+    <div class="column col-md-12"></div>
   </div>
 
   {# The default HTML content element #}
@@ -123,8 +123,8 @@
   </div>
 
   {# Editor-control: The column-structure controls to be shown above each separate row #}
-  <div class="row-fluid edit-structure">
-    <div class="column span12">
+  <div class="row edit-structure">
+    <div class="column col-md-12">
       <div class="edit-structure-inner">
         <button class="btn" data-type="single" title="Bruk én stor kolonne i denne seksjonen"></button>
         <button class="btn" data-type="double" title="Bruk to like store kolonner i denne seksjonen"></button>

@@ -83,10 +83,10 @@ $(function() {
                 var span;
                 var offset = 0;
                 $($(this).attr('class').split(' ')).each(function() {
-                    if(this.startsWith('span')) {
-                        span = this.substring('span'.length);
-                    } else if(this.startsWith('offset')) {
-                        offset = this.substring('offset'.length);
+                    if(this.match('col-md-[0-9]')) {
+                        span = this.substring('col-md-'.length);
+                    } else if(this.match('col-md-offset-[0-9]')) {
+                        offset = this.substring('col-md-offset-'.length);
                     }
                 });
                 var column = {
