@@ -5,7 +5,7 @@
 {% block body %}
 
 <div class="row">
-  <div class="span9">
+  <div class="col-md-9">
 
     <h2>{{ aktivitet_date.aktivitet.title }}</h2>
 
@@ -13,7 +13,7 @@
 
   </div>
 
-  <div class="span3">
+  <div class="col-md-3">
     {% include 'common/user/account/navigation.html' with active='turleder_aktiviteter' %}
   </div>
 </div>
