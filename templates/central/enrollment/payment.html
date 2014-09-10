@@ -10,7 +10,7 @@
 
 <div class="enrollment-payment-method">
   <div class="row">
-    <div class="span8">
+    <div class="col-md-8">
 
       {% include 'central/enrollment/progress.html' with step=4 %}
 
@@ -66,25 +66,25 @@
           </label>
         </div>
 
-        <div class="alert alert-info invoice-info hide">
+        <div class="alert alert-info invoice-info jq-hide">
           {% trans "<strong>Merk:</strong> Velger du å betale med faktura blir ikke medlemskapet gyldig før betalingen er registrert i vårt system." %}
         </div>
 
         <p>
-          <a class="btn btn-large" href="{% url 'enrollment.views.verification' %}"><i class="icon-arrow-left"></i> {% trans "Tilbake" %}</a>
-          <button type="submit" class="btn btn-danger btn-large payment card{% if not card_available %} hide{% endif %}">
+          <a class="btn btn-default btn-large" href="{% url 'enrollment.views.verification' %}"><i class="icon-arrow-left"></i> {% trans "Tilbake" %}</a>
+          <button type="submit" class="btn btn-danger btn-large payment card{% if not card_available %} jq-hide{% endif %}">
             {% trans "Til betaling" %} <i class="icon-arrow-right icon-white"></i>
           </button>
-          <button type="submit" class="btn btn-danger btn-large payment invoice{% if card_available %} hide{% endif %}">
+          <button type="submit" class="btn btn-danger btn-large payment invoice{% if card_available %} jq-hide{% endif %}">
             {% trans "Send bestilling" %} <i class="icon-ok icon-white"></i>
           </button>
-          <img class="ajaxloader hide" src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" alt="{% trans "Laster, vennligst vent..." %}">
+          <img class="ajaxloader jq-hide" src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" alt="{% trans "Laster, vennligst vent..." %}">
         </p>
       </form>
 
     </div>
 
-    <div class="span4">
+    <div class="col-md-4">
       {% include 'central/membership/infobox.html' %}
     </div>
   </div>

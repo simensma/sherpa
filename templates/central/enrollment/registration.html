@@ -25,18 +25,14 @@
 <div class="enrollment-registration">
 
   {% if dntconnect %}
-    <div class="row">
-      <div class="span12">
-        <div class="alert alert-info">
-          <strong>{% trans "Innmelding i Den Norske Turistforening" %}</strong><br>
-          {% trans "Du er i ferd med å melde deg inn i DNT i forbindelse med at du skal melde deg på en tur eller aktivitet. Når innmeldingen er fullført vil du bli videresendt til påmelding for turen." %}
-        </div>
-      </div>
+    <div class="alert alert-info">
+      <strong>{% trans "Innmelding i Den Norske Turistforening" %}</strong><br>
+      {% trans "Du er i ferd med å melde deg inn i DNT i forbindelse med at du skal melde deg på en tur eller aktivitet. Når innmeldingen er fullført vil du bli videresendt til påmelding for turen." %}
     </div>
   {% endif %}
 
   <div class="row">
-    <div class="span8">
+    <div class="col-md-8">
 
       {% include 'central/enrollment/progress.html' with step=1 %}
 
@@ -130,7 +126,7 @@
       </form>
     </div>
 
-    <div class="span4">
+    <div class="col-md-4">
       {% include 'central/membership/infobox.html' %}
     </div>
   </div>

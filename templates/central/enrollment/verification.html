@@ -39,7 +39,7 @@
 <div class="enrollment-verification">
 
   <div class="row">
-    <div class="span8">
+    <div class="col-md-8">
 
       {% include 'central/enrollment/progress.html' with step=3 %}
 
@@ -71,7 +71,7 @@
           </div>
         {% endif %}
 
-        <div class="alert alert-info cheaper-mainmember-hint hide">
+        <div class="alert alert-info cheaper-mainmember-hint jq-hide">
           <a class="close">x</a><strong>
           <img src="/static/img/icons/glyph/original/glyphicons_195_circle_info.png"> {% trans "Rabattmulighet!" %}</strong><br>
           {% blocktrans %}
@@ -219,14 +219,14 @@
         </p>
 
         <p>
-          <a class="btn btn-large" href="{% url 'enrollment.views.household' %}"><i class="icon-arrow-left"></i> {% trans "Tilbake" %}</a>
+          <a class="btn btn-default btn-large" href="{% url 'enrollment.views.household' %}"><i class="icon-arrow-left"></i> {% trans "Tilbake" %}</a>
           <a href="javascript:undefined" class="btn btn-danger btn-large verify">{% trans "Bekreft" %} <i class="icon-arrow-right icon-white"></i></a>
         </p>
 
       </form>
     </div>
 
-    <div class="span4">
+    <div class="col-md-4">
       {% include 'central/membership/infobox.html' %}
     </div>
   </div>

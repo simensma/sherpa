@@ -20,7 +20,7 @@
 {% block enrollment %}
 
 <div class="row">
-  <div class="span8">
+  <div class="col-md-8">
 
     {% include 'central/enrollment/progress.html' with step=2 %}
 
@@ -87,7 +87,7 @@
             <label>{% trans "Postnummer / Poststed" %} <span class="asterisk red">*</span></label>
             <input type="text" class="input-small" name="zipcode" value="{{ enrollment.zipcode }}" maxlength="10">
             <input type="text" class="input-medium" name="area" value="{{ enrollment.area }}" disabled>
-            <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="zip ajaxloader hide" alt="{% trans "Laster poststed..." %}" title="{% trans "Laster poststed..." %}">
+            <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="zip ajaxloader jq-hide" alt="{% trans "Laster poststed..." %}" title="{% trans "Laster poststed..." %}">
           </div>
         </div>
         <div class="world">
@@ -124,42 +124,42 @@
         <p>
           <input type="text" name="existing" value="{{ enrollment.existing_memberid }}" placeholder="{% trans "Oppgi medlemsnummer..." %}">
           <a href="javascript:undefined" class="btn search-existing input-button-align"><i class="icon-search"></i> {% trans "Søk" %}</a>
-          <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="existing ajaxloader hide" alt="{% trans "Laster medlemsinfo..." %}" title="{% trans "Laster medlemsinfo..." %}">
+          <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="existing ajaxloader jq-hide" alt="{% trans "Laster medlemsinfo..." %}" title="{% trans "Laster medlemsinfo..." %}">
         </p>
 
-        <div class="existing-result hide">
-          <span class="success hide">
+        <div class="existing-result jq-hide">
+          <span class="success jq-hide">
             {% trans "Hovedmedlem:" %} <span class="result"></span>
           </span>
-          <span class="actor-has-not-paid error hide">{% trans "Dette medlemmet har ikke betalt medlemskontingenten for i år." %}</span>
-          <span class="bad-zipcode error hide">{% trans "Du må oppgi riktig postnummer før du søker." %}</span>
-          <span class="invalid-id error hide">{% trans "Ugyldig medlemsnummer oppgitt." %}</span>
-          <span class="actor-does-not-exist error hide">{% trans "Fant ingen medlemmer med dette medlemsnummeret." %}</span>
-          <span class="too-young error hide">
+          <span class="actor-has-not-paid error jq-hide">{% trans "Dette medlemmet har ikke betalt medlemskontingenten for i år." %}</span>
+          <span class="bad-zipcode error jq-hide">{% trans "Du må oppgi riktig postnummer før du søker." %}</span>
+          <span class="invalid-id error jq-hide">{% trans "Ugyldig medlemsnummer oppgitt." %}</span>
+          <span class="actor-does-not-exist error jq-hide">{% trans "Fant ingen medlemmer med dette medlemsnummeret." %}</span>
+          <span class="too-young error jq-hide">
             {% blocktrans %}
               Det angitte medlemmet er bare <span class="age"></span> år ved utgangen av året, og kan ikke være hovedmedlem.
             {% endblocktrans %}
           </span>
-          <span class="is-household-member error hide">
+          <span class="is-household-member error jq-hide">
             {% trans "Det angitte medlemmet er selv et husstandsmedlem. Dere kan kun knytte dere til et hovedmedlem." %}
           </span>
-          <span class="actoraddress-does-not-exist error hide">
+          <span class="actoraddress-does-not-exist error jq-hide">
             {% trans "Det angitte medlemmet bor ikke på samme adresse som dere." %}
           </span>
-          <span class="technical-error error hide">
+          <span class="technical-error error jq-hide">
             {% trans "Beklager, det oppstod en teknisk feil ved oppslag i medlemsregisteret. Feilen har blitt logget i våre systemer. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer." %}
           </span>
         </div>
 
       </div>
       <p>
-        <a class="btn btn-large" href="{% url 'enrollment.views.registration' %}"><i class="icon-arrow-left"></i> {% trans "Tilbake" %}</a>
+        <a class="btn btn-default btn-large" href="{% url 'enrollment.views.registration' %}"><i class="icon-arrow-left"></i> {% trans "Tilbake" %}</a>
         <button class="btn btn-danger btn-large" type="submit">{% trans "Gå videre" %} <i class="icon-arrow-right icon-white"></i></button>
       </p>
     </form>
   </div>
 
-  <div class="span4">
+  <div class="col-md-4">
     {% include 'central/membership/infobox.html' %}
   </div>
 </div>

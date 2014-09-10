@@ -9,7 +9,7 @@
 {% block enrollment %}
 
 <div class="row">
-  <div class="span8">
+  <div class="col-md-8">
 
     {% include 'central/enrollment/progress.html' with step=4 %}
 
@@ -22,7 +22,7 @@
       </div>
 
       <p>
-        <a href="javascript:undefined" class="btn btn-large refresh">{% trans "Sjekk betalingen igjen ved å trykke F5 eller på denne knappen!" %}</a>
+        <a href="javascript:undefined" class="btn btn-default btn-large refresh">{% trans "Sjekk betalingen igjen ved å trykke F5 eller på denne knappen!" %}</a>
       </p>
 
       <p class="help-action what-to-do">
@@ -31,7 +31,7 @@
         </a>
       </p>
 
-      <div class="alert alert-info what-to-do hide">
+      <div class="alert alert-info what-to-do jq-hide">
         {% trans "Du bør prøve å trykke på knappen over minst 3-4 ganger, gjerne med noen minutters mellomrom. Hvis det ikke hjelper, må du ta kontakt med medlemsservice - se boksen til høyre." %}<br><br>
 
         {% trans "Oppgi ditt navn og fortell oss hva som har skjedd, så skal vi rette det. Vi har logget detaljene rundt feilen i våre systemer og kan spore opp betalingen manuelt." %}
@@ -43,7 +43,7 @@
         </a>
       </p>
 
-      <div class="alert alert-info more-information hide">
+      <div class="alert alert-info more-information jq-hide">
         {% trans "Når du har gjennomført din betaling i nettbanken, må vi kontakte vår betalingsleverandør for å bekrefte at betalingen var vellykket. Når vi forsøkte det, oppstod en tilkoblingsfeil. Det kan skyldes en feil i vårt system, i løsningen til vår betalingsleverandør, eller i eventuelle tredjepartssystemer." %}<br><br>
 
         {% trans "Vanligvis er dette en feil som plutselig kan oppstå uten noen klar årsak, men går bort av seg selv etter kort tid." %}
@@ -54,7 +54,7 @@
     </div>
   </div>
 
-  <div class="span4">
+  <div class="col-md-4">
     {% include 'central/membership/infobox.html' %}
   </div>
 </div>
