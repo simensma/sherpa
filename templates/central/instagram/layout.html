@@ -10,43 +10,37 @@
 
 {% block body %}
 
-<div class="row instagram-header">
-  <div class="span12">
-
-    {% block intro %}{% endblock %}
-
-  </div>
+<div class="instagram-header">
+  {% block intro %}{% endblock %}
 </div>
 
-<div class="row">
-  <div class="span12 instagram-wrapper" data-load-url="{% url 'instagram.views.load' %}">
-    <div class="items"></div>
+<div class="instagram-wrapper" data-load-url="{% url 'instagram.views.load' %}">
+  <div class="items"></div>
 
-    <div style="clear: both;"></div>
+  <div style="clear: both;"></div>
 
-    <div class="infinite-loader">
-      <button class="btn btn-large">Se flere bilder</button>
+  <div class="infinite-loader">
+    <button class="btn btn-large">Se flere bilder</button>
 
-      <div class="loading form-border hide">
-        <img src="{{ STATIC_URL }}img/common/ajax-loader-large.gif" alt="Laster, vennligst vent..."><br>
-        Laster bilder, vennligst vent...
-      </div>
+    <div class="loading form-border hide">
+      <img src="{{ STATIC_URL }}img/common/ajax-loader-large.gif" alt="Laster, vennligst vent..."><br>
+      Laster bilder, vennligst vent...
     </div>
-
-    <div class="ender hide">
-      Dette var alle bildene vi klarte å finne i denne omgang.
-    </div>
-
-    <div class="instagram-skeleton hide">
-      <div class="wrap2 left"></div>
-      <div class="right"></div>
-      <div class="wrap2 left"></div>
-      <div class="wrap2 left"></div>
-      <div class="wrap2 right"></div>
-      <div class="left"></div>
-    </div>
-
   </div>
+
+  <div class="ender hide">
+    Dette var alle bildene vi klarte å finne i denne omgang.
+  </div>
+
+  <div class="instagram-skeleton hide">
+    <div class="wrap2 left"></div>
+    <div class="right"></div>
+    <div class="wrap2 left"></div>
+    <div class="wrap2 left"></div>
+    <div class="wrap2 right"></div>
+    <div class="left"></div>
+  </div>
+
 </div>
 
 {% advertisement %}
