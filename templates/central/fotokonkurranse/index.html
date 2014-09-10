@@ -26,203 +26,198 @@
 {% block body %}
 
 <div class="fotokonkurranse-root">
-  <div class="row">
-    <div class="span12">
 
-      <div class="intro-image">
-        <h1>KNIPS DEG TIL FLAX!</h1>
-        <p class="lede">Grip stemningen i DNTs fotokonkurranse {{ now|date:"Y" }}</p>
-        <p class="credits">
-          Foto: Live Andrea Sulheim / DNTs fotokonkurranse
-        </p>
+  <div class="intro-image">
+    <h1>KNIPS DEG TIL FLAX!</h1>
+    <p class="lede">Grip stemningen i DNTs fotokonkurranse {{ now|date:"Y" }}</p>
+    <p class="credits">
+      Foto: Live Andrea Sulheim / DNTs fotokonkurranse
+    </p>
+  </div>
+
+  <p>
+    Del dine naturopplevelser i {{ now|date:"Y" }} med oss og send inn dine beste bilder til vår store fotokonkurranse, som arrangeres i samarbeid med DNTs turpartner <a href="https://www.norsk-tipping.no/">Norsk Tipping</a>. Finalistene er med i konkurransen om flotte premier - førstepremien er 10 000 kr og 100 Flax-lodd fra <a href="https://www.norsk-tipping.no/">Norsk Tipping</a>, andre-, og tredjepremie er ryggsekk og overnatting på våre hytter.
+  </p>
+
+  <p id="lastopp">
+    <strong>Last opp dine fineste bilder med tema: «hverdagstur» innen 30. november. Bruk opplastingsskjemaet nedenfor.</strong>
+  </p>
+
+  <p>
+    Husk å ta med kamera når du er på tur. Lykke til!
+  </p>
+
+  <hr>
+
+  {% if destination_album_exists %}
+
+    <div class="uploader form-default form-horizontal" data-url="{% url 'fotokonkurranse.views.upload' %}">
+
+      <div class="control-group">
+        <label class="control-label" for="name">Ditt navn</label>
+        <div class="controls">
+          <input type="text" id="name" name="name" value="{{ user.get_full_name }}" class="input-xlarge">
+        </div>
       </div>
 
-      <p>
-        Del dine naturopplevelser i {{ now|date:"Y" }} med oss og send inn dine beste bilder til vår store fotokonkurranse, som arrangeres i samarbeid med DNTs turpartner <a href="https://www.norsk-tipping.no/">Norsk Tipping</a>. Finalistene er med i konkurransen om flotte premier - førstepremien er 10 000 kr og 100 Flax-lodd fra <a href="https://www.norsk-tipping.no/">Norsk Tipping</a>, andre-, og tredjepremie er ryggsekk og overnatting på våre hytter.
-      </p>
-
-      <p id="lastopp">
-        <strong>Last opp dine fineste bilder med tema: «hverdagstur» innen 30. november. Bruk opplastingsskjemaet nedenfor.</strong>
-      </p>
-
-      <p>
-        Husk å ta med kamera når du er på tur. Lykke til!
-      </p>
-
-      <hr>
-
-      {% if destination_album_exists %}
-
-        <div class="uploader form-default form-horizontal" data-url="{% url 'fotokonkurranse.views.upload' %}">
-
-          <div class="control-group">
-            <label class="control-label" for="name">Ditt navn</label>
-            <div class="controls">
-              <input type="text" id="name" name="name" value="{{ user.get_full_name }}" class="input-xlarge">
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="phone">Telefonnummer</label>
-            <div class="controls">
-              <input type="text" id="phone" name="phone" value="{% if user.is_member %}{{ user.get_phone_mobile }}{% endif %}" class="input-medium">
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="email">E-postadresse</label>
-            <div class="controls">
-              <input type="text" id="email" name="email" value="{% if user.is_member %}{{ user.get_email }}{% endif %}" class="input-xlarge">
-            </div>
-          </div>
-
-          <div class="images" data-max-images-warning="Du kan ikke delta med flere enn 3 bilder." data-canvas-error="Beklager, klarte ikke å legge til bildet du valgte. Er du sikker på at det er en ordentlig bildefil? Feilmeldingen var: ">
-            <div class="control-group image hide clone">
-              <label class="control-label"></label>
-              <div class="controls">
-                <div class="control-as-text cancel">
-                  <button class="btn btn-warning cancel">
-                    <i class="icon-white icon-ban-circle"></i> Ta bort bilde
-                  </button>
-                </div>
-                <div class="preview hide"></div>
-                <textarea name="description" class="input-xxlarge" cols="160" rows="6" placeholder="Beskriv sted, motiv og andre relevante opplysninger om bildet..."></textarea>
-                <div class="description control-as-text hide"></div>
-                <div class="loader hide">
-                  <div class="progress progress-striped active">
-                    <div class="bar"></div>
-                  </div>
-                </div>
-                <div class="upload-success control-as-text hide">
-                  Bildet har blitt lastet opp - takk for ditt bidrag!
-                </div>
-                <div class="upload-fail alert alert-error hide">
-                  Beklager - noe gikk galt under opplastingen av dette bildet! Du kan prøve å sende inn bildet igjen, eller ta det bort og legg til et annet. Husk at bildet må være minst 800x800 piksler stort.
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="control-group image-adder">
-            <div class="controls">
-              <span class="btn btn-default fileinput-button">
-                <i class="icon-plus"></i>
-                <span>Legg til bilde...</span>
-                <input type="file" name="file" multiple>
-              </span>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <div class="controls">
-              <div class="control-as-text">
-                Du kan laste opp inntil 3 bilder. Når du sender inn bilde(r) samtykker du samtidig til <a href="#regler" class="conditions">vilkårene i konkurransereglene</a>.
-              </div>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <div class="controls">
-              <button type="submit" class="btn btn-success btn-large hide" data-confirm="Er du sikker på at du vil sende inn disse bildene til konkurransen? Ved å sende inn bildene samtykker du samtidig til vilkårene i konkurransereglene.">Send inn bildene!</button>
-            </div>
-          </div>
-
+      <div class="control-group">
+        <label class="control-label" for="phone">Telefonnummer</label>
+        <div class="controls">
+          <input type="text" id="phone" name="phone" value="{% if user.is_member %}{{ user.get_phone_mobile }}{% endif %}" class="input-medium">
         </div>
-
-      {% else %}
-
-        <div class="closed">
-          Beklager, fotokonkurransen er for øyeblikket avsluttet.<br>
-          Vi håper å se deg neste sesong!
-        </div>
-
-      {% endif %}
-
-      <hr>
-
-      <div class="prizes">
-
-        <div class="row-fluid">
-          <div class="span4">
-            <p class="prize-header">1. premie</p>
-            <p class="prize">
-              10 000 kr og 100 Flax-lodd fra <a href="https://www.norsk-tipping.no/">Norsk Tipping</a>
-            </p>
-          </div>
-          <div class="span4">
-            <p class="prize-header">2. premie</p>
-            <p class="prize">
-              Tursekk og 8 overnattinger på DNT-hytte
-            </p>
-          </div>
-          <div class="span4">
-            <p class="prize-header">3. premie</p>
-            <p class="prize">
-              Dagstursekk og 4 overnattinger på DNT-hytte
-            </p>
-          </div>
-        </div>
-
       </div>
 
-      <hr>
+      <div class="control-group">
+        <label class="control-label" for="email">E-postadresse</label>
+        <div class="controls">
+          <input type="text" id="email" name="email" value="{% if user.is_member %}{{ user.get_email }}{% endif %}" class="input-xlarge">
+        </div>
+      </div>
 
-      <h2 id="regler">Regler</h2>
+      <div class="images" data-max-images-warning="Du kan ikke delta med flere enn 3 bilder." data-canvas-error="Beklager, klarte ikke å legge til bildet du valgte. Er du sikker på at det er en ordentlig bildefil? Feilmeldingen var: ">
+        <div class="control-group image jq-hide clone">
+          <label class="control-label"></label>
+          <div class="controls">
+            <div class="control-as-text cancel">
+              <button class="btn btn-warning cancel">
+                <i class="icon-white icon-ban-circle"></i> Ta bort bilde
+              </button>
+            </div>
+            <div class="preview jq-hide"></div>
+            <textarea name="description" class="input-xxlarge" cols="160" rows="6" placeholder="Beskriv sted, motiv og andre relevante opplysninger om bildet..."></textarea>
+            <div class="description control-as-text jq-hide"></div>
+            <div class="loader jq-hide">
+              <div class="progress progress-striped active">
+                <div class="bar"></div>
+              </div>
+            </div>
+            <div class="upload-success control-as-text jq-hide">
+              Bildet har blitt lastet opp - takk for ditt bidrag!
+            </div>
+            <div class="upload-fail alert alert-error jq-hide">
+              Beklager - noe gikk galt under opplastingen av dette bildet! Du kan prøve å sende inn bildet igjen, eller ta det bort og legg til et annet. Husk at bildet må være minst 800x800 piksler stort.
+            </div>
+          </div>
+        </div>
+      </div>
 
-      <ul>
-        <li>Det er til sammen 3 konkurranser: Vi kårer beste vinter-/vårbilde, beste sommerbilde og beste høstbilde.</li>
-        <li>Frist for innsending av foto til første runde er 31. mai, andre runde er 31. august og den tredje runden avsluttes den 30. november</li>
-        <li>Bilder som sendes inn etter innleveringsfrist blir ikke med i konkurransen</li>
-        <li>Hver deltager kan sende inn <strong>maksimalt 3 bilder</strong> per konkurranse.</li>
-        <li>Bildene må være i <strong>så stor oppløsning som mulig</strong> (minimum 1MB/800px) og i <strong>jpg-, gif- eller png-format</strong>.</li>
-        <li>Bildene må være tatt i <strong>Norge</strong>.</li>
-        <li>Du kan kun delta med <strong>bilder du selv har fotografert</strong>.</li>
-        <li>Det er innsenders ansvar å sørge for å få <strong>tillatelse til offentliggjøring</strong> av eventuelt andre personer på bildet.</li>
-        <li><strong>Navn på personer</strong> på bildet må være med hvis personene er identifiserbare.</li>
-        <li><strong>Personopplysninger</strong> vil bli lagret i forbindelse med bilder som arkiveres i Den Norske Turistforeningens fotoarkiv.</li>
-        <li>Ved bilder av barn må foreldre <strong>samtykke på barnets vegne inntil barnet er 15 år</strong>.</li>
-        <li>DNT forbeholder seg retten til å <strong>offentliggjøre</strong> innsendte bilder samt <strong>bruke</strong> bildene i DNTs egne kommunikasjonskanaler (magasiner, nettsider, sosiale medier), i PR og for bruk av DNTs sponsorer.</li>
-      </ul>
+      <div class="control-group image-adder">
+        <div class="controls">
+          <span class="btn btn-default fileinput-button">
+            <i class="icon-plus"></i>
+            <span>Legg til bilde...</span>
+            <input type="file" name="file" multiple>
+          </span>
+        </div>
+      </div>
 
-      <p>
-        <strong>Juryen består av:</strong>
-      </p>
+      <div class="control-group">
+        <div class="controls">
+          <div class="control-as-text">
+            Du kan laste opp inntil 3 bilder. Når du sender inn bilde(r) samtykker du samtidig til <a href="#regler" class="conditions">vilkårene i konkurransereglene</a>.
+          </div>
+        </div>
+      </div>
 
-      <ul>
-        <li><strong>Nils Øveraas</strong>, generalsekretær i Den Norske Turistforening</li>
-        <li><strong>Roger Brendhagen</strong>, fotograf</li>
-        <li><strong>Sindre Thoresen Lønnes</strong>, fotoansvarlig i Den Norske Turistforening</li>
-      </ul>
-
-      <p>
-        <strong>Fototips:</strong>
-      </p>
-
-      <ul>
-        <li><a href="http://ut.no/artikkel/1.7654872">10 tips til bedre turbilder (UT.no)</a></li>
-        <li><a href="http://ut.no/artikkel/1.7926733">Slik tar du bedre vinterbilder (UT.no)</a></li>
-        <li><a href="http://ut.no/artikkel/1.7847895">Slik tar du fartsfylte bilder (UT.no)</a></li>
-      </ul>
-
-      <p>
-        <a href="#lastopp" class="btn btn-default back-to-upload"><i class="icon-arrow-up"></i> Send inn dine bilder!</a>
-      </p>
-
-      <hr>
-
-      <div class="norsk-tipping">
-        <a href="https://www.norsk-tipping.no/">
-          <img src="{{ STATIC_URL }}img/public/fotokonkurranse/norsk-tipping.jpg" alt="Norsk Tipping">
-        </a>
-        <p>
-          Fotokonkurransen arrangeres i samarbeid med vår turpartner <a href="https://www.norsk-tipping.no/">Norsk Tipping</a>
-        </p>
+      <div class="control-group">
+        <div class="controls">
+          <button type="submit" class="btn btn-success btn-large jq-hide" data-confirm="Er du sikker på at du vil sende inn disse bildene til konkurransen? Ved å sende inn bildene samtykker du samtidig til vilkårene i konkurransereglene.">Send inn bildene!</button>
+        </div>
       </div>
 
     </div>
+
+  {% else %}
+
+    <div class="closed">
+      Beklager, fotokonkurransen er for øyeblikket avsluttet.<br>
+      Vi håper å se deg neste sesong!
+    </div>
+
+  {% endif %}
+
+  <hr>
+
+  <div class="prizes">
+
+    <div class="row">
+      <div class="col-md-4">
+        <p class="prize-header">1. premie</p>
+        <p class="prize">
+          10 000 kr og 100 Flax-lodd fra <a href="https://www.norsk-tipping.no/">Norsk Tipping</a>
+        </p>
+      </div>
+      <div class="col-md-4">
+        <p class="prize-header">2. premie</p>
+        <p class="prize">
+          Tursekk og 8 overnattinger på DNT-hytte
+        </p>
+      </div>
+      <div class="col-md-4">
+        <p class="prize-header">3. premie</p>
+        <p class="prize">
+          Dagstursekk og 4 overnattinger på DNT-hytte
+        </p>
+      </div>
+    </div>
+
   </div>
 
-  <div class="modal upload-success-generic hide">
+  <hr>
+
+  <h2 id="regler">Regler</h2>
+
+  <ul>
+    <li>Det er til sammen 3 konkurranser: Vi kårer beste vinter-/vårbilde, beste sommerbilde og beste høstbilde.</li>
+    <li>Frist for innsending av foto til første runde er 31. mai, andre runde er 31. august og den tredje runden avsluttes den 30. november</li>
+    <li>Bilder som sendes inn etter innleveringsfrist blir ikke med i konkurransen</li>
+    <li>Hver deltager kan sende inn <strong>maksimalt 3 bilder</strong> per konkurranse.</li>
+    <li>Bildene må være i <strong>så stor oppløsning som mulig</strong> (minimum 1MB/800px) og i <strong>jpg-, gif- eller png-format</strong>.</li>
+    <li>Bildene må være tatt i <strong>Norge</strong>.</li>
+    <li>Du kan kun delta med <strong>bilder du selv har fotografert</strong>.</li>
+    <li>Det er innsenders ansvar å sørge for å få <strong>tillatelse til offentliggjøring</strong> av eventuelt andre personer på bildet.</li>
+    <li><strong>Navn på personer</strong> på bildet må være med hvis personene er identifiserbare.</li>
+    <li><strong>Personopplysninger</strong> vil bli lagret i forbindelse med bilder som arkiveres i Den Norske Turistforeningens fotoarkiv.</li>
+    <li>Ved bilder av barn må foreldre <strong>samtykke på barnets vegne inntil barnet er 15 år</strong>.</li>
+    <li>DNT forbeholder seg retten til å <strong>offentliggjøre</strong> innsendte bilder samt <strong>bruke</strong> bildene i DNTs egne kommunikasjonskanaler (magasiner, nettsider, sosiale medier), i PR og for bruk av DNTs sponsorer.</li>
+  </ul>
+
+  <p>
+    <strong>Juryen består av:</strong>
+  </p>
+
+  <ul>
+    <li><strong>Nils Øveraas</strong>, generalsekretær i Den Norske Turistforening</li>
+    <li><strong>Roger Brendhagen</strong>, fotograf</li>
+    <li><strong>Sindre Thoresen Lønnes</strong>, fotoansvarlig i Den Norske Turistforening</li>
+  </ul>
+
+  <p>
+    <strong>Fototips:</strong>
+  </p>
+
+  <ul>
+    <li><a href="http://ut.no/artikkel/1.7654872">10 tips til bedre turbilder (UT.no)</a></li>
+    <li><a href="http://ut.no/artikkel/1.7926733">Slik tar du bedre vinterbilder (UT.no)</a></li>
+    <li><a href="http://ut.no/artikkel/1.7847895">Slik tar du fartsfylte bilder (UT.no)</a></li>
+  </ul>
+
+  <p>
+    <a href="#lastopp" class="btn btn-default back-to-upload"><i class="icon-arrow-up"></i> Send inn dine bilder!</a>
+  </p>
+
+  <hr>
+
+  <div class="norsk-tipping">
+    <a href="https://www.norsk-tipping.no/">
+      <img src="{{ STATIC_URL }}img/public/fotokonkurranse/norsk-tipping.jpg" alt="Norsk Tipping">
+    </a>
+    <p>
+      Fotokonkurransen arrangeres i samarbeid med vår turpartner <a href="https://www.norsk-tipping.no/">Norsk Tipping</a>
+    </p>
+  </div>
+
+  <div class="modal upload-success-generic jq-hide">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal">X</button>
       <h2>Takk for ditt bidrag!</h2>
