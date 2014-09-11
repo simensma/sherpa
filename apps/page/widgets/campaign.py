@@ -64,7 +64,7 @@ class CampaignWidget(Widget):
 
             # Always resolve the active campaign; shouldn't cache this as it varies with time
             if main_campaign is not None:
-                main_active_campaign = CampaignWidget.resolve_active_campaign(main_widget_options)
+                main_active_campaign = CampaignWidget.resolve_active_campaign(main_campaign['main_widget_options'])
                 if main_active_campaign is not None:
                     # All right, there is an active main site front page campaign, get the title
                     widget_context['main_campaign_title'] = Campaign.objects.get(id=main_active_campaign['campaign_id']).title
