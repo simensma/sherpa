@@ -76,30 +76,27 @@
                   {% endfor %}
                 </select>
 
-                <div
-                  class="checkbox jq-hide"
-                  data-popover
-                  data-trigger="hover"
-                  data-placement="top"
-                  data-html="true"
-                  data-title="Inkluder sertifikat med høyere nivå"
-                  data-content="Hvis du har denne på og for eksempel søker etter grunnleggende turlederutdanning, får du også de som har sommerturleder- og vinterturledersertifikat."
-                  data-dnt-container="include-all-certificates-checkbox">
-                  <label>
+                <div class="checkbox jq-hide" data-dnt-container="include-all-certificates-checkbox">
+                  <label
+                    data-popover
+                    data-trigger="hover"
+                    data-placement="top"
+                    data-html="true"
+                    data-title="Inkluder sertifikat med høyere nivå"
+                    data-content="Hvis du har denne på og for eksempel søker etter grunnleggende turlederutdanning, får du også de som har sommerturleder- og vinterturledersertifikat.">
                     <input type="checkbox" name="include_all_certificates" checked>
                     Inkluder de som har sertifikat med høyere nivå
                   </label>
                 </div>
 
-                <div
-                  class="checkbox"
-                  data-popover
-                  data-trigger="hover"
-                  data-placement="top"
-                  data-html="true"
-                  data-title="Vis kun kursledere"
-                  data-content="Viser kun turledere som også er registrert som kursleder.">
-                  <label>
+                <div class="checkbox">
+                  <label
+                    data-popover
+                    data-trigger="hover"
+                    data-placement="top"
+                    data-html="true"
+                    data-title="Vis kun kursledere"
+                    data-content="Viser kun turledere som også er registrert som kursleder.">
                     <input type="checkbox" name="only_kursledere">
                     Vis kun kursledere
                   </label>
