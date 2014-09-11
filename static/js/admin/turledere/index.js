@@ -12,7 +12,7 @@ $(function() {
     var turleder_roles = filters.find("select[name='turleder_roles']");
     var only_kursledere = filters.find('input[name="only_kursledere"]');
     var instruktor_roles = filters.find("select[name='instruktor_roles']");
-    var turleder_include_all_roles_label = filters.find("label.include-all-certificates");
+    var turleder_include_all_roles_label = filters.find('[data-dnt-container="include-all-certificates-checkbox"]');
     var turleder_include_all_roles = filters.find("input[name='include_all_certificates']");
     var turleder_forening_approved = filters.find("select[name='forening_approved']");
 

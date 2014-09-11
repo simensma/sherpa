@@ -37,14 +37,18 @@
           <div class="control-as-text">
             Når slutt-dato for siste kampanje er passert, vil jeg at:
           </div>
-          <label class="radio">
-            <input type="radio" name="hide-when-expired" value="true">
-            Kampanjen forsvinner av seg selv når datoen passeres
-          </label>
-          <label class="radio">
-            <input type="radio" name="hide-when-expired" value="false">
-            Siste kampanje blir liggende selv om datoen er passert
-          </label>
+          <div class="radio">
+            <label>
+              <input type="radio" name="hide-when-expired" value="true">
+              Kampanjen forsvinner av seg selv når datoen passeres
+            </label>
+          </div>
+          <div class="radio">
+            <label>
+              <input type="radio" name="hide-when-expired" value="false">
+              Siste kampanje blir liggende selv om datoen er passert
+            </label>
+          </div>
         </div>
       </div>
     </div>
@@ -55,10 +59,12 @@
           <div class="control-as-text">
             Kjerneinnhold-meny (kun tilgjengelig for {{ site.domain }})
           </div>
-          <label class="checkbox">
-            <input type="checkbox" name="display-core-menu">
-            Vis meny for kjerneinnhold
-          </label>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" name="display-core-menu">
+              Vis meny for kjerneinnhold
+            </label>
+          </div>
 
           {# Inform about potential wrong menu label when editing the front page #}
           {% if version.variant.page.slug == '' %}

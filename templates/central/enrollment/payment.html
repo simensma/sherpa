@@ -58,12 +58,16 @@
         <input type="hidden" name="main-member" value="">
         <h2>{% trans "Velg betalingsmåte:" %}</h2>
         <div class="control-group">
-          <label class="radio">
-            <input type="radio" name="payment_method" value="card" {% if card_available %}checked{% else %}disabled{% endif %}> VISA / MASTERCARD
-          </label>
-          <label class="radio">
-            <input type="radio" name="payment_method" value="invoice"{% if card_required %} disabled{% elif not card_required and not card_available %} checked{% endif %}> {% trans "Få tilsendt faktura" %}
-          </label>
+          <div class="radio">
+            <label>
+              <input type="radio" name="payment_method" value="card" {% if card_available %}checked{% else %}disabled{% endif %}> VISA / MASTERCARD
+            </label>
+          </div>
+          <div class="radio">
+            <label>
+              <input type="radio" name="payment_method" value="invoice"{% if card_required %} disabled{% elif not card_required and not card_available %} checked{% endif %}> {% trans "Få tilsendt faktura" %}
+            </label>
+          </div>
         </div>
 
         <div class="alert alert-info invoice-info jq-hide">

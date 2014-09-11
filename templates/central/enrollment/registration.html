@@ -72,9 +72,11 @@
             </tr>
           {% endfor %}
           </table>
-          <label class="checkbox">
-            <input type="checkbox" class="conditions"{% if enrollment.accepts_conditions %} checked{% endif %}> {% if enrollment.users.count > 1 %}{% trans "Vi" %}{% else %}{% trans "Jeg" %}{% endif %} {% trans "har lest og godtar" %} <a href="javascript:undefined" data-toggle="modal" data-target=".modal">{% trans "betingelsene" %}</a>
-          </label>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" class="conditions"{% if enrollment.accepts_conditions %} checked{% endif %}> {% if enrollment.users.count > 1 %}{% trans "Vi" %}{% else %}{% trans "Jeg" %}{% endif %} {% trans "har lest og godtar" %} <a href="javascript:undefined" data-toggle="modal" data-target=".modal">{% trans "betingelsene" %}</a>
+            </label>
+          </div>
           <p>
             <a href="{% url 'enrollment.views.household' %}" class="btn btn-danger btn-lg step2{% if current_user %} post{% endif %}" data-conditions-message="{% trans "Du kan ikke gå videre med mindre du har lest og godtatt betingelsene." %}">
               {% trans "Gå videre" %} <i class="icon-arrow-right icon-white"></i>
@@ -106,12 +108,18 @@
         </div>
         <div class="control-group gender">
           <label> {% trans "Kjønn" %} <span class="asterisk red">*</span></label>
-          <label class="radio gender">
-            <input type="radio" name="gender" value="f"{% if current_user.gender == 'f' %} checked{% endif %}> {% trans "Kvinne" %}
-          </label>
-          <label class="radio gender">
-            <input type="radio" name="gender" value="m"{% if current_user.gender == 'm' %} checked{% endif %}> {% trans "Mann" %}
-          </label>
+          <div>
+            <div class="radio gender">
+              <label class="">
+                <input type="radio" name="gender" value="f"{% if current_user.gender == 'f' %} checked{% endif %}> {% trans "Kvinne" %}
+              </label>
+            </div>
+            <div class="radio gender">
+              <label class="">
+                <input type="radio" name="gender" value="m"{% if current_user.gender == 'm' %} checked{% endif %}> {% trans "Mann" %}
+              </label>
+            </div>
+          </div>
         </div>
         <div style="clear: both;"></div>
         <div class="control-group phone">

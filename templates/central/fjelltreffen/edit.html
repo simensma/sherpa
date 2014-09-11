@@ -123,14 +123,18 @@
       <div class="control-group hideage">
         <label class="control-label">Vis min alder som:</label>
         <div class="controls">
-          <label class="radio" for="hideage_raw">
-            <input type="radio" name="hideage" id="hideage_raw" value="raw"{% if not annonse.hideage %} checked{% endif %}>
-            {{ user.get_age }} år
-          </label>
-          <label class="radio" for="hideage_hide">
-            <input type="radio" name="hideage" id="hideage_hide" value="hide"{% if annonse.hideage %} checked{% endif %}>
-            {{ obscured_age }} år
-          </label>
+          <div class="radio">
+            <label for="hideage_raw">
+              <input type="radio" name="hideage" id="hideage_raw" value="raw"{% if not annonse.hideage %} checked{% endif %}>
+              {{ user.get_age }} år
+            </label>
+          </div>
+          <div class="radio">
+            <label for="hideage_hide">
+              <input type="radio" name="hideage" id="hideage_hide" value="hide"{% if annonse.hideage %} checked{% endif %}>
+              {{ obscured_age }} år
+            </label>
+          </div>
           <a href="javascript:undefined" class="hideage-info">Feil alder?</a>
           <div class="alert alert-info hideage-info jq-hide">
             Din alder hentes fra medlemsregisteret. Hvis den skulle være feil må du kontakte <a href="{% url 'membership.views.service' %}">medlemsservice</a>.
@@ -146,12 +150,16 @@
           <div class="control-group hide-annonse" title="Du kan ikke vise en skjult annonse når du ikke har betalt årskontingenten.">
             <label class="control-label">Synlighet</label>
             <div class="controls">
-              <label class="radio" for="hidden_show">
-                <input type="radio" name="hidden" id="hidden_show" value="show" disabled> Publiser annonsen
-              </label>
-              <label class="radio" for="hidden_hide">
-                <input type="radio" name="hidden" id="hidden_hide" value="hide" checked disabled> Skjul annonsen
-              </label>
+              <div class="radio">
+                <label for="hidden_show">
+                  <input type="radio" name="hidden" id="hidden_show" value="show" disabled> Publiser annonsen
+                </label>
+              </div>
+              <div class="radio">
+                <label for="hidden_hide">
+                  <input type="radio" name="hidden" id="hidden_hide" value="hide" checked disabled> Skjul annonsen
+                </label>
+              </div>
               <div class="hints">
                 Ingen kan se eller svare på annonsen mens den er skjult.
               </div>
@@ -169,12 +177,16 @@
           <div class="control-group hide-annonse">
             <label class="control-label">Synlighet</label>
             <div class="controls">
-              <label class="radio" for="hidden_show">
-                <input type="radio" name="hidden" id="hidden_show" value="show"{% if not annonse.hidden %} checked{% endif %}> Publiser annonsen
-              </label>
-              <label class="radio" for="hidden_hide">
-                <input type="radio" name="hidden" id="hidden_hide" value="hide"{% if annonse.hidden %} checked{% endif %}> Skjul annonsen
-              </label>
+              <div class="radio">
+                <label for="hidden_show">
+                  <input type="radio" name="hidden" id="hidden_show" value="show"{% if not annonse.hidden %} checked{% endif %}> Publiser annonsen
+                </label>
+              </div>
+              <div class="radio">
+                <label for="hidden_hide">
+                  <input type="radio" name="hidden" id="hidden_hide" value="hide"{% if annonse.hidden %} checked{% endif %}> Skjul annonsen
+                </label>
+              </div>
               <div class="hints">
                 Ingen kan se eller svare på annonsen mens den er skjult.
               </div>

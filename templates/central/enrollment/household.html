@@ -102,12 +102,14 @@
         </div>
         {% if enrollment.has_potential_main_member %}
           <div class="control-group yearbook">
-            <label class="checkbox">
-              <input type="checkbox" name="yearbook"{% if enrollment.wants_yearbook %} checked{% endif %}>
-              {% blocktrans %}
-                Motta årboken og Fjell og Vidde mot et årlig gebyr på kr. {{ foreign_shipment_price }}
-              {% endblocktrans %}
-            </label>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" name="yearbook"{% if enrollment.wants_yearbook %} checked{% endif %}>
+                {% blocktrans %}
+                  Motta årboken og Fjell og Vidde mot et årlig gebyr på kr. {{ foreign_shipment_price }}
+                {% endblocktrans %}
+              </label>
+            </div>
           </div>
         {% endif %}
       </div>

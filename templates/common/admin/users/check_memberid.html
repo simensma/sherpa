@@ -20,11 +20,13 @@
   </p>
 
   {% if user_to_change.norway_bus_ticket %}
-    <label class="checkbox">
-      <input type="checkbox" name="purge-busticket"> Slett bussbilletten<br>
-      Bestilt <strong>{{ user_to_change.norway_bus_ticket.date_placed|date:"j. F Y" }}</strong> av <strong>{{ user_to_change.memberid }}</strong><br>
-      (Hvis medlemmet har vært utmeldt i to år eller mer, skal han/henne få nytt rabattilbud)
-    </label>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" name="purge-busticket"> Slett bussbilletten<br>
+        Bestilt <strong>{{ user_to_change.norway_bus_ticket.date_placed|date:"j. F Y" }}</strong> av <strong>{{ user_to_change.memberid }}</strong><br>
+        (Hvis medlemmet har vært utmeldt i to år eller mer, skal han/henne få nytt rabattilbud)
+      </label>
+    </div>
   {% endif %}
 
   <p>
@@ -47,16 +49,18 @@
   </p>
 
   {% if user_to_change.norway_bus_ticket or existing_user.norway_bus_ticket %}
-    <label class="checkbox">
-      <input type="checkbox" name="purge-busticket"> Slett bussbilletten{% if user_to_change.norway_bus_ticket and existing_user.norway_bus_ticket %}e{% endif %}<br>
-      {% if user_to_change.norway_bus_ticket %}
-        Bestilt <strong>{{ user_to_change.norway_bus_ticket.date_placed|date:"j. F Y" }}</strong> av <strong>{{ user_to_change.memberid }}</strong><br>
-      {% endif %}
-      {% if existing_user.norway_bus_ticket %}
-        Bestilt <strong>{{ existing_user.norway_bus_ticket.date_placed|date:"j. F Y" }}</strong> av <strong>{{ existing_user.memberid }}</strong><br>
-      {% endif %}
-      (Hvis medlemmet har vært utmeldt i to år eller mer, skal han/henne få nytt rabattilbud)
-    </label>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" name="purge-busticket"> Slett bussbilletten{% if user_to_change.norway_bus_ticket and existing_user.norway_bus_ticket %}e{% endif %}<br>
+        {% if user_to_change.norway_bus_ticket %}
+          Bestilt <strong>{{ user_to_change.norway_bus_ticket.date_placed|date:"j. F Y" }}</strong> av <strong>{{ user_to_change.memberid }}</strong><br>
+        {% endif %}
+        {% if existing_user.norway_bus_ticket %}
+          Bestilt <strong>{{ existing_user.norway_bus_ticket.date_placed|date:"j. F Y" }}</strong> av <strong>{{ existing_user.memberid }}</strong><br>
+        {% endif %}
+        (Hvis medlemmet har vært utmeldt i to år eller mer, skal han/henne få nytt rabattilbud)
+      </label>
+    </div>
   {% endif %}
 
   <p>

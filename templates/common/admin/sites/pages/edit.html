@@ -84,7 +84,11 @@
       </div>
 
       <div class="display-ads">
-        <label class="checkbox"><input type="checkbox" name="display-ads"{% if version.ads %} checked{% endif %}>Vis annonser</label>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" name="display-ads"{% if version.ads %} checked{% endif %}>Vis annonser
+          </label>
+        </div>
       </div>
 
       <div class="tags">

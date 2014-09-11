@@ -134,9 +134,11 @@
 
             <p class="user-list">
               {% for user in enrollment.get_users_by_name %}
-                <label class="checkbox">
-                  <input type="radio" name="user" value="{{ user.memberid }}"> {{ user.name }}
-                </label>
+                <div class="checkbox">
+                  <label>
+                    <input type="radio" name="user" value="{{ user.memberid }}"> {{ user.name }}
+                  </label>
+                </div>
               {% endfor %}
             </p>
 
