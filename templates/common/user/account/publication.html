@@ -1,5 +1,5 @@
 {% extends site.template|add:"/layout.html" %}
-{% block title %}Publikasjoner &mdash; Min side{% endblock %}
+{% block title %}Publikasjoner — Min side{% endblock %}
 {% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <a href="{% url 'user.views.publications' %}">Publikasjoner</a> / <em>{{ publication.title }}</em>{% endblock %}
 
 {% block extra_js %}

@@ -1,5 +1,5 @@
 {% extends site.template|add:"/layout.html" %}
-{% block title %}NOR-WAY Bussbilletter &mdash; Min side{% endblock %}
+{% block title %}NOR-WAY Bussbilletter — Min side{% endblock %}
 {% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <em>NOR-WAY Bussbilletter</em>{% endblock %}
 
 {% block extra_js %}
@@ -57,7 +57,7 @@
       <h3>Tilbudet har utgått</h3>
 
       <p>
-        Beklager &mdash; dette tilbudet gjelder kun for nye medlemmer, og må benyttes innen utgangen av det året du melder deg inn.
+        Beklager — dette tilbudet gjelder kun for nye medlemmer, og må benyttes innen utgangen av det året du melder deg inn.
       </p>
 
     {% elif not user.has_paid %}

@@ -54,7 +54,7 @@ msgstr ""
 #: templates/central/connect/signon_enrollment_card_deactivated.html:24
 msgid ""
 "Siden du melder deg inn i forbindelse med en tur/aktivitet arrangert i regi "
-"av DNT, kan du ikke velge å betale med faktura &mdash; da kan vi ikke gi deg "
+"av DNT, kan du ikke velge å betale med faktura — da kan vi ikke gi deg "
 "en eventuell rabatt, siden vi ikke får bekreftet innbetalingen."
 msgstr ""
 "You are enrolling together with signing up for a tour or activity arranged "

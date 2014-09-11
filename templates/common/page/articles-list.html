@@ -14,7 +14,7 @@
   <div class="col-md-12">
     <div class="wrapper">
       <div class="article-listing" data-initial-count="{{ versions|length }}" data-url="{% url 'articles.views.more' %}">
-        <h1>Nyheter{% if tag %} &mdash; {{ tag }}{% endif %}</h1>
+        <h1>Nyheter{% if tag %} — {{ tag }}{% endif %}</h1>
 
         {% if tag %}
           <p>
