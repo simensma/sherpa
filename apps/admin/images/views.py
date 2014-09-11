@@ -167,40 +167,43 @@ def download_album(request, album):
         else:
             metadata[key] = pyexiv2.ExifTag(key, value)
 
+    def download_image_with_retry(image, memory_file, memory_file_index, zip_archive, file_count):
+        image_key = bucket.get_key("%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, image.key, image.extension))
+        image_data = image_key.get_contents_as_string()
+
+        # Write relevant exif data
+        metadata = pyexiv2.ImageMetadata.from_buffer(image_data)
+        metadata.read()
+        set_exif_tag(metadata, 'Exif.Image.ImageDescription', image.description)
+        set_exif_tag(metadata, 'Exif.Image.Artist', image.photographer)
+        set_exif_tag(metadata, 'Exif.Image.Copyright', image.licence)
+        metadata.write()
+
+        # And add the modified image to the zip archive
+        if image.photographer == '':
+            image_filename = '%s-%s.%s' % (album.name, file_count, image.extension)
+        else:
+            image_filename = '%s-%s-%s.%s' % (album.name, file_count, image.photographer, image.extension)
+        zip_archive.writestr(image_filename.encode('ascii', 'ignore'), metadata.buffer)
+
+        # Rewind the memory file back, read the written data, and yield it to our response,
+        # while we'll go fetch the next file from S3
+        next_memory_file_index = memory_file.tell()
+        memory_file.seek(memory_file_index)
+        return next_memory_file_index, memory_file.read()
+
     def build_zipfile():
         memory_file = StringIO()
         zip_archive = zipfile.ZipFile(memory_file, 'w')
-        zipfile_index = 0 # Used to keep track of the amount of written data each iteration
+        memory_file_index = 0 # Used to keep track of the amount of written data each iteration
 
         for file_count, image in enumerate(Image.objects.filter(album=album), start=1):
-            image_key = bucket.get_key("%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, image.key, image.extension))
-            image_data = image_key.get_contents_as_string()
-
-            # Write relevant exif data
-            metadata = pyexiv2.ImageMetadata.from_buffer(image_data)
-            metadata.read()
-            set_exif_tag(metadata, 'Exif.Image.ImageDescription', image.description)
-            set_exif_tag(metadata, 'Exif.Image.Artist', image.photographer)
-            set_exif_tag(metadata, 'Exif.Image.Copyright', image.licence)
-            metadata.write()
-
-            # And add the modified image to the zip archive
-            if image.photographer == '':
-                image_filename = '%s-%s.%s' % (album.name, file_count, image.extension)
-            else:
-                image_filename = '%s-%s-%s.%s' % (album.name, file_count, image.photographer, image.extension)
-            zip_archive.writestr(image_filename.encode('ascii', 'ignore'), metadata.buffer)
-
-            # Rewind the memory file back, read the written data, and yield it to our response,
-            # while we'll go fetch the next file from S3
-            next_zipfile_index = memory_file.tell()
-            memory_file.seek(zipfile_index)
-            zipfile_index = next_zipfile_index
-            yield memory_file.read()
+            memory_file_index, data = download_image_with_retry(image, memory_file, memory_file_index, zip_archive, file_count)
+            yield data
 
         # Now close the archive and yield the final piece of data written
         zip_archive.close()
-        memory_file.seek(zipfile_index)
+        memory_file.seek(memory_file_index)
         yield memory_file.read()
 
     response = HttpResponse(build_zipfile(), content_type='application/x-zip-compressed')
