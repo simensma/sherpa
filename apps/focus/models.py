@@ -1,13 +1,16 @@
 # encoding: utf-8
+from datetime import datetime, date
+import logging
+
 from django.db import models
 from django.core.cache import cache
 from django.db.models import Q
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.conf import settings
-
-from datetime import datetime, date
-import logging
+from django.core.mail import send_mail
+from django.template import Context
+from django.template.loader import render_to_string
 
 from focus.util import get_membership_type_by_code, get_membership_type_by_codename, FJELLOGVIDDE_SERVICE_CODE, YEARBOOK_SERVICE_CODES, FOREIGN_POSTAGE_SERVICE_CODES, PAYMENT_METHOD_CODES, HOUSEHOLD_MEMBER_SERVICE_CODES, MEMBERSHIP_TYPES
 
@@ -74,7 +77,7 @@ class Actor(models.Model):
     # User data
     first_name = models.CharField(max_length=50, db_column=u'FiNm')
     last_name = models.CharField(max_length=50, db_column=u'Nm')
-    birth_date = models.DateTimeField(null=True, db_column=u'BDt')
+    birth_date = models.DateField(null=True, db_column=u'BDt')
     gender = models.CharField(max_length=1, db_column=u'Sex')
     email = models.CharField(max_length=250, db_column=u'EMail')
     phone_home = models.CharField(max_length=50, db_column=u'Ph')
@@ -247,7 +250,7 @@ class Actor(models.Model):
         return self.birth_date
 
     def get_age(self):
-        return (datetime.now() - self.get_birth_date()).days / 365
+        return (date.today() - self.get_birth_date()).days / 365
 
     def get_gender(self):
         if self.gender.lower() == 'm':
@@ -297,14 +300,19 @@ class Actor(models.Model):
         """
         from core.util import membership_year_start
         if date.today() >= membership_year_start()['actual_date']:
+            # Note that even if this_year is False and next_year is True, we should return True - this is a business
+            # rule as payments for the next year will include the rest of the current year.
             return self.has_paid_this_year() or self.has_paid_next_year()
         else:
             return self.has_paid_this_year()
 
     def has_paid_this_year(self):
         """
-        Checks if the membership is paid for the current year. This is how we find out that
-        a membership is valid after årskravet/before new years for the remainder of the year.
+        Checks if the membership is paid for the current year. This is how we find out that a membership is valid
+        after årskravet/before new years for the remainder of the year, for those who haven't yet paid for the next
+        year.
+        Note that the membership may be still valid for this year even though this method returns False, IF they have
+        paid for the next year.
         """
         from core.util import membership_year_start
         if date.today() >= membership_year_start()['actual_date']:
@@ -314,8 +322,8 @@ class Actor(models.Model):
 
     def has_paid_next_year(self):
         """
-        Checks if this member has paid for the next membership year. Can only be called after
-        årskravet. A False result doesn't mean they're not a valid member right now.
+        Checks if this member has paid for the next membership year. Can only be called after årskravet. A False
+        result doesn't mean they're not a valid member right now.
         """
         from core.util import membership_year_start
         if not date.today() >= membership_year_start()['actual_date']:
@@ -324,8 +332,8 @@ class Actor(models.Model):
 
     def balance_is_paid(self):
         """
-        Checks if the balance view says that the membership is paid. Means different things
-        before and after årskravet, you usually want to check has_paid_{this,next}_year instead.
+        Checks if the balance view says that the membership is paid. Means different things before and after
+        årskravet, you usually want to check has_paid_{this,next}_year instead.
         """
         has_paid = cache.get('actor.balance.%s' % self.memberid)
         if has_paid is None:
@@ -339,8 +347,8 @@ class Actor(models.Model):
 
     def has_paid_this_year_after_arskrav(self):
         """
-        In the period after årskravet but before year's end, members who have paid for the current
-        year (but not the next) should apparently have no end_date (and those who haven't, do).
+        In the period after årskravet but before year's end, members who have paid for the current year (but not
+        the next) should apparently have no end_date (and those who haven't, do).
         """
         from core.util import membership_year_start
         if not date.today() >= membership_year_start()['actual_date']:
@@ -391,10 +399,31 @@ class Actor(models.Model):
 
     def get_fjellogvidde_service(self):
         services = self.get_services().filter(code=FJELLOGVIDDE_SERVICE_CODE)
+
+        # This assumes that the actor *has* the F&V service, I suspect that assumption
+        # will sometimes be incorrect
         if len(services) == 0:
-            # This assumes that the actor *has* the F&V service, I suspect that assumption
-            # will sometimes be incorrect
-            raise Exception("Expected at least one Fjell og Vidde-service to exist in Focus")
+
+            # Yeah, another member without the service. Automatically inform memberservice that they need
+            # to update the record in Focus.
+            if cache.get('actor.%s.missing_service' % self.memberid) is None:
+                context = Context({
+                    'actor': self,
+                    'service_type': 'Fjell og Vidde',
+                })
+                message = render_to_string('common/user/account/missing_focus_service.txt', context)
+                send_mail(
+                    "Medlem %s mangler tjeneste i medlemsregisteret" % self.memberid,
+                    message,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [settings.MEMBERSERVICE_EMAIL]
+                )
+                # Ignore repeated errors for 24 hours
+                cache.set('actor.%s.missing_service' % self.memberid, True, 60 * 60 * 24)
+
+            # Ideally we would display an error message to the user and not log the error here, but
+            # we have to raise an exception and you can't do that without it being recorded.
+            raise Exception("Medlem mangler tjeneste (medlemsservice er automatisk varslet)")
         elif len(services) == 1:
             return services[0]
         else:
@@ -403,10 +432,31 @@ class Actor(models.Model):
 
     def get_yearbook_service(self):
         services = self.get_services().filter(code__in=YEARBOOK_SERVICE_CODES)
+
+        # This assumes that the actor *has* the yearbook service, I suspect that assumption
+        # will sometimes be incorrect
         if len(services) == 0:
-            # This assumes that the actor *has* the yearbook service, I suspect that assumption
-            # will sometimes be incorrect
-            raise Exception("Expected at least one Yearbook-service to exist in Focus")
+
+            # Yeah, another member without the service. Automatically inform memberservice that they need
+            # to update the record in Focus.
+            if cache.get('actor.%s.missing_service' % self.memberid) is None:
+                context = Context({
+                    'actor': self,
+                    'service_type': 'Årboken',
+                })
+                message = render_to_string('common/user/account/missing_focus_service.txt', context)
+                send_mail(
+                    "Medlem %s mangler tjeneste i medlemsregisteret" % self.memberid,
+                    message,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [settings.MEMBERSERVICE_EMAIL]
+                )
+                # Ignore repeated errors for 24 hours
+                cache.set('actor.%s.missing_service' % self.memberid, True, 60 * 60 * 24)
+
+            # Ideally we would display an error message to the user and not log the error here, but
+            # we have to raise an exception and you can't do that without it being recorded.
+            raise Exception("Medlem mangler tjeneste (medlemsservice er automatisk varslet)")
         elif len(services) == 1:
             return services[0]
         else:

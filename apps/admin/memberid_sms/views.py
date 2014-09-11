@@ -8,6 +8,7 @@ def list(request):
     if not request.user.has_perm('sherpa_admin'):
         raise PermissionDenied
     sms_requests = SMSServiceRequest.objects.all()
+    sms_requests_count = SMSServiceRequest.objects.count()
     total_sent = len(sms_requests.filter(memberid__isnull=False, blocked=False))
     sms_requests = sms_requests.order_by('-date')
     sms_price = 0.39
@@ -20,7 +21,7 @@ def list(request):
         sms_requests = paginator.page(1)
 
     context = {
-        'sms_requests': sms_requests,
+        'sms_requests_count': sms_requests_count,
         'sms_price': sms_price,
         'total_cost': total_cost,
         'total_sent': total_sent

@@ -1,11 +1,11 @@
+from datetime import datetime
+
 from django.core.cache import cache
 from django.conf import settings
 
 from core.models import County, FocusCountry, Zipcode
 from focus.models import FocusZipcode, Enrollment
 from focus.util import PAYMENT_METHOD_CODES
-
-from datetime import datetime
 
 class ActorAddressClean:
     """
@@ -105,7 +105,7 @@ class ActorProxy:
     def __init__(self, memberid):
         enrollment = cache.get('focus.enrollment.%s' % memberid)
         if enrollment is None:
-            enrollment = Enrollment.objects.get(memberid=memberid)
+            enrollment = Enrollment.get_active().get(memberid=memberid)
             cache.set('focus.enrollment.%s' % memberid, enrollment, settings.FOCUS_MEMBER_CACHE_PERIOD)
         self.enrollment = enrollment
 
@@ -115,6 +115,9 @@ class ActorProxy:
     def is_personal_member(self):
         """Assume that all new enrollments are personal memberships."""
         return True
+
+    def is_household_member(self):
+        return self.get_parent_memberid() != None
 
     def get_first_name(self):
         return self.enrollment.first_name.strip()
@@ -152,11 +155,36 @@ class ActorProxy:
     def get_phone_mobile(self):
         return self.enrollment.phone_mobile.strip() if self.enrollment.phone_mobile is not None else ''
 
+    def get_parent(self):
+        from user.models import User
+        parent = cache.get('focus.enrollment.%s.parent' % self.enrollment.memberid)
+        if parent is None:
+            parent_memberid = self.get_parent_memberid()
+            if parent_memberid is not None:
+                try:
+                    parent = User.get_or_create_inactive(memberid=parent_memberid, include_pending=True)
+                except Enrollment.DoesNotExist:
+                    # Entirely possible that this member is connected to a parent which isn't active. Ignore it
+                    parent = None
+            else:
+                parent = None
+            cache.set('focus.enrollment.%s.parent' % self.enrollment.memberid, parent, settings.FOCUS_MEMBER_CACHE_PERIOD)
+        return parent
+
+
     def get_parent_memberid(self):
         if self.enrollment.linked_to == 0 or self.enrollment.linked_to == self.enrollment.memberid or self.enrollment.linked_to == '':
             return None
         else:
             return self.enrollment.linked_to
+
+    def get_children(self):
+        # Assuming that there aren't members in the Actor table that could be connected to this member.
+        children = cache.get('focus.enrollment.children.%s' % self.enrollment.memberid)
+        if children is None:
+            children = Enrollment.get_active().filter(linked_to=self.enrollment.memberid).exclude(pk=self.enrollment.pk)
+            cache.set('focus.enrollment.children.%s' % self.enrollment.memberid, children, settings.FOCUS_MEMBER_CACHE_PERIOD)
+        return children
 
     def has_paid(self):
         return self.enrollment.has_paid()

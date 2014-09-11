@@ -1,10 +1,6 @@
 $(function() {
 
-    /* When creating a page, slugify the title as URL */
-    $("#add-page-dialog input[name='title']").keyup(function() {
-        $("#add-page-dialog input[name='slug']").val(slugify($(this).val()));
-    });
-
+    // Simulate anchor click when user changes active forening
     $("select[name='user_forening']").chosen().change(function() {
         var a = $('<a class="jq-hide" href="' + $(this).find('option:selected').attr('data-href') + '">s</a>').appendTo(document.body).get(0).click();
     });
@@ -15,11 +11,11 @@ $(function() {
         nav.find("li[data-type='" + $(this).attr('data-toggle') + "']").slideToggle('fast');
     });
 
-});
+    // Activate outdatedBrowser warning
+    outdatedBrowser({
+        bgColor: '#f25648',
+        color: '#ffffff',
+        lowerThan: 'IE9'
+    });
 
-function slugify(string) {
-    string = string.toLowerCase().trim();
-    string = string.replace(/[^a-zæøåÆØÅ0-9-_\ ]/g, '');
-    string = string.replace(/\ +/g, '-');
-    return string.toLowerCase().trim();
-}
+});

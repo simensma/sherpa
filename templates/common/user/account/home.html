@@ -3,7 +3,7 @@
 {% block breadcrumb %}<em><a href="{% url 'user.views.home' %}">Min side</a></em>{% endblock %}
 
 {% block extra_js %}
-  <script src="{{ STATIC_URL }}js/membership/memberid_sms_userpage.js"></script>
+  <script src="{{ STATIC_URL }}js/public/membership/memberid_sms_userpage.js"></script>
 {% endblock %}
 
 {% load rowiterator %}
@@ -42,7 +42,7 @@
             <th>Medlemsnummer:</th>
             <td>
               {{ user.memberid }}
-              {% include 'main/membership/memberid_sms/userpage.html' %}
+              {% include 'central/membership/memberid_sms/userpage.html' %}
             </td>
           </tr>
           <tr>

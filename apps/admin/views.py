@@ -1,13 +1,14 @@
+from datetime import datetime, date
+import re
+
 from django.shortcuts import render, redirect
 from django.core.cache import cache
 from django.db.models import Q
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 
-from datetime import datetime, date
 from lxml import etree
 import requests
-import re
 
 # This ugly import hack imports the model from views because of namespace collision,
 # should be 'from aktiviteter.models import Aktivitet'
@@ -76,7 +77,7 @@ def index(request):
                     'image': image,
                     'pub_date': pub_date,
                 })
-        except requests.ConnectionError:
+        except (requests.ConnectionError, AttributeError):
             pass
 
         cache.set('admin.betablog', betablog, 60 * 60 * 12)
@@ -129,18 +130,20 @@ def setup_site(request):
                 context['existing_domain'] = domain
             return render(request, 'common/admin/setup_site.html', context)
         else:
-            # TODO let creator choose template?
             site = Site(
                 domain=result['domain'],
                 prefix=result['prefix'],
                 type=request.POST['type'],
-                template='large',
+                template='local',
                 forening=request.active_forening,
                 title='',
             )
             if request.POST['type'] == 'hytte' or request.POST['type'] == 'kampanje':
                 site.title = request.POST['title'].strip()
             site.save()
+
+            # Invalidate the forening's homepage site cache
+            cache.delete('forening.homepage_site.%s' % request.active_forening.id)
 
             page = Page(
                 title='Forside',

@@ -35,7 +35,7 @@
     });
 
     $(document).on('click', 'div.image-archive-picker .clickable-image', function() {
-        var url = "http://cdn.turistforeningen.no/images/" + $(this).attr('data-path');
+        var url = "http://" + Turistforeningen.s3_bucket + "/images/" + $(this).attr('data-path');
         var description = $(this).attr('data-description');
         var photographer = $(this).attr('data-photographer');
 

@@ -24,6 +24,14 @@
 <div class="row">
   <div class="col-md-12">
 
+    {% for message in messages %}
+      {% if message.message == 'slug_not_unique' %}
+        <div class="alert alert-danger">
+          Adressen du valgte er allerede i bruk av en annen side! Prøv igjen med en ny adresse.
+        </div>
+      {% endif %}
+    {% endfor %}
+
     <p style="text-align: center;">
       <a id="add-page" class="btn btn-success btn-lg new-page" href="javascript:undefined">
         Opprett ny side
@@ -65,13 +73,13 @@
       <div class="form-group">
         <label>Permanent URL:</label>
         http://{{ active_site.domain }}/<span class="slug"></span><span class="slash"></span> <i class="edit-slug fa fa-pencil"></i><i class="save-slug fa fa-check"></i>
-        <img class="loader" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="Laster...">
+        <img class="loader" src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" alt="Laster...">
         <span class="valid">
-          <img src="{{ STATIC_URL }}img/valid.png" alt="Gyldig URL">
+          <img src="{{ STATIC_URL }}img/admin/sites/pages/valid.png" alt="Gyldig URL">
           Ok!
         </span>
         <span class="invalid">
-          <img src="{{ STATIC_URL }}img/invalid.png" alt="Ugyldig URL">
+          <img src="{{ STATIC_URL }}img/admin/sites/pages/invalid.png" alt="Ugyldig URL">
           Denne URLen er allerede i bruk!
         </span>
 
@@ -81,19 +89,19 @@
 
       <div class="row">
         <div class="col-sm-3">
-          <img src="{{ STATIC_URL }}img/templates/empty.jpg" alt="Ferdigdefinert mal" data-template="1">
+          <img src="{{ STATIC_URL }}img/admin/sites/editor/templates/empty.jpg" alt="Ferdigdefinert mal" data-template="1">
           <p>Tom</p>
         </div>
         <div class="col-sm-3">
-          <img src="{{ STATIC_URL }}img/templates/full-width.jpg" alt="Ferdigdefinert mal" data-template="2">
+          <img src="{{ STATIC_URL }}img/admin/sites/editor/templates/full-width.jpg" alt="Ferdigdefinert mal" data-template="2">
           <p>Én kolonne</p>
         </div>
         <div class="col-sm-3">
-          <img src="{{ STATIC_URL }}img/templates/sidebar.jpg" alt="Ferdigdefinert mal" data-template="3">
+          <img src="{{ STATIC_URL }}img/admin/sites/editor/templates/sidebar.jpg" alt="Ferdigdefinert mal" data-template="3">
           <p>Sidebar (hele)</p>
         </div>
         <div class="col-sm-3">
-          <img src="{{ STATIC_URL }}img/templates/3-columns.jpg" alt="Ferdigdefinert mal" data-template="4">
+          <img src="{{ STATIC_URL }}img/admin/sites/editor/templates/3-columns.jpg" alt="Ferdigdefinert mal" data-template="4">
           <p>Tre kolonner</p>
         </div>
       </div>

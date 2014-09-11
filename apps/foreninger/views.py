@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.http import HttpResponse
@@ -9,18 +11,22 @@ from django.core.exceptions import PermissionDenied
 from foreninger.models import Forening
 from core.models import County
 
-import json
-
 def index(request):
     counties = County.typical_objects().exclude(code='21').order_by('code') # Exclude Svalbard
 
-    full_list = cache.get('foreninger.full_list')
+
+    full_list = cache.get('foreninger.all.sorted_by_name.with_active_url')
     if full_list is None:
+        all_foreninger_by_name = cache.get('foreninger.all.sorted_by_name')
+        if all_foreninger_by_name is None:
+            all_foreninger_by_name = list(Forening.objects.order_by('name'))
+            cache.set('foreninger.all.sorted_by_name', all_foreninger_by_name, 60 * 60 * 24 * 7)
+
         full_list = [
             (f.name, f.get_active_url() or f.get_main_foreninger()[0].get_active_url())
-            for f in Forening.objects.order_by('name')
+            for f in all_foreninger_by_name
         ]
-        cache.set('foreninger.full_list', full_list, 60 * 60 * 24 * 7)
+        cache.set('foreninger.all.sorted_by_name.with_active_url', full_list, 60 * 60 * 24 * 7)
 
     context = {
         'categories': Forening.PUBLIC_CATEGORIES,
@@ -29,12 +35,12 @@ def index(request):
         'chosen_county': request.GET.get('fylke', ''),
         'full_list': full_list,
     }
-    return render(request, 'main/foreninger/list.html', context)
+    return render(request, 'central/foreninger/list.html', context)
 
 def visit(request):
     foreninger = Forening.objects.filter(type='forening').exclude(visit_address='').order_by('name')
     context = {'foreninger': foreninger}
-    return render(request, 'main/foreninger/visit.html', context)
+    return render(request, 'central/foreninger/visit.html', context)
 
 def filter(request):
     if not 'category' in request.POST or not 'county' in request.POST:
@@ -58,7 +64,7 @@ def filter(request):
 
         foreninger = foreninger.order_by('name')
 
-        result = [render_to_string('main/foreninger/result.html', RequestContext(request, {
+        result = [render_to_string('central/foreninger/result.html', RequestContext(request, {
             'forening': forening,
         })) for forening in foreninger]
 

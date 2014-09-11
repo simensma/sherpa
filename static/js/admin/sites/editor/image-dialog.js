@@ -17,13 +17,13 @@
         });
 
         function insertImageDetails(url, description, photographer) {
-            image_dialog.find("input[name='src']").val(ImageUtils.removeImageSizeFromUrl(url));
+            image_dialog.find("input[name='src']").val(url);
             image_dialog.find("input[name='description']").val(description);
             image_dialog.find("input[name='photographer']").val(photographer);
         }
 
         image_dialog.find("button.insert-image").click(function() {
-            var src = ImageUtils.removeImageSizeFromUrl(image_dialog.find("input[name='src']").val().trim());
+            var src = image_dialog.find("input[name='src']").val().trim();
             if(src === "") {
                 alert(image_dialog.attr('data-missing-url-warning'));
                 return;
@@ -51,7 +51,7 @@
         image_picked_callback = opts.save;
         image_removed_callback = opts.remove;
 
-        image_dialog.find("input[name='src']").val(ImageUtils.removeImageSizeFromUrl(opts.src));
+        image_dialog.find("input[name='src']").val(opts.src);
         image_dialog.find("input[name='anchor']").val(opts.anchor);
         image_dialog.find("input[name='description']").val(opts.description);
         image_dialog.find("input[name='photographer']").val(opts.photographer);

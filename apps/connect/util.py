@@ -1,26 +1,29 @@
 # encoding: utf-8
+from urllib import quote_plus
+from datetime import datetime, timedelta
+from Crypto.Cipher import AES
+import base64
+import json
+import time
+import os
+import sys
+import hmac
+import hashlib
+import logging
 
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect
 
-from Crypto.Cipher import AES
 from core import pkcs7
-
-from urllib import quote_plus
-from datetime import datetime, timedelta
-import base64
-import json
-import time
-import os
-import hmac
-import hashlib
-import logging
 
 logger = logging.getLogger('sherpa')
 
 def get_request_data(request):
     if not request.GET.get('client', '') in settings.DNT_CONNECT:
+        logger.warning(u"DNT Connect: Mangler 'client' GET parameter",
+            extra={'request': request}
+        )
         raise PermissionDenied
     else:
         client = settings.DNT_CONNECT[request.GET['client']]
@@ -30,7 +33,14 @@ def get_request_data(request):
 
     # Check the transmit datestamp
     request_time = datetime.fromtimestamp(request_data['timestamp'])
-    if datetime.now() - request_time > timedelta(seconds=settings.DNT_CONNECT_TIMEOUT):
+    if not client['ignore_timestamp_validation'] and datetime.now() - request_time > timedelta(seconds=settings.DNT_CONNECT_TIMEOUT):
+        logger.warning(u"DNT Connect: Timestamp validering feilet",
+            extra={
+                'request': request,
+                'request_time': request_time,
+                'current_time': datetime.now(),
+            }
+        )
         raise PermissionDenied
 
     # Redirect to provided url, or the default if none provided
@@ -103,7 +113,7 @@ def decrypt(auth, encoded, hmac_):
         plaintext = pkcs7.decode(plaintext_padded, settings.DNT_CONNECT_BLOCK_SIZE)
 
         if auth['iv'] and calc_hmac(auth['key'], iv + plaintext) != hmac_:
-            logger.warning(u"Forespurt hmac matchet ikke egenkalkulert hmac",
+            logger.warning(u"DNT Connect: Forespurt hmac matchet ikke egenkalkulert hmac",
                 extra={
                     'our_hmac': calc_hmac(auth['key'], iv + plaintext),
                     'their_hmac': hmac_,
@@ -117,6 +127,12 @@ def decrypt(auth, encoded, hmac_):
         return plaintext
     except TypeError:
         # Can e.g. be incorrect padding if they forgot to URLEncode the data
+        logger.warning(u"DNT Connect: TypeError ved dekryptering",
+            exc_info=sys.exc_info(),
+            extra={
+                'auth': auth,
+            }
+        )
         raise PermissionDenied
 
 def calc_hmac(key, data):

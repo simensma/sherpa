@@ -1,4 +1,7 @@
 # encoding: utf-8
+from datetime import datetime
+import json
+
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
@@ -10,9 +13,6 @@ from django.template.loader import render_to_string
 from django.db.models import Q
 from django.core.cache import cache
 
-from datetime import datetime
-import json
-
 from foreninger.models import Forening
 from user.models import User, Turleder, Kursleder, Instruktor
 from focus.models import Actor
@@ -21,7 +21,8 @@ def index(request):
     context = {
         'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH,
         'turleder_roles': Turleder.TURLEDER_CHOICES,
-        'instruktor_roles': Instruktor.ROLE_CHOICES
+        'instruktor_roles': Instruktor.ROLE_CHOICES,
+        'all_foreninger_sorted': Forening.get_all_sorted(),
     }
     return render(request, 'common/admin/turledere/index.html', context)
 
@@ -167,6 +168,9 @@ def turleder_search(request):
 
     for role in json.loads(request.POST['instruktor_roles']):
         turledere = turledere.filter(instruktor__role=role)
+
+    if json.loads(request.POST['only_kursledere']):
+        turledere = turledere.filter(kursleder__isnull=False)
 
     # Filter on certificates approved by some forening
     forening_approved = None

@@ -1,13 +1,4 @@
 # encoding: utf-8
-from django.conf import settings
-from django.shortcuts import render, redirect
-from django.core.mail import send_mail
-from django.http import HttpResponse
-from django.contrib import messages
-from django.db.models import Q
-from django.template import RequestContext
-from django.template.loader import render_to_string
-
 from collections import OrderedDict
 from datetime import datetime, date
 import json
@@ -15,19 +6,29 @@ from smtplib import SMTPException
 from ssl import SSLError
 import logging
 import sys
-import requests
 import hashlib
 
+from django.conf import settings
+from django.shortcuts import render, redirect
+from django.core.mail import send_mail
+from django.core.exceptions import PermissionDenied
+from django.http import HttpResponse
+from django.contrib import messages
+from django.db.models import Q
+from django.template import RequestContext
+from django.template.loader import render_to_string
+
+import requests
+
 from user.models import User, NorwayBusTicket
+from user.util import verify_memberid
+from user.exceptions import MemberidLookupsExceeded, CountryDoesNotExist, NoMatchingMemberid, ActorIsNotPersonalMember
 from core import validator
 from core.models import Zipcode, FocusCountry
-from focus.models import Actor
+from focus.util import ADDRESS_FIELD_MAX_LENGTH
 from admin.models import Publication
 from aktiviteter.models import AktivitetDate
 from foreninger.models import Forening
-
-from focus.util import ADDRESS_FIELD_MAX_LENGTH
-from user.util import memberid_lookups_exceeded
 from sherpa.decorators import user_requires, user_requires_login
 
 logger = logging.getLogger('sherpa')
@@ -189,11 +190,12 @@ def register_membership(request):
         return render(request, 'common/user/account/register_membership.html', context)
     elif request.method == 'POST':
         try:
-            # Check that the memberid is correct (and retrieve the Actor-entry)
-            if memberid_lookups_exceeded(request.META['REMOTE_ADDR']):
-                messages.error(request, 'memberid_lookups_exceeded')
-                return redirect('user.views.register_membership')
-            actor = Actor.get_personal_members().get(memberid=request.POST['memberid'], address__zipcode=request.POST['zipcode'])
+            actor = verify_memberid(
+                ip_address=request.META['REMOTE_ADDR'],
+                memberid=request.POST['memberid'],
+                country_code=request.POST['country'],
+                zipcode=request.POST['zipcode'],
+            )
 
             if request.POST['email-equal'] == 'true':
                 # Focus-email is empty, or equal to this email, so just use it
@@ -212,15 +214,13 @@ def register_membership(request):
                 raise Exception("Missing email-equal / email-choise-parameters")
 
             # Check that the user doesn't already have an account
-            if User.get_users().filter(memberid=request.POST['memberid'], is_inactive=False).exists():
+            if User.get_users(
+                include_expired=True,
+            ).filter(
+                memberid=request.POST['memberid'],
+                is_inactive=False,
+            ).exists():
                 messages.error(request, 'user_exists')
-                return redirect('user.views.register_membership')
-
-            # Check that the memberid isn't expired.
-            # Expired memberids shouldn't exist in Focus, so this is an error and should never happen,
-            # but we'll check for it anyway.
-            if User.objects.filter(memberid=request.POST['memberid'], is_expired=True).exists():
-                messages.error(request, 'expired_user_exists')
                 return redirect('user.views.register_membership')
 
             # Ok, registration successful, update the user
@@ -228,13 +228,24 @@ def register_membership(request):
 
             try:
                 # If this memberid is already an imported inactive member, merge them
-                other_user = User.get_users().get(memberid=request.POST['memberid'], is_inactive=True)
+                other_user = User.get_users(
+                    include_expired=True,
+                ).get(
+                    memberid=request.POST['memberid'],
+                    is_inactive=True,
+                )
                 user.merge_with(other_user, move_password=True) # This will delete the other user
             except User.DoesNotExist:
                 # It could be a pending user. If inactive, that's fine. If active, they already
                 # gave it a password - but they authenticated anyway, so we should still merge them.
                 try:
-                    other_user = User.objects.get(memberid=request.POST['memberid'], is_pending=True)
+                    other_user = User.get_users(
+                        include_pending=True,
+                        include_expired=True,
+                    ).get(
+                        memberid=request.POST['memberid'],
+                        is_pending=True,
+                    )
                     user.merge_with(other_user, move_password=True) # This will delete the other user
                 except User.DoesNotExist:
                     # All right then, the user doesn't exist.
@@ -255,7 +266,15 @@ def register_membership(request):
             request.user.save()
 
             return redirect('user.views.home')
-        except (Actor.DoesNotExist, ValueError):
+
+        except MemberidLookupsExceeded:
+            messages.error(request, 'memberid_lookups_exceeded')
+            return redirect('user.views.register_membership')
+
+        except CountryDoesNotExist:
+            raise PermissionDenied
+
+        except (NoMatchingMemberid, ActorIsNotPersonalMember, ValueError):
             messages.error(request, 'invalid_memberid')
             return redirect('user.views.register_membership')
 
@@ -343,12 +362,7 @@ def publication(request, publication):
 @user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 def norway_bus_tickets(request):
-    now = datetime.now()
-
-    context = {
-        'now': now,
-    }
-    return render(request, 'common/user/account/norway_bus_tickets.html', context)
+    return render(request, 'common/user/account/norway_bus_tickets.html')
 
 @user_requires_login()
 @user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')

@@ -1,3 +1,8 @@
+from itertools import cycle, islice
+import json
+import logging
+import sys
+
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
 from django.core.urlresolvers import reverse
@@ -5,11 +10,7 @@ from django.conf import settings
 from django.template import RequestContext, loader
 from django.core.cache import cache
 
-from itertools import cycle, islice
 import requests
-import json
-import logging
-import sys
 
 from page.models import AdPlacement
 from instagram.exceptions import InstagramServerError
@@ -24,7 +25,7 @@ def default(request):
         'iteration': 0,
         'tags': {x: initial_url % (x, settings.INSTAGRAM_CLIENT_ID) for x in tags}
     }
-    return render(request, 'main/instagram/default.html')
+    return render(request, 'central/instagram/default.html')
 
 def opptur2013(request):
     tags = ['opptur2013']
@@ -32,7 +33,7 @@ def opptur2013(request):
         'iteration': 0,
         'tags': {x: initial_url % (x, settings.INSTAGRAM_CLIENT_ID) for x in tags}
     }
-    return render(request, 'main/instagram/opptur.html')
+    return render(request, 'central/instagram/opptur.html')
 
 def load(request):
     if not 'instagram' in request.session:
@@ -81,7 +82,7 @@ def load(request):
 
 iterations = ['small', 'small', 'small', 'small', 'medium', 'large', 'medium', 'small', 'small', 'small', 'small', 'medium', 'medium', 'medium', 'medium', 'small', 'small', 'large']
 def next_image(request, item):
-    t = loader.get_template('main/instagram/images/%s.html' % iterations[request.session['instagram']['iteration']])
+    t = loader.get_template('central/instagram/images/%s.html' % iterations[request.session['instagram']['iteration']])
     c = RequestContext(request, {'item': item})
     request.session['instagram']['iteration'] += 1
     if request.session['instagram']['iteration'] == len(iterations):

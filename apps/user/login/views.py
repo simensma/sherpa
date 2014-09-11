@@ -1,4 +1,9 @@
 # encoding: utf-8
+from datetime import datetime, timedelta
+import json
+import logging
+import hashlib
+
 from django.core.urlresolvers import reverse
 from django.core.mail import send_mail
 from django.conf import settings
@@ -8,17 +13,13 @@ from django.contrib.auth import authenticate, login as log_user_in, logout as lo
 from django.contrib import messages
 from django.template import RequestContext, loader
 from django.utils import crypto
-from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
-
-from datetime import datetime, timedelta
-import json
-import logging
-import hashlib
+from django.core.exceptions import PermissionDenied
 
 from user.models import User
-from user.util import memberid_lookups_exceeded
+from user.util import verify_memberid as verify_memberid_util
 from user.login.util import attempt_login, attempt_registration, attempt_registration_nonmember
-from focus.models import Actor, Enrollment
+from user.exceptions import MemberidLookupsExceeded, CountryDoesNotExist, NoMatchingMemberid, ActorIsNotPersonalMember
+from focus.models import Actor
 from focus.util import get_enrollment_email_matches
 from core import validator
 from core.models import FocusCountry
@@ -154,53 +155,57 @@ def verify_memberid(request):
         # Some clients seem to send empty query dicts, see e.g.:
         # https://sentry.turistforeningen.no/turistforeningen/sherpa/group/1173/
         raise PermissionDenied
-    if memberid_lookups_exceeded(request.META['REMOTE_ADDR']):
-        return HttpResponse(json.dumps({'memberid_lookups_exceeded': True}))
-    if not FocusCountry.objects.filter(code=request.POST['country']).exists():
-        raise PermissionDenied
+
     try:
-        # Not filtering on Actor.get_personal_members(), see below
-        actor = Actor.objects.filter(
+        actor = verify_memberid_util(
+            ip_address=request.META['REMOTE_ADDR'],
             memberid=request.POST['memberid'],
-            address__country_code=request.POST['country']
+            country_code=request.POST['country'],
+            zipcode=request.POST['zipcode'],
         )
-        if request.POST['country'] == 'NO':
-            actor = actor.filter(address__zipcode=request.POST['zipcode'])
-        if actor.exists():
-            actor = actor.get()
-        else:
-            # No matching actors, check for pending users
-            enrollment = Enrollment.get_active().filter(memberid=request.POST['memberid'])
-            if request.POST['country'] == 'NO':
-                enrollment = enrollment.filter(zipcode=request.POST['zipcode'])
-            if enrollment.exists():
-                actor = User.get_users(include_pending=True).get(memberid=request.POST['memberid']).get_actor()
-            else:
-                # Give up
-                raise ObjectDoesNotExist
 
-        # Check that it's a proper member object (note that we didn't filter the query on Actor.get_personal_members())
-        if not actor.is_personal_member():
-            return HttpResponse(json.dumps({
-                'actor_is_not_member': True,
-            }))
-
+        # Check whether or not the user already has an account.
+        # Note that we're treating expired users as regular users here because the Actor lookup above
+        # confirmed that they're not expired anymore.
         try:
-            user = User.objects.get(memberid=request.POST['memberid'], is_inactive=False)
+            user = User.get_users(
+                include_pending=True,
+                include_expired=True,
+            ).get(
+                memberid=request.POST['memberid'],
+                is_inactive=False,
+            )
+
+            # This user is not expired, fix it if current state happens to be incorrect
+            if user.is_expired:
+                user.is_expired = False
+                user.save()
+
             user_exists = True
-            user_is_expired = user.is_expired
         except User.DoesNotExist:
             user_exists = False
-            user_is_expired = False
 
         return HttpResponse(json.dumps({
             'exists': True,
             'name': actor.get_full_name(),
             'email': actor.get_email(),
             'user_exists': user_exists,
-            'user_is_expired': user_is_expired
         }))
-    except (ValueError, ObjectDoesNotExist):
+
+    except MemberidLookupsExceeded:
+        return HttpResponse(json.dumps({
+            'memberid_lookups_exceeded': True,
+        }))
+
+    except CountryDoesNotExist:
+        raise PermissionDenied
+
+    except ActorIsNotPersonalMember:
+        return HttpResponse(json.dumps({
+            'actor_is_not_member': True,
+        }))
+
+    except (NoMatchingMemberid, ValueError):
         return HttpResponse(json.dumps({'exists': False}))
 
 def send_restore_password_email(request):
@@ -210,20 +215,60 @@ def send_restore_password_email(request):
     if not validator.email(request.POST['email']):
         return HttpResponse(json.dumps({'status': 'invalid_email'}))
 
-    # The address will match only one non-member, but may match several members, registered or not
-    local_matches = list(User.objects.filter(email=request.POST['email']))
+    # The address might match one non-member, check it:
+    local_matches = list(User.objects.filter(memberid__isnull=True, email=request.POST['email']))
+
+    # The address might match several members, registered or not
     focus_unregistered_matches = False
-    for a in Actor.get_personal_members().filter(email=request.POST['email']):
+
+    # Search through matching Actors
+    for actor in Actor.get_personal_members().filter(email=request.POST['email']):
         try:
-            # Include pending users in case they're resetting it *after* verification (i.e. Actor created),
-            # but *before* we've checked if they should still be pending.
-            local_matches.append(User.get_users(include_pending=True).get(memberid=a.memberid, is_inactive=False))
+            # Ok, look for any matching active user
+            user = User.get_users(
+                include_pending=True,
+                include_expired=True
+            ).get(
+                memberid=actor.memberid,
+                is_inactive=False # ignore inactive users; these need to register first
+            )
+
+            # Reset state if this user was previously pending but is now a proper member
+            if user.is_pending:
+                user.is_pending = False
+                user.save()
+
+            # Reset state if this user was previously marked as expired for some reason
+            if user.is_expired:
+                user.is_expired = False
+                user.save()
+
+            local_matches.append(user)
         except User.DoesNotExist:
+            # There is an actor but no corresponding user - inform the user that they need to register
             focus_unregistered_matches = True
 
-    for e in get_enrollment_email_matches(request.POST['email']):
+    # Now search through matching active enrollments
+    for enrollment in get_enrollment_email_matches(request.POST['email']):
         try:
-            local_matches.append(User.get_users(include_pending=True).get(memberid=e.memberid, is_pending=True, is_inactive=False))
+            # Ok, look for any matching active AND pending user
+            user = User.get_users(
+                include_pending=True,
+                include_expired=True
+            ).get(
+                memberid=enrollment.memberid,
+                is_pending=True,
+                is_inactive=False # ignore inactive users; these need to register first
+            )
+
+            # Reset state if this user was previously marked as expired for some reason
+            if user.is_expired:
+                user.is_expired = False
+                user.save()
+
+            # Check that the user isn't already matched as an Actor since this theoretically could be a duplicate
+            if user not in local_matches:
+                local_matches.append(user)
         except User.DoesNotExist:
             pass
 

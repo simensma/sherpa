@@ -1,11 +1,11 @@
+import json
+
 from django.http import HttpResponse, Http404
 from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.shortcuts import render, redirect
 from django.core.exceptions import PermissionDenied
 from django.contrib import messages
-
-import json
 
 from sherpa.decorators import user_requires_login
 from sherpa2.models import Location

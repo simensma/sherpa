@@ -5,7 +5,7 @@
 {% block title %}Nyheter{% endblock %}
 {% block breadcrumb %}<em><a href="">Nyheter</a></em>{% endblock %}
 {% block extra_js %}
-  <script src="{{ STATIC_URL }}js/article-list.js"></script>
+  <script src="{{ STATIC_URL }}js/public/article-list.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -36,7 +36,7 @@
         {% endfor %}
       </div>
 
-      {% if site.domain == 'www.turistforeningen.no' %}
+      {% if site == main_site %}
         <div class="old-article-listing hide" data-url="{% url 'articles.views.more_old' %}">
           <div class="alert alert-info">
             <a class="close">x</a>
@@ -50,7 +50,7 @@
         <button class="btn btn-large">Se flere nyheter</button>
 
         <div class="loading form-border hide">
-          <img src="{{ STATIC_URL }}img/ajax-loader-large.gif" alt="Laster, vennligst vent..."><br>
+          <img src="{{ STATIC_URL }}img/common/ajax-loader-large.gif" alt="Laster, vennligst vent..."><br>
           Henter nyheter, vennligst vent...
         </div>
       </div>

@@ -1,3 +1,5 @@
+from datetime import date
+
 from django import template
 
 register = template.Library()
@@ -12,18 +14,25 @@ def payment_status(user, prefix='Betalt,Ikke betalt'):
 
     prefix_paid, prefix_not_paid = prefix.split(',')
 
-    payment_years = user.get_payment_years()
+    today = date.today()
+    current_year = today.year
+    next_year = today.year + 1
+
+    status = user.get_payment_status()
     if user.is_lifelong_member():
         return '%s (livsvarig)'% (prefix_paid)
-    elif payment_years['code'] == 'both':
-        return '%s for %s, samt ut %s'% (prefix_paid, payment_years['next'], payment_years['current'])
-    elif payment_years['code'] == 'current_not_next':
-        return '%s ut %s, men ikke for %s' % (prefix_paid, payment_years['current'], payment_years['next'])
-    elif payment_years['code'] == 'neither_years':
-        return '%s for %s eller %s' % (prefix_not_paid, payment_years['current'], payment_years['next'])
-    elif payment_years['code'] == 'current':
-        return '%s for %s' % (prefix_paid, payment_years['current'])
-    elif payment_years['code'] == 'not_this_year':
-        return '%s for %s' % (prefix_not_paid, payment_years['current'])
+
+    if status['new_membership_year']:
+        if status['current_year'] and status['next_year']:
+            return '%s for %s, samt ut %s'% (prefix_paid, next_year, current_year)
+        elif status['current_year'] and not status['next_year']:
+            return '%s ut %s, men ikke for %s' % (prefix_paid, current_year, next_year)
+        elif not status['current_year'] and status['next_year']:
+            raise Exception("Illegal state: current_year should always be paid when next_year is. Go debug!")
+        elif not status['current_year'] and not status['next_year']:
+            return '%s for %s eller %s' % (prefix_not_paid, current_year, next_year)
     else:
-        raise Exception("Unknown user payment_years code")
+        if status['current_year']:
+            return '%s for %s' % (prefix_paid, current_year)
+        else:
+            return '%s for %s' % (prefix_not_paid, current_year)

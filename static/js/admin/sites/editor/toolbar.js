@@ -9,6 +9,18 @@ $(function() {
     var anchorInsert = toolbar.find("div.anchor-insert");
     var formatting = toolbar.find("div.formatting");
 
+    rangy.init();
+    window.selection = undefined;
+
+    // Make toolbar draggable, but not if input-elements are clicked
+    toolbar.draggable();
+    toolbar.find("input,select,button,a").mousedown(function(e) {
+        e.stopPropagation();
+    });
+
+    // Draggable will set position relative, so make sure it is fixed before the user drags it
+    toolbar.css('position', 'fixed');
+
     /**
      * Toolbar buttons
      */
@@ -32,6 +44,12 @@ $(function() {
             var range = selection.getRangeAt(0);
             var start = $(range.startContainer);
             var container = start.parent();
+
+            // If this is an anchor, the styled container will be its parent
+            if(container.is('a')) {
+                container = container.parent();
+            }
+
             if(container.is("h1") || container.hasClass('h1')) {
                 formatting.find("button[data-format='h1']").addClass('active');
             } else if(container.is("h2") || container.hasClass('h2')) {

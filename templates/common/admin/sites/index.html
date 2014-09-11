@@ -44,6 +44,12 @@
       </a>
     </div>
     <div class="col-lg-2">
+      <a class="navigation-block" href="{% url 'admin.sites.campaigns.views.index' active_site.id %}" data-toogle="tooltip" title="Legg ut kampanjer som kan inkluderes på nettsidene">
+        <p><i class="fa fa-picture-o fa-5x"></i></p>
+        <p>Kampanjer</p>
+      </a>
+    </div>
+    <div class="col-lg-2">
       <a class="navigation-block" href="{% url 'admin.sites.ads.views.list' active_site.id %}" data-toogle="tooltip" title="Legg ut reklameannonser som vises på nettisdene">
         <p><i class="fa fa-desktop fa-5x"></i></p>
         <p>Annonser</p>
@@ -68,21 +74,21 @@
         <th>Tittel</th>
       </tr>
       {% for site in active_forening.get_sites_sorted.forening %}
-        <tr>
+        <tr{% if site == active_site %} class="active"{% endif %}>
           <td>Hjemmeside</td>
           <td><a href="{% url 'admin.sites.views.index' site.id %}">{{ site.domain }}</a></td>
           <td>{{ site.get_title }}</td>
         </tr>
       {% endfor %}
       {% for site in active_forening.get_sites_sorted.hytte %}
-        <tr>
+        <tr{% if site == active_site %} class="active"{% endif %}>
           <td>Hytteside</td>
           <td><a href="{% url 'admin.sites.views.index' site.id %}">{{ site.domain }}</a></td>
           <td>{{ site.get_title }}</td>
         </tr>
       {% endfor %}
       {% for site in active_forening.get_sites_sorted.kampanje %}
-        <tr>
+        <tr{% if site == active_site %} class="active"{% endif %}>
           <td>Kampanjeside</td>
           <td><a href="{% url 'admin.sites.views.index' site.id %}">{{ site.domain }}</a></td>
           <td>{{ site.get_title }}</td>
@@ -125,7 +131,7 @@
       {% for forening in children_foreninger_with_site %}
         {% for site in forening.sites.all %}
 
-          <tr>
+          <tr{% if site == active_site %} class="active"{% endif %}>
             <td>
               {% if forloop.first %}
                 {{ forening.name }}

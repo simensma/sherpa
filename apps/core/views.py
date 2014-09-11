@@ -1,14 +1,15 @@
+from datetime import datetime
+import json
+
 from django.http import HttpResponse
 from django.core import serializers
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
 from django.conf import settings
 
-from core.models import Tag, Zipcode, County, Municipality
-
-from datetime import datetime
-import json
 import requests
+
+from core.models import Tag, Zipcode, County, Municipality
 
 def zipcode(request):
     if not request.is_ajax() or not 'zipcode' in request.POST:
@@ -27,7 +28,7 @@ def filter_tags(request):
     return HttpResponse(json.dumps(tags))
 
 def attribution(request):
-    return render(request, 'main/attribution.html')
+    return render(request, 'central/attribution.html')
 
 def county_lookup(request):
     point_wkt = 'POINT(%s %s)' % (json.loads(request.POST['lng']), json.loads(request.POST['lat']))
@@ -38,7 +39,7 @@ def municipality_lookup(request):
     return HttpResponse(json.dumps([m.id for m in Municipality.objects.filter(geom__contains=point_wkt)]))
 
 def doge(request):
-    return render(request, 'main/doge.html')
+    return render(request, 'central/doge.html')
 
 def booking_spots(request, code, date):
     """This view is used by gamle Sherpa to display available spots in a small iframe next to the signup buttons."""
@@ -58,7 +59,7 @@ def booking_spots(request, code, date):
                     'total': tour_date['plasserTotalt'],
                     'waiting_list': tour_date['venteliste'],
                 }
-                return render(request, 'main/booking_spots.html', context)
+                return render(request, 'central/booking_spots.html', context)
 
         # Invalid date?
         raise Exception()

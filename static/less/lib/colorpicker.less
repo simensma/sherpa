@@ -1,0 +1,27 @@
+/**
+ * Custom CSS common for the colorpicker library
+ */
+
+.colorselector {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 36px;
+  height: 36px;
+  background: url(/static/lib/colorpicker/images/select2.png);
+
+  div {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 28px;
+    height: 28px;
+    background: url(/static/lib/colorpicker/images/select2.png) center;
+
+  }
+}
+
+// Note that the actual colorpicker element will not be a child of the container
+.colorpicker {
+  z-index: 1000;
+}

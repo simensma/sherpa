@@ -1,7 +1,7 @@
 # encoding: utf-8
-from django.contrib import messages
-
 from datetime import datetime
+
+from django.contrib import messages
 
 from core.models import Zipcode
 from core import validator

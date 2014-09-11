@@ -21,8 +21,8 @@
     <div class="col-md-10">
       <div class="row">
         <div class="col-md-3">
-          <img src="{% firstof release.get_cover_photo '/static/img/turbo-placeholder.png' %}" alt="{{ release.title }}" class="cover_photo" style="max-width: 100%;">
-          <img class="ajaxloader jq-hide" src="/static/img/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+          <img src="{% firstof release.get_cover_photo '/static/img/admin/publications/turbo-placeholder.png' %}" alt="{{ release.title }}" class="cover_photo" style="max-width: 100%;">
+          <img class="ajaxloader jq-hide" src="/static/img/common/ajax-loader-small.gif" alt="Laster, vennligst vent...">
         </div>
         <div class="col-md-9">
           <input type="text" name="cover_photo" id="release_cover_photo" value="{{ release.cover_photo }}" class="form-control">

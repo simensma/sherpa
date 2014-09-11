@@ -3,7 +3,7 @@
 {% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <em><a href="{% url 'user.views.register_membership' %}">Registrer medlemskap</a></em>{% endblock %}
 
 {% block extra_js %}
-  <script src="{{ STATIC_URL }}js/user/register_membership.js"></script>
+  <script src="{{ STATIC_URL }}js/public/user/register_membership.js"></script>
 {% endblock %}
 
 {% load advertisement %}
@@ -38,7 +38,7 @@
             <div class="controls">
               <input type="text" class="input-small" name="zipcode" id="zipcode" maxlength="4">
               <input type="text" class="input-medium" name="area" disabled>
-              <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader zipcode hide" alt="Laster poststed..." title="Laster poststed...">
+              <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="ajaxloader zipcode hide" alt="Laster poststed..." title="Laster poststed...">
             </div>
           </div>
 
@@ -91,7 +91,7 @@
         <div class="control-group">
           <div class="controls">
             <button type="submit" class="btn btn-large btn-danger"><i class="icon-ok icon-white"></i> Registrer deg</button>
-            <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader submit hide" alt="Sjekker medlemsnummer, vennligst vent...">
+            <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="ajaxloader submit hide" alt="Sjekker medlemsnummer, vennligst vent...">
           </div>
         </div>
       </div>
@@ -109,11 +109,6 @@
       <div class="alert alert-error user-exists hide">
         <strong>Dette medlemmet har allerede en Min side-bruker!</strong><br>
         Hvis du har en annen konto og har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url 'user.login.views.login' %}">innloggingssiden</a> (da må du logge ut først).
-      </div>
-
-      <div class="alert alert-error user-is-expired hide">
-        <strong>Dette medlemmet har allerede en bruker, men den er markert som inaktiv!</strong><br>
-        Dette kan være en feil i vårt medlemsregister. Vennligst ta kontakt med <a href="{% url 'membership.views.service' %}">medlemsservice</a>.
       </div>
 
       <div class="alert alert-error actor-is-not-member hide">
@@ -136,11 +131,6 @@
           <div class="alert alert-error">
             <strong>Dette medlemmet har allerede en annen Min side-bruker!</strong><br>
             Hvis du har en annen konto og har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url 'user.login.views.login' %}">innloggingssiden</a> (da må du <a href="{% url 'user.login.views.logout' %}">logge ut</a> først).
-          </div>
-        {% elif message.message == 'expired_user_exists' %}
-          <div class="alert alert-error">
-            <strong>Dette medlemmet har allerede en bruker, men den er markert som inaktiv!</strong><br>
-            Dette kan være en feil i vårt medlemsregister. Vennligst ta kontakt med <a href="{% url 'membership.views.service' %}">medlemsservice</a>.
           </div>
         {% elif message.message == 'invalid_email' %}
           <div class="alert alert-error">

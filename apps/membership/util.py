@@ -1,16 +1,17 @@
 # encoding: utf-8
+from urllib import quote_plus
+import re
+import logging
+import sys
+import json
+
 from django.template.loader import render_to_string
 from django.template import RequestContext
 from django.http import HttpResponse
 from django.core.cache import cache
 from django.conf import settings
 
-from urllib import quote_plus
 import requests
-import re
-import logging
-import sys
-import json
 
 logger = logging.getLogger('sherpa')
 
@@ -33,7 +34,7 @@ def send_sms_receipt(request, user):
             'mob_user': user,
             'all_paid': all(u.has_paid() for u in [user] + list(user.get_children()))
         })
-        sms_message = render_to_string('main/membership/memberid_sms/message.txt', context).encode('utf-8')
+        sms_message = render_to_string('central/membership/memberid_sms/message.txt', context).encode('utf-8')
         r = requests.get(settings.SMS_URL % (quote_plus(number), quote_plus(sms_message)))
         if r.text.find("1 SMS messages added to queue") == -1:
             logger.error(u"Kunne ikke sende medlemsnummer på SMS: Ukjent status",

@@ -1,3 +1,9 @@
+from datetime import date
+import random
+import json
+import re
+import time
+
 from django.db.models.signals import pre_delete, post_delete
 from django.dispatch import receiver
 from django.db import models
@@ -5,21 +11,15 @@ from django.db.models import Q, F
 from django.conf import settings
 from django.core.cache import cache
 
-from datetime import date
-import random
-import json
-import re
-import simples3 # TODO: Replace with boto
-import time
+import boto
+
+from core.util import s3_bucket
 
 class Menu(models.Model):
     name = models.CharField(max_length=50)
     url = models.CharField(max_length=2048)
-    # Even though this should be unique, it's not enforced because
-    # when swapping, two orders will temporarily clash.
+    # order field is unique only per site, not globally, so don't enforce it on the DB-level
     order = models.IntegerField()
-    # Used to mark the current active menu page
-    active = None
     site = models.ForeignKey('core.Site')
 
     def __unicode__(self):
@@ -69,10 +69,6 @@ class Variant(models.Model):
     # probability
     owner = models.ForeignKey('user.User', related_name='+')
     # change_comment = models.TextField()
-    # The active field can be set by the view in order to get a reference to
-    # the active version in the template. Not sure if there exists a better
-    # way to do this?
-    active = None
 
     def __unicode__(self):
         return u'%s' % self.pk
@@ -94,11 +90,38 @@ class Version(models.Model):
     def __unicode__(self):
         return u'%s' % self.pk
 
+    def fetch_content(self):
+        """
+        This will "prefetch" all structure and content in this Version by calling get_rows(), get_columns() and
+        get_contents() which will store cached references on the local objects. This method should be called
+        before caching a Version object so that further calls to get_rows() on the cached object will used its
+        locally cached data instead of performing new lookups.
+        """
+        for row in self.get_rows():
+            for column in row.get_columns():
+                column.get_contents()
+
+    def get_rows(self):
+        # Cache the results in a local attribute on this object
+        if not hasattr(self, '_rows'):
+            self._rows = Row.objects.filter(version=self).order_by('order')
+        return self._rows
+
     def get_title_content(self):
-        return Content.objects.get(column__row__version=self, type='title')
+        # Cache the results in a local attribute on this object
+        if not hasattr(self, '_title'):
+            title = cache.get('version.%s.title' % self.id)
+            if title is None:
+                title = Content.objects.get(column__row__version=self, type='title')
+                cache.set('version.%s.title' % self.id, title, 60 * 60 * 24 * 7)
+            self._title = title
+        return self._title
 
     def get_lede_content(self):
-        return Content.objects.get(column__row__version=self, type='lede')
+        # Cache the results in a local attribute on this object
+        if not hasattr(self, '_lede'):
+            self._lede = Content.objects.get(column__row__version=self, type='lede')
+        return self._lede
 
     def get_thumbnail(self, size='small'):
         """Return a dict with two keys:
@@ -139,7 +162,7 @@ class Version(models.Model):
 
                 # Statically use the 150px version. This should be optimized; save
                 # the available sizes with the model and use the smallest appropriate one.
-                if thumbnail['url'] is not None and settings.AWS_BUCKET in thumbnail['url']:
+                if thumbnail['url'] is not None and s3_bucket() in thumbnail['url']:
                     if size == 'small':
                         size_string = str(min(settings.THUMB_SIZES))
                     else:
@@ -162,6 +185,9 @@ class Version(models.Model):
     def get_children_count(self):
         return Version.objects.filter(variant__page__parent=self.variant.page, active=True).count()
 
+    def get_publishers(self):
+        return sorted(self.publishers.all(), key=lambda u: u.get_full_name())
+
 @receiver(post_delete, sender=Version, dispatch_uid="page.models")
 def delete_page_version(sender, **kwargs):
     Row.objects.filter(version=kwargs['instance']).delete()
@@ -171,7 +197,12 @@ def delete_page_version(sender, **kwargs):
 class Row(models.Model):
     version = models.ForeignKey('page.Version', related_name='rows')
     order = models.IntegerField()
-    columns = None
+
+    def get_columns(self):
+        # Cache the results in a local attribute on this object
+        if not hasattr(self, '_columns'):
+            self._columns = Column.objects.filter(row=self).order_by('order')
+        return self._columns
 
     def __unicode__(self):
         return u'%s' % self.pk
@@ -185,7 +216,12 @@ class Column(models.Model):
     span = models.IntegerField()
     offset = models.IntegerField()
     order = models.IntegerField()
-    contents = None
+
+    def get_contents(self):
+        # Cache the results in a local attribute on this object
+        if not hasattr(self, '_contents'):
+            self._contents = Content.objects.filter(column=self).order_by('order')
+        return self._contents
 
     def __unicode__(self):
         return u'%s' % self.pk
@@ -212,6 +248,34 @@ class Content(models.Model):
             self._parsed_content = json.loads(self.content)
         return self._parsed_content
 
+    def get_image_source(self):
+        if self.type != 'image':
+            raise Exception("You can only call this method on image contents, check your code logic")
+
+        source = self.get_content()['src']
+
+        local_image_path = '%s/%s' % (s3_bucket(), settings.AWS_IMAGEGALLERY_PREFIX)
+        local_image_path_ssl = '%s/%s' % (s3_bucket(ssl=True), settings.AWS_IMAGEGALLERY_PREFIX)
+
+        if not local_image_path in source and not local_image_path_ssl in source:
+            # Not an image from the image gallery; don't touch it
+            return source
+
+        for size in settings.THUMB_SIZES:
+            if ('-%s') % size in source:
+                return source
+
+        column_size = settings.COLUMN_SPAN_MAP[12 / self.column.span]
+        if column_size > max(settings.THUMB_SIZES):
+            # No thumbs are large enough, use the original
+            # Not technically possible right now (the largest column is 940px and the largest thumb is 1880)
+            return source
+        else:
+            thumb_size = min([t for t in settings.THUMB_SIZES if t >= column_size])
+
+        name, extension = source.rsplit('.', 1)
+        return '%s-%s.%s' % (name, thumb_size, extension)
+
     def get_cropping_json(self):
         if self.type != 'image':
             raise Exception("You can only call this method on image contents, check your code logic")
@@ -221,6 +285,14 @@ class Content(models.Model):
             return json.dumps(content['crop'])
         else:
             return None
+
+    def render_widget(self, request, current_site, admin_context=False):
+        """Render this widget (obviously only applicable for widget-content) in the context of the given site"""
+        from page.widgets.util import render_widget
+        if self.type != 'widget':
+            raise Exception("render_widget called on Content of type '%s'" % self.type)
+
+        return render_widget(request, self.get_content(), current_site, admin_context=admin_context, content_id=self.id)
 
 @receiver(pre_delete, sender=Content, dispatch_uid="page.models")
 def delete_content(sender, **kwargs):
@@ -259,13 +331,13 @@ class Ad(models.Model):
         return u'%s' % self.pk
 
     def url(self):
-        return "//%s/%s%s.%s" % (settings.AWS_BUCKET_SSL, settings.AWS_ADS_PREFIX, self.sha1_hash, self.extension)
+        return "//%s/%s%s.%s" % (s3_bucket(ssl=True), settings.AWS_ADS_PREFIX, self.sha1_hash, self.extension)
 
     def has_fallback(self):
         return self.fallback_sha1_hash is not None and self.fallback_extension is not None
 
     def fallback_url(self):
-        return "//%s/%s%s.%s" % (settings.AWS_BUCKET_SSL, settings.AWS_ADS_PREFIX, self.fallback_sha1_hash, self.fallback_extension)
+        return "//%s/%s%s.%s" % (s3_bucket(ssl=True), settings.AWS_ADS_PREFIX, self.fallback_sha1_hash, self.fallback_extension)
 
     def is_adform_script(self):
         return self.content_type == Ad.ADFORM_SCRIPT_CONTENT_TYPE
@@ -285,16 +357,16 @@ class Ad(models.Model):
     def delete_file(self):
         # Check that other ads aren't using the same image file
         if not Ad.objects.exclude(id=self.id).filter(sha1_hash=self.sha1_hash).exists():
-            s3 = simples3.S3Bucket(settings.AWS_BUCKET, settings.AWS_ACCESS_KEY_ID,
-                settings.AWS_SECRET_ACCESS_KEY, 'https://%s' % settings.AWS_BUCKET)
-            s3.delete("%s%s.%s" % (settings.AWS_ADS_PREFIX, self.sha1_hash, self.extension))
+            conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+            bucket = conn.get_bucket(s3_bucket())
+            bucket.delete_key("%s%s.%s" % (settings.AWS_ADS_PREFIX, self.sha1_hash, self.extension))
 
     def delete_fallback_file(self):
         # Check that other ads aren't using the same image file
         if not Ad.objects.exclude(id=self.id).filter(fallback_sha1_hash=self.fallback_sha1_hash).exists():
-            s3 = simples3.S3Bucket(settings.AWS_BUCKET, settings.AWS_ACCESS_KEY_ID,
-                settings.AWS_SECRET_ACCESS_KEY, 'https://%s' % settings.AWS_BUCKET)
-            s3.delete("%s%s.%s" % (settings.AWS_ADS_PREFIX, self.fallback_sha1_hash, self.fallback_extension))
+            conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+            bucket = conn.get_bucket(s3_bucket())
+            bucket.delete_key("%s%s.%s" % (settings.AWS_ADS_PREFIX, self.fallback_sha1_hash, self.fallback_extension))
 
     @staticmethod
     def on(site):

@@ -1,9 +1,11 @@
 # encoding: utf-8
-from django.core.management.base import BaseCommand
-from core.models import Zipcode, ZipcodeState
-from focus.models import FocusZipcode
 from datetime import datetime
 import re
+
+from django.core.management.base import BaseCommand
+
+from core.models import Zipcode, ZipcodeState
+from focus.models import FocusZipcode
 
 # Note: Does not compare the state of the DB to the files - simply lists the changes based on last update in ZipcodeState.
 

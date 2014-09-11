@@ -10,6 +10,7 @@ $(function() {
     var turleder_search_button = filters.find("button.turleder-search");
     var turleder_forening_active = filters.find("select[name='forening_active']");
     var turleder_roles = filters.find("select[name='turleder_roles']");
+    var only_kursledere = filters.find('input[name="only_kursledere"]');
     var instruktor_roles = filters.find("select[name='instruktor_roles']");
     var turleder_include_all_roles_label = filters.find("label.include-all-certificates");
     var turleder_include_all_roles = filters.find("input[name='include_all_certificates']");
@@ -39,7 +40,8 @@ $(function() {
 
     turleder_roles.change(function() {
         if($(this).find("option:selected").val().length > 0) {
-            turleder_include_all_roles_label.show();
+            // Explicitly force block-display; or it would've been set to inline-block
+            turleder_include_all_roles_label.show().css('display', 'block');
         } else {
             turleder_include_all_roles_label.hide();
         }
@@ -85,6 +87,7 @@ $(function() {
                 query: turleder_search_input.val(),
                 turleder_foreninger_active: JSON.stringify(get_selected_active_foreninger()),
                 turleder_role: turleder_roles.find("option:selected").val(),
+                only_kursledere: JSON.stringify(only_kursledere.prop('checked')),
                 instruktor_roles: JSON.stringify(get_selected_instruktor_roles()),
                 turleder_role_include: JSON.stringify(turleder_include_all_roles.prop("checked")),
                 turleder_forening_approved: turleder_forening_approved.find("option:selected").val()
@@ -101,7 +104,10 @@ $(function() {
                     InfiniteScroller.end();
                 }
                 table.append($.parseHTML(result.html.trim()));
-            }
+            },
+            fail: function(result) {
+                table.find('tr.technical-error').show();
+            },
         }
     });
     InfiniteScroller.trigger();

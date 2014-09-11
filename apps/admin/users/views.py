@@ -1,3 +1,6 @@
+from datetime import date
+import json
+
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
@@ -13,9 +16,6 @@ from foreninger.models import Forening
 from user.models import User, Permission, ForeningRole, Turleder
 from admin.users.util import send_access_granted_email
 from focus.models import Actor, Enrollment
-
-from datetime import date
-import json
 
 def index(request):
     context = {
@@ -56,7 +56,6 @@ def show(request, other_user):
         'assignable_foreninger': Forening.sort(assignable_foreninger),
         'all_foreninger': Forening.sort(Forening.objects.all()),
         'turleder_roles': Turleder.TURLEDER_CHOICES,
-        'today': today,
         'five_years_from_now': five_years_from_now,
     }
     return render(request, 'common/admin/users/show/index.html', context)

@@ -1,4 +1,12 @@
 # encoding: utf-8
+import json
+import sys
+import logging
+from cStringIO import StringIO
+from hashlib import sha1
+from smtplib import SMTPException
+from ssl import SSLError
+
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.core.exceptions import PermissionDenied
@@ -7,34 +15,25 @@ from django.template import RequestContext, loader
 from django.core.mail import send_mail
 from django.core.cache import cache
 
-import json
-import sys
-import logging
-from cStringIO import StringIO
-from hashlib import sha1
-from datetime import datetime
-from smtplib import SMTPException
-from ssl import SSLError
-
 import boto
-from PIL import Image as pil
+import PIL.Image
 
 from admin.models import Image, Fotokonkurranse
 from core.models import Tag
 from admin.images.util import generate_unique_random_image_key, get_exif_tags, create_thumb
 from core import xmp, validator
+from core.util import s3_bucket
 
 logger = logging.getLogger('sherpa')
 
 MIN_SIZE = 800 # pixlors
 EMAIL_CONFIRMATION_SUBJECT = "Takk for ditt bidrag til DNTs fotokonkurranse!"
 
-def default(request):
+def index(request):
     context = {
         'destination_album_exists': Fotokonkurranse.objects.get().album is not None,
-        'now': datetime.now(),
     }
-    return render(request, 'main/fotokonkurranse/default.html', context)
+    return render(request, 'central/fotokonkurranse/index.html', context)
 
 def upload(request):
     try:
@@ -61,12 +60,12 @@ def upload(request):
 
     try:
         conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
-        bucket = conn.get_bucket(settings.AWS_BUCKET)
+        bucket = conn.get_bucket(s3_bucket())
 
         image_key = generate_unique_random_image_key()
         data = image_file.read()
         ext = image_file.name.split(".")[-1].lower()
-        pil_image = pil.open(StringIO(data))
+        pil_image = PIL.Image.open(StringIO(data))
         exif_json = json.dumps(get_exif_tags(pil_image))
         image_file_tags = xmp.find_keywords(data)
         thumbs = [{'size': size, 'data': create_thumb(pil_image, ext, size)} for size in settings.THUMB_SIZES]
@@ -82,14 +81,12 @@ def upload(request):
 
         key = boto.s3.key.Key(bucket, '%s%s.%s' % (settings.AWS_IMAGEGALLERY_PREFIX, image_key, ext))
         key.content_type = image_file.content_type
-        key.set_contents_from_string(data)
-        key.set_acl('public-read')
+        key.set_contents_from_string(data, policy='public-read')
 
         for thumb in thumbs:
             key = boto.s3.key.Key(bucket, '%s%s-%s.%s' % (settings.AWS_IMAGEGALLERY_PREFIX, image_key, thumb['size'], ext))
             key.content_type = image_file.content_type
-            key.set_contents_from_string(thumb['data'])
-            key.set_acl('public-read')
+            key.set_contents_from_string(thumb['data'], policy='public-read')
 
         destination_album = Fotokonkurranse.objects.get().album
         licence_text = "Kan brukes i DNTs egne kommunikasjonskanaler som magasiner, nettsider og sosiale medier, i PR og for bruk av DNTs sponsorer."
@@ -120,7 +117,7 @@ def upload(request):
             # it's sent, because other upload requests may try to send meanwhile and we don't want them to.
             cache.set('fotokonkurranse.emails.%s' % post_email, True, 60 * 60)
             try:
-                t = loader.get_template('main/fotokonkurranse/email_confirmation.txt')
+                t = loader.get_template('central/fotokonkurranse/email_confirmation.txt')
                 c = RequestContext(request, {
                     'user_name': post_name,
                 })

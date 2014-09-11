@@ -12,7 +12,7 @@ class ForeningDataForm(forms.Form):
         self._user = user
 
         # If this is the create-form, and the user is not an admin, then they can only create turlag and turgrupper
-        if type(self) == ForeningDataForm and not self._user.is_admin_in_main_central():
+        if type(self) == ForeningDataForm and not self._user.is_admin_in_dnt_central():
             self.fields['type'].choices = [t for t in Forening.TYPES if t[0] in ['turlag', 'turgruppe']]
 
     # Note that we're rendering parents manually, and not with the provided (or a custom) widget
@@ -203,7 +203,7 @@ class ForeningDataForm(forms.Form):
         # Non DNT admins cannot *create* forening with type forening/sentral
         # Note that this might be legal in derived classes, so check this only for the base class
         # Shouldn't be possible without a manual POST
-        if type(self) == ForeningDataForm and not self._user.is_admin_in_main_central() and type_ in ['sentral', 'forening']:
+        if type(self) == ForeningDataForm and not self._user.is_admin_in_dnt_central() and type_ in ['sentral', 'forening']:
             self._errors['type'] = self.error_class([
                 u"Du har ikke tillatelse til å opprette sentrale grupper eller medlemsforeninger. Vennligst ta kontakt med DNT sentralt."
             ])
@@ -292,7 +292,7 @@ class ExistingForeningDataForm(ForeningDataForm):
             return cleaned_data
 
         # Non DNT admins cannot *change* the type to forening/sentral
-        if not self._user.is_admin_in_main_central():
+        if not self._user.is_admin_in_dnt_central():
             # Cannot change an existing sentral/forening at all
             if forening.type in ['sentral', 'forening'] and forening.type != new_type:
                 self._errors['type'] = self.error_class([

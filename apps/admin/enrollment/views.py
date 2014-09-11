@@ -1,10 +1,10 @@
 # encoding: utf-8
+import json
+
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.paginator import Paginator, InvalidPage
 from django.db.models import Q
-
-import json
 
 from enrollment.models import State, Enrollment
 

@@ -23,7 +23,8 @@
 
   {# Editor specific scripts #}
   <script src="{{ STATIC_URL }}js/admin/sites/editor/main.js"></script>
-  <script src="{{ STATIC_URL }}js/admin/sites/editor/move-content.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/sites/editor/content.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/sites/editor/content-move.js"></script>
   <script src="{{ STATIC_URL }}js/admin/sites/editor/save.js"></script>
   <script src="{{ STATIC_URL }}js/admin/sites/editor/image-dialog.js"></script>
   <script src="{{ STATIC_URL }}js/admin/sites/editor/widgets/articles.js"></script>
@@ -35,6 +36,7 @@
   <script src="{{ STATIC_URL }}js/admin/sites/editor/widgets/button.js"></script>
   <script src="{{ STATIC_URL }}js/admin/sites/editor/widgets/main.js"></script>
   <script src="{{ STATIC_URL }}js/admin/sites/editor/widgets/table.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/sites/editor/widgets/campaign.js"></script>
   <script src="{{ STATIC_URL }}js/admin/sites/editor/article.js"></script>
   <script src="{{ STATIC_URL }}js/admin/sites/editor/toolbar.js"></script>
 {% endblock %}
@@ -46,9 +48,7 @@
 
 {% block js_globals %}
   <script>
-    window.Turistforeningen = {
-      image_search_length: {{ image_search_length }}
-    };
+    Turistforeningen.image_search_length = {{ image_search_length }};
   </script>
 {% endblock %}
 
@@ -74,7 +74,7 @@
           <input type="radio" name="thumbnail" value="new"{% if not version.get_thumbnail.hide and version.variant.article.thumbnail %} checked{% endif %}> Bruk et annet bilde<br>
 
           <div style="width:200px; overflow:hidden;">
-          <img class="article-thumbnail" src="{% if not version.variant.article.thumbnail %}{{ STATIC_URL }}img/placeholder.png{% else %}{{ version.variant.article.thumbnail }}{% endif %}" alt="{{ title|striptags }}">
+          <img class="article-thumbnail" src="{% if not version.variant.article.thumbnail %}{{ editor_placeholder_image }}{% else %}{{ version.variant.article.thumbnail }}{% endif %}" alt="{{ title|striptags }}">
           </div>
         </div>
 
@@ -92,9 +92,11 @@
           <p>
             Forfattere:
             <select name="authors" multiple="multiple">
-              {% for user in users %}
-                <option value="{{ user.id }}"{% if user in version.publishers.all %} selected="selected"{% endif %}>{{ user.get_full_name }}</option>
-              {% endfor %}
+              {% with version.publishers.all as publishers %}
+                {% for user in users %}
+                  <option value="{{ user.id }}"{% if user in publishers %} selected="selected"{% endif %}>{{ user.get_full_name }}</option>
+                {% endfor %}
+              {% endwith %}
             </select>
           </p>
         </div>
@@ -125,7 +127,7 @@
           </a>
           <br><br>
 
-          <button class="btn btn-success save-and-quit" data-href="{% url 'admin.sites.pages.page.list' active_site.id %}">Lagre &amp; Tilbake til Sherpa</button>
+          <button class="btn btn-success save-and-quit" data-href="{% url 'admin.sites.articles.views.list' active_site.id %}">Lagre &amp; Tilbake til Sherpa</button>
           <a href="{% url 'admin.sites.pages.page.list' active_site.id %}" class="btn btn-default quit" data-confirm="Er du sikker på at du vil gå tilbake til Sherpa uten å lagre?">Tilbake til Sherpa UTEN å lagre</a>
 
         </div>

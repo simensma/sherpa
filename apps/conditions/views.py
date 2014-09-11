@@ -2,8 +2,6 @@ from django.shortcuts import render
 from django.core.cache import cache
 
 from sherpa2.models import Condition
-from page.models import AdPlacement
-
 
 def index(request):
     conditions = cache.get('conditions.recent')
@@ -18,4 +16,4 @@ def index(request):
         'conditions': conditions,
         'available_locations': available_locations
     }
-    return render(request, 'main/conditions/index.html', context)
+    return render(request, 'central/conditions/index.html', context)

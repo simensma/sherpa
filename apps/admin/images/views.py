@@ -1,25 +1,25 @@
+from cStringIO import StringIO
+from datetime import datetime
+from hashlib import sha1
+import json
+import logging
+import sys
+import zipfile
+
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.conf import settings
 
+import PIL.Image
+import boto
+import pyexiv2
+
 from core.models import Tag
 from admin.models import Image, Album, Fotokonkurranse
 from user.models import User
-
 from core import xmp
+from core.util import s3_bucket
 from admin.images.util import parse_objects, list_parents, list_parents_values, full_archive_search, get_exif_tags, create_thumb, generate_unique_random_image_key
-
-from PIL import Image as pil
-from cStringIO import StringIO
-import json
-import logging
-import sys
-from datetime import datetime
-import simples3 # TODO: Replace with boto
-from hashlib import sha1
-import boto
-import zipfile
-import pyexiv2
 
 logger = logging.getLogger('sherpa')
 
@@ -41,7 +41,6 @@ def user_images(request, user):
     context = {
         'active_user': user,
         'images': images,
-        'aws_bucket': settings.AWS_BUCKET,
         'origin': request.get_full_path(),
         'all_users': sorted(User.sherpa_users(), key=lambda u: u.get_first_name()),
         'current_navigation': current_navigation,
@@ -66,7 +65,6 @@ def list_albums(request, album):
         'albumpath': parents,
         'current_album': current_album,
         'images': images,
-        'aws_bucket': settings.AWS_BUCKET,
         'origin': request.get_full_path(),
         'all_users': sorted(User.sherpa_users(), key=lambda u: u.get_first_name()),
         'current_navigation': 'albums',
@@ -90,7 +88,6 @@ def image_details(request, image):
         'exif': exif,
         'taken': taken,
         'tags': tags,
-        'aws_bucket': settings.AWS_BUCKET,
         'origin': request.get_full_path(),
         'all_users': sorted(User.sherpa_users(), key=lambda u: u.get_first_name()),
         'current_navigation': 'albums'
@@ -162,7 +159,7 @@ def download_album(request, album):
     album = Album.objects.get(id=album)
 
     conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
-    bucket = conn.get_bucket(settings.AWS_BUCKET)
+    bucket = conn.get_bucket(s3_bucket())
 
     def set_exif_tag(metadata, key, value):
         if key in metadata:
@@ -216,7 +213,6 @@ def update_images(request):
     if request.method == 'GET':
         ids = json.loads(request.GET['bilder'])
         context = {
-            'aws_bucket': settings.AWS_BUCKET,
             'ids': json.dumps(ids),
             'origin': request.GET.get('origin', '')
         }
@@ -275,35 +271,31 @@ def upload_image(request):
             result = json.dumps({'status': 'no_files'})
             return render(request, 'common/admin/images/iframe.html', {'result': result})
 
-        s3 = simples3.S3Bucket(
-            settings.AWS_BUCKET,
-            settings.AWS_ACCESS_KEY_ID,
-            settings.AWS_SECRET_ACCESS_KEY,
-            'https://%s' % settings.AWS_BUCKET)
+        conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+        bucket = conn.get_bucket(s3_bucket())
 
         ids = []
         album = None if request.POST['album'] == '' else Album.objects.get(id=request.POST['album'])
         for image in request.FILES.getlist('files'):
-            key = generate_unique_random_image_key()
+            image_key = generate_unique_random_image_key()
             data = image.read()
             ext = image.name.split(".")[-1].lower()
-            pil_image = pil.open(StringIO(data))
+            pil_image = PIL.Image.open(StringIO(data))
             exif_json = json.dumps(get_exif_tags(pil_image))
             tags = xmp.find_keywords(data)
             thumbs = [{'size': size, 'data': create_thumb(pil_image, ext, size)} for size in settings.THUMB_SIZES]
 
-            s3.put("%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, key, ext),
-                data,
-                acl='public-read',
-                mimetype=image.content_type)
+            key = bucket.new_key("%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, image_key, ext))
+            key.content_type = image.content_type
+            key.set_contents_from_string(data, policy='public-read')
+
             for thumb in thumbs:
-                s3.put("%s%s-%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, key, thumb['size'], ext),
-                    thumb['data'],
-                    acl='public-read',
-                    mimetype=image.content_type)
+                key = bucket.new_key("%s%s-%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, image_key, thumb['size'], ext))
+                key.content_type = image.content_type
+                key.set_contents_from_string(thumb['data'], policy='public-read')
 
             image = Image(
-                key=key,
+                key=image_key,
                 extension=ext,
                 hash=sha1(data).hexdigest(),
                 description='',
@@ -387,7 +379,6 @@ def search(request):
     context.update({
         'albums': albums,
         'images': images,
-        'aws_bucket': settings.AWS_BUCKET,
         'search_query': request.GET['q']})
     return render(request, 'common/admin/images/search.html', context)
 

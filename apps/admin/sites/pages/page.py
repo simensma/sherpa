@@ -1,17 +1,18 @@
 from __future__ import absolute_import
 
+import json
+
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.conf import settings
+from django.contrib import messages
 from django.template import RequestContext
 from django.template.loader import render_to_string
 
 from admin.sites.pages.util import slug_is_unique, create_template
-from page.widgets import parse_widget, widget_admin_context, get_static_promo_context
-from page.models import Page, Variant, Version, Row, Column, Content
+from page.widgets.util import admin_context
+from page.models import Page, Variant, Version
 from core.models import Site
-
-import json
 
 def list(request, site):
     active_site = Site.objects.get(id=site)
@@ -39,9 +40,13 @@ def children(request, site):
 
 def new(request, site):
     active_site = Site.objects.get(id=site)
+
+    if request.method != 'POST':
+        return redirect('admin.sites.pages.page.list', active_site.id)
+
     if not slug_is_unique(request.POST['slug']):
-        # TODO: Error handling
-        raise Exception("Slug is not unique (error handling TBD)")
+        messages.error(request, 'slug_not_unique')
+        return redirect('admin.sites.pages.page.new', active_site.id)
 
     page = Page(
         title=request.POST['title'],
@@ -89,21 +94,10 @@ def edit(request, site, version):
     active_site = Site.objects.get(id=site)
     pages = Page.on(active_site).all().order_by('title')
     version = Version.objects.get(id=version)
-    rows = Row.objects.filter(version=version).order_by('order')
-    for row in rows:
-        columns = Column.objects.filter(row=row).order_by('order')
-        for column in columns:
-            contents = Content.objects.filter(column=column).order_by('order')
-            for content in contents:
-                if content.type == 'widget':
-                    content.content = parse_widget(request, json.loads(content.content), active_site)
-            column.contents = contents
-        row.columns = columns
     context = {
         'active_site': active_site,
-        'rows': rows,
         'version': version,
-        'widget_data': widget_admin_context(),
+        'widget_data': admin_context(active_site),
         'pages': pages,
         'image_search_length': settings.IMAGE_SEARCH_LENGTH
     }
@@ -115,24 +109,10 @@ def edit(request, site, version):
 def preview(request, site, version):
     active_site = Site.objects.get(id=site)
     version = Version.objects.get(id=version)
-    rows = Row.objects.filter(version=version).order_by('order')
-    for row in rows:
-        columns = Column.objects.filter(row=row).order_by('order')
-        for column in columns:
-            contents = Content.objects.filter(column=column).order_by('order')
-            for content in contents:
-                if content.type == 'widget':
-                    content.content = parse_widget(request, json.loads(content.content), active_site)
-            column.contents = contents
-        row.columns = columns
     context = {
         'active_site': active_site,
-        'rows': rows,
         'version': version,
     }
-    if active_site.id == Site.DNT_CENTRAL_ID:
-        path = '/' if version.variant.page.slug == '' else '/%s/' % version.variant.page.slug
-        context.update(get_static_promo_context(path))
 
     # Fake request.site to the edited site; this will make context processors behave accordingly
     request.site = active_site

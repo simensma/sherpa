@@ -1,0 +1,63 @@
+{% extends 'common/admin/layout.html' %}
+
+{% block title %}Kampanjer — {{ block.super }}{% endblock %}
+
+{% block admin_menu %}{% with 'sites' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="col-lg-12">
+    <h1>Kampanjer <small>opprett kampanjer som kan vises på forsiden</small></h1>
+    <ol class="breadcrumb">
+      <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
+      <li><a href="{% url 'admin.sites.views.index' active_site.id %}">Nettsteder</a></li>
+      <li><a href="{% url 'admin.sites.views.index' active_site.id %}">{{ active_site.domain }}</a></li>
+      <li><a href="{% url 'admin.sites.campaigns.views.index' active_site.id %}">Kampanjer</a></li>
+    </ol>
+  </div>
+</div><!-- /.row -->
+
+<div class="list-campaigns">
+  <div class="row">
+    <div class="col-lg-12">
+
+      <p>
+        Her kan du opprette og designe kampanjer. En kampanje er typisk et stort, fengende bilde, en kort tittel, og som oftest en knapp som lenker til en handling (call to action). For å vise kampanjen må du redigere en webside, legge til et element og velge "kampanje". Der kan du velge å vise kampanjen som du har opprettet her.
+      </p>
+
+      <p>
+        <a href="{% url 'admin.sites.campaigns.views.edit' active_site.id %}" class="btn btn-default btn-lg">Opprett ny kampanje</a>
+      </p>
+
+      {% for campaign in campaigns %}
+
+        <div class="campaign-preview media">
+          <a class="pull-left" href="{% url 'admin.sites.campaigns.views.edit' active_site.id campaign.id %}">
+            <img class="media-object" src="{{ campaign.get_cropped_image }}" alt="{{ campaign.title }}">
+          </a>
+          <div class="media-body">
+            <h2 class="media-heading">
+              <a href="{% url 'admin.sites.campaigns.views.edit' active_site.id campaign.id %}">{{ campaign.title }}</a>
+            </h2>
+            {% for text in campaign.text.all %}
+              <div>
+                {{ text.content|safe }}
+              </div>
+            {% endfor %}
+            <div>
+              {{ campaign.created|date:"j. F Y" }}
+            </div>
+          </div>
+        </div>
+
+      {% empty %}
+
+        Det er ikke blitt opprettet noen kampanjer.
+
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

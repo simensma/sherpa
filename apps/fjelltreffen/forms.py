@@ -1,6 +1,7 @@
 # encoding: utf-8
 from django import forms
 from django.forms.widgets import Textarea
+
 from captcha.fields import ReCaptchaField
 
 class ReplyForm(forms.Form):

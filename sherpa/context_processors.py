@@ -1,12 +1,11 @@
+from datetime import datetime, date
+
 from django.conf import settings
 from django.core.cache import cache
 
 from page.models import Menu
 from core.models import Site
-from core.util import membership_year_start as membership_year_start_date_set
-
-from datetime import datetime, date
-import re
+from core.util import membership_year_start as membership_year_start_date_set, s3_bucket as get_s3_bucket
 
 def menus(request):
     if request.is_ajax():
@@ -16,14 +15,6 @@ def menus(request):
         if menus is None:
             menus = Menu.on(request.site).all().order_by('order')
             cache.set('main.menu.%s' % request.site.id, menus, 60 * 60 * 24)
-        for menu in menus:
-            url = re.sub('https?:\/\/', '', menu.url) # Strip protocol
-            # Add final slash if missing
-            if len(url) == 0 or url[-1] != '/':
-                url = "%s/" % url
-            if "%s%s" % (request.site.domain, request.path) == url:
-                menu.active = True
-                break
         return {'menus': menus}
 
 def main_site(request):
@@ -43,17 +34,8 @@ def admin_active_forening(request):
         return {'active_forening': request.active_forening}
     return {}
 
-def focus_downtime(request):
-    now = datetime.now()
-    for downtime in settings.FOCUS_DOWNTIME_PERIODS:
-        if now >= downtime['from'] and now < downtime['to']:
-            return {
-                'focus_downtime': {
-                    'is_currently_down': True,
-                    'period_message': downtime['period_message']
-                }
-            }
-    return {'focus_downtime': {'is_currently_down': False}}
+def db_connections(request):
+    return {'db_connections': request.db_connections}
 
 def dntconnect(request):
     if 'dntconnect' in request.session:
@@ -78,3 +60,23 @@ def membership_year_start(request):
 
 def do_not_track(request):
     return {'donottrack': 'HTTP_DNT' in request.META and request.META['HTTP_DNT'] == '1'}
+
+def current_time(request):
+    return {
+        'now': datetime.now(),
+        'today': date.today(),
+    }
+
+def analytics_ua(request):
+    """Override the analytics ua with the test-profile if settings.DEBUG is True"""
+    if not settings.DEBUG:
+        ua = request.site.analytics_ua
+    else:
+        ua = settings.DEBUG_ANALYTICS_UA
+    return {'analytics_ua': ua}
+
+def s3_bucket(request):
+    return {'s3_bucket': get_s3_bucket()}
+
+def editor_placeholder_image(request):
+    return {'editor_placeholder_image': settings.EDITOR_PLACEHOLDER_IMAGE}

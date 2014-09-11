@@ -1,4 +1,11 @@
 # encoding: utf-8
+from cStringIO import StringIO
+from hashlib import sha1
+import json
+import random
+import logging
+import sys
+
 from django.http import HttpResponse
 from django.conf import settings
 from django.db.models import Q
@@ -6,20 +13,14 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.shortcuts import render
 
-import json
+import PIL.Image
+import PIL.ExifTags
+import boto
 
 from core.models import Tag
 from admin.models import Image, Album
 from core import xmp
-
-from PIL.ExifTags import TAGS
-import random
-from PIL import Image as pil
-from cStringIO import StringIO
-from hashlib import sha1
-import simples3 # TODO: Replace with boto
-import logging
-import sys
+from core.util import s3_bucket
 
 logger = logging.getLogger('sherpa')
 
@@ -77,33 +78,29 @@ def image_upload_dialog(request):
         return render(request, 'common/admin/images/iframe.html', {'result': result})
 
     try:
-        s3 = simples3.S3Bucket(
-            settings.AWS_BUCKET,
-            settings.AWS_ACCESS_KEY_ID,
-            settings.AWS_SECRET_ACCESS_KEY,
-            'https://%s' % settings.AWS_BUCKET)
+        conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+        bucket = conn.get_bucket(s3_bucket())
 
-        key = generate_unique_random_image_key()
+        image_key = generate_unique_random_image_key()
         data = image.read()
         ext = image.name.split(".")[-1].lower()
-        pil_image = pil.open(StringIO(data))
+        pil_image = PIL.Image.open(StringIO(data))
         exif_json = json.dumps(get_exif_tags(pil_image))
         image_file_tags = xmp.find_keywords(data)
         user_provided_tags = json.loads(request.POST['tags-serialized'])
         thumbs = [{'size': size, 'data': create_thumb(pil_image, ext, size)} for size in settings.THUMB_SIZES]
 
-        s3.put("%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, key, ext),
-            data,
-            acl='public-read',
-            mimetype=image.content_type)
+        key = bucket.new_key("%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, image_key, ext))
+        key.content_type = image.content_type
+        key.set_contents_from_string(data, policy='public-read')
+
         for thumb in thumbs:
-            s3.put("%s%s-%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, key, thumb['size'], ext),
-                thumb['data'],
-                acl='public-read',
-                mimetype=image.content_type)
+            key = bucket.new_key("%s%s-%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, image_key, thumb['size'], ext))
+            key.content_type = image.content_type
+            key.set_contents_from_string(thumb['data'], policy='public-read')
 
         image = Image(
-            key=key,
+            key=image_key,
             extension=ext,
             hash=sha1(data).hexdigest(),
             description=request.POST['description'],
@@ -123,7 +120,8 @@ def image_upload_dialog(request):
 
         result = json.dumps({
             'status': 'success',
-            'url': 'http://%s/%s%s.%s' % (settings.AWS_BUCKET, settings.AWS_IMAGEGALLERY_PREFIX, key, ext)})
+            'url': 'http://%s/%s%s.%s' % (s3_bucket(), settings.AWS_IMAGEGALLERY_PREFIX, image_key, ext),
+        })
         return render(request, 'common/admin/images/iframe.html', {'result': result})
     except(IOError, KeyError):
         logger.warning(u"Kunne ikke parse opplastet bilde, antar at det er ugyldig bildefil",
@@ -243,7 +241,7 @@ def get_exif_tags(pil_image):
                     # Skip this tag, it's not a text string
                     # TODO: Should log a warning with the tag string here.
                     continue
-                exif[TAGS.get(tag, tag)] = value
+                exif[PIL.ExifTags.TAGS.get(tag, tag)] = value
     except IOError:
         # Calling _getexif() on some select images raises IOError("not enough data").
         # Not sure what that means but we'll ignore exif data on those images for now.
@@ -252,7 +250,7 @@ def get_exif_tags(pil_image):
 def create_thumb(pil_image, extension, size):
     fp = StringIO()
     img_copy = pil_image.copy()
-    img_copy.thumbnail([size, size], pil.ANTIALIAS)
+    img_copy.thumbnail([size, size], PIL.Image.ANTIALIAS)
     img_copy.save(fp, standardize_extension(extension))
     return fp.getvalue()
 

@@ -1,4 +1,9 @@
 # encoding: utf-8
+import json
+import logging
+import sys
+import re
+
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
@@ -12,21 +17,11 @@ from focus.models import FocusZipcode, Price, Actor
 from focus.util import ACTOR_ENDCODE_DUBLETT, DNT_OSLO_ID as DNT_OSLO_ID_FOCUS
 from core.models import Zipcode
 from enrollment.models import State
-from enrollment.gift.models import membership_price_by_code
 from membership.models import SMSServiceRequest
-from user.models import User
 from membership.util import send_sms_receipt, memberid_sms_count
-
-import json
-import logging
-import sys
-import re
+from user.models import User
 
 logger = logging.getLogger('sherpa')
-
-def index(request):
-    context = {'gift_membership_prices': membership_price_by_code}
-    return render(request, 'main/membership/index.html', context)
 
 def benefits(request, forening_id):
     if forening_id is None:
@@ -50,7 +45,7 @@ def benefits(request, forening_id):
         'price': price,
         'enrollment_active': State.objects.all()[0].active,
     }
-    return render(request, 'main/membership/benefits.html', context)
+    return render(request, 'central/membership/benefits.html', context)
 
 def zipcode_search(request):
     if not 'zipcode' in request.POST:
@@ -93,7 +88,7 @@ def zipcode_search(request):
         return HttpResponse(json.dumps({'error': 'unregistered_zipcode', 'zipcode': request.POST['zipcode']}))
 
 def service(request):
-    return render(request, 'main/membership/service.html')
+    return render(request, 'central/membership/service.html')
 
 def memberid_sms(request):
     # This is a membership service that lets you get your memberid by providing your phone number.
@@ -152,6 +147,9 @@ def memberid_sms(request):
     user = User.get_or_create_inactive(memberid=actor.memberid)
     sms_request.memberid = user.memberid
     sms_request.save()
+
+    # Delete the actor cache in case the number was recently updated; the cache may differ from our raw lookup above
+    cache.delete('actor.%s' % actor.memberid)
     return send_sms_receipt(request, user)
 
 @user_requires_login()

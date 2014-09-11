@@ -38,14 +38,14 @@
       <div class="controls">
         <input type="text" class="input-small" name="zipcode" id="registration_zipcode" maxlength="4">
         <input type="text" class="input-medium" name="area" disabled>
-        <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader zipcode hide" alt="{% trans "Laster poststed..." %}" title="{% trans "Laster poststed..." %}">
+        <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="ajaxloader zipcode hide" alt="{% trans "Laster poststed..." %}" title="{% trans "Laster poststed..." %}">
       </div>
     </div>
 
     <div class="control-group">
       <div class="controls">
         <button type="submit" class="btn btn-danger">{% trans "Gå videre" %} <i class="icon-arrow-right icon-white"></i></button>
-        <img src="{{ STATIC_URL }}img/ajax-loader-small.gif" class="ajaxloader submit hide" alt="{% trans "Sjekker medlemsnummer, vennligst vent..." %}">
+        <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="ajaxloader submit hide" alt="{% trans "Sjekker medlemsnummer, vennligst vent..." %}">
       </div>
     </div>
   </div>
@@ -94,7 +94,7 @@
     <div class="control-group">
       <div class="controls">
         <button type="submit" class="btn btn-large btn-danger"><i class="icon-ok icon-white"></i> {% trans "Registrer deg" %}</button>
-        <img class="ajaxloader submit hide" src="{{ STATIC_URL }}img/ajax-loader-small.gif" alt="{% trans "Laster, vennligst vent..." %}">
+        <img class="ajaxloader submit hide" src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" alt="{% trans "Laster, vennligst vent..." %}">
       </div>
     </div>
   </div>
@@ -104,11 +104,6 @@
 <div class="hide alert alert-error user-exists">
   <strong>{% trans "Hmmm... det ser ut som om du allerede har en bruker!" %}</strong><br>
   <a href="javascript:undefined" class="toggle-login-tab">{% trans "Logg inn her" %}</a>. {% trans "Hvis du har glemt passordet kan du gjenopprette det der." %}
-</div>
-
-<div class="hide alert alert-error user-is-expired">
-  <strong>{% trans "Du har allerede en bruker, men den er markert som inaktiv!" %}</strong><br>
-  {% trans "Dette kan være en feil i vårt medlemsregister. Vennligst ta kontakt med" %} <a href="{% url 'membership.views.service' %}">{% trans "medlemsservice" %}</a>.
 </div>
 
 <div class="hide alert alert-error no-memberid-match">
@@ -147,11 +142,6 @@
     <div class="alert alert-error">
       <strong>{% trans "Hmmm... det ser ut som om du allerede har en bruker!" %}</strong><br>
       <a href="javascript:undefined" class="toggle-login-tab">{% trans "Logg inn her" %}</a>. {% trans "Hvis du har glemt passordet kan du gjenopprette det der." %}
-    </div>
-  {% elif message.message == 'expired_user_exists' %}
-    <div class="alert alert-error">
-      <strong>{% trans "Du har allerede en bruker, men den er markert som inaktiv!" %}</strong><br>
-      {% trans "Dette kan være en feil i vårt medlemsregister. Vennligst ta kontakt med" %} <a href="{% url 'membership.views.service' %}">{% trans "medlemsservice" %}</a>.
     </div>
   {% elif message.message == 'invalid_email' %}
     <div class="alert alert-error">

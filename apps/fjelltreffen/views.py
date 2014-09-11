@@ -1,4 +1,11 @@
 # encoding: utf-8
+from datetime import date, timedelta
+import json
+import sys
+import logging
+from cStringIO import StringIO
+import hashlib
+
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.template import RequestContext
@@ -8,14 +15,8 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 
-from datetime import date, timedelta
-import json
-import sys
-import logging
-from PIL import Image as pil
-from cStringIO import StringIO
-import hashlib
-import simples3 # TODO: Replace with boto
+import PIL.Image
+import boto
 
 from admin.images.util import standardize_extension
 from sherpa.decorators import user_requires, user_requires_login
@@ -23,6 +24,7 @@ from fjelltreffen.models import Annonse
 from fjelltreffen.forms import ReplyForm, ReplyAnonForm
 from core import validator, librato
 from core.models import County
+from core.util import s3_bucket
 
 logger = logging.getLogger('sherpa')
 
@@ -41,7 +43,7 @@ def index(request):
         'age_limits': settings.FJELLTREFFEN_AGE_LIMITS,
         'filter': request.session.get('fjelltreffen.filter')
     }
-    return render(request, 'main/fjelltreffen/index.html', context)
+    return render(request, 'central/fjelltreffen/index.html', context)
 
 def load(request):
     if not request.is_ajax() or request.method != 'POST' or not 'filter' in request.POST:
@@ -62,7 +64,7 @@ def load(request):
 
     context = RequestContext(request)
     context['annonser'] = annonser
-    string = render_to_string('main/fjelltreffen/annonselist.html', context)
+    string = render_to_string('central/fjelltreffen/annonselist.html', context)
     return HttpResponse(json.dumps({
         'html': string,
         'start_index': start_index,
@@ -72,7 +74,7 @@ def show(request, id):
     try:
         annonse = Annonse.objects.get(id=id, hidden=False)
     except Annonse.DoesNotExist:
-        return render(request, 'main/fjelltreffen/show_not_found.html')
+        return render(request, 'central/fjelltreffen/show_not_found.html')
 
     context = {}
     if request.method == 'POST':
@@ -88,7 +90,7 @@ def show(request, id):
                         'text': form.cleaned_data['text']
                     }
                 })
-                content = render_to_string('main/fjelltreffen/reply_email.txt', email_context)
+                content = render_to_string('central/fjelltreffen/reply_email.txt', email_context)
                 send_mail('DNT Fjelltreffen - Svar fra %s' % form.cleaned_data['name'], content, settings.DEFAULT_FROM_EMAIL, [annonse.email], fail_silently=False)
                 librato.increment('sherpa.fjelltreffen_svar')
                 request.session['fjelltreffen.reply'] = {
@@ -124,7 +126,7 @@ def show(request, id):
         'annonse': annonse,
         'form': form,
         'report': report})
-    return render(request, 'main/fjelltreffen/show.html', context)
+    return render(request, 'central/fjelltreffen/show.html', context)
 
 def show_reply_sent(request, id):
     if not 'fjelltreffen.reply' in request.session:
@@ -135,7 +137,7 @@ def show_reply_sent(request, id):
         'reply': request.session['fjelltreffen.reply']
     }
     del request.session['fjelltreffen.reply']
-    return render(request, 'main/fjelltreffen/show_reply_sent.html', context)
+    return render(request, 'central/fjelltreffen/show_reply_sent.html', context)
 
 @user_requires_login(message='fjelltreffen_login_required_for_report')
 def report(request, id):
@@ -151,7 +153,7 @@ def report(request, id):
                 'annonse': annonse,
                 'notifier': request.user,
                 'reason': request.POST['reason']})
-            content = render_to_string('main/fjelltreffen/report_email.txt', context)
+            content = render_to_string('central/fjelltreffen/report_email.txt', context)
 
             send_mail('Fjelltreffen - melding om upassende annonse', content, settings.DEFAULT_FROM_EMAIL, [settings.FJELLTREFFEN_REPORT_EMAIL], fail_silently=False)
             return redirect('fjelltreffen.views.show_report_sent', annonse.id)
@@ -172,10 +174,10 @@ def show_report_sent(request, id):
         'report': request.session['fjelltreffen.report']
     }
     del request.session['fjelltreffen.report']
-    return render(request, 'main/fjelltreffen/show_report_sent.html', context)
+    return render(request, 'central/fjelltreffen/show_report_sent.html', context)
 
 def about(request):
-    return render(request, 'main/fjelltreffen/about.html')
+    return render(request, 'central/fjelltreffen/about.html')
 
 #
 # Actions for logged-in users (crud)
@@ -187,7 +189,7 @@ def about(request):
 @user_requires(lambda u: u.get_age() > settings.FJELLTREFFEN_AGE_LIMIT, redirect_to='fjelltreffen.views.too_young')
 def new(request):
     if not request.user.has_paid():
-        return render(request, 'main/fjelltreffen/payment_required.html')
+        return render(request, 'central/fjelltreffen/payment_required.html')
 
     other_active_annonse_exists = Annonse.get_active().filter(user=request.user, hidden=False).exists()
     context = {
@@ -196,7 +198,7 @@ def new(request):
         'obscured_age': Annonse.obscure_age(request.user.get_age()),
         'other_active_annonse_exists': other_active_annonse_exists
     }
-    return render(request, 'main/fjelltreffen/edit.html', context)
+    return render(request, 'central/fjelltreffen/edit.html', context)
 
 @user_requires_login(message='fjelltreffen_login_required')
 @user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
@@ -209,7 +211,7 @@ def edit(request, id):
         if annonse.user != request.user:
             raise PermissionDenied
     except Annonse.DoesNotExist:
-        return render(request, 'main/fjelltreffen/edit_not_found.html')
+        return render(request, 'central/fjelltreffen/edit_not_found.html')
 
     other_active_annonse_exists = Annonse.get_active().exclude(id=annonse.id).filter(user=request.user).exists()
     context = {
@@ -219,7 +221,7 @@ def edit(request, id):
         'obscured_age': Annonse.obscure_age(request.user.get_age()),
         'other_active_annonse_exists': other_active_annonse_exists
     }
-    return render(request, 'main/fjelltreffen/edit.html', context)
+    return render(request, 'central/fjelltreffen/edit.html', context)
 
 @user_requires_login(message='fjelltreffen_login_required')
 @user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
@@ -260,16 +262,15 @@ def save(request):
 
     if 'image' in request.FILES:
         try:
-            # Uploading image. TODO: Consider streaming the file instead of reading everything into memory first.
-            # See simples3/htstream.py
+            # Uploading image
             file = request.FILES['image']
             data = file.read()
             extension = standardize_extension(file.name.split(".")[-1])
 
             # Create the thumbnail
-            thumb = pil.open(StringIO(data)).copy()
+            thumb = PIL.Image.open(StringIO(data)).copy()
             fp = StringIO()
-            thumb.thumbnail([settings.FJELLTREFFEN_IMAGE_THUMB_SIZE, settings.FJELLTREFFEN_IMAGE_THUMB_SIZE], pil.ANTIALIAS)
+            thumb.thumbnail([settings.FJELLTREFFEN_IMAGE_THUMB_SIZE, settings.FJELLTREFFEN_IMAGE_THUMB_SIZE], PIL.Image.ANTIALIAS)
             thumb.save(fp, extension)
             thumb_data = fp.getvalue()
 
@@ -320,25 +321,18 @@ def save(request):
         annonse.delete_image()
 
         # Setup AWS connection
-        s3 = simples3.S3Bucket(
-            settings.AWS_BUCKET,
-            settings.AWS_ACCESS_KEY_ID,
-            settings.AWS_SECRET_ACCESS_KEY,
-            'https://%s' % settings.AWS_BUCKET)
+        conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+        bucket = conn.get_bucket(s3_bucket())
 
         # Upload the original image to AWS
-        s3.put(
-            "%s/%s.%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, hash, extension),
-            data,
-            acl='public-read',
-            mimetype=file.content_type)
+        key = bucket.new_key("%s/%s.%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, hash, extension))
+        key.content_type = file.content_type
+        key.set_contents_from_string(data, policy='public-read')
 
         # Upload the thumbnail to AWS
-        s3.put(
-            "%s/%s.%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, thumb_hash, extension),
-            thumb_data,
-            acl='public-read',
-            mimetype=file.content_type)
+        key = bucket.new_key("%s/%s.%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, thumb_hash, extension))
+        key.content_type = file.content_type
+        key.set_contents_from_string(thumb_data, policy='public-read')
 
         # Update the DB fields with new images
         annonse.image = "%s.%s" % (hash, extension)
@@ -388,7 +382,7 @@ def mine(request):
         'annonser': annonser,
         'annonse_retention_days': settings.FJELLTREFFEN_ANNONSE_RETENTION_DAYS
     }
-    return render(request, 'main/fjelltreffen/mine.html', context)
+    return render(request, 'central/fjelltreffen/mine.html', context)
 
 @user_requires_login(message='fjelltreffen_login_required')
 @user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
@@ -399,34 +393,46 @@ def show_mine(request, id):
         messages.error(request, 'membership_not_paid')
         return redirect('fjelltreffen.views.mine')
 
-    # Hide all other annonser that belongs to this user first
-    hidden = Annonse.get_active().filter(user=request.user).update(hidden=True)
-    if hidden > 0:
-        messages.info(request, 'max_one_active_annonse')
-    annonse = Annonse.objects.get(id=id, user=request.user)
-    annonse.hidden = False
-    annonse.save()
-    return redirect('fjelltreffen.views.mine')
+    try:
+        # Hide all other annonser that belongs to this user first
+        hidden = Annonse.get_active().filter(user=request.user).update(hidden=True)
+        if hidden > 0:
+            messages.info(request, 'max_one_active_annonse')
+        annonse = Annonse.objects.get(id=id, user=request.user)
+        annonse.hidden = False
+        annonse.save()
+        return redirect('fjelltreffen.views.mine')
+    except Annonse.DoesNotExist:
+        # Unexpected case; maybe some asynchronous browsing. Ignore and return to the annonse-list
+        return redirect('fjelltreffen.views.mine')
 
 @user_requires_login(message='fjelltreffen_login_required')
 @user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 @user_requires(lambda u: u.get_age() > settings.FJELLTREFFEN_AGE_LIMIT, redirect_to='fjelltreffen.views.too_young')
 def hide_mine(request, id):
-    annonse = Annonse.objects.get(id=id, user=request.user)
-    annonse.hidden = True
-    annonse.save()
-    return redirect('fjelltreffen.views.mine')
+    try:
+        annonse = Annonse.objects.get(id=id, user=request.user)
+        annonse.hidden = True
+        annonse.save()
+        return redirect('fjelltreffen.views.mine')
+    except Annonse.DoesNotExist:
+        # Unexpected case; maybe some asynchronous browsing. Ignore and return to the annonse-list
+        return redirect('fjelltreffen.views.mine')
 
 @user_requires_login(message='fjelltreffen_login_required')
 @user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
 @user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
 @user_requires(lambda u: u.get_age() > settings.FJELLTREFFEN_AGE_LIMIT, redirect_to='fjelltreffen.views.too_young')
 def renew_mine(request, id):
-    annonse = Annonse.objects.get(id=id, user=request.user)
-    annonse.date_renewed = date.today()
-    annonse.save()
-    return redirect('fjelltreffen.views.mine')
+    try:
+        annonse = Annonse.objects.get(id=id, user=request.user)
+        annonse.date_renewed = date.today()
+        annonse.save()
+        return redirect('fjelltreffen.views.mine')
+    except Annonse.DoesNotExist:
+        # Unexpected case; maybe some asynchronous browsing. Ignore and return to the annonse-list
+        return redirect('fjelltreffen.views.mine')
 
 @user_requires_login(message='fjelltreffen_login_required')
 @user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
@@ -448,4 +454,4 @@ def too_young(request):
         'age_limit': settings.FJELLTREFFEN_AGE_LIMIT,
         'remaining_years': settings.FJELLTREFFEN_AGE_LIMIT - request.user.get_age()
     }
-    return render(request, 'main/fjelltreffen/too_young.html', context)
+    return render(request, 'central/fjelltreffen/too_young.html', context)

@@ -8,9 +8,9 @@ from exceptions import BadRequest
 import api
 
 @csrf_exempt
-def header_versioning(request, versions):
+def header_versioning(request, versions, require_authentication=True):
     try:
-        if not authenticate(request):
+        if require_authentication and not authenticate(request):
             raise invalid_authentication_exception()
         version, format = requested_representation_from_header(request)
         try:
@@ -22,9 +22,9 @@ def header_versioning(request, versions):
         return e.response()
 
 @csrf_exempt
-def url_versioning(request, resource, version):
+def url_versioning(request, resource, version, require_authentication=True):
     try:
-        if not authenticate(request):
+        if require_authentication and not authenticate(request):
             raise invalid_authentication_exception()
         format = requested_representation_from_url(request)
         return call_api(request, resource, version, format)
@@ -32,11 +32,7 @@ def url_versioning(request, resource, version):
         return e.response()
 
 def call_api(request, resource, version, format):
-    if resource == 'members':
-        response = api.members(request, version, format)
-    elif resource == 'forening':
-        response = api.forening(request, version, format)
-
-    # We'll just let an unhandled KeyError be raised here if we typoed resource or something
+    # We'll just let an unhandled exception be raised here if we ever call a non-existing resource
+    response = getattr(api, resource)(request, version, format)
     response['Content-Type'] = "%s.%s+%s; charset=utf-8" % (vendor_media_type, version, format)
     return response

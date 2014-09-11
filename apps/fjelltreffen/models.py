@@ -1,11 +1,14 @@
+from datetime import date, timedelta
+
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from django.db import models
 from django.conf import settings
 from django.db.models import Q
 
-from datetime import date, timedelta
-import simples3 # TODO: Replace with boto
+import boto
+
+from core.util import s3_bucket
 
 # Default annonse-filters
 default_min_age = '18'
@@ -39,13 +42,13 @@ class Annonse(models.Model):
         if self.is_image_old:
             return "http://%s/%s" % (settings.OLD_SITE, self.image)
         else:
-            return "http://%s/%s/%s" % (settings.AWS_BUCKET, settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image)
+            return "http://%s/%s/%s" % (s3_bucket(), settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image)
 
     def get_image_thumb_url(self):
         if self.is_image_old:
             return self.get_image_url()
         else:
-            return "http://%s/%s/%s" % (settings.AWS_BUCKET, settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image_thumb)
+            return "http://%s/%s/%s" % (s3_bucket(), settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image_thumb)
 
     def get_age(self):
         age = self.user.get_age()
@@ -67,18 +70,15 @@ class Annonse(models.Model):
             self.image_thumb = ''
             self.save()
         else:
-            s3 = simples3.S3Bucket(
-                settings.AWS_BUCKET,
-                settings.AWS_ACCESS_KEY_ID,
-                settings.AWS_SECRET_ACCESS_KEY,
-                'https://%s' % settings.AWS_BUCKET)
+            conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+            bucket = conn.get_bucket(s3_bucket())
 
             if self.image != '':
-                s3.delete("%s/%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image))
+                bucket.delete_key("%s/%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image))
                 self.image = ''
 
             if self.image_thumb != '':
-                s3.delete("%s/%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image_thumb))
+                bucket.delete_key("%s/%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, self.image_thumb))
                 self.image_thumb = ''
 
             self.save()

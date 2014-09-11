@@ -1,10 +1,9 @@
+import json
+
 from django.conf import settings
 
 from page.models import Version, Row, Column, Content
-from page.widgets import parse_widget
 from core.models import Site
-
-import json
 
 BULK_COUNT = 8
 
@@ -16,30 +15,16 @@ def list_bulk(request, bulk, active_site):
         variant__article__site=active_site
     ).order_by('-variant__article__created_date')[(bulk * BULK_COUNT) : (bulk * BULK_COUNT) + BULK_COUNT]
 
-def parse_version_content(request, version, active_site):
-    version = Version.objects.get(id=version)
-    rows = Row.objects.filter(version=version).order_by('order')
-    for row in rows:
-        columns = Column.objects.filter(row=row).order_by('order')
-        for column in columns:
-            contents = Content.objects.filter(column=column).order_by('order')
-            for content in contents:
-                if content.type == 'widget':
-                    content.content = parse_widget(request, json.loads(content.content), active_site)
-            column.contents = contents
-        row.columns = columns
-    return rows, version
-
 def create_template(template, version, title):
     main_site_domain = Site.objects.get(id=Site.DNT_CENTRAL_ID).domain
 
     if template == '0':
         contents = [
             {'type': 'title', 'content': """<h1>%s</h1>""" % title},
-            {'type': 'image', 'content': json.dumps({'src': "http://%s%simg/placeholder.png" % (main_site_domain, settings.STATIC_URL), "description": "", "photographer": "", "anchor": None})},
+            {'type': 'image', 'content': json.dumps({'src': settings.EDITOR_PLACEHOLDER_IMAGE, "description": "", "photographer": "", "anchor": None})},
             {'type': 'lede', 'content': ""},
             {'type': 'html', 'content': ""},
-            {'type': 'image', 'content': json.dumps({'src': "http://%s%simg/placeholder.png" % (main_site_domain, settings.STATIC_URL), "description": "", "photographer": "", "anchor": None})},
+            {'type': 'image', 'content': json.dumps({'src': settings.EDITOR_PLACEHOLDER_IMAGE, "description": "", "photographer": "", "anchor": None})},
         ]
         row = Row(version=version, order=0)
         row.save()
@@ -51,7 +36,7 @@ def create_template(template, version, title):
     elif template == '1':
         contents_upper = [
             {'type': 'title', 'content': """<h1>%s</h1>""" % title},
-            {'type': 'image', 'content': json.dumps({'src': "http://%s%simg/placeholder.png" % (main_site_domain, settings.STATIC_URL), "description": "", "photographer": "", "anchor": None})},
+            {'type': 'image', 'content': json.dumps({'src': settings.EDITOR_PLACEHOLDER_IMAGE, "description": "", "photographer": "", "anchor": None})},
             {'type': 'lede', 'content': ""},
         ]
         contents_lower_left = [
@@ -59,7 +44,7 @@ def create_template(template, version, title):
         ]
         contents_lower_right = [
             {'type': 'html', 'content': ""},
-            {'type': 'image', 'content': json.dumps({'src': "http://%s%simg/placeholder.png" % (main_site_domain, settings.STATIC_URL), "description": "", "photographer": "", "anchor": None})},
+            {'type': 'image', 'content': json.dumps({'src': settings.EDITOR_PLACEHOLDER_IMAGE, "description": "", "photographer": "", "anchor": None})},
         ]
         row = Row(version=version, order=0)
         row.save()

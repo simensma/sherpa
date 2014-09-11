@@ -13,9 +13,9 @@
   </div>
 </div><!-- /.row -->
 
-{% if focus_downtime.is_currently_down %}
+{% if not db_connections.focus.is_available %}
   <div class="alert alert-danger">
-    <strong>Focus er nede for midlertidig vedlikehold {{ focus_downtime.period_message }}.</strong><br>
+    <strong>Focus er nede for midlertidig vedlikehold {{ db_connections.focus.period_message }}.</strong><br>
     Sherpa er tilgjengelig, men vi er avhengige av Focus for mange av funksjonene her.<br>
     Derfor er det <strong>stor sannsynlighet for at du kan oppleve teknisk feil</strong> mens du bruker Sherpa.<br>
     Det er også derfor vi ikke kan vise navnet ditt oppe i høyre hjørne!
@@ -199,6 +199,10 @@
               </h3>
               {{ entry.content|truncatewords:50 }}
             </div>
+          </div>
+        {% empty %}
+          <div class="alert alert-danger">
+            Beklager, vi kunne ikke hente blogg-innleggene fra <a href="http://beta.turistforeningen.no/">betabloggen</a>. Det kan hende at bloggen opplever tekniske problemer. Du kan <a href="http://beta.turistforeningen.no/">prøve å gå til bloggen selv</a> eller komme tilbake senere.
           </div>
         {% endfor %}
       </div>

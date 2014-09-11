@@ -1,4 +1,6 @@
 # encoding: utf-8
+import logging
+
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
@@ -10,9 +12,6 @@ from connect.util import get_request_data, prepare_response, add_signon_session_
 from user.login.util import attempt_login, attempt_registration, attempt_registration_nonmember
 from user.models import User
 from core.models import FocusCountry
-from core.util import focus_is_down
-
-import logging
 
 logger = logging.getLogger('sherpa')
 
@@ -22,7 +21,7 @@ def bounce(request):
     # For now, if Focus is down, just say that they're not authenticated.
     # This might not be the best approach, reconsider this.
     response_data = {'er_autentisert': request.user.is_authenticated()}
-    if request.user.is_authenticated() and not focus_is_down():
+    if request.user.is_authenticated() and not request.db_connections['focus']['is_available']:
         response_data.update(get_member_data(request.user))
 
     return prepare_response(client, auth_index, response_data, redirect_url)
@@ -76,7 +75,7 @@ def signon_login(request):
                 pass
 
         if request.method == 'GET':
-            return render(request, 'main/connect/%s/signon.html' % request.session['dntconnect']['client_id'], context)
+            return render(request, 'central/connect/%s/signon.html' % request.session['dntconnect']['client_id'], context)
         else:
             matches, message = attempt_login(request)
 
@@ -92,7 +91,7 @@ def signon_login(request):
             else:
                 messages.error(request, message)
                 context['email'] = request.POST['email']
-                return render(request, 'main/connect/%s/signon.html' % request.session['dntconnect']['client_id'], context)
+                return render(request, 'central/connect/%s/signon.html' % request.session['dntconnect']['client_id'], context)
 
 def signon_choose_authenticated_user(request):
     if not 'authenticated_users' in request.session or not 'dntconnect' in request.session:
@@ -102,7 +101,7 @@ def signon_choose_authenticated_user(request):
     context = {
         'users': sorted(users, key=lambda u: u.get_first_name())
     }
-    return render(request, 'main/connect/signon_choose_authenticated_user.html', context)
+    return render(request, 'central/connect/signon_choose_authenticated_user.html', context)
 
 def signon_login_chosen_user(request):
     if not 'authenticated_users' in request.session or not 'dntconnect' in request.session:

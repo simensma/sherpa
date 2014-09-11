@@ -3,7 +3,7 @@
 {% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <em><a href="{% url 'user.views.account' %}">Dine opplysninger</a></em>{% endblock %}
 
 {% block extra_js %}
-  <script src="{{ STATIC_URL }}js/user/account.js"></script>
+  <script src="{{ STATIC_URL }}js/public/user/account.js"></script>
 {% endblock %}
 
 {% load has_membership_type %}

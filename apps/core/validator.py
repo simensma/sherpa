@@ -28,7 +28,14 @@ def email(email, req=True):
     email_format = len(re.findall('^[^\s\,\<\>]+@[^\s\,\<\>]+\.[^\s\,\<\>]+$', email)) > 0
     no_dotdot = '..' not in email
     no_double_at = email.find('@') == email.rfind('@')
-    return email_format and no_dotdot and no_double_at
+    email_stripped = email.strip()
+    if len(email_stripped) > 0:
+        no_leading_dot = email_stripped[0] != '.'
+        no_trailing_dot = email_stripped[-1] != '.'
+    else:
+        no_leading_dot = True
+        no_trailing_dot = True
+    return email_format and no_dotdot and no_double_at and no_leading_dot and no_trailing_dot
 
 def memberid(memberid, req=True):
     if not req and memberid == '':

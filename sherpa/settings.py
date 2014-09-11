@@ -1,5 +1,4 @@
 # encoding: utf-8
-
 from datetime import datetime, date
 
 # Django settings for Sherpa.
@@ -11,7 +10,7 @@ sys.path.insert(1, "%s/apps" % sys.path[0])
 
 from sherpa.local_settings import *
 
-ROOT_URLCONF = 'sherpa.urls_main' # Should be overridden from the Sites middleware in almost all cases, but not when raising PermissionDenied in other middleware.
+ROOT_URLCONF = 'sherpa.urls_central' # Should be overridden from the Sites middleware in almost all cases, but not when raising PermissionDenied in other middleware.
 AUTH_USER_MODEL = 'user.User'
 LOGIN_URL = '/minside/logg-inn/'
 
@@ -19,12 +18,16 @@ AWS_ADS_PREFIX = 'ads/'
 AWS_IMAGEGALLERY_PREFIX = 'images/'
 AWS_FJELLTREFFEN_IMAGES_PREFIX = 'fjelltreffen'
 AWS_PUBLICATIONS_PREFIX = 'publications'
+AWS_CAMPAIGNS_PREFIX = 'campaigns'
 AWS_BUCKET = 'cdn.turistforeningen.no'
 AWS_BUCKET_SSL = 's3-eu-west-1.amazonaws.com/cdn.turistforeningen.no'
+AWS_BUCKET_DEV = 'dev.cdn.turistforeningen.no'
+AWS_BUCKET_SSL_DEV = 's3-eu-west-1.amazonaws.com/dev.cdn.turistforeningen.no'
 OLD_SITE = 'www2.turistforeningen.no'
 BLOG_URL = 'blogg.turistforeningen.no'
 BLOG_CATEGORY_API = 'api/get_category_index/'
 INSTAGRAM_CLIENT_ID = '9f849b1f6e97480ea58ee989159a597a'
+DEBUG_ANALYTICS_UA = 'UA-266436-62'
 
 # Our SMS-service endpoint
 SMS_URL = "http://admin.telefonkatalogen.no/smsgateway/sendSms?sender=DNT&targetNumbers=%s&sms=%s"
@@ -54,6 +57,9 @@ FJELLTREFFEN_IMAGE_THUMB_SIZE = 150 # Max pixel width and/or height
 ADMIN_USER_SEARCH_CHAR_LENGTH = 4
 
 MSSQL_MAX_PARAMETER_COUNT = 2000 # Actually 2100, but leave room for some other parameters
+
+# Emails to DNT Medlemsservice
+MEMBERSERVICE_EMAIL = 'DNT Medlemsservice <medlem@turistforeningen.no>'
 
 # Define when årskravet is performed each year.
 # We may need to know when the *previous* years årskrav started, so keep a history.
@@ -86,8 +92,17 @@ MEMBERSHIP_YEAR_START = [
 ]
 
 # Pixel sizes for thumbnail images generated from uploaded images.
-# Duplicated client-side in js/admin/sites/editor/image-utils.js
 THUMB_SIZES = [1880, 940, 500, 150]
+
+# Map column count to their minimum size. This will need to be changed if:
+# - The number of available columns in the admin editor changes
+# - The grid layout (column width) in the design changes
+COLUMN_SPAN_MAP = {
+    4: 220,
+    3: 300,
+    2: 460,
+    1: 940,
+}
 
 # Require this many characters for an image search
 IMAGE_SEARCH_LENGTH = 3
@@ -182,6 +197,8 @@ USE_I18N = True
 USE_L10N = True
 STATIC_URL = '/static/'
 
+EDITOR_PLACEHOLDER_IMAGE = '%simg/admin/sites/editor/placeholder.png' % STATIC_URL
+
 DATABASE_ROUTERS = ['sherpa.db_routers.Router']
 AUTHENTICATION_BACKENDS = ('sherpa.auth_backends.CustomBackend',)
 
@@ -229,15 +246,20 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "sherpa.context_processors.current_site",
     "sherpa.context_processors.old_site",
     "sherpa.context_processors.admin_active_forening",
-    "sherpa.context_processors.focus_downtime",
+    "sherpa.context_processors.db_connections",
     "sherpa.context_processors.dntconnect",
     "sherpa.context_processors.membership_year_start",
     "sherpa.context_processors.do_not_track",
+    "sherpa.context_processors.current_time",
+    "sherpa.context_processors.analytics_ua",
+    "sherpa.context_processors.s3_bucket",
+    "sherpa.context_processors.editor_placeholder_image",
 )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'sherpa.middleware.DBConnection',
     'sherpa.middleware.DefaultLanguage',
     'sherpa.middleware.Sites',
     'sherpa.middleware.CurrentApp',

@@ -1,4 +1,8 @@
 # encoding: utf-8
+from itertools import groupby
+from datetime import date
+import json
+
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.conf import settings
@@ -8,10 +12,6 @@ from django.utils import crypto
 from focus.models import Actor, Enrollment
 from foreninger.models import Forening
 from focus.abstractions import ActorProxy
-
-from itertools import groupby
-from datetime import date
-import json
 
 class User(AbstractBaseUser):
     USERNAME_FIELD = 'identifier'
@@ -34,6 +34,8 @@ class User(AbstractBaseUser):
     # Some users haven't registered but we still have some data relating to them
     # from various sources. They'll be created as inactive users, and registration
     # will if possible use the inactive user and retain the related data.
+    # Note: Don't confuse this with Django's built-in "is_active" field, which we
+    # do not use!
     is_inactive = models.BooleanField(default=False)
 
     # Actors can be deleted from Focus for various reasons. Whenever discovered,
@@ -99,23 +101,59 @@ class User(AbstractBaseUser):
 
         try:
             if self.is_pending:
-                return ActorProxy(self.memberid)
+                actor_proxy = ActorProxy(self.memberid)
+
+                # Do a quick check and reset in case this user was previously marked as expired for some reason
+                if self.is_expired:
+                    self.is_expired = False
+                    self.save()
+
+                return actor_proxy
             else:
                 actor = cache.get('actor.%s' % self.memberid)
                 if actor is None:
                     actor = Actor.get_personal_members().get(memberid=self.memberid)
+
+                    # Do a quick check and reset in case this user was previously marked as expired for some reason
+                    if self.is_expired:
+                        self.is_expired = False
+                        self.save()
+
                     cache.set('actor.%s' % self.memberid, actor, settings.FOCUS_MEMBER_CACHE_PERIOD)
                 return actor
-        except (Enrollment.DoesNotExist, Actor.DoesNotExist) as e:
+        except Enrollment.DoesNotExist:
+            if not self.is_pending:
+                raise Exception("Didn't expect Enrollment.DoesNotExist to be thrown for a non-pending member")
+
+            # Expired pending-member. This is very unusual. Verify that they're still pending.
+            if self.verify_still_pending(ignore_cache=True):
+                # Seems this user is expired. Since this could be called from anywhere, we can't give a
+                # proper error message, we'll just have to re-raise the exception. But we can at least
+                # set is_expired to True, so it hopefully doesn't happen again with this user.
+                self.is_expired = True
+                self.save()
+                raise
+            else:
+                # Ah, they're not pending anymore. Recursion! This should work because when verify_still_pending
+                # returns False, is_pending will be set to True and the new Actor will be fetched instead.
+                return self.get_actor()
+        except Actor.DoesNotExist:
+            if self.is_pending:
+                raise Exception("Didn't expect Actor.DoesNotExist to be thrown for a pending member")
+
             # Seems this user is expired. Since this could be called from anywhere, we can't give a
             # proper error message, we'll just have to re-raise the exception. But we can at least
             # set is_expired to True, so it hopefully doesn't happen again with this user.
             self.is_expired = True
             self.save()
-            raise e
+            raise
 
     def get_parent(self):
-        if not self.is_pending and not self.is_household_member():
+        if self.is_pending:
+            # Pending members have their own implementation in the ActorProxy; delegate
+            return self.get_actor().get_parent()
+
+        if not self.is_household_member():
             return None
 
         parent_memberid = self.get_actor().get_parent_memberid()
@@ -133,7 +171,10 @@ class User(AbstractBaseUser):
         if children is None:
             children = []
             for actor_child in self.get_actor().get_children():
-                children.append(User.get_or_create_inactive(memberid=actor_child.memberid))
+                # Note that we're including pending children if and only if this is a pending member
+                children.append(
+                    User.get_or_create_inactive(memberid=actor_child.memberid, include_pending=self.is_pending)
+                )
             cache.set('user.%s.children' % self.memberid, children, settings.FOCUS_MEMBER_CACHE_PERIOD)
         return children
 
@@ -250,33 +291,37 @@ class User(AbstractBaseUser):
         return self.get_actor().get_phone_mobile()
 
     def has_paid(self):
+        """
+        Returns True if the users' membership is currently paid, regardless of where in the membership year we are.
+        """
         return self.get_actor().has_paid()
 
-    def get_payment_years(self):
+    def get_payment_status(self):
+        """
+        Returns a dict explaining the users' payment status.
+        'new_membership_year' will be False before årskravet, and True after.
+        'current_year' is always included and is True if the user has paid their membership for the current year.
+        'next_year' is always None if 'new_membership_year' is False, otherwise it will be True if the user has paid
+          for the next years' membership
+        """
         from core.util import membership_year_start
         start_date = membership_year_start()['actual_date']
         today = date.today()
-        years = {
-            'current': today.year,
-            'next': today.year + 1
+
+        status = {
+            'new_membership_year': today >= start_date,
+            'current_year': self.get_actor().has_paid_this_year(),
         }
-        if today >= start_date:
-            if self.get_actor().has_paid_next_year():
-                years['code'] = 'both'
-                return years
-            elif self.get_actor().has_paid_this_year():
-                years['code'] = 'current_not_next'
-                return years
-            else:
-                years['code'] = 'neither_years'
-                return years
+        if status['new_membership_year']:
+            status['next_year'] = self.get_actor().has_paid_next_year()
+
+            # Business rule: If they've paid for next year, it includes the current year regardless of whether or not
+            # that was paid previously. So override it to True.
+            status['current_year'] = True
         else:
-            if self.get_actor().has_paid_this_year():
-                years['code'] = 'current'
-                return years
-            else:
-                years['code'] = 'not_this_year'
-                return years
+            status['next_year'] = None
+
+        return status
 
     def is_eligible_for_publications(self):
         return self.get_actor().is_eligible_for_publications()
@@ -442,7 +487,7 @@ class User(AbstractBaseUser):
         dnt_central = Forening.objects.get(name='Den Norske Turistforening')
         return dnt_central in self.all_foreninger()
 
-    def is_admin_in_main_central(self):
+    def is_admin_in_dnt_central(self):
         """True if the user has the admin role for DNT central."""
         dnt_central = Forening.objects.get(id=56)
         return self.is_admin_in_forening(dnt_central)
@@ -642,13 +687,13 @@ class User(AbstractBaseUser):
     #
 
     @staticmethod
-    def get_users(include_pending=False):
-        """
-        Filter on what we consider the 'current' userbase, i.e. not expired users.
-        Typically this shouldn't include pending users (until they're accepted), but
-        in some rare cases we *do* want them too, hence the include_pending parameter.
-        """
-        users = User.objects.filter(is_expired=False)
+    def get_users(include_pending=False, include_expired=False):
+        """Filter on what we consider the 'current' userbase, i.e. not expired or pending users. The include_pending
+        and include_expired parameters are available for the rare cases where these users shouldn't be excluded.
+        Each of these cases will have to be considered separately."""
+        users = User.objects.all()
+        if not include_expired:
+            users = users.exclude(is_expired=True)
         if not include_pending:
             users = users.exclude(is_pending=True)
         return users
@@ -659,19 +704,36 @@ class User(AbstractBaseUser):
         return User.get_users().filter(permissions=permission, is_inactive=False)
 
     @staticmethod
-    def get_or_create_inactive(memberid, **kwargs):
+    def get_or_create_inactive(memberid, include_pending=False):
         """Get or create an inactive user with the specified memberid.
-        Note that further kwargs are passed to User.get_users()"""
+        Typically this shouldn't include pending users (until they're accepted), but the include_pending param is
+        nonetheless available. If set to True, this method will attempt to return or create a pending user with the
+        given memberid as well.
+        This method assumes that an Actor with the specified memberid already exists, and will raise Actor.DoesNotExist
+        if it doesn't. Note that if include_pending is True, Enrollment.DoesNotExist will be raised instead.
+        """
         try:
-            return User.get_users(**kwargs).get(memberid=memberid)
+            # First, check if a user object with that memberid exists
+            return User.get_users(include_pending=include_pending).get(memberid=memberid)
         except User.DoesNotExist:
-            return User.create_inactive_user(memberid)
+            try:
+                # No existing user, try to create an inactive normal member
+                return User.create_inactive_user(memberid)
+            except Actor.DoesNotExist:
+                # No members with that ID
+                if not include_pending:
+                    # Ignoring pending members - just re-raise the Actor.DoesNotExist exception
+                    raise
+                else:
+                    # Checking pending members as well - try to create a pending user. If that fails, it will throw
+                    # an exception which we'll let our caller handle
+                    return User.create_pending_user(memberid)
 
     @staticmethod
     def create_inactive_user(memberid):
         Actor.get_personal_members().get(memberid=memberid) # Verify that the Actor exists
         try:
-            # Check if the user already exists first.
+            # Check if the user object already exists first.
             existing_user = User.objects.get(memberid=memberid)
 
             # Note that we don't check if this user is inactive or not.
@@ -679,14 +741,14 @@ class User(AbstractBaseUser):
             # It doesn't matter, let this user pass as the created one.
 
             if existing_user.is_pending:
-                # Well, we saw that they're not pending anymore since we checked the
-                # actor, so fix that and let them pass.
+                # Well, we saw that they're not pending anymore since we checked the actor, so fix that and let them
+                # pass.
                 existing_user.is_pending = False
                 existing_user.save()
 
             if existing_user.is_expired:
-                # Oh, what happened here? Well, they're not expired anymore since we
-                # the actor exists, so fix that and let them pass.
+                # Oh, what happened here? Well, they're not expired anymore since the actor exists, so fix that and
+                # let them pass.
                 existing_user.is_expired = False
                 existing_user.save()
 
@@ -698,31 +760,69 @@ class User(AbstractBaseUser):
             return user
 
     @staticmethod
-    def create_pending(memberid):
+    def create_pending_user(memberid):
+        """Create an inactive pending user. Note that the caller must verify that the memberid does not exist in Actor
+        first. Read the implementation for more details."""
+        # Note that a known bug will result in an exception here, more specifically:
+        # https://sentry.turistforeningen.no/turistforeningen/sherpa/group/1655/
+        # This occurs during enrollment. When saving an enrollment in Focus, the payment_method field should be set to
+        # one of two sentinel values for card or invoice; see focus.util.PAYMENT_METHOD_CODES. However, for some
+        # reason, some of these entries are saved with payment_method=0 (which is NOT one of the sentinel values). This
+        # will occur in an exception where, because Enrollment.get_active() will filter on valid payment codes, not
+        # find the given memberid, and raise an exception which isn't handled in the enrollment view (because it
+        # shouldn't need to be).
         Enrollment.get_active().get(memberid=memberid) # Ensure that the enrollment exists
-        user = User(
-            identifier='%s' % memberid,
-            memberid=memberid,
-            is_inactive=True,
-            is_pending=True
-        )
-        user.set_unusable_password()
-        key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
-        while User.objects.filter(pending_registration_key=key).exists():
-            # Ensure that the key isn't already in use. With the current key length of 40, we'll have
-            # ~238 bits of entropy which means that this will never ever happen, ever.
-            # You will win the lottery before this happens. And I want to know if it does, so log it.
-            logger.warning(u"Noen fikk en random-generert pending-registration-key som allerede finnes!",
-                extra={
-                    'request': request,
-                    'should_you_play_the_lottery': True,
-                    'key': key
-                }
+        try:
+            # Check if the user object already exists first.
+            existing_user = User.objects.get(memberid=memberid)
+
+            # Note that we don't check if this user is inactive or not.
+            # If they are, maybe someone double-clicked some link or something.
+            # It doesn't matter, let this user pass as the created one.
+
+            if not existing_user.verify_still_pending():
+                # Should never happen - this method should only be called:
+                # - When creating new members, in which case the database should return a memberid which is
+                #   *guaranteed* to be new, unique and NOT used in Actor
+                # - If the caller has verified that the memberid isn't in use in Actor, and needs to create a new
+                #   inactive pending user.
+                # We could ignore this and just return the user, but since the caller expects this to be a pending
+                # user, there's no telling what craziness might happen, so it is (probably) better to raise an
+                # exception here. I don't expect this to happen unless there's been made a code logic mistake
+                # somewhere.
+                raise Exception("Tried to create a pending user with a memberid which exists in the Actor table.")
+
+            if existing_user.is_expired:
+                # Oh, what happened here? Well, they're not expired anymore since the actor exists, so fix that and
+                # let them pass.
+                existing_user.is_expired = False
+                existing_user.save()
+
+            return existing_user
+        except User.DoesNotExist:
+            user = User(
+                identifier='%s' % memberid,
+                memberid=memberid,
+                is_inactive=True,
+                is_pending=True
             )
+            user.set_unusable_password()
             key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
-        user.pending_registration_key = key
-        user.save()
-        return user
+            while User.objects.filter(pending_registration_key=key).exists():
+                # Ensure that the key isn't already in use. With the current key length of 40, we'll have
+                # ~238 bits of entropy which means that this will never ever happen, ever.
+                # You will win the lottery before this happens. And I want to know if it does, so log it.
+                logger.warning(u"Noen fikk en random-generert pending-registration-key som allerede finnes!",
+                    extra={
+                        'request': request,
+                        'should_you_play_the_lottery': True,
+                        'key': key
+                    }
+                )
+                key = crypto.get_random_string(length=settings.RESTORE_PASSWORD_KEY_LENGTH)
+            user.pending_registration_key = key
+            user.save()
+            return user
 
 class Permission(models.Model):
     """

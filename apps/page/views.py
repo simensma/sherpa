@@ -1,4 +1,6 @@
 # encoding: utf-8
+from datetime import datetime
+
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponseNotFound, HttpResponseServerError, HttpResponseForbidden
@@ -9,13 +11,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from django.core.cache import cache
 
-from datetime import datetime
-import json
-
-from page.models import AdPlacement, Ad, Page, Variant, Version, Row, Column, Content
+from page.models import AdPlacement, Ad, Page, Variant, Version
 from articles.models import OldArticle
 from analytics.models import Search, NotFound
-from page.widgets import parse_widget, get_static_promo_context
 from sherpa2.models import Cabin as Sherpa2Cabin
 from core.models import Site
 
@@ -57,16 +55,6 @@ def page(request, slug):
 def parse_content(request, version):
     context = cache.get('content.version.%s' % version.id)
     if context is None:
-        rows = Row.objects.filter(version=version).order_by('order')
-        for row in rows:
-            columns = Column.objects.filter(row=row).order_by('order')
-            for column in columns:
-                contents = Content.objects.filter(column=column).order_by('order')
-                for content in contents:
-                    if content.type == 'widget':
-                        content.content = parse_widget(request, json.loads(content.content), request.site)
-                column.contents = contents
-            row.columns = columns
         # If parents, generate page hierarchy for breadcrumb path
         page_hierarchy = []
         if version.variant.page.parent is not None:
@@ -83,13 +71,12 @@ def parse_content(request, version):
                 parent = parent.parent
             page_hierarchy.reverse()
 
-        context = {'rows': rows, 'version': version, 'page_hierarchy': page_hierarchy}
+        # Perform DB lookups for all structure and content in this version
+        version.fetch_content()
+
+        context = {'version': version, 'page_hierarchy': page_hierarchy}
         cache.set('content.version.%s' % version.id, context, 60 * 10)
 
-    context['request'] = request
-
-    if request.site.id == Site.DNT_CENTRAL_ID:
-        context.update(get_static_promo_context(request.path))
     return render(request, 'common/page/page.html', context)
 
 @csrf_exempt

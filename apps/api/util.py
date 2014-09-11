@@ -1,10 +1,8 @@
 # encoding: utf-8
+import base64
 
 from django.conf import settings
 
-import base64
-
-from core.util import focus_is_down
 from exceptions import BadRequest
 from urls import supported_versions
 import error_codes
@@ -42,11 +40,36 @@ def get_member_data(user):
                 'object_id': f.get_ntb_id(),
             } for f in user.all_foreninger()]
 
+        if user.get_parent() is None:
+            parent_memberid = None
+        else:
+            parent_memberid = user.get_parent().memberid
+
+        if not user.is_household_member():
+            # This is a main member - just list all children
+            household_members = [c.memberid for c in user.get_children()]
+        else:
+            # This is a household member - include all "sibling" household members
+            household_members = [c.memberid for c in user.get_parent().get_children()]
+
+        if user.is_pending:
+            forening = None
+        else:
+            forening = {
+                'sherpa_id': user.main_forening().id,
+                'navn': user.main_forening().name,
+            }
+
         return {
             'sherpa_id': user.id,
             'er_medlem': True,
             'medlemsnummer': user.memberid,
+            'forening': forening,
             'aktivt_medlemskap': user.has_paid(),
+            'medlemskap_status': translate_user_payment_status(user.get_payment_status()),
+            'er_husstandsmedlem': user.is_household_member(),
+            'tilknyttet_hovedmedlem': parent_memberid,
+            'tilknyttede_husstandsmedlemmer': household_members,
             'fornavn': user.get_first_name(),
             'etternavn': user.get_last_name(),
             'født': dob,
@@ -67,6 +90,14 @@ def get_member_data(user):
             'foreningstilganger': forening_permissions,
         }
 
+def translate_user_payment_status(payment_status):
+    translated_status = {
+        'nytt_medlemsår': payment_status['new_membership_year'],
+        'inneværende_år': payment_status['current_year'],
+        'neste_år': payment_status['next_year'],
+    }
+    return translated_status
+
 def get_forening_data(forening):
     return {
         'sherpa_id': forening.id,
@@ -79,7 +110,7 @@ def get_forening_data(forening):
 def authenticate(request):
     try:
         return base64.b64decode(request.GET.get('autentisering', '')) in settings.API_KEYS
-    except TypeError:
+    except (TypeError, UnicodeEncodeError):
         raise BadRequest(
             "Unable to base64-decode your authentication parameter '%s'" % request.GET.get('autentisering', ''),
             code=error_codes.INVALID_AUTHENTICATION,
@@ -158,8 +189,8 @@ def invalid_version_response(version):
         http_code=400
     ).response()
 
-def require_focus():
-    if focus_is_down():
+def require_focus(request):
+    if not request.db_connections['focus']['is_available']:
         raise BadRequest(
             "Our member system is required by this API call, however it is currently down for maintenance.",
             code=error_codes.FOCUS_IS_DOWN,

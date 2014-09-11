@@ -1,16 +1,10 @@
 // Generic
+@import "admin/layout.less";
+@import "admin/forms.less";
 @import "admin/generic-elements.less";
 @import "admin/generic-markup.less";
-@import "admin/forms.less";
-@import "admin/layout.less";
-@import "admin/dashboard-panel.less";
-@import "admin/jquery-sortable.less";
-@import "admin/images-util.less";
-@import "admin/typeahead.less";
-@import "admin/site-admin.less";
-@import "admin/setup-site.less";
 
-// Page-specific
+// Page- or module-specific (move these into hierarchy, like below)
 @import "admin/set-active-forening.less";
 @import "admin/ads.less";
 @import "admin/dashboard.less";
@@ -20,10 +14,28 @@
 @import "admin/articles.less";
 @import "admin/users.less";
 @import "admin/forening.less";
+@import "admin/site-admin.less";
+@import "admin/setup-site.less";
+@import "admin/dashboard-panel.less";
+@import "admin/images-util.less";
+
+// Page- or module-specific (with correct hierarchy)
+@import "admin/sites/settings/publish.less";
+@import "admin/sites/navigation/menu.less";
+@import "admin/sites/campaigns.less";
+@import "admin/util/url-picker.less";
+
+// Library implementations
+@import "lib/jquery-sortable.less";
+@import "lib/typeahead.less";
+@import "lib/colorpicker.less";
 
 // Generic common
-@import "common/main-menu.less";
+@import "common/fonts.less";
 @import "common/generic-markup.less";
+@import "common/overrides.less";
+@import "common/campaign-variables.less";
 
-// Page-specific common
+// Page- or module-specific common
+@import "common/main-menu.less";
 @import "common/publications.less";

@@ -57,9 +57,9 @@
       <tr>
         <th>Åpne:</th>
         <td>
-          <a href="http://{{ aws_bucket }}/images/{{ image.key }}.{{ image.extension }}">{{ image.width }}x{{ image.height }}</a>,
-          <a href="http://{{ aws_bucket }}/images/{{ image.key }}-500.{{ image.extension }}">500px</a>,
-          <a href="http://{{ aws_bucket }}/images/{{ image.key }}-150.{{ image.extension }}">150px</a>
+          <a href="http://{{ s3_bucket }}/images/{{ image.key }}.{{ image.extension }}">{{ image.width }}x{{ image.height }}</a>,
+          <a href="http://{{ s3_bucket }}/images/{{ image.key }}-500.{{ image.extension }}">500px</a>,
+          <a href="http://{{ s3_bucket }}/images/{{ image.key }}-150.{{ image.extension }}">150px</a>
         </td>
       </tr>
       <tr>
@@ -104,8 +104,8 @@
 
     <div class="col-md-6">
       <p>
-        <a href="http://{{ aws_bucket }}/images/{{ image.key }}.{{ image.extension }}">
-          <img src="http://{{ aws_bucket }}/images/{{ image.key }}-500.{{ image.extension }}" alt="{{ image.description }}" title="{{ image.description }}">
+        <a href="http://{{ s3_bucket }}/images/{{ image.key }}.{{ image.extension }}">
+          <img src="http://{{ s3_bucket }}/images/{{ image.key }}-500.{{ image.extension }}" alt="{{ image.description }}" title="{{ image.description }}">
         </a>
       </p>
 

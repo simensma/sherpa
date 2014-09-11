@@ -1,0 +1,103 @@
+{% extends 'central/enrollment/index.html' %}
+
+{% load i18n %}
+
+{% block enrollment %}
+
+<div class="enrollment-result enrollment-success-invoice">
+  <div class="row">
+    <div class="span12">
+      <h2>
+        {# Can't use plural blocktrans when a variable is only used in one of the forms #}
+        {% if enrollment.users.count == 1 %}
+          {% blocktrans with name=enrollment.users.all.0.name %}
+            Velkommen som medlem, {{ name }}!
+          {% endblocktrans %}
+        {% else %}
+          {% trans "Velkommen som medlemmer!" %}
+        {% endif %}
+      </h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <div id="result" class="span8">
+
+      <p>
+        {% blocktrans with forening=enrollment.get_actual_forening_if_all.name url=enrollment.get_actual_forening_if_all.get_active_url count users=enrollment.users.count %}
+          Du blir medlem i DNT og <a href="{{ url }}">{{ forening }}</a>.
+        {% plural %}
+          Dere blir medlemmer i DNT og <a href="{{ url }}">{{ forening }}</a>.
+        {% endblocktrans %}
+        <br>
+
+        {% if enrollment.is_applicable_for_dnt_ung_oslo == 'some' %}
+
+          {% blocktrans with forening=enrollment.get_actual_forening_if_any.name url=enrollment.get_actual_forening_if_any.get_active_url %}
+            Ungdomsmedlemmer blir medlem i DNT og <a href="{{ url }}">{{ forening }}</a>.
+          {% endblocktrans %}
+          <br>
+
+        {% endif %}
+      </p>
+
+      <p>
+        {% blocktrans with total_price=enrollment.get_total_price count users=enrollment.users.count %}
+          Du vil i løpet av kort tid motta medlemskort og faktura på kr. {{ total_price }} i posten. Medlemskapet er gyldig når betalingen er registrert i vårt system.
+        {% plural %}
+          Dere vil i løpet av kort tid motta medlemskort og faktura på kr. {{ total_price }} i posten. Medlemskapet er gyldig når betalingen er registrert i vårt system.
+        {% endblocktrans %}
+      </p>
+
+      <p>
+        {% if enrollment.users.count == 1 %}
+          {% blocktrans with email=enrollment.users.all.0.email %}
+            Kvittering på denne registreringen er sendt på e-post til <strong>{{ email }}</strong>.
+          {% endblocktrans %}
+        {% else %}
+          {% trans "Kvittering på denne registreringen er sendt på e-post til følgende adresser:" %}
+          {% for email in emails %}
+            <strong>{{ email }}</strong>{% if not forloop.last %}, {% else %}.{% endif %}
+          {% endfor %}
+        {% endif %}
+      </p>
+
+      {# "Where to go next" - hide if enrolling for an aktivitet #}
+      <div class="next-step">
+
+        {% if enrollment.users.count == 1 %}
+          <h3>{% trans "Registrer deg på Min side" %}</h3>
+          <p>
+            {% url 'user.login.views.login' as login_url %}
+            {% blocktrans with key=enrollment.users.all.0.pending_user.pending_registration_key context "Don't translate URL params (registreringsnokkel and #registrering)" %}
+              Registrer deg på <a href="{{ login_url }}?registreringsnokkel={{ key }}#registrering">Min side</a> og få tilgang til våre medlemstjenester.
+            {% endblocktrans %}
+          </p>
+        {% endif %}
+
+        <h3>{% trans "Planlegg turen på UT.no" %}</h3>
+        <p>
+          {% blocktrans %}
+            På <a href="http://ut.no/">UT.no</a> finner du hytter og turer over hele landet.
+          {% endblocktrans %}
+        </p>
+
+        {% if enrollment.country == 'NO' %}
+          <h3>{% trans "Hva skjer der du bor" %}</h3>
+          <p>
+            {% blocktrans with forening=enrollment.get_actual_forening_if_all.name url=enrollment.get_actual_forening_if_all.get_active_url %}
+              <a href="{{ url }}">{{ forening }}</a> arrangerer fellesturer og aktiviteter hele året.
+            {% endblocktrans %}
+          </p>
+        {% endif %}
+
+      </div>
+    </div>
+
+    <div class="span4">
+      {% include 'central/membership/infobox.html' %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}
