@@ -1,7 +1,7 @@
 <div class="horizontal">
-  <div class="row-fluid">
+  <div class="row">
     {% for version in widget.versions %}
-      <div class="span{{ widget.span }}">
+      <div class="col-md-{{ widget.span }}">
         <div class="item-wrapper">
           {% if widget.display_images and not version.get_medium_thumbnail.hide %}
             <div class="image-container">
