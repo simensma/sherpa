@@ -170,10 +170,9 @@ def download_album(request, album):
     def build_zipfile():
         memory_file = StringIO()
         zip_archive = zipfile.ZipFile(memory_file, 'w')
-        file_count = 1
         zipfile_index = 0 # Used to keep track of the amount of written data each iteration
 
-        for image in Image.objects.filter(album=album):
+        for file_count, image in enumerate(Image.objects.filter(album=album), start=1):
             image_key = bucket.get_key("%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, image.key, image.extension))
             image_data = image_key.get_contents_as_string()
 
@@ -191,7 +190,6 @@ def download_album(request, album):
             else:
                 image_filename = '%s-%s-%s.%s' % (album.name, file_count, image.photographer, image.extension)
             zip_archive.writestr(image_filename.encode('ascii', 'ignore'), metadata.buffer)
-            file_count += 1
 
             # Rewind the memory file back, read the written data, and yield it to our response,
             # while we'll go fetch the next file from S3
