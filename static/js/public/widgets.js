@@ -84,6 +84,16 @@ $(function() {
                 });
             }
 
+            // Scale down large font sizes
+            var FONT_SIZE_LIMIT = 32;
+            widget.find('.text').each(function() {
+                var font_size = $(this).css('font-size');
+                font_size = Number(font_size.substring(0, font_size.length - 2));
+                if(font_size > FONT_SIZE_LIMIT) {
+                    $(this).addClass('font-size-limit-exceeded');
+                }
+            });
+
         }
     };
 
