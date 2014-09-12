@@ -347,20 +347,16 @@ def edit(request, aktivitet):
 
             # Save the AktivitDate model before attempting to add turledere
             # (many-to-many relationship)
+            model.should_have_turleder = 'should_have_turleder' in date
             model.save()
 
             if 'should_have_turleder' in date and date['should_have_turleder'] == '1':
-                model.should_have_turleder = True
-
                 key = 'dates[%s][turleder][]' %s i
                 if key in request.POST and request.POST[key] != '':
                     model.turledere = request.POST.getlist(key)
 
             else:
-                model.should_have_turleder = False
                 model.turledere = []
-
-            model.save()
 
         if not errors:
             messages.info(request, 'save_success')
