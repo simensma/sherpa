@@ -268,10 +268,14 @@ def edit(request, aktivitet):
                 if not date['end_time']: date['end_time'] = '16:00'
 
                 model.start_date = datetime.strptime(
-                    "%s %s" % (date['start_date'], date['start_time']), "%d.%m.%Y %H:%M"
+                    "%s %s" % (date['start_date'],
+                    date['start_time']),
+                    "%d.%m.%Y %H:%M"
                 )
                 model.end_date = datetime.strptime(
-                    "%s %s" % (date['end_date'], date['end_time']), "%d.%m.%Y %H:%M"
+                    "%s %s" % (date['end_date'],
+                    date['end_time']),
+                    "%d.%m.%Y %H:%M"
                 )
 
                 if not date['signup_method'] or date['signup_method'] == 'none':
@@ -287,7 +291,8 @@ def edit(request, aktivitet):
 
                     if 'signup_start' in date and date['signup_start'] != '':
                         model.signup_start = datetime.strptime(
-                            date['signup_start'], "%d.%m.%Y"
+                            date['signup_start'],
+                            "%d.%m.%Y"
                         ).date()
                     else:
                         model.signup_start = datetime.now()
@@ -296,7 +301,8 @@ def edit(request, aktivitet):
                         model.signup_deadline = None
                     elif 'signup_deadline' in date and date['signup_deadline'] != '':
                         model.signup_deadline = datetime.strptime(
-                            date['signup_deadline'], "%d.%m.%Y"
+                            date['signup_deadline'],
+                            "%d.%m.%Y"
                         ).date()
 
                     if 'no_cancel_deadline' in date and date['no_cancel_deadline'] == '1':
