@@ -219,7 +219,7 @@ def download_album(request, album):
 
     def build_zipfile():
         with tempfile.TemporaryFile() as tmp_file:
-            zip_archive = zipfile.ZipFile(tmp_file, 'w', allowZip64=True)
+            zip_archive = zipfile.ZipFile(tmp_file, 'w', zipfile.ZIP_DEFLATED, allowZip64=True)
             tmp_file_index = 0 # Used to keep track of the amount of written data each iteration
 
             for file_count, image in enumerate(Image.objects.filter(album=album), start=1):
