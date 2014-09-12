@@ -167,16 +167,34 @@ def edit(request, aktivitet):
         errors = False
 
         aktivitet = Aktivitet.objects.get(id=aktivitet)
-        if 'code' in request.POST: aktivitet.code = request.POST['code']
-        if 'title' in request.POST: aktivitet.title = request.POST['title']
-        if 'description' in request.POST: aktivitet.description = request.POST['description']
-        if 'difficulty' in request.POST: aktivitet.difficulty = request.POST['difficulty']
+
+        if 'code' in request.POST:
+            aktivitet.code = request.POST['code']
+
+        if 'title' in request.POST:
+            aktivitet.title = request.POST['title']
+
+        if 'description' in request.POST:
+            aktivitet.description = request.POST['description']
+
+        if 'difficulty' in request.POST:
+            aktivitet.difficulty = request.POST['difficulty']
+
         if 'audiences' in request.POST:
             aktivitet.audiences = json.dumps(request.POST.getlist('audiences'))
-        if 'category' in request.POST: aktivitet.category = request.POST['category']
-        if 'category_type' in request.POST: aktivitet.category_type = request.POST['category_type']
-        if 'publish' in request.POST: aktivitet.published = request.POST.get('publish') == 'publish'
-        if 'getting_there' in request.POST: aktivitet.getting_there = request.POST['getting_there']
+
+        if 'category' in request.POST:
+            aktivitet.category = request.POST['category']
+
+        if 'category_type' in request.POST:
+            aktivitet.category_type = request.POST['category_type']
+
+        if 'publish' in request.POST:
+            aktivitet.published = request.POST.get('publish') == 'publish'
+
+        if 'getting_there' in request.POST:
+            aktivitet.getting_there = request.POST['getting_there']
+
         if 'locations' in request.POST:
             aktivitet.locations = json.dumps([int(l) for l in request.POST.getlist('locations')])
 
