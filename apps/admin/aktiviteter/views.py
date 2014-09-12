@@ -11,6 +11,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from aktiviteter.models import Aktivitet, AktivitetDate, AktivitetImage
+from admin.aktiviteter.util import parse_html_array
 from core.models import Tag, County, Municipality
 from sherpa2.models import Location, Turforslag
 from user.models import User
@@ -21,31 +22,6 @@ from datetime import datetime, date, timedelta
 
 import json
 import re
-
-# http://www.ironzebra.com/code/23/converting-multi-dimensional-form-arrays-in-django
-def parse_html_array(post, name):
-    dic = {}
-    for k in post.keys():
-        if k.startswith(name):
-            rest = k[len(name):]
-
-            # Split the string into different components
-            parts = [p[:-1] for p in rest.split('[')][1:]
-
-            # Prevent parsing non integer array keys (such as tmp)
-            try:
-                id = int(parts[0])
-            except ValueError:
-                continue
-
-            # Add a new dictionary if it doesn't exist yet
-            if id not in dic:
-                dic[id] = {}
-
-            # Add the information to the dictionary
-            dic[id][parts[1]] = post.get(k)
-
-    return dic
 
 def index(request):
     try:
