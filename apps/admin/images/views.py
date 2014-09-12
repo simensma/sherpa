@@ -1,7 +1,6 @@
 from cStringIO import StringIO
 from datetime import datetime
 from hashlib import sha1
-from ssl import SSLError
 import json
 import logging
 import sys
