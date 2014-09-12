@@ -350,11 +350,10 @@ def edit(request, aktivitet):
             model.should_have_turleder = 'should_have_turleder' in date
             model.save()
 
-            if 'should_have_turleder' in date and date['should_have_turleder'] == '1':
+            if date.get('should_have_turleder') == '1':
                 key = 'dates[%s][turleder][]' %s i
                 if key in request.POST and request.POST[key] != '':
                     model.turledere = request.POST.getlist(key)
-
             else:
                 model.turledere = []
 
