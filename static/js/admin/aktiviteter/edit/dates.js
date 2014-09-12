@@ -81,23 +81,14 @@ scope.find('[data-dnt-toggle="date-contact-custom"]').on('change', function() {
 scope.find('[data-dnt-action="date-turleder-add"]').on('click', function() {
     var parent = $(this).parents('div.panel-body');
     var table = parent.find('[data-dnt-container="date-turledere"] table tbody');
-    var i = 0; // @TODO how to figure this out?
+    var i = $(this).parents('div.panel').index();
 
     // Event handler for selected turleder
-    function dateTurlederSelectHandler(e, turleder) {
-        console.log('dateTurlederSelectHandler', arguments);
-
-        var btn = $('<button class="btn btn-sm btn-danger">Fjern</button>')
-            .data('dntAction', 'turleder-rm')
-            .on('click', dateTurlederRemoveHandler);
-
-        var input = $('<input type="hidden" name="dates[' + i + '][turleder][]">')
-            .val(turleder.id);
-
-        table.append($('<tr>')
-            .append('<td>' + turleder.name + '</td>')
-            .append('<td>' + turleder.phone + '<br>' + turleder.email + '</td>')
-            .append($('<td>').append(input).append(btn)));
+    function dateTurlederSelectHandler(e, turleder, row) {
+        row.removeClass('jq-hide');
+        row.find('button').on('click', dateTurlederRemoveHandler);
+        row.find('input').attr('name', 'dates[' + i + '][turleder][]');
+        table.append(row);
     };
 
     // Attach modal event handlers and show
@@ -109,7 +100,7 @@ scope.find('[data-dnt-action="date-turleder-add"]').on('click', function() {
         .modal('show');
 });
 
-scope.find('[data-dnt-action="date-turleder-rm"]').on('click', dateTurlederRemoveHandler);
+scope.find('[data-dnt-action="turleder-rm"]').on('click', dateTurlederRemoveHandler);
 
 function dateTurlederRemoveHandler() {
     $(this).parents('tr').remove();

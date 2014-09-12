@@ -69,14 +69,17 @@ function turlederSearchEnable() {
 };
 
 function turlederSearchRowButtonClickHandler() {
-    data = {
+    var user = {
         id: $(this).data('dntUserId'),
         name: $(this).data('dntUserName'),
         phone: $(this).data('dntUserPhone'),
         email: $(this).data('dntUserEmail')
     }
+    var row = $(this).parents('table').find('[data-dnt-turleder="' + user.id + '"]').clone()
+
     $(this).parents('[data-dnt-container="turleder-search"]')
-        .trigger('dnt.turleder.selected', [data]);
+        .trigger('dnt.turleder.selected', [user, row]);
+
     $(this).button('loading');
 };
 

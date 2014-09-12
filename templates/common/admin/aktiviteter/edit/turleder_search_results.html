@@ -43,6 +43,7 @@
     </td>
   </tr>
 
-  {#% include 'common/admin/aktiviteter/edit/turleder_display.html' with hide=True %#}
+  {# Include a hidden row that is added to the main when the turleder is selected #}
+  {% include 'common/admin/aktiviteter/edit/turleder_display.html' with hide=True i="tmp" %}
 
 {% endfor %}

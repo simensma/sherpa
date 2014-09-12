@@ -232,20 +232,7 @@
               </thead>
               <tbody>
                 {% for user in date.get_turledere_ordered %}
-                  <tr>
-                    <td>{{ user.get_full_name }}</td>
-                    <td>
-                      {% firstof user.get_phone_mobile user.get_phone_home "Ingen telefon" %}
-                      <br>
-                      {% firstof user.get_email "Ingen epost" %}
-                    </td>
-                    <td>
-                      <input type="hidden" name="dates[{{ i }}][turledere][]" value="{{ user.id }}">
-                      <button class="btn btn-sm btn-danger" data-dnt-action="date-turleder-rm">
-                        Fjern
-                      </button>
-                    </td>
-                  </tr>
+                  {% include 'common/admin/aktiviteter/edit/turleder_display.html' %}
                 {% endfor %}
               </tbody>
             </table>
