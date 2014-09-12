@@ -75,7 +75,8 @@ function turlederSearchRowButtonClickHandler() {
         phone: $(this).data('dntUserPhone'),
         email: $(this).data('dntUserEmail')
     }
-    $(this).parents('[data-dnt-container="turleder-search"]').trigger('select.dnt.turleder', [data]);
+    $(this).parents('[data-dnt-container="turleder-search"]')
+        .trigger('dnt.turleder.selected', [data]);
     $(this).button('loading');
 };
 

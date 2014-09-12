@@ -102,9 +102,9 @@ scope.find('[data-dnt-action="date-turleder-add"]').on('click', function() {
 
     // Attach modal event handlers and show
     $('[data-dnt-container="turleder-search"]')
-        .on('select.dnt.turleder', dateTurlederSelectHandler)
+        .on('dnt.turleder.selected', dateTurlederSelectHandler)
         .one('hide.bs.modal', function() {
-            $(this).off('select.dnt.turleder', dateTurlederSelectHandler);
+            $(this).off('dnt.turleder.selected', dateTurlederSelectHandler);
         })
         .modal('show');
 });
