@@ -344,9 +344,6 @@ def edit(request, aktivitet):
             model.contact_custom_name = date['contact_custom_name']
             model.contact_custom_phone = date['contact_custom_phone']
             model.contact_custom_email = date['contact_custom_email']
-
-            # Save the AktivitDate model before attempting to add turledere
-            # (many-to-many relationship)
             model.should_have_turleder = date.get('should_have_turleder') == '1'
             model.save()
 
