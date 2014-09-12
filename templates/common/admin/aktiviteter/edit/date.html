@@ -248,33 +248,59 @@
           </div>
 
           <div class="form-group">
-            <label for="" class="col-sm-12 control-label">Kontaktinformasjon</label>
-            <div class="col-sm-8">
-              <div class="radio">
-                <label>
-                  <input type="radio" name="dates[{{ i }}][contact_type]" value="arrangør"
-                    data-dnt-toggle="date-contact-custom"
-                    {% if date.contact_type|default:"arrangør" == "arrangør" %}checked{% endif %}>
-                  Arrangør
-                </label>
-              </div>
-              <div data-dnt-container="date-turledere"
-                class="radio{% if not date.should_have_turleder %} jq-hide{% endif %}">
-                <label>
-                  <input type="radio" name="dates[{{ i }}][contact_type]" value="turleder"
-                    data-dnt-toggle="date-contact-custom"
-                    {% if date.contact_type == "turleder" %}checked{% endif %}>
-                  Turleder
-                </label>
-              </div>
-              <div class="radio">
-                <label>
-                  <input type="radio" name="dates[{{ i }}][contact_type]" value="custom"
-                    data-dnt-toggle="date-contact-custom"
-                    {% if date.contact_type == "custom" %}checked{% endif %}>
-                  Annet
-                </label>
-              </div>
+            <label class="col-sm-12 control-label">Kontaktinformasjon</label>
+          </div>
+
+          <div class="form-group">
+            <div class="col-sm-12">
+              <div class="btn-group" data-toggle="buttons">
+
+                {% if date.contact_type|default:"arrangør" == "arrangør" %}
+                  <label class="btn btn-default active">
+                    <input type="radio" name="dates[{{ i }}][contact_type]" value="arrangør"
+                      data-dnt-toggle="date-contact-custom" checked>
+                    <span class="glyphicon glyphicon-home"></span> Arrangør
+                  </label>
+                {% else %}
+                  <label class="btn btn-default">
+                    <input type="radio" name="dates[{{ i }}][contact_type]" value="arrangør"
+                    data-dnt-toggle="date-contact-custom">
+                    <span class="glyphicon glyphicon-home"></span> Arrangør
+                  </label>
+                {% endif %}
+
+                {% if date.contact_type == "turleder" %}
+                  <label class="btn btn-default active" data-dnt-container="date-turledere">
+                    <input type="radio" name="dates[{{ i }}][contact_type]" value="turleder"
+                      data-dnt-toggle="date-contact-custom" checked>
+                    <span class="glyphicon glyphicon-user"></span> Turleder
+                  </label>
+                {% else %}
+                  <label class="btn btn-default" data-dnt-container="date-turledere">
+                    <input type="radio" name="dates[{{ i }}][contact_type]" value="turleder"
+                    data-dnt-toggle="date-contact-custom">
+                    <span class="glyphicon glyphicon-user"></span> Turleder
+                  </label>
+                {% endif %}
+
+                {% if date.contact_type == "custom" %}
+                  <label class="btn btn-default active">
+                    <input type="radio" name="dates[{{ i }}][contact_type]" value="custom"
+                      data-dnt-toggle="date-contact-custom" checked>
+                    <span class="glyphicon glyphicon-pencil"></span> Annen
+                  </label>
+                {% else %}
+                  <label class="btn btn-default">
+                    <input type="radio" name="dates[{{ i }}][contact_type]" value="custom"
+                    data-dnt-toggle="date-contact-custom">
+                    <span class="glyphicon glyphicon-pencil"></span> Annen
+                  </label>
+                {% endif %}
+
+              </div><!-- /.btn-group -->
+              <p class="help-block">Her kan du velge hvem nye deltakere og påmeldte skal kontakte
+              angående dette arrangementet. Hvis du vil spesifisere kontaktinformasjon selv velger
+              du <strong>Annen</strong>.</p>
             </div>
           </div><!-- /.form-group -->
 
