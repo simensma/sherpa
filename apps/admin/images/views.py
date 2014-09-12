@@ -6,6 +6,7 @@ import json
 import logging
 import sys
 import zipfile
+import tempfile
 
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -168,7 +169,7 @@ def download_album(request, album):
         else:
             metadata[key] = pyexiv2.ExifTag(key, value)
 
-    def download_image_with_retry(image, bucket, memory_file, memory_file_index, zip_archive, file_count, tries=5):
+    def download_image_with_retry(image, bucket, tmp_file, tmp_file_index, zip_archive, file_count, tries=5):
         """
         Tries to download an image from S3, and if an SSLError occurs, resets the boto connection and retries the
         download. This was implemented because we experienced this error occasionally for large album downloads.
@@ -199,9 +200,9 @@ def download_album(request, album):
 
             # Rewind the memory file back, read the written data, and yield it to our response,
             # while we'll go fetch the next file from S3
-            next_memory_file_index = memory_file.tell()
-            memory_file.seek(memory_file_index)
-            return next_memory_file_index, memory_file.read()
+            next_index = tmp_file.tell()
+            tmp_file.seek(tmp_file_index)
+            return next_index, tmp_file.read()
         except Exception:
             logger.warning(u"Feil ved albumnedlasting (prøver igjen automatisk)",
                 exc_info=sys.exc_info(),
@@ -214,21 +215,21 @@ def download_album(request, album):
             # Reset the conncetion and try again
             conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
             bucket = conn.get_bucket(s3_bucket())
-            return download_image_with_retry(image, bucket, memory_file, memory_file_index, zip_archive, file_count, tries=tries-1)
+            return download_image_with_retry(image, bucket, tmp_file, tmp_file_index, zip_archive, file_count, tries=tries-1)
 
     def build_zipfile():
-        memory_file = StringIO()
-        zip_archive = zipfile.ZipFile(memory_file, 'w', allowZip64=True)
-        memory_file_index = 0 # Used to keep track of the amount of written data each iteration
+        with tempfile.TemporaryFile() as tmp_file:
+            zip_archive = zipfile.ZipFile(tmp_file, 'w', allowZip64=True)
+            tmp_file_index = 0 # Used to keep track of the amount of written data each iteration
 
-        for file_count, image in enumerate(Image.objects.filter(album=album), start=1):
-            memory_file_index, data = download_image_with_retry(image, bucket, memory_file, memory_file_index, zip_archive, file_count)
-            yield data
+            for file_count, image in enumerate(Image.objects.filter(album=album), start=1):
+                tmp_file_index, data = download_image_with_retry(image, bucket, tmp_file, tmp_file_index, zip_archive, file_count)
+                yield data
 
-        # Now close the archive and yield the final piece of data written
-        zip_archive.close()
-        memory_file.seek(memory_file_index)
-        yield memory_file.read()
+            # Now close the archive and yield the final piece of data written
+            zip_archive.close()
+            tmp_file.seek(tmp_file_index)
+            yield tmp_file.read()
 
     response = HttpResponse(build_zipfile(), content_type='application/x-zip-compressed')
     response['Content-Disposition'] = 'attachment; filename="%s.zip"' % album.name.encode('utf-8')
