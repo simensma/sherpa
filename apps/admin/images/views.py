@@ -1,3 +1,4 @@
+# encoding: utf-8
 from cStringIO import StringIO
 from datetime import datetime
 from hashlib import sha1
