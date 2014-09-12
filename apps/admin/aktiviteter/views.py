@@ -46,7 +46,6 @@ def parse_html_array(post, name):
             dic[id][parts[1]] = post.get(k)
 
     return dic
-    #return sorted(dic.items())
 
 def index(request):
     try:
