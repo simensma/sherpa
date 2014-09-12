@@ -1,3 +1,4 @@
+# encoding: utf-8
 from cStringIO import StringIO
 from datetime import datetime
 from hashlib import sha1
@@ -5,6 +6,7 @@ import json
 import logging
 import sys
 import zipfile
+import tempfile
 
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -167,13 +169,17 @@ def download_album(request, album):
         else:
             metadata[key] = pyexiv2.ExifTag(key, value)
 
-    def build_zipfile():
-        memory_file = StringIO()
-        zip_archive = zipfile.ZipFile(memory_file, 'w')
-        file_count = 1
-        zipfile_index = 0 # Used to keep track of the amount of written data each iteration
-
-        for image in Image.objects.filter(album=album):
+    def download_image_with_retry(image, bucket, tmp_file, tmp_file_index, zip_archive, file_count, tries=5):
+        """
+        Tries to download an image from S3, and if an SSLError occurs, resets the boto connection and retries the
+        download. This was implemented because we experienced this error occasionally for large album downloads.
+        The idea was originally to use funcy[1] with the @retry decorator, but we discovered that we need to change
+        state on error (i.e. reset the boto connection), which AFAIK couldn't be done with funcy; hence this custom
+        implementation.
+        [1] See https://github.com/Suor/funcy and
+            http://hackflow.com/blog/2014/06/22/why-every-language-needs-its-underscore/
+        """
+        try:
             image_key = bucket.get_key("%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, image.key, image.extension))
             image_data = image_key.get_contents_as_string()
 
@@ -191,19 +197,39 @@ def download_album(request, album):
             else:
                 image_filename = '%s-%s-%s.%s' % (album.name, file_count, image.photographer, image.extension)
             zip_archive.writestr(image_filename.encode('ascii', 'ignore'), metadata.buffer)
-            file_count += 1
 
             # Rewind the memory file back, read the written data, and yield it to our response,
             # while we'll go fetch the next file from S3
-            next_zipfile_index = memory_file.tell()
-            memory_file.seek(zipfile_index)
-            zipfile_index = next_zipfile_index
-            yield memory_file.read()
+            next_index = tmp_file.tell()
+            tmp_file.seek(tmp_file_index)
+            return next_index, tmp_file.read()
+        except Exception:
+            logger.warning(u"Feil ved albumnedlasting (prøver igjen automatisk)",
+                exc_info=sys.exc_info(),
+                extra={'request': request}
+            )
 
-        # Now close the archive and yield the final piece of data written
-        zip_archive.close()
-        memory_file.seek(zipfile_index)
-        yield memory_file.read()
+            if tries <= 0:
+                raise
+
+            # Reset the conncetion and try again
+            conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+            bucket = conn.get_bucket(s3_bucket())
+            return download_image_with_retry(image, bucket, tmp_file, tmp_file_index, zip_archive, file_count, tries=tries-1)
+
+    def build_zipfile():
+        with tempfile.TemporaryFile() as tmp_file:
+            zip_archive = zipfile.ZipFile(tmp_file, 'w', zipfile.ZIP_DEFLATED, allowZip64=True)
+            tmp_file_index = 0 # Used to keep track of the amount of written data each iteration
+
+            for file_count, image in enumerate(Image.objects.filter(album=album), start=1):
+                tmp_file_index, data = download_image_with_retry(image, bucket, tmp_file, tmp_file_index, zip_archive, file_count)
+                yield data
+
+            # Now close the archive and yield the final piece of data written
+            zip_archive.close()
+            tmp_file.seek(tmp_file_index)
+            yield tmp_file.read()
 
     response = HttpResponse(build_zipfile(), content_type='application/x-zip-compressed')
     response['Content-Disposition'] = 'attachment; filename="%s.zip"' % album.name.encode('utf-8')
