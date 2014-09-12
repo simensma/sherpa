@@ -347,7 +347,7 @@ def edit(request, aktivitet):
 
             # Save the AktivitDate model before attempting to add turledere
             # (many-to-many relationship)
-            model.should_have_turleder = 'should_have_turleder' in date
+            model.should_have_turleder = date.get('should_have_turleder') == '1'
             model.save()
 
             if date.get('should_have_turleder') == '1':
