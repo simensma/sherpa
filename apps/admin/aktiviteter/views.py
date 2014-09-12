@@ -357,6 +357,8 @@ def edit(request, aktivitet):
             model.save()
 
             if date.get('should_have_turleder') == '1':
+                # We need to specify the key for this particular field because the parse_html_array
+                # function does not properly parse multidimensional arrays.
                 key = 'dates[%s][turleder][]' %s i
                 if key in request.POST and request.POST[key] != '':
                     model.turledere = request.POST.getlist(key)
