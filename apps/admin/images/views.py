@@ -203,6 +203,11 @@ def download_album(request, album):
             memory_file.seek(memory_file_index)
             return next_memory_file_index, memory_file.read()
         except Exception:
+            logger.warning(u"Feil ved albumnedlasting (prøver igjen automatisk)",
+                exc_info=sys.exc_info(),
+                extra={'request': request}
+            )
+
             if tries <= 0:
                 raise
 
