@@ -202,7 +202,7 @@ def download_album(request, album):
             next_memory_file_index = memory_file.tell()
             memory_file.seek(memory_file_index)
             return next_memory_file_index, memory_file.read()
-        except SSLError:
+        except Exception:
             if tries <= 0:
                 raise
 
