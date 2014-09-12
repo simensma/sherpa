@@ -273,6 +273,8 @@ def edit(request, aktivitet):
             else:
                 model = AktivitetDate(aktivitet=aktivitet)
 
+            # @TODO for existing dates; if model.start_date > now; dissalow editing.
+
             # Explicit delete of dates
             if date['status'] == 'delete':
                 if date['id'] != '':
@@ -285,11 +287,14 @@ def edit(request, aktivitet):
                 if not date['start_time']: date['start_time'] = '08:00'
                 if not date['end_time']: date['end_time'] = '16:00'
 
+                # @TODO check start_time > now
                 model.start_date = datetime.strptime(
                     "%s %s" % (date['start_date'],
                     date['start_time']),
                     "%d.%m.%Y %H:%M"
                 )
+
+                # @TODO check end_time > start_time
                 model.end_date = datetime.strptime(
                     "%s %s" % (date['end_date'],
                     date['end_time']),
