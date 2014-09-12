@@ -23,7 +23,7 @@ import json
 import re
 
 # http://www.ironzebra.com/code/23/converting-multi-dimensional-form-arrays-in-django
-def parseHtmlArray(post, name):
+def parse_html_array(post, name):
     dic = {}
     for k in post.keys():
         if k.startswith(name):
@@ -234,7 +234,7 @@ def edit(request, aktivitet):
                 )
                 image.save()
 
-        dates = parseHtmlArray(request.POST, 'dates').items()
+        dates = parse_html_array(request.POST, 'dates').items()
 
         # Remove the date objects that were explicitly deleted (checks and verifications are done
         # client-side). Verify that those that would be implicitly deleted (by not being POSTed for
