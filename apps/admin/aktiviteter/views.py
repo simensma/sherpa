@@ -297,7 +297,11 @@ def edit(request, aktivitet):
                 )
 
                 if not date['signup_method'] or date['signup_method'] == 'none':
-                    # Do not think about setting mode.participant to None!
+                    # To the next maintainer. This block indicates that a date does not allow
+                    # signup. However, keep in mind that this might be an existing date with
+                    # participants. Hence, do not set model.participant to None event though it
+                    # might be tempting!
+
                     model.signup_enabled = False
                     model.signup_start = None
                     model.signup_deadline = None
