@@ -265,7 +265,7 @@ def edit(request, aktivitet):
             # happens.
             raise Exception("Implicit delete of AktivitetDate is strictly forbidden!")
 
-        for k, date in dates:
+        for i, date in dates:
             if date['id'] != '':
                 # @TODO Check if this can be exploited. Can you hijack another trip's date by
                 # setting an arbitrary ID in the date['id'] field?
@@ -352,7 +352,7 @@ def edit(request, aktivitet):
             if 'should_have_turleder' in date and date['should_have_turleder'] == '1':
                 model.should_have_turleder = True
 
-                key = 'dates[' + str(k) + '][turleder][]'
+                key = 'dates[' + str(i) + '][turleder][]'
                 if key in request.POST and request.POST[key] != '':
                     model.turledere = request.POST.getlist(key)
 
