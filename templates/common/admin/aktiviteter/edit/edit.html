@@ -132,7 +132,7 @@
             <label class="col-md-2 control-label" for="forening">
               Hovedarrangør <span class="required">*</span>
             </label>
-            <div class="col-md-4">
+            <div class="col-md-6 col-lg-5">
               <select class="form-control" name="forening" id="forening"
                 data-placeholder="Ingen arrangør valgt">
 
@@ -160,7 +160,7 @@
 
           <div class="form-group co_forening">
             <label class="col-md-2 control-label" for="co_forening">Medarrangør</label>
-            <div class="col-md-4">
+            <div class="col-md-6 col-lg-5">
               <select class="form-control" name="co_forening" id="co_forening"
                 data-placeholder="Ingen medarrangør valgt">
 
@@ -185,7 +185,7 @@
                 hovedforeningen hvis dette arrangementet arrangeres av en undergruppe!</p>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-2">
               <button class="btn btn-warning" data-dnt-action="remove-co-forening">
                 <span class="glyphicon glyphicon-remove"></span> Fjern medarrangør
               </button>
@@ -202,7 +202,7 @@
 
           <div class="form-group code">
             <label class="col-md-2 control-label" for="code">Turkode</label>
-            <div class="col-md-4">
+            <div class="col-md-8 col-lg-4">
               <input class="form-control" name="code" id="code" type="text"
                 value="{{ aktivitet.code }}">
               <div class="help-block">
@@ -270,7 +270,7 @@
             <label class="col-md-2 control-label" for="audiences">
               Målgruppe<span class="required">*</span>
             </label>
-            <div class="col-md-4">
+            <div class="col-md-8 col-lg-4">
               <select class="form-control" id="audiences" name="audiences"
                 data-placeholder="Velg målgruppe" multiple>
 
@@ -337,7 +337,7 @@
               </div>
             </label>
 
-            <div class="col-md-4">
+            <div class="col-md-8 col-lg-5">
               <select class="form-control" name="category_type"
                 data-placeholder="Velg underkategori">
 
@@ -367,7 +367,7 @@
 
           <div class="form-group tags{% if not aktivitet.category %} jq-hide{% endif %}">
             <label class="col-md-2 control-label">Tagger</label>
-            <div class="col-md-4">
+            <div class="col-md-8 col-lg-5">
               <select class="form-control" name="category_tags" multiple
                 data-placeholder="Ingen tagger valgt">
 
@@ -386,7 +386,7 @@
                 <p>Her kan du ytterligere spesifisere arrangements-aktiviteter!</p>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 col-md-offset-2 col-lg-5 col-lg-offset-0">
               <button class="btn btn-warning" data-dnt-action="remove-category-tags">
                 <span class="glyphicon glyphicon-remove"></span> Fjern tagger
               </button>
