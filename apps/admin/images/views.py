@@ -213,7 +213,7 @@ def download_album(request, album):
 
     def build_zipfile():
         memory_file = StringIO()
-        zip_archive = zipfile.ZipFile(memory_file, 'w')
+        zip_archive = zipfile.ZipFile(memory_file, 'w', allowZip64=True)
         memory_file_index = 0 # Used to keep track of the amount of written data each iteration
 
         for file_count, image in enumerate(Image.objects.filter(album=album), start=1):
