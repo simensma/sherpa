@@ -1,4 +1,8 @@
 # encoding: utf-8
+from datetime import datetime, date, timedelta
+import json
+import re
+
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -17,11 +21,6 @@ from sherpa2.models import Location, Turforslag
 from user.models import User
 from focus.models import Actor
 from foreninger.models import Forening
-
-from datetime import datetime, date, timedelta
-
-import json
-import re
 
 def index(request):
     try:
