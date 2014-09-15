@@ -37,11 +37,13 @@ class Aktivitet(models.Model):
     # and probably faster.
     audiences = models.CharField(max_length=1023)
     CATEGORY_CHOICES = (
-        ('trip', 'Tur/Aktivitet'),
+        # ('trip', 'Tur/Aktivitet'),
+        ('organizedhike', 'Fellestur'),
         ('course', 'Kurs'),
         ('event', 'Arrangement'),
         ('volunteerwork', 'Dugnad'),)
     category = models.CharField(max_length=255, choices=CATEGORY_CHOICES)
+    category_type = models.CharField(max_length=255, null=True)
     category_tags = models.ManyToManyField('core.Tag', related_name='aktiviteter')
     pub_date = models.DateField()
     published = models.BooleanField(default=False)
@@ -51,10 +53,13 @@ class Aktivitet(models.Model):
         return u'%s: %s' % (self.pk, self.title)
 
     def get_dates_ordered(self):
-        return self.dates.all().order_by('-start_date')
+        return enumerate(self.dates.all().order_by('start_date'))
 
     def get_difficulty(self):
         return [c[1] for c in self.DIFFICULTY_CHOICES if c[0] == self.difficulty][0]
+
+    def get_start_point_latlng(self):
+        return ','.join(str(i) for i in self.start_point.get_coords()) if self.start_point else ''
 
     def get_start_point_lat_json(self):
         return json.dumps(self.start_point.get_coords()[0])
@@ -167,6 +172,14 @@ class Aktivitet(models.Model):
             u'utenlandstur',
             u'orientering',
         ],
+        'organizedhike': [
+            u'fottur',
+            u'skitur',
+            u'sykkeltur',
+            u'padletur',
+            u'klatretur',
+            u'bretur'
+        ],
         'course': [
             u'turlederkurs',
             u'instruktørkurs',
@@ -215,8 +228,10 @@ class AktivitetDate(models.Model):
     # Signup start/deadline/cancel should only be null when signup_enabled is False
     signup_start = models.DateField(null=True)
     signup_deadline = models.DateField(null=True)
+    # Rename to cancel_deadline
     signup_cancel_deadline = models.DateField(null=True)
 
+    should_have_turleder = models.BooleanField(default=False)
     turledere = models.ManyToManyField('user.User', related_name='turleder_aktivitet_dates')
     participants = models.ManyToManyField('user.User', related_name='aktiviteter')
     meeting_place = models.TextField()
@@ -231,6 +246,15 @@ class AktivitetDate(models.Model):
 
     def __unicode__(self):
         return u'%s (%s, aktivitet: <%s>)' % (self.pk, self.start_date, self.aktivitet)
+
+    def signup_method(self):
+        if not self.signup_enabled:
+            return 'none'
+        else:
+            if self.signup_simple_allowed:
+                return 'simple'
+            else:
+                return 'minside'
 
     def accepts_signups(self):
         today = date.today()

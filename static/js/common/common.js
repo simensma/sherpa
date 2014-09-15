@@ -9,8 +9,10 @@ $(function() {
             type: 'POST',
             cache: false
         });
-        $(document).on('ajaxSend', function(event, xhr) {
-            xhr.setRequestHeader("X-CSRFToken", $("input[name='csrfmiddlewaretoken']").val());
+        $(document).on('ajaxSend', function(event, xhr, request) {
+            if (/^\//.test(request.url)) {
+                xhr.setRequestHeader("X-CSRFToken", $("input[name='csrfmiddlewaretoken']").val());
+            }
         });
     }
 

@@ -15,6 +15,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from aktiviteter.models import Aktivitet, AktivitetDate, AktivitetImage
+from admin.aktiviteter.util import parse_html_array
 from core.models import Tag, County, Municipality
 from sherpa2.models import Location, Turforslag
 from user.models import User
@@ -129,31 +130,53 @@ def edit(request, aktivitet):
             'audiences': Aktivitet.AUDIENCE_CHOICES,
             'categories': Aktivitet.CATEGORY_CHOICES,
             'subcategories': Aktivitet.SUBCATEGORIES,
-            'all_foreninger': Forening.get_all_sorted(),
+            'all_foreninger': Forening.sort(Forening.objects.all()),
             'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH,
             'counties': County.typical_objects().order_by('name'),
             'municipalities': Municipality.objects.order_by('name'),
             'locations': Location.get_active().order_by('name'),
+            'now': datetime.now()
         }
         return render(request, 'common/admin/aktiviteter/edit/edit.html', context)
     elif request.method == 'POST':
         errors = False
 
         aktivitet = Aktivitet.objects.get(id=aktivitet)
-        aktivitet.code = request.POST['code']
-        aktivitet.title = request.POST['title']
-        aktivitet.description = request.POST['description']
-        aktivitet.difficulty = request.POST['difficulty']
-        aktivitet.audiences = json.dumps(request.POST.getlist('audiences'))
-        aktivitet.category = request.POST['category']
-        aktivitet.published = request.POST.get('publish') == 'publish'
-        aktivitet.getting_there = request.POST['getting_there']
-        aktivitet.locations = json.dumps([int(l) for l in request.POST.getlist('locations')])
 
-        if request.POST['turforslag_id'] == '':
+        if 'code' in request.POST:
+            aktivitet.code = request.POST['code']
+
+        if 'title' in request.POST:
+            aktivitet.title = request.POST['title']
+
+        if 'description' in request.POST:
+            aktivitet.description = request.POST['description']
+
+        if 'difficulty' in request.POST:
+            aktivitet.difficulty = request.POST['difficulty']
+
+        if 'audiences' in request.POST:
+            aktivitet.audiences = json.dumps(request.POST.getlist('audiences'))
+
+        if 'category' in request.POST:
+            aktivitet.category = request.POST['category']
+
+        if 'category_type' in request.POST:
+            aktivitet.category_type = request.POST['category_type']
+
+        if 'publish' in request.POST:
+            aktivitet.published = request.POST.get('publish') == 'publish'
+
+        if 'getting_there' in request.POST:
+            aktivitet.getting_there = request.POST['getting_there']
+
+        if 'locations' in request.POST:
+            aktivitet.locations = json.dumps([int(l) for l in request.POST.getlist('locations')])
+
+        if 'ntb_id' not in request.POST or request.POST['ntb_id'] == '':
             aktivitet.turforslag = None
         else:
-            aktivitet.turforslag = request.POST['turforslag_id']
+            aktivitet.turforslag = request.POST['ntb_id']
 
         if aktivitet.published:
             # If published, set the extra relevant fields (otherwise ignore them)
@@ -175,8 +198,10 @@ def edit(request, aktivitet):
         aktivitet.forening = forening
         aktivitet.co_forening = co_forening
 
-        if request.POST['position_lat'] != '' and request.POST['position_lng'] != '':
-            aktivitet.start_point = Point(float(request.POST['position_lat']), float(request.POST['position_lng']))
+        if request.POST['latlng']:
+            latlng = request.POST['latlng'].split(',')
+            if len(latlng) == 2:
+                aktivitet.start_point = Point(float(latlng[0]), float(latlng[1]))
 
         aktivitet.save()
 
@@ -184,82 +209,136 @@ def edit(request, aktivitet):
         aktivitet.municipalities = request.POST.getlist('municipalities')
 
         aktivitet.category_tags.clear()
-        for tag in [tag.lower() for tag in json.loads(request.POST['subcategories'])]:
-            obj, created = Tag.objects.get_or_create(name=tag)
-            aktivitet.category_tags.add(obj)
+        if 'category_tags' in request.POST and request.POST['category_tags'] != '':
+            for tag in request.POST.getlist('category_tags'):
+                obj, created = Tag.objects.get_or_create(name=tag)
+                aktivitet.category_tags.add(obj)
 
         aktivitet.images.all().delete()
-        for image in json.loads(request.POST['images']):
-            image = AktivitetImage(
-                aktivitet=aktivitet,
-                url=image['url'],
-                text=image['text'],
-                photographer=image['photographer'],
-                order=image['order']
-            )
-            image.save()
+        if 'images' in request.POST and request.POST['images'] != '':
+            for image in json.loads(request.POST['images']):
+                image = AktivitetImage(
+                    aktivitet=aktivitet,
+                    url=image['url'],
+                    text=image['text'],
+                    photographer=image['photographer'],
+                    order=image['order']
+                )
+                image.save()
 
-        #
-        # Dates
-        #
+        dates = parse_html_array(request.POST, 'dates').items()
 
-        dates = json.loads(request.POST['dates'])
+        # Remove the date objects that were explicitly deleted (checks and verifications are done
+        # client-side). Verify that those that would be implicitly deleted (by not being POSTed for
+        # editing) match those explicitly POSTed.
+        date_ids = [int(d['id']) for k, d in dates if d['id'] != '']
+        implicit_del = set([date.id for date in aktivitet.dates.all() if date.id not in date_ids])
 
-        # Remove the date objects that were explicitly deleted (checks and verifications are
-        # done client-side). Verify that those that would be implicitly deleted (by not being
-        # POSTed for editing) match those explicitly POSTed.
-        posted_ids = [int(d['id']) for d in dates if d['id'] != '']
-        implicit_to_delete = set([date.id for date in aktivitet.dates.all() if date.id not in posted_ids])
-        explicit_to_delete = set([int(d) for d in json.loads(request.POST['dates_to_delete'])])
-
-        if implicit_to_delete != explicit_to_delete:
+        if len(implicit_del) > 0:
             # Better to raise an exception and not delete anything. The user will be confused and
-            # lose edits, but we'll get a report and hopefully be able to fix this, if it ever happens.
-            raise Exception("The explicit and implicit dates to delete did not match.")
+            # lose edits, but we'll get a report and hopefully be able to fix this, if it ever
+            # happens.
+            raise Exception("Implicit delete of AktivitetDate is strictly forbidden!")
 
-        AktivitetDate.objects.filter(id__in=explicit_to_delete).delete()
-
-        for date_post in dates:
-            if date_post['id'] != '':
-                aktivitet_date = AktivitetDate.objects.get(id=date_post['id'])
+        for i, date in dates:
+            if date['id'] != '':
+                # @TODO Check if this can be exploited. Can you hijack another trip's date by
+                # setting an arbitrary ID in the date['id'] field?
+                model = AktivitetDate.objects.get(id=date['id'])
             else:
-                aktivitet_date = AktivitetDate(aktivitet=aktivitet)
+                model = AktivitetDate(aktivitet=aktivitet)
+
+            # @TODO for existing dates; if model.start_date > now; dissalow editing.
+
+            # Explicit delete of dates
+            if date['status'] == 'delete':
+                if date['id'] != '':
+                    if model.total_signup_count() > 0:
+                        raise Exception("Date with participants can not be deleted!")
+                    model.delete()
+                continue
 
             try:
-                aktivitet_date.start_date = datetime.strptime("%s %s" % (date_post['start_date'], date_post['start_time']), "%d.%m.%Y %H:%M")
-                aktivitet_date.end_date = datetime.strptime("%s %s" % (date_post['end_date'], date_post['end_time']), "%d.%m.%Y %H:%M")
-                if date_post['signup_type'] == 'minside' or date_post['signup_type'] == 'simple':
-                    aktivitet_date.signup_enabled = True
-                    aktivitet_date.signup_start = datetime.strptime(date_post['signup_start'], "%d.%m.%Y").date()
-                    if date_post['signup_deadline_until_start']:
-                        aktivitet_date.signup_deadline = aktivitet_date.start_date
+                if not date['start_time']: date['start_time'] = '08:00'
+                if not date['end_time']: date['end_time'] = '16:00'
+
+                # @TODO check start_time > now
+                model.start_date = datetime.strptime(
+                    "%s %s" % (date['start_date'],
+                    date['start_time']),
+                    "%d.%m.%Y %H:%M"
+                )
+
+                # @TODO check end_time > start_time
+                model.end_date = datetime.strptime(
+                    "%s %s" % (date['end_date'],
+                    date['end_time']),
+                    "%d.%m.%Y %H:%M"
+                )
+
+                if not date['signup_method'] or date['signup_method'] == 'none':
+                    # To the next maintainer. This block indicates that a date does not allow
+                    # signup. However, keep in mind that this might be an existing date with
+                    # participants. Hence, do not set model.participant to None event though it
+                    # might be tempting!
+
+                    model.signup_enabled = False
+                    model.signup_start = None
+                    model.signup_deadline = None
+                    model.signup_cancel_deadline = None
+
+                elif date['signup_method'] == 'minside' or date['signup_method'] == 'simple':
+                    model.signup_enabled = True
+                    model.signup_max_allowed = date['signup_max_allowed']
+
+                    if 'signup_start' in date and date['signup_start'] != '':
+                        model.signup_start = datetime.strptime(
+                            date['signup_start'],
+                            "%d.%m.%Y"
+                        ).date()
                     else:
-                        aktivitet_date.signup_deadline = datetime.strptime(date_post['signup_deadline'], "%d.%m.%Y").date()
-                    if date_post['signup_cancel_deadline_until_start']:
-                        aktivitet_date.signup_cancel_deadline = aktivitet_date.start_date
-                    else:
-                        aktivitet_date.signup_cancel_deadline = datetime.strptime(date_post['signup_cancel_deadline'], "%d.%m.%Y").date()
-                elif date_post['signup_type'] == 'none':
-                    aktivitet_date.signup_enabled = False
-                    aktivitet_date.signup_start = None
-                    aktivitet_date.signup_deadline = None
-                    aktivitet_date.signup_cancel_deadline = None
+                        model.signup_start = datetime.now()
+
+                    if 'no_signup_deadline' in date and date['no_signup_deadline'] == '1':
+                        model.signup_deadline = None
+                    elif 'signup_deadline' in date and date['signup_deadline'] != '':
+                        model.signup_deadline = datetime.strptime(
+                            date['signup_deadline'],
+                            "%d.%m.%Y"
+                        ).date()
+
+                    if 'no_cancel_deadline' in date and date['no_cancel_deadline'] == '1':
+                        model.signup_cancel_deadline = None
+                    elif 'cancel_deadline' in date and date['cancel_deadline'] != '':
+                        model.signup_cancel_deadline = datetime.strptime(
+                            date['cancel_deadline'], "%d.%m.%Y"
+                        ).date()
+
                 else:
-                    raise Exception("Unrecognized POST value for signup_type field")
+                    raise Exception("Unrecognized POST value for signup_method field")
+
             except ValueError:
                 errors = True
                 messages.error(request, 'invalid_date_format')
+                return redirect('admin.aktiviteter.views.edit', aktivitet.id)
 
-            aktivitet_date.signup_simple_allowed = date_post['signup_type'] == 'simple'
-            aktivitet_date.meeting_place = date_post['meeting_place']
-            aktivitet_date.contact_type = date_post['contact_type']
-            aktivitet_date.contact_custom_name = date_post['contact_custom_name']
-            aktivitet_date.contact_custom_phone = date_post['contact_custom_phone']
-            aktivitet_date.contact_custom_email = date_post['contact_custom_email']
-            aktivitet_date.save()
+            model.signup_simple_allowed = date['signup_method'] == 'simple'
+            model.meeting_place = date['meeting_place']
+            model.contact_type = date['contact_type']
+            model.contact_custom_name = date['contact_custom_name']
+            model.contact_custom_phone = date['contact_custom_phone']
+            model.contact_custom_email = date['contact_custom_email']
+            model.should_have_turleder = date.get('should_have_turleder') == '1'
+            model.save()
 
-            # Turledere
-            aktivitet_date.turledere = date_post['turledere']
+            if date.get('should_have_turleder') == '1':
+                # We need to specify the key for this particular field because the parse_html_array
+                # function does not properly parse multidimensional arrays.
+                key = 'dates[%s][turleder][]' % i
+                if key in request.POST and request.POST[key] != '':
+                    model.turledere = request.POST.getlist(key)
+            else:
+                model.turledere = []
 
         if not errors:
             messages.info(request, 'save_success')

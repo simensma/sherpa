@@ -1,90 +1,85 @@
-(function(AdminAktivitetTurlederSearch, $, undefined ) {
+$('[data-dnt-container="turleder-search"]').on('show', function() {
+    $(this).find('form input').val('');
+    $(this).find('table').addClass('jq-hide');
+    $(this).find('table tbody tr').remove();
+});
 
-    var that = this;
+$('[data-dnt-container="turleder-search"] form').on('submit', function(e) {
+    e.preventDefault();
 
-    $(function() {
+    var container = $(this).parents('[data-dnt-container="turleder-search"]');
+    var table = container.find('table');
+    var tbody = table.find('tbody');
 
-        that.editor = $("div.admin-aktivitet-edit");
-        that.search = editor.find("div.modal.turleder-search");
+    turlederSearchLoading();
 
-        that.table = search.find("table.search-results");
-        that.search_input = search.find("input[name='turleder-search']");
-        that.search_button = search.find("button.turleder-search");
+    $.ajaxQueue({
+        url: $(this).prop('action').replace(/^https?:\/\/[^\/]+/, ''),
+        data: { q: $(this).find('input').val() }
+    }).done(function(result) {
+        result = JSON.parse(result);
 
-        that.intro = that.table.find("tr.intro");
-        that.loader = that.table.find("tr.loader");
-        that.no_hits = that.table.find("tr.no-hits");
-        that.short_query = that.table.find("tr.short_query");
-        that.error = that.table.find("tr.technical-error");
-        that.max_hits_exceeded = that.table.find("tr.max-hits-exceeded");
-        that.result_mirror = that.no_hits.find("span.result-mirror");
+        var rows = $(result.results);
+        rows.find('button').on('click', turlederSearchRowButtonClickHandler);
 
+        // check progress bar before showing results
+        var bar = container.find('.progress-bar');
+        if (bar.attr('aria-valuenow') === bar.attr('aria-valuemax')) {
+            tbody.html(rows);
+            turlederSearchEnable();
+        } else {
+            bar.one('finished', function() {
+                tbody.html(rows);
+                turlederSearchEnable();
+            }.bind(this));
+        }
+    }.bind(this));
+});
 
-        that.search_input.keyup(function(e) {
-            if(e.which == 13) { // Enter
-                that.search_button.click();
-            }
-        });
+function turlederSearchLoading() {
+    var container = $('[data-dnt-container="turleder-search"]');
+    container.find('form input').prop('disabled', true);
+    container.find('form button').button('loading');
 
-        that.search_button.click(function() {
-            that.search_input.prop('disabled', true);
-            that.search_button.prop('disabled', true);
-            that.intro.hide();
-            that.table.slideDown();
-            that.loader.show();
-            that.no_hits.hide();
-            that.short_query.hide();
-            that.error.hide();
-            that.max_hits_exceeded.hide();
-            that.table.find("tr.result").remove();
+    var bar = $('<div class="progress-bar" style="width: 0%">');
+    bar.attr('aria-valuenow', 0);
+    bar.attr('aria-valuemin', 0);
+    bar.attr('aria-valuemax', 100);
 
-            var query = that.search_input.val();
-            if(query.length < Turistforeningen.admin_user_search_char_length) {
-                that.search_input.prop('disabled', false);
-                that.search_button.prop('disabled', false);
-                that.short_query.show();
-                that.loader.hide();
-                return;
-            }
+    var progress = $('<div class="progress progress-striped active">').append(bar);
+    container.find('table tbody').html($('<td colspan="6">').append(progress));
+    container.find('table').removeClass('jq-hide');
 
-            $.ajaxQueue({
-                url: that.table.attr('data-search-url'),
-                data: { q: query }
-            }).done(function(result) {
-                result = JSON.parse(result);
-                that.table.find("tr.result").remove();
-                if(result.results.trim() === '') {
-                    that.result_mirror.text(query);
-                    that.no_hits.show();
-                } else {
-                    that.table.append(result.results);
-                    if(result.max_hits_exceeded) {
-                        that.max_hits_exceeded.show();
-                    }
-                    that.table.find("tr.result a.assign-turleder").click(function() {
-                        var display_result = $(this).parents("tr.result").next().clone();
-                        display_result.removeClass('jq-hide');
-                        that.callback({
-                            result_row: display_result
-                        });
-                        that.search.modal('hide');
-                    });
-                }
-            }).fail(function(result) {
-                that.table.find("tr.result").remove();
-                that.error.show();
-            }).always(function(result) {
-                that.loader.hide();
-                that.search_input.prop('disabled', false);
-                that.search_button.prop('disabled', false);
-            });
-        });
+    var i = 0;
+    var j = setInterval(function() {
+        bar.css('width', ++i + '%');
+        bar.attr('aria-valuenow', i);
 
-    });
+        if (i === 100) {
+            clearInterval(j);
+            bar.trigger('finished');
+        }
+    }, 200);
+};
 
-    AdminAktivitetTurlederSearch.enable = function(opts) {
-        that.callback = opts.callback;
-        that.search.modal();
-    };
+function turlederSearchEnable() {
+    var container = $('[data-dnt-container="turleder-search"]');
+    container.find('form input').prop('disabled', false);
+    container.find('form button').button('reset');
+};
 
-}(window.AdminAktivitetTurlederSearch = window.AdminAktivitetTurlederSearch || {}, jQuery ));
+function turlederSearchRowButtonClickHandler() {
+    var user = {
+        id: $(this).data('dntUserId'),
+        name: $(this).data('dntUserName'),
+        phone: $(this).data('dntUserPhone'),
+        email: $(this).data('dntUserEmail')
+    }
+    var row = $(this).parents('table').find('[data-dnt-turleder="' + user.id + '"]').clone()
+
+    $(this).parents('[data-dnt-container="turleder-search"]')
+        .trigger('dnt.turleder.selected', [user, row]);
+
+    $(this).button('loading');
+};
+
