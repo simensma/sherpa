@@ -4,7 +4,7 @@ from django import template
 
 register = template.Library()
 
-GRAVATAR_URL = "http://www.gravatar.com/avatar"
+GRAVATAR_URL = "https://www.gravatar.com/avatar"
 
 @register.simple_tag
 def gravatar(email, size=40, default='mm'):
