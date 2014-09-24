@@ -216,16 +216,14 @@ def edit(request, aktivitet):
                 aktivitet.category_tags.add(obj)
 
         aktivitet.images.all().delete()
-        if 'images' in request.POST and request.POST['images'] != '':
-            for image in json.loads(request.POST['images']):
-                image = AktivitetImage(
-                    aktivitet=aktivitet,
-                    url=image['url'],
-                    text=image['text'],
-                    photographer=image['photographer'],
-                    order=image['order']
-                )
-                image.save()
+        for i, image in parse_html_array(request.POST, 'images').items():
+            AktivitetImage(
+                aktivitet=aktivitet,
+                url=image['url'],
+                text=image['description'],
+                photographer=image['photographer'],
+                order=i
+            ).save()
 
         dates = parse_html_array(request.POST, 'dates').items()
 
