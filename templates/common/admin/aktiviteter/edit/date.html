@@ -33,7 +33,7 @@
             <label for="" class="col-sm-3 control-label">Turen starter</label>
             <div class="col-sm-5">
               <div class="input-group date">
-                <input type="date" class="form-control" name="dates[{{ i }}][start_date]"
+                <input type="text" class="form-control" name="dates[{{ i }}][start_date]"
                   placeholder="dd.mm.åååå"
                   data-dnt-update="date-title"
                   value="{% firstof date.start_date|date:"d.m.Y" "" %}">
@@ -54,7 +54,7 @@
             <label for="" class="col-sm-3 control-label">Turen slutter</label>
             <div class="col-sm-5">
               <div class="input-group date">
-                <input type="date" class="form-control" name="dates[{{ i }}][end_date]"
+                <input type="text" class="form-control" name="dates[{{ i }}][end_date]"
                   placeholder="dd.mm.åååå"
                   data-dnt-update="date-title"
                   value="{% firstof date.end_date|date:"d.m.Y" "" %}">
@@ -119,7 +119,7 @@
               <label for="" class="col-sm-3 control-label">Påmelding fra</label>
               <div class="col-sm-5">
                 <div class="input-group date">
-                  <input type="date" class="form-control" name="dates[{{ i }}][signup_start]"
+                  <input type="text" class="form-control" name="dates[{{ i }}][signup_start]"
                     placeholder="dd.mm.åååå"
                     value="{% firstof date.start_date|date:"d.m.Y" now|date:"d.m.Y" %}">
                   <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
@@ -148,7 +148,7 @@
               data-dnt-container="date-signup-deadline">
               <div class="col-sm-5 col-sm-offset-3">
                 <div class="input-group date">
-                  <input type="date" class="form-control" name="dates[{{ i }}][signup_deadline]"
+                  <input type="text" class="form-control" name="dates[{{ i }}][signup_deadline]"
                     value="{% firstof date.signup_deadline|date:"d.m.Y" date.end_date|date:"d.m.Y" %}"
                     placeholder="dd.mm.åååå">
 
@@ -178,7 +178,7 @@
               class="form-group{% if not date.signup_cancel_deadline %} jq-hide{% endif %}">
               <div class="col-sm-5 col-sm-offset-3">
                 <div class="input-group date">
-                  <input type="date" class="form-control" name="dates[{{ i }}][cancel_deadline]"
+                  <input type="text" class="form-control" name="dates[{{ i }}][cancel_deadline]"
                     value="{% firstof date.signup_cancel_deadline|date:"d.m.Y" date.end_date|date:"d.m.Y" %}"
                     placeholder="dd.mm.åååå">
 
