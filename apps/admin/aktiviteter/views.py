@@ -73,21 +73,21 @@ def index(request):
         children = request.active_forening.get_children_sorted()
         datoer = datoer.filter(
             Q(aktivitet__forening=forening) |
-            Q(aktivitet__co_forening=forening) |
+            Q(aktivitet__co_foreninger=forening) |
             Q(
                 aktivitet__forening__parents=forening,
                 aktivitet__forening__type='turgruppe',
             ) |
             Q(
-                aktivitet__co_forening__parents=forening,
-                aktivitet__co_forening__type='turgruppe',
+                aktivitet__co_foreninger__parents=forening,
+                aktivitet__co_foreninger__type='turgruppe',
             )
         )
     else:
         children = dict()
         datoer = datoer.filter(
             Q(aktivitet__forening=forening) |
-            Q(aktivitet__co_forening=forening)
+            Q(aktivitet__co_foreninger=forening)
         )
 
     paginator = Paginator(datoer, 25)
@@ -190,13 +190,14 @@ def edit(request, aktivitet):
         forening = Forening.objects.get(id=request.POST['forening'])
         if not forening in request.user.children_foreninger():
             raise PermissionDenied
-        if request.POST['co_forening'] == '':
-            co_forening = None
+
+        if 'co_foreninger[]' in request.POST and request.POST['co_foreninger[]'] != '':
+            co_foreninger = request.POST.getlist('co_foreninger[]')
         else:
-            co_forening = Forening.objects.get(id=request.POST['co_forening'])
+            co_foreninger = []
 
         aktivitet.forening = forening
-        aktivitet.co_forening = co_forening
+        aktivitet.co_foreninger = co_foreninger
 
         if request.POST['latlng']:
             latlng = request.POST['latlng'].split(',')

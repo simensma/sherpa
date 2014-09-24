@@ -153,20 +153,20 @@
                 <p>Velg den gruppen eller foreningen som arrangerer dette arrangentet.</p>
               </div>
             </div>
-          </div><!-- /.form-group.co_forening -->
+          </div><!-- /.form-group.co_foreninger -->
 
-          <div class="form-group co_forening">
-            <label class="col-md-2 control-label" for="co_forening">Medarrangør</label>
+          <div class="form-group co_foreninger">
+            <label class="col-md-2 control-label" for="co_foreninger">Medarrangører</label>
             <div class="col-md-6 col-lg-5">
-              <select class="form-control" name="co_forening" id="co_forening"
-                data-placeholder="Ingen medarrangør valgt">
+              <select class="form-control" name="co_foreninger[]" id="co_foreninger"
+                data-placeholder="Ingen medarrangør valgt" multiple>
 
-                <option value=""></option>
+                <!-- <option value=""></option> -->
                 {% for type, groups in all_foreninger.items %}
                   {% if groups %}
                     <optgroup label="{{ type | capfirst }}">
                       {% for g in groups %}
-                        {% if aktivitet.co_forening == g %}
+                        {% if g in aktivitet.co_foreninger.all %}
                           <option value="{{ g.id }}" selected>{{ g.name }}</option>
                         {% else %}
                           <option value="{{ g.id }}">{{ g.name }}</option>
@@ -183,11 +183,11 @@
               </div>
             </div>
             <div class="col-md-2">
-              <button class="btn btn-warning" data-dnt-action="remove-co-forening">
+              <button class="btn btn-warning" data-dnt-action="remove-co-foreninger">
                 <span class="glyphicon glyphicon-remove"></span> Fjern medarrangør
               </button>
             </div>
-          </div><!-- /.form-group.co_forening -->
+          </div><!-- /.form-group.co_foreninger -->
         </div><!-- /.section.forening -->
 
         <div class="section description">

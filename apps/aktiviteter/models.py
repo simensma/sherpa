@@ -8,7 +8,7 @@ from sherpa2.models import Location, Turforslag
 
 class Aktivitet(models.Model):
     forening = models.ForeignKey('foreninger.Forening', related_name='+')
-    co_forening = models.ForeignKey('foreninger.Forening', null=True, related_name='+')
+    co_foreninger = models.ManyToManyField('foreninger.Forening', null=True, related_name='aktiviteter')
     code = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
     description = models.TextField()

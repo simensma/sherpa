@@ -41,7 +41,7 @@ def index(request):
         pages = None
     aktiviteter = Aktivitet.objects.filter(
         Q(forening=request.active_forening) |
-        Q(co_forening=request.active_forening),
+        Q(co_foreninger=request.active_forening),
         pub_date__lte=date.today(),
         published=True,
         private=False,

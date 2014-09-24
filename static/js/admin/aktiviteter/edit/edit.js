@@ -2,7 +2,7 @@ $(function() {
     var scope = $('[data-dnt-container="aktivitet"]');
 
     scope.find('select[name="forening"]').select2();
-    scope.find('select[name="co_forening"]').select2({ allowClear: true });
+    scope.find('select[name="co_foreninger[]"]').select2({ allowClear: true });
     scope.find('select[name="audiences"]').select2({ allowClear: true });
     scope.find('select[name="category_type"]').select2();
     scope.find('select[name="category_tags"]').select2({ allowClear: true });
@@ -13,9 +13,9 @@ $(function() {
         weekStart: 1
     });
 
-    scope.find('button[data-dnt-action="remove-co-forening"]').on('click', function() {
+    scope.find('button[data-dnt-action="remove-co-foreninger"]').on('click', function() {
         // Single selects should be set to empty string ""
-        scope.find('select[name="co_forening"]').select2('val', '');
+        scope.find('select[name="co_foreninger[]"]').select2('val', '');
     });
 
     scope.find('button[data-dnt-action="remove-category-tags"]').on('click', function() {
