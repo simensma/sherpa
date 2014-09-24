@@ -509,7 +509,7 @@
               <label class="col-md-2 control-label" for="pub_date">Vis fra</label>
               <div class="col-md-3">
                 <div class="input-group date" data-dnt-container="pub-date">
-                  <input class="form-control" id="pub_date" name="pub_date" type="date"
+                  <input class="form-control" id="pub_date" name="pub_date" type="text"
                     placeholder="dd.mm.åååå"
                     value="{% firstof aktivitet.pub_date|date:"d.m.Y" now "d.m.Y" %}">
 
