@@ -1,0 +1,36 @@
+<div class="row">
+  <div class="col-lg-12 activity-pictures">
+    <div class="row">
+      <div data-dnt-container="images">
+        {% for i, image in aktivitet.get_images_ordered %}
+          {% include 'common/admin/aktiviteter/edit/image.html' %}
+        {% empty %}
+          <div class="alert alert-warning">
+            <strong>Ingen bilder!</strong>&nbsp;Husk å legge inn bilder fra turen din, slik at
+            det blir synlig på forsiden av UT.no
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="jq-hide" data-dnt-template="image">
+  {% include 'common/admin/aktiviteter/edit/image.html' with i="tmp" image=None %}
+</div>
+
+<div class="form-group">
+  <div class="col-md-12">
+    <div class="shortcuts">
+      <button class="btn btn-default" data-dnt-action="image-select">
+        <i class="fa fa-search"></i> Finn bilde i arkivet
+      </button>
+      <button class="btn btn-default" data-dnt-action="image-upload">
+        <i class="fa fa-upload"></i> Last opp nytt bilde
+      </button>
+    </div>
+    <p class="help-block">Legg til bilder til arrangementet ved å hente fra bildearkivet
+    eller laste opp fra datamaskinen din.</p>
+  </div>
+</div>
+

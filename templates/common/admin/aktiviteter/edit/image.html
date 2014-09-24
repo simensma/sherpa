@@ -1,0 +1,30 @@
+<div class="aktivitet-image col-sm-4 col-md-4 col-lg-3">
+  <input type="hidden" name="images[{{ i }}][url]" value="{{ image.url }}">
+
+  <div class="thumbnail thumbnail-removable">
+    <a href="#" data-dnt-action="image-remove">
+      <span class="glyphicon glyphicon-remove"></span>
+    </a>
+    <img src="{{ image.url }}" alt="{{ image.text }}">
+  </div>
+
+  <div class="form-group">
+    <div class="input-group">
+      <span class="input-group-addon">
+        <span class="glyphicon glyphicon-picture"></span>
+      </span>
+      <input type="text" class="form-control" name="images[{{ i }}][description]"
+        value="{{ image.text }}" placeholder="Beskrivelse av bildet">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="input-group">
+      <span class="input-group-addon">
+        <span class="glyphicon glyphicon-user"></span>
+      </span>
+      <input type="text" class="form-control" name="images[{{ i }}][photographer]"
+        value="{{ image.photographer }}" placeholder="Kreditering av bildet">
+    </div>
+  </div>
+</div>
