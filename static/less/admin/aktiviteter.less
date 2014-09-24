@@ -92,6 +92,10 @@ div.admin-aktivitet-edit {
     @import "admin/aktiviteter/position.less";
   }
 
+  div.section.images {
+    @import "admin/aktiviteter/edit/images.less";
+  }
+
   div.section.dates {
     margin-bottom: 30px;
     @import "admin/aktiviteter/edit/dates.less";
@@ -152,53 +156,6 @@ div.modal.admin-aktiviteter-delete-date {
 .form-horizontal .form-label-left {
   label.control-label {
     text-align: left;
-  }
-}
-
-.areas-and-positions-output .chzn-container {
-  width: 100% !important;
-}
-
-/* Route Pictures, removable */
-
-.thumbnail.removable .removeItem {
-  display: none;
-}
-
-.thumbnail.removable:hover .removeItem {
-  display: block;
-  font-family: 'Glyphicons Halflings';
-  text-align: center;
-  font-size: 12px;
-  color: #fff;
-  border-radius: 100%;
-  position: absolute;
-  top: -8px;
-  left: 8px;
-  background-color: #d2322d;
-  height: 28px;
-  width: 28px;
-  border: 3px solid #fff;
-  box-shadow: 0 0 1px 0 rgba(0, 0, 0, .5);
-  line-height: 20px;
-}
-
-.route-images-all-container .thumbnail {
-  height: 160px;
-}
-
-.route-images-all-container .thumbnail img {
-    max-height: 100%;
-}
-
-.route-images .progress {
-  margin-top: 20px;
-}
-
-.activity-pictures {
-  .form-group {
-    margin-right: 0 !important;
-    margin-left: 0 !important;
   }
 }
 

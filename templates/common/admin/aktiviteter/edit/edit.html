@@ -28,12 +28,14 @@
   <script src="{{ STATIC_URL }}js/admin/aktiviteter/edit/validations.js"></script>
   <script src="{{ STATIC_URL }}js/admin/aktiviteter/edit/edit.js"></script>
   <script src="{{ STATIC_URL }}js/admin/aktiviteter/edit/position.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/aktiviteter/edit/images.js"></script>
 {% endblock %}
 
 {% block js_globals %}
   <script>
     window.Turistforeningen = {
-      admin_user_search_char_length: {{ admin_user_search_char_length }}
+      admin_user_search_char_length: {{ admin_user_search_char_length }},
+      s3_bucket: '{{ s3_bucket }}'
     };
   </script>
 {% endblock %}
@@ -97,7 +99,6 @@
 
         {% csrf_token %}
 
-        <input type="hidden" name="images" value="">
         <input type="hidden" name="preview" value="false">
 
         <div class="form-group submit-header">
@@ -395,56 +396,14 @@
 
         </div><!-- /.section.description -->
 
-        <div class="section pictures">
+        <div class="section images">
           <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
               <h2>Bilder</h2>
             </div>
           </div>
 
-          <div class="row">
-            <div class="col-lg-12 activity-pictures">
-              <div id="noPictures" class="alert alert-warning jq-hide">
-                <strong>Ingen bilder!</strong>&nbsp;Husk å legge inn bilder fra turen din, slik at
-                det blir synlig på forsiden av UT.no
-              </div>
-              <div class="row">
-                <div id="" class="route-images-all-container ui-sortable">
-                  <div class="activity-picture-wrapper col-sm-4 col-md-4 col-lg-3 jq-hide">
-                    <div class="thumbnail removable">
-                      <a id="deletePicture" href="#" class="removeItem">
-                        <span class="glyphicon glyphicon-remove"></span>
-                      </a>
-                      <img src="http://gfx.nrk.no/thplIp5SIOaMmEZgIQUi-gDD0AHgY9GshITgUsysl5VA" alt="">
-                    </div>
-                    <div class="form-group required">
-                      <div class="input-group" data-model-validation-field-name="beskrivelse">
-                        <span class="input-group-addon">
-                          <span class="glyphicon glyphicon-picture"></span>
-                        </span>
-                        <input name="beskrivelse" type="text" placeholder="Beskrivelse av bildet" class="form-control">
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <div class="col-md-10 col-md-offset-2">
-              <div class="shortcuts">
-                <button class="btn btn-default pick-from-image-archive">
-                  <i class="fa fa-search"></i> Finn bilde i arkivet
-                </button>
-                <button class="btn btn-default upload-new-image">
-                  <i class="fa fa-upload"></i> Last opp nytt bilde
-                </button>
-              </div>
-              <p class="help-block">Legg til bilder til arrangementet ved å hente fra bildearkivet
-              eller laste opp fra datamaskinen din.</p>
-            </div>
-          </div>
+          {% include 'common/admin/aktiviteter/edit/images.html' with aktivtet=aktivitet %}
 
         </div><!-- /.section.pictures -->
 

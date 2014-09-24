@@ -63,26 +63,5 @@ $(function() {
     scope.submit(function(e) {
         scope.find('button[type="submit"]').prop('disabled', true);
     });
-
-    /**
-     * DEMO: Code below is work in progress.
-     * Simple toggling of fields, for demo purposes only
-     */
-
-    // DEMO: Images
-
-    $("button.pick-from-image-archive").click(function() {
-        ImageArchivePicker.pick(function(url, description, photographer) {
-            $('.activity-picture-wrapper').removeClass('jq-hide');
-            // TODO: Add to images container
-        });
-    });
-
-    $("button.upload-new-image").click(function() {
-        ImageUploadDialog.open(function(url, description, photographer) {
-            $('.activity-picture-wrapper').removeClass('jq-hide');
-            // TODO: Add to images container
-        });
-    });
 });
 
