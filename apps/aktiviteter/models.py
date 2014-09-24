@@ -124,7 +124,7 @@ class Aktivitet(models.Model):
             return Turforslag.objects.get(id=self.turforslag)
 
     def get_images_ordered(self):
-        return self.images.order_by('order')
+        return enumerate(self.images.order_by('order'))
 
     def get_images_json(self):
         images = []
