@@ -263,15 +263,13 @@ def edit(request, aktivitet):
 
                 # @TODO check start_time > now
                 model.start_date = datetime.strptime(
-                    "%s %s" % (date['start_date'],
-                    date['start_time']),
+                    "%s %s" % (date['start_date'], date['start_time']),
                     "%d.%m.%Y %H:%M"
                 )
 
                 # @TODO check end_time > start_time
                 model.end_date = datetime.strptime(
-                    "%s %s" % (date['end_date'],
-                    date['end_time']),
+                    "%s %s" % (date['end_date'], date['end_time']),
                     "%d.%m.%Y %H:%M"
                 )
 
