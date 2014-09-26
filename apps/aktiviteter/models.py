@@ -235,6 +235,7 @@ class AktivitetDate(models.Model):
     turledere = models.ManyToManyField('user.User', related_name='turleder_aktivitet_dates')
     participants = models.ManyToManyField('user.User', related_name='aktiviteter')
     meeting_place = models.TextField()
+    meeting_time = models.DateTimeField(null=True)
     CONTACT_TYPE_CHOICES = (
         (u'arrangør', 'Arrangørforening'),
         (u'turleder', 'Turleder'),

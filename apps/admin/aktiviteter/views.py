@@ -263,17 +263,22 @@ def edit(request, aktivitet):
 
                 # @TODO check start_time > now
                 model.start_date = datetime.strptime(
-                    "%s %s" % (date['start_date'],
-                    date['start_time']),
+                    "%s %s" % (date['start_date'], date['start_time']),
                     "%d.%m.%Y %H:%M"
                 )
 
                 # @TODO check end_time > start_time
                 model.end_date = datetime.strptime(
-                    "%s %s" % (date['end_date'],
-                    date['end_time']),
+                    "%s %s" % (date['end_date'], date['end_time']),
                     "%d.%m.%Y %H:%M"
                 )
+
+                # @TODO check start_date > meeting_time
+                if date['start_date'] and date['meeting_time']:
+                    model.meeting_time = datetime.strptime(
+                        "%s %s" % (date['start_date'], date['meeting_time']),
+                        "%d.%m.%Y %H:%M"
+                    )
 
                 if not date['signup_method'] or date['signup_method'] == 'none':
                     # To the next maintainer. This block indicates that a date does not allow

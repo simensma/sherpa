@@ -3,8 +3,6 @@ $(function() {
     var marker, map;
 
     function positionSsrSelectShowHandler() {
-        console.log('positionSsrSelectShowHandler');
-
         $(this).find('input').select2({
             placeholder: 'Hvor starter turen?',
             minimumInputLength: 2,
@@ -32,13 +30,10 @@ $(function() {
         ].join('');
     };
 
-    function positionNtbSelectShowHandler() {
-        console.log('positionNtbSelectShowHandler');
-    };
+    function positionNtbSelectShowHandler() { };
 
     function positionMapInit() {
         if (map) { return; }
-        console.log('positionMapInit');
 
         var tile_url = [
             'http://opencache.statkart.no/gatekeeper/gk/',
@@ -56,7 +51,6 @@ $(function() {
 
     function positionMapMarkerUpdate() {
         if (!map) { return; }
-        console.log('positionMapMarkerUpdate');
 
         var latlng = $(this).val().split(',');
 
@@ -66,7 +60,7 @@ $(function() {
             if (marker) {
                 marker.setLatLng(latlng);
             } else {
-                marker = L.marker(latlng, {title: 'Turern starter her'}).addTo(map);
+                marker = L.marker(latlng, {title: 'Turen går her'}).addTo(map);
             }
 
             // @TODO what to put in the popup
@@ -77,24 +71,19 @@ $(function() {
     };
 
     function positionLatlngDomUpdate(e) {
-        console.log('positionLatlngDomUpdate', e.data.type);
-
         var lat, lng;
         if (e.data.type === 'ssr') {
             lat = $(this).select2('data').nord;
             lng = $(this).select2('data').aust;
         } else {
-            return console.log('Type not supported');
+            throw new Error('Type not supported');
         }
 
         $('input[name="latlng"]').val(lat + ',' + lng).trigger("change");
     }
 
     function positionMetadataRegenerate(e) {
-        console.log('positionMetadataRegenerate');
-
         var latlng = $(this).val().split(',');
-        console.log(latlng);
 
         if (latlng.length === 2) {
             positionMetadataSelect.apply($('select[name="counties"]'), latlng);
@@ -104,8 +93,6 @@ $(function() {
     };
 
     function positionMetadataSelect(lat, lng) {
-        console.log('positionMetdataSelect', lat, lng, this);
-
         // @TODO this depends on the dom
         $(this).parent().parent().find('.ajaxloader').removeClass('jq-hide');
 
@@ -131,8 +118,6 @@ $(function() {
     };
 
     function positionMetadataPlaceholderUpdate(e) {
-        console.log('positionMetadataPlaceholderUpdate', e.data.placeholder, arguments);
-
         var html = $.map($(this).find('option:selected'), function(option) {
             return $(option).html().trim();
         }).join(', ');

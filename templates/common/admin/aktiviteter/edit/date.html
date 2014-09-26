@@ -83,19 +83,29 @@
                 </label>
               </div>
               <div class="radio">
-                <label>
+                <label
+                  data-trigger="hover" data-container="body"
+                  data-toggle="popover" data-placement="right"
+                  data-content="Krever ikke Sherpa-bruker eller kontaktinformasjon.">
+
                   <input type="radio" name="dates[{{ i }}][signup_method]" value="simple"
                     data-dnt-toggle="date-signup"
                     {% if date.signup_method == "simple" %}checked{% endif %}>
-                  Enkel påmelding
+
+                  Enkel påmelding <span class="label label-info">?</span>
                 </label>
               </div>
               <div class="radio">
-                <label>
+                <label
+                  data-trigger="hover" data-container="body"
+                  data-toggle="popover" data-placement="right"
+                  data-content="Krever Sherpa-bruker med gyldig kontaktinformasjon.">
+
                   <input type="radio" name="dates[{{ i }}][signup_method]" value="minside"
                     data-dnt-toggle="date-signup"
                     {% if date.signup_method == "minside" %}checked{% endif %}>
-                  Vanlig påmelding
+
+                  Vanlig påmelding <span class="label label-info">?</span>
                 </label>
               </div>
             </div>
@@ -190,14 +200,23 @@
           </div><!-- [data-dnt-container="date-signup"] -->
 
           <!-- meeting_place -->
-          <div class="form-group meetup">
-            <label for="" class="col-sm-3 control-label">Oppmøte</label>
+          <div class="form-group">
+            <label for="" class="col-sm-3 control-label">Oppmøtested</label>
             <div class="col-sm-9">
               <textarea class="form-control" name="dates[{{ i }}][meeting_place]"
-                rows="6">{{ date.meeting_place }}</textarea>
+                rows="2">{{ date.meeting_place }}</textarea>
               <div class="help-block">
-                <p>Beskriv oppøtested og tidspunkt slik at nye deltakere kan finne frem.</p>
+                <p>Beskriv hvor og hvordan deltakere kommer seg til oppmøtestedet.</p>
               </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="" class="col-sm-3 control-label">Oppmøtetid</label>
+            <div class="col-sm-3">
+              <input type="time" class="form-control" name="dates[{{ i }}][meeting_time]"
+                value="{% firstof date.meeting_time|date:"H:i" "" %}"
+                placeholder="07:30">
             </div>
           </div>
 
