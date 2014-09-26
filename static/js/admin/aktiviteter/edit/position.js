@@ -66,7 +66,7 @@ $(function() {
             if (marker) {
                 marker.setLatLng(latlng);
             } else {
-                marker = L.marker(latlng, {title: 'Turern starter her'}).addTo(map);
+                marker = L.marker(latlng, {title: 'Turen går her'}).addTo(map);
             }
 
             // @TODO what to put in the popup
