@@ -273,6 +273,13 @@ def edit(request, aktivitet):
                     "%d.%m.%Y %H:%M"
                 )
 
+                # @TODO check start_date > meeting_time
+                if date['start_date'] and date['meeting_time']:
+                    model.meeting_time = datetime.strptime(
+                        "%s %s" % (date['start_date'], date['meeting_time']),
+                        "%d.%m.%Y %H:%M"
+                    )
+
                 if not date['signup_method'] or date['signup_method'] == 'none':
                     # To the next maintainer. This block indicates that a date does not allow
                     # signup. However, keep in mind that this might be an existing date with
