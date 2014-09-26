@@ -83,19 +83,29 @@
                 </label>
               </div>
               <div class="radio">
-                <label>
+                <label
+                  data-trigger="hover" data-container="body"
+                  data-toggle="popover" data-placement="right"
+                  data-content="Krever ikke Sherpa-bruker eller kontaktinformasjon.">
+
                   <input type="radio" name="dates[{{ i }}][signup_method]" value="simple"
                     data-dnt-toggle="date-signup"
                     {% if date.signup_method == "simple" %}checked{% endif %}>
-                  Enkel påmelding
+
+                  Enkel påmelding <span class="label label-info">?</span>
                 </label>
               </div>
               <div class="radio">
-                <label>
+                <label
+                  data-trigger="hover" data-container="body"
+                  data-toggle="popover" data-placement="right"
+                  data-content="Krever Sherpa-bruker med gyldig kontaktinformasjon.">
+
                   <input type="radio" name="dates[{{ i }}][signup_method]" value="minside"
                     data-dnt-toggle="date-signup"
                     {% if date.signup_method == "minside" %}checked{% endif %}>
-                  Vanlig påmelding
+
+                  Vanlig påmelding <span class="label label-info">?</span>
                 </label>
               </div>
             </div>
