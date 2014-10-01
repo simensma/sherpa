@@ -110,4 +110,3 @@ $(function() {
         $(this).parents('tr').remove();
     };
 });
-

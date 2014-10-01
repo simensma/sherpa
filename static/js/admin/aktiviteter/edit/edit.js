@@ -64,4 +64,3 @@ $(function() {
         scope.find('button[type="submit"]').prop('disabled', true);
     });
 });
-
