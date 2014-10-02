@@ -26,7 +26,7 @@ WIDGETS = {
     'quote': QuoteWidget(),
     'carousel': CarouselWidget(),
     'articles': ArticlesWidget(),
-    'aktivitet-listing': AktivitetListingWidget(),
+    'aktivitet_listing': AktivitetListingWidget(),
     'blog': BlogWidget(),
     'embed': EmbedWidget(),
     'fact': FactWidget(),
