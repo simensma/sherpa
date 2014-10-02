@@ -28,6 +28,14 @@
       {% endfor %}
     </select>
 
+    <h3>Målgruppe</h3>
+
+    <select class="form-control" name="audiences" data-placeholder="Velg målgruppe..." multiple>
+      {% for audience in widget_data.aktivitet_listing.audiences %}
+        <option value="{{ audience.0 }}">{{ audience.1 }}</option>
+      {% endfor %}
+    </select>
+
   </div>
 
   <div class="modal-footer" style="clear: both;">
