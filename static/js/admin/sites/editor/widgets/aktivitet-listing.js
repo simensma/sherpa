@@ -1,7 +1,7 @@
 $(function() {
 
     WidgetEditor.listen({
-        widget_name: 'activity-listing',
+        widget_name: 'aktivitet-listing',
 
         init: function(editor) {
         },
@@ -14,7 +14,7 @@ $(function() {
 
         onSave: function(editor) {
             WidgetEditor.saveWidget({
-                widget: 'activity-listing',
+                widget: 'aktivitet-listing',
             });
             return true;
         }
