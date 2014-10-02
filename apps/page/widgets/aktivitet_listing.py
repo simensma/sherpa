@@ -17,7 +17,8 @@ class AktivitetListingWidget(Widget):
         )
 
         # Programmatic filtering for json values
-        if len(widget_options['audiences']) > 0:
+        # Skip if none, or all, audiences were chosen
+        if len(widget_options['audiences']) > 0 and len(widget_options['audiences']) < len(Aktivitet.AUDIENCE_CHOICES):
             aktivitet_dates = [d for d in aktivitet_dates
                 if any(a in widget_options['audiences'] for a in json.loads(d.aktivitet.audiences))
             ]
