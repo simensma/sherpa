@@ -1,4 +1,5 @@
 from datetime import date
+import json
 
 from django.db.models import Q
 
@@ -14,6 +15,12 @@ class AktivitetListingWidget(Widget):
             aktivitet__private=False,
             start_date__gte=date.today(),
         )
+
+        # Programmatic filtering for json values
+        if len(widget_options['audiences']) > 0:
+            aktivitet_dates = [d for d in aktivitet_dates
+                if any(a in widget_options['audiences'] for a in json.loads(d.aktivitet.audiences))
+            ]
 
         return {'aktivitet_dates': aktivitet_dates}
 
