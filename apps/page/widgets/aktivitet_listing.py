@@ -1,10 +1,10 @@
 from page.widgets.widget import Widget
-from aktiviteter.util import filter_aktivitet_dates
+from aktiviteter.models import AktivitetDate
 
 class AktivitetListingWidget(Widget):
     def parse(self, widget_options, site):
-        aktivitet_dates = filter_aktivitet_dates({
-            'page': 1,
-        })
+        aktivitet_dates = AktivitetDate.get_published().filter(
+            aktivitet__private=False,
+        ).order_by('-start_date')
 
         return {'aktivitet_dates': aktivitet_dates}
