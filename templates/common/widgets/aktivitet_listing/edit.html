@@ -21,11 +21,7 @@
         {% if type.foreninger|length > 0 %}
           <optgroup label="{{ type.name }}">
             {% for forening in type.foreninger %}
-              {% if forening in active_site.forening %}
-                <option value="{{ forening.id }}" selected>{{ forening.name }}</option>
-              {% else %}
-                <option value="{{ forening.id }}">{{ forening.name }}</option>
-              {% endif %}
+              <option value="{{ forening.id }}">{{ forening.name }}</option>
             {% endfor %}
           </optgroup>
         {% endif %}
