@@ -29,4 +29,5 @@ class AktivitetListingWidget(Widget):
         return {
             'all_foreninger_sorted': Forening.get_all_sorted_with_type_data(),
             'audiences': Aktivitet.AUDIENCE_CHOICES,
+            'categories': Aktivitet.CATEGORY_CHOICES,
         }

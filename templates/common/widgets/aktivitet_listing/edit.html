@@ -36,6 +36,14 @@
       {% endfor %}
     </select>
 
+    <h3>Kategori</h3>
+
+    <select class="form-control" name="categories" data-placeholder="Velg kategori..." multiple>
+      {% for category in widget_data.aktivitet_listing.categories %}
+        <option value="{{ category.0 }}">{{ category.1 }}</option>
+      {% endfor %}
+    </select>
+
   </div>
 
   <div class="modal-footer" style="clear: both;">
