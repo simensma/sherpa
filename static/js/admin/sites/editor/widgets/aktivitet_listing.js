@@ -52,11 +52,25 @@ $(function() {
         },
 
         onSave: function(editor) {
+            var $audiences = editor.find('select[name="audiences"]');
+            var $categories = editor.find('select[name="categories"]');
+
+            var audiences = $audiences.select2('val');
+            var categories = $categories.select2('val');
+
+            if(audiences.length === 0) {
+                audiences = allOptionsFor($audiences);
+            }
+
+            if(categories.length === 0) {
+                categories = allOptionsFor($categories);
+            }
+
             WidgetEditor.saveWidget({
                 widget: 'aktivitet_listing',
                 foreninger: editor.find('select[name="foreninger"]').select2('val'),
-                audiences: editor.find('select[name="audiences"]').select2('val'),
-                categories: editor.find('select[name="categories"]').select2('val'),
+                audiences: audiences,
+                categories: categories,
             });
             return true;
         }
