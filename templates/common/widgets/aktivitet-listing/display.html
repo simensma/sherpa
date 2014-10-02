@@ -1,3 +1,29 @@
-<p>
-  Aktivitetsliste
-</p>
+{% for date in widget.aktivitet_dates %}
+
+  <div class="aktivitet-item">
+    <div class="category">{{ date.aktivitet.get_category }}</div>
+    <div class="image">
+      <img src="http://placehold.it/150x150">
+    </div>
+    <div class="info">
+      <h2>
+        <a href="{% url 'aktiviteter.views.show' date.id %}">
+          {{ date.aktivitet.title|default:"(Mangler navn)" }}
+        </a>
+      </h2>
+      <div class="meta">
+        <span class="date">
+          {{ date.start_date|date:"j. F Y" }}
+        </span>
+      </div>
+      <p class="description">
+        {{ date.aktivitet.description|truncatewords:"12" }}
+      </p>
+    </div>
+  </div>
+
+{% empty %}
+
+  <p>Ingen kommende aktiviteter.</p>
+
+{% endfor %}
