@@ -1,4 +1,7 @@
-<div class="modal hide widget-editor aktivitet_listing" data-widget="aktivitet_listing">
+<div
+  class="modal hide widget-editor aktivitet_listing"
+  data-widget="aktivitet_listing"
+  data-dnt-active-forening="{{ active_site.forening.id }}">
 
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
@@ -19,6 +22,24 @@
         Informasjonssider for turgrupper som også vil vise tilbudet til denne gruppen
       </li>
     </ol>
+
+    <h3>Arrangør</h3>
+
+    <select class="form-control" name="foreninger" data-placeholder="Ingen arrangør valgt" multiple>
+      {% for type in widget_data.aktivitet_listing.all_foreninger_sorted %}
+        {% if type.foreninger|length > 0 %}
+          <optgroup label="{{ type.name }}">
+            {% for forening in type.foreninger %}
+              {% if forening in active_site.forening %}
+                <option value="{{ forening.id }}" selected>{{ forening.name }}</option>
+              {% else %}
+                <option value="{{ forening.id }}">{{ forening.name }}</option>
+              {% endif %}
+            {% endfor %}
+          </optgroup>
+        {% endif %}
+      {% endfor %}
+    </select>
 
   </div>
 
