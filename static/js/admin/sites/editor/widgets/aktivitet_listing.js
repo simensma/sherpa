@@ -23,21 +23,11 @@ $(function() {
             editor.find('[data-dnt-container="edit-filters"]').show();
             editor.find('[data-dnt-container="filters"]').hide();
 
-            // Create an array with all available audiences and default to that
+            // Default to all available audiences and categories
             var audiences = editor.find('select[name="audiences"]');
-            var audience_options = [];
-            audiences.find('option').each(function() {
-                audience_options.push($(this).val());
-            });
-            audiences.select2('val', audience_options);
-
-            // Create an array with all available categories and default to that
             var categories = editor.find('select[name="categories"]');
-            var category_options = [];
-            categories.find('option').each(function() {
-                category_options.push($(this).val());
-            });
-            categories.select2('val', category_options);
+            audiences.select2('val', allOptionsFor(audiences));
+            categories.select2('val', allOptionsFor(categories));
         },
 
         onEdit: function(editor, widget_content) {
@@ -45,19 +35,8 @@ $(function() {
             editor.find('select[name="audiences"]').select2('val', widget_content.audiences);
             editor.find('select[name="categories"]').select2('val', widget_content.categories);
 
-            // Create an array with all available audiences and default to that
-            var audiences = editor.find('select[name="audiences"]');
-            var audience_options = [];
-            audiences.find('option').each(function() {
-                audience_options.push($(this).val());
-            });
-
-            // Create an array with all available categories and default to that
-            var categories = editor.find('select[name="categories"]');
-            var category_options = [];
-            categories.find('option').each(function() {
-                category_options.push($(this).val());
-            });
+            var audience_options = allOptionsFor(editor.find('select[name="audiences"]'));
+            var category_options = allOptionsFor(editor.find('select[name="categories"]'));
 
             if(widget_content.audiences.length == audience_options.length &&
                 widget_content.categories.length == category_options.length) {
@@ -82,4 +61,13 @@ $(function() {
             return true;
         }
     });
+
+    function allOptionsFor(select) {
+        // Create an array with all available options in the given select
+        var options = [];
+        select.find('option').each(function() {
+            options.push($(this).val());
+        });
+        return options;
+    }
 });
