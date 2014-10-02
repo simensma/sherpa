@@ -16,7 +16,7 @@
 
     <h3>Arrangør</h3>
 
-    <select class="form-control" name="foreninger" data-placeholder="Ingen arrangør valgt" multiple>
+    <select class="form-control" name="foreninger" data-placeholder="Velg arrangør..." multiple>
       {% for type in widget_data.aktivitet_listing.all_foreninger_sorted %}
         {% if type.foreninger|length > 0 %}
           <optgroup label="{{ type.name }}">
