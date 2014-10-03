@@ -40,7 +40,7 @@ $(function() {
         }
     });
 
-    button_selections.find("button").click(function() {
+    filters.find("button").click(function() {
         refreshContent(results_content.attr('data-current-page'));
     });
 
@@ -97,13 +97,15 @@ $(function() {
         });
         var start_date = filters.find("input[name='start_date']").val();
         var end_date = filters.find("input[name='end_date']").val();
+        var search = filters.find("input[name='search']").val();
         return {
             categories: categories,
             audiences: audiences,
             difficulties: difficulties,
             locations: locations,
             start_date: start_date,
-            end_date: end_date
+            end_date: end_date,
+            search: search
         };
     }
 

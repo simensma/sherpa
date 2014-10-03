@@ -11,6 +11,10 @@ def filter_aktivitet_dates(filter):
 
     dates = AktivitetDate.get_published().filter(aktivitet__private=False)
 
+    if 'search' in filter and len(filter['search']) > 2:
+        # @TODO add search on aktivitet__code
+        dates = dates.filter(aktivitet__title__contains=filter['search'])
+
     if 'categories' in filter and len(filter['categories']) > 0:
         dates = dates.filter(aktivitet__category__in=filter['categories'])
 
