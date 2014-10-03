@@ -253,6 +253,25 @@ class Forening(models.Model):
             'turgruppe': [f for f in foreninger if f.type == 'turgruppe'],
         }
 
+    @staticmethod
+    def get_all_sorted_with_type_data():
+        foreninger_sorted = cache.get('foreninger.all.sorted_by_type_with_type_data')
+        if foreninger_sorted is None:
+            foreninger_sorted = Forening.sort_with_type_data(Forening.objects.all())
+            cache.set('foreninger.all.sorted_by_type_with_type_data', foreninger_sorted, 60 * 60 * 24 * 7)
+        return foreninger_sorted
+
+    @staticmethod
+    def sort_with_type_data(foreninger):
+        """Like sort(), but with both the code and name for each type. Preferably all use of sort() should
+        be rewritten to replace it with this method."""
+        foreninger = sorted(foreninger, key=lambda f: f.name.lower())
+        return [{
+            'code': type[0],
+            'name': type[1],
+            'foreninger': [f for f in foreninger if f.type == type[0]],
+        } for type in Forening.TYPES]
+
     class Meta:
         ordering = ['name']
 

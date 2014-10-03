@@ -1,0 +1,62 @@
+<div
+  class="modal hide widget-editor aktivitet_listing"
+  data-widget="aktivitet_listing"
+  data-dnt-active-forening="{{ active_site.forening.id }}">
+
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h3>Liste med turer og aktiviteter</h3>
+  </div>
+
+  <div class="modal-body">
+
+    <p>
+      Dette er en enkel liste med turer og aktiviteter som passer godt for foreninger med få turer i året, eller for
+      små turgrupper som ønsker å vise tilbudet sitt.
+    </p>
+
+    <h3>Arrangør</h3>
+
+    <select class="form-control" name="foreninger" data-placeholder="Velg arrangør..." multiple>
+      {% for type in widget_data.aktivitet_listing.all_foreninger_sorted %}
+        {% if type.foreninger|length > 0 %}
+          <optgroup label="{{ type.name }}">
+            {% for forening in type.foreninger %}
+              <option value="{{ forening.id }}">{{ forening.name }}</option>
+            {% endfor %}
+          </optgroup>
+        {% endif %}
+      {% endfor %}
+    </select>
+
+    <p data-dnt-container="edit-filters">
+      <a href="javascript:undefined" data-dnt-trigger="edit-filters">Filtrer på målgruppe eller
+      kategori...</a>
+    </p>
+
+    <div data-dnt-container="filters">
+      <h3>Målgruppe</h3>
+
+      <select class="form-control" name="audiences" data-placeholder="Velg målgruppe..." multiple>
+        {% for audience in widget_data.aktivitet_listing.audiences %}
+          <option value="{{ audience.0 }}">{{ audience.1 }}</option>
+        {% endfor %}
+      </select>
+
+      <h3>Kategori</h3>
+
+      <select class="form-control" name="categories" data-placeholder="Velg kategori..." multiple>
+        {% for category in widget_data.aktivitet_listing.categories %}
+          <option value="{{ category.0 }}">{{ category.1 }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+  </div>
+
+  <div class="modal-footer" style="clear: both;">
+    <button class="btn btn-success save"><i class="icon-ok icon-white"></i> Sett inn listen</button>
+    <button class="btn" data-dismiss="modal">Avbryt</button>
+  </div>
+
+</div>
