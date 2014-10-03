@@ -40,6 +40,15 @@ $(function() {
         }
     });
 
+
+    // Disable enter submit on forms
+    filters.find("form").bind("keypress", function(e) {
+        if (e.keyCode == 13) {
+            refreshContent(results_content.attr('data-current-page'));
+            return false;
+        }
+    });
+
     filters.find("button").click(function() {
         refreshContent(results_content.attr('data-current-page'));
     });
