@@ -95,13 +95,15 @@ $(function() {
         filters.find("select[name='location'] option:selected").each(function() {
             locations.push($(this).val());
         });
-        var travel_date_from = filters.find("input[name='travel_date_from']").val();
+        var start_date = filters.find("input[name='start_date']").val();
+        var end_date = filters.find("input[name='end_date']").val();
         return {
             categories: categories,
             audiences: audiences,
             difficulties: difficulties,
             locations: locations,
-            travel_date: travel_date_from,
+            start_date: start_date,
+            end_date: end_date
         };
     }
 
