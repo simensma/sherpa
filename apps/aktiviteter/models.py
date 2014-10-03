@@ -74,7 +74,7 @@ class Aktivitet(models.Model):
         return json.loads(self.audiences)
 
     def get_category(self):
-        return [c for c in self.CATEGORY_CHOICES if c[0] == self.category][0]
+        return [c for c in self.CATEGORY_CHOICES if c[0] == self.category][0][1]
 
     def get_main_subcategories(self):
         return [{
@@ -125,6 +125,10 @@ class Aktivitet(models.Model):
 
     def get_images_ordered(self):
         return enumerate(self.images.order_by('order'))
+
+    def get_image(self):
+        for image in self.images.order_by('order'):
+            return image
 
     def get_images_json(self):
         images = []

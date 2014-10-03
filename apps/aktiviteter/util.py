@@ -11,6 +11,10 @@ def filter_aktivitet_dates(filter):
 
     dates = AktivitetDate.get_published().filter(aktivitet__private=False)
 
+    if 'search' in filter and len(filter['search']) > 2:
+        # @TODO add search on aktivitet__code
+        dates = dates.filter(aktivitet__title__contains=filter['search'])
+
     if 'categories' in filter and len(filter['categories']) > 0:
         dates = dates.filter(aktivitet__category__in=filter['categories'])
 
@@ -18,7 +22,13 @@ def filter_aktivitet_dates(filter):
         dates = dates.filter(aktivitet__difficulty__in=filter['difficulties'])
 
     try:
-        dates = dates.filter(start_date__gte=datetime.strptime(filter['travel_date'], "%d.%m.%Y"))
+        if 'start_date' in filter and filter['start_date'] != '':
+            dates = dates.filter(start_date__gte=datetime.strptime(filter['start_date'], "%d.%m.%Y"))
+        else:
+            dates = dates.filter(start_date__gte=datetime.now())
+
+        if 'end_date' in filter and filter['end_date'] != '':
+            dates = dates.filter(end_date__lte=datetime.strptime(filter['end_date'], "%d.%m.%Y"))
     except (ValueError, KeyError):
         pass
 

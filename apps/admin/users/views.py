@@ -54,7 +54,7 @@ def show(request, other_user):
         'other_user': other_user,
         'revokable_foreninger': Forening.sort(revokable_foreninger),
         'assignable_foreninger': Forening.sort(assignable_foreninger),
-        'all_foreninger': Forening.sort(Forening.objects.all()),
+        'all_foreninger': Forening.get_all_sorted(),
         'turleder_roles': Turleder.TURLEDER_CHOICES,
         'five_years_from_now': five_years_from_now,
     }

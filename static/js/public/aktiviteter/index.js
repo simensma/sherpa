@@ -40,7 +40,16 @@ $(function() {
         }
     });
 
-    button_selections.find("button").click(function() {
+
+    // Disable enter submit on forms
+    filters.find("form").bind("keypress", function(e) {
+        if (e.keyCode == 13) {
+            refreshContent(results_content.attr('data-current-page'));
+            return false;
+        }
+    });
+
+    filters.find("button").click(function() {
         refreshContent(results_content.attr('data-current-page'));
     });
 
@@ -95,13 +104,45 @@ $(function() {
         filters.find("select[name='location'] option:selected").each(function() {
             locations.push($(this).val());
         });
-        var travel_date = filters.find("input[name='travel_date']").val();
+        var start_date = filters.find("input[name='start_date']").val();
+        var end_date = filters.find("input[name='end_date']").val();
+        var search = filters.find("input[name='search']").val();
         return {
             categories: categories,
             audiences: audiences,
             difficulties: difficulties,
             locations: locations,
-            travel_date: travel_date,
+            start_date: start_date,
+            end_date: end_date,
+            search: search
         };
     }
+
+
+    $('input[name="ssr_id"]').select2({
+        placeholder: 'Finn sted',
+        minimumInputLength: 2,
+        escapeMarkup: function (m) { return m; },
+        formatSearching: function () { return 'Søker'; },
+        formatInputTooShort: function (term, minLength) { return 'Minimum to bokstaver'; },
+        formatResult: positionSsrToHtml,
+        query: function(options) {
+            var res = [];
+            $.fn.SSR(options.term).done(function(steder) {
+                res = $.map(steder.stedsnavn, function(sted) {
+                    sted.id = sted.ssrId;
+                    sted.text = sted.stedsnavn;
+                    return sted;
+                });
+            }).always(function() { options.callback({results: res}); });
+        }
+    });
+
+    function positionSsrToHtml(sted) {
+        return [
+            '<label>' + sted.text + '</label><br>',
+            '<small>' + [sted.navnetype, sted.kommunenavn, sted.fylkesnavn].join(' i ') + '</small>'
+        ].join('');
+    };
+
 });

@@ -130,7 +130,7 @@ def edit(request, aktivitet):
             'audiences': Aktivitet.AUDIENCE_CHOICES,
             'categories': Aktivitet.CATEGORY_CHOICES,
             'subcategories': Aktivitet.SUBCATEGORIES,
-            'all_foreninger': Forening.sort(Forening.objects.all()),
+            'all_foreninger': Forening.get_all_sorted(),
             'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH,
             'counties': County.typical_objects().order_by('name'),
             'municipalities': Municipality.objects.order_by('name'),

@@ -1,38 +1,61 @@
 div.aktivitet-listing {
   div.search-filters {
     font-family: "DTL Nobel" !important;
-    margin: 25px 0;
-    .form-border;
 
-    div.row-fluid {
-      h3 {
-        font-size: 20px;
-        font-weight: normal;
+    h3 {
+      font-size: 18px;
+    }
+
+    div.section:not(:last-of-type),
+    div.section:first-of-type {
+      margin-bottom: 30px;
+    }
+
+    div.button-selections {
+      button {
+        margin-bottom: 5px;
       }
+    }
 
-      div.section:not(:last-of-type) {
-        margin-bottom: 30px;
-      }
+  }
 
-      div.button-selections {
-        button {
-          margin-bottom: 5px;
+  div.column-query-parameters {
+
+    padding-top: 30px;
+
+    h2 {
+      font-size: 40px;
+      text-transform: uppercase;
+    }
+  }
+
+  div.column-results {
+    background-color: #e4e4e4;
+    padding: 30px;
+
+    table.aktiviteter {
+      td {
+        padding: 0;
+
+        div.aktivitet-item {
+          .aktivitet-item();
         }
       }
     }
   }
 
-  table.aktiviteter {
-    p.date {
-      color: rgb(150, 150, 150);
-    }
-  }
-
-  div.listing-footer {
+  div.listing-footer,
+  div.listing-header {
     * {
       font-family: "DTL Nobel" !important;
     }
-
+    p {
+      float: left;
+    }
+    .pagination {
+      float: right;
+      margin: 0;
+    }
   }
 
   div.loading {
@@ -142,9 +165,3 @@ div.aktivitet-signup {
   }
 }
 
-p.temporary-aktivitet-beta-highlight {
-  text-align: center;
-  margin-bottom: 0;
-  font-weight: bold;
-  font-size: 18px;
-}

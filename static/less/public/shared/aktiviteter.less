@@ -1,0 +1,52 @@
+/**
+ * Listing of aktiviteter is shared between the canonical site (public/aktiviteter.less)
+ * and the listing widget (public/widgets/aktivitet_listing.less)
+ */
+
+.aktivitet-item() {
+  position: relative;
+  margin-bottom: 20px;
+  background-color: #fff;
+  height: 150px;
+
+  h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+
+  div.image {
+    float: left;
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+    margin-right: 20px;
+
+     > img {
+      max-width: none;
+      max-height: 100%;
+      display: block;
+    }
+  }
+
+  div.info {
+    padding:  15px 20px;
+  }
+
+  div.meta {
+    font-family: "DTL Nobel" !important;
+    font-size: 14px;
+    color: #1d1d1d;
+    margin-bottom: 10px;
+  }
+
+  div.category {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    background-color: rgba(0, 0, 0, 0.25);
+    padding: 7px 9px;
+    font-family: "DTL Nobel" !important;
+    color: #fff;
+  }
+}
