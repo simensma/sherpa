@@ -65,7 +65,15 @@ div.aktivitet-listing {
       div.image {
         float: left;
         width: 150px;
+        height: 150px;
+        overflow: hidden;
         margin-right: 20px;
+
+         > img {
+          max-width: none;
+          max-height: 100%;
+          display: block;
+        }
       }
 
       div.info {
