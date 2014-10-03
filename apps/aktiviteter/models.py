@@ -126,6 +126,10 @@ class Aktivitet(models.Model):
     def get_images_ordered(self):
         return enumerate(self.images.order_by('order'))
 
+    def get_image(self):
+        for image in self.images.order_by('order'):
+            return image
+
     def get_images_json(self):
         images = []
         for image in self.images.order_by('order'):
