@@ -1,0 +1,4 @@
+Utility styles for image utility modals.
+
+I initially wanted to place these directly in less/admin/util/ but placed them here instead because the corresponding
+javascript and template files are also placed in the admin/images/util/ subdirectory.

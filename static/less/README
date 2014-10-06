@@ -1,0 +1,58 @@
+Description of the files in this directory:
+-------------------------------------------
+
+compile.sh
+  Compilation script used on the production server (with a git post-hook) to compile less into css
+
+admin.less  A compilation of all less files to be included in a single css for the admin layout
+
+public.less
+  A compilation of all less files to be included in a single css for the public layout
+
+editor.less
+  Ad-hoc compilation for editor css, since it is common for admin and public. Currently a separately included css file;
+  needs to be refactored into admin.less and public.less though - this is a hack.
+
+print.less
+  Style overrides to be applied for media="print", both in the admin and public layout
+
+500.less
+  Styles for the 500 Server Error page
+
+ie7.less
+  Separate styles for Internet Explorer 7. Now deprecated as we're not supporting IE7 anymore, at least not for the
+  admin layout. We might want to keep it a little while for the public layout, but it can probably be removed soon.
+
+
+Description of the subdirectories in this directory:
+----------------------------------------------------
+
+admin/
+  Collection of less-files to be included in the admin layout css.
+
+public/
+  Collection of less-files to be included in the public layout css.
+
+common/
+  Collection of less-files to be included in both the admin and public layout css.
+
+lib/
+  See lib/README
+
+
+Directory hierarchy *inside* admin, public and/or common:
+---------------------------------------------------------
+
+generic/
+  Completely generic styles and common markup
+
+util/
+  Reusable components, usually tied to some specific markup
+
+shared/
+  Module-specific but shared across modules. For example, listing of aktiviteter contains some styles shared between
+  the main aktivitet-listing page and the corresponding widget.
+
+apps/
+  Contains explicit less files for single use on some specific page. Structured according to other files (apps,
+  templates etc.)
