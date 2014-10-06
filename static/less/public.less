@@ -31,23 +31,25 @@
 // Module-specific but shared
 @import "public/shared/aktiviteter.less";
 
-// Page- or module-specific
+// Page- or module-specific (move these into hierarchy, like below)
 @import "public/aktiviteter.less";
-@import "public/article.less";
-@import "public/article-listing.less";
-@import "public/conditions.less";
-@import "public/membership.less";
-@import "public/foreninger.less";
-@import "public/enrollment.less";
-@import "public/instagram.less";
-@import "public/user.less";
 @import "public/cms.less";
-@import "public/doge.less";
-@import "public/connect.less";
-@import "public/fotokonkurranse.less";
 @import "public/admin-editor-preview.less";
-@import "public/fjelltreffen.less";
 @import "public/slider.less";
+
+// Page- or module-specific (with correct hierarchy)
+@import "public/apps/articles/article.less";
+@import "public/apps/articles/listing.less";
+@import "public/apps/conditions/conditions.less";
+@import "public/apps/connect/connect.less";
+@import "public/apps/core/doge.less";
+@import "public/apps/enrollment/enrollment.less";
+@import "public/apps/fjelltreffen/fjelltreffen.less";
+@import "public/apps/foreninger/foreninger.less";
+@import "public/apps/fotokonkurranse/fotokonkurranse.less";
+@import "public/apps/membership/membership.less";
+@import "public/apps/instagram/instagram.less";
+@import "public/apps/user/user.less";
 
 // Widgets
 @import "public/widgets/article-blog.less";
