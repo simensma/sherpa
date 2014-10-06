@@ -27,15 +27,13 @@
 
 // Shared utility components
 @import "public/util/forening-logo.less";
+@import "public/util/slider.less";
 
 // Module-specific but shared
 @import "public/shared/aktiviteter.less";
 
 // Page- or module-specific (move these into hierarchy, like below)
 @import "public/aktiviteter.less";
-@import "public/cms.less";
-@import "public/admin-editor-preview.less";
-@import "public/slider.less";
 
 // Page- or module-specific (with correct hierarchy)
 @import "public/apps/articles/article.less";
@@ -58,3 +56,10 @@
 @import "public/widgets/quote.less";
 @import "public/widgets/table.less";
 @import "public/widgets/campaign.less";
+
+// Uncategorized - hacks for pages generated in the editor
+@import "public/page-hacks.less";
+
+// Uncategorized - not sure where this belongs; styles that semantically belong in the
+// admin app, but should be included in the public layout (for the preview page)
+@import "public/admin-editor-preview.less";
