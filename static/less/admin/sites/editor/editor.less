@@ -1,0 +1,330 @@
+// This sheet needs a good refactoring
+
+/* Page header editing */
+
+div.editor-header {
+  background-color: rgb(240, 240, 240) !important;
+  color: rgb(65, 65, 65) !important;
+
+  h1 {
+    font-size: 160%;
+    font-weight: normal;
+  }
+
+  div.publish {
+    input[name='date'] {
+      width: 110px;
+    }
+
+    input[name='time'] {
+      width: 70px;
+    }
+  }
+}
+
+/* Article header editing */
+
+div.editor-header.article {
+  img.article-thumbnail {
+    background-color: rgb(0, 0, 0);
+    min-width: 20px;
+    min-height: 20px;
+  }
+
+  img.article-thumbnail:hover {
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+    cursor: pointer;
+  }
+
+  div.preview-image {
+    float: right;
+  }
+
+  div.publish, div.editor-header.article div.status {
+    margin-bottom: 10px;
+  }
+
+  select[name='authors'] {
+    width: 400px;
+  }
+}
+
+/* CMS editor */
+
+div.cms-editor {
+  article {
+
+    div.column {
+      position: relative; // Needed to position its children
+    }
+
+    div.image {
+      img {
+        display: block;
+        background-color: rgb(0, 0, 0);
+        min-width: 20px;
+        min-height: 20px;
+      }
+
+      img.cropped {
+        max-width: none !important;
+      }
+    }
+
+    div.image:hover:not(.moving),
+    div.image.hover:not(.moving),
+    div.widget:not(.moving):not(.static):hover,
+    div.widget.hover:not(.moving):not(.static) {
+      opacity: 0.5;
+      filter: alpha(opacity=50);
+      cursor: pointer;
+    }
+
+    div[contenteditable='true'].selected {
+      background-color: rgb(235, 235, 235);
+    }
+
+    div[contenteditable='true']:hover:not(.selected):not(.moving),
+    div[contenteditable='true'].hover:not(.selected):not(.moving) {
+      background-color: rgb(240, 240, 240);
+    }
+
+    div.html[data-placeholder], div.lede[data-placeholder] {
+      margin: -1px -1px 19px -1px; /* Subtract the border from the default margins */
+      border: 1px solid rgb(255, 95, 95);
+      background-color: rgb(255, 220, 220);
+      font-style: italic;
+    }
+
+    div.html[data-placeholder]:hover, div.lede[data-placeholder]:hover {
+      cursor: text;
+    }
+
+    div.edit-structure-inner {
+      text-align: center;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      border-top: 1px solid rgb(200, 200, 200);
+      border-left: 1px solid rgb(200, 200, 200);
+      border-right: 1px solid rgb(200, 200, 200);
+
+      button {
+        width: 30px;
+        height: 30px;
+        background-position: center center;
+        background-repeat: no-repeat;
+      }
+
+      button[data-type='single'] {
+        background-image: url("/static/img/admin/sites/editor/structure/single.png");
+      }
+
+      button[data-type='double'] {
+        background-image: url("/static/img/admin/sites/editor/structure/double.png");
+      }
+
+      button[data-type='sidebar-left'] {
+        background-image: url("/static/img/admin/sites/editor/structure/sidebar-left.png");
+      }
+
+      button[data-type='sidebar-right'] {
+        background-image: url("/static/img/admin/sites/editor/structure/sidebar-right.png");
+      }
+
+      button[data-type='triple'] {
+        background-image: url("/static/img/admin/sites/editor/structure/triple.png");
+      }
+
+      button[data-type='quadruple'] {
+        background-image: url("/static/img/admin/sites/editor/structure/quadruple.png");
+      }
+
+    }
+
+    @content-control-height: 30px;
+    @content-control-padding: 10px 0;
+
+    div.add-content {
+      text-align: center;
+      min-height: @content-control-height;
+      margin: 0;
+      padding: @content-control-padding;
+      background-image: url('/static/img/icons/glyph/original/glyphicons_190_circle_plus.png');
+      background-position: center center;
+      background-repeat: no-repeat;
+    }
+
+    div.drop-area {
+      @height: @content-control-height;
+      @border: 2px;
+      padding: @content-control-padding;
+      height: @height - (@border * 2);
+      border: @border dotted rgb(200, 200, 200);
+
+      font-size: 16px;
+      text-align: center;
+      font-style: italic;
+      color: rgb(160, 160, 160);
+
+      &:hover {
+        cursor: pointer;
+        background-color: rgb(245, 245, 245);
+        border-color: rgb(120, 120, 120);
+      }
+    }
+
+    div.add-content:hover {
+      cursor: pointer;
+      background-color: rgb(240, 240, 240);
+    }
+
+    // The content-item fields are contained within a popover (sibling to add-content)
+    div.content-item {
+      float: left;
+      min-width: 50px;
+      min-height: 65px;
+      margin: 0 5px 10px 5px;
+      padding: 5px 10px 5px 10px;
+      text-align: center;
+      font-family: "DTL Nobel" !important;
+      font-size: 16px;
+
+      &:hover {
+        cursor: pointer;
+        background-color: rgb(240, 240, 240);
+      }
+
+      .image-container {
+        text-align: center;
+
+        img {
+          width: 40px;
+          height: 40px;
+        }
+      }
+    }
+
+    div.content {
+      min-height: 70px;
+    }
+
+    div.content-control {
+      position: absolute;
+      z-index: 30; // Float above the content you're positioned over
+      width: 23px;
+      height: 23px;
+      padding: 12px 25px;
+      border: 1px solid rgb(52, 224, 194);
+      background-color: rgb(255, 255, 255);
+      background-position: center center;
+      background-repeat: no-repeat;
+    }
+
+    div.content-control:hover {
+      cursor: pointer;
+      background-color: rgb(52, 224, 194);
+    }
+
+    div.remove-content {
+      right: 0;
+      background-image: url('/static/img/admin/sites/editor/content/remove-content-inactive.png');
+    }
+
+    div.remove-content:hover {
+      background-image: url('/static/img/admin/sites/editor/content/remove-content-active.png');
+    }
+
+    div.move-content {
+      right: 75px; // The outer width of remove-content - could be dynamically calculated
+      background-image: url('/static/img/admin/sites/editor/content/move-content-inactive.png');
+    }
+
+    div.move-content:hover {
+      background-image: url('/static/img/admin/sites/editor/content/move-content-active.png');
+    }
+
+    div.crop-content {
+      right: 150px; // The outer width of other control-contents - could be dynamically calculated
+      background-image: url('/static/img/admin/sites/editor/content/crop-content-inactive.png');
+    }
+
+    div.crop-content:hover {
+      background-image: url('/static/img/admin/sites/editor/content/crop-content-active.png');
+    }
+
+    div.crop-control {
+      position: absolute;
+      background-color: rgb(245, 245, 245);
+      border: 1px solid rgb(221, 221, 221);
+      padding: 10px;
+      width: 100%;
+    }
+
+  }
+
+  div.cms-editor-toolbar {
+    position: fixed;
+    top: 50px;
+    right: 50px;
+    width: 500px;
+    z-index: 1000;
+    padding: 9px;
+    background-color: rgb(245, 245, 245) !important;
+    border: 1px solid rgb(221, 221, 221);
+
+    a.button {
+      display: block;
+      float: left;
+      cursor: pointer;
+      width: 27px;
+      height: 27px;
+    }
+
+    a.button:hover {
+      text-decoration: none;
+    }
+
+    input[name='url'] {
+      width: 350px;
+    }
+  }
+}
+
+/* Change image-dialog */
+
+div.change-image {
+  width: 800px;
+
+  h2 {
+    font-size: 20px;
+  }
+}
+
+/* Widget editors */
+
+.widget-editor[data-widget='campaign'] {
+  .campaigns {
+    .campaign {
+      border-bottom: 1px solid rgb(200, 200, 200);
+      margin-bottom: 20px;
+    }
+  }
+
+  button.add-campaign {
+    margin-bottom: 20px;
+  }
+}
+
+.widget-editor.aktivitet_listing {
+  .modal-body {
+    p, li {
+      font-family: "DTL Nobel" !important;
+    }
+
+    h3 {
+      margin-top: 20px;
+      margin-bottom: 5px;
+    }
+  }
+}
