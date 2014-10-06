@@ -1,3 +1,28 @@
+/* Common layout (admin + public) */
+
+// Generic common
+@import "common/fonts.less";
+@import "common/generic-markup.less";
+@import "common/campaign-variables.less";
+
+// Generic utility components
+@import "common/util/tag-box.less";
+
+// Page- or module-specific common
+@import "common/main-menu.less";
+@import "common/publications.less";
+
+// Library implementations or overrides
+@import "lib/jquery-sortable.less";
+@import "lib/typeahead.less";
+@import "lib/colorpicker.less";
+@import "lib/sb-admin.less";
+@import "lib/datepicker.less";
+@import "lib/chosen.less";
+@import "lib/outdated-browser.less";
+
+/* Admin layout */
+
 // Generic
 @import "admin/layout.less";
 @import "admin/forms.less";
@@ -26,24 +51,3 @@
 @import "admin/sites/settings/publish.less";
 @import "admin/sites/navigation/menu.less";
 @import "admin/sites/campaigns.less";
-
-// Library implementations or overrides
-@import "lib/jquery-sortable.less";
-@import "lib/typeahead.less";
-@import "lib/colorpicker.less";
-@import "lib/sb-admin.less";
-@import "lib/datepicker.less";
-@import "lib/chosen.less";
-@import "lib/outdated-browser.less";
-
-// Generic common
-@import "common/fonts.less";
-@import "common/generic-markup.less";
-@import "common/campaign-variables.less";
-
-// Generic utility components
-@import "common/util/tag-box.less";
-
-// Page- or module-specific common
-@import "common/main-menu.less";
-@import "common/publications.less";

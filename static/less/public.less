@@ -1,3 +1,24 @@
+/* Common layout (admin + public) */
+
+// Generic common
+@import "common/fonts.less";
+@import "common/generic-markup.less";
+@import "common/campaign-variables.less";
+
+// Generic utility components
+@import "common/util/tag-box.less";
+
+// Page- or module-specific common
+@import "common/publications.less";
+@import "common/main-menu.less";
+
+// Library implementations or overrides
+@import "lib/datepicker.less";
+@import "lib/chosen.less";
+@import "lib/outdated-browser.less";
+
+/* Public layout */
+
 // Generic
 @import "public/main.less";
 @import "public/generic/bootstrap-overrides.less";
@@ -35,21 +56,3 @@
 @import "public/widgets/quote.less";
 @import "public/widgets/table.less";
 @import "public/widgets/campaign.less";
-
-// Library implementations or overrides
-@import "lib/datepicker.less";
-@import "lib/chosen.less";
-@import "lib/outdated-browser.less";
-
-// Generic common
-@import "common/fonts.less";
-@import "common/generic-markup.less";
-@import "common/campaign-variables.less";
-
-// Generic utility components
-@import "common/util/tag-box.less";
-
-// Page- or module-specific common
-@import "common/publications.less";
-@import "common/main-menu.less";
-
