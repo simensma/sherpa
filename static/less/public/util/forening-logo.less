@@ -52,29 +52,29 @@ div.forening-logo {
       line-height: 12px;
     }
   }
-}
 
-/**
- * There's a strange psychological effect where the text in the top logos (those aligned with the top window edge)
- * LOOK vertically unaligned - however the same logo displayed anywhere else on the page would look just right. So
- * this rule handles those top logos and sets a slightly shorter padding-top value, so it looks right.
- * Note that we had to duplicate the @img-height variable here for the height.
- */
-div.forening-logo.top {
-  @img-height: 56px;
+  /**
+   * There's a strange psychological effect where the text in the top logos (those aligned with the top window edge)
+   * LOOK vertically unaligned - however the same logo displayed anywhere else on the page would look just right. So
+   * this rule handles those top logos and sets a slightly shorter padding-top value, so it looks right.
+   * Note that we had to duplicate the @img-height variable here for the height.
+   */
+  &.top {
+    @img-height: 56px;
 
-  a.single, span.single {
-    @padding-top: 15px;
-    padding-top: @padding-top;
-    height: @img-height - @padding-top;
+    a.single, span.single {
+      @padding-top: 15px;
+      padding-top: @padding-top;
+      height: @img-height - @padding-top;
+    }
+    // Note that the double-version looks fine with its default values and isn't adjusted here
   }
-  // Note that the double-version looks fine with its default values and isn't adjusted here
-}
 
-div.forening-logo.left {
-  float: left;
-}
+  &.left {
+    float: left;
+  }
 
-div.forening-logo.right {
-  float: right;
+  &.right {
+    float: right;
+  }
 }
