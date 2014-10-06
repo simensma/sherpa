@@ -2,10 +2,14 @@
 
 article {
 
-  & div.lede, & span.lede, & p.lede {
+  .lede() {
     font-family: "DTL Nobel" !important;
     font-size: 20px;
     line-height: 1.4;
+  }
+
+  & div.lede, & span.lede, & p.lede {
+    .lede;
   }
 
   & div.image img, & div.widget.carousel img {
@@ -118,9 +122,7 @@ article {
     }
 
     div.lede, div.lede * {
-      font-family: "DTL Nobel" !important;
-      font-size: 20px;
-      line-height: 1.4;
+      .lede;
     }
   }
 }
