@@ -7,7 +7,7 @@
             Kjønn:
           </th>
           <td>
-            <select name="gender">
+            <select class="form-control" name="gender">
               <option value=""{% if filter.gender == '' %} selected{% endif %}>Begge kjønn</option>
               <option value="f"{% if filter.gender == 'f' %} selected{% endif %}>Kvinner</option>
               <option value="m"{% if filter.gender == 'm' %} selected{% endif %}>Menn</option>
@@ -20,7 +20,7 @@
             Område:
           </th>
           <td>
-            <select name="county">
+            <select class="form-control" name="county">
               <option value="all"{% if not filter or filter.county == 'all' %} selected{% endif %}>Hele landet</option>
               {% for county in counties %}
                 <option value="{{ county.id }}"{% if filter.county == county.id|stringformat:"s" %} selected{% endif %}>{{ county.name }}</option>
@@ -39,7 +39,7 @@
             Aldersgruppe:
           </th>
           <td>
-            <select name="min_age">
+            <select class="form-control" name="min_age">
               {% for age in age_limits|slice:":-1" %}
                 <option value="{{ age }}"{% if filter.minage == age|stringformat:"s" %} selected{% endif %}>{{ age }} år</option>
               {% endfor %}
@@ -47,7 +47,7 @@
 
             -
 
-            <select name="max_age">
+            <select class="form-control" name="max_age">
               {% for age in age_limits|slice:"1:" %}
                 <option value="{{ age|add:-1 }}"{% if filter.maxage == age|add:-1|stringformat:"s" %} selected{% endif %}>{{ age|add:-1 }} år</option>
               {% endfor %}
@@ -61,7 +61,7 @@
             Fritekst:
           </th>
           <td>
-            <input type="text" name="text" placeholder="Søk i fritekst..." value="{{ filter.text }}">
+            <input class="form-control" name="text" type="text" placeholder="Søk i fritekst..." value="{{ filter.text }}">
           </td>
         </tr>
       </table>
