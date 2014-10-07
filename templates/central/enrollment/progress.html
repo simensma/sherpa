@@ -30,17 +30,17 @@
       {% if step > 1 %}<a href="{% url 'enrollment.views.registration' %}">{% endif %}
         {% trans "Personopplysninger" %}
       {% if step > 1 %}</a>{% endif %}
-    {% if step == 1 %}</strong>{% endif %} <i class="icon-arrow-right"></i>
+    {% if step == 1 %}</strong>{% endif %} <i class="glyphicon glyphicon-arrow-right"></i>
     {% if step == 2 %}<strong>{% endif %}
       {% if step > 2 %}<a href="{% url 'enrollment.views.household' %}">{% endif %}
         {% trans "Adresse" %}
       {% if step > 2 %}</a>{% endif %}
-    {% if step == 2 %}</strong>{% endif %} <i class="icon-arrow-right"></i>
+    {% if step == 2 %}</strong>{% endif %} <i class="glyphicon glyphicon-arrow-right"></i>
     {% if step == 3 %}<strong>{% endif %}
       {% if step > 3 %}<a href="{% url 'enrollment.views.verification' %}">{% endif %}
         {% trans "Bekreftelse" %}
       {% if step > 3 %}</a>{% endif %}
-    {% if step == 3 %}</strong>{% endif %} <i class="icon-arrow-right"></i>
+    {% if step == 3 %}</strong>{% endif %} <i class="glyphicon glyphicon-arrow-right"></i>
     {% if step == 4 %}<strong>{% endif %}
         {% trans "Betaling" %}
     {% if step == 4 %}</strong>{% endif %}
