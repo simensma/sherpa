@@ -6,9 +6,16 @@
     Få gyldig kvittering på ditt medlemskap tilsendt gratis på SMS.
   </p>
 
-  <input type="text" name="phone_mobile" class="input-medium" placeholder="Ditt mobilnummer...">
-  <button class="btn input-button-align" data-href="{% url 'membership.views.memberid_sms' %}">Send</button>
-  <img class="jq-hide ajaxloader" src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+  <div class="input-group">
+    <input class="form-control" type="text" name="phone_mobile" placeholder="Ditt mobilnummer...">
+    <span class="input-group-btn">
+      <button class="btn btn-default" data-href="{% url 'membership.views.memberid_sms' %}">Send</button>
+    </span>
+  </div>
+
+  <p>
+    <img class="jq-hide ajaxloader" src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+  </p>
 
   <div class="results">
     <div class="alert alert-success ok jq-hide">
