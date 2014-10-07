@@ -1,6 +1,6 @@
 $(function() {
 
-    var form = $("form#household");
+    var form = $('[data-dnt-container="household-form"]');
     var existing_result = form.find("div.existing-result");
 
     form.find("select[name='country']").chosen();

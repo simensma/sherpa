@@ -1,0 +1,115 @@
+/* Mixins */
+
+.gifters() {
+  table.gift-receiver {
+    margin-right: 20px;
+  }
+
+  table.gift-giver, table.gift-receiver {
+    td {
+      font-family: "DTL Nobel" !important;
+    }
+  }
+
+  h2.gift-from-to {
+    font-size: 22px;
+  }
+
+  p.gift-receiver-type {
+    font-family: "DTL Nobel" !important;
+    font-size: 18px;
+    font-weight: bold;
+
+    span.price-popover {
+      margin-left: 5px;
+
+      div.popover {
+        color: rgb(0, 0, 0);
+        font-weight: normal;
+      }
+    }
+  }
+}
+
+/* Entry (index page) */
+
+form.gift-entry {
+  margin-top: 40px;
+
+  .types {
+    border: 1px solid rgb(221, 221, 221);
+    padding: 14px 20px;
+    height: 170px;
+  }
+}
+
+/* Main form */
+
+.gift-membership-form {
+  margin-top: 20px;
+  margin-top: 0;
+
+  div.border {
+    border: 1px solid rgb(221, 221, 221);
+    padding: 14px 20px;
+    margin-bottom: 20px;
+  }
+
+  div.receiver-box:first-of-type {
+    button.remove-receiver {
+      display: none;
+    }
+  }
+
+  label {
+    .label();
+  }
+
+  input, select {
+    color: rgb(0, 0, 0);
+  }
+
+  select[name='receiver_type'] {
+    width: 300px;
+  }
+
+  a.date-picker-control {
+    margin-bottom: 8px;
+  }
+
+  div.control-group.giver_phone label, div.control-group.giver_email label, div.control-group.giver_memberid label, div.control-group.receiver_type label {
+    padding-left: 20px;
+    background: url('/static/img/icons/netlife/icon-info.png') center left no-repeat;
+  }
+
+  div.control-group.giver_phone:hover label, div.control-group.giver_email:hover label, div.control-group.giver_memberid:hover label, div.control-group.receiver_type:hover label {
+    background-image: url('/static/img/icons/netlife/icon-info-hover.png');
+  }
+
+  .asterisks;
+}
+
+/* Confirmation */
+
+.gift-membership-confirmation {
+  .gifters;
+
+  p.gift-confirmation-buttons {
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+}
+
+/* Receipt */
+
+.gift-receipt-details {
+  margin-top: 40px;
+
+  .gifters;
+
+  p.gift-order-sent {
+    font-family: "DTL Nobel" !important;
+    font-size: 18px;
+    font-weight: bold;
+  }
+}

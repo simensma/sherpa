@@ -4,30 +4,31 @@
 
 {% block body %}
 
-<h1>Gi bort gavemedlemskap</h1>
-{% include 'central/enrollment/gift/progress.html' with step=4 %}
+<div class="gift-receipt-details">
 
-<p class="gift-order-sent">
-  Din bestilling har blitt sendt!
-</p>
-<p>
-  Faktura, gavekort og medlemskort blir sendt til din adresse så snart DNTs medlemsservice har godkjent bestillingen. Merk at medlemskapet ikke er gyldig før fakturaen er betalt.
-</p>
-{% if any_normal_memberships %}
-  <p>
-    Pris for vanlig medlemskap varierer mellom medlemsforeningene og avhenger av alder og husstandsmedlemskap. <a href="/medlem/">Se gjeldende kontingentsatser</a>.
+  <h1>Gi bort gavemedlemskap</h1>
+  {% include 'central/enrollment/gift/progress.html' with step=4 %}
+
+  <p class="gift-order-sent">
+    Din bestilling har blitt sendt!
   </p>
-{% endif %}
-
-{% for message in messages %}
-  {% if message.message == 'email_receipt_fail' %}
+  <p>
+    Faktura, gavekort og medlemskort blir sendt til din adresse så snart DNTs medlemsservice har godkjent bestillingen. Merk at medlemskapet ikke er gyldig før fakturaen er betalt.
+  </p>
+  {% if any_normal_memberships %}
     <p>
-      <strong>Vi fikk ikke sendt deg kvittering på e-post,</strong> grunnet en teknisk feil. Merk at bestillingen <strong>har</strong> blitt sendt uten problemer. Du bør derfor vurdere å printe ut denne siden om du ønsker å ta vare på kvitteringen.
+      Pris for vanlig medlemskap varierer mellom medlemsforeningene og avhenger av alder og husstandsmedlemskap. <a href="/medlem/">Se gjeldende kontingentsatser</a>.
     </p>
   {% endif %}
-{% endfor %}
 
-<div class="gift-receipt-details">
+  {% for message in messages %}
+    {% if message.message == 'email_receipt_fail' %}
+      <p>
+        <strong>Vi fikk ikke sendt deg kvittering på e-post,</strong> grunnet en teknisk feil. Merk at bestillingen <strong>har</strong> blitt sendt uten problemer. Du bør derfor vurdere å printe ut denne siden om du ønsker å ta vare på kvitteringen.
+      </p>
+    {% endif %}
+  {% endfor %}
+
   <div class="row">
     <div class="col-md-4">
 

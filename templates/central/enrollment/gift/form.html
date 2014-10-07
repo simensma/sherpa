@@ -50,7 +50,11 @@
   </div>
 {% endif %}
 
-<form id="gift" method="post" action="{% url 'enrollment.gift.views.validate' %}">
+<form
+  class="gift-membership-form"
+  data-dnt-container="gift-membership-form"
+  method="post"
+  action="{% url 'enrollment.gift.views.validate' %}">
   {% csrf_token %}
   <input type="hidden" name="receivers" value="">
   <div class="row">

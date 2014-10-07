@@ -1,7 +1,7 @@
 $(function() {
 
     var registration = $("div.enrollment-registration");
-    var form = registration.find("form#registration");
+    var form = registration.find('[data-dnt-container="registration-form"]');
 
     // startDate is based on the earliest possible mssql smalldatetime value
     var now = new Date();
