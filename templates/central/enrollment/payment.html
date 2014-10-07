@@ -53,7 +53,7 @@
         </div>
       {% endif %}
 
-      <form method="post" action="{% url 'enrollment.views.payment' %}" class="payment">
+      <form class="payment" method="post" action="{% url 'enrollment.views.payment' %}">
         {% csrf_token %}
         <input type="hidden" name="main-member" value="">
         <h2>{% trans "Velg betalingsmåte:" %}</h2>
