@@ -1,2 +1,9 @@
 .member-registration {
+  .zipcode-inputs-inline;
+
+  // Override the area width in this case simply because it's too large for its context. Note that this will make
+  // the areas with the longest names not fully visible
+  input[name='area'] {
+    width: 225px;
+  }
 }
