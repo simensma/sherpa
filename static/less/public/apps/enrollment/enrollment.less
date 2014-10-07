@@ -1,17 +1,70 @@
 /* Enrollment */
 
-form#registration label, form#household label, form#gift label {
+.label() {
   font-size: 110%;
   font-family: "DTL Nobel" !important;
 }
 
-form#registration .control-group:not(.error,.warning) label, form#household .control-group:not(.error,.warning) label {
+.label-default-color() {
   color: black;
 }
 
-form#registration .gender {
-  display: inline-block;
-  margin: 0 10px 15px 0;
+.input-default-color() {
+  color: black;
+}
+
+.input-default-style() {
+  font-size: 120%;
+  padding: 8px;
+  height: auto !important;
+}
+
+.button-margin() {
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
+
+.enrollment-registration {
+  form.registration {
+    label {
+      .label();
+    }
+
+    .control-group:not(.error,.warning) {
+      label {
+        .label-default-color;
+      }
+    }
+
+    .gender {
+      display: inline-block;
+      margin: 0 10px 15px 0;
+    }
+
+    input[type='text'] {
+      .input-default-color;
+      .input-default-style;
+    }
+
+    div.date.input-append {
+      span.add-on {
+        padding-top: 8px;
+        padding-bottom: 8px;
+      }
+    }
+
+    button {
+      .button-margin;
+    }
+  }
+}
+
+form#household label, form#gift label {
+  .label();
+}
+
+form#household .control-group:not(.error,.warning) label {
+  .label-default-color;
 }
 
 /* Negate defaults and JQuery-UI design */
@@ -51,24 +104,17 @@ div.existing-result {
   }
 }
 
-form#registration input[type='text'], form#household input[type='text'], form#household select {
-  color: black;
+form#household select {
+  .input-default-color;
 }
 
-form#registration input[type='text'], form#household input[type='text'] {
-  font-size: 120%;
-  padding: 8px;
-  height: auto !important;
+form#household input[type='text'] {
+  .input-default-color;
+  .input-default-style;
 }
 
-form#registration div.date.input-append span.add-on {
-  padding-top: 8px;
-  padding-bottom: 8px;
-}
-
-form#registration button, form#household button {
-  margin-top: 3px;
-  margin-bottom: 3px;
+form#household button {
+  .button-margin;
 }
 
 table.memberlist {

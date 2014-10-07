@@ -88,7 +88,12 @@
         <br>
       {% endif %}
 
-      <form id="registration" class="form-border" action="{% url 'enrollment.views.registration' %}" method="post">
+      <form
+        class="form-border registration"
+        data-dnt-container="registration-form"
+        action="{% url 'enrollment.views.registration' %}"
+        method="post">
+
         {% csrf_token %}
         {% if current_user %}
           <input type="hidden" name="user" value="{{ current_user.id }}">
