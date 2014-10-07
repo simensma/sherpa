@@ -93,16 +93,22 @@
             {% csrf_token %}
 
             <div class="form-group name">
-              <label class="col-sm-3 control-label" for="id_name">Ditt navn</label>
+              <label class="col-sm-3 control-label" for="id_name">
+                Ditt navn
+                <span class="asterisk red">*</span>
+              </label>
               <div class="col-sm-9">
-                {{ form.name }} <span class="asterisk red">*</span>
+                {{ form.name }}
               </div>
             </div>
 
             <div class="form-group email">
-              <label class="col-sm-3 control-label" for="id_email">Din e-postadresse</label>
+              <label class="col-sm-3 control-label" for="id_email">
+                Din e-postadresse
+                <span class="asterisk red">*</span>
+              </label>
               <div class="col-sm-9">
-                {{ form.email }} <span class="asterisk red">*</span>
+                {{ form.email }}
               </div>
             </div>
 
