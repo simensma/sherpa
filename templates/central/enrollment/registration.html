@@ -65,8 +65,10 @@
                     {% trans "(Anonym)" %}
                   {% endif %}
                 </a>
-                <span class="remove">
-                  <a href="{% url 'enrollment.views.remove' user.id %}"><i class="icon-remove" title="Fjern {{ user.name }}"></i></a>
+                <span class="remove pull-right">
+                  <a href="{% url 'enrollment.views.remove' user.id %}">
+                    <i class="glyphicon glyphicon-remove" title="Fjern {{ user.name }}"></i>
+                  </a>
                 </span>
               </td>
             </tr>
