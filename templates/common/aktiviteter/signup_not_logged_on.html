@@ -83,7 +83,7 @@
                 Her kan du melde deg på ved å legge inn navn og telefonnummer eller e-postadresse. Vurdér å opprette en Min side-bruker i stedet: Da kan du logge på og se historikk over turene du har deltatt på, og mye mer. Du trenger ikke være medlem i DNT.
               </p>
 
-              <form action="{% url 'aktiviteter.views.signup_simple' aktivitet_date.id %}" method="post" class="form-default form-horizontal simple-signup">
+              <form action="{% url 'aktiviteter.views.signup_simple' aktivitet_date.id %}" method="post" class="form-dnt-default form-horizontal simple-signup">
                 {% csrf_token %}
 
                 <div class="control-group name">

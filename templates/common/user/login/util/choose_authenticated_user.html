@@ -7,7 +7,7 @@
       Du har flere brukere med <strong>samme</strong> e-postadresse og passord. Vennligst velg hvilken du vil logge på med:
     </p>
 
-    <form action="{{ action }}{% if next %}?next={{ next }}{% endif %}" method="post" class="form-default form-horizontal choose">
+    <form action="{{ action }}{% if next %}?next={{ next }}{% endif %}" method="post" class="form-dnt-default form-horizontal choose">
       {% csrf_token %}
       <input type="hidden" name="user" value="">
 

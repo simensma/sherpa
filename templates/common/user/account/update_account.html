@@ -20,7 +20,7 @@
 
     <h2>Dine opplysninger</h2>
 
-    <form action="{% url 'user.views.update_account' %}" method="post" class="form-border form-horizontal form-default account-info">
+    <form action="{% url 'user.views.update_account' %}" method="post" class="form-border form-horizontal form-dnt-default account-info">
       {% csrf_token %}
 
       {% for message in messages %}

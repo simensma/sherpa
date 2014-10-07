@@ -74,7 +74,7 @@
 
     {% else %}
 
-      <form action="{% url 'user.views.norway_bus_tickets_order' %}" method="post" class="form-border form-horizontal form-default">
+      <form action="{% url 'user.views.norway_bus_tickets_order' %}" method="post" class="form-border form-horizontal form-dnt-default">
         {% csrf_token %}
 
         {% for message in messages %}

@@ -46,7 +46,7 @@
       {% endif %}
     {% endfor %}
 
-    <form action="{% url 'user.views.update_account' %}" method="post" class="form-border form-default form-horizontal account-info">
+    <form action="{% url 'user.views.update_account' %}" method="post" class="form-border form-dnt-default form-horizontal account-info">
       {% csrf_token %}
 
       <div class="control-group name">

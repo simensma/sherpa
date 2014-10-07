@@ -57,7 +57,7 @@
       {% endif %}
     {% endfor %}
 
-    <form action="{% url 'fjelltreffen.views.save' %}" method="post" enctype="multipart/form-data" class="form-border form-default form-horizontal fjelltreffen-annonse-edit">
+    <form action="{% url 'fjelltreffen.views.save' %}" method="post" enctype="multipart/form-data" class="form-border form-dnt-default form-horizontal fjelltreffen-annonse-edit">
       {% csrf_token %}
       <input type="hidden" name="id" value="{{ annonse.id }}">
 

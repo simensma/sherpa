@@ -89,7 +89,7 @@
 
           <h2>Svar på annonsen</h2>
 
-          <form action="{% url 'fjelltreffen.views.show' annonse.id %}" method="post" class="form-default form-horizontal fjelltreffen-annonse-reply">
+          <form action="{% url 'fjelltreffen.views.show' annonse.id %}" method="post" class="form-dnt-default form-horizontal fjelltreffen-annonse-reply">
             {% csrf_token %}
 
             <div class="control-group name">
@@ -173,7 +173,7 @@
             <em>Vi setter pris på at du gir oss beskjed om upassende innhold på Fjelltreffen. Du kan selv velge om du vil oppgi en begrunnelse.</em>
           </p>
 
-          <form action="{% url 'fjelltreffen.views.report' annonse.id %}" method="post" class="form-default fjelltreffen-annonse-report">
+          <form action="{% url 'fjelltreffen.views.report' annonse.id %}" method="post" class="form-dnt-default fjelltreffen-annonse-report">
             {% csrf_token %}
 
             <div class="control-group text">

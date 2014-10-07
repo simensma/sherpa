@@ -15,7 +15,7 @@
   {% endif %}
 {% endfor %}
 
-<form action="{{ action }}{% if next %}?next={{ next }}{% endif %}" method="post" class="form-default form-horizontal login-form">
+<form action="{{ action }}{% if next %}?next={{ next }}{% endif %}" method="post" class="form-dnt-default form-horizontal login-form">
   {% csrf_token %}
 
   <div class="form-group email">

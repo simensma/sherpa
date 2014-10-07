@@ -6,7 +6,7 @@
   {% endif %}
 {% endfor %}
 
-<form action="{% url 'admin.forening.views.index' current_forening.id %}#opprett" method="post" class="create-forening form-default form-horizontal">
+<form action="{% url 'admin.forening.views.index' current_forening.id %}#opprett" method="post" class="create-forening form-dnt-default form-horizontal">
   {% csrf_token %}
   <input type="hidden" name="form" value="create">
 

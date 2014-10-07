@@ -1,6 +1,6 @@
 {% load i18n %}
 
-<form action="{{ action }}{% if next %}?next={{ next }}{% endif %}" method="post" class="registration-nonmember form-default form-horizontal">
+<form action="{{ action }}{% if next %}?next={{ next }}{% endif %}" method="post" class="registration-nonmember form-dnt-default form-horizontal">
   {% csrf_token %}
 
   <p class="form-hints">

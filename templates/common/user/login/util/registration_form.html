@@ -1,6 +1,6 @@
 {% load i18n %}
 
-<form action="{{ action }}{% if next %}?next={{ next }}{% endif %}" method="post" class="form-default form-horizontal member-registration" data-memberid-url="{% url 'user.login.views.verify_memberid' %}">
+<form action="{{ action }}{% if next %}?next={{ next }}{% endif %}" method="post" class="form-dnt-default form-horizontal member-registration" data-memberid-url="{% url 'user.login.views.verify_memberid' %}">
   {% csrf_token %}
 
   <div class="step1">

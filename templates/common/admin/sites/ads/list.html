@@ -181,7 +181,7 @@
       <div class="tab-content tab-content-visible">
         <div class="tab-pane active" id="fil">
 
-          <form method="post" action="{% url 'admin.sites.ads.views.create_ad' active_site.id %}" enctype="multipart/form-data" class="form-default form-horizontal">
+          <form method="post" action="{% url 'admin.sites.ads.views.create_ad' active_site.id %}" enctype="multipart/form-data" class="form-dnt-default form-horizontal">
             {% csrf_token %}
             <input type="hidden" name="type" value="file">
 
@@ -240,7 +240,7 @@
         </div>
         <div class="tab-pane" id="script">
 
-          <form method="post" action="{% url 'admin.sites.ads.views.create_ad' active_site.id %}" class="form-default form-horizontal">
+          <form method="post" action="{% url 'admin.sites.ads.views.create_ad' active_site.id %}" class="form-dnt-default form-horizontal">
             {% csrf_token %}
             <input type="hidden" name="type" value="adform-script">
 
