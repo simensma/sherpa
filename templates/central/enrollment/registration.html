@@ -98,44 +98,44 @@
         {% if current_user %}
           <input type="hidden" name="user" value="{{ current_user.id }}">
         {% endif %}
-        <div class="control-group name">
+        <div class="form-group name">
           <label>{% trans "Fullt navn" %} <span class="asterisk red">*</span></label>
-          <input type="text" class="input-large" name="name" value="{{ current_user.name }}">
+          <input type="text" class="form-control" name="name" value="{{ current_user.name }}">
         </div>
-        <div class="control-group dob">
+        <div class="form-group dob">
           <label>{% trans "Fødselsdato (dd.mm.åååå)" %} <span class="asterisk red">*</span></label>
-          <div class="date input-append">
-            <input type="text" class="input-medium dob" name="dob" value="{{ current_user.dob|date:"d.m.Y" }}">
-            <span class="add-on">
-              <i class="icon-th"></i>
+          <div class="input-group date">
+            <input type="text" class="form-control dob" name="dob" value="{{ current_user.dob|date:"d.m.Y" }}">
+            <span class="input-group-addon">
+              <i class="glyphicon glyphicon-calendar"></i>
             </span>
           </div>
         </div>
-        <div class="control-group gender">
+        <div class="form-group gender">
           <label> {% trans "Kjønn" %} <span class="asterisk red">*</span></label>
           <div>
             <div class="radio gender">
-              <label class="">
+              <label>
                 <input type="radio" name="gender" value="f"{% if current_user.gender == 'f' %} checked{% endif %}> {% trans "Kvinne" %}
               </label>
             </div>
             <div class="radio gender">
-              <label class="">
+              <label>
                 <input type="radio" name="gender" value="m"{% if current_user.gender == 'm' %} checked{% endif %}> {% trans "Mann" %}
               </label>
             </div>
           </div>
         </div>
         <div style="clear: both;"></div>
-        <div class="control-group phone">
+        <div class="form-group phone">
           <label> {% trans "Mobiltelefon" %} {% if enrollment.users.count == 0 %}<span class="asterisk red">*</span>{% endif %}</label>
-          <input type="text" class="input-medium" name="phone" value="{{ current_user.phone }}">
+          <input type="text" class="form-control" name="phone" value="{{ current_user.phone }}">
         </div>
-        <div class="control-group email">
+        <div class="form-group email">
           <label> {% trans "E-post" %} {% if enrollment.users.count == 0 %}<span class="asterisk red">*</span>{% endif %}</label>
-          <input type="text" class="input-large" name="email" value="{{ current_user.email }}">
+          <input type="text" class="form-control" name="email" value="{{ current_user.email }}">
         </div>
-        <button type="submit" class="btn btn-lg"><i class="icon-user"></i> {% if current_user %}{% trans "Lagre endringer" %}{% else %}{% trans "Legg til medlem" %}{% endif %}</button><br>
+        <button type="submit" class="btn btn-default btn-lg"><i class="glyphicon glyphicon-user"></i> {% if current_user %}{% trans "Lagre endringer" %}{% else %}{% trans "Legg til medlem" %}{% endif %}</button><br>
       </form>
     </div>
 
