@@ -26,25 +26,31 @@
       <div class="form-elements">
 
         <div class="step1">
-          <div class="control-group memberid">
-            <label class="control-label" for="memberid">Medlemsnummer:</label>
-            <div class="controls">
-              <input type="text" class="input-xlarge" name="memberid" id="memberid">
+          <div class="form-group memberid">
+            <label class="col-sm-3 control-label" for="memberid">Medlemsnummer:</label>
+            <div class="col-sm-7">
+              <input type="text" class="form-control" name="memberid" id="memberid">
             </div>
           </div>
 
-          <div class="control-group zipcode">
-            <label class="control-label" for="zipcode">Postnummer:</label>
-            <div class="controls">
-              <input type="text" class="input-small" name="zipcode" id="zipcode" maxlength="4">
-              <input type="text" class="input-medium" name="area" disabled>
-              <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="ajaxloader zipcode jq-hide" alt="Laster poststed..." title="Laster poststed...">
+          <div class="form-group zipcode">
+            <label class="col-sm-3 control-label" for="zipcode">Postnummer:</label>
+            <div class="col-sm-7">
+              <div class="row">
+                <div class="col-sm-3">
+                  <input type="text" class="form-control" name="zipcode" id="zipcode" maxlength="4">
+                </div>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" name="area" disabled>
+                  <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="ajaxloader zipcode jq-hide" alt="Laster poststed..." title="Laster poststed...">
+                </div>
+              </div>
             </div>
           </div>
 
-          <div class="control-group country">
-            <label class="control-label" for="country">Land:</label>
-            <div class="controls">
+          <div class="form-group country">
+            <label class="col-sm-3 control-label" for="country">Land:</label>
+            <div class="col-sm-7">
               <select name="country" id="country" data-chosen>
                 <optgroup id="scandinavia" label="Scandinavia">
                   <option value="{{ countries.norway.code }}" selected>{{ countries.norway.name }}</option>
@@ -63,12 +69,12 @@
         </div>
 
         <div class="step2 jq-hide">
-          <div class="control-group email" data-email="{{ user.get_email }}">
-            <label class="control-label">E-postadresse:</label>
-            <div class="controls">
-              <div class="hints">
+          <div class="form-group email" data-email="{{ user.get_email }}">
+            <label class="col-sm-3 control-label">E-postadresse:</label>
+            <div class="col-sm-9">
+              <span class="help-block">
                 Du har forskjellige e-postadresser i Min side og medlemsregisteret, vennligst velg hvilken adresse du vil bruke:
-              </div>
+              </span>
 
               <div class="radio">
                 <label>
@@ -87,15 +93,15 @@
               <div class="radio">
                 <label>
                   <input type="radio" name="email-choice" value="custom">
-                  <input type="text" class="input-xlarge" name="email" placeholder="Velg en annen adresse..." disabled>
+                  <input type="text" class="form-control" name="email" placeholder="Velg en annen adresse..." disabled>
                 </label>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="control-group">
-          <div class="controls">
+        <div class="form-group">
+          <div class="col-sm-offset-3">
             <button type="submit" class="btn btn-lg btn-danger"><i class="icon-ok icon-white"></i> Registrer deg</button>
             <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="ajaxloader submit jq-hide" alt="Sjekker medlemsnummer, vennligst vent...">
           </div>
