@@ -1,3 +1,36 @@
+/* Mixins */
+
+.gifters() {
+  table.gift-receiver {
+    margin-right: 20px;
+  }
+
+  table.gift-giver, table.gift-receiver {
+    td {
+      font-family: "DTL Nobel" !important;
+    }
+  }
+
+  h2.gift-from-to {
+    font-size: 22px;
+  }
+
+  p.gift-receiver-type {
+    font-family: "DTL Nobel" !important;
+    font-size: 18px;
+    font-weight: bold;
+
+    span.price-popover {
+      margin-left: 5px;
+
+      div.popover {
+        color: rgb(0, 0, 0);
+        font-weight: normal;
+      }
+    }
+  }
+}
+
 /* Entry (index page) */
 
 form.gift-entry {
@@ -54,4 +87,29 @@ form.gift-entry {
   }
 
   .asterisks;
+}
+
+/* Confirmation */
+
+.gift-membership-confirmation {
+  .gifters;
+
+  p.gift-confirmation-buttons {
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+}
+
+/* Receipt */
+
+.gift-receipt-details {
+  margin-top: 40px;
+
+  .gifters;
+
+  p.gift-order-sent {
+    font-family: "DTL Nobel" !important;
+    font-size: 18px;
+    font-weight: bold;
+  }
 }
