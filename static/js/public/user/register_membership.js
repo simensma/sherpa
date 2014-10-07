@@ -73,7 +73,7 @@ $(function() {
                 }
                 form.find("button[type='submit']").show();
             } else if(result.memberid_lookups_exceeded) {
-                form.find("div.form-hints div.memberid-lookups-exceeded").slideDown();
+                form.find("div.memberid-lookups-exceeded").slideDown();
             } else {
                 no_memberid_match.slideDown();
                 form.find("button[type='submit']").show();
