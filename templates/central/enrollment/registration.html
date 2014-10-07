@@ -100,19 +100,29 @@
         {% if current_user %}
           <input type="hidden" name="user" value="{{ current_user.id }}">
         {% endif %}
-        <div class="form-group" data-dnt-form-group="name">
-          <label>{% trans "Fullt navn" %} <span class="asterisk red">*</span></label>
-          <input type="text" class="form-control" name="name" value="{{ current_user.name }}">
-        </div>
-        <div class="form-group" data-dnt-form-group="dob">
-          <label>{% trans "Fødselsdato (dd.mm.åååå)" %} <span class="asterisk red">*</span></label>
-          <div class="input-group date">
-            <input type="text" class="form-control dob" name="dob" value="{{ current_user.dob|date:"d.m.Y" }}">
-            <span class="input-group-addon">
-              <i class="glyphicon glyphicon-calendar"></i>
-            </span>
+
+        <div class="row">
+          <div class="form-group col-sm-6" data-dnt-form-group="name">
+            <label>{% trans "Fullt navn" %} <span class="asterisk red">*</span></label>
+            <input type="text" class="form-control" name="name" value="{{ current_user.name }}">
           </div>
         </div>
+
+        <div class="form-group" data-dnt-form-group="dob">
+          <label>{% trans "Fødselsdato (dd.mm.åååå)" %} <span class="asterisk red">*</span></label>
+
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="input-group date">
+                <input type="text" class="form-control dob" name="dob" value="{{ current_user.dob|date:"d.m.Y" }}">
+                <span class="input-group-addon">
+                  <i class="glyphicon glyphicon-calendar"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="form-group" data-dnt-form-group="gender">
           <label> {% trans "Kjønn" %} <span class="asterisk red">*</span></label>
           <div>
@@ -128,15 +138,21 @@
             </div>
           </div>
         </div>
-        <div style="clear: both;"></div>
-        <div class="form-group" data-dnt-form-group="phone">
-          <label> {% trans "Mobiltelefon" %} {% if enrollment.users.count == 0 %}<span class="asterisk red">*</span>{% endif %}</label>
-          <input type="text" class="form-control" name="phone" value="{{ current_user.phone }}">
+
+        <div class="row">
+          <div class="form-group col-sm-4" data-dnt-form-group="phone">
+            <label> {% trans "Mobiltelefon" %} {% if enrollment.users.count == 0 %}<span class="asterisk red">*</span>{% endif %}</label>
+            <input type="text" class="form-control" name="phone" value="{{ current_user.phone }}">
+          </div>
         </div>
-        <div class="form-group" data-dnt-form-group="email">
-          <label> {% trans "E-post" %} {% if enrollment.users.count == 0 %}<span class="asterisk red">*</span>{% endif %}</label>
-          <input type="text" class="form-control" name="email" value="{{ current_user.email }}">
+
+        <div class="row">
+          <div class="form-group col-sm-7" data-dnt-form-group="email">
+            <label> {% trans "E-post" %} {% if enrollment.users.count == 0 %}<span class="asterisk red">*</span>{% endif %}</label>
+            <input type="text" class="form-control" name="email" value="{{ current_user.email }}">
+          </div>
         </div>
+
         <button type="submit" class="btn btn-default btn-lg"><i class="glyphicon glyphicon-user"></i> {% if current_user %}{% trans "Lagre endringer" %}{% else %}{% trans "Legg til medlem" %}{% endif %}</button><br>
       </form>
     </div>
