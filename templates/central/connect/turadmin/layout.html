@@ -100,6 +100,7 @@
 {# Include uservoice for turadmin/dnt connect-related feedback/issues #}
 <script src="{{ STATIC_URL }}js/uservoice.js"></script>
 
+{% include 'global_layout/scripts_init.html' %}
 {% block js_globals %}{% endblock %}
 {% include 'global_layout/scripts.html' %}
 {% block extra_js %}{% endblock %}

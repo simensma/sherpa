@@ -97,6 +97,7 @@
 {# "Global" csrf_token for AJAX-requests #}
 {% csrf_token %}
 
+{% include 'global_layout/scripts_init.html' %}
 {% block js_globals %}{% endblock %}
 {% include 'global_layout/scripts.html' %}
 {% block extra_js %}{% endblock %}
