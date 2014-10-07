@@ -3,7 +3,7 @@
 <form action="{{ action }}{% if next %}?next={{ next }}{% endif %}" method="post" class="registration-nonmember form-dnt-default form-horizontal">
   {% csrf_token %}
 
-  <p class="form-hints">
+  <p>
     {% trans "Vi trenger foreløpig ikke mer enn navn og e-postadresse. Du må velge et passord som du bruker sammen med e-postadressen til å logge inn." %}
   </p>
 
