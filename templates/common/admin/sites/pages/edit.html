@@ -59,7 +59,7 @@
   <div class="well editor-header page" data-page-id="{{ version.variant.page.id }}" data-version-id="{{ version.id }}">
     <div class="status"{% if version.variant.page.published %} data-published{% endif %}>
       <div class="title">
-        Tittel: <input name="title" type="text" class="input-xlarge" value="{{ version.variant.page.title }}">
+        Tittel: <input class="form-control" name="title" type="text" value="{{ version.variant.page.title }}">
       </div>
 
       <div class="parent">
@@ -73,14 +73,24 @@
       </div>
 
       <div class="publish">
-        <input type="checkbox" name="publish"{% if version.variant.page.published %} checked="checked"{% endif %}> Publiseres
+        <div class="row">
+          <div class="col-sm-2">
+            <input type="checkbox" name="publish"{% if version.variant.page.published %} checked="checked"{% endif %}> Publiseres
+          </div>
 
-        <div class="input-append date">
-          <input type="text" name="date" value="{{ version.variant.page.pub_date|date:"d.m.Y" }}" placeholder="dd.mm.åååå">
-          <span class="add-on"><i class="icon-th"></i></span>
+          <div class="col-sm-3">
+            <div class="input-group date">
+              <input class="form-control" type="text" name="date" value="{{ version.variant.page.pub_date|date:"d.m.Y" }}" placeholder="dd.mm.åååå">
+              <span class="input-group-addon">
+                <i class="glyphicon glyphicon-calendar"></i>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-sm-3">
+            kl. <input class="form-control" type="text" name="time" value="{{ version.variant.page.pub_date|date:"H:i" }}" placeholder="tt:mm">
+          </div>
         </div>
-        kl.
-        <input type="text" name="time" value="{{ version.variant.page.pub_date|date:"H:i" }}" placeholder="tt:mm">
       </div>
 
       <div class="display-ads">
@@ -91,12 +101,13 @@
         </div>
       </div>
 
+      {# Replace with select2 #}
       <div class="tags">
         <table>
           <tr>
             <td style="vertical-align: top">
               Nøkkelord:
-              <input type="text" name="tags">
+              <input class="form-control" type="text" name="tags">
             </td>
           </tr>
           <tr>
