@@ -7,32 +7,32 @@ $(function() {
     var no_memberid_match = registration.find("div.no-memberid-match");
     var actor_is_not_member = registration.find("div.actor-is-not-member");
     var country_select = registration.find("select[name='country']");
-    var zipcode_control_group = registration.find("div.control-group.zipcode");
+    var zipcode_control_group = registration.find('[data-dnt-form-group="zipcode"]');
 
     Validator.validate({
         method: 'email',
-        control_group: registration.find("div.control-group.email"),
+        control_group: registration.find('[data-dnt-form-group="email"]'),
         input: registration.find("input[name='email']"),
         req: true
     });
 
     Validator.validatePasswords({
-        control_group: registration.find("div.control-group.password, div.control-group.password-repeat"),
+        control_group: registration.find('[data-dnt-form-group="password"], [data-dnt-form-group="password-repeat"]'),
         pass1: registration.find("input[name='password']"),
         pass2: registration.find("input[name='password-repeat']"),
         min_length: Turistforeningen.user_password_length,
-        hints: registration.find("div.control-group.password div.controls div.hints.validator")
+        hints: registration.find('[data-dnt-form-group="password"] div.controls .help-block.validator')
     });
 
     Validator.validate({
         method: 'memberid',
-        control_group: registration.find("div.control-group.memberid"),
+        control_group: registration.find('[data-dnt-form-group="memberid"]'),
         input: registration.find("input[name='memberid']"),
         req: true
     });
 
     Validator.validateZipcode(
-        registration.find("div.control-group.zipcode"),
+        registration.find('[data-dnt-form-group="zipcode"]'),
         registration.find("input[name='zipcode']"),
         registration.find("input[name='area']"),
         registration.find("img.ajaxloader.zipcode")
@@ -101,10 +101,10 @@ $(function() {
 
         step2.find("span.name").text(result.name);
         if(result.email !== '') {
-            step2.find("div.hints.email-found").show().find("a.email").attr('href', 'mailto:' + result.email).text(result.email);
+            step2.find(".help-block.email-found").show().find("a.email").attr('href', 'mailto:' + result.email).text(result.email);
             step2.find("input[name='email']").val(result.email);
         } else {
-            step2.find("div.hints.email-not-found").show();
+            step2.find(".help-block.email-not-found").show();
         }
 
         if(window.Turistforeningen.prefilled_user === undefined) {
