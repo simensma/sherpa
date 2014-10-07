@@ -14,21 +14,21 @@ $(function() {
 
     Validator.validate({
         method: 'anything',
-        control_group: form.find("div.form-group.title"),
+        form_group: form.find("div.form-group.title"),
         input: form.find("input[name='title']"),
         req: true
     });
 
     Validator.validate({
         method: 'email',
-        control_group: form.find("div.form-group.email"),
+        form_group: form.find("div.form-group.email"),
         input: form.find("input[name='email']"),
         req: true
     });
 
     Validator.validate({
         method: 'anything',
-        control_group: form.find("div.form-group.text"),
+        form_group: form.find("div.form-group.text"),
         input: form.find("textarea[name='text']"),
         req: true
     });
