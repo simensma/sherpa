@@ -70,46 +70,62 @@
               Hvor bor dere?
             {% endblocktrans %}
           </h2>
-          <div class="control-group country">
-            <label>{% trans "Land" %} <span class="asterisk red">*</span></label>
-            <select name="country">
-              <optgroup id="scandinavia" label="{% trans "Skandinavia" %}">
-                <option value="{{ countries.norway.code }}"{% if enrollment.country == countries.norway.code or not enrollment.country %} selected{% endif %}>{{ countries.norway.name }}</option>
-                {% for c in countries.scandinavia %}
+
+          <div class="row">
+            <div class="form-group col-sm-7" data-dnt-form-group="country">
+              <label class="select-label">{% trans "Land" %} <span class="asterisk red">*</span></label>
+              <select name="country" class="form-control">
+                <optgroup id="scandinavia" label="{% trans "Skandinavia" %}">
+                  <option value="{{ countries.norway.code }}"{% if enrollment.country == countries.norway.code or not enrollment.country %} selected{% endif %}>{{ countries.norway.name }}</option>
+                  {% for c in countries.scandinavia %}
+                    <option value="{{ c.code }}"{% if enrollment.country == c.code %} selected{% endif %}>{{ c.name }}</option>
+                  {% endfor %}
+                </optgroup>
+                <optgroup id="world" label="{% trans "Resten av verden" %}">
+                {% for c in countries.other %}
                   <option value="{{ c.code }}"{% if enrollment.country == c.code %} selected{% endif %}>{{ c.name }}</option>
                 {% endfor %}
-              </optgroup>
-              <optgroup id="world" label="{% trans "Resten av verden" %}">
-              {% for c in countries.other %}
-                <option value="{{ c.code }}"{% if enrollment.country == c.code %} selected{% endif %}>{{ c.name }}</option>
-              {% endfor %}
-              </optgroup>
-            </select>
+                </optgroup>
+              </select>
+            </div>
           </div>
-          <div class="control-group address1">
-            <label>{% trans "Adresse" %} <span class="asterisk red">*</span></label>
-            <input type="text" class="input-large" name="address1" value="{{ enrollment.address1 }}">
+
+          <div class="row">
+            <div class="form-group col-sm-6" data-dnt-form-group="address1">
+              <label>{% trans "Adresse" %} <span class="asterisk red">*</span></label>
+              <input type="text" class="form-control" name="address1" value="{{ enrollment.address1 }}">
+            </div>
           </div>
+
           <div class="scandinavia">
-            <div class="control-group zipcode">
+            <div class="form-group" data-dnt-form-group="zipcode">
               <label>{% trans "Postnummer / Poststed" %} <span class="asterisk red">*</span></label>
-              <input type="text" class="input-small" name="zipcode" value="{{ enrollment.zipcode }}" maxlength="10">
-              <input type="text" class="input-medium" name="area" value="{{ enrollment.area }}" disabled>
-              <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="zip ajaxloader jq-hide" alt="{% trans "Laster poststed..." %}" title="{% trans "Laster poststed..." %}">
+
+              {# We'll have to align these inputs with css instead of columns because the grid gutter is too large #}
+              <div class="row">
+                <div class="col-sm-12">
+                  <input type="text" class="form-control" name="zipcode" value="{{ enrollment.zipcode }}" maxlength="10">
+                  <input type="text" class="form-control" name="area" value="{{ enrollment.area }}" disabled>
+                  <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="zip ajaxloader jq-hide" alt="{% trans "Laster poststed..." %}" title="{% trans "Laster poststed..." %}">
+                </div>
+              </div>
+
             </div>
           </div>
+
           <div class="world">
-            <div class="control-group address2">
+            <div class="form-group" data-dnt-form-group="address2">
               <label>{% trans "Adresse 2" %}</label>
-              <input type="text" class="input-large" name="address2" value="{{ enrollment.address2 }}">
+              <input type="text" class="form-control" name="address2" value="{{ enrollment.address2 }}">
             </div>
-            <div class="control-group address3">
+            <div class="form-group" data-dnt-form-group="address3">
               <label>{% trans "Adresse 3" %}</label>
-              <input type="text" class="input-large" name="address3" value="{{ enrollment.address3 }}">
+              <input type="text" class="form-control" name="address3" value="{{ enrollment.address3 }}">
             </div>
           </div>
+
           {% if enrollment.has_potential_main_member %}
-            <div class="control-group yearbook">
+            <div class="form-group" data-dnt-form-group="yearbook">
               <div class="checkbox">
                 <label>
                   <input type="checkbox" name="yearbook"{% if enrollment.wants_yearbook %} checked{% endif %}>
@@ -120,6 +136,7 @@
               </div>
             </div>
           {% endif %}
+
         </div>
 
         <div class="well">
@@ -131,11 +148,23 @@
               Bor dere sammen med et <strong>eksisterende</strong> hovedmedlem, kan dere få billigere medlemskap som husstandsmedlemmer.
             {% endblocktrans %}
           </p>
-          <p>
-            <input type="text" name="existing" value="{{ enrollment.existing_memberid }}" placeholder="{% trans "Oppgi medlemsnummer..." %}">
-            <a href="javascript:undefined" class="btn search-existing input-button-align"><i class="icon-search"></i> {% trans "Søk" %}</a>
-            <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="existing ajaxloader jq-hide" alt="{% trans "Laster medlemsinfo..." %}" title="{% trans "Laster medlemsinfo..." %}">
-          </p>
+
+          <div class="input-group">
+            <input
+              class="form-control"
+              name="existing"
+              type="text"
+              value="{{ enrollment.existing_memberid }}"
+              placeholder="{% trans "Oppgi medlemsnummer..." %}">
+
+            <span class="input-group-btn">
+              <a href="javascript:undefined" class="btn btn-default search-existing" data-dnt-trigger="existing">
+                <i class="glyphicon glyphicon-search"></i> {% trans "Søk" %}
+              </a>
+            </span>
+          </div>
+
+          <img src="{{ STATIC_URL }}img/common/ajax-loader-large.gif" class="existing ajaxloader jq-hide" alt="{% trans "Laster medlemsinfo..." %}" title="{% trans "Laster medlemsinfo..." %}">
 
           <div class="existing-result jq-hide">
             <span class="success jq-hide">

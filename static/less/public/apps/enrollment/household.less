@@ -11,8 +11,6 @@
     }
 
     select {
-      width: 300px;
-      height: 34px;
       .input-default-color;
 
       option[disabled] {
@@ -30,6 +28,20 @@
     }
 
     .asterisks;
+
+    input[name="zipcode"] {
+      display: inline-block;
+      width: 80px;
+    }
+
+    input[name="area"] {
+      display: inline-block;
+      width: 250px; // Longest zipcode area name in Norway is 20 characters
+    }
+
+    .search-existing {
+      padding: 9px; // Because the input text has larger padding than default
+    }
   }
 
   .existing-result {
