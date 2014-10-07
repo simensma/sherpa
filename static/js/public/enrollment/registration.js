@@ -19,26 +19,26 @@ $(function() {
 
     // Clear input validation-status upon focus
     form.find("input").focus(function() {
-        $(this).parents("div.control-group").removeClass('error warning success');
+        $(this).parents('[data-dnt-form-group]').removeClass('has-error has-warning has-success');
     });
 
     Validator.validate({
         method: 'full_name',
-        control_group: form.find("div.control-group.name"),
+        form_group: form.find('[data-dnt-form-group="name"]'),
         input: form.find("input[name='name']"),
         req: true
     });
 
     Validator.validate({
         method: 'phone',
-        control_group: form.find("div.control-group.phone"),
+        form_group: form.find('[data-dnt-form-group="phone"]'),
         input: form.find("input[name='phone']"),
         req: Turistforeningen.phone_required
     });
 
     Validator.validate({
         method: 'email',
-        control_group: form.find("div.control-group.email"),
+        form_group: form.find('[data-dnt-form-group="email"]'),
         input: form.find("input[name='email']"),
         req: Turistforeningen.email_required
     });
@@ -49,7 +49,7 @@ $(function() {
         // Datepicker calls this on close
         Validator.performValidation({
             method: 'date',
-            control_group: form.find("div.control-group.dob"),
+            form_group: form.find('[data-dnt-form-group="dob"]'),
             input: form.find("input[name='dob']"),
             req: true,
             opts: {'min_year': 1900, 'max_year': 2078}
@@ -58,9 +58,9 @@ $(function() {
 
     function validateGender() {
         if(form.find("input[name='gender']:checked").length == 0) {
-            form.find("div.control-group.gender").addClass('error');
+            form.find('[data-dnt-form-group="gender"]').addClass('has-error');
         } else {
-            form.find("div.control-group.gender").addClass('success');
+            form.find('[data-dnt-form-group="gender"]').addClass('has-success');
         }
     }
 
