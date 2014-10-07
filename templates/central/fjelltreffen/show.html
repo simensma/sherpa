@@ -92,45 +92,45 @@
           <form action="{% url 'fjelltreffen.views.show' annonse.id %}" method="post" class="form-dnt-default form-horizontal fjelltreffen-annonse-reply">
             {% csrf_token %}
 
-            <div class="control-group name">
-              <label class="control-label" for="id_name">Ditt navn</label>
-              <div class="controls">
+            <div class="form-group name">
+              <label class="col-sm-3 control-label" for="id_name">Ditt navn</label>
+              <div class="col-sm-9">
                 {{ form.name }} <span class="asterisk red">*</span>
               </div>
             </div>
 
-            <div class="control-group email">
-              <label class="control-label" for="id_email">Din e-postadresse</label>
-              <div class="controls">
+            <div class="form-group email">
+              <label class="col-sm-3 control-label" for="id_email">Din e-postadresse</label>
+              <div class="col-sm-9">
                 {{ form.email }} <span class="asterisk red">*</span>
               </div>
             </div>
 
-            <div class="control-group text">
-              <label class="control-label" for="id_text">Svar til annonsøren</label>
-              <div class="controls">
+            <div class="form-group text">
+              <label class="col-sm-3 control-label" for="id_text">Svar til annonsøren</label>
+              <div class="col-sm-9">
                 {{ form.text }}
               </div>
             </div>
 
             {% if form.captcha %}
               {# Will only be required for anonymous users #}
-              <div class="control-group captcha">
-                <label class="control-label">Skriv inn bokstavene i bildet</label>
-                <div class="controls">
+              <div class="form-group captcha">
+                <label class="col-sm-3 control-label">Skriv inn bokstavene i bildet</label>
+                <div class="col-sm-9">
                   {{ form.captcha }}
                 </div>
               </div>
             {% endif %}
 
-            <div class="control-group">
-              <div class="controls">
+            <div class="form-group">
+              <div class="col-sm-offset-3 col-sm-9">
                 <em>Merk: Når du sender svaret ditt, vil annonsøren motta en e-post med ditt navn, din e-postadresse og ditt svar. Det er deretter opp til annonsøren å svare deg.</em>
               </div>
             </div>
 
-            <div class="control-group">
-              <div class="controls">
+            <div class="form-group">
+              <div class="col-sm-offset-3 col-sm-9">
                 <button type="submit" class="btn btn-success">Send svar</button>
               </div>
             </div>
@@ -176,8 +176,8 @@
           <form action="{% url 'fjelltreffen.views.report' annonse.id %}" method="post" class="form-dnt-default fjelltreffen-annonse-report">
             {% csrf_token %}
 
-            <div class="control-group text">
-              <textarea name="reason" placeholder="Oppgi begrunnelsen din her...">{{ report.reason }}</textarea>
+            <div class="form-group text">
+              <textarea class="form-control" name="reason" placeholder="Oppgi begrunnelsen din her...">{{ report.reason }}</textarea>
             </div>
 
             <button type="submit" class="btn btn-danger"><i class="icon-warning-sign"></i> Send anmeldelse</button>

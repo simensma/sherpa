@@ -12,16 +12,17 @@ class ReplyForm(forms.Form):
 
     name.widget.attrs.update({
         'placeholder': "Ditt navn...",
-        'class': 'input-xlarge'
+        'class': 'form-control',
     })
 
     email.widget.attrs.update({
         'placeholder': "Din e-postadresse...",
-        'class': 'input-xlarge'
+        'class': 'form-control',
     })
 
     text.widget.attrs.update({
-        'placeholder': "Skriv svaret ditt her..."
+        'placeholder': "Skriv svaret ditt her...",
+        'class': 'form-control',
     })
 
     def __init__(self, *args, **kwargs):
