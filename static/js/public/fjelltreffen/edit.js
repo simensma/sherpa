@@ -4,9 +4,9 @@ $(function() {
     var submit_button = form.find("button[type='submit']");
     var hidden_buttons = form.find("input[name='hidden']");
 
-    form.find("div.control-group.hideage div.controls a.hideage-info").click(function() {
+    form.find("div.form-group.hideage div.controls a.hideage-info").click(function() {
         $(this).hide();
-        form.find("div.control-group.hideage div.controls div.hideage-info").slideDown();
+        form.find("div.form-group.hideage div.controls div.hideage-info").slideDown();
     });
     form.find("a.delete").click(function() {
         return confirm("Er du sikker på at du vil slette denne annonsen?");
@@ -14,21 +14,21 @@ $(function() {
 
     Validator.validate({
         method: 'anything',
-        control_group: form.find("div.control-group.title"),
+        control_group: form.find("div.form-group.title"),
         input: form.find("input[name='title']"),
         req: true
     });
 
     Validator.validate({
         method: 'email',
-        control_group: form.find("div.control-group.email"),
+        control_group: form.find("div.form-group.email"),
         input: form.find("input[name='email']"),
         req: true
     });
 
     Validator.validate({
         method: 'anything',
-        control_group: form.find("div.control-group.text"),
+        control_group: form.find("div.form-group.text"),
         input: form.find("textarea[name='text']"),
         req: true
     });
@@ -36,21 +36,21 @@ $(function() {
     form.submit(function(e) {
         // Recheck upon submit, because checks server-side causes loss of submitted info.
         // It might suck for a novice user to submit an invalid email address and lose a long post.
-        // Just use the error class on the control-groups to determine if stuff is valid.
+        // Just use the error class on the form-groups to determine if stuff is valid.
         // These error messages are duplicated in the messages from server-side validations.
 
-        if(form.find("div.control-group.title").is(".error")) {
+        if(form.find("div.form-group.title").is(".has-error")) {
             alert("Du må fylle inn en tittel på annonsen.");
             e.preventDefault();
         }
 
-        if(form.find("div.control-group.email").is(".error")) {
+        if(form.find("div.form-group.email").is(".has-error")) {
             alert("Du må fylle inn en gyldig e-postadresse!\n\n" +
                 "Du vil motta svar på annonsen på denne adressen. Adressen vises ikke i annonsen.");
             e.preventDefault();
         }
 
-        if(form.find("div.control-group.text").is(".error")) {
+        if(form.find("div.form-group.text").is(".has-error")) {
             alert("Du får neppe napp med mindre du skriver litt om hvem du er, eller hva du er ute etter, i annonsen.");
             e.preventDefault();
         }
