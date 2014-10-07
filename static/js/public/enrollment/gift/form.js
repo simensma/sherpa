@@ -1,5 +1,6 @@
 $(function() {
 
+    var form = $('[data-dnt-container="gift-membership-form"]');
     var giver_control_group = $("div.control-group.giver_zipcode");
     var giver_zipcode = $("input[name='giver_zipcode']");
     var giver_area = $("input[name='giver_area']");
@@ -11,36 +12,36 @@ $(function() {
 
     Validator.validate({
         method: 'full_name',
-        control_group: $("form#gift div.control-group.giver_name"),
-        input: $("form#gift input[name='giver_name']"),
+        control_group: form.find("div.control-group.giver_name"),
+        input: form.find("input[name='giver_name']"),
         req: true
     });
 
     Validator.validate({
         method: 'address',
-        control_group: $("form#gift div.control-group.giver_address"),
-        input: $("form#gift input[name='giver_address']"),
+        control_group: form.find("div.control-group.giver_address"),
+        input: form.find("input[name='giver_address']"),
         req: true
     });
 
     Validator.validate({
         method: 'memberid',
-        control_group: $("form#gift div.control-group.giver_memberid"),
-        input: $("form#gift input[name='giver_memberid']"),
+        control_group: form.find("div.control-group.giver_memberid"),
+        input: form.find("input[name='giver_memberid']"),
         req: false
     });
 
     Validator.validate({
         method: 'phone',
-        control_group: $("form#gift div.control-group.giver_phone"),
-        input: $("form#gift input[name='giver_phone']"),
+        control_group: form.find("div.control-group.giver_phone"),
+        input: form.find("input[name='giver_phone']"),
         req: false
     });
 
     Validator.validate({
         method: 'email',
-        control_group: $("form#gift div.control-group.giver_email"),
-        input: $("form#gift input[name='giver_email']"),
+        control_group: form.find("div.control-group.giver_email"),
+        input: form.find("input[name='giver_email']"),
         req: false
     });
 
@@ -102,7 +103,7 @@ $(function() {
     function addReceiver(initial_date) {
         var clone = $("div.receiver-box-skeleton").clone();
         clone.removeClass('receiver-box-skeleton').addClass('receiver-box');
-        $("form#gift div.receivers").append(clone);
+        form.find("div.receivers").append(clone);
         var new_receiver = $("p.new-receiver");
         new_receiver.detach();
         $("div.receiver-box").last().append(new_receiver);
@@ -114,7 +115,7 @@ $(function() {
     }
 
     // Add more receivers
-    $("form#gift button.new-receiver").click(function(e) {
+    form.find("button.new-receiver").click(function(e) {
         e.preventDefault();
         addReceiver();
     });
@@ -131,9 +132,9 @@ $(function() {
     });
 
 
-    $("form#gift button[type='submit']").click(function(e) {
+    form.find("button[type='submit']").click(function(e) {
         var receivers = [];
-        $("form#gift div.receiver-box").each(function() {
+        form.find("div.receiver-box").each(function() {
             var receiver = {
                 type: $(this).find("select[name='receiver_type'] option:selected").val(),
                 name: $(this).find("input[name='receiver_name']").val(),
@@ -145,7 +146,7 @@ $(function() {
             };
             receivers.push(receiver);
         });
-        $("form#gift input[name='receivers']").val(JSON.stringify(receivers));
+        form.find("input[name='receivers']").val(JSON.stringify(receivers));
     });
 
     if(Turistforeningen.session_receivers.length === 0) {
