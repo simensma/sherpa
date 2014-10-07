@@ -1,0 +1,46 @@
+.enrollment-household {
+  form.household {
+    label {
+      .label();
+    }
+
+    .control-group:not(.error,.warning) {
+      label {
+        .label-default-color;
+      }
+    }
+
+    select {
+      height: 34px;
+      width: 300px;
+      .input-default-color;
+
+      option[disabled] {
+        background-color: rgb(215, 215, 215);
+      }
+    }
+
+    input[type='text'] {
+      .input-default-color;
+      .input-default-style;
+    }
+
+    button {
+      .button-margin;
+    }
+
+    .asterisks;
+  }
+
+  .existing-result {
+    font-weight: bold;
+
+    span.success span.result {
+      color: rgb(60, 180, 60);
+    }
+
+    span.error {
+      color: rgb(180, 60, 60);
+    }
+  }
+}

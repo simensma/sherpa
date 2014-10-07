@@ -52,7 +52,14 @@
         </div>
       {% endif %}
 
-      <form id="household" action="{% url 'enrollment.views.household' %}" method="post" data-existing-url="{% url 'enrollment.views.existing' %}" data-confirm-no-address="{% trans "Har du glemt å fylle ut gateadressen?&#10;&#10;Hvis du ikke har gateadresse, klikker du bare OK for å gå videre." %}">
+      <form
+        class="household"
+        action="{% url 'enrollment.views.household' %}"
+        method="post"
+        data-dnt-container="household-form"
+        data-existing-url="{% url 'enrollment.views.existing' %}"
+        data-confirm-no-address="{% trans "Har du glemt å fylle ut gateadressen?&#10;&#10;Hvis du ikke har gateadresse, klikker du bare OK for å gå videre." %}">
+
         {% csrf_token %}
 
         <div class="form-border">

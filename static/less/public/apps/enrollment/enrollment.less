@@ -24,48 +24,19 @@
   margin-bottom: 3px;
 }
 
-form#household label, form#gift label {
+.asterisks() {
+  span.asterisk {
+    font-size: 120%;
+    font-weight: bold;
+  }
+
+  span.asterisk.red {
+    color: red;
+  }
+}
+
+form#gift label {
   .label();
-}
-
-form#household .control-group:not(.error,.warning) label {
-  .label-default-color;
-}
-
-form#household {
-  select {
-    height: 34px;
-    width: 300px;
-
-    option[disabled] {
-      background-color: rgb(215, 215, 215);
-    }
-  }
-}
-
-div.existing-result {
-  font-weight: bold;
-
-  span.success span.result {
-    color: rgb(60, 180, 60);
-  }
-
-  span.error {
-    color: rgb(180, 60, 60);
-  }
-}
-
-form#household select {
-  .input-default-color;
-}
-
-form#household input[type='text'] {
-  .input-default-color;
-  .input-default-style;
-}
-
-form#household button {
-  .button-margin;
 }
 
 div.members label {
@@ -98,15 +69,6 @@ table.prices {
   tfoot tr th {
     font-size: 120%;
   }
-}
-
-span.asterisk {
-  font-size: 120%;
-  font-weight: bold;
-}
-
-span.asterisk.red {
-  color: red;
 }
 
 div.notice-alert {
