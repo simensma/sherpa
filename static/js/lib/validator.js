@@ -15,7 +15,7 @@
 
         // Clear status on focusin
         opts.input.on('focusin.validator', function() {
-            opts.control_group.removeClass('error success');
+            opts.form_group.removeClass('has-error has-success');
         });
 
         // Perform the validation on focusout
@@ -24,9 +24,9 @@
 
     Validator.performValidation = function(opts) {
         if(Validator.check[opts.method](opts.input.val(), opts.req, opts.opts)) {
-            opts.control_group.removeClass('error').addClass('success');
+            opts.form_group.removeClass('has-error').addClass('has-success');
         } else {
-            opts.control_group.removeClass('success').addClass('error');
+            opts.form_group.removeClass('has-success').addClass('has-error');
         }
     };
 
@@ -98,30 +98,30 @@
      */
     Validator.triggerZipcode = function(zipcode) { zipcode.keyup(); };
     Validator.stopZipcodeValidation = function(zipcode) { zipcode.off('.zipcodevalidator'); };
-    Validator.validateZipcode = function(control_group, zipcode, area, loader, options) {
+    Validator.validateZipcode = function(form_group, zipcode, area, loader, options) {
 
         zipcode.on('focusin.zipcodevalidator', function() {
-            control_group.removeClass('error success');
+            form_group.removeClass('has-error has-success');
         });
 
         zipcode.on('focusout.zipcodevalidator', function() {
-            control_group.removeClass('error success');
-            if(control_group.data('valid')) {
-                control_group.addClass('success');
+            form_group.removeClass('has-error has-success');
+            if(form_group.data('valid')) {
+                form_group.addClass('has-success');
             } else {
-                control_group.addClass('error');
+                form_group.addClass('has-error');
             }
         });
 
         zipcode.on('keyup.zipcodevalidator', function() {
-            control_group.removeClass('success error');
+            form_group.removeClass('has-success has-error');
             function end() {
                 if(!zipcode.is(":focus")) {
                     // Trigger validation-check
                     zipcode.focusout();
                 }
             }
-            control_group.data('valid', false);
+            form_group.data('valid', false);
             if(!zipcode.val().match(/^\d{4}$/)) {
                 end();
                 return zipcode;
@@ -130,14 +130,14 @@
             LookupZipcode(zipcode.val(), function(result) {
                 if(result.success) {
                     area.val(result.area);
-                    control_group.addClass('success');
-                    control_group.data('valid', true);
+                    form_group.addClass('has-success');
+                    form_group.data('valid', true);
                 } else if(result.error == 'does_not_exist') {
                     area.val("Ukjent postnummer");
-                    control_group.addClass('error');
+                    form_group.addClass('has-error');
                 } else if(result.error == 'technical_failure') {
                     area.val("Teknisk feil");
-                    control_group.addClass('error');
+                    form_group.addClass('has-error');
                 }
                 loader.hide();
                 end();
@@ -150,8 +150,8 @@
      */
      Validator.validatePasswords = function(opts) {
 
-         opts.pass1.on('focusin.passwordvalidator', function() { opts.control_group.removeClass('error success'); opts.hints.hide(); });
-         opts.pass2.on('focusin.passwordvalidator', function() { opts.control_group.removeClass('error success'); opts.hints.hide(); });
+         opts.pass1.on('focusin.passwordvalidator', function() { opts.form_group.removeClass('has-error has-success'); opts.hints.hide(); });
+         opts.pass2.on('focusin.passwordvalidator', function() { opts.form_group.removeClass('has-error has-success'); opts.hints.hide(); });
 
          opts.pass1.on('focusout.passwordvalidator', function() {
              var len = checkLength(opts);
@@ -160,13 +160,13 @@
              // the user might just not have gotten to the second field, so don't say anything
              // about validity yet.
              if(len && opts.pass2.val() !== '' && checkEquality(opts)) {
-                 opts.control_group.removeClass('error').addClass('success');
+                 opts.form_group.removeClass('has-error').addClass('has-success');
              }
          });
 
          opts.pass2.on('focusout.passwordvalidator', function() {
              if(checkLength(opts) && checkEquality(opts)) {
-                 opts.control_group.removeClass('error').addClass('success');
+                 opts.form_group.removeClass('has-error').addClass('has-success');
                  opts.hints.hide();
              }
          });
@@ -174,7 +174,7 @@
 
          function checkEquality(opts) {
              if(opts.pass1.val() != opts.pass2.val()) {
-                 opts.control_group.removeClass('success').addClass('error');
+                 opts.form_group.removeClass('has-success').addClass('has-error');
                  opts.hints.filter(".unequal").show();
                  return false;
              }
@@ -183,7 +183,7 @@
 
          function checkLength(opts) {
              if(opts.pass1.val().length < opts.min_length) {
-                 opts.control_group.removeClass('success').addClass('error');
+                 opts.form_group.removeClass('has-success').addClass('has-error');
                  opts.hints.filter(".short").show();
                  return false;
              }
