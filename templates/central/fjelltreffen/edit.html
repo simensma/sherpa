@@ -62,18 +62,22 @@
       <input type="hidden" name="id" value="{{ annonse.id }}">
 
       <div class="form-group title">
-        <label class="col-sm-3 control-label" for="title">Tittel</label>
+        <label class="col-sm-3 control-label" for="title">
+          Tittel
+          <span class="asterisk red">*</span>
+        </label>
         <div class="col-sm-9">
           <input type="text" name="title" id="title" value="{{ annonse.title }}" placeholder="Skriv en annonsetittel..." class="form-control">
-          <span class="asterisk red">*</span>
         </div>
       </div>
 
       <div class="form-group email">
-        <label class="col-sm-3 control-label" for="email">E-postadresse</label>
+        <label class="col-sm-3 control-label" for="email">
+          E-postadresse
+          <span class="asterisk red">*</span>
+        </label>
         <div class="col-sm-9">
           <input type="text" name="email" id="email" value="{% firstof annonse.email user.get_email %}" placeholder="Din e-postadresse (vises ikke)" class="form-control">
-          <span class="asterisk red">*</span><br>
           <span class="help-block">
             Svar blir sendt til denne adressen, men den vises ikke i annonsen.
           </span>
