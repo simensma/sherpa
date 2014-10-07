@@ -12,20 +12,20 @@ $(function() {
 
     Validator.validate({
         method: 'full_name',
-        control_group: form.find("div.control-group.name"),
+        form_group: form.find("div.form-group.name"),
         input: form.find("input[name='name']"),
         req: true
     });
 
     Validator.validate({
         method: 'email',
-        control_group: form.find("div.control-group.email"),
+        form_group: form.find("div.form-group.email"),
         input: form.find("input[name='email']"),
         req: true
     });
 
     Validator.validatePasswords({
-        control_group: form.find("div.control-group.password, div.control-group.password-repeat"),
+        form_group: form.find("div.form-group.password, div.form-group.password-repeat"),
         pass1: form.find("input[name='password']"),
         pass2: form.find("input[name='password-repeat']"),
         min_length: Turistforeningen.user_password_length,
