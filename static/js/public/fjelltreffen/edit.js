@@ -4,9 +4,9 @@ $(function() {
     var submit_button = form.find("button[type='submit']");
     var hidden_buttons = form.find("input[name='hidden']");
 
-    form.find("div.form-group.hideage div.controls a.hideage-info").click(function() {
+    form.find("div.form-group.hideage a.hideage-info").click(function() {
         $(this).hide();
-        form.find("div.form-group.hideage div.controls div.hideage-info").slideDown();
+        form.find("div.form-group.hideage div.hideage-info").slideDown();
     });
     form.find("a.delete").click(function() {
         return confirm("Er du sikker på at du vil slette denne annonsen?");
