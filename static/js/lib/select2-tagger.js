@@ -39,6 +39,12 @@ function Select2Tagger(opts) {
         },
     });
     var existing_tags = JSON.parse(opts.$input.attr('data-dnt-existing-tags'));
+
+    // Clean the tag for any comma, should it contain it
+    for(var i=0; i<existing_tags.length; i++) {
+        existing_tags[i] = existing_tags[i].replace(',', '');
+    }
+
     if(existing_tags.length > 0) {
         opts.$input.select2('val', existing_tags);
     }
