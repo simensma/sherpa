@@ -4,6 +4,6 @@ $(function() {
         pass1: $('input[name="password"]'),
         pass2: $('input[name="password-repeat"]'),
         min_length: Turistforeningen.user_password_length,
-        hints: $('.password-hint')
+        help_blocks: $('.password-hint')
     });
 });

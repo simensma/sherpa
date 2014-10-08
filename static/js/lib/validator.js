@@ -150,8 +150,8 @@
      */
      Validator.validatePasswords = function(opts) {
 
-         opts.pass1.on('focusin.passwordvalidator', function() { opts.form_group.removeClass('has-error has-success'); opts.hints.hide(); });
-         opts.pass2.on('focusin.passwordvalidator', function() { opts.form_group.removeClass('has-error has-success'); opts.hints.hide(); });
+         opts.pass1.on('focusin.passwordvalidator', function() { opts.form_group.removeClass('has-error has-success'); opts.help_blocks.hide(); });
+         opts.pass2.on('focusin.passwordvalidator', function() { opts.form_group.removeClass('has-error has-success'); opts.help_blocks.hide(); });
 
          opts.pass1.on('focusout.passwordvalidator', function() {
              var len = checkLength(opts);
@@ -167,7 +167,7 @@
          opts.pass2.on('focusout.passwordvalidator', function() {
              if(checkLength(opts) && checkEquality(opts)) {
                  opts.form_group.removeClass('has-error').addClass('has-success');
-                 opts.hints.hide();
+                 opts.help_blocks.hide();
              }
          });
 
@@ -175,7 +175,7 @@
          function checkEquality(opts) {
              if(opts.pass1.val() != opts.pass2.val()) {
                  opts.form_group.removeClass('has-success').addClass('has-error');
-                 opts.hints.filter(".unequal").show();
+                 opts.help_blocks.filter(".unequal").show();
                  return false;
              }
              return true;
@@ -184,7 +184,7 @@
          function checkLength(opts) {
              if(opts.pass1.val().length < opts.min_length) {
                  opts.form_group.removeClass('has-success').addClass('has-error');
-                 opts.hints.filter(".short").show();
+                 opts.help_blocks.filter(".short").show();
                  return false;
              }
              return true;

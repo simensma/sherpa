@@ -29,7 +29,7 @@ $(function() {
         pass1: form.find("input[name='password']"),
         pass2: form.find("input[name='password-repeat']"),
         min_length: Turistforeningen.user_password_length,
-        hints: form.find(".form-elements .password-hint")
+        help_blocks: form.find(".form-elements .password-hint")
     });
 
 });

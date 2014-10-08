@@ -22,7 +22,7 @@ $(function() {
         pass1: $('input[name="password"]'),
         pass2: $('input[name="password-repeat"]'),
         min_length: Turistforeningen.user_password_length,
-        hints: $('div.password-hints *')
+        help_blocks: $('div.password-hints *')
     });
 
     $('input[name="toggle-sherpa-email"]').change(function() {

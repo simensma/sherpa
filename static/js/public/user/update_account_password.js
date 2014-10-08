@@ -5,7 +5,7 @@ $(function() {
         pass1: $('input[name="password"]'),
         pass2: $('input[name="password-repeat"]'),
         min_length: Turistforeningen.user_password_length,
-        hints: $('[data-dnt-form-group="password"] .validator')
+        help_blocks: $('[data-dnt-form-group="password"] .validator')
     });
 
     // Trigger all validations

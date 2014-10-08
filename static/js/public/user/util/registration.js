@@ -21,7 +21,7 @@ $(function() {
         pass1: registration.find("input[name='password']"),
         pass2: registration.find("input[name='password-repeat']"),
         min_length: Turistforeningen.user_password_length,
-        hints: registration.find('[data-dnt-form-group="password"] div.controls .help-block.validator')
+        help_blocks: registration.find('[data-dnt-form-group="password"] div.controls .help-block.validator')
     });
 
     Validator.validate({
