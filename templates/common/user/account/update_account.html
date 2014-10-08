@@ -201,8 +201,8 @@
           <div class="form-group" data-dnt-form-group="zipcode" for="zipcode">
             <label class="col-sm-3 control-label">Postnummer</label>
             <div class="col-sm-9">
-              <input class="form-control" type="text" name="zipcode" id="zipcode" value="{{ user.get_address.zipcode.zipcode }}" maxlength="4">
-              <input class="form-control" type="text" name="area" value="{{ user.get_address.zipcode.area }}" disabled>
+              <input class="form-control zipcode-inline" type="text" name="zipcode" id="zipcode" value="{{ user.get_address.zipcode.zipcode }}" maxlength="4">
+              <input class="form-control area-inline" type="text" name="area" value="{{ user.get_address.zipcode.area }}" disabled>
               <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="ajaxloader zipcode jq-hide" alt="Laster poststed..." title="Laster poststed...">
             </div>
           </div>

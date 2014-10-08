@@ -36,8 +36,8 @@
     <div class="form-group" data-dnt-form-group="zipcode">
       <label class="col-sm-4 control-label" for="registration_zipcode">{% trans "Postnummer:" %}</label>
       <div class="col-md-8">
-        <input class="form-control" id="registration_zipcode" name="zipcode" type="text" maxlength="4">
-        <input class="form-control" name="area" type="text" disabled>
+        <input class="form-control zipcode-inline" id="registration_zipcode" name="zipcode" type="text" maxlength="4">
+        <input class="form-control area-inline" name="area" type="text" disabled>
         <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="ajaxloader zipcode jq-hide" alt="{% trans "Laster poststed..." %}" title="{% trans "Laster poststed..." %}">
       </div>
     </div>

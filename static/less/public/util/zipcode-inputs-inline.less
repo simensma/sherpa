@@ -1,0 +1,15 @@
+/**
+ * Add this mixin to any form with inline zipcode elements and add the zipcode-inline and area-inline classes
+ * to the relevant inputs.
+ */
+.zipcode-inputs-inline() {
+  input.zipcode-inline {
+    display: inline-block;
+    width: 80px;
+  }
+
+  input.area-inline {
+    display: inline-block;
+    width: 250px; // Longest zipcode area name in Norway is 20 characters
+  }
+}

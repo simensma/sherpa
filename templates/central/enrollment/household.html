@@ -104,8 +104,8 @@
               {# We'll have to align these inputs with css instead of columns because the grid gutter is too large #}
               <div class="row">
                 <div class="col-sm-12">
-                  <input type="text" class="form-control" name="zipcode" value="{{ enrollment.zipcode }}" maxlength="10">
-                  <input type="text" class="form-control" name="area" value="{{ enrollment.area }}" disabled>
+                  <input class="form-control zipcode-inline" type="text" name="zipcode" value="{{ enrollment.zipcode }}" maxlength="10">
+                  <input class="form-control area-inline" type="text" name="area" value="{{ enrollment.area }}" disabled>
                   <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="zip ajaxloader jq-hide" alt="{% trans "Laster poststed..." %}" title="{% trans "Laster poststed..." %}">
                 </div>
               </div>
