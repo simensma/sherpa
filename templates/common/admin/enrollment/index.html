@@ -32,11 +32,18 @@
   <div class="row">
     <div class="col-lg-12">
 
-      <div class="search">
+      <div class="search-wrapper">
         <form action="{% url 'admin.enrollment.views.index' %}" method="get">
           {% csrf_token %}
-          <input type="text" name="search" class="form-control" value="{{ search|default:"" }}" placeholder="Søk etter navn, kontaktopplysninger, transaksjonsID eller ordrenummer...">
-          <button class="btn btn-default search input-button-align" type="submit"><i class="fa fa-search"></i> Søk</button>
+
+          <div class="input-group">
+            <input type="text" name="search" class="form-control" value="{{ search|default:"" }}" placeholder="Søk etter navn, kontaktopplysninger, transaksjonsID eller ordrenummer...">
+            <span class="input-group-btn">
+              <button class="btn btn-default search" type="submit">
+                <i class="fa fa-search"></i> Søk
+              </button>
+            </span>
+          </div>
         </form>
       </div>
 

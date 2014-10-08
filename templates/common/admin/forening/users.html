@@ -247,8 +247,14 @@
           <strong>Søk i medlemsregisteret etter brukeren du vil gi tilgang.</strong> En vanlig bruker har tilgang til sin egen forening, mens en administrator også har tilgang til turlag og turgrupper underlagt foreningen.
         </p>
 
-        <input type="text" class="form-control" name="search" placeholder="Søk etter navn eller medlemsnummer...">
-        <button class="btn btn-default search input-button-align"><i class="fa fa-search"></i></button>
+        <div class="input-group">
+          <input type="text" class="form-control" name="search" placeholder="Søk etter navn eller medlemsnummer...">
+          <span class="input-group-btn">
+            <button class="btn btn-default search">
+              <i class="fa fa-search"></i>
+            </button>
+          </span>
+        </div>
 
         <table class="table search-results" data-search-url="{% url 'admin.forening.views.users_access_search' current_forening.id %}" data-forening-name="{{ current_forening.name }}">
           <tr>
