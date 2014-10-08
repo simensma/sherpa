@@ -31,121 +31,123 @@
   </div>
 </div><!-- /.row -->
 
-<div class="row">
-  <div class="col-md-12">
+<div class="edit-publication">
+  <div class="row">
+    <div class="col-md-12">
 
-    {% for message in messages %}
-      {% if message.message == 'publication_info_saved' %}
-        <div class="alert alert-success">
-          <strong>Publikasjonen har blitt lagret.</strong>
-        </div>
-      {% elif message.message == 'release_info_saved' %}
-        <div class="alert alert-success">
-          <strong>Utgivelsen har blitt lagret.</strong>
-        </div>
-      {% endif %}
-    {% endfor %}
-
-    <p class="publication-actions">
-      <a href="javascript:undefined" class="btn btn-default edit-publication">
-        <i class="fa fa-pencil"></i> Endre generell informasjon for publikasjonen
-        <br>
-      </a>
-      <a href="javascript:undefined" class="btn btn-default delete-publication">
-        <i class="fa fa-warning"></i> Slett hele publikasjonen
-      </a>
-    </p>
-
-    {% include 'common/admin/publications/edit_publication_form.html' %}
-
-    <div class="alert alert-danger delete-publication-confirm jq-hide">
-      <p>
-        <strong>Er du sikker på at du vil slette {{ publication.title }}{% if publication.releases_ordered|length > 0 %}, med sine {{ publication.releases_ordered|length }} utgivelser{% endif %}?</strong><br>
-        {% if publication.releases_ordered|length > 0 %}
-          Alle PDF-filene som er lastet opp for utgivelsene vil også slettes. Forsidebildene vil bli liggende i bildearkivet, hvis du vil slette dem også må du gå til bildearkivet og gjøre det selv. Følgende utgivelser blir også slettet:
+      {% for message in messages %}
+        {% if message.message == 'publication_info_saved' %}
+          <div class="alert alert-success">
+            <strong>Publikasjonen har blitt lagret.</strong>
+          </div>
+        {% elif message.message == 'release_info_saved' %}
+          <div class="alert alert-success">
+            <strong>Utgivelsen har blitt lagret.</strong>
+          </div>
         {% endif %}
-      </p>
+      {% endfor %}
 
-      {% if publication.releases_ordered|length > 0 %}
-        <ul>
-          {% for release in publication.releases_ordered %}
-            <li>{{ release.title }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-
-      <p>
-        <a href="{% url 'admin.publications.views.delete_publication' publication.id %}" class="btn btn-danger delete-publication-final">
-          <i class="fa fa-warning"></i>
-          {% if publication.releases_ordered|length > 0 %}
-            Ja, jeg skjønner. Slett publikasjonen og alle utgivelsene for godt.
-          {% else %}
-            Ja, slett publikasjonen for godt.
-          {% endif %}
+      <p class="publication-actions">
+        <a href="javascript:undefined" class="btn btn-default edit-publication">
+          <i class="fa fa-pencil"></i> Endre generell informasjon for publikasjonen
+          <br>
+        </a>
+        <a href="javascript:undefined" class="btn btn-default delete-publication">
+          <i class="fa fa-warning"></i> Slett hele publikasjonen
         </a>
       </p>
-    </div>
 
-    {% for message in messages %}
-      {% if message.message == 'incorrect_file_format' %}
-        <div class="alert alert-danger">
-          <strong>Du kan kun laste opp filer i PDF-format.</strong>
-        </div>
-      {% endif %}
-    {% endfor %}
+      {% include 'common/admin/publications/edit_publication_form.html' %}
 
-    {% include 'common/admin/publications/edit_release_form.html' %}
-
-    <p>
-      <button class="btn btn-default create-release">
-        <i class="fa fa-upload"></i> Legg ut ny utgivelse
-      </button>
-    </p>
-
-    <div class="publications">
-      <div class="row">
-        {% for release in publication.releases_ordered %}
-          <div class="col-md-4{% if forloop.counter|divisibleby:"2" %} col-md-offset-1{% endif %}">
-            <div class="release">
-              <h3 class="title">
-                <a href="{% url 'admin.publications.views.edit_release' publication.id release.id %}">
-                  {{ release.title }}
-                </a>
-              </h3>
-              <p class="meta">{{ release.pub_date|date:"j. F Y" }}</p>
-              <p>
-                <a href="{% url 'admin.publications.views.edit_release' publication.id release.id %}">
-                  <img src="{% firstof release.get_cover_photo '/static/img/admin/publications/turbo-placeholder.png' %}" alt="{{ release.title }}">
-                </a>
-              </p>
-              <p class="content">
-                {% if release.pdf_hash != '' and release.online_view != '' %}
-                  <a href="{{ release.get_pdf_url }}">Se opplastet PDF ({{ release.pdf_file_size|filesizeformat }})</a><br>
-                  <a href="{{ release.online_view }}">Se les på nett-lenke</a>
-                {% elif release.pdf_hash != '' %}
-                  <a href="{{ release.get_pdf_url }}">Se opplastet PDF ({{ release.pdf_file_size|filesizeformat }})</a>
-                {% elif release.online_view != '' %}
-                  <a href="{{ release.online_view }}">Se les på nett-lenke</a>
-                {% else %}
-                  <div class="alert alert-danger">
-                    <strong>Utgivelsen mangler innhold!</strong><br>
-                    Den blir ikke lagt ut på Min side før du enten laster opp en PDF, eller legger inn en lenke til hvor den kan leses på nett.
-                  </div>
-                {% endif %}
-              </p>
-              <p class="description">
-                {{ release.description|linebreaksbr }}
-              </p>
-            </div>
-          </div>
-
-          {% if not forloop.last and forloop.counter|divisibleby:"2" %}
-            </div><div class="row">
+      <div class="alert alert-danger delete-publication-confirm jq-hide">
+        <p>
+          <strong>Er du sikker på at du vil slette {{ publication.title }}{% if publication.releases_ordered|length > 0 %}, med sine {{ publication.releases_ordered|length }} utgivelser{% endif %}?</strong><br>
+          {% if publication.releases_ordered|length > 0 %}
+            Alle PDF-filene som er lastet opp for utgivelsene vil også slettes. Forsidebildene vil bli liggende i bildearkivet, hvis du vil slette dem også må du gå til bildearkivet og gjøre det selv. Følgende utgivelser blir også slettet:
           {% endif %}
-        {% endfor %}
-      </div>
-    </div>
+        </p>
 
+        {% if publication.releases_ordered|length > 0 %}
+          <ul>
+            {% for release in publication.releases_ordered %}
+              <li>{{ release.title }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+
+        <p>
+          <a href="{% url 'admin.publications.views.delete_publication' publication.id %}" class="btn btn-danger delete-publication-final">
+            <i class="fa fa-warning"></i>
+            {% if publication.releases_ordered|length > 0 %}
+              Ja, jeg skjønner. Slett publikasjonen og alle utgivelsene for godt.
+            {% else %}
+              Ja, slett publikasjonen for godt.
+            {% endif %}
+          </a>
+        </p>
+      </div>
+
+      {% for message in messages %}
+        {% if message.message == 'incorrect_file_format' %}
+          <div class="alert alert-danger">
+            <strong>Du kan kun laste opp filer i PDF-format.</strong>
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      {% include 'common/admin/publications/edit_release_form.html' %}
+
+      <p>
+        <button class="btn btn-default create-release">
+          <i class="fa fa-upload"></i> Legg ut ny utgivelse
+        </button>
+      </p>
+
+      <div class="publications">
+        <div class="row">
+          {% for release in publication.releases_ordered %}
+            <div class="col-md-4{% if forloop.counter|divisibleby:"2" %} col-md-offset-1{% endif %}">
+              <div class="release">
+                <h3 class="title">
+                  <a href="{% url 'admin.publications.views.edit_release' publication.id release.id %}">
+                    {{ release.title }}
+                  </a>
+                </h3>
+                <p class="meta">{{ release.pub_date|date:"j. F Y" }}</p>
+                <p>
+                  <a href="{% url 'admin.publications.views.edit_release' publication.id release.id %}">
+                    <img src="{% firstof release.get_cover_photo '/static/img/admin/publications/turbo-placeholder.png' %}" alt="{{ release.title }}">
+                  </a>
+                </p>
+                <p class="content">
+                  {% if release.pdf_hash != '' and release.online_view != '' %}
+                    <a href="{{ release.get_pdf_url }}">Se opplastet PDF ({{ release.pdf_file_size|filesizeformat }})</a><br>
+                    <a href="{{ release.online_view }}">Se les på nett-lenke</a>
+                  {% elif release.pdf_hash != '' %}
+                    <a href="{{ release.get_pdf_url }}">Se opplastet PDF ({{ release.pdf_file_size|filesizeformat }})</a>
+                  {% elif release.online_view != '' %}
+                    <a href="{{ release.online_view }}">Se les på nett-lenke</a>
+                  {% else %}
+                    <div class="alert alert-danger">
+                      <strong>Utgivelsen mangler innhold!</strong><br>
+                      Den blir ikke lagt ut på Min side før du enten laster opp en PDF, eller legger inn en lenke til hvor den kan leses på nett.
+                    </div>
+                  {% endif %}
+                </p>
+                <p class="description">
+                  {{ release.description|linebreaksbr }}
+                </p>
+              </div>
+            </div>
+
+            {% if not forloop.last and forloop.counter|divisibleby:"2" %}
+              </div><div class="row">
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+    </div>
   </div>
 </div>
 
