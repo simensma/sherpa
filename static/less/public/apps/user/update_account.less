@@ -1,20 +1,12 @@
-form.account-info div.control-group div.controls {
-  img.info.nohover {
-    display: inline;
-  }
+form.account-info {
+  .zipcode-inputs-inline();
 
-  img.info.hover {
-    display: none;
-  }
-}
+  .info-popover {
+    padding-right: 20px;
+    background: url(/static/img/icons/netlife/icon-info.png) center right no-repeat;
 
-form.account-info div.control-group:hover div.controls {
-  img.info.nohover {
-    display: none;
-  }
-
-  img.info.hover {
-    display: inline;
+    &:hover {
+      background-image: url(/static/img/icons/netlife/icon-info-hover.png);
+    }
   }
 }
-
