@@ -113,7 +113,7 @@
       <ul>
       {% for album in albums %}
         <li class="album" data-id="{{ album.id }}">
-          <button class="btn mark"><i class="fa fa-tags"></i> Merk album</button>
+          <button class="btn btn-default mark"><i class="fa fa-tags"></i> Merk album</button>
           <a class="image" href="{% url 'admin.images.views.list_albums' album.id %}">
             <img src="{{ STATIC_URL }}img/admin/images/folder.png" alt="Album: {{ album.name }}">
           </a>
@@ -123,7 +123,7 @@
       {% endfor %}
       {% for image in images %}
         <li class="image" data-id="{{ image.id }}">
-          <button class="btn mark"><i class="fa fa-tag"></i> Merk bilde</button>
+          <button class="btn btn-default mark"><i class="fa fa-tag"></i> Merk bilde</button>
           <a class="image" href="{% url 'admin.images.views.image_details' image.id %}">
             <img src="http://{{ s3_bucket }}/images/{{ image.key }}-150.{{ image.extension }}" alt="{{ image.description }}">
           </a>
