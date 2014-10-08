@@ -248,12 +248,7 @@
         });
 
         // Tags, used in the header for both pages and articles
-
-        TagDisplay.enable({
-            tagBox: $("div.editor-header div.tags div.tag-box"),
-            pickerInput: $("div.editor-header div.tags input[name='tags']")
-        });
-
+        Select2Tagger({$input: $('input[name="tags"]')});
     });
 
     // Remove popovers when clicking on anything else than their trigger button

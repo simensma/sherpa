@@ -102,24 +102,14 @@
         </div>
       </div>
 
-      {# Replace with select2 #}
-      <div class="tags">
-        <table>
-          <tr>
-            <td style="vertical-align: top">
-              Nøkkelord:
-              <input class="form-control" type="text" name="tags">
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div class="tag-box" data-predefined-tags="{{ version.tags.all|taglist }}"></div>
-            </td>
-          </tr>
-        </table>
-      </div>
-
-      <div style="clear: left;"></div>
+      <p>
+        Nøkkelord:
+        <input
+          class="form-control"
+          name="tags"
+          data-dnt-existing-tags="{{ version.tags.all|taglist }}"
+          data-dnt-tags-url="{% url 'core.views.filter_tags' %}">
+      </p>
 
       <div class="save">
         <button class="btn btn-success save">
