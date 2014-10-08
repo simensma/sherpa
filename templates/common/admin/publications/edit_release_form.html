@@ -65,13 +65,13 @@
     <label class="col-md-2 control-label" for="release_pdf">Last opp PDF</label>
     <div class="col-md-10">
       <input type="file" name="pdf" id="release_pdf" class="form-control" accept="application/pdf">
-      <div class="hints">
+      <span class="help-block">
         PDF-magasin som medlemmer kan laste ned.
         {% if release and release.pdf_hash != '' %}
         <br>
         <a href="{{ release.get_pdf_url }}">Denne</a> ({{ release.pdf_file_size|filesizeformat }}) er allerede lastet opp, hvis du laster opp ny blir den forrige slettet.
         {% endif %}
-      </div>
+      </span>
     </div>
   </div>
 
@@ -79,10 +79,10 @@
     <label class="col-md-2 control-label" for="release_online_view">Les på nett-lenke</label>
     <div class="col-md-10">
       <input type="text" name="online_view" id="release_online_view" value="{% firstof release.online_view 'http://' %}" class="form-control">
-      <div class="hints">
+      <span class="help-block">
         Kan lenke til en tjeneste der man kan lese utgaven på nett, f.eks. på <a href="http://www.calameo.com/">Calameo</a>.<br>
         Du trenger ikke oppgi denne hvis du laster opp en PDF i stedet.
-      </div>
+      </span>
     </div>
   </div>
 
