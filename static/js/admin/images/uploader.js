@@ -62,9 +62,9 @@ $(function() {
     });
 
     var photographer = form_details.find("input[name='photographer']");
-    photographer.typeahead({
-        minLength: 3,
-        remote: photographer.attr('data-photographers-url') + "?q=%QUERY"
+    SimpleTypeahead({
+        url: photographer.attr('data-photographers-url'),
+        $input: photographer,
     });
 
     form_details.submit(function(e) {
