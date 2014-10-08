@@ -13,11 +13,11 @@
     <table>
       <tr>
         <td>Tekst på knappen:</td>
-        <td><input type="text" name="text" class="input-small"></td>
+        <td><input class="form-control" type="text" name="text"></td>
       </tr>
       <tr>
         <td>Adresse knappen går til:</td>
-        <td><input type="text" name="url" class="input-xlarge" value="http://"></td>
+        <td><input class="form-control" type="text" name="url" value="http://"></td>
       </tr>
     </table>
 
@@ -26,7 +26,7 @@
         <td><input type="radio" name="color" value="" checked></td>
         <td><button class="btn btn-default">Vanlig knapp</button></td>
         <td><input type="radio" name="size" value="btn-lg"></td>
-        <td><button class="btn btn-lg">Stor</button></td>
+        <td><button class="btn btn-default btn-lg">Stor</button></td>
       </tr>
       <tr>
         <td><input type="radio" name="color" value="btn-primary"></td>
@@ -38,13 +38,13 @@
         <td><input type="radio" name="color" value="btn-info"></td>
         <td><button class="btn btn-info">Informasjon</button></td>
         <td><input type="radio" name="size" value="btn-sm"></td>
-        <td><button class="btn btn-sm">Liten</button></td>
+        <td><button class="btn btn-default btn-sm">Liten</button></td>
       </tr>
       <tr>
         <td><input type="radio" name="color" value="btn-success"></td>
         <td><button class="btn btn-success">Suksess</button></td>
         <td><input type="radio" name="size" value="btn-xs"></td>
-        <td><button class="btn btn-xs">Mini</button></td>
+        <td><button class="btn btn-default btn-xs">Mini</button></td>
       </tr>
       <tr>
         <td><input type="radio" name="color" value="btn-warning"></td>
@@ -62,7 +62,7 @@
 
   </div>
   <div class="modal-footer" style="clear: both;">
-    <button class="btn btn-success save"><i class="icon-ok icon-white"></i> Lagre knapp</button>
+    <button class="btn btn-success save"><i class="glyphicon glyphicon-ok"></i> Lagre knapp</button>
     <button class="btn btn-default" data-dismiss="modal">Avbryt</button>
   </div>
 </div>

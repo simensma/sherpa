@@ -22,8 +22,8 @@
     </div>
 
     <div class="form-dnt-default form-horizontal">
-      <div class="control-group">
-        <div class="controls">
+      <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-9">
           <button class="btn btn-default add-campaign" data-dnt-toggle="add-campaign">
             <i class="icon-plus"></i> Legg til flere kampanjer...
           </button>
@@ -32,11 +32,11 @@
     </div>
 
     <div class="form-dnt-default form-horizontal">
-      <div class="control-group">
-        <div class="controls">
-          <div class="control-as-text">
+      <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-9">
+          <p class="form-control-static">
             Når slutt-dato for siste kampanje er passert, vil jeg at:
-          </div>
+          </p>
           <div class="radio">
             <label>
               <input type="radio" name="hide-when-expired" value="true">
@@ -54,11 +54,11 @@
     </div>
 
     <div class="form-dnt-default form-horizontal{% if site != main_site %} jq-hide{% endif %}">
-      <div class="control-group">
-        <div class="controls">
-          <div class="control-as-text">
+      <div class="form-group">
+        <div class="col-md-offset-3 col-md-9">
+          <p class="form-control-static">
             Kjerneinnhold-meny (kun tilgjengelig for {{ site.domain }})
-          </div>
+          </p>
           <div class="checkbox">
             <label>
               <input type="checkbox" name="display-core-menu">
@@ -68,7 +68,7 @@
 
           {# Inform about potential wrong menu label when editing the front page #}
           {% if version.variant.page.slug == '' %}
-            <p>
+            <p class="form-control-static">
               <em>
                 Merk: Du redigerer nå forsiden. Det øverste menyfeltet vil settes til tittelen for kampanjen,<br>
                 men den vil vise feil tittel frem til du har lagret siden, og laster kampanjen på nytt.
@@ -81,9 +81,9 @@
 
     <div class="campaign jq-hide" data-dnt-template="campaign">
 
-      <div class="control-group">
-        <label class="control-label">Kampanje</label>
-        <div class="controls">
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Kampanje</label>
+        <div class="col-sm-9">
           <select name="campaign" class="chosen" data-placeholder="Velg blant eksisterende kampanjer...">
             <option value=""></option>
             {% for campaign in widget_data.campaign.campaigns %}
@@ -93,29 +93,33 @@
         </div>
       </div>
 
-      <div class="control-group">
-        <label class="control-label">Periode</label>
-        <div class="controls">
-          <div class="input-append date" data-dnt-container="datepicker">
-            <input type="text" class="input-medium" name="start-date" value="{{ now|date:"d.m.Y" }}">
-            <span class="add-on">
-              <i class="icon-th"></i>
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Periode</label>
+        <div class="col-sm-9">
+          <div class="input-group date start-date" data-dnt-container="datepicker">
+            <input class="form-control" type="text" name="start-date" value="{{ now|date:"d.m.Y" }}">
+            <span class="input-group-addon">
+              <i class="glyphicon glyphicon-calendar"></i>
             </span>
           </div>
-          til og med
-          <div class="input-append date" data-dnt-container="datepicker">
-            <input type="text" class="input-medium" name="stop-date" value="{{ now|date:"d.m.Y" }}">
-            <span class="add-on">
-              <i class="icon-th"></i>
+
+          <p class="form-control-static date-label">
+            til og med
+          </p>
+
+          <div class="input-group date end-date" data-dnt-container="datepicker">
+            <input class="form-control" type="text" name="stop-date" value="{{ now|date:"d.m.Y" }}">
+            <span class="input-group-addon">
+              <i class="glyphicon glyphicon-calendar"></i>
             </span>
           </div>
         </div>
       </div>
 
-      <div class="control-group">
-        <div class="controls">
+      <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-9">
           <button class="btn btn-danger" data-dnt-toggle="remove-campaign">
-            <i class="icon-remove icon-white"></i> Ta bort
+            <i class="glyphicon glyphicon-remove"></i> Ta bort
           </button>
         </div>
       </div>
@@ -124,7 +128,7 @@
 
   </div>
   <div class="modal-footer" style="clear: both;">
-    <button class="btn btn-success save"><i class="icon-ok icon-white"></i> Lagre kampanjen</button>
+    <button class="btn btn-success save"><i class="glyphicon glyphicon-ok"></i> Lagre kampanjen</button>
     <button class="btn btn-default" data-dismiss="modal">Avbryt</button>
   </div>
 </div>

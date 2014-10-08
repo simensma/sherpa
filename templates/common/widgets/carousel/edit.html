@@ -7,24 +7,52 @@
     <p>
       <table>
         <tr>
-          <td><label>Bilde:</label></td>
-          <td><input name="url" type="text" class="input-xlarge"></td>
-          <td><button name="choose" class='btn btn-success choose-image'><i class='icon-share-alt'></i> Finn i arkivet</button></td>
-          <td><button name="upload" class="btn btn-success"><i class="icon-share-alt"></i> Last opp</button></td>
-          <td><button name="remove" class='btn btn-danger remove-image'><i class='icon-remove'></i> Fjern</button></td>
+          <td>
+            <label>Bilde:</label>
+          </td>
+          <td>
+            <input name="url" type="text" class="form-control">
+          </td>
+          <td>
+            <button name="choose" class="btn btn-success choose-image">
+              <i class="glyphicon glyphicon-share-alt"></i> Finn i arkivet
+            </button>
+          </td>
+          <td>
+            <button name="upload" class="btn btn-success">
+              <i class="glyphicon glyphicon-share-alt"></i> Last opp
+            </button>
+          </td>
+          <td>
+            <button name="remove" class="btn btn-danger remove-image">
+              <i class="glyphicon glyphicon-remove"></i> Fjern
+            </button>
+          </td>
         </tr>
         <tr>
-          <td><label>Bildetekst:</label></td>
-          <td><input name="description" type='text' class='input-xlarge'></td>
+          <td>
+            <label>Bildetekst:</label>
+          </td>
+          <td>
+            <input class="form-control" name="description" type="text">
+          </td>
         </tr>
         <tr>
-          <td><label>Fotograf:</label></td>
-          <td><input name='photographer' type='text' class='input-xlarge'></td>
+          <td>
+            <label>Fotograf:</label>
+          </td>
+          <td>
+            <input class="form-control" name="photographer" type="text">
+          </td>
         </tr>
         <tr>
-          <td><label name="sequence">Bilde 1 av 1 </label></td>
-          <td><button class="btn btn-success previous"><i class="icon-chevron-left"></i> Forrige bilde</button>
-          <button class="btn btn-success next">Neste bilde <i class="icon-chevron-right"></i></button></td>
+          <td>
+            <label name="sequence">Bilde 1 av 1 </label>
+          </td>
+          <td>
+            <button class="btn btn-success previous"><i class="glyphicon glyphicon-chevron-left"></i> Forrige bilde</button>
+            <button class="btn btn-success next">Neste bilde <i class="glyphicon glyphicon-chevron-right"></i></button>
+          </td>
         </tr>
       </table>
 
@@ -41,7 +69,7 @@
     </p>
   </div>
   <div class="modal-footer" style="clear: both;">
-    <button class="btn btn-success save"><i class="icon-ok icon-white"></i> Lagre bildekarusell</button>
+    <button class="btn btn-success save"><i class="glyphicon glyphicon-ok"></i> Lagre bildekarusell</button>
     <button class="btn btn-default" data-dismiss="modal">Avbryt</button>
   </div>
 </div>
