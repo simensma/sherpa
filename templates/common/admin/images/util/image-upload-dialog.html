@@ -5,6 +5,7 @@
   </div>
 
   <div class="modal-body">
+
     <div class="alert alert-info uploading jq-hide">
       <a class="close">x</a>
       Vent mens bildet lastes opp...
@@ -22,7 +23,7 @@
       Beklager, det oppstod en teknisk feil ved opplastingen! Bildet er sannsynligvis ikke blitt lastet opp, du kan sjekke dette under "Mine bilder" i bildearkivet. Feilen har blitt logget og vi vil fikse den så snart som mulig. Vennligst prøv igjen, eller kontakt teknisk avdeling ved DNT sentralt hvis feilen vedvarer.
     </div>
 
-    <form action="{% url 'admin.images.util.image_upload_dialog' %}" method="post" enctype="multipart/form-data" target="inlineframe" class="form-horizontal">
+    <form action="{% url 'admin.images.util.image_upload_dialog' %}" method="post" enctype="multipart/form-data" target="inlineframe" class="form-dnt-default form-horizontal">
       {% csrf_token %}
       <input type="reset" class="jq-hide">
 
@@ -70,12 +71,6 @@
           <div style="clear: both;"></div>
         </div>
       </div>
-
-      <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-          <input class="btn btn-success" type="submit" value="Last opp">
-        </div>
-      </div>
     </form>
 
     <iframe name="inlineframe" class="jq-hide"></iframe>
@@ -83,6 +78,7 @@
   </div>
 
   <div class="modal-footer">
-    <a href="javascript:undefined" class="btn btn-default" data-dismiss="modal">Lukk vindu</a>
+    <button class="btn btn-success" type="submit">Last opp</button>
+    <a href="javascript:undefined" class="btn btn-default" data-dismiss="modal">Avbryt</a>
   </div>
 </div>

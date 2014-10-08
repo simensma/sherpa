@@ -4,9 +4,12 @@
 
     var uploader;
     var form;
+    var button_submit;
+
     $(function() {
         uploader = $("div.image-upload-dialog");
         form = uploader.find("form");
+        button_submit = uploader.find('button[type="submit"]');
 
         TagDisplay.enable({
             ref: 'image-upload-dialog',
@@ -15,9 +18,13 @@
             pickerInput: form.find("input[name='tags']")
         });
 
+        button_submit.click(function() {
+            form.submit();
+        });
+
         uploader.find("form").submit(function(e) {
             uploader.find("div.uploading").show();
-            uploader.find("input[type='submit']").prop('disabled', true);
+            button_submit.prop('disabled', true);
             TagDisplay.collect('image-upload-dialog');
         });
 
@@ -31,7 +38,7 @@
     ImageUploadDialog.open = function(callback) {
         ImageUploadDialog.callback = callback;
 
-        uploader.find("input[type='submit']").prop('disabled', false);
+        button_submit.prop('disabled', false);
         uploader.find("input[type='reset']").click();
 
         uploader.find("input[name='tags-serialized']").val("");
@@ -52,15 +59,15 @@
             uploader.modal('hide');
             ImageUploadDialog.callback(result.url, description, photographer);
         } else if(result.status === "no_files") {
-            uploader.find("input[type='submit']").prop('disabled', false);
+            button_submit.prop('disabled', false);
             uploader.find("div.upload-no-files").show();
             uploader.find("div.uploading").hide();
         } else if(result.status == 'parse_error') {
-            uploader.find("input[type='submit']").prop('disabled', false);
+            button_submit.prop('disabled', false);
             uploader.find("div.parse-error").show();
             uploader.find("div.uploading").hide();
         } else if(result.status == 'unknown_exception') {
-            uploader.find("input[type='submit']").prop('disabled', false);
+            button_submit.prop('disabled', false);
             uploader.find("div.unknown-exception").show();
             uploader.find("div.uploading").hide();
         }
