@@ -30,7 +30,7 @@
 <script>
   $.fn.datepicker.defaults.language = '{{ LANGUAGE_CODE }}';
 </script>
-<script src="{{ STATIC_URL }}lib/typeahead/typeahead.min.js"></script>
+<script src="{{ STATIC_URL }}lib/typeahead/typeahead.bundle.min.js"></script>
 
 {# Other 3rd party libs #}
 <script src="{{ STATIC_URL }}lib/chosen/chosen.jquery.min.js"></script>
@@ -48,6 +48,7 @@
 <script src="{{ STATIC_URL }}js/public/widgets.js"></script>
 <script src="{{ STATIC_URL }}js/lib/validator.js"></script>
 <script src="{{ STATIC_URL }}js/lib/infinite-scroller.js"></script>
+<script src="{{ STATIC_URL }}js/lib/typeahead.js"></script>
 
 {# Google analytics #}
 {% if analytics_ua %}

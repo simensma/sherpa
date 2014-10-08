@@ -413,7 +413,7 @@ def photographer(request):
     for word in request.GET['q'].split():
         images = images.filter(photographer__icontains=word)
     images = images.distinct('photographer')
-    photographers = [image.photographer for image in images]
+    photographers = [{'value': image.photographer} for image in images]
     return HttpResponse(json.dumps(photographers))
 
 def set_fotokonkurranse_album(request, new_album):
