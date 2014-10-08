@@ -7,17 +7,17 @@ $(function() {
     var no_memberid_match = registration.find("div.no-memberid-match");
     var actor_is_not_member = registration.find("div.actor-is-not-member");
     var country_select = registration.find("select[name='country']");
-    var zipcode_control_group = registration.find('[data-dnt-form-group="zipcode"]');
+    var zipcode_form_group = registration.find('[data-dnt-form-group="zipcode"]');
 
     Validator.validate({
         method: 'email',
-        control_group: registration.find('[data-dnt-form-group="email"]'),
+        form_group: registration.find('[data-dnt-form-group="email"]'),
         input: registration.find("input[name='email']"),
         req: true
     });
 
     Validator.validatePasswords({
-        control_group: registration.find('[data-dnt-form-group="password"], [data-dnt-form-group="password-repeat"]'),
+        form_group: registration.find('[data-dnt-form-group="password"], [data-dnt-form-group="password-repeat"]'),
         pass1: registration.find("input[name='password']"),
         pass2: registration.find("input[name='password-repeat']"),
         min_length: Turistforeningen.user_password_length,
@@ -26,7 +26,7 @@ $(function() {
 
     Validator.validate({
         method: 'memberid',
-        control_group: registration.find('[data-dnt-form-group="memberid"]'),
+        form_group: registration.find('[data-dnt-form-group="memberid"]'),
         input: registration.find("input[name='memberid']"),
         req: true
     });
@@ -41,9 +41,9 @@ $(function() {
     country_select.chosen();
     country_select.change(function() {
         if($(this).find("option:selected").val() == 'NO') {
-            zipcode_control_group.show();
+            zipcode_form_group.show();
         } else {
-            zipcode_control_group.hide();
+            zipcode_form_group.hide();
         }
     });
 
