@@ -37,5 +37,9 @@ function Select2Tagger(opts) {
                 return {results: data};
             }
         },
-    }).select2('val', JSON.parse(opts.$input.attr('data-dnt-existing-tags')));
+    });
+    var existing_tags = JSON.parse(opts.$input.attr('data-dnt-existing-tags'));
+    if(existing_tags.length > 0) {
+        opts.$input.select2('val', existing_tags);
+    }
 }
