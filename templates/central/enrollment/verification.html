@@ -49,13 +49,13 @@
           {% if message.message == 'invalid_main_member' %}
             <div class="alert alert-error">
               <a class="close">x</a>
-              <strong><i class="icon-warning-sign"></i> {% trans "Ugyldig hovedmedlem" %}</strong><br>
+              <strong><i class="glyphicon glyphicon-warning-sign"></i> {% trans "Ugyldig hovedmedlem" %}</strong><br>
               {% trans "En teknisk feil oppstod, som gjorde at du valgte et barnemedlem eller skoleungdomsmedlem som hovedmedlem. Dette er ikke tillatt. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer." %}
             </div>
           {% elif message.message == 'no_main_member' %}
             <div class="alert alert-error">
               <a class="close">x</a>
-              <strong><i class="icon-warning-sign"></i> {% trans "Mangler hovedmedlem" %}</strong><br>
+              <strong><i class="glyphicon glyphicon-warning-sign"></i> {% trans "Mangler hovedmedlem" %}</strong><br>
               {% trans "En teknisk feil oppstod, som gjorde at du ikke valgte hvem som er hovedmedlem, selv om du har registrert medlemmer som er eldre enn ungdomsmedlemsalderen. I dette tilfellet må et hovedmedlem velges. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer." %}
             </div>
           {% endif %}
@@ -64,7 +64,7 @@
         {% if enrollment.attempted_yearbook %}
           <div class="alert alert-warning">
             <a class="close">x</a>
-            <strong><i class="icon-info-sign"></i> {% trans "Årbok og Fjell og Vidde må bestilles separat" %}</strong><br>
+            <strong><i class="glyphicon glyphicon-info-sign"></i> {% trans "Årbok og Fjell og Vidde må bestilles separat" %}</strong><br>
             {% blocktrans %}
               Dere har angitt at dere ønsker å motta årbok og Fjell og Vidde. Siden hovedmedlemmet ({{ existing_name }}) allerede er medlem, kan ikke disse bestilles i dette skjemaet. Ta kontakt med medlemsservice for å bestille disse.
             {% endblocktrans %}
@@ -219,8 +219,8 @@
         </p>
 
         <p>
-          <a class="btn btn-default btn-lg" href="{% url 'enrollment.views.household' %}"><i class="icon-arrow-left"></i> {% trans "Tilbake" %}</a>
-          <a href="javascript:undefined" class="btn btn-danger btn-lg verify">{% trans "Bekreft" %} <i class="icon-arrow-right icon-white"></i></a>
+          <a class="btn btn-default btn-lg" href="{% url 'enrollment.views.household' %}"><i class="glyphicon glyphicon-arrow-left"></i> {% trans "Tilbake" %}</a>
+          <a href="javascript:undefined" class="btn btn-danger btn-lg verify">{% trans "Bekreft" %} <i class="glyphicon glyphicon-arrow-right"></i></a>
         </p>
 
       </form>

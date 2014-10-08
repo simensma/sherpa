@@ -125,7 +125,12 @@
         {% if enrollment.users.count == 1 %}
 
           <p>
-            <a class="btn btn-danger" href="{% url 'connect.views.signon_login' %}?registreringsnokkel={{ enrollment.users.all.0.pending_user.pending_registration_key }}#registrering">{% trans "Gå videre" %} <i class="icon-white icon-share-alt"></i></a>
+            <a
+              class="btn btn-danger"
+              href="{% url 'connect.views.signon_login' %}?registreringsnokkel={{ enrollment.users.all.0.pending_user.pending_registration_key }}#registrering">
+
+              {% trans "Gå videre" %} <i class="glyphicon glyphicon-share-alt"></i>
+            </a>
           </p>
 
         {% else %}
@@ -143,9 +148,17 @@
             </p>
 
             <p>
-              <a class="btn btn-danger user" href="" disabled>{% trans "Gå videre" %} <i class="icon-white icon-share-alt"></i></a>
+              <a class="btn btn-danger user" href="" disabled>
+                {% trans "Gå videre" %} <i class="glyphicon glyphicon-share-alt"></i>
+              </a>
               {% for user in enrollment.get_users_by_name %}
-                <a class="btn btn-danger jq-hide user" data-user-id="{{ user.memberid }}" href="{% url 'connect.views.signon_login' %}?registreringsnokkel={{ user.pending_user.pending_registration_key }}#registrering">{% trans "Gå videre" %} <i class="icon-white icon-share-alt"></i></a>
+                <a
+                  class="btn btn-danger jq-hide user"
+                  data-user-id="{{ user.memberid }}"
+                  href="{% url 'connect.views.signon_login' %}?registreringsnokkel={{ user.pending_user.pending_registration_key }}#registrering">
+
+                  {% trans "Gå videre" %} <i class="glyphicon glyphicon-share-alt"></i>
+                </a>
               {% endfor %}
             </p>
 

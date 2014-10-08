@@ -121,10 +121,14 @@
       <div style="clear: left;"></div>
 
       <div class="save">
-        <button class="btn btn-success save"><i class="icon-heart"></i> Lagre nå</button>
-        <button class="btn btn-success preview" data-href="{% url 'admin.sites.pages.page.preview' active_site.id version.id %}"><i class="icon-search"></i> Forhåndsvisning</button>
+        <button class="btn btn-success save">
+          <i class="glyphicon glyphicon-heart"></i> Lagre nå
+        </button>
+        <button class="btn btn-success preview" data-href="{% url 'admin.sites.pages.page.preview' active_site.id version.id %}">
+          <i class="glyphicon glyphicon-search"></i> Forhåndsvisning
+        </button>
         <a class="btn btn-danger delete-page" href="{% url 'admin.sites.pages.page.delete' active_site.id version.variant.page.id %}">
-          <i class="icon-warning-sign"></i> Slett
+          <i class="glyphicon glyphicon-warning-sign"></i> Slett
         </a>
         <br><br>
 

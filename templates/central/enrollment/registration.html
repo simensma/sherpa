@@ -39,7 +39,7 @@
       {% for message in messages %}
         {% if message.message == 'contact_missing' %}
           <div class="alert alert-error">
-            <a class="close">x</a><strong><i class="icon-warning-sign"></i> {% trans "Kontaktinformasjon mangler." %}</strong><br>
+            <a class="close">x</a><strong><i class="glyphicon glyphicon-warning-sign"></i> {% trans "Kontaktinformasjon mangler." %}</strong><br>
             {% trans "Minst ett medlem av husstanden må ha gyldig kontaktinformasjon (både telefon og e-post)." %}
           </div>
         {% elif message.message == 'user_invalid' %}
@@ -81,7 +81,7 @@
           </div>
           <p>
             <a href="{% url 'enrollment.views.household' %}" class="btn btn-danger btn-lg step2{% if current_user %} post{% endif %}" data-conditions-message="{% trans "Du kan ikke gå videre med mindre du har lest og godtatt betingelsene." %}">
-              {% trans "Gå videre" %} <i class="icon-arrow-right icon-white"></i>
+              {% trans "Gå videre" %} <i class="glyphicon glyphicon-arrow-right"></i>
             </a>
           </p>
         </div>
