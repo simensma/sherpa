@@ -69,7 +69,12 @@
             <span class="input-group-addon">
               <input type="checkbox" name="set-tag-link">
             </span>
-            <input class="form-control" type="text" name="tag-link" data-tags-url="{% url 'core.views.filter_tags' %}" disabled>
+            <input
+              class="form-control"
+              type="text"
+              name="tag-link"
+              data-dnt-lookup-url="{% url 'core.views.filter_tags' %}"
+              data-dnt-search-label="Skriv inn nøkkelord å søke etter...">
           </div>
         </div>
       </div>
