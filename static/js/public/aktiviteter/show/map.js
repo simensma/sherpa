@@ -2,7 +2,7 @@ $(function() {
     var aktivitet = $("div.aktivitet");
     var popup_content = aktivitet.find("div.leaflet-popup-content").html();
 
-    var map = L.map('map').setView([Turistforeningen.start_point_lat, Turistforeningen.start_point_lng], 5);
+    var map = L.map('map').setView([Turistforeningen.start_point_lat, Turistforeningen.start_point_lng], 14);
     L.tileLayer('http://opencache.statkart.no/gatekeeper/gk/gk.open_gmaps?layers=topo2&zoom={z}&x={x}&y={y}', {
         attribution: 'Kartverket'
     }).addTo(map);
