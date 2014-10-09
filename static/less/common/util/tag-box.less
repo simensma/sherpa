@@ -1,7 +1,27 @@
 /**
- * A wrapper used for displaying and choosing tags connected to some object.
- * Will probably be replaced by select2.
+ * A wrapper used for displaying tags connected to some object.
  */
+
+.tag-cloud {
+  margin-bottom: 8px;
+
+  .tag {
+    display: inline-block;
+    padding: 3px 6px;
+    margin-bottom: 5px;
+    font-size: 18px;
+    color: #3e6d8e;
+    background: #e0eaf1;
+    border-bottom: 1px solid #3e6d8e;
+    border-right: 1px solid #7f9fb6;
+
+    &:hover {
+      color: #e0eaf1;
+      text-decoration: none;
+      background-color: #3e6d8e;
+    }
+  }
+}
 
 div.tag-box {
 
