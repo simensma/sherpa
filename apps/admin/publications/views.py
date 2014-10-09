@@ -119,7 +119,11 @@ def edit_release(request, publication, release):
         release.save()
 
         release.tags.clear()
-        for tag in [tag.lower() for tag in json.loads(request.POST['tags-serialized'])]:
+        for tag in request.POST['tags'].split(','):
+            tag = tag.strip().lower()
+            if tag == '':
+                continue
+
             obj, created = Tag.objects.get_or_create(name=tag)
             release.tags.add(obj)
         return redirect('admin.publications.views.edit_publication', publication.id)
