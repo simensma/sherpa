@@ -14,18 +14,14 @@
 
 {% block body %}
 
-<div class="row">
-  <div class="span12">
-    <h1>Fjelltreffen</h1>
-  </div>
-</div>
+<h1>Fjelltreffen</h1>
 
 <div class="row">
-  <div class="span9">
+  <div class="col-md-9">
 
     <div class="fjelltreffen-list" data-start-index="{{ start_index }}" data-load-url="{% url 'fjelltreffen.views.load' %}">
       <p class="lede">
-        På Fjelltreffen kan du søke etter turfølge &mdash; kanskje for livet? Søk i annonsene nedenfor eller <a href="{% url 'fjelltreffen.views.new' %}">legg ut din egen annonse</a>.
+        På Fjelltreffen kan du søke etter turfølge — kanskje for livet? Søk i annonsene nedenfor eller <a href="{% url 'fjelltreffen.views.new' %}">legg ut din egen annonse</a>.
       </p>
 
       {% include 'central/fjelltreffen/filter.html' %}
@@ -35,24 +31,24 @@
       </table>
 
       <div class="load-more">
-        <img class="ajaxloader hide" src="/static/img/common/ajax-loader-large.gif" alt="Laster, vennligst vent...">
-        <button class="btn btn-large load{% if annonser|length == 0 or end %} hide{% endif %}"><i class="icon-refresh"></i> Last flere annonser</button>
+        <img class="ajaxloader jq-hide" src="/static/img/common/ajax-loader-large.gif" alt="Laster, vennligst vent...">
+        <button class="btn btn-default btn-lg load{% if annonser|length == 0 or end %} jq-hide{% endif %}"><i class="glyphicon glyphicon-refresh"></i> Last flere annonser</button>
       </div>
 
-      <div class="no-matches alert alert-error{% if annonser|length > 0 %} hide{% endif %}">
+      <div class="no-matches alert alert-error{% if annonser|length > 0 %} jq-hide{% endif %}">
         Vi fant ingen annonser på dette søket - prøv å endre søkekriteriene dine.<br>
         Hva med å <a href="{% url 'fjelltreffen.views.new' %}">legge ut en annonse</a> selv?<br><br>
-        Visste du forresten at DNTs medlemsforeninger arrangerer egne <a href="http://www2.turistforeningen.no/activity.php?fo_id=2513&search_string&ac_cat=singeltur">turer for single</a>?
+        Visste du forresten at DNTs medlemsforeninger arrangerer egne <a href="http://www2.turistforeningen.no/activity.php?fo_id=2513&amp;search_string&amp;ac_cat=singeltur">turer for single</a>?
       </div>
 
-      <div class="no-further-matches alert alert-error{% if annonser|length == 0 or not end %} hide{% endif %}">
+      <div class="no-further-matches alert alert-error{% if annonser|length == 0 or not end %} jq-hide{% endif %}">
         Dette var alle annonsene som passet søket ditt. Endre søkekriteriene for å finne flere eller færre annonser. Hva med å <a href="{% url 'fjelltreffen.views.new' %}">legge ut en annonse</a> selv?<br><br>
-        Visste du forresten at DNTs medlemsforeninger arrangerer egne <a href="http://www2.turistforeningen.no/activity.php?fo_id=2513&search_string&ac_cat=singeltur">turer for single</a>?
+        Visste du forresten at DNTs medlemsforeninger arrangerer egne <a href="http://www2.turistforeningen.no/activity.php?fo_id=2513&amp;search_string&amp;ac_cat=singeltur">turer for single</a>?
       </div>
     </div>
   </div>
 
-  <div class="span3">
+  <div class="col-md-3">
     {% include 'central/fjelltreffen/navigation.html' with active='index' %}
   </div>
 

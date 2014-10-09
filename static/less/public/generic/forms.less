@@ -1,0 +1,39 @@
+/**
+ * Default form styling.
+ * Explicit bootstrap overrides may also be found in less/lib/bootstrap.less
+ */
+
+.form-dnt-default {
+  label {
+    font-family: "DTL Nobel" !important;
+    font-weight: normal;
+
+    .asterisk {
+      font-size: 20px;
+      font-weight: bold;
+
+      &.red {
+        color: red;
+      }
+    }
+  }
+
+  input, textarea {
+    color: rgb(0, 0, 0) !important;
+  }
+
+  // This is a Bootstrap class
+  .form-control-static {
+    font-family: "DTL Nobel" !important;
+    font-weight: bold;
+  }
+
+  // This is a Bootstrap class
+  .help-block {
+    font-size: 14px !important;
+
+    &.error {
+      color: @profile-red;
+    }
+  }
+}

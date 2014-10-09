@@ -12,87 +12,82 @@
 
 {% block body %}
 
-<div class="row">
-  <div class="span12">
+<h2>Min side</h2>
 
-    <h2>Min side</h2>
-
-    {% for message in messages %}
-      {% if message.message == 'password_reset_success' %}
-        <div class="alert alert-success">
-          Velkommen tilbake {{ user.get_first_name }}, passordet ditt har blitt endret og du er nå innlogget.
-        </div>
-      {% elif message.message == 'password_update_success' %}
-        <div class="alert alert-success">
-          <a class="close">x</a>
-          <strong>Passordet ditt har blitt endret.</strong>
-        </div>
-      {% endif %}
-    {% endfor %}
-
-    <div class="user-home-account form-border form-horizontal">
-
-      <table class="user-data">
-        <tr>
-          <th>Deg:</th>
-          <td>{{ user.get_full_name }}</td>
-        </tr>
-        {% if user.is_member %}
-          <tr>
-            <th>Medlemsnummer:</th>
-            <td>
-              {{ user.memberid }}
-              {% include 'central/membership/memberid_sms/userpage.html' %}
-            </td>
-          </tr>
-          <tr>
-            <th>Ditt medlemskap:</th>
-            <td{% if not user.has_paid %} data-popover data-trigger="hover" data-placement="left" data-title="Ubetalt årskontingent" data-content="Vi kan ikke se at betaling for medlemskap i {{ membership_year_start.public_date.applicable_year }} er registrert i vårt system. Du har derfor ikke tilgang til medlemstjenestene på Min side. Hvis du nettopp har meldt deg inn blir dette oppdatert straks du betaler fakturaen du får tilsendt i posten."{% endif %}>
-              {% if user.is_lifelong_member %}
-                Livsvarig meldmesskap
-              {% else %}
-                {{ user|payment_status }}
-              {% endif %}
-              {% if not user.has_paid %}
-                <i class="info-hover"></i>
-              {% endif %}
-            </td>
-          </tr>
-          <tr>
-            <th>Din medlemsforening:</th>
-            <td>
-              {% if user.main_forening.get_homepage_site %}<a href="http://{{ user.main_forening.get_homepage_site.domain }}/">{% endif %}
-                {{ user.main_forening.name }}
-              {% if user.main_forening.get_homepage_site %}</a>{% endif %}
-            </td>
-          </tr>
-          {% if user.turledere.count > 0 %}
-            <tr>
-              <th>Turledersertifikat:</th>
-              <td>
-                {% if user.get_highest_turleder_role.is_expired %}
-                  <a class="turleder-certificate-expired" href="{% url 'user.views.account' %}">Utgått</a>
-                {% else %}
-                  {{ user.get_highest_turleder_role.get_role }}
-                  {% if user.get_highest_turleder_role.role != 'ambassadør' and user.get_highest_turleder_role.role != 'grunnleggende' %}
-                    til {{ user.get_highest_turleder_role.date_end|date:"Y" }}
-                  {% endif %}
-                {% endif %}
-              </td>
-            </tr>
-          {% endif %}
-        {% else %}
-          <tr>
-            <th>Ditt medlemskap:</th>
-            <td>
-              Du er ikke DNT-medlem.<br>
-              <a href="{% url 'user.views.register_membership' %}">Registrer ditt medlemskap</a>
-            </td>
-          </tr>
-        {% endif %}
-      </table>
+{% for message in messages %}
+  {% if message.message == 'password_reset_success' %}
+    <div class="alert alert-success">
+      Velkommen tilbake {{ user.get_first_name }}, passordet ditt har blitt endret og du er nå innlogget.
     </div>
-  </div>
+  {% elif message.message == 'password_update_success' %}
+    <div class="alert alert-success">
+      <a class="close">x</a>
+      <strong>Passordet ditt har blitt endret.</strong>
+    </div>
+  {% endif %}
+{% endfor %}
+
+<div class="user-home-account form-border form-horizontal">
+
+  <table class="user-data">
+    <tr>
+      <th>Deg:</th>
+      <td>{{ user.get_full_name }}</td>
+    </tr>
+    {% if user.is_member %}
+      <tr>
+        <th>Medlemsnummer:</th>
+        <td>
+          {{ user.memberid }}
+          {% include 'central/membership/memberid_sms/userpage.html' %}
+        </td>
+      </tr>
+      <tr>
+        <th>Ditt medlemskap:</th>
+        <td{% if not user.has_paid %} data-popover data-trigger="hover" data-placement="left" data-title="Ubetalt årskontingent" data-content="Vi kan ikke se at betaling for medlemskap i {{ membership_year_start.public_date.applicable_year }} er registrert i vårt system. Du har derfor ikke tilgang til medlemstjenestene på Min side. Hvis du nettopp har meldt deg inn blir dette oppdatert straks du betaler fakturaen du får tilsendt i posten."{% endif %}>
+          {% if user.is_lifelong_member %}
+            Livsvarig meldmesskap
+          {% else %}
+            {{ user|payment_status }}
+          {% endif %}
+          {% if not user.has_paid %}
+            <i class="info-hover"></i>
+          {% endif %}
+        </td>
+      </tr>
+      <tr>
+        <th>Din medlemsforening:</th>
+        <td>
+          {% if user.main_forening.get_homepage_site %}<a href="http://{{ user.main_forening.get_homepage_site.domain }}/">{% endif %}
+            {{ user.main_forening.name }}
+          {% if user.main_forening.get_homepage_site %}</a>{% endif %}
+        </td>
+      </tr>
+      {% if user.turledere.count > 0 %}
+        <tr>
+          <th>Turledersertifikat:</th>
+          <td>
+            {% if user.get_highest_turleder_role.is_expired %}
+              <a class="turleder-certificate-expired" href="{% url 'user.views.account' %}">Utgått</a>
+            {% else %}
+              {{ user.get_highest_turleder_role.get_role }}
+              {% if user.get_highest_turleder_role.role != 'ambassadør' and user.get_highest_turleder_role.role != 'grunnleggende' %}
+                til {{ user.get_highest_turleder_role.date_end|date:"Y" }}
+              {% endif %}
+            {% endif %}
+          </td>
+        </tr>
+      {% endif %}
+    {% else %}
+      <tr>
+        <th>Ditt medlemskap:</th>
+        <td>
+          Du er ikke DNT-medlem.<br>
+          <a href="{% url 'user.views.register_membership' %}">Registrer ditt medlemskap</a>
+        </td>
+      </tr>
+    {% endif %}
+  </table>
 </div>
 
 <div class="user-home-navigation">
@@ -232,35 +227,6 @@
   {% endrowiterator %}
 
 </div>
-
-{# Temporary #}
-{% if first_visit %}
-  <div class="modal first-time-minside-visitor hide">
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal">X</button>
-      <h3>Velkommen til ny Min side!</h3>
-    </div>
-    <div class="modal-body">
-      <p>
-        Innholdet og tjenestene er stort sett som før, men utseende og oppsett er nytt. Vi har dessverre ikke fått på plass oversikt over dine påmeldinger til turer og aktiviteter, vennevervinger eller nyhetsbrev - vi jobber med både disse og nye tjenester.
-      </p>
-      <p>
-        Vi håper uansett du blir fornøyd med endringene.
-      </p>
-      <p>
-        <em>Hilsen oss på DNTs medlemsservice!</em>
-      </p>
-      <p>
-        Spørsmål? Ta gjerne kontakt med oss på 4000 1870 eller <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a>.
-      </p>
-    </div>
-    <div class="modal-footer">
-      <p>
-        <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
-      </p>
-    </div>
-  </div>
-{% endif %}
 
 {% advertisement %}
 

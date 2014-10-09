@@ -1,0 +1,44 @@
+.enrollment-household {
+  form.household {
+    label {
+      .enrollment-label();
+    }
+
+    select {
+      .enrollment-input-default-color;
+
+      option[disabled] {
+        background-color: rgb(215, 215, 215);
+      }
+    }
+
+    input[type='text'] {
+      .enrollment-input-default-color;
+      .enrollment-input-default-style;
+    }
+
+    button {
+      .enrollment-button-margin;
+    }
+
+    .enrollment-asterisks;
+
+    .zipcode-inputs-inline;
+
+    .search-existing {
+      padding: 9px; // Because the input text has larger padding than default
+    }
+  }
+
+  .existing-result {
+    font-weight: bold;
+
+    span.success span.result {
+      color: rgb(60, 180, 60);
+    }
+
+    span.error {
+      color: rgb(180, 60, 60);
+    }
+  }
+}

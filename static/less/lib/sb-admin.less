@@ -1,0 +1,78 @@
+/**
+ * Custom overrides for the admin layout theme (sb-admin)
+ */
+
+@sbadmin-background-color: #3d3d3d;
+
+body {
+  background-color: @sbadmin-background-color;
+}
+
+.navbar {
+  .navbar-brand {
+    padding: 5px 15px 5px 8px;
+    min-height: 50px;
+
+    &:hover {
+      background-color: #444;
+    }
+
+    .title {
+      font-size: 20px;
+      color: #fff;
+    }
+  }
+
+  .navbar-user {
+    margin-right: 0 !important;
+
+    .dropdown > a {
+      color: #fff !important;
+    }
+
+    .user-dropdown {
+      .dropdown-with-gravatar {
+        height: 50px;
+        padding-top: 0;
+        padding-bottom: 0;
+
+        img {
+          vertical-align: middle;
+        }
+
+        span {
+          display: inline-block;
+          padding-top: 14px;
+          padding-bottom: 14px;
+        }
+      }
+    }
+  }
+
+  .side-nav {
+    background-color: @sbadmin-background-color;
+
+    li {
+      overflow: hidden;
+
+      &.active {
+        a {
+          background-color: @profile-red !important;
+        }
+      }
+
+      &.submenu {
+        a {
+          background-color: #4b4b4b;
+        }
+      }
+
+      a {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        color: #fff;
+        border-top: 1px solid #5c5c5c;
+      }
+    }
+  }
+}

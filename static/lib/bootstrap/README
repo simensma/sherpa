@@ -1,0 +1,2 @@
+admin/ is an unmodified distribution of bootstrap (used in the admin layout)
+public/ is a modified and manually compiled version (used in the public layout) - see https://github.com/Turistforeningen/bootstrap for what's changed

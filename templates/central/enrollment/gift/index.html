@@ -7,18 +7,14 @@
 
 {% block body %}
 
-<div class="row">
-  <div class="span12">
-    <h1>Gi bort gavemedlemskap</h1>
-    {% include 'central/enrollment/gift/progress.html' with step=1 %}
-    {% if display_christmas_warning %}
-      {% include 'central/enrollment/gift/christmas_warning.html' %}
-    {% endif %}
-  </div>
-</div>
+<h1>Gi bort gavemedlemskap</h1>
+{% include 'central/enrollment/gift/progress.html' with step=1 %}
+{% if display_christmas_warning %}
+  {% include 'central/enrollment/gift/christmas_warning.html' %}
+{% endif %}
 
-<div class="row-fluid">
-  <div class="span9">
+<div class="row">
+  <div class="col-md-9">
     <p>
       Tom for gaveidéer? Et medlemskap i DNT varer lenge og kan brukes så mye man vil. I tillegg til flotte naturopplevelser gir medlemskapet rabatt på overnatting på DNTs hytter, mulighet for å være med på turer, kurs og andre aktiviteter, samt en rekke andre fordeler. Velg mellom:
     </p>
@@ -26,8 +22,8 @@
     <form class="gift-entry" method="post" action="{% url 'enrollment.gift.views.form' %}">
       {% csrf_token %}
       <input type="hidden" name="type" value="">
-      <div class="row-fluid">
-        <div class="span6">
+      <div class="row">
+        <div class="col-md-6">
           <div class="types">
             <h2>Vanlig medlemskap</h2>
             <p>
@@ -37,7 +33,7 @@
             <p><button type="submit" class="btn btn-danger" data-type="0">Bestill</button></p>
           </div>
         </div>
-        <div class="span6">
+        <div class="col-md-6">
           <div class="types">
             <h2>Dåpsgave</h2>
             <p>
@@ -48,8 +44,8 @@
           </div>
         </div>
       </div>
-      <div class="row-fluid" style="margin-top: 20px">
-        <div class="span6">
+      <div class="row" style="margin-top: 20px">
+        <div class="col-md-6">
           <div class="types">
             <h2>Jubileum</h2>
             <p>
@@ -59,7 +55,7 @@
             <p><button type="submit" class="btn btn-danger" data-type="2">Bestill</button></p>
           </div>
         </div>
-        <div class="span6">
+        <div class="col-md-6">
           <div class="types">
             <h2>Livsvarig medlemskap</h2>
             <p>
@@ -73,14 +69,14 @@
     </div>
   </form>
 
-  <div class="span3">
+  <div class="col-md-3">
     <div class="well">
       <p>
-        <i class="icon-info-sign"></i> Husk å bestille i god tid, slik at vi rekker å sende ut gavekort og medlemskort innen du skal overrekke gaven.
+        <i class="glyphicon glyphicon-info-sign"></i> Husk å bestille i god tid, slik at vi rekker å sende ut gavekort og medlemskort innen du skal overrekke gaven.
       </p>
 
       <p>
-        <i class="icon-exclamation-sign"></i> <strong>NB! Bestilling av gavemedlemskap gjelder kun i Norge.</strong>
+        <i class="glyphicon glyphicon-exclamation-sign"></i> <strong>NB! Bestilling av gavemedlemskap gjelder kun i Norge.</strong>
       </p>
     </div>
 

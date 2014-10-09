@@ -1,4 +1,4 @@
-<div class="modal hide widget-editor" data-widget="blog">
+<div class="modal jq-hide widget-editor" data-widget="blog">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
     <h3>Liste med nyeste blogginnlegg</h3>
@@ -6,10 +6,10 @@
   <div class="modal-body">
     <p>
       <label>Antall innlegg:</label>
-      <input type="text" name="count" class="input-small"><br>
+      <input class="form-control" type="text" name="count"><br>
 
       <label>Kategori:</label>
-      <select name="category" class="input-small">
+      <select class="form-control" name="category">
         {% for category in widget_data.blog.categories %}
           <option value="{{category}}">{{category}}</option>
         {% endfor %}
@@ -18,7 +18,7 @@
     </p>
   </div>
   <div class="modal-footer" style="clear: both;">
-    <button class="btn btn-success save"><i class="icon-ok icon-white"></i> Lagre blogginnlegg-liste</button>
-    <button class="btn" data-dismiss="modal">Avbryt</button>
+    <button class="btn btn-success save"><i class="glyphicon glyphicon-ok"></i> Lagre blogginnlegg-liste</button>
+    <button class="btn btn-default" data-dismiss="modal">Avbryt</button>
   </div>
 </div>

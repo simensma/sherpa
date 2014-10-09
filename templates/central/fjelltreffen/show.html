@@ -14,14 +14,10 @@
 
 {% block body %}
 
-<div class="row">
-  <div class="span12">
-    <h1>Fjelltreffen</h1>
-  </div>
-</div>
+<h1>Fjelltreffen</h1>
 
 <div class="row">
-  <div class="span9">
+  <div class="col-md-9">
 
     <div class="fjelltreffen-annonse">
       <h2>{{ annonse.title }}</h2>
@@ -89,52 +85,58 @@
         {% endif %}
 
         {# Replies - show if already filled and there were errors #}
-        <div class="reply{% if not form.errors and not email_reply_failure %} hide{% endif %}">
+        <div class="reply{% if not form.errors and not email_reply_failure %} jq-hide{% endif %}">
 
           <h2>Svar på annonsen</h2>
 
-          <form action="{% url 'fjelltreffen.views.show' annonse.id %}" method="post" class="form-default form-horizontal fjelltreffen-annonse-reply">
+          <form action="{% url 'fjelltreffen.views.show' annonse.id %}" method="post" class="form-dnt-default form-horizontal fjelltreffen-annonse-reply">
             {% csrf_token %}
 
-            <div class="control-group name">
-              <label class="control-label" for="id_name">Ditt navn</label>
-              <div class="controls">
-                {{ form.name }} <span class="asterisk red">*</span>
+            <div class="form-group name">
+              <label class="col-sm-3 control-label" for="id_name">
+                Ditt navn
+                <span class="asterisk red">*</span>
+              </label>
+              <div class="col-sm-9">
+                {{ form.name }}
               </div>
             </div>
 
-            <div class="control-group email">
-              <label class="control-label" for="id_email">Din e-postadresse</label>
-              <div class="controls">
-                {{ form.email }} <span class="asterisk red">*</span>
+            <div class="form-group email">
+              <label class="col-sm-3 control-label" for="id_email">
+                Din e-postadresse
+                <span class="asterisk red">*</span>
+              </label>
+              <div class="col-sm-9">
+                {{ form.email }}
               </div>
             </div>
 
-            <div class="control-group text">
-              <label class="control-label" for="id_text">Svar til annonsøren</label>
-              <div class="controls">
+            <div class="form-group text">
+              <label class="col-sm-3 control-label" for="id_text">Svar til annonsøren</label>
+              <div class="col-sm-9">
                 {{ form.text }}
               </div>
             </div>
 
             {% if form.captcha %}
               {# Will only be required for anonymous users #}
-              <div class="control-group captcha">
-                <label class="control-label">Skriv inn bokstavene i bildet</label>
-                <div class="controls">
+              <div class="form-group captcha">
+                <label class="col-sm-3 control-label">Skriv inn bokstavene i bildet</label>
+                <div class="col-sm-9">
                   {{ form.captcha }}
                 </div>
               </div>
             {% endif %}
 
-            <div class="control-group">
-              <div class="controls">
+            <div class="form-group">
+              <div class="col-sm-offset-3 col-sm-9">
                 <em>Merk: Når du sender svaret ditt, vil annonsøren motta en e-post med ditt navn, din e-postadresse og ditt svar. Det er deretter opp til annonsøren å svare deg.</em>
               </div>
             </div>
 
-            <div class="control-group">
-              <div class="controls">
+            <div class="form-group">
+              <div class="col-sm-offset-3 col-sm-9">
                 <button type="submit" class="btn btn-success">Send svar</button>
               </div>
             </div>
@@ -172,19 +174,19 @@
           </p>
         {% endif %}
 
-        <div class="report{% if not report %} hide{% endif %}">
+        <div class="report{% if not report %} jq-hide{% endif %}">
           <p>
             <em>Vi setter pris på at du gir oss beskjed om upassende innhold på Fjelltreffen. Du kan selv velge om du vil oppgi en begrunnelse.</em>
           </p>
 
-          <form action="{% url 'fjelltreffen.views.report' annonse.id %}" method="post" class="form-default fjelltreffen-annonse-report">
+          <form action="{% url 'fjelltreffen.views.report' annonse.id %}" method="post" class="form-dnt-default fjelltreffen-annonse-report">
             {% csrf_token %}
 
-            <div class="control-group text">
-              <textarea name="reason" placeholder="Oppgi begrunnelsen din her...">{{ report.reason }}</textarea>
+            <div class="form-group text">
+              <textarea class="form-control" name="reason" placeholder="Oppgi begrunnelsen din her...">{{ report.reason }}</textarea>
             </div>
 
-            <button type="submit" class="btn btn-danger"><i class="icon-warning-sign"></i> Send anmeldelse</button>
+            <button type="submit" class="btn btn-danger"><i class="glyphicon glyphicon-warning-sign"></i> Send anmeldelse</button>
           </form>
         </div>
 
@@ -194,7 +196,7 @@
 
   </div>
 
-  <div class="span3">
+  <div class="col-md-3">
     {% include 'central/fjelltreffen/navigation.html' with active='None' %}
   </div>
 
@@ -203,7 +205,7 @@
 {% advertisement %}
 
 {% if annonse.image %}
-  <div class="modal annonse-image-modal hide">
+  <div class="modal annonse-image-modal jq-hide">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal">X</button>
       <h3>Annonsebilde</h3>
@@ -217,7 +219,7 @@
     </div>
     <div class="modal-footer">
       <p class="modal-close">
-        <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
+        <a href="javascript:undefined" class="btn btn-default" data-dismiss="modal">Lukk vindu</a>
       </p>
     </div>
   </div>

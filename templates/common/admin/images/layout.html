@@ -82,13 +82,13 @@
   <div class="row image-archive-quicksearch">
     <div class="col-md-4">
       <form action="{% url 'admin.images.views.search' %}" method="get">
-        <div class="row">
-          <div class="col-md-10">
-            <input type="text" name="q" value="{{ search_query }}" class="form-control" placeholder="Søk etter bilder...">
-          </div>
-          <div class="col-md-2">
-            <button type="submit" class="btn btn-default input-button-align"><i class="fa fa-search"></i></button>
-          </div>
+        <div class="input-group">
+          <input type="text" name="q" value="{{ search_query }}" class="form-control" placeholder="Søk etter bilder...">
+          <span class="input-group-btn">
+            <button type="submit" class="btn btn-default">
+              <i class="fa fa-search"></i>
+            </button>
+          </span>
         </div>
       </form>
     </div>

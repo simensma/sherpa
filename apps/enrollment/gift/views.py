@@ -141,8 +141,8 @@ def confirm(request):
 def send(request):
     if not 'gift_membership' in request.session:
         return redirect('enrollment.gift.views.index')
-    t1 = loader.get_template('central/enrollment/gift/email-memberservice.html')
-    t2 = loader.get_template('central/enrollment/gift/email-giver.html')
+    t1 = loader.get_template('central/enrollment/gift/emails/memberservice.txt')
+    t2 = loader.get_template('central/enrollment/gift/emails/giver.txt')
     # Note that this context is used for both email templates
     c = RequestContext(request, {
         'giver': request.session['gift_membership']['giver'],

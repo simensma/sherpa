@@ -48,6 +48,13 @@
         // An insertable drop-area was clicked, move the content there
         article.find("div.drop-area").click(function() {
             moved_content.detach().insertAfter($(this));
+
+            // If the item was moved into a row with a sole add-content control and no content, it'll be missing the
+            // data-dnt-row attribute, so add that
+            var row = $(this).parents('.row');
+            if(row.attr('data-dnt-row') === undefined) {
+                row.attr('data-dnt-row', true);
+            }
         });
 
         // Any click ends the moving session

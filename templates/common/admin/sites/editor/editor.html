@@ -1,7 +1,7 @@
 {% load render_widget %}
 
 <div class="row">
-  <div class="offset3 span6">
+  <div class="col-md-6 col-md-offset-3">
     <div class="no-save-warning alert alert-danger jq-hide">
       <a class="close">x</a>
       <strong>Advarsel!</strong><br>
@@ -24,10 +24,10 @@
 
   {% for row in version.get_rows %}
     {# Rows are recognized by their data-dnt-row attribute, not their class #}
-    <div class="row-fluid" data-dnt-row data-id="{{ row.id }}">
+    <div class="row" data-dnt-row data-id="{{ row.id }}">
 
       {% for column in row.get_columns %}
-        <div class="column offset{{ column.offset }} span{{ column.span }}" data-id="{{ column.id }}">
+        <div class="column col-md-{{ column.span }} col-md-offset-{{ column.offset }}" data-id="{{ column.id }}">
 
           {% for content in column.get_contents %}
             {% if content.type == 'html' or content.type == 'title' or content.type == 'lede' %}
@@ -89,8 +89,8 @@
 <div class="jq-hide" data-dnt-container="insertion-templates">
 
   {# The default row with a full-sized column #}
-  <div class="row-fluid" data-dnt-row>
-    <div class="column span12"></div>
+  <div class="row" data-dnt-row>
+    <div class="column col-md-12"></div>
   </div>
 
   {# The default HTML content element #}
@@ -123,15 +123,15 @@
   </div>
 
   {# Editor-control: The column-structure controls to be shown above each separate row #}
-  <div class="row-fluid edit-structure">
-    <div class="column span12">
+  <div class="row edit-structure">
+    <div class="column col-md-12">
       <div class="edit-structure-inner">
-        <button class="btn" data-type="single" title="Bruk én stor kolonne i denne seksjonen"></button>
-        <button class="btn" data-type="double" title="Bruk to like store kolonner i denne seksjonen"></button>
-        <button class="btn" data-type="sidebar-left" title="Bruk to kolonner i denne seksjonen, liten kolonne til venstre"></button>
-        <button class="btn" data-type="sidebar-right" title="Bruk to kolonner i denne seksjonen, liten kolonne til høyre"></button>
-        <button class="btn" data-type="triple" title="Bruk tre kolonner i denne seksjonen"></button>
-        <button class="btn" data-type="quadruple" title="Bruk fire kolonner i denne seksjonen"></button>
+        <button class="btn btn-default" data-type="single" title="Bruk én stor kolonne i denne seksjonen"></button>
+        <button class="btn btn-default" data-type="double" title="Bruk to like store kolonner i denne seksjonen"></button>
+        <button class="btn btn-default" data-type="sidebar-left" title="Bruk to kolonner i denne seksjonen, liten kolonne til venstre"></button>
+        <button class="btn btn-default" data-type="sidebar-right" title="Bruk to kolonner i denne seksjonen, liten kolonne til høyre"></button>
+        <button class="btn btn-default" data-type="triple" title="Bruk tre kolonner i denne seksjonen"></button>
+        <button class="btn btn-default" data-type="quadruple" title="Bruk fire kolonner i denne seksjonen"></button>
       </div>
     </div>
   </div>
@@ -337,10 +337,10 @@
   <div class="crop-control">
     <div class="submit pull-right">
       <button class="btn btn-success use">
-        <i class="icon-white icon-check"></i> Bruk dette utsnittet
+        <i class="glyphicon glyphicon-check"></i> Bruk dette utsnittet
       </button>
-      <button class="btn remove">
-        <i class="icon-remove"></i> Vis hele bildet
+      <button class="btn btn-default remove">
+        <i class="glyphicon glyphicon-remove"></i> Vis hele bildet
       </button>
     </div>
 
@@ -349,11 +349,11 @@
         <strong>Velg utsnitt:</strong>
       </p>
       <div class="btn-group" data-toggle="buttons-radio">
-        <button class="btn" data-ratio="free">Fri</button>
-        <button class="btn" data-ratio="16:9">Widescreen</button>
-        <button class="btn" data-ratio="12:8">Landskap</button>
-        <button class="btn" data-ratio="3:4">Portrett</button>
-        <button class="btn" data-ratio="1:1">Firkant</button>
+        <button class="btn btn-default" data-ratio="free">Fri</button>
+        <button class="btn btn-default" data-ratio="16:9">Widescreen</button>
+        <button class="btn btn-default" data-ratio="12:8">Landskap</button>
+        <button class="btn btn-default" data-ratio="3:4">Portrett</button>
+        <button class="btn btn-default" data-ratio="1:1">Firkant</button>
       </div>
     </div>
   </div>
@@ -372,7 +372,7 @@
 {% include 'common/widgets/campaign/edit.html' %}
 
 {# Other dialogs #}
-{% include 'common/admin/images/util/image-archive-picker.html' with bs2compatible=True %}
-{% include 'common/admin/images/util/image-upload-dialog-bootstrap2compatible.html' %}
+{% include 'common/admin/images/util/image-archive-picker.html' %}
+{% include 'common/admin/images/util/image-upload-dialog.html' %}
 {% include 'common/admin/sites/editor/image-dialog.html' %}
 {% include 'common/admin/sites/editor/toolbar.html' %}

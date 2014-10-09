@@ -6,7 +6,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="google-site-verification" content="FIAhXuevMnC7YVDxnUZhTRzqTSZ_FYrkRNIHl0Z5HfI">
-  <title>{% block title %}Forsiden{% endblock %} &mdash; Turistforeningen</title>
+  <title>{% block title %}Forsiden{% endblock %} — Turistforeningen</title>
   <link rel="shortcut icon" href="{{ STATIC_URL }}img/favicon.ico">
 
   {% include 'global_layout/css.html' %}
@@ -20,57 +20,47 @@
 {# We'll use some hacks to make this design look like the original, since we're not modifying the css for this template. If this becomes too ugly, just remove everything and redesign based on the original. #}
 
 <header>
-  <div class="row">
-    <div class="span12" style="height: 70px">
-      <div class="forening-logo left top">
-        <a href="{% url 'page.views.page' %}" class="single">
-          {{ site.forening.name }}
-        </a>
-      </div>
+  <div style="height: 70px">
+    <div class="forening-logo left top">
+      <a href="{% url 'page.views.page' %}" class="single">
+        {{ site.forening.name }}
+      </a>
     </div>
   </div>
 
-  <div class="row">
-    <div class="span12 mobile-control">
-      <p class="display-menu">
-        <a href="javascript:undefined">
-          Meny <b class="caret"></b>
-        </a>
-      </p>
-      <p class="display-search">
-        <a href="javascript:undefined">
-          <b class="caret"></b> Søk
-        </a>
-      </p>
-      <div style="clear: both;"></div>
-    </div>
+  <div class="mobile-control">
+    <p class="display-menu">
+      <a href="javascript:undefined">
+        Meny <b class="caret"></b>
+      </a>
+    </p>
+    <p class="display-search">
+      <a href="javascript:undefined">
+        <b class="caret"></b> Søk
+      </a>
+    </p>
+    <div style="clear: both;"></div>
   </div>
 
-  <div class="row">
-    <div class="span12">
-      <form action="{% url 'page.views.search' %}" method="get" class="search-mobile form-search">
-        <input type="text" name="q" value="{{ search_query }}">
-        <button type="submit" class="btn">Søk</button>
-      </form>
-    </div>
-  </div>
+  <form action="{% url 'page.views.search' %}" method="get" class="form-inline search-mobile">
+    <input type="text" name="q" value="{{ search_query }}">
+    <button type="submit" class="btn btn-default">Søk</button>
+  </form>
 
-  <div class="row">
-    <div class="span12 menu-container">
-      <nav id="menus">
-        <ul>
-          <li>
-            <a href="{% url 'connect.views.signon_cancel' %}" class="noexternal">Avbryt og gå tilbake</a>
-          </li>
-        </ul>
-      </nav>
-    </div>
+  <div class="menu-container">
+    <nav id="menus">
+      <ul>
+        <li>
+          <a href="{% url 'connect.views.signon_cancel' %}" class="noexternal">Avbryt og gå tilbake</a>
+        </li>
+      </ul>
+    </nav>
   </div>
 
   <div class="border"></div>
 
   <div class="row">
-    <div class="span10 breadcrumb-container">
+    <div class="col-md-10 breadcrumb-container">
       <div class="menu-breadcrumb">
         {{ dntconnect.client_name }}
         {# Too much template logic, but can't see a better way to do this. #}
@@ -107,6 +97,7 @@
 {# "Global" csrf_token for AJAX-requests #}
 {% csrf_token %}
 
+{% include 'global_layout/scripts_init.html' %}
 {% block js_globals %}{% endblock %}
 {% include 'global_layout/scripts.html' %}
 {% block extra_js %}{% endblock %}

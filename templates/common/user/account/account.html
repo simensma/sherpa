@@ -14,7 +14,7 @@
 {% block body %}
 
 <div class="row">
-  <div class="span9">
+  <div class="col-md-9">
 
     <div class="account-info">
 
@@ -49,7 +49,7 @@
           <tr>
             <th></th>
             <td>
-              <i class="icon-pencil"></i> <a href="{% url 'user.views.update_account' %}">Endre dine opplysninger</a>
+              <i class="glyphicon glyphicon-pencil"></i> <a href="{% url 'user.views.update_account' %}">Endre dine opplysninger</a>
             </td>
           </tr>
         </table>
@@ -64,7 +64,7 @@
           Dine opplysninger
           <span class="pull-right">
             <a class="btn btn-danger" href="{% url 'user.views.update_account' %}">
-              <i class="icon-pencil icon-white"></i> Endre dine opplysninger
+              <i class="glyphicon glyphicon-pencil"></i> Endre dine opplysninger
             </a>
           </span>
         </h2>
@@ -358,7 +358,7 @@
     </div>
   </div>
 
-  <div class="span3">
+  <div class="col-md-3">
     {% include 'common/user/account/navigation.html' with active='account' %}
   </div>
 </div>

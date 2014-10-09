@@ -1,29 +1,70 @@
+/* Common layout (admin + public) */
+
+// Generic common
+@import "common/fonts.less";
+@import "common/generic-markup.less";
+@import "common/campaign-variables.less";
+
+// Generic utility components
+@import "common/util/tag-cloud.less";
+@import "common/util/constants.less";
+
+// Page- or module-specific common
+@import "common/publications.less";
+@import "common/main-menu.less";
+
+// Library implementations or overrides
+@import "lib/datepicker.less";
+@import "lib/chosen.less";
+@import "lib/outdated-browser.less";
+@import "lib/bootstrap.less";
+@import "lib/typeahead.less";
+@import "lib/select2.less";
+
+/* Public layout */
+
 // Generic
 @import "public/main.less";
-@import "public/bootstrap-overrides.less";
-@import "public/generic-elements.less";
-@import "public/forms.less";
-@import "public/aktiviteter.less";
+@import "public/generic/elements.less";
+@import "public/generic/forms.less";
+
+// Shared utility components
+@import "public/util/forening-logo.less";
+@import "public/util/slider.less";
+@import "public/util/zipcode-inputs-inline.less";
 
 // Module-specific but shared
 @import "public/shared/aktiviteter.less";
+@import "public/shared/image-description.less";
+@import "public/shared/lede.less";
 
-// Page- or module-specific
-@import "public/article.less";
-@import "public/article-listing.less";
-@import "public/conditions.less";
-@import "public/membership.less";
-@import "public/foreninger.less";
-@import "public/enrollment.less";
-@import "public/instagram.less";
-@import "public/user.less";
-@import "public/cms.less";
-@import "public/doge.less";
-@import "public/connect.less";
-@import "public/fotokonkurranse.less";
-@import "public/admin-editor-preview.less";
-@import "public/fjelltreffen.less";
-@import "public/slider.less";
+// Page- or module-specific (move these into hierarchy, like below)
+@import "public/aktiviteter.less";
+
+// Page- or module-specific (with correct hierarchy)
+@import "public/apps/articles/byline.less";
+@import "public/apps/articles/old-articles.less";
+@import "public/apps/articles/listing.less";
+@import "public/apps/conditions/conditions.less";
+@import "public/apps/connect/connect.less";
+@import "public/apps/core/doge.less";
+@import "public/apps/enrollment/mixins.less";
+@import "public/apps/enrollment/registration.less";
+@import "public/apps/enrollment/household.less";
+@import "public/apps/enrollment/verification.less";
+@import "public/apps/enrollment/payment.less";
+@import "public/apps/enrollment/result.less";
+@import "public/apps/enrollment/gift.less";
+@import "public/apps/fjelltreffen/fjelltreffen.less";
+@import "public/apps/foreninger/foreninger.less";
+@import "public/apps/fotokonkurranse/fotokonkurranse.less";
+@import "public/apps/membership/membership.less";
+@import "public/apps/instagram/instagram.less";
+@import "public/apps/page/page.less";
+@import "public/apps/user/user.less";
+@import "public/apps/user/update_account.less";
+@import "public/apps/user/login.less";
+@import "public/apps/user/registration.less";
 
 // Widgets
 @import "public/widgets/article-blog.less";
@@ -32,14 +73,11 @@
 @import "public/widgets/quote.less";
 @import "public/widgets/table.less";
 @import "public/widgets/campaign.less";
+@import "public/widgets/carousel.less";
 
-// Generic common
-@import "common/fonts.less";
-@import "common/generic-markup.less";
-@import "common/overrides.less";
-@import "common/campaign-variables.less";
+// Uncategorized - hacks for pages generated in the editor
+@import "public/page-hacks.less";
 
-// Page- or module-specific common
-@import "common/publications.less";
-@import "common/main-menu.less";
-
+// Uncategorized - not sure where this belongs; styles that semantically belong in the
+// admin app, but should be included in the public layout (for the preview page)
+@import "public/admin-editor-preview.less";

@@ -1,0 +1,77 @@
+.forening-logo {
+  @img-width: 59px;
+  @img-height: 56px;
+
+  display: inline-block;
+  height: @img-height;
+  font-family: "DTL Nobel" !important;
+  font-size: 17px;
+  margin-left: auto;
+  margin-right: auto;
+  background: @profile-red url('/static/img/common/header-logo-part.png') top right no-repeat;
+  height: @img-height;
+  white-space: nowrap;
+
+  a:hover, a:hover span {
+    text-decoration: none;
+  }
+
+  a.single, span.single {
+    @padding-top: 18px;
+    @padding-horizontal: 16px;
+
+    display: block;
+    margin: 0;
+    padding-top: @padding-top;
+    padding-right: @img-width + @padding-horizontal;
+    padding-left: @padding-horizontal;
+    color: white;
+    height: @img-height - @padding-top;
+  }
+
+  a.double, span.double {
+    @padding-top: 10px;
+    @padding-horizontal: 16px;
+
+    display: block;
+    padding-top: @padding-top;
+    padding-right: @img-width + @padding-horizontal;
+    padding-left: @padding-horizontal;
+    height: @img-height - @padding-top;
+    color: white;
+    margin: 0;
+
+    span.main {
+      display: block;
+      line-height: 20px;
+    }
+
+    span.parent {
+      display: block;
+      font-size: 10px;
+      line-height: 12px;
+    }
+  }
+
+  /**
+   * There's a strange psychological effect where the text in the top logos (those aligned with the top window edge)
+   * LOOK vertically unaligned - however the same logo displayed anywhere else on the page would look just right. So
+   * this rule handles those top logos and sets a slightly shorter padding-top value, so it looks right.
+   */
+  &.top {
+    a.single, span.single {
+      @padding-top: 15px;
+      padding-top: @padding-top;
+      height: @img-height - @padding-top;
+    }
+    // Note that the double-version looks fine with its default values and isn't adjusted here
+  }
+
+  &.left {
+    float: left;
+  }
+
+  &.right {
+    float: right;
+  }
+}

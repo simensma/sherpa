@@ -1,5 +1,5 @@
 {% extends site.template|add:"/layout.html" %}
-{% block title %}Publikasjoner &mdash; Min side{% endblock %}
+{% block title %}Publikasjoner — Min side{% endblock %}
 {% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <em>Publikasjoner</em>{% endblock %}
 
 {% load has_membership_type %}
@@ -9,7 +9,7 @@
 {% block body %}
 
 <div class="row">
-  <div class="span9">
+  <div class="col-md-9">
 
     <h2>Publikasjoner</h2>
 
@@ -26,9 +26,9 @@
     {% endif %}
 
     <div class="publications">
-      <div class="row-fluid">
+      <div class="row">
         {% for publication in publications_user %}
-          <div class="span5{% if forloop.counter|divisibleby:"2" %} offset1{% endif %}">
+          <div class="col-md-5{% if forloop.counter|divisibleby:"2" %} col-md-offset-1{% endif %}">
             <div class="publication">
               <h3 class="title">
                 <a href="{% url 'user.views.publication' publication.id %}">
@@ -52,7 +52,7 @@
           </div>
 
           {% if not forloop.last and forloop.counter|divisibleby:"2" %}
-            </div><div class="row-fluid">
+            </div><div class="row">
           {% endif %}
         {% endfor %}
       </div>
@@ -77,7 +77,7 @@
 
   </div>
 
-  <div class="span3">
+  <div class="col-md-3">
     {% include 'common/user/account/navigation.html' with active='publications' %}
   </div>
 </div>

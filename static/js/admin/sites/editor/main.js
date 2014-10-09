@@ -42,7 +42,7 @@
             if(add_content.parents('[data-dnt-row]').length === 0) {
                 // The add-content control is on a separate row without content siblings
 
-                var prev_row = $(this).parents("div.row-fluid").prev("div[data-dnt-row]");
+                var prev_row = $(this).parents("div.row").prev("div[data-dnt-row]");
 
                 var position;
                 if(type !== 'columns' && prev_row.length > 0 && prev_row.children("div.column").length === 1) {
@@ -51,7 +51,7 @@
                 } else {
                     // Column explicitly chosen, no previous row, or not single-column; create a new row
                     var new_row = insertion_templates.find('[data-dnt-row]').clone();
-                    new_row.insertAfter($(this).parents("div.row-fluid"));
+                    new_row.insertAfter($(this).parents("div.row"));
                     position = {insertion: 'prepend', existingElement: new_row.find("div.column")};
                 }
 
@@ -81,7 +81,7 @@
                     } else {
                         var following_elements = add_content.nextAll('div.content');
                         var new_row = insertion_templates.find('[data-dnt-row]').clone();
-                        new_row.insertAfter($(this).parents('div.row-fluid'));
+                        new_row.insertAfter($(this).parents('div.row'));
                         following_elements.detach().prependTo(new_row.find('div.column'));
                         Editor.resetControls();
                         return $(this);
@@ -119,7 +119,7 @@
             if($(this).attr('data-type') === 'single') {
                 var first_column = row.children("div.column").first();
                 var extra_columns = row.children("div.column").slice(1);
-                first_column.attr('class', '').addClass('column span12');
+                first_column.attr('class', '').addClass('column col-md-12');
 
                 extra_columns.each(function() {
                     $(this).children().detach().appendTo(first_column);
@@ -135,8 +135,8 @@
                     second_column.insertAfter(first_column);
                 }
 
-                first_column.attr('class', '').addClass('column span6');
-                second_column.attr('class', '').addClass('column span6');
+                first_column.attr('class', '').addClass('column col-md-6');
+                second_column.attr('class', '').addClass('column col-md-6');
 
                 extra_columns.each(function() {
                     $(this).children().detach().appendTo(second_column);
@@ -152,8 +152,8 @@
                     second_column.insertAfter(first_column);
                 }
 
-                first_column.attr('class', '').addClass('column span3');
-                second_column.attr('class', '').addClass('column span9');
+                first_column.attr('class', '').addClass('column col-md-3');
+                second_column.attr('class', '').addClass('column col-md-9');
 
                 extra_columns.each(function() {
                     $(this).children().detach().appendTo(second_column);
@@ -169,8 +169,8 @@
                     second_column.insertAfter(first_column);
                 }
 
-                first_column.attr('class', '').addClass('column span9');
-                second_column.attr('class', '').addClass('column span3');
+                first_column.attr('class', '').addClass('column col-md-9');
+                second_column.attr('class', '').addClass('column col-md-3');
 
                 extra_columns.each(function() {
                     $(this).children().detach().appendTo(second_column);
@@ -192,9 +192,9 @@
                     third_column.insertAfter(second_column);
                 }
 
-                first_column.attr('class', '').addClass('column span4');
-                second_column.attr('class', '').addClass('column span4');
-                third_column.attr('class', '').addClass('column span4');
+                first_column.attr('class', '').addClass('column col-md-4');
+                second_column.attr('class', '').addClass('column col-md-4');
+                third_column.attr('class', '').addClass('column col-md-4');
 
                 extra_columns.each(function() {
                     $(this).children().detach().appendTo(third_column);
@@ -222,10 +222,10 @@
                     fourth_column.insertAfter(third_column);
                 }
 
-                first_column.attr('class', '').addClass('column span3');
-                second_column.attr('class', '').addClass('column span3');
-                third_column.attr('class', '').addClass('column span3');
-                fourth_column.attr('class', '').addClass('column span3');
+                first_column.attr('class', '').addClass('column col-md-3');
+                second_column.attr('class', '').addClass('column col-md-3');
+                third_column.attr('class', '').addClass('column col-md-3');
+                fourth_column.attr('class', '').addClass('column col-md-3');
 
                 extra_columns.each(function() {
                     $(this).children().detach().appendTo(fourth_column);
@@ -248,12 +248,7 @@
         });
 
         // Tags, used in the header for both pages and articles
-
-        TagDisplay.enable({
-            tagBox: $("div.editor-header div.tags div.tag-box"),
-            pickerInput: $("div.editor-header div.tags input[name='tags']")
-        });
-
+        Select2Tagger({$input: $('.editor-header input[name="tags"]')});
     });
 
     // Remove popovers when clicking on anything else than their trigger button
@@ -289,7 +284,7 @@
         });
 
         // Remove existing editor-control markup, and leftover tooltips that for some reason haven't been removed
-        article.children('div.row-fluid:not([data-dnt-row])').remove();
+        article.children('div.row:not([data-dnt-row])').remove();
         article.find('div.add-content,.tooltip').remove();
 
         var rows = article.find("div[data-dnt-row]");

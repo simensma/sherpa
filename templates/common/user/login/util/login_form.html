@@ -15,49 +15,51 @@
   {% endif %}
 {% endfor %}
 
-<form action="{{ action }}{% if next %}?next={{ next }}{% endif %}" method="post" class="form-default form-horizontal login-form">
+<form action="{{ action }}{% if next %}?next={{ next }}{% endif %}" method="post" class="form-dnt-default form-horizontal login-form">
   {% csrf_token %}
 
-  <div class="control-group email">
-    <label class="control-label" for="login_email">{% trans "E-post" %}:</label>
-    <div class="controls">
-      <input type="text" name="email" id="login_email" value="{{ email }}" class="input-xlarge">
+  <div class="form-group email">
+    <label class="col-sm-3 control-label" for="login_email">{% trans "E-post" %}:</label>
+    <div class="col-sm-7">
+      <input class="form-control" id="login_email" name="email" type="text" value="{{ email }}">
     </div>
   </div>
 
-  <div class="control-group password">
-    <label class="control-label" for="login_password">{% trans "Passord:" %}</label>
-    <div class="controls">
-      <input type="password" name="password" id="login_password" class="input-large">
+  <div class="form-group password">
+    <label class="col-sm-3 control-label" for="login_password">{% trans "Passord:" %}</label>
+    <div class="col-sm-5">
+      <input class="form-control" id="login_password" name="password" type="password">
     </div>
   </div>
 
-  <div class="control-group">
-    <div class="controls">
-      <button type="submit" class="btn btn-danger"><i class="icon-white icon-ok"></i> {% trans "Logg inn" %}</button>
+  <div class="form-group">
+    <div class="col-sm-offset-3 col-sm-9">
+      <button type="submit" class="btn btn-danger"><i class="glyphicon glyphicon-ok"></i> {% trans "Logg inn" %}</button>
     </div>
   </div>
 </form>
 
-<div class="control-group">
-  <div class="controls">
+<div class="row">
+  <div class="col-sm-offset-3 col-sm-9">
     <p><a href="javascript:undefined" class="forgot">{% trans "Jeg har glemt passordet mitt!" %}</a></p>
-    <div class="forgot-password hide" data-email-url="{% url 'user.login.views.send_restore_password_email' %}">
-      <p><input type="text" class="input-xlarge" name="email" placeholder="{% trans "Fyll ut din e-post adresse..." %}"></p>
-      <p class="actions">
-        <button class="btn restore-password">{% trans "Gjenopprett passord" %}</button>
-        <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="hide ajaxloader" alt="{% trans "Sender e-post, vennligst vent..." %}">
+    <div class="forgot-password jq-hide" data-email-url="{% url 'user.login.views.send_restore_password_email' %}">
+      <p>
+        <input class="form-control" type="text" name="email" placeholder="{% trans "Fyll ut din e-post adresse..." %}">
       </p>
-      <div class="alert alert-success success hide">
+      <p class="actions">
+        <button class="btn btn-default restore-password">{% trans "Gjenopprett passord" %}</button>
+        <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="jq-hide ajaxloader" alt="{% trans "Sender e-post, vennligst vent..." %}">
+      </p>
+      <div class="alert alert-success success jq-hide">
         {% trans "En e-post har blitt sendt til adressen du oppgav med ytterligere instruksjoner for å få gjenopprettet passordet." %}
       </div>
-      <div class="alert alert-error unknown invalid hide">
+      <div class="alert alert-error unknown invalid jq-hide">
         {% trans "Denne e-postadressen er ikke registrert på noen av våre brukere. Er det denne adressen du er registrert med? Sjekk også at du har skrevet adressen riktig." %}
       </div>
-      <div class="alert alert-info unregistered hide">
-        {% trans "Du har ikke opprettet brukerkonto ennå. Du kan" %} <a href="javascript:undefined" class="toggle-registration-tab">{% trans "opprette din bruker her" %}</a> &mdash; {% trans "det er kjapt, enkelt og gratis!" %}
+      <div class="alert alert-info unregistered jq-hide">
+        {% trans "Du har ikke opprettet brukerkonto ennå. Du kan" %} <a href="javascript:undefined" class="toggle-registration-tab">{% trans "opprette din bruker her" %}</a> — {% trans "det er kjapt, enkelt og gratis!" %}
       </div>
-      <div class="alert alert-error error hide">
+      <div class="alert alert-error error jq-hide">
         {% trans "Vi beklager, en teknisk feil har oppstått! Feilen har blitt logget i våre systemer og vi vil se på den så snart som mulig. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer." %}
       </div>
     </div>

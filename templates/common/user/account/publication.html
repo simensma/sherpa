@@ -1,5 +1,5 @@
 {% extends site.template|add:"/layout.html" %}
-{% block title %}Publikasjoner &mdash; Min side{% endblock %}
+{% block title %}Publikasjoner — Min side{% endblock %}
 {% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <a href="{% url 'user.views.publications' %}">Publikasjoner</a> / <em>{{ publication.title }}</em>{% endblock %}
 
 {% block extra_js %}
@@ -11,7 +11,7 @@
 {% block body %}
 
 <div class="row">
-  <div class="span9">
+  <div class="col-md-9">
 
     <h2>{{ publication.title }}</h2>
 
@@ -40,9 +40,9 @@
     {% endif %}
 
     <div class="publications">
-      <div class="row-fluid">
+      <div class="row">
         {% for release in publication.released_releases_ordered %}
-          <div class="span5{% if forloop.counter|divisibleby:"2" %} offset1{% endif %}">
+          <div class="col-md-5{% if forloop.counter|divisibleby:"2" %} col-md-offset-1{% endif %}">
             <div class="release">
               <h3 class="title">
                 {% if release.is_available %}
@@ -58,7 +58,7 @@
               <div class="content-wrapper">
                 <img src="{% firstof release.get_cover_photo '/static/img/admin/publications/turbo-placeholder.png' %}" alt="{{ release.title }}">
 
-                <div class="hover-content hide">
+                <div class="hover-content jq-hide">
                   {% if release.pdf_hash != '' %}
                     <a href="{{ release.get_pdf_url }}" class="cta download">
                       <div class="action-label">
@@ -84,7 +84,7 @@
           </div>
 
           {% if not forloop.last and forloop.counter|divisibleby:"2" %}
-            </div><div class="row-fluid">
+            </div><div class="row">
           {% endif %}
         {% endfor %}
       </div>
@@ -96,7 +96,7 @@
     </div>
   </div>
 
-  <div class="span3">
+  <div class="col-md-3">
     {% include 'common/user/account/navigation.html' with active='publications' %}
   </div>
 </div>

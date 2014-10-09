@@ -17,14 +17,10 @@
 
 {% block body %}
 
-<div class="row">
-  <div class="span12">
-    <h1>Fjelltreffen</h1>
-  </div>
-</div>
+<h1>Fjelltreffen</h1>
 
 <div class="row">
-  <div class="span9">
+  <div class="col-md-9">
 
     {% if annonse %}
       <h2>Rediger annonse</h2>
@@ -61,34 +57,38 @@
       {% endif %}
     {% endfor %}
 
-    <form action="{% url 'fjelltreffen.views.save' %}" method="post" enctype="multipart/form-data" class="form-border form-default form-horizontal fjelltreffen-annonse-edit">
+    <form action="{% url 'fjelltreffen.views.save' %}" method="post" enctype="multipart/form-data" class="form-border form-dnt-default form-horizontal fjelltreffen-annonse-edit">
       {% csrf_token %}
       <input type="hidden" name="id" value="{{ annonse.id }}">
 
-      <div class="control-group title">
-        <label class="control-label" for="title">Tittel</label>
-        <div class="controls">
-          <input type="text" name="title" id="title" value="{{ annonse.title }}" placeholder="Skriv en annonsetittel..." class="input-xlarge">
+      <div class="form-group title">
+        <label class="col-sm-3 control-label" for="title">
+          Tittel
           <span class="asterisk red">*</span>
+        </label>
+        <div class="col-sm-9">
+          <input type="text" name="title" id="title" value="{{ annonse.title }}" placeholder="Skriv en annonsetittel..." class="form-control">
         </div>
       </div>
 
-      <div class="control-group email">
-        <label class="control-label" for="email">E-postadresse</label>
-        <div class="controls">
-          <input type="text" name="email" id="email" value="{% firstof annonse.email user.get_email %}" placeholder="Din e-postadresse (vises ikke)" class="input-xlarge">
-          <span class="asterisk red">*</span><br>
-          <div class="hints">
+      <div class="form-group email">
+        <label class="col-sm-3 control-label" for="email">
+          E-postadresse
+          <span class="asterisk red">*</span>
+        </label>
+        <div class="col-sm-9">
+          <input type="text" name="email" id="email" value="{% firstof annonse.email user.get_email %}" placeholder="Din e-postadresse (vises ikke)" class="form-control">
+          <span class="help-block">
             Svar blir sendt til denne adressen, men den vises ikke i annonsen.
-          </div>
+          </span>
         </div>
       </div>
 
 
-      <div class="control-group county">
-        <label class="control-label" for="county">Jeg bor i</label>
-        <div class="controls">
-          <select name="county" id="county">
+      <div class="form-group county">
+        <label class="col-sm-3 control-label" for="county">Jeg bor i</label>
+        <div class="col-sm-9">
+          <select class="form-control" id="county" name="county">
             {% for county in counties %}
               {% if annonse %}
                 <option{% if annonse.county == county %} selected="selected"{% endif %} value="{{ county.id }}">{{ county.name }}</option>
@@ -101,42 +101,46 @@
         </div>
       </div>
 
-      <div class="control-group image">
-        <label class="control-label" for="image">Last opp bilde</label>
-        <div class="controls">
-          <input type="file" name="image" id="image"><br>
+      <div class="form-group image">
+        <label class="col-sm-3 control-label" for="image">Last opp bilde</label>
+        <div class="col-sm-9">
+          <input type="file" name="image" id="image">
           {% if annonse.image %}
-            <div class="hints existing-image-label">
+            <span class="help-block existing-image-label">
               Du har lastet opp <a href="javascript:undefined" data-toggle="modal" data-target=".annonse-image-modal">dette</a> bildet. Hvis du laster opp nytt blir det gamle overskrevet.<br>
-            </div>
+            </span>
           {% endif %}
           {# We're using double hints and hide here, because we'll want to show this text if the user deletes the image with AJAX. #}
-          <div class="hints default-image-label{% if annonse.image %} hide{% endif %}">
+          <span class="help-block default-image-label{% if annonse.image %} jq-hide{% endif %}">
             Bilde er valgfritt og vil vises i annonselistingen.
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group text">
+        <label class="col-sm-3 control-label" for="text">Annonsetekst</label>
+        <div class="col-sm-9">
+          <textarea class="form-control" name="text" id="text" placeholder="Skriv annonsen din her...">{{ annonse.text }}</textarea>
+        </div>
+      </div>
+
+      <div class="form-group hideage">
+        <label class="col-sm-3 control-label">Vis min alder som:</label>
+        <div class="col-sm-9">
+          <div class="radio">
+            <label for="hideage_raw">
+              <input type="radio" name="hideage" id="hideage_raw" value="raw"{% if not annonse.hideage %} checked{% endif %}>
+              {{ user.get_age }} år
+            </label>
           </div>
-        </div>
-      </div>
-
-      <div class="control-group text">
-        <label class="control-label" for="text">Annonsetekst</label>
-        <div class="controls">
-          <textarea name="text" id="text" placeholder="Skriv annonsen din her...">{{ annonse.text }}</textarea>
-        </div>
-      </div>
-
-      <div class="control-group hideage">
-        <label class="control-label">Vis min alder som:</label>
-        <div class="controls">
-          <label class="radio" for="hideage_raw">
-            <input type="radio" name="hideage" id="hideage_raw" value="raw"{% if not annonse.hideage %} checked{% endif %}>
-            {{ user.get_age }} år
-          </label>
-          <label class="radio" for="hideage_hide">
-            <input type="radio" name="hideage" id="hideage_hide" value="hide"{% if annonse.hideage %} checked{% endif %}>
-            {{ obscured_age }} år
-          </label>
+          <div class="radio">
+            <label for="hideage_hide">
+              <input type="radio" name="hideage" id="hideage_hide" value="hide"{% if annonse.hideage %} checked{% endif %}>
+              {{ obscured_age }} år
+            </label>
+          </div>
           <a href="javascript:undefined" class="hideage-info">Feil alder?</a>
-          <div class="alert alert-info hideage-info hide">
+          <div class="alert alert-info hideage-info jq-hide">
             Din alder hentes fra medlemsregisteret. Hvis den skulle være feil må du kontakte <a href="{% url 'membership.views.service' %}">medlemsservice</a>.
           </div>
         </div>
@@ -147,54 +151,62 @@
         {# Hidden state is irrelevant if the annonse is expired. #}
         {% if annonse.hidden and not user.has_paid %}
           {# Editing existing *hidden* annonse, and user hasn't paid - don't let them show the annonse #}
-          <div class="control-group hide-annonse" title="Du kan ikke vise en skjult annonse når du ikke har betalt årskontingenten.">
-            <label class="control-label">Synlighet</label>
-            <div class="controls">
-              <label class="radio" for="hidden_show">
-                <input type="radio" name="hidden" id="hidden_show" value="show" disabled> Publiser annonsen
-              </label>
-              <label class="radio" for="hidden_hide">
-                <input type="radio" name="hidden" id="hidden_hide" value="hide" checked disabled> Skjul annonsen
-              </label>
-              <div class="hints">
-                Ingen kan se eller svare på annonsen mens den er skjult.
+          <div class="form-group hide-annonse" title="Du kan ikke vise en skjult annonse når du ikke har betalt årskontingenten.">
+            <label class="col-sm-3 control-label">Synlighet</label>
+            <div class="col-sm-9">
+              <div class="radio">
+                <label for="hidden_show">
+                  <input type="radio" name="hidden" id="hidden_show" value="show" disabled> Publiser annonsen
+                </label>
               </div>
+              <div class="radio">
+                <label for="hidden_hide">
+                  <input type="radio" name="hidden" id="hidden_hide" value="hide" checked disabled> Skjul annonsen
+                </label>
+              </div>
+              <span class="help-block">
+                Ingen kan se eller svare på annonsen mens den er skjult.
+              </span>
             </div>
           </div>
         {% elif other_active_annonse_exists %}
           {# User already has an active one #}
-          <div class="control-group hide-annonse">
-            <div class="controls">
+          <div class="form-group hide-annonse">
+            <div class="col-sm-9">
               Du har allerede en annen synlig annonse, derfor blir denne skjult når du lagrer den. Du kan bytte synlig annonse etterpå, under "Mine annonser".
             </div>
           </div>
         {% else %}
           {# No special state, let the user do as they please #}
-          <div class="control-group hide-annonse">
-            <label class="control-label">Synlighet</label>
-            <div class="controls">
-              <label class="radio" for="hidden_show">
-                <input type="radio" name="hidden" id="hidden_show" value="show"{% if not annonse.hidden %} checked{% endif %}> Publiser annonsen
-              </label>
-              <label class="radio" for="hidden_hide">
-                <input type="radio" name="hidden" id="hidden_hide" value="hide"{% if annonse.hidden %} checked{% endif %}> Skjul annonsen
-              </label>
-              <div class="hints">
-                Ingen kan se eller svare på annonsen mens den er skjult.
+          <div class="form-group hide-annonse">
+            <label class="col-sm-3 control-label">Synlighet</label>
+            <div class="col-sm-9">
+              <div class="radio">
+                <label for="hidden_show">
+                  <input type="radio" name="hidden" id="hidden_show" value="show"{% if not annonse.hidden %} checked{% endif %}> Publiser annonsen
+                </label>
               </div>
+              <div class="radio">
+                <label for="hidden_hide">
+                  <input type="radio" name="hidden" id="hidden_hide" value="hide"{% if annonse.hidden %} checked{% endif %}> Skjul annonsen
+                </label>
+              </div>
+              <span class="help-block">
+                Ingen kan se eller svare på annonsen mens den er skjult.
+              </span>
             </div>
           </div>
         {% endif %}
       {% endif %}
 
-      <div class="control-group">
-        <div class="controls">
+      <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-9">
           <button type="submit" class="btn btn-success">
             {% if annonse.is_expired or other_active_annonse_exists or annonse.hidden and not user.has_paid %}
               Lagre annonsen
             {% else %}
-              <span class="save{% if not annonse.hidden %} hide{% endif %}">Lagre annonsen</span>
-              <span class="publish{% if annonse.hidden %} hide{% endif %}">Publiser annonsen</span>
+              <span class="save{% if not annonse.hidden %} jq-hide{% endif %}">Lagre annonsen</span>
+              <span class="publish{% if annonse.hidden %} jq-hide{% endif %}">Publiser annonsen</span>
             {% endif %}
           </button>
           {% if annonse %}
@@ -206,7 +218,7 @@
     </form>
 
   </div>
-  <div class="span3">
+  <div class="col-md-3">
     {% if annonse %}
       {% include 'central/fjelltreffen/navigation.html' %}
     {% else %}
@@ -216,7 +228,7 @@
 </div>
 
 {% if annonse.image %}
-  <div class="modal annonse-image-modal hide">
+  <div class="modal annonse-image-modal jq-hide">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal">X</button>
       <h3>Annonsebilde</h3>
@@ -228,13 +240,13 @@
     </div>
     <div class="modal-footer">
       <p class="delete pull-left">
-        <button class="btn btn-danger delete-image" data-href="{% url 'fjelltreffen.views.delete_image' annonse.id %}"><i class="icon-remove"></i> Slett bildet fra annonsen</button>
+        <button class="btn btn-danger delete-image" data-href="{% url 'fjelltreffen.views.delete_image' annonse.id %}"><i class="glyphicon glyphicon-remove"></i> Slett bildet fra annonsen</button>
       </p>
-      <p class="loading hide">
+      <p class="loading jq-hide">
         <img src="{{ STATIC_URL }}img/common/ajax-loader-large.gif" alt="Laster, vennligst vent...">
       </p>
       <p class="modal-close">
-        <a href="javascript:undefined" class="btn" data-dismiss="modal">Lukk vindu</a>
+        <a href="javascript:undefined" class="btn btn-default" data-dismiss="modal">Lukk vindu</a>
       </p>
     </div>
   </div>

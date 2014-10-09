@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-05 15:21+0200\n"
+"POT-Creation-Date: 2014-09-11 10:30+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,7 +22,7 @@ msgid "Velkommen som medlem!"
 msgstr "Welcome as a member!"
 
 #: apps/enrollment/util.py:25
-#: templates/central/enrollment/result/success_card.html:21
+#: templates/central/enrollment/result/success_card.html:19
 #: templates/central/enrollment/result/success_invoice.html:17
 msgid "Velkommen som medlemmer!"
 msgstr "Welcome as members!"
@@ -33,17 +33,17 @@ msgstr "Welcome as members!"
 #: templates/central/connect/signon_unavailable.html:6
 #: templates/central/connect/columbus/signon.html:5
 #: templates/central/connect/columbus/signon.html:6
-#: templates/central/connect/columbus/signon.html:50
+#: templates/central/connect/columbus/signon.html:46
 #: templates/common/user/login/util/login_form.html:37
 msgid "Logg inn"
 msgstr "Log on"
 
-#: templates/central/connect/signon_enrollment_card_deactivated.html:17
+#: templates/central/connect/signon_enrollment_card_deactivated.html:14
 #: templates/central/enrollment/payment.html:41
 msgid "Kortbetaling utilgjengelig"
 msgstr "Online payment is currently unavailable"
 
-#: templates/central/connect/signon_enrollment_card_deactivated.html:20
+#: templates/central/connect/signon_enrollment_card_deactivated.html:17
 msgid ""
 "Vi avslutter medlemsåret og kan dessverre ikke motta kortbetalinger akkurat "
 "nå."
@@ -51,17 +51,17 @@ msgstr ""
 "We are now closing our membership year and can unfortunately not receive "
 "online payments at this moment."
 
-#: templates/central/connect/signon_enrollment_card_deactivated.html:24
+#: templates/central/connect/signon_enrollment_card_deactivated.html:21
 msgid ""
 "Siden du melder deg inn i forbindelse med en tur/aktivitet arrangert i regi "
-"av DNT, kan du ikke velge å betale med faktura &mdash; da kan vi ikke gi deg "
-"en eventuell rabatt, siden vi ikke får bekreftet innbetalingen."
+"av DNT, kan du ikke velge å betale med faktura — da kan vi ikke gi deg en "
+"eventuell rabatt, siden vi ikke får bekreftet innbetalingen."
 msgstr ""
 "You are enrolling together with signing up for a tour or activity arranged "
 "by DNT, so payment by invoice is not possible until we verify the payment "
 "and offer any discounts."
 
-#: templates/central/connect/signon_enrollment_card_deactivated.html:28
+#: templates/central/connect/signon_enrollment_card_deactivated.html:25
 msgid ""
 "Dette betyr at du ikke kan melde deg inn for øyeblikket. Vi beklager på det "
 "sterkeste ulempene dette medfører. Om du har noen spørsmål, kan disse rettes "
@@ -70,7 +70,7 @@ msgstr ""
 "This means that you cannot enrollment just now. We apologize for this "
 "inconvenience. If you have any questions, please contact"
 
-#: templates/central/connect/signon_enrollment_card_deactivated.html:28
+#: templates/central/connect/signon_enrollment_card_deactivated.html:25
 #: templates/common/user/login/util/registration_form.html:111
 #: templates/common/user/login/util/registration_form.html:116
 #: templates/common/user/login/util/registration_form.html:121
@@ -79,23 +79,23 @@ msgstr ""
 msgid "medlemsservice"
 msgstr "memberservice"
 
-#: templates/central/connect/signon_enrollment_card_deactivated.html:32
+#: templates/central/connect/signon_enrollment_card_deactivated.html:29
 msgid "Gå tilbake til forrige side"
 msgstr "Go back to the previous page"
 
-#: templates/central/connect/signon_enrollment_card_deactivated.html:32
+#: templates/central/connect/signon_enrollment_card_deactivated.html:29
 msgid "eller"
 msgstr "or"
 
-#: templates/central/connect/signon_enrollment_card_deactivated.html:32
+#: templates/central/connect/signon_enrollment_card_deactivated.html:29
 msgid "avbryt påmelding til tur"
 msgstr "cancel signup for tour"
 
-#: templates/central/connect/signon_unavailable.html:17
+#: templates/central/connect/signon_unavailable.html:14
 msgid "Midlertidig vedlikehold"
 msgstr "Temporary maintenance"
 
-#: templates/central/connect/signon_unavailable.html:20
+#: templates/central/connect/signon_unavailable.html:17
 #, python-format
 msgid ""
 "Tjenesten er dessverre utilgjengelig %(period)s på grunn av midlertidig "
@@ -104,68 +104,66 @@ msgstr ""
 "This service is unfortunately not available due to temporary maintenance, "
 "(in Norwegian): \"%(period)s\"."
 
-#: templates/central/connect/signon_unavailable.html:25
+#: templates/central/connect/signon_unavailable.html:22
 #, python-format
 msgid ""
-"\n"
-"        Vi beklager på det sterkeste ulempene dette medfører. Vennligst smør "
-"deg inn med tålmodighet, og prøv igjen når vedlikeholdsperioden er over. "
-"Innen da kan vi dessverre ikke annet enn å sende deg <a href="
-"\"%(previous_url)s\">tilbake dit du kom fra</a>.\n"
-"      "
+"    Vi beklager på det sterkeste ulempene dette medfører. Vennligst smør deg "
+"inn med tålmodighet, og prøv igjen når vedlikeholdsperioden er over. Innen "
+"da kan vi dessverre ikke annet enn å sende deg <a href=\"%(previous_url)s"
+"\">tilbake dit du kom fra</a>.\n"
+"  "
 msgstr ""
-"\n"
 "We apologize for this inconvenience. Please be patient, and come back when "
 "the maintenance period is over. Meanwhile, we'll return you <a href="
 "\"%(previous_url)s\">to where you started</a>."
 
-#: templates/central/connect/columbus/layout.html:49
+#: templates/central/connect/columbus/layout.html:44
 msgid "Avbryt og gå tilbake"
 msgstr "Cancel and return"
 
-#: templates/central/connect/columbus/layout.html:119
+#: templates/central/connect/columbus/layout.html:122
 msgid "Åpningstider tlf."
 msgstr "Calling hours"
 
-#: templates/central/connect/columbus/layout.html:121
+#: templates/central/connect/columbus/layout.html:124
 msgid "Man-fre."
 msgstr "Mon-fri."
 
-#: templates/central/connect/columbus/layout.html:122
+#: templates/central/connect/columbus/layout.html:125
 msgid "Sentralbord"
 msgstr "Operator"
 
-#: templates/central/connect/columbus/layout.html:123
+#: templates/central/connect/columbus/layout.html:126
 msgid "Turinfo"
 msgstr "Tour information"
 
-#: templates/central/connect/columbus/layout.html:124
+#: templates/central/connect/columbus/layout.html:127
 #: templates/common/user/login/util/registration_form.html:59
 msgid "E-post:"
 msgstr "E-mail:"
 
-#: templates/central/connect/columbus/layout.html:128
+#: templates/central/connect/columbus/layout.html:134
 msgid "Åpningstider turinfo"
 msgstr "Opening hours"
 
-#: templates/central/connect/columbus/layout.html:130
+#: templates/central/connect/columbus/layout.html:136
 msgid "Mandag-fredag"
 msgstr "Monday-Friday"
 
-#: templates/central/connect/columbus/layout.html:131
+#: templates/central/connect/columbus/layout.html:137
 msgid "Torsdag"
 msgstr "Thursday"
 
-#: templates/central/connect/columbus/layout.html:132
+#: templates/central/connect/columbus/layout.html:138
 msgid "Lørdag"
 msgstr "Saturday"
 
-#: templates/central/connect/columbus/signon.html:38
+#: templates/central/connect/columbus/signon.html:36
 msgid "Du er nå kommet til neste steg i bestillingen"
 msgstr "Next step in e booking"
 
-#: templates/central/connect/columbus/signon.html:41
-#: templates/central/connect/columbus/signon.html:110
+#: templates/central/connect/columbus/signon.html:39
+#: templates/central/connect/columbus/signon.html:105
 msgid ""
 "For å gå videre med bestillingen og se antall ledige plasser på turen må du "
 "logge deg på Min side."
@@ -173,7 +171,7 @@ msgstr ""
 "To continue booking and to get an overview of available places you have to "
 "log on to the User Page."
 
-#: templates/central/connect/columbus/signon.html:42
+#: templates/central/connect/columbus/signon.html:40
 msgid ""
 "Er du ikke Min side-bruker så kan du <a href=\"javascript:undefined\" class="
 "\"toggle-registration-tab\">enkelt registrere deg</a>."
@@ -181,31 +179,31 @@ msgstr ""
 "If you do not have a DNT User Page log on, it is <a href=\"javascript:"
 "undefined\" class=\"toggle-registration-tab\">easy to register</a>."
 
-#: templates/central/connect/columbus/signon.html:51
+#: templates/central/connect/columbus/signon.html:47
 msgid "Opprett ny bruker"
 msgstr "Create user"
 
-#: templates/central/connect/columbus/signon.html:83
+#: templates/central/connect/columbus/signon.html:79
 msgid "Jeg er allerede medlem i DNT"
 msgstr "I'm already a member of DNT"
 
-#: templates/central/connect/columbus/signon.html:86
+#: templates/central/connect/columbus/signon.html:82
 msgid "Jeg vil melde meg inn i DNT først"
 msgstr "I want to become a DNT member now"
 
-#: templates/central/connect/columbus/signon.html:87
+#: templates/central/connect/columbus/signon.html:83
 msgid "(må betales på nett)"
 msgstr "(must be paid online)"
 
-#: templates/central/connect/columbus/signon.html:90
+#: templates/central/connect/columbus/signon.html:86
 msgid "Jeg vil opprette bruker uten å bli medlem i DNT nå"
 msgstr "I want to create a user without becoming a DNT member now"
 
-#: templates/central/connect/columbus/signon.html:106
+#: templates/central/connect/columbus/signon.html:101
 msgid "Lurer du på noe?"
 msgstr "Questions?"
 
-#: templates/central/connect/columbus/signon.html:114
+#: templates/central/connect/columbus/signon.html:109
 msgid ""
 "Har du problemer med påloggingen eller spørsmål rundt bestilling kontakt oss "
 "gjerne på: 22 82 28 22"
@@ -213,7 +211,7 @@ msgstr ""
 "If you should have any difficulties with log on or enquiries about booking, "
 "feel welcome to call us at: (+47) 22 82 28 22"
 
-#: templates/central/connect/columbus/signon.html:132
+#: templates/central/connect/columbus/signon.html:127
 msgid ""
 "Du finner også nummeret på giroen fra forrige årskontingent, og på "
 "medlemskortet ditt som vist med rød ring på bildet:"
@@ -221,12 +219,12 @@ msgstr ""
 "You'll also find your ID on your previous invoice, and on your membership "
 "card as shown with a red circle on the following photo:"
 
-#: templates/central/connect/columbus/signon.html:134
+#: templates/central/connect/columbus/signon.html:129
 msgid "Illustrasjonsfoto av medlemsnummer-plassering på medlemskortet"
 msgstr "Illustration of the member ID's location on the membership card"
 
-#: templates/central/connect/columbus/signon.html:137
-#: templates/central/enrollment/registration.html:165
+#: templates/central/connect/columbus/signon.html:132
+#: templates/central/enrollment/registration.html:169
 msgid "Lukk vindu"
 msgstr "Close window"
 
@@ -344,23 +342,21 @@ msgstr "Address 2"
 msgid "Adresse 3"
 msgstr "Address 3"
 
-#: templates/central/enrollment/household.html:107
+#: templates/central/enrollment/household.html:108
 #, python-format
 msgid ""
-"\n"
-"                Motta årboken og Fjell og Vidde mot et årlig gebyr på kr. "
+"                  Motta årboken og Fjell og Vidde mot et årlig gebyr på kr. "
 "%(foreign_shipment_price)s\n"
-"              "
+"                "
 msgstr ""
-"\n"
 "Receive the yearbook and Fjell og Vidde for a yearly fee of kr. "
 "%(foreign_shipment_price)s"
 
-#: templates/central/enrollment/household.html:116
+#: templates/central/enrollment/household.html:118
 msgid "Husstandsmedlemskap"
 msgstr "Householdmembership"
 
-#: templates/central/enrollment/household.html:118
+#: templates/central/enrollment/household.html:120
 msgid ""
 "\n"
 "            Bor du sammen med et <strong>eksisterende</strong> hovedmedlem, "
@@ -380,39 +376,39 @@ msgstr[1] ""
 "You can get cheaper membership prices if you live with an <strong>existing</"
 "strong> main member."
 
-#: templates/central/enrollment/household.html:125
+#: templates/central/enrollment/household.html:127
 msgid "Oppgi medlemsnummer..."
 msgstr "Enter member ID..."
 
-#: templates/central/enrollment/household.html:126
+#: templates/central/enrollment/household.html:128
 msgid "Søk"
 msgstr "Search"
 
-#: templates/central/enrollment/household.html:127
+#: templates/central/enrollment/household.html:129
 msgid "Laster medlemsinfo..."
 msgstr "Loading member data..."
 
-#: templates/central/enrollment/household.html:132
+#: templates/central/enrollment/household.html:134
 msgid "Hovedmedlem:"
 msgstr "Main member:"
 
-#: templates/central/enrollment/household.html:134
+#: templates/central/enrollment/household.html:136
 msgid "Dette medlemmet har ikke betalt medlemskontingenten for i år."
 msgstr "This member has not paid for this years membership."
 
-#: templates/central/enrollment/household.html:135
+#: templates/central/enrollment/household.html:137
 msgid "Du må oppgi riktig postnummer før du søker."
 msgstr "Enter your Postcode before searching."
 
-#: templates/central/enrollment/household.html:136
+#: templates/central/enrollment/household.html:138
 msgid "Ugyldig medlemsnummer oppgitt."
 msgstr "Invalid member ID."
 
-#: templates/central/enrollment/household.html:137
+#: templates/central/enrollment/household.html:139
 msgid "Fant ingen medlemmer med dette medlemsnummeret."
 msgstr "No members found with this member ID."
 
-#: templates/central/enrollment/household.html:139
+#: templates/central/enrollment/household.html:141
 msgid ""
 "\n"
 "              Det angitte medlemmet er bare <span class=\"age\"></span> år "
@@ -423,17 +419,17 @@ msgstr ""
 "This member is just <span class=\"age\"></span> years old by the end of this "
 "year, and cannot be a main member."
 
-#: templates/central/enrollment/household.html:144
+#: templates/central/enrollment/household.html:146
 msgid ""
 "Det angitte medlemmet er selv et husstandsmedlem. Dere kan kun knytte dere "
 "til et hovedmedlem."
 msgstr "This member is a household member. You can only have one main member."
 
-#: templates/central/enrollment/household.html:147
+#: templates/central/enrollment/household.html:149
 msgid "Det angitte medlemmet bor ikke på samme adresse som dere."
 msgstr "This member doesn't share your address."
 
-#: templates/central/enrollment/household.html:150
+#: templates/central/enrollment/household.html:152
 msgid ""
 "Beklager, det oppstod en teknisk feil ved oppslag i medlemsregisteret. "
 "Feilen har blitt logget i våre systemer. Vennligst prøv igjen, eller kontakt "
@@ -443,17 +439,17 @@ msgstr ""
 "register. The error has been logged in our systems. Please try again, or "
 "contect member service if the error persists."
 
-#: templates/central/enrollment/household.html:156
-#: templates/central/enrollment/payment.html:74
+#: templates/central/enrollment/household.html:158
+#: templates/central/enrollment/payment.html:78
 #: templates/central/enrollment/verification.html:222
 msgid "Tilbake"
 msgstr "Back"
 
-#: templates/central/enrollment/household.html:157
-#: templates/central/enrollment/registration.html:84
-#: templates/central/enrollment/result/success_card.html:132
+#: templates/central/enrollment/household.html:159
+#: templates/central/enrollment/registration.html:82
+#: templates/central/enrollment/result/success_card.html:128
+#: templates/central/enrollment/result/success_card.html:146
 #: templates/central/enrollment/result/success_card.html:148
-#: templates/central/enrollment/result/success_card.html:150
 #: templates/common/user/login/util/registration_form.html:47
 msgid "Gå videre"
 msgstr "Continue"
@@ -465,27 +461,27 @@ msgstr "Continue"
 msgid "Innmelding"
 msgstr "Become member"
 
-#: templates/central/enrollment/index.html:13
+#: templates/central/enrollment/index.html:11
 msgid "Bli medlem for"
 msgstr "Become member for"
 
-#: templates/central/enrollment/index.html:20
+#: templates/central/enrollment/index.html:16
 #, python-format
 msgid ""
 "\n"
-"              Vi forbereder nytt medlemsår og kan dessverre ikke motta "
+"        Vi forbereder nytt medlemsår og kan dessverre ikke motta "
 "kortbetaling akkurat nå. Kortbetaling vil igjen være tilgjengelig fra "
 "%(date)s. Bestiller du faktura i dag, blir denne behandlet og sendt medio "
 "%(month)s. Medlemskap for resten av %(year)s får du med på kjøpet. Merk at "
 "oppgitte priser gjelder for %(year)s.<br><br>\n"
-"              Dersom det haster, kan du kjøpe medlemskap hos din lokale "
+"        Dersom det haster, kan du kjøpe medlemskap hos din lokale "
 "medlemsforening. Vi beklager eventuelle ulemper og takker for din "
 "tålmodighet. Eventuelle spørsmål kan rettes til medlemsservice, se "
 "kontaktboksen under.\n"
-"            "
+"      "
 msgstr ""
 "\n"
-"We are commencing a new membership year and cannot yetreceive online "
+"We are commencing a new membership year and cannot yet receive online "
 "payments at this moment. Online payments will be available %(date)s. Invoice "
 "orders will be sent in mid-%(month)s and also be valid for the rest of "
 "%(year)s.<br><br>In urgent cases, please contact your local member "
@@ -651,11 +647,11 @@ msgstr ""
 msgid "Velg betalingsmåte:"
 msgstr "Choose payment method:"
 
-#: templates/central/enrollment/payment.html:65
+#: templates/central/enrollment/payment.html:68
 msgid "Få tilsendt faktura"
 msgstr "Receive invoice"
 
-#: templates/central/enrollment/payment.html:70
+#: templates/central/enrollment/payment.html:74
 msgid ""
 "<strong>Merk:</strong> Velger du å betale med faktura blir ikke medlemskapet "
 "gyldig før betalingen er registrert i vårt system."
@@ -663,15 +659,15 @@ msgstr ""
 "<strong>Note:</strong> If you choose to pay with an invoice, your membership "
 "will not be valid until the payment is registered in our systems."
 
-#: templates/central/enrollment/payment.html:76
+#: templates/central/enrollment/payment.html:80
 msgid "Til betaling"
 msgstr "To payment"
 
-#: templates/central/enrollment/payment.html:79
+#: templates/central/enrollment/payment.html:83
 msgid "Send bestilling"
 msgstr "Complete and send order"
 
-#: templates/central/enrollment/payment.html:81
+#: templates/central/enrollment/payment.html:85
 #: templates/central/membership/memberid_sms/forgotten.html:13
 #: templates/common/user/login/util/registration_form.html:97
 msgid "Laster, vennligst vent..."
@@ -693,11 +689,11 @@ msgstr "Verify"
 msgid "Betaling"
 msgstr "Payment"
 
-#: templates/central/enrollment/registration.html:31
+#: templates/central/enrollment/registration.html:29
 msgid "Innmelding i Den Norske Turistforening"
 msgstr "Enrolling in The Norwegian Trekking Association"
 
-#: templates/central/enrollment/registration.html:32
+#: templates/central/enrollment/registration.html:30
 msgid ""
 "Du er i ferd med å melde deg inn i DNT i forbindelse med at du skal melde "
 "deg på en tur eller aktivitet. Når innmeldingen er fullført vil du bli "
@@ -707,11 +703,11 @@ msgstr ""
 "activity. When enrollment is completed, you'll be forwarded to sign up for "
 "the activity."
 
-#: templates/central/enrollment/registration.html:46
+#: templates/central/enrollment/registration.html:42
 msgid "Kontaktinformasjon mangler."
 msgstr "Contact information is missing."
 
-#: templates/central/enrollment/registration.html:47
+#: templates/central/enrollment/registration.html:43
 msgid ""
 "Minst ett medlem av husstanden må ha gyldig kontaktinformasjon (både telefon "
 "og e-post)."
@@ -719,11 +715,11 @@ msgstr ""
 "At least one member of your household should have valid contact information "
 "(both phone and E-mail)."
 
-#: templates/central/enrollment/registration.html:52
+#: templates/central/enrollment/registration.html:48
 msgid "Vi klarte ikke å lagre opplysningene."
 msgstr "We weren't able to save the data."
 
-#: templates/central/enrollment/registration.html:53
+#: templates/central/enrollment/registration.html:49
 msgid ""
 "Er alt riktig fylt ut? Vennligst sjekk felter som er markert røde og prøv på "
 "nytt."
@@ -731,53 +727,53 @@ msgstr ""
 "Did you fill in the form correctly? Please verify any fields marked red and "
 "try again."
 
-#: templates/central/enrollment/registration.html:60
+#: templates/central/enrollment/registration.html:56
 msgid "Du har registrert:"
 msgstr "You've registered:"
 
-#: templates/central/enrollment/registration.html:69
+#: templates/central/enrollment/registration.html:65
 msgid "(Anonym)"
 msgstr "(Anonymous)"
 
-#: templates/central/enrollment/registration.html:80
+#: templates/central/enrollment/registration.html:77
 msgid "Vi"
 msgstr "We"
 
-#: templates/central/enrollment/registration.html:80
+#: templates/central/enrollment/registration.html:77
 msgid "Jeg"
 msgstr "I"
 
-#: templates/central/enrollment/registration.html:80
+#: templates/central/enrollment/registration.html:77
 msgid "har lest og godtar"
 msgstr "have read and accepted"
 
-#: templates/central/enrollment/registration.html:80
+#: templates/central/enrollment/registration.html:77
 msgid "betingelsene"
 msgstr "the terms and conditions"
 
-#: templates/central/enrollment/registration.html:83
+#: templates/central/enrollment/registration.html:81
 msgid "Du kan ikke gå videre med mindre du har lest og godtatt betingelsene."
 msgstr ""
 "You cannot proceed unless you've read and accepted our terms and conditions."
 
-#: templates/central/enrollment/registration.html:88
+#: templates/central/enrollment/registration.html:86
 msgid "Meld inn flere i familien/husstanden:"
 msgstr "Register more members of the family/household"
 
-#: templates/central/enrollment/registration.html:89
+#: templates/central/enrollment/registration.html:87
 msgid "Du kan kun melde inn flere samtidig hvis alle bor på samme adresse."
 msgstr ""
 "You can only register multiple members if you all share the same address."
 
-#: templates/central/enrollment/registration.html:99
+#: templates/central/enrollment/registration.html:97
 msgid "Fullt navn"
 msgstr "Full name"
 
-#: templates/central/enrollment/registration.html:103
+#: templates/central/enrollment/registration.html:101
 msgid "Fødselsdato (dd.mm.åååå)"
 msgstr "Birth date (dd.mm.yyyy)"
 
-#: templates/central/enrollment/registration.html:112
+#: templates/central/enrollment/registration.html:110
 msgid "Kjønn"
 msgstr "Gender"
 
@@ -786,34 +782,34 @@ msgstr "Gender"
 msgid "Kvinne"
 msgstr "Female"
 
-#: templates/central/enrollment/registration.html:117
+#: templates/central/enrollment/registration.html:119
 #: templates/central/enrollment/verification.html:123
 msgid "Mann"
 msgstr "Male"
 
-#: templates/central/enrollment/registration.html:122
+#: templates/central/enrollment/registration.html:126
 msgid "Mobiltelefon"
 msgstr "Mobile"
 
-#: templates/central/enrollment/registration.html:126
+#: templates/central/enrollment/registration.html:130
 #: templates/common/user/login/util/login_form.html:22
 msgid "E-post"
 msgstr "E-mail"
 
-#: templates/central/enrollment/registration.html:129
+#: templates/central/enrollment/registration.html:133
 msgid "Lagre endringer"
 msgstr "Save changes"
 
-#: templates/central/enrollment/registration.html:129
+#: templates/central/enrollment/registration.html:133
 msgid "Legg til medlem"
 msgstr "Add this member"
 
-#: templates/central/enrollment/registration.html:142
+#: templates/central/enrollment/registration.html:146
 msgid "Betingelser for medlemskap i Den Norske Turistforening"
 msgstr ""
 "Terms and conditions for membership in the Norwegian Trekking Association"
 
-#: templates/central/enrollment/registration.html:147
+#: templates/central/enrollment/registration.html:151
 #, python-format
 msgid ""
 "\n"
@@ -828,15 +824,15 @@ msgstr ""
 "%(month)s, any new enrollments/renewals will provide membership for the "
 "following calendar year."
 
-#: templates/central/enrollment/registration.html:151
+#: templates/central/enrollment/registration.html:155
 msgid "Medlemskapet er personlig."
 msgstr "The membership is personal."
 
-#: templates/central/enrollment/registration.html:152
+#: templates/central/enrollment/registration.html:156
 msgid "Det er ingen angrerett på betalt medlemskap."
 msgstr "Paid membership cannot be cancelled."
 
-#: templates/central/enrollment/registration.html:153
+#: templates/central/enrollment/registration.html:157
 #, python-format
 msgid ""
 "Medlemstypene er aldersbegrenset, men uføretrygdede (minst 50%%) gis rett "
@@ -845,7 +841,7 @@ msgstr ""
 "The membership categories are determined by age; however, disabled (at least "
 "50%%) are entitled to senior membership."
 
-#: templates/central/enrollment/registration.html:154
+#: templates/central/enrollment/registration.html:158
 msgid ""
 "Medlemskapet er ikke gyldig før det er betalt og medlemskortet er kun gyldig "
 "med stempel eller oblat fra bank/post."
@@ -853,7 +849,7 @@ msgstr ""
 "The membership is not valid until paid in full and the membership card is "
 "only valid with an approved stamp or sticker from bank/postal."
 
-#: templates/central/enrollment/registration.html:155
+#: templates/central/enrollment/registration.html:159
 msgid ""
 "DNT forplikter seg til ikke å videreformidle personlige opplysninger til "
 "andre enn våre egne medlemsforeninger, samt enkelte samarbeidspartnere i "
@@ -864,20 +860,20 @@ msgstr ""
 "affiliated third parties offering membership benefits. Youcan opt out of "
 "this by logging in on the user page after enrollment."
 
-#: templates/central/enrollment/registration.html:159
+#: templates/central/enrollment/registration.html:163
 msgid "Sist endret: 9. november 2012."
 msgstr "Last updated on 9th November 2012."
 
-#: templates/central/enrollment/registration.html:160
+#: templates/central/enrollment/registration.html:164
 msgid "Med forbehold om endringer i løpet av medlemsåret."
 msgstr ""
 "These terms and conditions are subject to change during the membership year."
 
-#: templates/central/enrollment/unavailable.html:11
+#: templates/central/enrollment/unavailable.html:9
 msgid "Innmelding utilgjengelig"
 msgstr "Enrollment unavailable"
 
-#: templates/central/enrollment/unavailable.html:17
+#: templates/central/enrollment/unavailable.html:15
 #, python-format
 msgid ""
 "Online innmeldingsskjema er dessverre utilgjengelig %(period)s på grunn av "
@@ -886,7 +882,7 @@ msgstr ""
 "Online enrollment is unfortunately not available due to temporary "
 "maintenance, for the following duration (in Norwegian): \"%(period)s\"."
 
-#: templates/central/enrollment/unavailable.html:20
+#: templates/central/enrollment/unavailable.html:18
 msgid ""
 "Online innmeldingsskjema er dessverre ikke tilgjengelig på grunn av "
 "midlertidig vedlikehold."
@@ -894,7 +890,7 @@ msgstr ""
 "Online enrollment is unfortunately not available due to temporary "
 "maintenance."
 
-#: templates/central/enrollment/unavailable.html:25
+#: templates/central/enrollment/unavailable.html:23
 msgid ""
 "For å bli medlem, vennligst ta kontakt med medlemsservice på tlf. 4000 1870 "
 "eller e-post"
@@ -991,7 +987,7 @@ msgid "Hoved-<br>medlem"
 msgstr "Main<br>member"
 
 #: templates/central/enrollment/verification.html:98
-#: templates/central/enrollment/result/success_card.html:52
+#: templates/central/enrollment/result/success_card.html:48
 msgid "Medlemstype"
 msgstr "Membership type"
 
@@ -1008,7 +1004,7 @@ msgstr ""
 "organization prices may vary."
 
 #: templates/central/enrollment/verification.html:99
-#: templates/central/enrollment/result/success_card.html:53
+#: templates/central/enrollment/result/success_card.html:49
 msgid "Pris"
 msgstr "Price"
 
@@ -1145,18 +1141,15 @@ msgstr ""
 "DNT Memberservice\n"
 "Tlf: 40001870"
 
-#: templates/central/enrollment/result/success_card.html:17
-#: templates/central/enrollment/result/success_invoice.html:13
+#: templates/central/enrollment/result/success_card.html:15
 #, python-format
 msgid ""
-"\n"
-"            Velkommen som medlem, %(name)s!\n"
-"          "
+"        Velkommen som medlem, %(name)s!\n"
+"      "
 msgstr ""
-"\n"
 "Welcome as a member, %(name)s!"
 
-#: templates/central/enrollment/result/success_card.html:31
+#: templates/central/enrollment/result/success_card.html:27
 #, python-format
 msgid ""
 "\n"
@@ -1174,7 +1167,7 @@ msgstr[1] ""
 "\n"
 "You are now members of DNT and <a href=\"%(url)s\">%(forening)s</a>."
 
-#: templates/central/enrollment/result/success_card.html:40
+#: templates/central/enrollment/result/success_card.html:36
 #, python-format
 msgid ""
 "\n"
@@ -1185,19 +1178,19 @@ msgstr ""
 "\n"
 "Youth members are members of DNT and <a href=\"%(url)s\">%(forening)s</a>."
 
-#: templates/central/enrollment/result/success_card.html:50
+#: templates/central/enrollment/result/success_card.html:46
 msgid "Navn"
 msgstr "Name"
 
-#: templates/central/enrollment/result/success_card.html:51
+#: templates/central/enrollment/result/success_card.html:47
 msgid "Medlemsnummer"
 msgstr "Member ID"
 
-#: templates/central/enrollment/result/success_card.html:65
+#: templates/central/enrollment/result/success_card.html:61
 msgid "Totalt:"
 msgstr "Total:"
 
-#: templates/central/enrollment/result/success_card.html:74
+#: templates/central/enrollment/result/success_card.html:70
 msgid ""
 "Du vil i løpet av kort tid motta ditt medlemskort i posten. Inntil da kan du "
 "skrive ut denne siden som midlertidig medlemsbevis gyldig frem til"
@@ -1205,16 +1198,16 @@ msgstr ""
 "Your membership card will be sent shortly. Meanwhile, you may print this "
 "page and use it as a membership certificate valid until"
 
-#: templates/central/enrollment/result/success_card.html:74
-#: templates/central/enrollment/result/success_card.html:76
+#: templates/central/enrollment/result/success_card.html:70
+#: templates/central/enrollment/result/success_card.html:72
 msgid "eller få tilsendt gratis kvittering på SMS"
 msgstr "or receive a free SMS receipt"
 
-#: templates/central/enrollment/result/success_card.html:74
+#: templates/central/enrollment/result/success_card.html:70
 msgid "Kvittering er også sendt på e-post til"
 msgstr "A receipt has also been sent by E-mail to"
 
-#: templates/central/enrollment/result/success_card.html:76
+#: templates/central/enrollment/result/success_card.html:72
 msgid ""
 "Dere vil i løpet av kort tid motta deres medlemskort i posten. Inntil da kan "
 "dere skrive ut denne siden som midlertidig medlemsbevis gyldig frem til"
@@ -1222,28 +1215,28 @@ msgstr ""
 "Your membership cards will ship shortly. Meanwhile, you may print this page "
 "and use it as a membership certificate valid until"
 
-#: templates/central/enrollment/result/success_card.html:76
+#: templates/central/enrollment/result/success_card.html:72
 msgid "Kvittering er også sendt på e-post til følgende adresser:"
 msgstr "A receipt has also been sent by E-mail to the following adresses:"
 
-#: templates/central/enrollment/result/success_card.html:88
+#: templates/central/enrollment/result/success_card.html:84
 msgid "Send gratis kvittering på SMS til"
 msgstr "Send free SMS receipt to"
 
-#: templates/central/enrollment/result/success_card.html:92
+#: templates/central/enrollment/result/success_card.html:88
 msgid "Sender SMS, vennligst vent..."
 msgstr "Sending SMS, please wait..."
 
-#: templates/central/enrollment/result/success_card.html:97
+#: templates/central/enrollment/result/success_card.html:93
 msgid "Kvittering har blitt sendt på SMS til"
 msgstr "Receipt has been sent by SMS to"
 
-#: templates/central/enrollment/result/success_card.html:100
+#: templates/central/enrollment/result/success_card.html:96
 msgid "En teknisk feil har oppstått ved utsendelse av SMS."
 msgstr "A technical error has occred during SMS sending."
 
-#: templates/central/enrollment/result/success_card.html:101
-#: templates/central/enrollment/result/success_card.html:108
+#: templates/central/enrollment/result/success_card.html:97
+#: templates/central/enrollment/result/success_card.html:104
 msgid ""
 "Dersom du/dere har planlagt å dra på tur i nærmeste fremtid, og ikke rekker "
 "å vente på at medlemskortet ankommer, kan dere kontakte medlemsservice for å "
@@ -1252,7 +1245,7 @@ msgstr ""
 "If you plan to use our services soon, before your  membership card arrives, "
 "please contact memberservice to get a receipt by SMS."
 
-#: templates/central/enrollment/result/success_card.html:104
+#: templates/central/enrollment/result/success_card.html:100
 msgid ""
 "SMS-Kvittering har allerede blitt sendt til dette nummeret. Ta kontakt med "
 "medlemsservice dersom du mener dette er feil."
@@ -1260,16 +1253,16 @@ msgstr ""
 "SMS receipt has already been sent to this phone number. Please contact "
 "memberservice if you think this is an error."
 
-#: templates/central/enrollment/result/success_card.html:107
+#: templates/central/enrollment/result/success_card.html:103
 msgid "En teknisk feil har oppstått ved kontakt med vår SMS-leverandør."
 msgstr ""
 "A technical error has occured during communication with our SMS provider."
 
-#: templates/central/enrollment/result/success_card.html:119
+#: templates/central/enrollment/result/success_card.html:115
 msgid "Fortsett til påmeldig for tur/aktivitet"
 msgstr "Continue to signup for tour/activity"
 
-#: templates/central/enrollment/result/success_card.html:122
+#: templates/central/enrollment/result/success_card.html:118
 msgid ""
 "\n"
 "            Du er nå innmeldt, og kan fortsette til påmeldingen, først må du "
@@ -1290,12 +1283,12 @@ msgstr[1] ""
 "You are now enrolled! You can continue to signup, first you'll just need to "
 "register a user."
 
-#: templates/central/enrollment/result/success_card.html:163
+#: templates/central/enrollment/result/success_card.html:161
 #: templates/central/enrollment/result/success_invoice.html:69
 msgid "Registrer deg på Min side"
 msgstr "Register on the user page"
 
-#: templates/central/enrollment/result/success_card.html:166
+#: templates/central/enrollment/result/success_card.html:164
 #, python-format
 msgctxt "Don't translate URL params (registreringsnokkel and #registrering)"
 msgid ""
@@ -1309,12 +1302,12 @@ msgstr ""
 "Register on <a href=\"%(login_url)s?registreringsnokkel=%(key)s#registrering"
 "\">the user page</a> and get access to our online membership services."
 
-#: templates/central/enrollment/result/success_card.html:172
+#: templates/central/enrollment/result/success_card.html:170
 #: templates/central/enrollment/result/success_invoice.html:78
 msgid "Planlegg turen på UT.no"
 msgstr "Plan your trip on UT.no"
 
-#: templates/central/enrollment/result/success_card.html:174
+#: templates/central/enrollment/result/success_card.html:172
 msgid ""
 "\n"
 "              På <a href=\"http://ut.no/\">UT.no</a> finner du hytter og "
@@ -1325,12 +1318,12 @@ msgstr ""
 "On <a href=\"http://ut.no/\">UT.no</a> you'll find cabins and trails for "
 "entire Norway."
 
-#: templates/central/enrollment/result/success_card.html:180
+#: templates/central/enrollment/result/success_card.html:178
 #: templates/central/enrollment/result/success_invoice.html:86
 msgid "Hva skjer der du bor"
 msgstr "What's happening in your area"
 
-#: templates/central/enrollment/result/success_card.html:182
+#: templates/central/enrollment/result/success_card.html:180
 #, python-format
 msgid ""
 "\n"
@@ -1341,6 +1334,16 @@ msgstr ""
 "\n"
 "<a href=\"%(url)s\">%(forening)s</a> arranges guided tours and activities "
 "all year."
+
+#: templates/central/enrollment/result/success_invoice.html:13
+#, python-format
+msgid ""
+"\n"
+"            Velkommen som medlem, %(name)s!\n"
+"          "
+msgstr ""
+"\n"
+"Welcome as a member, %(name)s!"
 
 #: templates/central/enrollment/result/success_invoice.html:27
 #, python-format

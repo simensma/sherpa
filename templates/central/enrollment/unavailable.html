@@ -6,25 +6,21 @@
 {% block breadcrumb %}<em><a href="{% url 'enrollment.views.index' %}">{% trans "Innmelding" %}</a></em>{% endblock %}
 {% block body %}
 
-<div class="row">
-  <div class="span12">
-    <h1>{% trans "Innmelding utilgjengelig" %}</h1>
+<h1>{% trans "Innmelding utilgjengelig" %}</h1>
 
-    {# This template can be rendered both by a deactivated enrollment, and by Focus being down. Render the status message slightly differently #}
-    <p>
-      {% if not db_connections.focus.is_available %}
-        <strong>
-          {% blocktrans with period=db_connections.focus.period_message %}Online innmeldingsskjema er dessverre utilgjengelig {{ period }} på grunn av midlertidig vedlikehold.{% endblocktrans %}
-        </strong>
-      {% else %}
-        <strong>{% trans "Online innmeldingsskjema er dessverre ikke tilgjengelig på grunn av midlertidig vedlikehold." %}</strong>
-      {% endif %}
-    </p>
+{# This template can be rendered both by a deactivated enrollment, and by Focus being down. Render the status message slightly differently #}
+<p>
+  {% if not db_connections.focus.is_available %}
+    <strong>
+      {% blocktrans with period=db_connections.focus.period_message %}Online innmeldingsskjema er dessverre utilgjengelig {{ period }} på grunn av midlertidig vedlikehold.{% endblocktrans %}
+    </strong>
+  {% else %}
+    <strong>{% trans "Online innmeldingsskjema er dessverre ikke tilgjengelig på grunn av midlertidig vedlikehold." %}</strong>
+  {% endif %}
+</p>
 
-    <p>
-      {% trans "For å bli medlem, vennligst ta kontakt med medlemsservice på tlf. 4000 1870 eller e-post" %} <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a>.
-    </p>
-  </div>
-</div>
+<p>
+  {% trans "For å bli medlem, vennligst ta kontakt med medlemsservice på tlf. 4000 1870 eller e-post" %} <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a>.
+</p>
 
 {% endblock %}

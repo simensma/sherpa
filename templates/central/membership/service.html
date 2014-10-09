@@ -11,14 +11,10 @@
 
 <div class="memberservice">
 
-  <div class="row">
-    <div class="span12">
-      <h1>Medlemsservice</h1>
-    </div>
-  </div>
+  <h1>Medlemsservice</h1>
 
   <div class="row">
-    <div class="span8">
+    <div class="col-md-8">
       <div class="faq">
 
         <h3>Medlemskap</h3>
@@ -128,7 +124,7 @@
       </div>
     </div>
 
-    <div class="span4">
+    <div class="col-md-4">
       <div class="well">
         <h3>Kontakt oss</h3>
 
@@ -149,9 +145,18 @@
       <div class="well">
         <h3>Medlemsfordeler og priser</h3>
         <p>For å se dine fordeler og priser må du taste inn ditt postnummer:</p>
-        <input type="text" name="zipcode" class="input-medium" placeholder="Ditt postnummer..."> <button class="btn zipcode-search input-button-align" data-zipcode-url="{% url 'membership.views.zipcode_search' %}">OK</button>
-        <img class="hide ajaxloader zipcode-search" src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" alt="Laster, vennligst vent...">
-        <br>
+
+        <div class="input-group">
+          <input class="form-control" type="text" name="zipcode" placeholder="Ditt postnummer...">
+          <span class="input-group-btn">
+            <button class="btn btn-default zipcode-search" data-zipcode-url="{% url 'membership.views.zipcode_search' %}">OK</button>
+          </span>
+        </div>
+
+        <p>
+          <img class="jq-hide ajaxloader zipcode-search" src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+        </p>
+
         <a href="{% url 'membership.views.benefits' %}">Jeg bor ikke i Norge</a>
         </form>
       </div>

@@ -3,13 +3,6 @@ $(function() {
     var login_wrapper = $("div.login-form-wrapper");
     var login_form = login_wrapper.find("form");
 
-    Validator.validate({
-        method: 'email',
-        control_group: login_form.find("div.forgot-password-container div.control-group"),
-        input: login_form.find("div.forgot-password-container input[name='email']"),
-        req: true
-    });
-
     /* Restore password */
     var forgot_password = login_wrapper.find("div.forgot-password");
     var restore_password_button = forgot_password.find("button.restore-password");

@@ -3,7 +3,7 @@
 <div class="change-memberid">
   <a href="javascript:undefined" class="change-memberid">Jeg vet hva jeg driver med. Endre brukerens medlemsnummer</a>
 
-  <form action="{% url 'admin.users.views.change_memberid' %}" method="post" class="form-default form-border form-horizontal jq-hide">
+  <form action="{% url 'admin.users.views.change_memberid' %}" method="post" class="form-dnt-default form-border form-horizontal jq-hide">
     {% csrf_token %}
     <input type="hidden" name="old-user" value="{{ other_user.id }}">
 

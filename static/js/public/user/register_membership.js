@@ -2,17 +2,17 @@ $(function() {
 
     var form = $("form.register-membership");
     var country_select = form.find("select[name='country']");
-    var zipcode_control_group = form.find("div.control-group.zipcode");
+    var zipcode_form_group = form.find("div.form-group.zipcode");
 
     Validator.validate({
         method: 'memberid',
-        control_group: form.find("div.control-group.memberid"),
+        form_group: form.find("div.form-group.memberid"),
         input: form.find("input[name='memberid']"),
         req: true
     });
 
     Validator.validateZipcode(
-        form.find("div.control-group.zipcode"),
+        form.find("div.form-group.zipcode"),
         form.find("input[name='zipcode']"),
         form.find("input[name='area']"),
         form.find("img.ajaxloader.zipcode")
@@ -20,16 +20,16 @@ $(function() {
 
     Validator.validate({
         method: 'email',
-        control_group: form.find("div.control-group.email"),
+        form_group: form.find("div.form-group.email"),
         input: form.find("input[name='email']"),
         req: true
     });
 
     country_select.change(function() {
         if($(this).find("option:selected").val() == 'NO') {
-            zipcode_control_group.show();
+            zipcode_form_group.show();
         } else {
-            zipcode_control_group.hide();
+            zipcode_form_group.hide();
         }
     });
 
@@ -58,7 +58,7 @@ $(function() {
             } else if(result.exists) {
                 if(!result.user_exists) {
                     memberid_accepted = true;
-                    var email = form.find("div.control-group.email");
+                    var email = form.find("div.form-group.email");
                     if(result.email == '' || result.email == email.attr('data-email')) {
                         form.find("input[name='email-equal']").val('true');
                         form.submit();
@@ -73,7 +73,7 @@ $(function() {
                 }
                 form.find("button[type='submit']").show();
             } else if(result.memberid_lookups_exceeded) {
-                form.find("div.form-hints div.memberid-lookups-exceeded").slideDown();
+                form.find("div.memberid-lookups-exceeded").slideDown();
             } else {
                 no_memberid_match.slideDown();
                 form.find("button[type='submit']").show();
@@ -91,7 +91,7 @@ $(function() {
             form.find("input[name='email']").prop('disabled', false);
         } else {
             form.find("input[name='email']").prop('disabled', true);
-            form.find("div.control-group.email").removeClass('error success');
+            form.find("div.form-group.email").removeClass('error success');
         }
     });
 

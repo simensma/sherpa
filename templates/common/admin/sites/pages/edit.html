@@ -14,7 +14,8 @@
   <script src="{{ STATIC_URL }}lib/jcrop/js/jquery.Jcrop.min.js"></script>
 
   {# Custom libs #}
-  <script src="{{ STATIC_URL }}js/admin/tagger.js"></script>
+  <script src="{{ STATIC_URL }}js/lib/select2-tagger.js"></script>
+  <script src="{{ STATIC_URL }}js/lib/select2-input-lookup.js"></script>
   <script src="{{ STATIC_URL }}js/admin/sites/editor/image-utils.js"></script>
   <script src="{{ STATIC_URL }}js/admin/sites/editor/image-cropper.js"></script>
   <script src="{{ STATIC_URL }}js/admin/images/util/image-archive-picker.js"></script>
@@ -56,73 +57,78 @@
 
 <div class="cms-editor">
 
-  <div class="row">
-    <div class="span12">
-      <div class="well editor-header page" data-page-id="{{ version.variant.page.id }}" data-version-id="{{ version.id }}">
-        <div class="status"{% if version.variant.page.published %} data-published{% endif %}>
-          <div class="title">
-            Tittel: <input name="title" type="text" class="input-xlarge" value="{{ version.variant.page.title }}">
-          </div>
+  <div class="well editor-header page" data-page-id="{{ version.variant.page.id }}" data-version-id="{{ version.id }}">
+    <div class="status"{% if version.variant.page.published %} data-published{% endif %}>
+      <div class="title">
+        Tittel: <input class="form-control" name="title" type="text" value="{{ version.variant.page.title }}">
+      </div>
 
-          <div class="parent">
-            Ligger under:
-            <select name="parent" class="chosen" data-placeholder="Ingen foreldreside">
-              <option value=""></option>
-              {% for page in pages %}
-                <option value="{{ page.id }}"{% if version.variant.page.parent.id == page.id %} selected class="default"{% endif %}>{{ page.title }}</option>
-              {% endfor %}
-            </select>
-          </div>
+      <div class="parent">
+        Ligger under:
+        <select name="parent" class="chosen" data-placeholder="Ingen foreldreside">
+          <option value=""></option>
+          {% for page in pages %}
+            <option value="{{ page.id }}"{% if version.variant.page.parent.id == page.id %} selected class="default"{% endif %}>{{ page.title }}</option>
+          {% endfor %}
+        </select>
+      </div>
 
-          <div class="publish">
+      <div class="publish">
+        <div class="row">
+          <div class="col-sm-2">
             <input type="checkbox" name="publish"{% if version.variant.page.published %} checked="checked"{% endif %}> Publiseres
+          </div>
 
-            <div class="input-append date">
-              <input type="text" name="date" value="{{ version.variant.page.pub_date|date:"d.m.Y" }}" placeholder="dd.mm.åååå">
-              <span class="add-on"><i class="icon-th"></i></span>
+          <div class="col-sm-3">
+            <div class="input-group date">
+              <input class="form-control" type="text" name="date" value="{{ version.variant.page.pub_date|date:"d.m.Y" }}" placeholder="dd.mm.åååå">
+              <span class="input-group-addon">
+                <i class="glyphicon glyphicon-calendar"></i>
+              </span>
             </div>
-            kl.
-            <input type="text" name="time" value="{{ version.variant.page.pub_date|date:"H:i" }}" placeholder="tt:mm">
           </div>
 
-          <div class="display-ads">
-            <label class="checkbox"><input type="checkbox" name="display-ads"{% if version.ads %} checked{% endif %}>Vis annonser</label>
-          </div>
-
-          <div class="tags">
-            <table>
-              <tr>
-                <td style="vertical-align: top">
-                  Nøkkelord:
-                  <input type="text" name="tags">
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="tag-box" data-predefined-tags="{{ version.tags.all|taglist }}"></div>
-                </td>
-              </tr>
-            </table>
-          </div>
-
-          <div style="clear: left;"></div>
-
-          <div class="save">
-            <button class="btn btn-success save"><i class="icon-heart"></i> Lagre nå</button>
-            <button class="btn btn-success preview" data-href="{% url 'admin.sites.pages.page.preview' active_site.id version.id %}"><i class="icon-search"></i> Forhåndsvisning</button>
-            <a class="btn btn-danger delete-page" href="{% url 'admin.sites.pages.page.delete' active_site.id version.variant.page.id %}">
-              <i class="icon-warning-sign"></i> Slett
-            </a>
-            <br><br>
-
-            <button class="btn btn-success save-and-quit" data-href="{% url 'admin.sites.pages.page.list' active_site.id %}">Lagre &amp; Tilbake til Sherpa</button>
-            <a href="{% url 'admin.sites.pages.page.list' active_site.id %}" class="btn btn-default quit" data-confirm="Er du sikker på at du vil gå tilbake til Sherpa uten å lagre?">Tilbake til Sherpa UTEN å lagre</a>
+          <div class="col-sm-3">
+            kl. <input class="form-control" type="text" name="time" value="{{ version.variant.page.pub_date|date:"H:i" }}" placeholder="tt:mm">
           </div>
         </div>
+      </div>
 
-        <div style="clear: both;"></div>
+      <div class="display-ads">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" name="display-ads"{% if version.ads %} checked{% endif %}>Vis annonser
+          </label>
+        </div>
+      </div>
+
+      <p>
+        Nøkkelord:
+        <input
+          class="form-control"
+          name="tags"
+          data-dnt-existing-tags="{{ version.tags.all|taglist }}"
+          data-dnt-tags-url="{% url 'core.views.filter_tags' %}">
+      </p>
+
+      <div class="save">
+        <button class="btn btn-success save">
+          <i class="glyphicon glyphicon-heart"></i> Lagre nå
+        </button>
+        <button class="btn btn-success preview" data-href="{% url 'admin.sites.pages.page.preview' active_site.id version.id %}">
+          <i class="glyphicon glyphicon-search"></i> Forhåndsvisning
+        </button>
+        <a class="btn btn-danger delete-page" href="{% url 'admin.sites.pages.page.delete' active_site.id version.variant.page.id %}">
+          <i class="glyphicon glyphicon-warning-sign"></i> Slett
+        </a>
+        <br><br>
+
+        <button class="btn btn-success save-and-quit" data-href="{% url 'admin.sites.pages.page.list' active_site.id %}">Lagre &amp; Tilbake til Sherpa</button>
+        <a href="{% url 'admin.sites.pages.page.list' active_site.id %}" class="btn btn-default quit" data-confirm="Er du sikker på at du vil gå tilbake til Sherpa uten å lagre?">Tilbake til Sherpa UTEN å lagre</a>
       </div>
     </div>
+
+    <div style="clear: both;"></div>
   </div>
 
   {% include 'common/admin/sites/editor/editor.html' %}

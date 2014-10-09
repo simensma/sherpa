@@ -1,68 +1,76 @@
-<div class="modal hide widget-editor" data-widget="button" data-width="auto">
+<div
+  class="modal jq-hide widget-editor button"
+  data-widget="button"
+  data-width="700px"
+  data-no-text-warning="Hva skal det stå på knappen? Du kan ikke sette inn en knapp uten tekst.">
+
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
     <h3>Knapp</h3>
   </div>
   <div class="modal-body">
 
-    <div class="alert alert-info jq-hide">
-      <a class="close">x</a>
-      <strong>Du kan da ikke legge til en knapp uten en liten tekst på den!</strong>
+    <div class="form-dnt-default form-horizontal">
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Tekst på knappen:</label>
+        <div class="col-sm-9">
+          <input class="form-control" type="text" name="text">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Lenker til:</label>
+        <div class="col-sm-9">
+          <input class="form-control" type="text" name="url" value="http://">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Farge:</label>
+        <div class="col-sm-9">
+
+          <div class="radio">
+            <label>
+              <input name="color" type="radio" value="btn-default" checked> Hvit
+            </label>
+          </div>
+
+          <div class="radio">
+            <label>
+              <input name="color" type="radio" value="btn-danger"> Rød
+            </label>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Størrelse:</label>
+        <div class="col-sm-9">
+
+          <div class="radio">
+            <label>
+              <input name="size" type="radio" value="" checked> Mellomstor
+            </label>
+          </div>
+
+          <div class="radio">
+            <label>
+              <input name="size" type="radio" value="btn-lg"> Ekstra stor
+            </label>
+          </div>
+
+        </div>
+      </div>
     </div>
 
-    <table>
-      <tr>
-        <td>Tekst på knappen:</td>
-        <td><input type="text" name="text" class="input-small"></td>
-      </tr>
-      <tr>
-        <td>Adresse knappen går til:</td>
-        <td><input type="text" name="url" class="input-xlarge" value="http://"></td>
-      </tr>
-    </table>
-
-    <table class="table choices">
-      <tr>
-        <td><input type="radio" name="color" value="" checked></td>
-        <td><button class="btn">Vanlig knapp</button></td>
-        <td><input type="radio" name="size" value="btn-large"></td>
-        <td><button class="btn btn-large">Stor</button></td>
-      </tr>
-      <tr>
-        <td><input type="radio" name="color" value="btn-primary"></td>
-        <td><button class="btn btn-primary">Hovedknapp</button></td>
-        <td><input type="radio" name="size" value="" checked></td>
-        <td><button class="btn">Middels</button></td>
-      </tr>
-      <tr>
-        <td><input type="radio" name="color" value="btn-info"></td>
-        <td><button class="btn btn-info">Informasjon</button></td>
-        <td><input type="radio" name="size" value="btn-small"></td>
-        <td><button class="btn btn-small">Liten</button></td>
-      </tr>
-      <tr>
-        <td><input type="radio" name="color" value="btn-success"></td>
-        <td><button class="btn btn-success">Suksess</button></td>
-        <td><input type="radio" name="size" value="btn-mini"></td>
-        <td><button class="btn btn-mini">Mini</button></td>
-      </tr>
-      <tr>
-        <td><input type="radio" name="color" value="btn-warning"></td>
-        <td><button class="btn btn-warning">Advarsel</button></td>
-      </tr>
-      <tr>
-        <td><input type="radio" name="color" value="btn-danger"></td>
-        <td><button class="btn btn-danger">Fare</button></td>
-      </tr>
-      <tr>
-        <td><input type="radio" name="color" value="btn-inverse"></td>
-        <td><button class="btn btn-inverse">Invertert</button></td>
-      </tr>
-    </table>
+    <p class="preview-button">
+      <button class="btn btn-default" data-dnt-preview-button data-dnt-placeholder="Forhåndsvisning"></button>
+    </p>
 
   </div>
   <div class="modal-footer" style="clear: both;">
-    <button class="btn btn-success save"><i class="icon-ok icon-white"></i> Lagre knapp</button>
-    <button class="btn" data-dismiss="modal">Avbryt</button>
+    <button class="btn btn-success save"><i class="glyphicon glyphicon-ok"></i> Lagre knapp</button>
+    <button class="btn btn-default" data-dismiss="modal">Avbryt</button>
   </div>
 </div>

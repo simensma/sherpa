@@ -11,28 +11,22 @@
 
 {% block body %}
 
-<div class="row">
-  <div class="span12">
+<h1>{% trans "Kortbetaling utilgjengelig" %}</h1>
 
-    <h1>{% trans "Kortbetaling utilgjengelig" %}</h1>
+<p class="lede">
+  {% trans "Vi avslutter medlemsåret og kan dessverre ikke motta kortbetalinger akkurat nå." %}
+</p>
 
-    <p class="lede">
-      {% trans "Vi avslutter medlemsåret og kan dessverre ikke motta kortbetalinger akkurat nå." %}
-    </p>
+<p>
+  {% trans "Siden du melder deg inn i forbindelse med en tur/aktivitet arrangert i regi av DNT, kan du ikke velge å betale med faktura — da kan vi ikke gi deg en eventuell rabatt, siden vi ikke får bekreftet innbetalingen." %}
+</p>
 
-    <p>
-      {% trans "Siden du melder deg inn i forbindelse med en tur/aktivitet arrangert i regi av DNT, kan du ikke velge å betale med faktura &mdash; da kan vi ikke gi deg en eventuell rabatt, siden vi ikke får bekreftet innbetalingen." %}
-    </p>
+<p>
+  {% trans "Dette betyr at du ikke kan melde deg inn for øyeblikket. Vi beklager på det sterkeste ulempene dette medfører. Om du har noen spørsmål, kan disse rettes til" %} <a href="{% url 'membership.views.service' %}">{% trans "medlemsservice" %}</a>.
+</p>
 
-    <p>
-      {% trans "Dette betyr at du ikke kan melde deg inn for øyeblikket. Vi beklager på det sterkeste ulempene dette medfører. Om du har noen spørsmål, kan disse rettes til" %} <a href="{% url 'membership.views.service' %}">{% trans "medlemsservice" %}</a>.
-    </p>
-
-    <p>
-      <a href="{% url 'connect.views.signon_login' %}">{% trans "Gå tilbake til forrige side" %}</a>, {% trans "eller" %} <a href="{% url 'connect.views.signon_cancel' %}">{% trans "avbryt påmelding til tur" %}</a>.
-    </p>
-
-  </div>
-</div>
+<p>
+  <a href="{% url 'connect.views.signon_login' %}">{% trans "Gå tilbake til forrige side" %}</a>, {% trans "eller" %} <a href="{% url 'connect.views.signon_cancel' %}">{% trans "avbryt påmelding til tur" %}</a>.
+</p>
 
 {% endblock %}

@@ -63,7 +63,7 @@
             <em>Gammel verdi beholdes</em>
           </td>
           <td class="new jq-hide">
-            <input type="text" class="form-control" name="photographer" placeholder="Fullt navn..." data-photographers-url="{% url 'admin.images.views.photographer' %}">
+            <input type="text" class="form-control" name="photographer" placeholder="Fullt navn..." autocomplete="off" data-photographers-url="{% url 'admin.images.views.photographer' %}">
           </td>
         </tr>
         <tr class="credits">
@@ -98,12 +98,19 @@
         <div class="col-md-6">
 
           <h3>Nøkkelord:</h3>
-          <p>Du kan legge til nye nøkkelord for alle bildene her. For å <strong>ta bort</strong> nøkkelord må du redigere ett og ett bilde.</p>
 
-          <input type="hidden" name="tags-serialized">
-          <input type="text" class="form-control" name="tags" style="margin-bottom: 10px">
-          <div class="tag-box" data-predefined-tags="{{ image.tags.all|taglist }}"></div>
-          <div style="clear: both;"></div>
+          <div class="form-dnt-default">
+            <div class="form-group">
+              <input
+                class="form-control"
+                name="tags"
+                data-dnt-tags-url="{% url 'core.views.filter_tags' %}">
+
+              <span class="help-block">
+                Du kan legge til nye nøkkelord for alle bildene her. For å <strong>ta bort</strong> nøkkelord må du redigere ett og ett bilde.
+              </span>
+            </div>
+          </div>
 
           <button type="submit" class="btn btn-lg btn-success"><i class="fa fa-check"></i> Lagre alle endringer</button>
         </div>

@@ -8,14 +8,9 @@ $(function() {
         $(this).parents("td").siblings("td.keep").toggle();
     });
 
-    TagDisplay.enable({
-        targetInput: $("input[name='tags-serialized']"),
-        tagBox: $("div.tag-box"),
-        pickerInput: $("input[name='tags']")
-    });
+    Select2Tagger({$input: $('input[name="tags"]')});
 
     $("form.update-images").submit(function() {
-        TagDisplay.collect();
         var fields = {
             description: $("table.multiple-metadata tr.description button.new:hidden").length > 0,
             photographer: $("table.multiple-metadata tr.photographer button.new:hidden").length > 0,
@@ -26,9 +21,9 @@ $(function() {
     });
 
     var photographer = $("form.update-images input[name='photographer']");
-    photographer.typeahead({
-        minLength: 3,
-        remote: photographer.attr('data-photographers-url') + "?q=%QUERY"
+    SimpleTypeahead({
+        url: photographer.attr('data-photographers-url'),
+        $input: photographer,
     });
 
 });

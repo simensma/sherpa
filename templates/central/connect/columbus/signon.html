@@ -32,20 +32,16 @@
 
 <div class="loginpage-wrapper">
 
-  <div class="row">
-    <div class="span12">
-      <p class="next-step-highlight">
-        {% trans "Du er nå kommet til neste steg i bestillingen" %}
-      </p>
-      <p>
-        {% trans "For å gå videre med bestillingen og se antall ledige plasser på turen må du logge deg på Min side." %}<br>
-        {% blocktrans %}Er du ikke Min side-bruker så kan du <a href="javascript:undefined" class="toggle-registration-tab">enkelt registrere deg</a>.{% endblocktrans %}
-      </p>
-    </div>
-  </div>
+  <p class="next-step-highlight">
+    {% trans "Du er nå kommet til neste steg i bestillingen" %}
+  </p>
+  <p>
+    {% trans "For å gå videre med bestillingen og se antall ledige plasser på turen må du logge deg på Min side." %}<br>
+    {% blocktrans %}Er du ikke Min side-bruker så kan du <a href="javascript:undefined" class="toggle-registration-tab">enkelt registrere deg</a>.{% endblocktrans %}
+  </p>
 
   <div class="row">
-    <div class="span7">
+    <div class="col-md-7">
       <ul class="nav nav-tabs">
         <li class="active"><a href="#login" data-toggle="tab">{% trans "Logg inn" %}</a></li>
         <li><a href="#registration" data-toggle="tab">{% trans "Opprett ny bruker" %}</a></li>
@@ -60,14 +56,14 @@
         </div>
         <div class="dntconnect-signon-registration form-border tab-pane" id="registration">
 
-          <div class="registration-form-wrapper hide">
+          <div class="registration-form-wrapper jq-hide">
 
             {% url 'connect.views.signon_register' as action %}
             {% include 'common/user/login/util/registration_form.html' %}
 
           </div>
 
-          <div class="registration-form-nonmember-wrapper hide">
+          <div class="registration-form-nonmember-wrapper jq-hide">
 
             {% url 'connect.views.signon_register_nonmember' as action %}
             {% include 'common/user/login/util/registration_form_nonmember.html' %}
@@ -76,7 +72,7 @@
 
           <div class="choose-creation">
 
-            <hr class="hide">
+            <hr class="jq-hide">
 
             <ul>
               <li>
@@ -98,9 +94,8 @@
 
     </div>
 
-    <div class="span5">
+    <div class="col-md-5">
       <div class="usersite-benefits">
-
 
         <p>
           <strong>{% trans "Lurer du på noe?" %}</strong>
@@ -120,7 +115,7 @@
 
 </div>
 
-<div class="modal memberid-hint-modal hide">
+<div class="modal memberid-hint-modal jq-hide">
   <div class="modal-body">
     {# We're not using modal-header for the close button because it's too tall when empty.  #}
     <p>
@@ -134,7 +129,7 @@
     <img src="{{ STATIC_URL }}img/public/medlemskort-illustrasjon.jpg" alt="{% trans "Illustrasjonsfoto av medlemsnummer-plassering på medlemskortet" %}">
   </div>
   <div class="modal-footer">
-    <a href="javascript:undefined" class="btn" data-dismiss="modal">{% trans "Lukk vindu" %}</a>
+    <a href="javascript:undefined" class="btn btn-default" data-dismiss="modal">{% trans "Lukk vindu" %}</a>
   </div>
 </div>
 

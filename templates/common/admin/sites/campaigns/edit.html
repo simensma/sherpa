@@ -111,7 +111,7 @@
     <div class="row">
       <div class="col-lg-12">
 
-        <div class="form-default form-horizontal">
+        <div class="form-dnt-default form-horizontal">
 
           <div class="form-group">
             <div class="col-md-2 control-label">
@@ -136,9 +136,9 @@
             <label class="col-md-2 control-label">Tittel</label>
             <div class="col-md-10">
               <input type="text" name="campaign-title" class="form-control" value="{{ campaign.title|default:"Kampanje" }}">
-              <div class="form-hints">
+              <span class="help-block">
                 Denne vises ikke på selve kampanjen, det er bare en intern tittel du kan bruke til å finne tilbake til denne kampanjen senere
-              </div>
+              </span>
             </div>
           </div>
 

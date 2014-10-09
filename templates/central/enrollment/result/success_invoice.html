@@ -6,7 +6,7 @@
 
 <div class="enrollment-result enrollment-success-invoice">
   <div class="row">
-    <div class="span12">
+    <div class="col-md-12">
       <h2>
         {# Can't use plural blocktrans when a variable is only used in one of the forms #}
         {% if enrollment.users.count == 1 %}
@@ -21,7 +21,7 @@
   </div>
 
   <div class="row">
-    <div id="result" class="span8">
+    <div class="col-md-8">
 
       <p>
         {% blocktrans with forening=enrollment.get_actual_forening_if_all.name url=enrollment.get_actual_forening_if_all.get_active_url count users=enrollment.users.count %}
@@ -94,7 +94,7 @@
       </div>
     </div>
 
-    <div class="span4">
+    <div class="col-md-4">
       {% include 'central/membership/infobox.html' %}
     </div>
   </div>

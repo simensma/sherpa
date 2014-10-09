@@ -25,25 +25,21 @@
 <div class="enrollment-registration">
 
   {% if dntconnect %}
-    <div class="row">
-      <div class="span12">
-        <div class="alert alert-info">
-          <strong>{% trans "Innmelding i Den Norske Turistforening" %}</strong><br>
-          {% trans "Du er i ferd med å melde deg inn i DNT i forbindelse med at du skal melde deg på en tur eller aktivitet. Når innmeldingen er fullført vil du bli videresendt til påmelding for turen." %}
-        </div>
-      </div>
+    <div class="alert alert-info">
+      <strong>{% trans "Innmelding i Den Norske Turistforening" %}</strong><br>
+      {% trans "Du er i ferd med å melde deg inn i DNT i forbindelse med at du skal melde deg på en tur eller aktivitet. Når innmeldingen er fullført vil du bli videresendt til påmelding for turen." %}
     </div>
   {% endif %}
 
   <div class="row">
-    <div class="span8">
+    <div class="col-md-8">
 
       {% include 'central/enrollment/progress.html' with step=1 %}
 
       {% for message in messages %}
         {% if message.message == 'contact_missing' %}
           <div class="alert alert-error">
-            <a class="close">x</a><strong><i class="icon-warning-sign"></i> {% trans "Kontaktinformasjon mangler." %}</strong><br>
+            <a class="close">x</a><strong><i class="glyphicon glyphicon-warning-sign"></i> {% trans "Kontaktinformasjon mangler." %}</strong><br>
             {% trans "Minst ett medlem av husstanden må ha gyldig kontaktinformasjon (både telefon og e-post)." %}
           </div>
         {% elif message.message == 'user_invalid' %}
@@ -69,19 +65,23 @@
                     {% trans "(Anonym)" %}
                   {% endif %}
                 </a>
-                <span class="remove">
-                  <a href="{% url 'enrollment.views.remove' user.id %}"><i class="icon-remove" title="Fjern {{ user.name }}"></i></a>
+                <span class="remove pull-right">
+                  <a href="{% url 'enrollment.views.remove' user.id %}">
+                    <i class="glyphicon glyphicon-remove" title="Ta bort {{ user.name }}"></i>
+                  </a>
                 </span>
               </td>
             </tr>
           {% endfor %}
           </table>
-          <label class="checkbox">
-            <input type="checkbox" class="conditions"{% if enrollment.accepts_conditions %} checked{% endif %}> {% if enrollment.users.count > 1 %}{% trans "Vi" %}{% else %}{% trans "Jeg" %}{% endif %} {% trans "har lest og godtar" %} <a href="javascript:undefined" data-toggle="modal" data-target=".modal">{% trans "betingelsene" %}</a>
-          </label>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" class="conditions"{% if enrollment.accepts_conditions %} checked{% endif %}> {% if enrollment.users.count > 1 %}{% trans "Vi" %}{% else %}{% trans "Jeg" %}{% endif %} {% trans "har lest og godtar" %} <a href="javascript:undefined" data-toggle="modal" data-target=".modal">{% trans "betingelsene" %}</a>
+            </label>
+          </div>
           <p>
-            <a href="{% url 'enrollment.views.household' %}" class="btn btn-danger btn-large step2{% if current_user %} post{% endif %}" data-conditions-message="{% trans "Du kan ikke gå videre med mindre du har lest og godtatt betingelsene." %}">
-              {% trans "Gå videre" %} <i class="icon-arrow-right icon-white"></i>
+            <a href="{% url 'enrollment.views.household' %}" class="btn btn-danger btn-lg step2{% if current_user %} post{% endif %}" data-conditions-message="{% trans "Du kan ikke gå videre med mindre du har lest og godtatt betingelsene." %}">
+              {% trans "Gå videre" %} <i class="glyphicon glyphicon-arrow-right"></i>
             </a>
           </p>
         </div>
@@ -90,53 +90,80 @@
         <br>
       {% endif %}
 
-      <form id="registration" class="form-border" action="{% url 'enrollment.views.registration' %}" method="post">
+      <form
+        class="form-border registration"
+        data-dnt-container="registration-form"
+        action="{% url 'enrollment.views.registration' %}"
+        method="post">
+
         {% csrf_token %}
         {% if current_user %}
           <input type="hidden" name="user" value="{{ current_user.id }}">
         {% endif %}
-        <div class="control-group name">
-          <label>{% trans "Fullt navn" %} <span class="asterisk red">*</span></label>
-          <input type="text" class="input-large" name="name" value="{{ current_user.name }}">
-        </div>
-        <div class="control-group dob">
-          <label>{% trans "Fødselsdato (dd.mm.åååå)" %} <span class="asterisk red">*</span></label>
-          <div class="date input-append">
-            <input type="text" class="input-medium dob" name="dob" value="{{ current_user.dob|date:"d.m.Y" }}">
-            <span class="add-on">
-              <i class="icon-th"></i>
-            </span>
+
+        <div class="row">
+          <div class="form-group col-sm-6" data-dnt-form-group="name">
+            <label>{% trans "Fullt navn" %} <span class="asterisk red">*</span></label>
+            <input type="text" class="form-control" name="name" value="{{ current_user.name }}">
           </div>
         </div>
-        <div class="control-group gender">
+
+        <div class="form-group" data-dnt-form-group="dob">
+          <label>{% trans "Fødselsdato (dd.mm.åååå)" %} <span class="asterisk red">*</span></label>
+
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="input-group date">
+                <input type="text" class="form-control dob" name="dob" value="{{ current_user.dob|date:"d.m.Y" }}">
+                <span class="input-group-addon">
+                  <i class="glyphicon glyphicon-calendar"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" data-dnt-form-group="gender">
           <label> {% trans "Kjønn" %} <span class="asterisk red">*</span></label>
-          <label class="radio gender">
-            <input type="radio" name="gender" value="f"{% if current_user.gender == 'f' %} checked{% endif %}> {% trans "Kvinne" %}
-          </label>
-          <label class="radio gender">
-            <input type="radio" name="gender" value="m"{% if current_user.gender == 'm' %} checked{% endif %}> {% trans "Mann" %}
-          </label>
+          <div>
+            <div class="radio gender">
+              <label>
+                <input type="radio" name="gender" value="f"{% if current_user.gender == 'f' %} checked{% endif %}> {% trans "Kvinne" %}
+              </label>
+            </div>
+            <div class="radio gender">
+              <label>
+                <input type="radio" name="gender" value="m"{% if current_user.gender == 'm' %} checked{% endif %}> {% trans "Mann" %}
+              </label>
+            </div>
+          </div>
         </div>
-        <div style="clear: both;"></div>
-        <div class="control-group phone">
-          <label> {% trans "Mobiltelefon" %} {% if enrollment.users.count == 0 %}<span class="asterisk red">*</span>{% endif %}</label>
-          <input type="text" class="input-medium" name="phone" value="{{ current_user.phone }}">
+
+        <div class="row">
+          <div class="form-group col-sm-4" data-dnt-form-group="phone">
+            <label> {% trans "Mobiltelefon" %} {% if enrollment.users.count == 0 %}<span class="asterisk red">*</span>{% endif %}</label>
+            <input type="text" class="form-control" name="phone" value="{{ current_user.phone }}">
+          </div>
         </div>
-        <div class="control-group email">
-          <label> {% trans "E-post" %} {% if enrollment.users.count == 0 %}<span class="asterisk red">*</span>{% endif %}</label>
-          <input type="text" class="input-large" name="email" value="{{ current_user.email }}">
+
+        <div class="row">
+          <div class="form-group col-sm-7" data-dnt-form-group="email">
+            <label> {% trans "E-post" %} {% if enrollment.users.count == 0 %}<span class="asterisk red">*</span>{% endif %}</label>
+            <input type="text" class="form-control" name="email" value="{{ current_user.email }}">
+          </div>
         </div>
-        <button type="submit" class="btn btn-large"><i class="icon-user"></i> {% if current_user %}{% trans "Lagre endringer" %}{% else %}{% trans "Legg til medlem" %}{% endif %}</button><br>
+
+        <button type="submit" class="btn btn-default btn-lg"><i class="glyphicon glyphicon-user"></i> {% if current_user %}{% trans "Lagre endringer" %}{% else %}{% trans "Legg til medlem" %}{% endif %}</button><br>
       </form>
     </div>
 
-    <div class="span4">
+    <div class="col-md-4">
       {% include 'central/membership/infobox.html' %}
     </div>
   </div>
 
   {# Conditions modal #}
-  <div class="modal conditions hide">
+  <div class="modal conditions jq-hide">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal">X</button>
       <h1>{% trans "Betingelser for medlemskap i Den Norske Turistforening" %}</h1>
@@ -162,7 +189,7 @@
 
     </div>
     <div class="modal-footer">
-      <a href="javascript:undefined" class="btn" data-dismiss="modal">{% trans "Lukk vindu" %}</a>
+      <a href="javascript:undefined" class="btn btn-default" data-dismiss="modal">{% trans "Lukk vindu" %}</a>
     </div>
   </div>
 </div>

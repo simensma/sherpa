@@ -1,4 +1,4 @@
-<div class="modal hide change-image" data-missing-url-warning="Du må angi URL-adressen til bildet. Denne kommer automatisk hvis du velger et bilde fra bildearkivet eller laster opp et nytt bilde fra din PC.">
+<div class="modal jq-hide change-image" data-missing-url-warning="Du må angi URL-adressen til bildet. Denne kommer automatisk hvis du velger et bilde fra bildearkivet eller laster opp et nytt bilde fra din PC.">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
     <h3>Velg et bilde å sette inn...</h3>
@@ -6,40 +6,40 @@
   <div class="modal-body">
 
     <div class="image-details">
-      <div class="form-horizontal">
-        <div class="control-group">
-          <label class="control-label">Bilde:</label>
-          <div class="controls">
-            <input type="text" name="src" class="input-xxlarge">
-            <p style="margin-top: 8px;">
-              <button class="btn choose-image">
-                <i class="icon-search"></i> Finn bilde i arkivet i Sherpa
+      <div class="form-dnt-default form-horizontal">
+        <div class="form-group">
+          <label class="col-md-3 control-label">Bilde:</label>
+          <div class="col-md-9">
+            <input class="form-control" type="text" name="src">
+            <p class="form-control-static">
+              <button class="btn btn-default choose-image">
+                <i class="glyphicon glyphicon-search"></i> Finn bilde i arkivet i Sherpa
               </button>
-              <button class="btn upload-image">
-                <i class="icon-share-alt"></i> Last opp bilde fra din PC
+              <button class="btn btn-default upload-image">
+                <i class="glyphicon glyphicon-share-alt"></i> Last opp bilde fra din PC
               </button>
             </p>
           </div>
         </div>
 
-        <div class="control-group">
-          <label class="control-label">Bildetekst:</label>
-          <div class="controls">
-            <input type="text" class="input-xxlarge" name="description">
+        <div class="form-group">
+          <label class="col-md-3 control-label">Bildetekst:</label>
+          <div class="col-md-9">
+            <input class="form-control" type="text" name="description">
           </div>
         </div>
 
-        <div class="control-group">
-          <label class="control-label">Fotograf:</label>
-          <div class="controls">
-            <input type="text" class="input-xlarge" name="photographer" data-photographers-url="{% url 'admin.images.views.photographer' %}">
+        <div class="form-group">
+          <label class="col-md-3 control-label">Fotograf:</label>
+          <div class="col-md-9">
+            <input class="form-control" type="text" name="photographer" autocomplete="off" data-photographers-url="{% url 'admin.images.views.photographer' %}">
           </div>
         </div>
 
-        <div class="control-group">
-          <label class="control-label">Lenker til:</label>
-          <div class="controls">
-            <input type="text" class="input-xxlarge" name="anchor">
+        <div class="form-group">
+          <label class="col-md-3 control-label">Lenker til:</label>
+          <div class="col-md-9">
+            <input class="form-control" type="text" name="anchor">
           </div>
         </div>
       </div>
@@ -48,7 +48,9 @@
 
   </div>
   <div class="modal-footer">
-    <button class="btn btn-success insert-image"><i class="icon-white icon-ok"></i> Sett inn bildet</button>
-    <button class="btn" data-dismiss="modal">Avbryt</button>
+    <button class="btn btn-success insert-image">
+      <i class="glyphicon glyphicon-ok"></i> Sett inn bildet
+    </button>
+    <button class="btn btn-default" data-dismiss="modal">Avbryt</button>
   </div>
 </div>

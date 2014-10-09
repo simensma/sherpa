@@ -1,9 +1,9 @@
 {% load i18n %}
 
-<form action="{{ action }}{% if next %}?next={{ next }}{% endif %}" method="post" class="registration-nonmember form-default form-horizontal">
+<form action="{{ action }}{% if next %}?next={{ next }}{% endif %}" method="post" class="registration-nonmember form-dnt-default form-horizontal">
   {% csrf_token %}
 
-  <p class="form-hints">
+  <p>
     {% trans "Vi trenger foreløpig ikke mer enn navn og e-postadresse. Du må velge et passord som du bruker sammen med e-postadressen til å logge inn." %}
   </p>
 
@@ -33,40 +33,42 @@
 
   <div class="form-elements">
 
-    <div class="control-group name">
-      <label class="control-label" for="name">{% trans "Fullt navn:" %}</label>
-      <div class="controls">
-        <input type="text" class="input-xlarge" name="name" id="name" value="{{ user_data.name }}">
+    <div class="form-group name">
+      <label class="col-sm-4 control-label" for="name">{% trans "Fullt navn:" %}</label>
+      <div class="col-md-8">
+        <input type="text" class="form-control" name="name" id="name" value="{{ user_data.name }}">
       </div>
     </div>
-    <div class="control-group email">
-      <label class="control-label" for="email">{% trans "E-postadresse:" %}</label>
-      <div class="controls">
-        <input type="text" class="input-xlarge" name="email" id="email" value="{{ user_data.email }}">
+    <div class="form-group email">
+      <label class="col-sm-4 control-label" for="email">{% trans "E-postadresse:" %}</label>
+      <div class="col-md-8">
+        <input type="text" class="form-control" name="email" id="email" value="{{ user_data.email }}">
       </div>
     </div>
-    <div class="control-group password">
-      <label class="control-label" for="password">{% trans "Passord:" %}</label>
-      <div class="controls">
-        <input type="password" class="input-xlarge" name="password" id="password">
-        <div class="hints error password-hint short hide">
+    <div class="form-group password">
+      <label class="col-sm-4 control-label" for="password">{% trans "Passord:" %}</label>
+      <div class="col-md-8">
+        <input type="password" class="form-control" name="password" id="password">
+        <span class="help-block error password-hint short jq-hide">
           {% blocktrans %}Passordet er for kort, det må være minst {{ user_password_length }} tegn.{% endblocktrans %}
-        </div>
+        </span>
       </div>
     </div>
-    <div class="control-group password-repeat">
-      <label class="control-label" for="password-repeat">{% trans "Gjenta passord:" %}</label>
-      <div class="controls">
-        <input type="password" class="input-xlarge" name="password-repeat" id="password-repeat">
-        <div class="hints error password-hint unequal hide">
+    <div class="form-group password-repeat">
+      <label class="col-sm-4 control-label" for="password-repeat">{% trans "Gjenta passord:" %}</label>
+      <div class="col-md-8">
+        <input type="password" class="form-control" name="password-repeat" id="password-repeat">
+        <span class="help-block error password-hint unequal jq-hide">
           {% trans "Passordene er ikke like, har du skrevet feil?" %}
-        </div>
+        </span>
       </div>
     </div>
 
-    <div class="control-group">
-      <div class="controls">
-        <button type="submit" class="btn btn-large btn-danger"><i class="icon-ok icon-white"></i> {% trans "Registrer deg" %}</button>
+    <div class="form-group">
+      <div class="col-sm-offset-2">
+        <button type="submit" class="btn btn-lg btn-danger">
+          <i class="glyphicon glyphicon-ok"></i> {% trans "Registrer deg" %}
+        </button>
       </div>
     </div>
   </div>

@@ -31,10 +31,12 @@
           {% endfor %}
         </optgroup>
       </select>
-      <label class="checkbox">
-        <input type="checkbox" name="active_foreninger_all_checkbox"{% if other_user.turleder_active_foreninger.count == all_foreninger.forening|length %} checked{% endif %}>
-        Aktiv i <strong>alle</strong> foreninger
-      </label>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" name="active_foreninger_all_checkbox"{% if other_user.turleder_active_foreninger.count == all_foreninger.forening|length %} checked{% endif %}>
+          Aktiv i <strong>alle</strong> foreninger
+        </label>
+      </div>
       <button type="submit" class="btn btn-default">Lagre aktive foreninger</button>
     </p>
   </form>
@@ -80,7 +82,7 @@
             {% endif %}
 
             {% if user.can_modify_kursleder_status %}
-              <form action="{% url 'admin.turledere.views.edit_kursleder_certificate' other_user.id %}" method="post" class="form-default form-horizontal edit-certificate jq-hide">
+              <form action="{% url 'admin.turledere.views.edit_kursleder_certificate' other_user.id %}" method="post" class="form-dnt-default form-horizontal edit-certificate jq-hide">
                 {% csrf_token %}
                 <input type="hidden" name="kursleder" value="{{ other_user.kursleder.id }}">
                 <input type="hidden" name="role" value="kursleder">
@@ -151,7 +153,7 @@
 
                 {% endif %}
 
-                <form action="{% url 'admin.turledere.views.edit_turleder_certificate' other_user.id %}" method="post" class="form-default form-horizontal edit-certificate jq-hide">
+                <form action="{% url 'admin.turledere.views.edit_turleder_certificate' other_user.id %}" method="post" class="form-dnt-default form-horizontal edit-certificate jq-hide">
                   {% csrf_token %}
                   <input type="hidden" name="turleder" value="{{ turleder_role.id }}">
                   <input type="hidden" name="role" value="{{ role.0 }}">
@@ -228,9 +230,11 @@
           {% csrf_token %}
 
           {% for role in other_user.get_instruktor_roles %}
-            <label class="checkbox">
-              <input type="checkbox" name="{{ role.key }}"{% if role.active %} checked{% endif %}> {{ role.name }}
-            </label>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" name="{{ role.key }}"{% if role.active %} checked{% endif %}> {{ role.name }}
+              </label>
+            </div>
           {% endfor %}
 
           <button type="submit" class="btn btn-default">Lagre instruktørroller</button>

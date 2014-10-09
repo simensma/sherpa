@@ -11,7 +11,7 @@
   {% endif %}
 {% endfor %}
 
-<form action="{% url 'admin.forening.views.index' current_forening.id %}" method="post" class="edit-forening form-default form-horizontal">
+<form action="{% url 'admin.forening.views.index' current_forening.id %}" method="post" class="edit-forening form-dnt-default form-horizontal">
   {% csrf_token %}
   <input type="hidden" name="form" value="edit">
   {{ edit_form.forening }}
@@ -160,7 +160,7 @@
       <label class="col-md-2 control-label">Hvem kan kontaktes</label>
       <div class="col-md-10">
         {% for input in edit_form.choose_contact %}
-          <div class="checkbox">
+          <div class="radio">
             {{ input }}
           </div>
         {% endfor %}
@@ -247,7 +247,7 @@
 
   <div class="form-group submit">
     <div class="col-md-offset-2 col-md-10">
-      <button type="submit" class="btn btn-large">Lagre foreningsdata</button>
+      <button type="submit" class="btn btn-default btn-lg">Lagre foreningsdata</button>
     </div>
   </div>
 

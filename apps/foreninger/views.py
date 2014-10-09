@@ -12,8 +12,24 @@ from foreninger.models import Forening
 from core.models import County
 
 def index(request):
-    counties = County.typical_objects().exclude(code='21').order_by('code') # Exclude Svalbard
+    county_objects = County.typical_objects().exclude(code='21').order_by('code') # Exclude Svalbard
 
+    # We'll use a "fake" county to represent the entire country, with a sentinel ID value
+    fake_national_county = County(
+        id='all',
+        name='Hele landet',
+    )
+
+    # Prepend "entire country" to the county listing
+    counties = [fake_national_county]
+    counties.extend(county_objects)
+
+    # Split the counties into groups pre-divided for 3 columns
+    counties_three_columns = (
+        [county for i, county in enumerate(counties) if i % 3 == 0],
+        [county for i, county in enumerate(counties) if (i-1) % 3 == 0],
+        [county for i, county in enumerate(counties) if (i-2) % 3 == 0],
+    )
 
     full_list = cache.get('foreninger.all.sorted_by_name.with_active_url')
     if full_list is None:
@@ -32,7 +48,8 @@ def index(request):
         'categories': Forening.PUBLIC_CATEGORIES,
         'chosen_category': request.GET.get('kategori', 'foreninger').lower(),
         'counties': counties,
-        'chosen_county': request.GET.get('fylke', ''),
+        'counties_three_columns': counties_three_columns,
+        'chosen_county_name': request.GET.get('fylke', fake_national_county.name),
         'full_list': full_list,
     }
     return render(request, 'central/foreninger/list.html', context)

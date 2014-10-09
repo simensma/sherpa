@@ -6,25 +6,21 @@
 
 {% block body %}
 
-<div class="row">
-  <div class="span12">
-    <div class="alert alert-info">
-      <a class="btn btn-large" href="{% url 'admin.sites.articles.views.edit' active_site.id version.id %}"><i class="icon-arrow-left"></i> Tilbake til redigering</a>
-      <span class="preview-notice pull-right">Dette er en forhåndsvisning av artikkelen.</span>
-    </div>
-  </div>
+<div class="alert alert-info">
+  <a class="btn btn-default btn-lg" href="{% url 'admin.sites.articles.views.edit' active_site.id version.id %}">
+    <i class="glyphicon glyphicon-arrow-left"></i> Tilbake til redigering
+  </a>
+  <span class="preview-notice pull-right">Dette er en forhåndsvisning av artikkelen.</span>
 </div>
 
 {% include 'common/page/display-content.html' %}
 {% include 'common/page/article-byline.html' %}
 
-<div class="row">
-  <div class="span12">
-    <div class="alert alert-info">
-      <a class="btn btn-large" href="{% url 'admin.sites.articles.views.edit' active_site.id version.id %}"><i class="icon-arrow-left"></i> Tilbake til redigering</a>
-      <span class="preview-notice pull-right">Dette er en forhåndsvisning av artikkelen.</span>
-    </div>
-  </div>
+<div class="alert alert-info">
+  <a class="btn btn-default btn-lg" href="{% url 'admin.sites.articles.views.edit' active_site.id version.id %}">
+    <i class="glyphicon glyphicon-arrow-left"></i> Tilbake til redigering
+  </a>
+  <span class="preview-notice pull-right">Dette er en forhåndsvisning av artikkelen.</span>
 </div>
 
 {% endblock %}

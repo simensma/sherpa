@@ -28,7 +28,7 @@
       <div class="form-group">
         <label class="col-md-2 control-label" for="image-photographer">Fotograf:</label>
         <div class="col-md-10">
-          <input type="text" class="form-control" name="photographer" value="{{ image.photographer }}" placeholder="Fullt navn..." id="image-photographer" data-photographers-url="{% url 'admin.images.views.photographer' %}">
+          <input type="text" class="form-control" name="photographer" value="{{ image.photographer }}" placeholder="Fullt navn..." id="image-photographer" autocomplete="off" data-photographers-url="{% url 'admin.images.views.photographer' %}">
         </div>
       </div>
 
@@ -49,9 +49,11 @@
       <div class="form-group">
         <label class="col-md-2 control-label" for="image-tags">Nøkkelord:</label>
         <div class="col-md-10">
-          <input type="hidden" name="tags-serialized">
-          <input type="text" class="form-control" name="tags" style="margin-bottom: 10px" id="image-tags">
-          <div class="tag-box" data-predefined-tags="{{ image.tags.all|taglist }}"></div>
+          <input
+            class="form-control"
+            name="tags"
+            data-dnt-existing-tags="{{ image.tags.all|taglist }}"
+            data-dnt-tags-url="{% url 'core.views.filter_tags' %}">
         </div>
       </div>
 

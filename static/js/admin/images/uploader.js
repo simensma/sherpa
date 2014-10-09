@@ -18,11 +18,7 @@ $(function() {
         uploader.toggle('slow');
     });
 
-    TagDisplay.enable({
-        targetInput: image_details.find("input[name='tags-serialized']"),
-        tagBox: image_details.find("div.tag-box"),
-        pickerInput: image_details.find("input[name='tags']")
-    });
+    Select2Tagger({$input: image_details.find('input[name="tags"]')});
 
     /* Changing destination album */
     uploader.find("a.albumpicker-trigger").click(function() {
@@ -62,15 +58,13 @@ $(function() {
     });
 
     var photographer = form_details.find("input[name='photographer']");
-    photographer.typeahead({
-        minLength: 3,
-        remote: photographer.attr('data-photographers-url') + "?q=%QUERY"
+    SimpleTypeahead({
+        url: photographer.attr('data-photographers-url'),
+        $input: photographer,
     });
 
     form_details.submit(function(e) {
-        if(uploadReady && userReady) {
-            TagDisplay.collect();
-        } else {
+        if(!uploadReady || !userReady) {
             e.preventDefault();
         }
     });

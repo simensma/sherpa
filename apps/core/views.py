@@ -23,8 +23,8 @@ def zipcode(request):
         return HttpResponse(json.dumps({'error': 'does_not_exist'}))
 
 def filter_tags(request):
-    tag_objects = Tag.objects.filter(name__icontains=request.GET['q'].strip())
-    tags = [tag.name for tag in tag_objects]
+    tag_objects = Tag.objects.filter(name__icontains=request.GET['q'].strip()).order_by('name')
+    tags = [{'id': tag.name, 'text': tag.name} for tag in tag_objects]
     return HttpResponse(json.dumps(tags))
 
 def attribution(request):

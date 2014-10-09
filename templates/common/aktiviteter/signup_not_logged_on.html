@@ -1,5 +1,5 @@
 {% extends "common/aktiviteter/layout.html" %}
-{% block title %}{{ aktivitet_date.aktivitet.title }} &mdash; Turer og aktiviteter{% endblock %}
+{% block title %}{{ aktivitet_date.aktivitet.title }} — Turer og aktiviteter{% endblock %}
 {% block breadcrumb %}<a href="{% url 'aktiviteter.views.index' %}">Turer og aktiviteter</a> / <a href="{% url 'aktiviteter.views.show' aktivitet_date.id %}">{{ aktivitet_date.aktivitet.title }}</a> / <em>Meld deg på</em> {% endblock %}
 
 {% block extra_js %}
@@ -29,7 +29,7 @@
           <p class="action">
             <a href="javascript:undefined">Opprett bruker her</a>
           </p>
-          <div class="content hide">
+          <div class="content jq-hide">
             <ul>
               <li>
                 <a href="{% url 'user.login.views.login' %}?next={% url 'aktiviteter.views.signup_logged_on' aktivitet_date.id %}#registrering">
@@ -78,12 +78,12 @@
             <p class="action">
               <a href="javascript:undefined">Meld deg på her</a>
             </p>
-            <div class="content hide">
+            <div class="content jq-hide">
               <p>
                 Her kan du melde deg på ved å legge inn navn og telefonnummer eller e-postadresse. Vurdér å opprette en Min side-bruker i stedet: Da kan du logge på og se historikk over turene du har deltatt på, og mye mer. Du trenger ikke være medlem i DNT.
               </p>
 
-              <form action="{% url 'aktiviteter.views.signup_simple' aktivitet_date.id %}" method="post" class="form-default form-horizontal simple-signup">
+              <form action="{% url 'aktiviteter.views.signup_simple' aktivitet_date.id %}" method="post" class="form-dnt-default form-horizontal simple-signup">
                 {% csrf_token %}
 
                 <div class="control-group name">

@@ -9,23 +9,19 @@
 {% block enrollment %}
 
 <div class="enrollment-result enrollment-success-card">
-  <div class="row">
-    <div class="span12">
-      <h2>
-        {# Can't use plural blocktrans when a variable is only used in one of the forms #}
-        {% if enrollment.users.count == 1 %}
-          {% blocktrans with name=enrollment.users.all.0.name %}
-            Velkommen som medlem, {{ name }}!
-          {% endblocktrans %}
-        {% else %}
-          {% trans "Velkommen som medlemmer!" %}
-        {% endif %}
-      </h2>
-    </div>
-  </div>
+  <h2>
+    {# Can't use plural blocktrans when a variable is only used in one of the forms #}
+    {% if enrollment.users.count == 1 %}
+      {% blocktrans with name=enrollment.users.all.0.name %}
+        Velkommen som medlem, {{ name }}!
+      {% endblocktrans %}
+    {% else %}
+      {% trans "Velkommen som medlemmer!" %}
+    {% endif %}
+  </h2>
 
   <div class="row">
-    <div id="result" class="span8">
+    <div class="col-md-8">
 
       <p>
         {% blocktrans with forening=enrollment.get_actual_forening_if_all.name url=enrollment.get_actual_forening_if_all.get_active_url count users=enrollment.users.count %}
@@ -88,22 +84,22 @@
                 {% trans "Send gratis kvittering på SMS til" %} {{ user.phone }}
               </a>
 
-              <p class="sending hide">
+              <p class="sending jq-hide">
                 {% trans "Sender SMS, vennligst vent..." %}
                 <img class="ajaxloader" src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" alt="Laster, vennligst vent...">
               </p>
 
-              <p class="success hide">
+              <p class="success jq-hide">
                 {% trans "Kvittering har blitt sendt på SMS til" %} {{ user.phone }}.
               </p>
-              <p class="technical-error error hide">
+              <p class="technical-error error jq-hide">
                 {% trans "En teknisk feil har oppstått ved utsendelse av SMS." %}
                 {% trans "Dersom du/dere har planlagt å dra på tur i nærmeste fremtid, og ikke rekker å vente på at medlemskortet ankommer, kan dere kontakte medlemsservice for å få tilsendt kvittering på SMS." %}
               </p>
-              <p class="already-sent error hide">
+              <p class="already-sent error jq-hide">
                 {% trans "SMS-Kvittering har allerede blitt sendt til dette nummeret. Ta kontakt med medlemsservice dersom du mener dette er feil." %}
               </p>
-              <p class="connection-error service-fail error hide">
+              <p class="connection-error service-fail error jq-hide">
                 {% trans "En teknisk feil har oppstått ved kontakt med vår SMS-leverandør." %}
                 {% trans "Dersom du/dere har planlagt å dra på tur i nærmeste fremtid, og ikke rekker å vente på at medlemskortet ankommer, kan dere kontakte medlemsservice for å få tilsendt kvittering på SMS." %}
               </p>
@@ -129,7 +125,12 @@
         {% if enrollment.users.count == 1 %}
 
           <p>
-            <a class="btn btn-danger" href="{% url 'connect.views.signon_login' %}?registreringsnokkel={{ enrollment.users.all.0.pending_user.pending_registration_key }}#registrering">{% trans "Gå videre" %} <i class="icon-white icon-share-alt"></i></a>
+            <a
+              class="btn btn-danger"
+              href="{% url 'connect.views.signon_login' %}?registreringsnokkel={{ enrollment.users.all.0.pending_user.pending_registration_key }}#registrering">
+
+              {% trans "Gå videre" %} <i class="glyphicon glyphicon-share-alt"></i>
+            </a>
           </p>
 
         {% else %}
@@ -138,16 +139,26 @@
 
             <p class="user-list">
               {% for user in enrollment.get_users_by_name %}
-                <label class="checkbox">
-                  <input type="radio" name="user" value="{{ user.memberid }}"> {{ user.name }}
-                </label>
+                <div class="checkbox">
+                  <label>
+                    <input type="radio" name="user" value="{{ user.memberid }}"> {{ user.name }}
+                  </label>
+                </div>
               {% endfor %}
             </p>
 
             <p>
-              <a class="btn btn-danger user" href="" disabled>{% trans "Gå videre" %} <i class="icon-white icon-share-alt"></i></a>
+              <a class="btn btn-danger user" href="" disabled>
+                {% trans "Gå videre" %} <i class="glyphicon glyphicon-share-alt"></i>
+              </a>
               {% for user in enrollment.get_users_by_name %}
-                <a class="btn btn-danger hide user" data-user-id="{{ user.memberid }}" href="{% url 'connect.views.signon_login' %}?registreringsnokkel={{ user.pending_user.pending_registration_key }}#registrering">{% trans "Gå videre" %} <i class="icon-white icon-share-alt"></i></a>
+                <a
+                  class="btn btn-danger jq-hide user"
+                  data-user-id="{{ user.memberid }}"
+                  href="{% url 'connect.views.signon_login' %}?registreringsnokkel={{ user.pending_user.pending_registration_key }}#registrering">
+
+                  {% trans "Gå videre" %} <i class="glyphicon glyphicon-share-alt"></i>
+                </a>
               {% endfor %}
             </p>
 
@@ -190,7 +201,7 @@
       {% endif %}
     </div>
 
-    <div class="span4">
+    <div class="col-md-4">
       {% include 'central/membership/infobox.html' %}
     </div>
   </div>

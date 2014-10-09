@@ -19,148 +19,188 @@
 
 {% block enrollment %}
 
-<div class="row">
-  <div class="span8">
+<div class="enrollment-household" data-dnt-container="enrollment-household">
+  <div class="row">
+    <div class="col-md-8">
 
-    {% include 'central/enrollment/progress.html' with step=2 %}
+      {% include 'central/enrollment/progress.html' with step=2 %}
 
-    {% for message in messages %}
-      {% if message.message == 'focus_zipcode_missing' %}
-        <div class="alert alert-error">
-          <a class="close">x</a><strong>{% trans "Dette postnummeret er ikke tilknyttet noen forening" %}</strong><br>
-          {% trans "Vi arbeider jevnlig med å knytte alle postnumre i landet til medlemsforeningene våre, men det ser dessverre ut til at vi ikke har fått registrert ditt postnummer ennå." %}<br>
-          {% blocktrans with zipcode=enrollment.zipcode %}
-            Vi har logget feilen, og vil knytte postnummer <strong>{{ zipcode }}</strong> til rett forening så snart som mulig.
-          {% endblocktrans %}<br>
-          {% trans "I mellomtiden, vennligst ta kontakt med DNTs medlemsservice, eller bruk et eldre postnummer i nærheten midlertidig." %}
-        </div>
-      {% endif %}
-    {% endfor %}
-
-    {% if invalid_existing %}
-      <div class="alert alert-error">
-        <a class="close">x</a><strong>{% trans "Ugyldig medlemsnummer" %}</strong><br>
-        {% trans "Vennligst sjekk at medlemsnummeret under er et gyldig medlemsnummer, og at medlemmet bor på samme adresse som dere." %}
-      </div>
-    {% endif %}
-
-    {% if errors %}
-      <div class="alert alert-error">
-        <a class="close">x</a><strong>{% trans "Noen av opplysningene du oppgav er ugyldige." %}</strong><br>
-        {% trans "Vennligst se gjennom skjemaet, og rett alle felter som er markert røde." %}
-      </div>
-    {% endif %}
-
-    <form id="household" action="{% url 'enrollment.views.household' %}" method="post" data-existing-url="{% url 'enrollment.views.existing' %}" data-confirm-no-address="{% trans "Har du glemt å fylle ut gateadressen?&#10;&#10;Hvis du ikke har gateadresse, klikker du bare OK for å gå videre." %}">
-      {% csrf_token %}
-
-      <div class="form-border">
-        <h2 style="margin-bottom: 15px;">
-          {% blocktrans count users=enrollment.users.count %}
-            Hvor bor du?
-          {% plural %}
-            Hvor bor dere?
-          {% endblocktrans %}
-        </h2>
-        <div class="control-group country">
-          <label>{% trans "Land" %} <span class="asterisk red">*</span></label>
-          <select name="country">
-            <optgroup id="scandinavia" label="{% trans "Skandinavia" %}">
-              <option value="{{ countries.norway.code }}"{% if enrollment.country == countries.norway.code or not enrollment.country %} selected{% endif %}>{{ countries.norway.name }}</option>
-              {% for c in countries.scandinavia %}
-                <option value="{{ c.code }}"{% if enrollment.country == c.code %} selected{% endif %}>{{ c.name }}</option>
-              {% endfor %}
-            </optgroup>
-            <optgroup id="world" label="{% trans "Resten av verden" %}">
-            {% for c in countries.other %}
-              <option value="{{ c.code }}"{% if enrollment.country == c.code %} selected{% endif %}>{{ c.name }}</option>
-            {% endfor %}
-            </optgroup>
-          </select>
-        </div>
-        <div class="control-group address1">
-          <label>{% trans "Adresse" %} <span class="asterisk red">*</span></label>
-          <input type="text" class="input-large" name="address1" value="{{ enrollment.address1 }}">
-        </div>
-        <div class="scandinavia">
-          <div class="control-group zipcode">
-            <label>{% trans "Postnummer / Poststed" %} <span class="asterisk red">*</span></label>
-            <input type="text" class="input-small" name="zipcode" value="{{ enrollment.zipcode }}" maxlength="10">
-            <input type="text" class="input-medium" name="area" value="{{ enrollment.area }}" disabled>
-            <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="zip ajaxloader hide" alt="{% trans "Laster poststed..." %}" title="{% trans "Laster poststed..." %}">
-          </div>
-        </div>
-        <div class="world">
-          <div class="control-group address2">
-            <label>{% trans "Adresse 2" %}</label>
-            <input type="text" class="input-large" name="address2" value="{{ enrollment.address2 }}">
-          </div>
-          <div class="control-group address3">
-            <label>{% trans "Adresse 3" %}</label>
-            <input type="text" class="input-large" name="address3" value="{{ enrollment.address3 }}">
-          </div>
-        </div>
-        {% if enrollment.has_potential_main_member %}
-          <div class="control-group yearbook">
-            <label class="checkbox">
-              <input type="checkbox" name="yearbook"{% if enrollment.wants_yearbook %} checked{% endif %}>
-              {% blocktrans %}
-                Motta årboken og Fjell og Vidde mot et årlig gebyr på kr. {{ foreign_shipment_price }}
-              {% endblocktrans %}
-            </label>
+      {% for message in messages %}
+        {% if message.message == 'focus_zipcode_missing' %}
+          <div class="alert alert-error">
+            <a class="close">x</a><strong>{% trans "Dette postnummeret er ikke tilknyttet noen forening" %}</strong><br>
+            {% trans "Vi arbeider jevnlig med å knytte alle postnumre i landet til medlemsforeningene våre, men det ser dessverre ut til at vi ikke har fått registrert ditt postnummer ennå." %}<br>
+            {% blocktrans with zipcode=enrollment.zipcode %}
+              Vi har logget feilen, og vil knytte postnummer <strong>{{ zipcode }}</strong> til rett forening så snart som mulig.
+            {% endblocktrans %}<br>
+            {% trans "I mellomtiden, vennligst ta kontakt med DNTs medlemsservice, eller bruk et eldre postnummer i nærheten midlertidig." %}
           </div>
         {% endif %}
-      </div>
+      {% endfor %}
 
-      <div class="well">
-        <h2>{% trans "Husstandsmedlemskap" %}</h2>
-        <p>
-          {% blocktrans count users=enrollment.users.count %}
-            Bor du sammen med et <strong>eksisterende</strong> hovedmedlem, kan du få billigere medlemskap som husstandsmedlem.
-          {% plural %}
-            Bor dere sammen med et <strong>eksisterende</strong> hovedmedlem, kan dere få billigere medlemskap som husstandsmedlemmer.
-          {% endblocktrans %}
-        </p>
-        <p>
-          <input type="text" name="existing" value="{{ enrollment.existing_memberid }}" placeholder="{% trans "Oppgi medlemsnummer..." %}">
-          <a href="javascript:undefined" class="btn search-existing input-button-align"><i class="icon-search"></i> {% trans "Søk" %}</a>
-          <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="existing ajaxloader hide" alt="{% trans "Laster medlemsinfo..." %}" title="{% trans "Laster medlemsinfo..." %}">
-        </p>
+      {% if invalid_existing %}
+        <div class="alert alert-error">
+          <a class="close">x</a><strong>{% trans "Ugyldig medlemsnummer" %}</strong><br>
+          {% trans "Vennligst sjekk at medlemsnummeret under er et gyldig medlemsnummer, og at medlemmet bor på samme adresse som dere." %}
+        </div>
+      {% endif %}
 
-        <div class="existing-result hide">
-          <span class="success hide">
-            {% trans "Hovedmedlem:" %} <span class="result"></span>
-          </span>
-          <span class="actor-has-not-paid error hide">{% trans "Dette medlemmet har ikke betalt medlemskontingenten for i år." %}</span>
-          <span class="bad-zipcode error hide">{% trans "Du må oppgi riktig postnummer før du søker." %}</span>
-          <span class="invalid-id error hide">{% trans "Ugyldig medlemsnummer oppgitt." %}</span>
-          <span class="actor-does-not-exist error hide">{% trans "Fant ingen medlemmer med dette medlemsnummeret." %}</span>
-          <span class="too-young error hide">
-            {% blocktrans %}
-              Det angitte medlemmet er bare <span class="age"></span> år ved utgangen av året, og kan ikke være hovedmedlem.
+      {% if errors %}
+        <div class="alert alert-error">
+          <a class="close">x</a><strong>{% trans "Noen av opplysningene du oppgav er ugyldige." %}</strong><br>
+          {% trans "Vennligst se gjennom skjemaet, og rett alle felter som er markert røde." %}
+        </div>
+      {% endif %}
+
+      <form
+        class="household"
+        action="{% url 'enrollment.views.household' %}"
+        method="post"
+        data-dnt-container="household-form"
+        data-existing-url="{% url 'enrollment.views.existing' %}"
+        data-confirm-no-address="{% trans "Har du glemt å fylle ut gateadressen?&#10;&#10;Hvis du ikke har gateadresse, klikker du bare OK for å gå videre." %}">
+
+        {% csrf_token %}
+
+        <div class="form-border">
+          <h2>
+            {% blocktrans count users=enrollment.users.count %}
+              Hvor bor du?
+            {% plural %}
+              Hvor bor dere?
             {% endblocktrans %}
-          </span>
-          <span class="is-household-member error hide">
-            {% trans "Det angitte medlemmet er selv et husstandsmedlem. Dere kan kun knytte dere til et hovedmedlem." %}
-          </span>
-          <span class="actoraddress-does-not-exist error hide">
-            {% trans "Det angitte medlemmet bor ikke på samme adresse som dere." %}
-          </span>
-          <span class="technical-error error hide">
-            {% trans "Beklager, det oppstod en teknisk feil ved oppslag i medlemsregisteret. Feilen har blitt logget i våre systemer. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer." %}
-          </span>
+          </h2>
+
+          <div class="row">
+            <div class="form-group col-sm-7" data-dnt-form-group="country">
+              <label class="select-label">{% trans "Land" %} <span class="asterisk red">*</span></label>
+              <select name="country" class="form-control">
+                <optgroup id="scandinavia" label="{% trans "Skandinavia" %}">
+                  <option value="{{ countries.norway.code }}"{% if enrollment.country == countries.norway.code or not enrollment.country %} selected{% endif %}>{{ countries.norway.name }}</option>
+                  {% for c in countries.scandinavia %}
+                    <option value="{{ c.code }}"{% if enrollment.country == c.code %} selected{% endif %}>{{ c.name }}</option>
+                  {% endfor %}
+                </optgroup>
+                <optgroup id="world" label="{% trans "Resten av verden" %}">
+                {% for c in countries.other %}
+                  <option value="{{ c.code }}"{% if enrollment.country == c.code %} selected{% endif %}>{{ c.name }}</option>
+                {% endfor %}
+                </optgroup>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-sm-6" data-dnt-form-group="address1">
+              <label>{% trans "Adresse" %} <span class="asterisk red">*</span></label>
+              <input type="text" class="form-control" name="address1" value="{{ enrollment.address1 }}">
+            </div>
+          </div>
+
+          <div class="scandinavia">
+            <div class="form-group" data-dnt-form-group="zipcode">
+              <label>{% trans "Postnummer / Poststed" %} <span class="asterisk red">*</span></label>
+
+              {# We'll have to align these inputs with css instead of columns because the grid gutter is too large #}
+              <div class="row">
+                <div class="col-sm-12">
+                  <input class="form-control zipcode-inline" type="text" name="zipcode" value="{{ enrollment.zipcode }}" maxlength="10">
+                  <input class="form-control area-inline" type="text" name="area" value="{{ enrollment.area }}" disabled>
+                  <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="zip ajaxloader jq-hide" alt="{% trans "Laster poststed..." %}" title="{% trans "Laster poststed..." %}">
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="world">
+            <div class="form-group" data-dnt-form-group="address2">
+              <label>{% trans "Adresse 2" %}</label>
+              <input type="text" class="form-control" name="address2" value="{{ enrollment.address2 }}">
+            </div>
+            <div class="form-group" data-dnt-form-group="address3">
+              <label>{% trans "Adresse 3" %}</label>
+              <input type="text" class="form-control" name="address3" value="{{ enrollment.address3 }}">
+            </div>
+          </div>
+
+          {% if enrollment.has_potential_main_member %}
+            <div class="form-group" data-dnt-form-group="yearbook">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" name="yearbook"{% if enrollment.wants_yearbook %} checked{% endif %}>
+                  {% blocktrans %}
+                    Motta årboken og Fjell og Vidde mot et årlig gebyr på kr. {{ foreign_shipment_price }}
+                  {% endblocktrans %}
+                </label>
+              </div>
+            </div>
+          {% endif %}
+
         </div>
 
-      </div>
-      <p>
-        <a class="btn btn-large" href="{% url 'enrollment.views.registration' %}"><i class="icon-arrow-left"></i> {% trans "Tilbake" %}</a>
-        <button class="btn btn-danger btn-large" type="submit">{% trans "Gå videre" %} <i class="icon-arrow-right icon-white"></i></button>
-      </p>
-    </form>
-  </div>
+        <div class="well">
+          <h2>{% trans "Husstandsmedlemskap" %}</h2>
+          <p>
+            {% blocktrans count users=enrollment.users.count %}
+              Bor du sammen med et <strong>eksisterende</strong> hovedmedlem, kan du få billigere medlemskap som husstandsmedlem.
+            {% plural %}
+              Bor dere sammen med et <strong>eksisterende</strong> hovedmedlem, kan dere få billigere medlemskap som husstandsmedlemmer.
+            {% endblocktrans %}
+          </p>
 
-  <div class="span4">
-    {% include 'central/membership/infobox.html' %}
+          <div class="input-group">
+            <input
+              class="form-control"
+              name="existing"
+              type="text"
+              value="{{ enrollment.existing_memberid }}"
+              placeholder="{% trans "Oppgi medlemsnummer..." %}">
+
+            <span class="input-group-btn">
+              <a href="javascript:undefined" class="btn btn-default search-existing" data-dnt-trigger="existing">
+                <i class="glyphicon glyphicon-search"></i> {% trans "Søk" %}
+              </a>
+            </span>
+          </div>
+
+          <img src="{{ STATIC_URL }}img/common/ajax-loader-large.gif" class="existing ajaxloader jq-hide" alt="{% trans "Laster medlemsinfo..." %}" title="{% trans "Laster medlemsinfo..." %}">
+
+          <div class="existing-result jq-hide">
+            <span class="success jq-hide">
+              {% trans "Hovedmedlem:" %} <span class="result"></span>
+            </span>
+            <span class="actor-has-not-paid error jq-hide">{% trans "Dette medlemmet har ikke betalt medlemskontingenten for i år." %}</span>
+            <span class="bad-zipcode error jq-hide">{% trans "Du må oppgi riktig postnummer før du søker." %}</span>
+            <span class="invalid-id error jq-hide">{% trans "Ugyldig medlemsnummer oppgitt." %}</span>
+            <span class="actor-does-not-exist error jq-hide">{% trans "Fant ingen medlemmer med dette medlemsnummeret." %}</span>
+            <span class="too-young error jq-hide">
+              {% blocktrans %}
+                Det angitte medlemmet er bare <span class="age"></span> år ved utgangen av året, og kan ikke være hovedmedlem.
+              {% endblocktrans %}
+            </span>
+            <span class="is-household-member error jq-hide">
+              {% trans "Det angitte medlemmet er selv et husstandsmedlem. Dere kan kun knytte dere til et hovedmedlem." %}
+            </span>
+            <span class="actoraddress-does-not-exist error jq-hide">
+              {% trans "Det angitte medlemmet bor ikke på samme adresse som dere." %}
+            </span>
+            <span class="technical-error error jq-hide">
+              {% trans "Beklager, det oppstod en teknisk feil ved oppslag i medlemsregisteret. Feilen har blitt logget i våre systemer. Vennligst prøv igjen, eller kontakt medlemsservice dersom feilen vedvarer." %}
+            </span>
+          </div>
+
+        </div>
+        <p>
+          <a class="btn btn-default btn-lg" href="{% url 'enrollment.views.registration' %}"><i class="glyphicon glyphicon-arrow-left"></i> {% trans "Tilbake" %}</a>
+          <button class="btn btn-danger btn-lg" type="submit">{% trans "Gå videre" %} <i class="glyphicon glyphicon-arrow-right"></i></button>
+        </p>
+      </form>
+    </div>
+
+    <div class="col-md-4">
+      {% include 'central/membership/infobox.html' %}
+    </div>
   </div>
 </div>
 

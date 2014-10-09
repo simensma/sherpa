@@ -61,10 +61,10 @@
 
         if(currentIndex == imageList.length -1){
             widget_editor.find("button.next").text(" Nytt bilde");
-            widget_editor.find("button.next").prepend("<i class='icon-plus'></i>");
+            widget_editor.find("button.next").prepend("<i class='glyphicon glyphicon-plus'></i>");
         }else{
             widget_editor.find("button.next").text("Neste bilde ")
-            widget_editor.find("button.next").append("<i class='icon-chevron-right'></i>");
+            widget_editor.find("button.next").append("<i class='glyphicon glyphicon-chevron-right'></i>");
         }
 
         //hax, the onload function is for when you are changing images and the selector needs a new height

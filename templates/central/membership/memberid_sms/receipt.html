@@ -6,21 +6,28 @@
     Få gyldig kvittering på ditt medlemskap tilsendt gratis på SMS.
   </p>
 
-  <input type="text" name="phone_mobile" class="input-medium" placeholder="Ditt mobilnummer...">
-  <button class="btn input-button-align" data-href="{% url 'membership.views.memberid_sms' %}">Send</button>
-  <img class="hide ajaxloader" src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+  <div class="input-group">
+    <input class="form-control" type="text" name="phone_mobile" placeholder="Ditt mobilnummer...">
+    <span class="input-group-btn">
+      <button class="btn btn-default" data-href="{% url 'membership.views.memberid_sms' %}">Send</button>
+    </span>
+  </div>
+
+  <p>
+    <img class="jq-hide ajaxloader" src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+  </p>
 
   <div class="results">
-    <div class="alert alert-success ok hide">
+    <div class="alert alert-success ok jq-hide">
       SMS med ditt medlemsnummer har blitt sendt til <span class="number"></span>.
     </div>
-    <div class="alert alert-error no-match hide">
+    <div class="alert alert-error no-match jq-hide">
       Vi fant ikke mobilnummer <span class="number"></span> i vårt medlemssystem. Vennligst kontakt DNTs medlemsservice på <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a> for å registrere ditt mobilnummer.
     </div>
-    <div class="alert alert-error error hide">
+    <div class="alert alert-error error jq-hide">
       Beklager, det oppstod en teknisk feil. Vennligst prøv igjen senere, eller ta kontakt med medlemsservice på <a href="mailto:medlem@turistforeningen.no">medlem@turistforeningen.no</a> dersom feilen vedvarer.
     </div>
-    <div class="alert alert-error too-high-frequency hide">
+    <div class="alert alert-error too-high-frequency jq-hide">
       Du har sendt for mange SMS-forespørsler på kort tid! Vennligst vent en stund før du prøver igjen.
     </div>
   </div>

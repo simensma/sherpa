@@ -11,7 +11,7 @@
 {% block body %}
 
 <div class="row">
-  <div class="span9">
+  <div class="col-md-9">
 
     <h2>Registrer medlemskap</h2>
 
@@ -19,32 +19,38 @@
       Hvis du er medlem i DNT bør du koble profilen din til medlemssystemet.
     </p>
 
-    <form action="{% url 'user.views.register_membership' %}" method="post" class="form-default form-border form-horizontal register-membership" data-memberid-url="{% url 'user.login.views.verify_memberid' %}">
+    <form action="{% url 'user.views.register_membership' %}" method="post" class="form-dnt-default form-border form-horizontal register-membership" data-memberid-url="{% url 'user.login.views.verify_memberid' %}">
       {% csrf_token %}
       <input type="hidden" name="email-equal" value="">
 
       <div class="form-elements">
 
         <div class="step1">
-          <div class="control-group memberid">
-            <label class="control-label" for="memberid">Medlemsnummer:</label>
-            <div class="controls">
-              <input type="text" class="input-xlarge" name="memberid" id="memberid">
+          <div class="form-group memberid">
+            <label class="col-sm-3 control-label" for="memberid">Medlemsnummer:</label>
+            <div class="col-sm-7">
+              <input type="text" class="form-control" name="memberid" id="memberid">
             </div>
           </div>
 
-          <div class="control-group zipcode">
-            <label class="control-label" for="zipcode">Postnummer:</label>
-            <div class="controls">
-              <input type="text" class="input-small" name="zipcode" id="zipcode" maxlength="4">
-              <input type="text" class="input-medium" name="area" disabled>
-              <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="ajaxloader zipcode hide" alt="Laster poststed..." title="Laster poststed...">
+          <div class="form-group zipcode">
+            <label class="col-sm-3 control-label" for="zipcode">Postnummer:</label>
+            <div class="col-sm-7">
+              <div class="row">
+                <div class="col-sm-3">
+                  <input type="text" class="form-control" name="zipcode" id="zipcode" maxlength="4">
+                </div>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" name="area" disabled>
+                  <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="ajaxloader zipcode jq-hide" alt="Laster poststed..." title="Laster poststed...">
+                </div>
+              </div>
             </div>
           </div>
 
-          <div class="control-group country">
-            <label class="control-label" for="country">Land:</label>
-            <div class="controls">
+          <div class="form-group country">
+            <label class="col-sm-3 control-label" for="country">Land:</label>
+            <div class="col-sm-7">
               <select name="country" id="country" data-chosen>
                 <optgroup id="scandinavia" label="Scandinavia">
                   <option value="{{ countries.norway.code }}" selected>{{ countries.norway.name }}</option>
@@ -62,56 +68,64 @@
           </div>
         </div>
 
-        <div class="step2 hide">
-          <div class="control-group email" data-email="{{ user.get_email }}">
-            <label class="control-label">E-postadresse:</label>
-            <div class="controls">
-              <div class="hints">
+        <div class="step2 jq-hide">
+          <div class="form-group email" data-email="{{ user.get_email }}">
+            <label class="col-sm-3 control-label">E-postadresse:</label>
+            <div class="col-sm-9">
+              <span class="help-block">
                 Du har forskjellige e-postadresser i Min side og medlemsregisteret, vennligst velg hvilken adresse du vil bruke:
+              </span>
+
+              <div class="radio">
+                <label>
+                  <input type="radio" name="email-choice" value="sherpa">
+                  <span class="preselected-email sherpa"></span>
+                </label>
               </div>
 
-              <label class="radio">
-                <input type="radio" name="email-choice" value="sherpa">
-                <span class="preselected-email sherpa"></span>
-              </label>
+              <div class="radio">
+                <label>
+                  <input type="radio" name="email-choice" value="focus" checked>
+                  <span class="preselected-email focus"></span>
+                </label>
+              </div>
 
-              <label class="radio">
-                <input type="radio" name="email-choice" value="focus" checked>
-                <span class="preselected-email focus"></span>
-              </label>
-
-              <label class="radio">
-                <input type="radio" name="email-choice" value="custom">
-                <input type="text" class="input-xlarge" name="email" placeholder="Velg en annen adresse..." disabled>
-              </label>
+              <div class="radio">
+                <label>
+                  <input type="radio" name="email-choice" value="custom">
+                  <input type="text" class="form-control" name="email" placeholder="Velg en annen adresse..." disabled>
+                </label>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="control-group">
-          <div class="controls">
-            <button type="submit" class="btn btn-large btn-danger"><i class="icon-ok icon-white"></i> Registrer deg</button>
-            <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="ajaxloader submit hide" alt="Sjekker medlemsnummer, vennligst vent...">
+        <div class="form-group">
+          <div class="col-sm-offset-3">
+            <button type="submit" class="btn btn-lg btn-danger">
+              <i class="glyphicon glyphicon-ok"></i> Registrer deg
+            </button>
+            <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="ajaxloader submit jq-hide" alt="Sjekker medlemsnummer, vennligst vent...">
           </div>
         </div>
       </div>
 
-      <div class="alert alert-error no-memberid-match hide">
+      <div class="alert alert-error no-memberid-match jq-hide">
         <strong>Ukjent bruker</strong><br>
         Beklager, vi har ingen medlemmer med disse opplysningene. Vennligst prøv igjen, eller kontakt <a href="{% url 'membership.views.service' %}">medlemsservice</a> hvis du mener at dette skal være rett.
       </div>
 
-      <div class="alert alert-error memberid-lookups-exceeded hide">
+      <div class="alert alert-error memberid-lookups-exceeded jq-hide">
         <strong>Du kan ikke gjøre flere oppslag på medlemsnummer!</strong><br>
         Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url 'membership.views.service' %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
       </div>
 
-      <div class="alert alert-error user-exists hide">
+      <div class="alert alert-error user-exists jq-hide">
         <strong>Dette medlemmet har allerede en Min side-bruker!</strong><br>
         Hvis du har en annen konto og har glemt passordet ditt, kan du opprette nytt passord på <a href="{% url 'user.login.views.login' %}">innloggingssiden</a> (da må du logge ut først).
       </div>
 
-      <div class="alert alert-error actor-is-not-member hide">
+      <div class="alert alert-error actor-is-not-member jq-hide">
         <strong>Medlemsnummeret er ikke tilknyttet et personlig medlemskap</strong><br>
         Kun personlige medlemmer i DNT kan benytte Min side. Vennligst ta kontakt med <a href="{% url 'membership.views.service' %}">medlemsservice</a> hvis du lurer på noe.
       </div>
@@ -143,7 +157,7 @@
     </form>
   </div>
 
-  <div class="span3">
+  <div class="col-md-3">
     {% include 'common/user/account/navigation.html' with active='register_membership' %}
   </div>
 </div>

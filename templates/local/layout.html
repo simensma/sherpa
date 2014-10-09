@@ -20,114 +20,112 @@
 <div class="container">
 
 <header>
-  <div class="row">
-    <div class="span6">
-      <div class="forening-logo left top">
-        <a href="{% url 'page.views.page' %}" class="single">
-          {{ site.get_title }}
-        </a>
+
+  <div class="logo-search-bar">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="forening-logo left top">
+          <a href="{% url 'page.views.page' %}" class="single">
+            {{ site.get_title }}
+          </a>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <form action="{% url 'page.views.search' %}" method="get" class="form-inline search">
+          <div class="form-group">
+            <input type="text" name="q" value="{{ search_query }}" class="form-control">
+            <button type="submit" class="btn btn-default">Søk</button>
+          </div>
+        </form>
       </div>
     </div>
-    <div class="span6 search">
-      <form action="{% url 'page.views.search' %}" method="get" class="form-search">
-        <input type="text" name="q" value="{{ search_query }}" class="input-medium">
-        <button type="submit" class="btn">Søk</button>
-      </form>
-    </div>
   </div>
 
-  <div class="row">
-    <div class="span12 mobile-control">
-      <p class="display-menu">
-        <a href="javascript:undefined">
-          Meny <b class="caret"></b>
-        </a>
-      </p>
-      <p class="display-search">
-        <a href="javascript:undefined">
-          <b class="caret"></b> Søk
-        </a>
-      </p>
-      <div style="clear: both;"></div>
-    </div>
+  <div class="mobile-control">
+    <p class="display-menu">
+      <a href="javascript:undefined">
+        Meny <b class="caret"></b>
+      </a>
+    </p>
+    <p class="display-search">
+      <a href="javascript:undefined">
+        <b class="caret"></b> Søk
+      </a>
+    </p>
+    <div style="clear: both;"></div>
   </div>
 
-  <div class="row">
-    <div class="span12">
-      <form action="{% url 'page.views.search' %}" method="get" class="search-mobile form-search">
-        <input type="text" name="q" value="{{ search_query }}">
-        <button type="submit" class="btn">Søk</button>
-      </form>
-    </div>
-  </div>
+  <form action="{% url 'page.views.search' %}" method="get" class="form-inline search-mobile">
+    <input type="text" name="q" value="{{ search_query }}">
+    <button type="submit" class="btn btn-default">Søk</button>
+  </form>
 
   <div class="row">
-    <div class="span9 menu-container">
-      <nav id="menus">
-        <ul>
-          {% for menu in menus %}
-          <li{% if menu|menu_active:request %} class="active"{% endif %}>
-            <a href="{{ menu.url }}" class="noexternal">{{ menu.name }}</a>
-          </li>
-          {% endfor %}
-        </ul>
-      </nav>
+    <div class="col-md-9">
+      <div class="menu-container">
+        <nav id="menus">
+          <ul>
+            {% for menu in menus %}
+            <li{% if menu|menu_active:request %} class="active"{% endif %}>
+              <a href="{{ menu.url }}" class="noexternal">{{ menu.name }}</a>
+            </li>
+            {% endfor %}
+          </ul>
+        </nav>
+      </div>
     </div>
-    <div class="span3 login-container">
-      <div class="login">
-        {% if user.is_authenticated %}
-          {% if user.perms.sherpa %}<a href="{% url 'admin.views.index' %}">Sherpa</a>{% endif %}
-          <a href="{% url 'user.views.home' %}">Min side</a>
-          <a href="{% url 'user.login.views.logout' %}">Logg ut</a>
-        {% else %}
-          <a href="{% url 'user.views.home' %}">Min side</a>
-        {% endif %}
+    <div class="col-md-3">
+      <div class="login-container">
+        <div class="login">
+          {% if user.is_authenticated %}
+            {% if user.perms.sherpa %}<a href="{% url 'admin.views.index' %}">Sherpa</a>{% endif %}
+            <a href="{% url 'user.views.home' %}">Min side</a>
+            <a href="{% url 'user.login.views.logout' %}">Logg ut</a>
+          {% else %}
+            <a href="{% url 'user.views.home' %}">Min side</a>
+          {% endif %}
+        </div>
       </div>
     </div>
   </div>
 
   <div class="border"></div>
 
-  <div class="row">
-    <div class="span12 breadcrumb-container">
-      <div class="menu-breadcrumb">
-        <a href="/">Forsiden</a>
-          {# Too much template logic, but can't see a better way to do this. #}
-          {% if page_hierarchy %}
-            {% for page in page_hierarchy %}
-              /
-              {% if forloop.last %}<em>{% endif %}
-                <a href="/{{ page.url }}/">{{ page.title }}</a>
-              {% if forloop.last %}</em>{% endif %}
-            {% endfor %}
-          {% elif version.variant.page %}
-            {% if version.variant.page.slug != '' %}
-              / <em><a href="/{{ version.variant.page.slug }}/">{{ version.variant.page.title }}</a></em>
-            {% endif %}
-          {% elif version.variant.article %}
-            / <a href="{% url 'articles.views.index' %}">Nyheter</a>
-            / <em><a href="">{{ version.get_title_content.content|striptags }}</a></em>
-          {% else %}
-            {# Fall back to the static title #}
-            / {% block breadcrumb %}<em><a href="">Turistforeningen</a></em>{% endblock %}
+  <div class="breadcrumb-container">
+    <div class="menu-breadcrumb">
+      <a href="/">Forsiden</a>
+        {# Too much template logic, but can't see a better way to do this. #}
+        {% if page_hierarchy %}
+          {% for page in page_hierarchy %}
+            /
+            {% if forloop.last %}<em>{% endif %}
+              <a href="/{{ page.url }}/">{{ page.title }}</a>
+            {% if forloop.last %}</em>{% endif %}
+          {% endfor %}
+        {% elif version.variant.page %}
+          {% if version.variant.page.slug != '' %}
+            / <em><a href="/{{ version.variant.page.slug }}/">{{ version.variant.page.title }}</a></em>
           {% endif %}
-      </div>
+        {% elif version.variant.article %}
+          / <a href="{% url 'articles.views.index' %}">Nyheter</a>
+          / <em><a href="">{{ version.get_title_content.content|striptags }}</a></em>
+        {% else %}
+          {# Fall back to the static title #}
+          / {% block breadcrumb %}<em><a href="">Turistforeningen</a></em>{% endblock %}
+        {% endif %}
     </div>
   </div>
+
 </header>
 
 {% if not site.is_published %}
-  <div class="row">
-    <div class="span12">
-      <div class="alert alert-error">
-        <strong>
-          Dette er en test-side!
-          {% if site.forening.get_old_url %}
-            <a href="{{ site.forening.get_old_url }}">Besøk {{ site.forening.name }}s offisielle sider</a>
-          {% endif %}
-        </strong>
-      </div>
-    </div>
+  <div class="alert alert-error">
+    <strong>
+      Dette er en test-side!
+      {% if site.forening.get_old_url %}
+        <a href="{{ site.forening.get_old_url }}">Besøk {{ site.forening.name }}s offisielle sider</a>
+      {% endif %}
+    </strong>
   </div>
 {% endif %}
 
@@ -143,7 +141,7 @@
   <div class="container">
 
     <div class="row">
-      <div class="span4">
+      <div class="col-md-4">
         <div class="contact-information">
           <h2>
             <a href="{{ site.forening.get_active_url }}" class="noexternal">
@@ -208,12 +206,7 @@
 {# "Global" csrf_token for AJAX-requests #}
 {% csrf_token %}
 
-{# Create the global Turistforeningen object. Note that other scripts will always expect this object to exist #}
-<script>
-  window.Turistforeningen = window.Turistforeningen || {};
-  Turistforeningen.s3_bucket = '{{ s3_bucket }}';
-</script>
-
+{% include 'global_layout/scripts_init.html' %}
 {% block js_globals %}{% endblock %}
 {% include 'global_layout/scripts.html' %}
 {% block extra_js %}{% endblock %}

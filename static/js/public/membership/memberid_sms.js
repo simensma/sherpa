@@ -16,7 +16,7 @@ $(function() {
     });
 
     button.click(function() {
-        button.hide();
+        button.prop('disabled', true);
         results.hide();
         loader.show();
 
@@ -41,7 +41,7 @@ $(function() {
         }).fail(function(result) {
             error.show();
         }).always(function(result) {
-            button.show();
+            button.prop('disabled', false);
             loader.hide();
         });
     });

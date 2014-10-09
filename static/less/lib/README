@@ -1,0 +1,6 @@
+This folder contains styles for *third party* libraries (not custom libraries, which one might assume).
+
+Some of these libraries require custom styling for implementation, and some we just want to customize for our usage.
+
+They are not organized within admin/public folders but included ad-hoc; see the root admin.less and public.less files
+to see which styles are included where.

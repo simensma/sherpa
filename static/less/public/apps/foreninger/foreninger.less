@@ -1,0 +1,115 @@
+.foreninger {
+
+  .searchbox {
+    margin-bottom: 40px;
+    width: 940px;
+    height: 467px;
+    background-image: url('/static/img/public/foreninger/sykkel.jpg');
+
+    .wrapper {
+      position: relative;
+      margin-left: 10px;
+      top: 100px;
+      width: 760px;
+      height: 270px;
+
+      table {
+        width: 100%;
+
+        td {
+          label {
+            font-family: "DTL Nobel" !important;
+            font-size: 16px;
+            color: rgb(100, 100, 100);
+          }
+
+          label.active {
+            color: @profile-red;
+          }
+
+          label:hover {
+            cursor: pointer;
+            text-decoration: underline;
+          }
+
+          &.categories {
+            width: 250px;
+            vertical-align: top;
+
+            p {
+              margin-top: 0;
+              margin-bottom: 0;
+            }
+          }
+
+          &.counties {
+            vertical-align: top;
+          }
+        }
+
+        th {
+          text-align: left;
+
+          h2 {
+            font-size: 20px;
+          }
+        }
+      }
+    }
+  }
+
+  div.count {
+    color: rgb(120, 120, 120);
+    font-size: 20px;
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+
+  table#results.visits {
+    margin-top: 30px;
+  }
+
+  table#results {
+    h2 {
+      font-size: 20px;
+      margin-top: 15px;
+      margin-bottom: 8px;
+    }
+
+    p {
+      font-size: 14px;
+      line-height: 1;
+      margin: 10px 0;
+      color: rgb(80, 80, 80);
+    }
+
+    div.map iframe {
+      width: 100%;
+      height: 400px;
+    }
+  }
+
+  select[name='full-list'] {
+    width: 100%;
+  }
+}
+
+/* Adjustments for small screens */
+
+div.searchbox-mobile {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  div.searchbox {
+    display: none;
+  }
+
+  div.searchbox-mobile {
+    display: block;
+  }
+
+  a.logo-url, div.logo {
+    display: none;
+  }
+}

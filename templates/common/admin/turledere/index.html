@@ -42,7 +42,7 @@
             Søk etter godkjente DNT-ambassadører og -turledere som er utdannet gjennom DNTs turlederutdanning. Du kan endre status og hvilken forening turlederen er aktiv i. Du kan <a href="javascript:undefined" class="toggle-create">legge inn nye turledere her</a>.
           </p>
 
-          <div class="form-border form-default form-horizontal search-area">
+          <div class="form-border form-dnt-default form-horizontal search-area">
             {% csrf_token %}
 
             <div class="form-group">
@@ -76,15 +76,31 @@
                   {% endfor %}
                 </select>
 
-                <label class="checkbox include-all-certificates jq-hide" data-popover data-trigger="hover" data-placement="top" data-html="true" data-title="Inkluder sertifikat med høyere nivå" data-content="Hvis du har denne på og for eksempel søker etter grunnleggende turlederutdanning, får du også de som har sommerturleder- og vinterturledersertifikat.">
-                  <input type="checkbox" name="include_all_certificates" checked>
-                  Inkluder de som har sertifikat med høyere nivå
-                </label>
+                <div class="checkbox jq-hide" data-dnt-container="include-all-certificates-checkbox">
+                  <label
+                    data-popover
+                    data-trigger="hover"
+                    data-placement="top"
+                    data-html="true"
+                    data-title="Inkluder sertifikat med høyere nivå"
+                    data-content="Hvis du har denne på og for eksempel søker etter grunnleggende turlederutdanning, får du også de som har sommerturleder- og vinterturledersertifikat.">
+                    <input type="checkbox" name="include_all_certificates" checked>
+                    Inkluder de som har sertifikat med høyere nivå
+                  </label>
+                </div>
 
-                <label class="checkbox" data-popover data-trigger="hover" data-placement="top" data-html="true" data-title="Vis kun kursledere" data-content="Viser kun turledere som også er registrert som kursleder.">
-                  <input type="checkbox" name="only_kursledere">
-                  Vis kun kursledere
-                </label>
+                <div class="checkbox">
+                  <label
+                    data-popover
+                    data-trigger="hover"
+                    data-placement="top"
+                    data-html="true"
+                    data-title="Vis kun kursledere"
+                    data-content="Viser kun turledere som også er registrert som kursleder.">
+                    <input type="checkbox" name="only_kursledere">
+                    Vis kun kursledere
+                  </label>
+                </div>
               </div>
             </div>
 
@@ -164,10 +180,14 @@
               Turledere som skal registreres må være medlem i DNT, men du kan også legge inn instruktører som ikke nødvendigvis er medlemmer. Disse må i så fall først registrere seg her: <a href="{% url 'user.login.views.register_nonmember' %}">http://{{ site.domain }}{% url 'user.login.views.register_nonmember' %}</a> før du kan søke dem opp nedenfor.
             </p>
 
-            <p>
+            <div class="input-group">
               <input type="text" name="member-search" placeholder="Søk etter brukere (navn eller medlemsnummer)..." class="form-control">
-              <button class="btn btn-default member-search input-button-align"><i class="fa fa-search"></i></button>
-            </p>
+              <span class="input-group-btn">
+                <button class="btn btn-default member-search">
+                  <i class="fa fa-search"></i>
+                </button>
+              </span>
+            </div>
 
             <table class="table member-search-list jq-hide" data-search-url="{% url 'admin.turledere.views.member_search' %}">
               <tr>

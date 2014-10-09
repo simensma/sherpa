@@ -1,0 +1,67 @@
+/* Pages and articles generated in the editor */
+
+article {
+  .row {
+    margin-top: 0.6em;
+    margin-bottom: 0.6em;
+
+    .content {
+      margin-bottom: 20px;
+
+      &.html, &.title, &.lede {
+        span.lede, p.lede {
+          .lede;
+        }
+
+        span.h1, span.h2, span.h3 {
+          display: block;
+          font-weight: bold;
+          margin-bottom: 25px;
+          .nobel-font;
+        }
+
+        span.h1 {
+          .header1;
+        }
+
+        span.h2 {
+          .header2;
+        }
+
+        span.h3 {
+          .header3;
+          margin-bottom: 0;
+        }
+
+        p {
+          margin-top: 0;
+          margin-bottom: 0;
+        }
+      }
+
+      &.lede {
+        .lede;
+      }
+
+      &.image {
+        position: relative;
+        overflow: hidden;
+
+        img {
+          display: block;
+          width: 100%;
+        }
+
+        .description {
+          .image-description;
+        }
+
+        &[data-crop] {
+          img {
+            max-width: none !important;
+          }
+        }
+      }
+    }
+  }
+}

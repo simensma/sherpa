@@ -5,10 +5,7 @@
   </div>
 
   <div class="modal-body">
-    <div class="alert alert-info uploading jq-hide">
-      <a class="close">x</a>
-      Vent mens bildet lastes opp...
-    </div>
+
     <div class="alert alert-danger upload-no-files jq-hide">
       <a class="close">x</a>
       Du må velge et bilde å laste opp!
@@ -22,7 +19,7 @@
       Beklager, det oppstod en teknisk feil ved opplastingen! Bildet er sannsynligvis ikke blitt lastet opp, du kan sjekke dette under "Mine bilder" i bildearkivet. Feilen har blitt logget og vi vil fikse den så snart som mulig. Vennligst prøv igjen, eller kontakt teknisk avdeling ved DNT sentralt hvis feilen vedvarer.
     </div>
 
-    <form action="{% url 'admin.images.util.image_upload_dialog' %}" method="post" enctype="multipart/form-data" target="inlineframe" class="form-horizontal">
+    <form action="{% url 'admin.images.util.image_upload_dialog' %}" method="post" enctype="multipart/form-data" target="inlineframe" class="form-dnt-default form-horizontal">
       {% csrf_token %}
       <input type="reset" class="jq-hide">
 
@@ -43,7 +40,7 @@
       <div class="form-group">
         <label class="col-md-2 control-label">Fotograf:</label>
         <div class="col-md-10">
-          <input type="text" class="form-control" name="photographer" placeholder="Fullt navn..." data-photographers-url="{% url 'admin.images.views.photographer' %}">
+          <input type="text" class="form-control" name="photographer" placeholder="Fullt navn..." autocomplete="off" data-photographers-url="{% url 'admin.images.views.photographer' %}">
         </div>
       </div>
 
@@ -64,16 +61,10 @@
       <div class="form-group">
         <label class="col-md-2 control-label">Nøkkelord</label>
         <div class="col-md-10">
-          <input type="text" class="form-control" name="tags">
-          <input type="hidden" name="tags-serialized">
-          <div class="tag-box"></div>
-          <div style="clear: both;"></div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-          <input class="btn btn-success" type="submit" value="Last opp">
+          <input
+            class="form-control"
+            name="tags"
+            data-dnt-tags-url="{% url 'core.views.filter_tags' %}">
         </div>
       </div>
     </form>
@@ -83,6 +74,11 @@
   </div>
 
   <div class="modal-footer">
-    <a href="javascript:undefined" class="btn btn-default" data-dismiss="modal">Lukk vindu</a>
+    <span class="uploading jq-hide">
+      Laster opp, vennligst vent...
+      <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" alt="Laster opp, vennligst vent...">
+    </span>
+    <button class="btn btn-success" type="submit">Last opp</button>
+    <a href="javascript:undefined" class="btn btn-default" data-dismiss="modal">Avbryt</a>
   </div>
 </div>

@@ -1,12 +1,14 @@
 $(function() {
 
-    var form = $("form#household");
+    var form = $('[data-dnt-container="household-form"]');
+    var existing_input = form.find('input[name="existing"]');
+    var existing_trigger = form.find('[data-dnt-trigger="existing"]');
     var existing_result = form.find("div.existing-result");
 
     form.find("select[name='country']").chosen();
 
     // Zipcode-validations
-    var zipcode_control_group = form.find("div.control-group.zipcode");
+    var zipcode_form_group = form.find('[data-dnt-form-group="zipcode"]');
     var zipcode = form.find("input[name='zipcode']");
     var area = form.find("input[name='area']");
     var loader = form.find("img.zip.ajaxloader");
@@ -20,57 +22,57 @@ $(function() {
         if(sel.val() == 'NO') {
             form.find("div.world").hide();
             form.find("div.scandinavia").show();
-            form.find("div.yearbook").hide();
+            form.find('[data-dnt-form-group="yearbook"]').hide();
             area.prop('disabled', true);
-            Validator.validateZipcode(zipcode_control_group, zipcode, area, loader);
+            Validator.validateZipcode(zipcode_form_group, zipcode, area, loader);
             if(!first || (first && zipcode.val() !== '')) {
                 Validator.triggerZipcode(zipcode);
             }
         } else if(sel.parents("optgroup#scandinavia").length > 0) {
             form.find("div.world").hide();
             form.find("div.scandinavia").show();
-            form.find("div.yearbook").show();
+            form.find('[data-dnt-form-group="yearbook"]').show();
             area.prop('disabled', false);
             Validator.stopZipcodeValidation(zipcode);
             zipcode.focusout();
         } else {
             form.find("div.world").show();
             form.find("div.scandinavia").hide();
-            form.find("div.yearbook").show();
+            form.find('[data-dnt-form-group="yearbook"]').show();
         }
     }
 
     form.find("input").focus(function() {
-        $(this).parents("div.control-group").removeClass('error warning success');
+        $(this).parents('[data-dnt-form-group]').removeClass('has-error has-warning has-success');
     });
 
     form.find("input[name='address1']").focusout(function() {
         if($(this).val() === "") {
-            $(this).parents("div.control-group").addClass('error');
+            $(this).parents('[data-dnt-form-group]').addClass('has-error');
         } else {
-            $(this).parents("div.control-group").addClass('success');
+            $(this).parents('[data-dnt-form-group]').addClass('has-success');
         }
     });
 
     form.find("input[name='address2'], input[name='address3']").focusout(function() {
-        $(this).parents("div.control-group").addClass('success');
+        $(this).parents('[data-dnt-form-group]').addClass('has-success');
     });
 
     zipcode.focusout(function() {
         if(form.find("select[name='country'] option:selected").val() != 'NO') {
             if($(this).val() === '' || area.val() === '') {
-                zipcode_control_group.removeClass('success').addClass('error');
+                zipcode_form_group.removeClass('has-success').addClass('has-error');
             } else {
-                zipcode_control_group.removeClass('error').addClass('success');
+                zipcode_form_group.removeClass('has-error').addClass('has-success');
             }
         }
     });
 
     area.focusout(function() {
         if($(this).val() === '' || zipcode.val() === '') {
-            zipcode_control_group.removeClass('success').addClass('error');
+            zipcode_form_group.removeClass('has-success').addClass('has-error');
         } else {
-            zipcode_control_group.removeClass('error').addClass('success');
+            zipcode_form_group.removeClass('has-error').addClass('has-success');
         }
     });
 
@@ -83,18 +85,26 @@ $(function() {
     });
 
     /* Existing */
-    form.find("a.search-existing").click(function(e) {
+
+    existing_input.keydown(function(e) {
+        if(e.which === 13) { // Enter
+            e.preventDefault();
+            existing_trigger.click();
+        }
+    });
+
+    existing_trigger.click(function(e) {
         e.preventDefault();
         existing_result.show();
         var button = $(this);
         button.prop('disabled', true);
         form.find("img.existing.ajaxloader").show();
         var data = {
-            id: form.find("input[name='existing']").val(),
+            id: existing_input.val(),
             zipcode: form.find("input[name='zipcode']").val(),
             country: form.find("select[name='country'] option:selected").val()
         };
-        existing_result.find("span.hide").hide();
+        existing_result.find("span.jq-hide").hide();
         $.ajaxQueue({
             url: form.attr('data-existing-url'),
             data: { data: JSON.stringify(data) }
@@ -130,7 +140,7 @@ $(function() {
     });
 
     if(Turistforeningen.existing) {
-        form.find("a.search-existing").click();
+        existing_trigger.click();
     } else {
         existing_result.hide();
     }

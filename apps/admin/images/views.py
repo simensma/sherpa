@@ -279,7 +279,11 @@ def update_images(request):
             # Save new tags, remove existing tags if specified
             if request.POST.get('replace-tags', '') == 'true':
                 image.tags.clear()
-            for tag in [tag.lower() for tag in json.loads(request.POST['tags-serialized'])]:
+            for tag in request.POST['tags'].split(','):
+                tag = tag.strip().lower()
+                if tag == '':
+                    continue
+
                 obj, created = Tag.objects.get_or_create(name=tag)
                 image.tags.add(obj)
 
@@ -413,7 +417,7 @@ def photographer(request):
     for word in request.GET['q'].split():
         images = images.filter(photographer__icontains=word)
     images = images.distinct('photographer')
-    photographers = [image.photographer for image in images]
+    photographers = [{'value': image.photographer} for image in images]
     return HttpResponse(json.dumps(photographers))
 
 def set_fotokonkurranse_album(request, new_album):

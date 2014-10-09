@@ -1,0 +1,72 @@
+.enrollment-registration {
+  table.memberlist {
+    margin-top: 20px;
+
+    td {
+      background-color: white;
+      font-family: "DTL Nobel";
+      font-size: 20px;
+      padding: 10px;
+    }
+
+    td:hover {
+      background-color: rgb(215, 215, 215);
+      color: rgb(0, 0, 0);
+    }
+
+    span.remove {
+      a {
+        color: rgb(0, 0, 0);
+      }
+    }
+  }
+
+  form.registration {
+    label {
+      .enrollment-label();
+    }
+
+    .form-group:not(.error,.warning) {
+      label {
+        .enrollment-label-default-color;
+      }
+    }
+
+    .gender {
+      display: inline-block;
+      margin: 0 10px 0 0;
+    }
+
+    input[type='text'] {
+      .enrollment-input-default-color;
+      .enrollment-input-default-style;
+    }
+
+    button {
+      .enrollment-button-margin;
+    }
+
+    .enrollment-asterisks;
+  }
+
+  .members {
+    label {
+      font-family: "DTL Nobel" !important;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+  }
+}
+
+.modal.conditions {
+  h1 {
+    margin-bottom: 0;
+    font-size: 22px;
+    border-bottom: none;
+  }
+
+  li, p {
+    font-family: georgia, times, serif !important;
+    font-size: 14px !important;
+  }
+}

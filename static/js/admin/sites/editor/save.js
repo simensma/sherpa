@@ -15,7 +15,7 @@ $(function() {
 
     var lastSaveCount = 0;
     var updateSaveCountID;
-    var statusIcon = '<i class="icon-heart"></i>';
+    var statusIcon = '<i class="glyphicon glyphicon-heart"></i>';
     function updateSaveCount() {
         lastSaveCount += 1;
         save_button.html(statusIcon + ' Lagre (' + lastSaveCount + ')');
@@ -38,13 +38,13 @@ $(function() {
 
     function saveAndGo() {
         var button = $(this);
-        button.html('<i class="icon-search"></i> Lagrer først...');
+        button.html('<i class="glyphicon glyphicon-search"></i> Lagrer først...');
         button.prop('disabled', true);
         var url = $(this).attr('data-href');
         save(function() {
             window.location = url;
         }, function() {
-            button.html('<i class="icon-search"></i> Forhåndsvisning');
+            button.html('<i class="glyphicon glyphicon-search"></i> Forhåndsvisning');
             button.prop('disabled', false);
         });
     }
@@ -58,7 +58,7 @@ $(function() {
 
         clearTimeout(updateSaveCountID);
         save_button.prop('disabled', true);
-        save_button.html('<i class="icon-heart"></i> Lagrer...');
+        save_button.html('<i class="glyphicon glyphicon-heart"></i> Lagrer...');
         no_save_warning.hide();
 
         var data = {};
@@ -83,10 +83,10 @@ $(function() {
                 var span;
                 var offset = 0;
                 $($(this).attr('class').split(' ')).each(function() {
-                    if(this.startsWith('span')) {
-                        span = this.substring('span'.length);
-                    } else if(this.startsWith('offset')) {
-                        offset = this.substring('offset'.length);
+                    if(this.match('col-md-[0-9]')) {
+                        span = this.substring('col-md-'.length);
+                    } else if(this.match('col-md-offset-[0-9]')) {
+                        offset = this.substring('col-md-offset-'.length);
                     }
                 });
                 var column = {
@@ -151,7 +151,7 @@ $(function() {
         data.rows = JSON.stringify(rows);
 
         // Tags
-        data.tags = JSON.stringify(TagDisplay.getTags());
+        data.tags = JSON.stringify(header.find('input[name="tags"]').select2('val'));
 
         // Publish-state
         var publish = header.find("div.publish");
@@ -215,7 +215,7 @@ $(function() {
             result = JSON.parse(result);
 
             lastSaveCount = 0;
-            statusIcon = '<i class="icon-heart"></i>';
+            statusIcon = '<i class="glyphicon glyphicon-heart"></i>';
             save_button.removeClass('btn-danger').addClass('btn-success');
             if(typeof(done) == 'function') {
                 done();
@@ -260,7 +260,7 @@ $(function() {
             }
 
         }).fail(function(result) {
-            statusIcon = '<i class="icon-warning-sign"></i>';
+            statusIcon = '<i class="glyphicon glyphicon-warning-sign"></i>';
             alert("Whoops!\n\nVi klarte ikke å lagre innholdet. Er du sikker på at du har nettilgang?\n" +
                 "Du kan prøve igjen til det går.\n\n" +
                 "Hvis du lukker siden, vil du miste alle endringene siden sist du lagret.");
