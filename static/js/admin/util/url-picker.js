@@ -208,7 +208,7 @@
                 url: email,
             });
         } else {
-            if(typeof(_cancel_callback) === 'function') {
+            if(typeof(cancel_callback) === 'function') {
                 cancel_callback();
             }
         }
@@ -216,7 +216,7 @@
     }
 
     function cancel() {
-        if(typeof(_cancel_callback) === 'function') {
+        if(typeof(cancel_callback) === 'function') {
             cancel_callback();
         }
         url_picker.modal('hide');
