@@ -81,10 +81,11 @@
             <span class="input-group-addon">
               <input type="checkbox" name="enable-tags">
             </span>
-            <input class="form-control" type="text" name="tags" disabled>
+            <input
+              class="form-control"
+              name="tags"
+              data-dnt-tags-url="{% url 'core.views.filter_tags' %}">
           </div>
-
-          <div class="tag-box"></div>
         </div>
       </div>
 
