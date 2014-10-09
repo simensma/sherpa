@@ -71,10 +71,39 @@ div.aktivitet-listing {
 
 div.aktivitet {
   div.meta {
-    margin-bottom: 15px;
     font-family: "DTL Nobel" !important;
+    font-weight: bold;
+
+    .heading {
+      font-size: 22px;
+      padding-bottom: 5px;
+      border-bottom: 3px solid #9b9b9b;
+    }
+
+    dl {
+      margin-bottom: 0;
+
+      dt {
+        color: @profile-red;
+        display: inline;
+        &:after {
+          content: ':';
+        }
+      }
+      dd {
+        display: inline;
+        &:after {
+          display: block;
+          content: '\A';
+          white-space: pre;
+          line-height: 6px;
+        }
+      }
+    }
 
     div.signup {
+      margin-top: 15px;
+
       div.no-signup {
         font-style: italic;
       }
@@ -98,20 +127,16 @@ div.aktivitet {
       }
     }
 
-    table {
-      th, td {
-        font-family: "DTL Nobel" !important;
-      }
+  }
 
-      th {
-        text-align: right;
-        padding: 4px 8px;
-      }
-    }
+  .contactinfo {
+    padding: 20px;
   }
 
   // Hackish item for using carousel-caption (which need a positioned parent) on single images
   div.images {
+    margin-bottom: 20px;
+
     div.single-carousel-item {
       position: relative;
     }
@@ -126,6 +151,7 @@ div.aktivitet {
 
   div.leaflet-map {
     height: 300px;
+    border: 1px solid #ccc;
   }
 }
 
