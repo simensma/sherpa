@@ -88,7 +88,6 @@
             <br>
 
             <select id="article" name="article" style="width: 100%;">
-              <option></option>
               {% for version in url_picker.article_versions %}
                 <option value="http://{{ active_site.domain }}{% url 'articles.views.show' version.variant.article.id version.get_title_content.content|striptags|slugify %}">
                   {{ version.get_title_content.content|striptags }}
