@@ -121,8 +121,8 @@
               {% else %}
                 <div id="carousel" class="carousel slide" data-interval="false" data-ride="carousel">
                   <ol class="carousel-indicators">
-                    {% for index, image in aktivitet_date.aktivitet.get_images_ordered_enumerated %}
-                      <li data-target="#carousel" data-slide-to="{{ index }}"{% if forloop.first %} class="active"{% endif %}></li>
+                    {% for image in aktivitet_date.aktivitet.get_images_ordered %}
+                      <li data-target="#carousel" data-slide-to="{{ forloop.counter0 }}"{% if forloop.first %} class="active"{% endif %}></li>
                     {% endfor %}
                   </ol>
                   <div class="carousel-inner">
