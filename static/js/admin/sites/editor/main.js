@@ -248,7 +248,7 @@
         });
 
         // Tags, used in the header for both pages and articles
-        Select2Tagger({$input: $('input[name="tags"]')});
+        Select2Tagger({$input: $('.editor-header input[name="tags"]')});
     });
 
     // Remove popovers when clicking on anything else than their trigger button
