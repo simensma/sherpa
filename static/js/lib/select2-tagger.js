@@ -23,7 +23,9 @@ function Select2Tagger(opts) {
         initSelection : function(element, callback) {
             var data = [];
             $(element.val().split(',')).each(function() {
-                data.push({id: this, text: this});
+                if(this.trim() !== '') {
+                    data.push({id: this, text: this});
+                }
             });
             callback(data);
         },
