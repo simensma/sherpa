@@ -45,6 +45,16 @@
                 </dd>
                 {% endif %}
 
+                {% with aktivitet_date.aktivitet.co_foreninger.all as co_foreninger %}
+                <dt>Arrangør{% if co_foreninger %}er{% endif %}</dt>
+                <dd>
+                  {{ aktivitet_date.aktivitet.forening }}
+                  {% for co_forening in co_foreninger %}
+                    , {{ co_forening }}
+                  {% endfor %}
+                </dd>
+                {% endwith %}
+
                 <dt>Turområde</dt>
                 <dd>{% for location in aktivitet_date.aktivitet.get_locations %}{{ location.name }}{% if not forloop.last %}, {% endif %}{% endfor %} {% if aktivitet_date.aktivitet.start_point %}<a href="#map">(se kart)</a>{% endif %}</dd>
 
