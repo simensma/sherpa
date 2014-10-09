@@ -46,11 +46,6 @@ $(function() {
     /* Enable any tooltips */
     $("*[data-tooltip]").tooltip();
 
-    /* Tags use data-href for links */
-    $("div.tag-box div.tag[data-href]").click(function() {
-        window.location = $(this).attr('data-href');
-    });
-
     /* Enable self-declared chosen selects */
     $("select[data-chosen]").chosen();
 
