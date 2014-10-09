@@ -35,7 +35,11 @@ $(function() {
             });
 
             $tags_enabled.change(function() {
-                $tags_input.select2('enable', $(this).is(':checked'));
+                var enabled = $(this).is(':checked');
+                $tags_input.select2('enable', enabled);
+                if(!enabled) {
+                    $tags_input.select2('val', '');
+                }
             });
 
             Select2Tagger({$input: $tags_input});
