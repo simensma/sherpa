@@ -7,6 +7,7 @@ from django.conf import settings
 from django.template import RequestContext
 from django.template.loader import render_to_string
 
+from admin.util import url_picker_context
 from admin.sites.articles.util import BULK_COUNT, list_bulk, create_template
 from articles.models import Article
 from page.models import Variant, Version
@@ -84,6 +85,7 @@ def edit(request, site, version):
         'image_search_length': settings.IMAGE_SEARCH_LENGTH,
         'widget_data': admin_context(active_site),
     }
+    context.update(url_picker_context(active_site))
 
     # Fake request.site to the edited site; this will make context processors behave accordingly
     request.site = active_site

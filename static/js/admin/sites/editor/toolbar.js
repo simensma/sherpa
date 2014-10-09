@@ -5,12 +5,9 @@ $(function() {
     var FORMATTER_ELEMENTS = "abbr,acronym,b,bdi,bdo,big,blink,cite,code,dfn,em,font,h1,h2,h3,h4,h5,h6,i,ins,kbd,mark,nobr,q,s,samp,small,span,strike,strong,sub,sup,tt,u,var";
 
     var toolbar = $("div.cms-editor-toolbar");
-    var toolbarContents = toolbar.find("div.toolbar-contents");
-    var anchorInsert = toolbar.find("div.anchor-insert");
     var formatting = toolbar.find("div.formatting");
 
     rangy.init();
-    window.selection = undefined;
 
     // Make toolbar draggable, but not if input-elements are clicked
     toolbar.draggable();
@@ -38,41 +35,66 @@ $(function() {
     });
 
     // Button-group formatting
-    $(document).mouseup(function() {
-        formatting.find("button").prop('disabled', false).removeClass('active');
-        if(selection !== undefined && selection.rangeCount !== 0) {
-            var range = selection.getRangeAt(0);
-            var start = $(range.startContainer);
-            var container = start.parent();
+    $(document).mouseup(function(e) {
+        // Don't reset the formatting buttons if one of the buttons were clicked
+        if($(e.target).parents('.formatting').length > 0) {
+            return;
+        }
 
-            // If this is an anchor, the styled container will be its parent
-            if(container.is('a')) {
-                container = container.parent();
-            }
+        var selection = rangy.getSelection();
+        formatting.find('button').prop('disabled', false).removeClass('active');
 
-            if(container.is("h1") || container.hasClass('h1')) {
-                formatting.find("button[data-format='h1']").addClass('active');
-            } else if(container.is("h2") || container.hasClass('h2')) {
-                formatting.find("button[data-format='h2']").addClass('active');
-            } else if(container.is("h3") || container.hasClass('h3')) {
-                formatting.find("button[data-format='h3']").addClass('active');
-            } else if(container.hasClass('lede')) {
-                formatting.find("button[data-format='lede']").addClass('active');
-            } else if(container.is("div") || container.is("p")) {
-                formatting.find("button[data-format='bread']").addClass('active');
-            } else {
-                formatting.find("button").prop('disabled', true);
-            }
-        } else {
-            formatting.find("button").prop('disabled', true);
+        // No selection or range?
+        if(selection === undefined || selection.rangeCount === 0) {
+            formatting.find('button').prop('disabled', true);
+            return;
+        }
+
+        // Look up the containing element
+        var container = $(selection.getRangeAt(0).startContainer).parent();
+
+        // Ensure it's within an editable
+        if(!container.is('.editable') && container.parents('.editable').length === 0) {
+            formatting.find('button').prop('disabled', true);
+            return;
+        }
+
+        // If this is an anchor, the styled container will be its parent
+        if(container.is('a')) {
+            container = container.parent();
+        }
+
+        // Now figure out what kind of styling it has, and mark the appropriate button as active
+        if(container.is('h1') || container.hasClass('h1')) {
+            formatting.find('button[data-format="h1"]').addClass('active');
+        } else if(container.is('h2') || container.hasClass('h2')) {
+            formatting.find('button[data-format="h2"]').addClass('active');
+        } else if(container.is('h3') || container.hasClass('h3')) {
+            formatting.find('button[data-format="h3"]').addClass('active');
+        } else if(container.hasClass('lede')) {
+            formatting.find('button[data-format="lede"]').addClass('active');
+        } else if(container.is('div') || container.is('p')) {
+            formatting.find('button[data-format="bread"]').addClass('active');
         }
     });
 
     formatting.find("button").click(function() {
+        function resetSelection(text_node) {
+            // After the DOM has been manipulated, call this with the new text node which was changed to reselect it
+            setTimeout(function() {
+                var selection = rangy.getSelection();
+                var range = rangy.createRange();
+                range.selectNodeContents(text_node);
+                selection.setSingleRange(range);
+                selection.refresh();
+            }, 0);
+        }
+
         var styleClass = $(this).attr('data-format');
         formatting.find("button").removeClass('active');
         $(this).addClass('active');
 
+        var selection = rangy.getSelection();
         if(selection === undefined || selection.rangeCount === 0) {
             alert("Du har ikke merket noen tekst!\n\n" +
                   "Da vet jeg ikke hvilken tekst jeg skal endre skrifttype på. Klikk på teksten du vil ha endret først.");
@@ -103,7 +125,9 @@ $(function() {
                 mozillaMadness(container, ['<span class="' + styleClass + '">', '</span>']);
             } else {
                 // The element isn't contained by a formatting element. Ignore parents and mozilla madness, just wrap the contents in a span.
-                start.replaceWith('<span class="' + styleClass + '">' + start.text() + '</span>');
+                var replacement = $('<span class="' + styleClass + '">' + start.text() + '</span>');
+                start.replaceWith(replacement);
+                resetSelection(replacement.contents().get(0));
             }
         }
 
@@ -121,6 +145,7 @@ $(function() {
                         match[2] = content[0] + match[2] + content[1];
                     }
                     container.html(match[1]).after('<br>', match[2], '<br>', clone);
+                    resetSelection(container.contents().get(0));
                 } else {
                     // Breaks are *only* before
                     var match = /(.*)<.*?data-special-case-tmp.*?>(.*)/.exec(container.html());
@@ -128,6 +153,7 @@ $(function() {
                         match[2] = content[0] + match[2] + content[1];
                     }
                     container.html(match[1]).after('<br>', match[2]);
+                    resetSelection(container.contents().get(0));
                 }
             } else if(start.next().is("br")) {
                 // Breaks are *only* after
@@ -137,68 +163,60 @@ $(function() {
                     match[1] = content[0] + match[1] + content[1];
                 }
                 container.html(match[2]).before(match[1], '<br>');
+                resetSelection(container.contents().get(0));
             } else {
                 // No mozilla madness, just remove the containernode <3
-                var text = container.text();
+                var wrapper;
+                var text_element;
                 if(content !== undefined) {
-                    text = content[0] + text + content[1];
+                    wrapper = $(content[0] + content[1]);
+                    text_element = container.contents().get(0);
+                    wrapper.append(text_element);
+                } else {
+                    wrapper = container.contents();
+                    text_element = wrapper.get(0);
                 }
-                container.replaceWith(text);
+                container.replaceWith(wrapper);
+                resetSelection(text_element);
             }
         }
-
-        // This refresh *might* make a second select.formatting change trigger work, even without reselecting the text.
-        selection.refresh();
-    });
-
-    function addAnchor(anchorType) {
-        anchorInsert.find("input[name='url']").val("");
-        if(anchorType === 'url') {
-            anchorInsert.find("span.url").show();
-            anchorInsert.find("span.email").hide();
-        } else if(anchorType === 'email') {
-            anchorInsert.find("span.url").hide();
-            anchorInsert.find("span.email").show();
-        }
-        anchorInsert.data('type', anchorType);
-        toolbarContents.hide();
-        anchorInsert.show();
-    }
-
-    anchorInsert.find("div.anchor-buttons button.anchor-add").click(function() {
-        var range = selection.getRangeAt(0);
-        // Trim the selection for whitespace (actually, just the last char, since that's most common)
-        if($(range.endContainer).text().substring(range.endOffset - 1, range.endOffset) == ' ') {
-            range.setEnd(range.endContainer, range.endOffset - 1);
-        }
-        selection.setSingleRange(range);
-        var url = anchorInsert.find("input[name='url']").val().trim();
-        if(url !== "") {
-            if(anchorInsert.data('type') === 'url') {
-                if(!url.match(/^https?:\/\//)) {
-                    url = "http://" + url;
-                }
-            } else if(anchorInsert.data('type') === 'email') {
-                if(!url.match(/^mailto:/)) {
-                    url = "mailto:" + url;
-                }
-            }
-            document.execCommand('createLink', false, url);
-        }
-        anchorInsert.hide();
-        toolbarContents.show();
-    });
-
-    anchorInsert.find("div.anchor-buttons button.anchor-cancel").click(function() {
-        anchorInsert.hide();
-        toolbarContents.show();
     });
 
     toolbar.find("a.button.anchor-add").click(function(event) {
-        addAnchor('url');
-    });
-    toolbar.find("a.button.email-add").click(function(event) {
-        addAnchor('email');
+        var selection = rangy.getSelection();
+
+        if(selection === undefined || selection.rangeCount === 0) {
+            // No selection or ranges - ignore the anchor button click
+            return;
+        }
+
+        var range = selection.getRangeAt(0);
+        var ancestor = $(range.commonAncestorContainer).parent();
+
+        if(ancestor.parents('.editable').length === 0 && !ancestor.is('.editable')) {
+            // User hasn't selected text in an editable element - ignore the anchor button click
+            return;
+        }
+
+        var existing_url;
+        if(ancestor.is('a')) {
+            existing_url = ancestor.attr('href');
+
+            // Make sure the entire anchor is included in the range
+            range.setStartBefore(range.startContainer);
+            range.setEndAfter(range.startContainer);
+        }
+        UrlPicker.open({
+            existing_url: existing_url,
+            done: function(result) {
+                // Trim the selection for whitespace (actually, just the last char, since that's most common)
+                if($(range.endContainer).text().substring(range.endOffset - 1, range.endOffset) == ' ') {
+                    range.setEnd(range.endContainer, range.endOffset - 1);
+                }
+                selection.setSingleRange(range);
+                document.execCommand('createLink', false, result.url);
+            },
+        });
     });
     toolbar.find("a.anchor-remove").click(function(event) {
         document.execCommand('unlink', false, null);
@@ -237,7 +255,7 @@ $(function() {
         document.execCommand('removeformat', false, null);
 
         // Also do some extra custom cleanup:
-
+        var selection = rangy.getSelection();
         if(selection === undefined || selection.rangeCount === 0) {
             alert("Du har ikke merket noen tekst!\n\n" +
                   "Da vet jeg ikke hvilken tekst jeg skal fjerne formatering for. Klikk på teksten du vil ha fikset først.");

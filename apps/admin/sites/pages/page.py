@@ -9,6 +9,7 @@ from django.contrib import messages
 from django.template import RequestContext
 from django.template.loader import render_to_string
 
+from admin.util import url_picker_context
 from admin.sites.pages.util import slug_is_unique, create_template
 from page.widgets.util import admin_context
 from page.models import Page, Variant, Version
@@ -101,6 +102,7 @@ def edit(request, site, version):
         'pages': pages,
         'image_search_length': settings.IMAGE_SEARCH_LENGTH
     }
+    context.update(url_picker_context(active_site))
 
     # Fake request.site to the edited site; this will make context processors behave accordingly
     request.site = active_site
