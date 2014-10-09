@@ -151,7 +151,7 @@ $(function() {
         data.rows = JSON.stringify(rows);
 
         // Tags
-        data.tags = JSON.stringify(TagDisplay.getTags());
+        data.tags = JSON.stringify(header.find('input[name="tags"]').select2('val'));
 
         // Publish-state
         var publish = header.find("div.publish");

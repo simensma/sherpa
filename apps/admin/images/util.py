@@ -87,7 +87,7 @@ def image_upload_dialog(request):
         pil_image = PIL.Image.open(StringIO(data))
         exif_json = json.dumps(get_exif_tags(pil_image))
         image_file_tags = xmp.find_keywords(data)
-        user_provided_tags = json.loads(request.POST['tags-serialized'])
+        user_provided_tags = [tag.strip() for tag in request.POST['tags'].split(',') if tag.strip() != '']
         thumbs = [{'size': size, 'data': create_thumb(pil_image, ext, size)} for size in settings.THUMB_SIZES]
 
         key = bucket.new_key("%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, image_key, ext))

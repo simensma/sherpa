@@ -118,11 +118,16 @@
       {% endif %}
 
       <h3>Nøkkelord:</h3>
-      <div class="tag-box">
+
+      <div class="tag-cloud">
         {% for tag in tags %}
-          <div class="tag" data-href="{% url 'admin.images.views.search' %}?q={{ tag.name }}">{{ tag.name }}</div>
+          <a class="tag" href="{% url 'admin.images.views.search' %}?q={{ tag.name }}">
+            {{ tag.name }}
+          </a>
         {% empty %}
-          <p>{{ image.uploader.get_first_name|default:"Opplasteren" }} la ikke inn noen nøkkelord for bildet.</p>
+          <p>
+            {{ image.uploader.get_first_name|default:"Opplasteren" }} la ikke inn noen nøkkelord for bildet.
+          </p>
         {% endfor %}
       </div>
     </div>

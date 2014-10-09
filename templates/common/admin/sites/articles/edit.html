@@ -15,7 +15,8 @@
   <script src="{{ STATIC_URL }}lib/jcrop/js/jquery.Jcrop.min.js"></script>
 
   {# Custom libs #}
-  <script src="{{ STATIC_URL }}js/admin/tagger.js"></script>
+  <script src="{{ STATIC_URL }}js/lib/select2-tagger.js"></script>
+  <script src="{{ STATIC_URL }}js/lib/select2-input-lookup.js"></script>
   <script src="{{ STATIC_URL }}js/admin/sites/editor/image-utils.js"></script>
   <script src="{{ STATIC_URL }}js/admin/sites/editor/image-cropper.js"></script>
   <script src="{{ STATIC_URL }}js/admin/images/util/image-archive-picker.js"></script>
@@ -100,21 +101,14 @@
       </p>
     </div>
 
-    <div class="tags">
-      <table>
-        <tr>
-          <td style="vertical-align: top">
-            Nøkkelord:
-            <input class="form-control" type="text" name="tags" data-tags-url="{% url 'core.views.filter_tags' %}">
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <div class="tag-box" data-predefined-tags="{{ version.tags.all|taglist }}"></div>
-          </td>
-        </tr>
-      </table>
-    </div>
+    <p>
+      Nøkkelord:
+      <input
+        class="form-control"
+        name="tags"
+        data-dnt-existing-tags="{{ version.tags.all|taglist }}"
+        data-dnt-tags-url="{% url 'core.views.filter_tags' %}">
+    </p>
 
     <div class="preview-image">
       <div class="row">

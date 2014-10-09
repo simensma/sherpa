@@ -297,6 +297,7 @@
   <script src="{{ STATIC_URL }}lib/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
   <script src="{{ STATIC_URL }}lib/bootstrap-datepicker/js/locales/bootstrap-datepicker.nb.js"></script>
   <script src="{{ STATIC_URL }}lib/select2-3.5.1/select2.min.js"></script>
+  <script src="{{ STATIC_URL }}lib/select2-3.5.1/select2_locale_no.js"></script>
   <script>
     $.fn.datepicker.defaults.language = '{{ LANGUAGE_CODE }}';
   </script>
@@ -334,13 +335,14 @@
   <script src="{{ STATIC_URL }}js/lib/image-cropping.js"></script>
   <script src="{{ STATIC_URL }}js/lib/zipcode.js"></script>
   <script src="{{ STATIC_URL }}js/lib/typeahead.js"></script>
+  <script src="{{ STATIC_URL }}js/lib/select2-tagger.js"></script>
+  <script src="{{ STATIC_URL }}js/lib/select2-input-lookup.js"></script>
 
   {# Our scripts #}
   <script src="{{ STATIC_URL }}js/admin/main.js"></script>
   <script src="{{ STATIC_URL }}js/common/common.js"></script>
   <script src="{{ STATIC_URL }}js/public/widgets.js"></script>
   <script src="{{ STATIC_URL }}js/lib/infinite-scroller.js"></script>
-  <script src="{{ STATIC_URL }}js/admin/tagger.js"></script>
   <script src="{{ STATIC_URL }}js/lib/validator.js"></script>
 
   {% block extra_js %}{% endblock %}

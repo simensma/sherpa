@@ -6,10 +6,6 @@
 
   <div class="modal-body">
 
-    <div class="alert alert-info uploading jq-hide">
-      <a class="close">x</a>
-      Vent mens bildet lastes opp...
-    </div>
     <div class="alert alert-danger upload-no-files jq-hide">
       <a class="close">x</a>
       Du må velge et bilde å laste opp!
@@ -65,10 +61,10 @@
       <div class="form-group">
         <label class="col-md-2 control-label">Nøkkelord</label>
         <div class="col-md-10">
-          <input type="text" class="form-control" name="tags">
-          <input type="hidden" name="tags-serialized">
-          <div class="tag-box"></div>
-          <div style="clear: both;"></div>
+          <input
+            class="form-control"
+            name="tags"
+            data-dnt-tags-url="{% url 'core.views.filter_tags' %}">
         </div>
       </div>
     </form>
@@ -78,6 +74,10 @@
   </div>
 
   <div class="modal-footer">
+    <span class="uploading jq-hide">
+      Laster opp, vennligst vent...
+      <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" alt="Laster opp, vennligst vent...">
+    </span>
     <button class="btn btn-success" type="submit">Last opp</button>
     <a href="javascript:undefined" class="btn btn-default" data-dismiss="modal">Avbryt</a>
   </div>
