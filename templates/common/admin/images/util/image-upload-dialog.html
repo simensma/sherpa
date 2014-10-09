@@ -65,10 +65,10 @@
       <div class="form-group">
         <label class="col-md-2 control-label">Nøkkelord</label>
         <div class="col-md-10">
-          <input type="text" class="form-control" name="tags">
-          <input type="hidden" name="tags-serialized">
-          <div class="tag-box"></div>
-          <div style="clear: both;"></div>
+          <input
+            class="form-control"
+            name="tags"
+            data-dnt-tags-url="{% url 'core.views.filter_tags' %}">
         </div>
       </div>
     </form>
