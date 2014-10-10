@@ -1,9 +1,12 @@
-<div class="aktivitet has-headerimage">
+{% with aktivitet_date.aktivitet.get_image as header_image %}
+<div class="aktivitet{% if header_image %} has-headerimage{% endif %}">
   <div class="row">
     <div class="header">
+      {% if header_image %}
       <div class="image col-md-12 hidden-xs">
-        <div class="image-element" style="background-image: url('{{ aktivitet_date.aktivitet.get_image.url }}');"></div>
+        <div class="image-element" style="background-image: url('{{ header_image.url }}');"></div>
       </div>
+      {% endif %}
       <div class="title col-md-8 col-sm-12">
         <h1>{{ aktivitet_date.aktivitet.title }}</h1>
       </div>
@@ -189,3 +192,4 @@
 
   </div>
 </div>
+{% endwith %}
