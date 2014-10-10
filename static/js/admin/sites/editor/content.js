@@ -67,7 +67,7 @@ $(function() {
                 }
                 image_content.find("img").attr('src', src);
                 image_content.find("img").attr('alt', description);
-                image_content.find("span.description").text(description);
+                image_content.find("span.description-content").text(description);
                 image_content.find("span.photographer span.content").text(photographer);
 
                 if(description === '' && photographer === '') {

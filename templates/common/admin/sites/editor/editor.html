@@ -59,7 +59,7 @@
                 {% if content.get_content.description or content.get_content.photographer %}
                   <div class="description">
                     {% if content.get_content.description %}
-                      <span class="description">{{ content.get_content.description }}</span>
+                      <span class="description-content">{{ content.get_content.description }}</span>
                     {% endif %}
                     {% if content.get_content.photographer %}
                       <span class="photographer">
@@ -102,7 +102,7 @@
       <img src="{{ editor_placeholder_image }}" alt="">
     </a>
     <div class="description">
-      <span class="description"></span>
+      <span class="description-content"></span>
       <span class="photographer">
         Foto: <span class="content"></span>
       </span>
