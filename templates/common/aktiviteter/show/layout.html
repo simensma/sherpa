@@ -12,9 +12,9 @@
 {% endblock %}
 
 {% block extra_js %}
-  <script src="{{ STATIC_URL }}js/aktiviteter/show/show.js"></script>
+  <script src="{{ STATIC_URL }}js/public/aktiviteter/show/show.js"></script>
   {% if aktivitet_date.aktivitet.start_point %}
-    <script src="{{ STATIC_URL }}js/aktiviteter/show/map.js"></script>
+    <script src="{{ STATIC_URL }}js/public/aktiviteter/show/map.js"></script>
     <script src="{{ STATIC_URL }}lib/leaflet/leaflet.js"></script>
   {% endif %}
 {% endblock %}

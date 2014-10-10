@@ -1,3 +1,34 @@
 // We'll use this sheet for constant variables we need for now.
 // It would of course be even better to have the relevant source available when we compile our LESS files
 @bootstrap-gutter-width: 30px;
+
+
+// Media query breakpoints
+// Copied from Bootstrap SASS source
+// Adding variable for tiny screens (Bootstrap does not define a selector for < 480px screens)
+
+// Tiny screen / phone
+@screen-tn: 0px;
+@screen-tn-min: @screen-tn;
+
+// Extra small screen / phone
+@screen-xs: 480px;
+@screen-xs-min: @screen-xs;
+
+// Small screen / tablet
+@screen-sm: 768px;
+@screen-sm-min: @screen-sm;
+
+// Medium screen / desktop
+@screen-md: 992px;
+@screen-md-min: @screen-md;
+
+// Large screen / wide desktop
+@screen-lg: 1200px;
+@screen-lg-min: @screen-lg;
+
+// So media queries don't overlap when required, provide a maximum
+@screen-tn-max: @screen-xs-min - 1;
+@screen-xs-max: @screen-sm-min - 1;
+@screen-sm-max: @screen-md-min - 1;
+@screen-md-max: @screen-lg-min - 1;
