@@ -30,7 +30,7 @@
 <div class="aktivitet-listing">
 
   <div class="row">
-    <div class="span4">
+    <div class="col-md-4">
       <div class="column-query-parameters">
         <h2>Finn en tur</h2>
 
@@ -46,28 +46,31 @@
         </div>
 
         <div class="search-filters">
-          <form class="form-search">
-            <input type="text" name="search" class="input-medium search-query">
-            <button type="button" class="btn">Søk</button>
-          </form>
-        </div>
-
-        <div class="search-filters">
+          <div class="input-group">
+            <input class="form-control search-query" type="text" name="search">
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default">Søk</button>
+            </span>
+          </div>
 
           <div class="section">
             <div class="row">
-              <div class="span2">
+              <div class="col-md-6">
                 <h3>Fra dato</h3>
-                <div class="input-append date">
-                  <input type="text" name="start_date" class="input-small date" placeholder="">
-                  <span class="add-on"><i class="icon-th"></i></span>
+                <div class="input-group date">
+                  <input class="form-control date" type="text" name="start_date" placeholder="">
+                  <span class="input-group-addon">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                  </span>
                 </div>
               </div>
-              <div class="span2">
+              <div class="col-md-6">
                 <h3>Til dato</h3>
-                <div class="input-append date">
-                  <input type="text" name="end_date" class="input-small date" placeholder="">
-                  <span class="add-on"><i class="icon-th"></i></span>
+                <div class="input-group date">
+                  <input class="form-control date" type="text" name="end_date" placeholder="">
+                  <span class="input-group-addon">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                  </span>
                 </div>
               </div>
             </div>
@@ -75,7 +78,7 @@
 
           <div class="section">
             <h3>I nærheten av sted</h3>
-            <input name="ssr_id" type="hidden" style="width: 100%;" data-select-show="position-map position-metadata">
+            <input class="form-control" name="ssr_id" type="hidden" data-select-show="position-map position-metadata">
           </div>
 
           <div class="section">
@@ -119,7 +122,7 @@
 
     </div>
 
-    <div class="span8">
+    <div class="col-md-8">
       <div class="column-results">
 
         <div class="showing">
@@ -147,20 +150,14 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="span12">
-
-      <div id="map" class="leaflet-map"></div>
-      <div class="popups jq-hide">
-        {% for aktivitet in aktivitet_positions %}
-          <div class="popup-content" data-aktivitet-date-id="{{ aktivitet.id }}">
-            <h3>{{ aktivitet.title }}</h3>
-            <p>{{ aktivitet.description|truncatewords:"30" }}</p>
-          </div>
-        {% endfor %}
+  <div id="map" class="leaflet-map"></div>
+  <div class="popups jq-hide">
+    {% for aktivitet in aktivitet_positions %}
+      <div class="popup-content" data-aktivitet-date-id="{{ aktivitet.id }}">
+        <h3>{{ aktivitet.title }}</h3>
+        <p>{{ aktivitet.description|truncatewords:"30" }}</p>
       </div>
-
-    </div>
+    {% endfor %}
   </div>
 </div>
 

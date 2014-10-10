@@ -3,23 +3,21 @@
     Viser {{ aktivitet_dates.object_list|length }} av {{ aktivitet_dates.paginator.count }} aktiviteter
   </p>
 
-  <div class="pagination pagination-small">
-    <ul>
-      <li{% if aktivitet_dates.number == 1 %} class="disabled"{% endif %}>
-        <a href="javascript:undefined" class="page" data-page="min">«</a>
-      </li>
+  <ul class="pagination pagination-sm">
+    <li{% if aktivitet_dates.number == 1 %} class="disabled"{% endif %}>
+      <a href="javascript:undefined" class="page" data-page="min">«</a>
+    </li>
 
-      {% for number in aktivitet_dates.paginator.page_range %}
-        <li{% if number == aktivitet_dates.number %} class="active"{% endif %}>
-          <a href="javascript:undefined" class="page" data-page="{{ number }}">{{ number }}</a>
-        </li>
-      {% endfor %}
-
-      <li{% if aktivitet_dates.number == aktivitet_dates.paginator.num_pages %} class="disabled"{% endif %}>
-        <a href="javascript:undefined" class="page" data-page="max">»</a>
+    {% for number in aktivitet_dates.paginator.page_range %}
+      <li{% if number == aktivitet_dates.number %} class="active"{% endif %}>
+        <a href="javascript:undefined" class="page" data-page="{{ number }}">{{ number }}</a>
       </li>
-    </ul>
-  </div>
+    {% endfor %}
+
+    <li{% if aktivitet_dates.number == aktivitet_dates.paginator.num_pages %} class="disabled"{% endif %}>
+      <a href="javascript:undefined" class="page" data-page="max">»</a>
+    </li>
+  </ul>
 </div>
 
 
@@ -56,21 +54,19 @@
     Viser {{ aktivitet_dates.object_list|length }} av {{ aktivitet_dates.paginator.count }} aktiviteter
   </p>
 
-  <div class="pagination pagination-small">
-    <ul>
-      <li{% if aktivitet_dates.number == 1 %} class="disabled"{% endif %}>
-        <a href="javascript:undefined" class="page" data-page="min">«</a>
-      </li>
+  <ul class="pagination pagination-sm">
+    <li{% if aktivitet_dates.number == 1 %} class="disabled"{% endif %}>
+      <a href="javascript:undefined" class="page" data-page="min">«</a>
+    </li>
 
-      {% for number in aktivitet_dates.paginator.page_range %}
-        <li{% if number == aktivitet_dates.number %} class="active"{% endif %}>
-          <a href="javascript:undefined" class="page" data-page="{{ number }}">{{ number }}</a>
-        </li>
-      {% endfor %}
-
-      <li{% if aktivitet_dates.number == aktivitet_dates.paginator.num_pages %} class="disabled"{% endif %}>
-        <a href="javascript:undefined" class="page" data-page="max">»</a>
+    {% for number in aktivitet_dates.paginator.page_range %}
+      <li{% if number == aktivitet_dates.number %} class="active"{% endif %}>
+        <a href="javascript:undefined" class="page" data-page="{{ number }}">{{ number }}</a>
       </li>
-    </ul>
-  </div>
+    {% endfor %}
+
+    <li{% if aktivitet_dates.number == aktivitet_dates.paginator.num_pages %} class="disabled"{% endif %}>
+      <a href="javascript:undefined" class="page" data-page="max">»</a>
+    </li>
+  </ul>
 </div>
