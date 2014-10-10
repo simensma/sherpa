@@ -89,6 +89,12 @@ MEMBERSHIP_YEAR_START = [
         'actual_date': date(year=2013, month=10, day=25), # Note that this is one day *after*
         'public_date': date(year=2013, month=11, day=1),
     },
+    {
+        'initiation_date': date(year=2014, month=10, day=13),
+        # actual_date was vaguely specified by memberservice this year; might occur a day or two before this date
+        'actual_date': date(year=2014, month=10, day=16),
+        'public_date': date(year=2014, month=11, day=1),
+    },
 ]
 
 # Pixel sizes for thumbnail images generated from uploaded images.
