@@ -62,6 +62,16 @@
                       <option value="{{ forening.id }}">{{ forening.name }}</option>
                     {% endfor %}
                   </optgroup>
+                  <optgroup label="Lokale turlag">
+                    {% for forening in all_foreninger_sorted.turlag %}
+                      <option value="{{ forening.id }}">{{ forening.name }}</option>
+                    {% endfor %}
+                  </optgroup>
+                  <optgroup label="Turgrupper">
+                    {% for forening in all_foreninger_sorted.turgruppe %}
+                      <option value="{{ forening.id }}">{{ forening.name }}</option>
+                    {% endfor %}
+                  </optgroup>
                 </select>
               </div>
             </div>
