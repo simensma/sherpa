@@ -70,9 +70,82 @@ div.aktivitet-listing {
 }
 
 div.aktivitet {
+
+  &.has-headerimage {
+    @headerimage-height: 380px;
+
+    @media (min-width: @screen-sm-min) {
+      div.header {
+        margin-bottom: 20px;
+
+        div.image {
+          width: 100%;
+          height: @headerimage-height;
+          overflow: hidden;
+
+          div.image-element {
+            height: 100%;
+            width: 100%;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: cover;
+          }
+
+        }
+
+        h1 {
+          position: absolute;
+          bottom: 0;
+          width: 100%;
+          padding: 0 25px;
+          border: 0;
+          font-size: 40px;
+          color: #fff;
+          text-shadow: 0 0 20px rgba(0, 0, 0, .75);
+        }
+      }
+    }
+
+    @media (min-width: @screen-md-min) {
+      div.header {
+        padding-top: @headerimage-height;
+
+        div.image {
+          position: absolute;
+          top: 150px;
+          left: 0;
+          width: 100%;
+          height: @headerimage-height;
+          overflow: hidden;
+          padding: 0;
+          border-top: 1px solid #e5e5e5;
+        }
+
+        h1 {
+          bottom: 50px;
+          padding: 0 25px 0 0;
+          font-size: 50px;
+        }
+
+      }
+
+      .meta-container {
+        position: relative;
+        top: -@headerimage-height/2;
+      }
+    }
+  }
+
+  @media (max-width: @screen-sm-max) {
+    div.meta-container.pull-right {
+      width: 100%;
+    }
+  }
+
   div.meta {
     font-family: "DTL Nobel" !important;
     font-weight: bold;
+    background-color: #e6e6e6;
 
     a {
       color: #333;

@@ -1,12 +1,16 @@
-<div class="row">
-  <div class="col-lg-12">
-
-    <div class="aktivitet">
-
-      <h1>{{ aktivitet_date.aktivitet.title }}</h1>
-
+<div class="aktivitet has-headerimage">
+  <div class="row">
+    <div class="header">
+      <div class="image col-md-12 hidden-xs">
+        <div class="image-element" style="background-image: url('{{ aktivitet_date.aktivitet.get_image.url }}');"></div>
+      </div>
+      <div class="title col-md-8 col-sm-12">
+        <h1>{{ aktivitet_date.aktivitet.title }}</h1>
+      </div>
+    </div>
+    <div class="content col-lg-12">
       <div class="row">
-        <div class="col-sm-4 pull-right">
+        <div class="meta-container col-sm-4 pull-right">
           <div class="meta square-well">
             <div class="meta aktivitet-info">
               <h3 class="heading">Tur med turleder</h3>
@@ -102,7 +106,6 @@
             <h3>Kontaktinformasjon:</h3>
             {% include 'common/aktiviteter/contact_information.html' %}
           </div>
-
         </div>
 
         <div class="col-sm-8 pull-left">
