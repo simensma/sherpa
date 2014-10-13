@@ -49,20 +49,30 @@
   </div>
 
   <div class="searchbox-mobile">
-    <p>Velg type:</p>
-    <select name="category">
-    {% for category in categories %}
-      <option value="{{ category.0 }}"{% if category == chosen_category %} selected{% endif %}>{{ category.1 }}</option>
-    {% endfor %}
-    </select>
+    <div class="form-dnt-default">
+      <div class="form-group">
+        <label class="control-label">Velg type:</label>
+        <select class="form-control" name="category">
+          {% for category in categories %}
+            <option value="{{ category.0 }}"{% if category == chosen_category %} selected{% endif %}>
+              {{ category.1 }}
+            </option>
+          {% endfor %}
+          </select>
+      </div>
 
-    <p>Velg fylke:</p>
-    <select name="county">
-      <option value="all">Hele landet</option>
-    {% for county in counties %}
-      <option value="{{ county.sherpa_id }}"{% if chosen_county_name|lower == county.name|lower %} selected{% endif %}>{{ county.name }}</option>
-    {% endfor %}
-    </select>
+      <div class="form-group">
+        <label class="control-label">Velg fylke:</label>
+        <select class="form-control" name="county">
+          <option value="all">Hele landet</option>
+          {% for county in counties %}
+            <option value="{{ county.sherpa_id }}"{% if chosen_county_name|lower == county.name|lower %} selected{% endif %}>
+              {{ county.name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
   </div>
 
 
