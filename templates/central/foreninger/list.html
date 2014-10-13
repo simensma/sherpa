@@ -65,7 +65,7 @@
         <label class="control-label">Velg fylke:</label>
         <select class="form-control" name="county">
           {% for county in counties %}
-            <option value="{{ county.sherpa_id }}"{% if chosen_county_name|lower == county.name|lower %} selected{% endif %}>
+            <option value="{{ county.id }}"{% if chosen_county_name|lower == county.name|lower %} selected{% endif %}>
               {{ county.name }}
             </option>
           {% endfor %}
