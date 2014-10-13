@@ -105,13 +105,9 @@
               </div>
             {% endif %}
           </div>
-          <div class="contactinfo">
-            <h3>Kontaktinformasjon:</h3>
-            {% include 'common/aktiviteter/contact_information.html' %}
-          </div>
         </div>
 
-        <div class="col-sm-8 pull-left">
+        <div class="col-md-8 pull-left">
 
           <div class="description">
             <p>{{ aktivitet_date.aktivitet.description|linebreaksbr }}</p>
@@ -180,6 +176,12 @@
           {% endif %}
 
         </div>
+        <div class="contactinfo-container col-md-4 pull-right">
+          <div class="contactinfo">
+            <h3>Kontaktinformasjon:</h3>
+            {% include 'common/aktiviteter/contact_information.html' %}
+          </div>
+        </div>
       </div>
 
       {% if aktivitet_date.aktivitet.turforslag %}
@@ -189,7 +191,6 @@
       {% endif %}
 
     </div>
-
   </div>
 </div>
 {% endwith %}
