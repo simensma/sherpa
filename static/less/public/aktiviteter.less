@@ -70,6 +70,26 @@ div.aktivitet-listing {
 }
 
 div.aktivitet {
+  h1 {
+    border: 0;
+  }
+
+  .meta-container {
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: @screen-sm-max) {
+    .contactinfo-container {
+      width: 100%;
+    }
+  }
+
+  @media (min-width: @screen-md-min) {
+    .contactinfo {
+      border-left: 3px solid #9b9b9b;
+      padding: 10px 0 10px 20px;
+    }
+  }
 
   &.has-headerimage {
     @headerimage-height: 380px;
@@ -98,8 +118,6 @@ div.aktivitet {
           bottom: 0;
           width: 100%;
           padding: 0 25px;
-          border: 0;
-          font-size: 40px;
           color: #fff;
           text-shadow: 0 0 20px rgba(0, 0, 0, .75);
         }
@@ -130,8 +148,7 @@ div.aktivitet {
       }
 
       .meta-container {
-        position: relative;
-        top: -@headerimage-height/2;
+        margin-top: -@headerimage-height/2;
       }
     }
   }
@@ -208,10 +225,6 @@ div.aktivitet {
 
   }
 
-  .contactinfo {
-    padding: 20px;
-  }
-
   // Hackish item for using carousel-caption (which need a positioned parent) on single images
   div.images {
     margin-bottom: 20px;
@@ -231,6 +244,7 @@ div.aktivitet {
   div.leaflet-map {
     height: 300px;
     border: 1px solid #ccc;
+    margin-bottom: 20px;
   }
 }
 
