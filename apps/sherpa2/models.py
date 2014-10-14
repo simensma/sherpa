@@ -617,17 +617,21 @@ class Activity(models.Model):
 
         aktivitet.sherpa2_id = self.id
         foreninger = self.convert_foreninger()
-        aktivitet.forening = foreninger['main']
-        aktivitet.co_foreninger = foreninger['rest']
         aktivitet.code = self.code.strip()
         aktivitet.title = self.name.strip()
         aktivitet.description = self.convert_description()
         aktivitet.pub_date = self.get_pub_date()
         aktivitet.start_point = self.get_start_point()
-        aktivitet.counties = self.get_counties()
         aktivitet.locations = json.dumps(self.get_counties())
         aktivitet.difficulty = self.convert_difficulty()
         aktivitet.audiences = json.dumps(self.convert_audiences())
+
+        # Save before updating relational fields in case this was a new object without a PK
+        aktivitet.save()
+
+        aktivitet.forening = foreninger['main']
+        aktivitet.co_foreninger = foreninger['rest']
+        aktivitet.counties = self.get_counties()
         category, category_type, category_tags = self.convert_categories()
         aktivitet.category = category
         aktivitet.category_type = category_type
@@ -635,8 +639,8 @@ class Activity(models.Model):
         for tag in category_tags:
             obj, created = Tag.objects.get_or_create(name=tag)
             aktivitet.category_tags.add(obj)
-
         aktivitet.save()
+
         return aktivitet
 
     @staticmethod
