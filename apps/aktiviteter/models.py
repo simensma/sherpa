@@ -37,7 +37,6 @@ class Aktivitet(models.Model):
     # and probably faster.
     audiences = models.CharField(max_length=1023)
     CATEGORY_CHOICES = (
-        # ('trip', 'Tur/Aktivitet'),
         ('organizedhike', 'Fellestur'),
         ('course', 'Kurs'),
         ('event', 'Arrangement'),
@@ -159,29 +158,6 @@ class Aktivitet(models.Model):
     # A predefined list of subcategory suggestions - they're simply implemented
     # as tags ('core.Tag'), though.
     SUBCATEGORIES = {
-        'trip': [
-            u'fottur',
-            u'skitur',
-            u'sykkeltur',
-            u'klatring',
-            u'padling',
-            u'skøytetur',
-            u'topptur',
-            u'kiting',
-            u'surfing',
-            u'brevandring',
-            u'grottetur',
-            u'snøhuletur',
-            u'trilletur',
-            u'bærtur',
-            u'sopptur',
-            u'fisketur',
-            u'ridetur',
-            u'singeltur',
-            u'naturlos',
-            u'utenlandstur',
-            u'orientering',
-        ],
         'organizedhike': [
             u'fottur',
             u'skitur',
