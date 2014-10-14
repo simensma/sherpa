@@ -392,7 +392,10 @@ class Activity(models.Model):
     cat = models.TextField(db_column='ac_cat', blank=True)
     lat = models.DecimalField(db_column='ac_lat', null=True, max_digits=65535, decimal_places=65535, blank=True)
     lon = models.DecimalField(db_column='ac_lon', null=True, max_digits=65535, decimal_places=65535, blank=True)
-    publish_date = models.TextField(db_column='ac_publish_date', blank=True)
+    pub_date = models.TextField(db_column='ac_publish_date', blank=True)
+
+    def get_pub_date(self):
+        return datetime.strptime(self.pub_date, "%Y-%m-%d").date()
 
     def convert(self, aktivitet=None):
         """Converts this aktivitet from sherpa2 to a new aktivitet. If aktivitet is provided, that object will be used
@@ -403,6 +406,7 @@ class Activity(models.Model):
             aktivitet = Aktivitet()
 
         aktivitet.sherpa2_id = self.id
+        aktivitet.pub_date = self.get_pub_date()
 
         aktivitet.save()
         return aktivitet
