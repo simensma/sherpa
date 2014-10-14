@@ -6,6 +6,9 @@ from django.contrib.gis.db import models
 from django.contrib.gis.geos import Point
 from django.core.cache import cache
 
+from core.models import County
+from sherpa2.util import SHERPA2_COUNTIES_SET1
+
 class Forening(models.Model):
     id = models.IntegerField(db_column='gr_id', primary_key=True)
     focus_id = models.IntegerField(db_column='gr_my_id', null=True, blank=True)
@@ -399,6 +402,9 @@ class Activity(models.Model):
         from foreninger.models import Forening
         return [Forening.objects.get(id=id) for id in self.owner.split('|') if id != '']
 
+    def get_counties(self):
+        return [County.objects.get(code=SHERPA2_COUNTIES_SET1[id]) for id in self.county.split('|') if id != '']
+
     def get_pub_date(self):
         return datetime.strptime(self.pub_date, "%Y-%m-%d").date()
 
@@ -448,6 +454,7 @@ class Activity(models.Model):
         aktivitet.description = self.convert_description()
         aktivitet.pub_date = self.get_pub_date()
         aktivitet.start_point = self.get_start_point()
+        aktivitet.counties = self.get_counties()
 
         aktivitet.save()
         return aktivitet
