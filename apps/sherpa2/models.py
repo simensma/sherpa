@@ -626,6 +626,7 @@ class Activity(models.Model):
         aktivitet.difficulty = self.convert_difficulty()
         aktivitet.audiences = json.dumps(self.convert_audiences())
         aktivitet.published = True
+        aktivitet.private = False
 
         # Save before updating relational fields in case this was a new object without a PK
         aktivitet.save()
