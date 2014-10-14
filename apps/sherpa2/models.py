@@ -420,6 +420,10 @@ class Activity(models.Model):
 
         raise Exception("Tried to convert empty list of foreninger")
 
+    def convert_description(self):
+        # TODO: Handle HTML
+        return "%s %s" % (self.ingress, self.content)
+
     def convert(self, aktivitet=None):
         """Converts this aktivitet from sherpa2 to a new aktivitet. If aktivitet is provided, that object will be used
         instead of a new one."""
@@ -434,6 +438,7 @@ class Activity(models.Model):
         aktivitet.co_foreninger = foreninger['rest']
         aktivitet.code = self.code.strip()
         aktivitet.title = self.name.strip()
+        aktivitet.description = self.convert_description()
         aktivitet.pub_date = self.get_pub_date()
 
         aktivitet.save()
