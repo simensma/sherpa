@@ -434,6 +434,15 @@ class Activity(models.Model):
         'Va_6': 'expert',
     }
 
+    AUDIENCE_CONVERSION_TABLE = {
+        'Tl_adult': 'adults',
+        'Tl_children': 'children',
+        'Tl_youth': 'youth',
+        'Tl_senior': 'senior',
+        'Tl_mountaineers': 'mountaineers',
+        'Tl_disabled': 'disabled',
+    }
+
     def convert_foreninger(self):
         """sherpa2 models foreninger as a flat list, while sherpa3 separates the main forening and co_foreninger.
         We'll assume that the forening with the highest 'type' (sentral/forening/turgruppe) is the main forening.
@@ -471,6 +480,10 @@ class Activity(models.Model):
 
         return difficulty
 
+    def convert_audiences(self):
+        return [Activity.AUDIENCE_CONVERSION_TABLE[extra]
+            for extra in self.get_extras() if extra in Activity.AUDIENCE_CONVERSION_TABLE]
+
     def convert(self, aktivitet=None):
         """Converts this aktivitet from sherpa2 to a new aktivitet. If aktivitet is provided, that object will be used
         instead of a new one."""
@@ -491,6 +504,7 @@ class Activity(models.Model):
         aktivitet.counties = self.get_counties()
         aktivitet.locations = json.dumps(self.get_counties())
         aktivitet.difficulty = self.convert_difficulty()
+        aktivitet.audiences = json.dumps(self.convert_audiences())
 
         aktivitet.save()
         return aktivitet
