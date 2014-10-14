@@ -428,11 +428,11 @@ class Activity(models.Model):
             aktivitet = Aktivitet()
 
         aktivitet.sherpa2_id = self.id
-        aktivitet.code = self.code.strip()
-        aktivitet.title = self.name.strip()
         foreninger = self.convert_foreninger(self.get_owners())
         aktivitet.forening = foreninger['main']
         aktivitet.co_foreninger = foreninger['rest']
+        aktivitet.code = self.code.strip()
+        aktivitet.title = self.name.strip()
         aktivitet.pub_date = self.get_pub_date()
 
         aktivitet.save()
