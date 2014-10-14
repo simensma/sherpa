@@ -401,6 +401,24 @@ class Activity(models.Model):
     def get_pub_date(self):
         return datetime.strptime(self.pub_date, "%Y-%m-%d").date()
 
+    def convert_foreninger(self, foreninger):
+        """sherpa2 models foreninger as a flat list, while sherpa3 separates the main forening and co_foreninger.
+        We'll assume that the forening with the highest 'type' (sentral/forening/turgruppe) is the main forening.
+        If there are >1 of the same highest type, we'll have to pick one at random."""
+        from foreninger.models import Forening
+
+        foreninger_sorted = Forening.sort(foreninger)
+        for type in [t[0] for t in Forening.TYPES]:
+            if len(foreninger_sorted[type]) > 0:
+                main_forening = foreninger_sorted[type][0]
+                rest = [f for f in foreninger if f != main_forening]
+                return {
+                    'main': main_forening,
+                    'rest': rest,
+                }
+
+        raise Exception("Tried to convert empty list of foreninger")
+
     def convert(self, aktivitet=None):
         """Converts this aktivitet from sherpa2 to a new aktivitet. If aktivitet is provided, that object will be used
         instead of a new one."""
@@ -410,7 +428,9 @@ class Activity(models.Model):
             aktivitet = Aktivitet()
 
         aktivitet.sherpa2_id = self.id
-        aktivitet.forening = self.get_owners()[0]
+        foreninger = self.convert_foreninger(self.get_owners())
+        aktivitet.forening = foreninger['main']
+        aktivitet.co_foreninger = foreninger['rest']
         aktivitet.pub_date = self.get_pub_date()
 
         aktivitet.save()
