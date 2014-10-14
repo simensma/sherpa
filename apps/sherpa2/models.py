@@ -3,6 +3,7 @@ from datetime import datetime, date, timedelta
 import json
 
 from django.contrib.gis.db import models
+from django.contrib.gis.geos import Point
 from django.core.cache import cache
 
 class Forening(models.Model):
@@ -401,6 +402,12 @@ class Activity(models.Model):
     def get_pub_date(self):
         return datetime.strptime(self.pub_date, "%Y-%m-%d").date()
 
+    def get_start_point(self):
+        if self.lat is None or self.lon is None:
+            return None
+
+        return Point(float(self.lat), float(self.lon))
+
     def convert_foreninger(self):
         """sherpa2 models foreninger as a flat list, while sherpa3 separates the main forening and co_foreninger.
         We'll assume that the forening with the highest 'type' (sentral/forening/turgruppe) is the main forening.
@@ -440,6 +447,7 @@ class Activity(models.Model):
         aktivitet.title = self.name.strip()
         aktivitet.description = self.convert_description()
         aktivitet.pub_date = self.get_pub_date()
+        aktivitet.start_point = self.get_start_point()
 
         aktivitet.save()
         return aktivitet
