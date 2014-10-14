@@ -409,6 +409,9 @@ class Activity(models.Model):
         return [Location.get_active().get(code=location_code)
             for location_code in self.location.split('|') if location_code != '']
 
+    def get_extras(self):
+        return [extra.strip() for extra in self.extras.split('|') if extra.strip() != '']
+
     def get_pub_date(self):
         return datetime.strptime(self.pub_date, "%Y-%m-%d").date()
 
@@ -417,6 +420,19 @@ class Activity(models.Model):
             return None
 
         return Point(float(self.lat), float(self.lon))
+
+    #
+    # Conversion to sherpa 3
+    #
+
+    DIFFICULTY_CONVERSION_TABLE = {
+        'Va_1': 'easy',
+        'Va_2': 'easy',
+        'Va_3': 'medium',
+        'Va_4': 'hard',
+        'Va_5': 'hard',
+        'Va_6': 'expert',
+    }
 
     def convert_foreninger(self):
         """sherpa2 models foreninger as a flat list, while sherpa3 separates the main forening and co_foreninger.
@@ -441,6 +457,20 @@ class Activity(models.Model):
         # TODO: Handle HTML
         return "%s %s" % (self.ingress, self.content)
 
+    def convert_difficulty(self):
+        difficulty = None
+        for extra in self.get_extras():
+            if extra in Activity.DIFFICULTY_CONVERSION_TABLE:
+                if difficulty is not None:
+                    raise Exception("Illegal state: Activity with more than one difficulty defined")
+
+                difficulty = Activity.DIFFICULTY_CONVERSION_TABLE[extra]
+
+        if difficulty is None:
+            raise Exception("Activity without difficulty")
+
+        return difficulty
+
     def convert(self, aktivitet=None):
         """Converts this aktivitet from sherpa2 to a new aktivitet. If aktivitet is provided, that object will be used
         instead of a new one."""
@@ -460,6 +490,7 @@ class Activity(models.Model):
         aktivitet.start_point = self.get_start_point()
         aktivitet.counties = self.get_counties()
         aktivitet.locations = json.dumps(self.get_counties())
+        aktivitet.difficulty = self.convert_difficulty()
 
         aktivitet.save()
         return aktivitet
