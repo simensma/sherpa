@@ -49,6 +49,9 @@ class Aktivitet(models.Model):
     published = models.BooleanField(default=False)
     private = models.BooleanField(default=False)
 
+    # Applicable for aktiviteter imported from sherpa2
+    sherpa2_id = models.IntegerField(null=True)
+
     def __unicode__(self):
         return u'%s: %s' % (self.pk, self.title)
 
