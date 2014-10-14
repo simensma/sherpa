@@ -355,3 +355,65 @@ class NtbId(models.Model):
 
     class Meta:
         db_table = 'ntb_id'
+
+class Activity(models.Model):
+    id = models.IntegerField(db_column='ac_id', primary_key=True)
+    code = models.TextField(db_column='ac_code', blank=True)
+    owner = models.TextField(db_column='ac_owner', blank=True)
+    name = models.TextField(db_column='ac_name', blank=True)
+    ingress = models.TextField(db_column='ac_ingress', blank=True)
+    content = models.TextField(db_column='ac_content', blank=True)
+    info = models.TextField(db_column='ac_info', blank=True)
+    author = models.TextField(db_column='ac_author', blank=True)
+    author_email = models.TextField(db_column='ac_author_email', blank=True)
+    date_from = models.TextField(db_column='ac_date_from', blank=True)
+    date_to = models.TextField(db_column='ac_date_to', blank=True)
+    deposit = models.DecimalField(db_column='ac_deposit', null=True, max_digits=6, decimal_places=2, blank=True)
+    cancel_valid = models.DecimalField(db_column='ac_cancel_valid', null=True, max_digits=6, decimal_places=2, blank=True)
+    cancel_invalid = models.DecimalField(db_column='ac_cancel_invalid', null=True, max_digits=6, decimal_places=2, blank=True)
+    days = models.IntegerField(db_column='ac_days', null=True, blank=True)
+    location = models.TextField(db_column='ac_location', blank=True)
+    type = models.TextField(db_column='ac_type', blank=True)
+    extras = models.TextField(db_column='ac_extras', blank=True)
+    status = models.TextField(db_column='ac_status', blank=True)
+    online = models.IntegerField(db_column='ac_online', null=True, blank=True)
+    lang = models.TextField(db_column='ac_lang', blank=True)
+    author_phone = models.TextField(db_column='ac_author_phone', blank=True)
+    name_nno = models.TextField(db_column='ac_name_nno', blank=True)
+    ingress_nno = models.TextField(db_column='ac_ingress_nno', blank=True)
+    content_nno = models.TextField(db_column='ac_content_nno', blank=True)
+    name_eng = models.TextField(db_column='ac_name_eng', blank=True)
+    ingress_eng = models.TextField(db_column='ac_ingress_eng', blank=True)
+    content_eng = models.TextField(db_column='ac_content_eng', blank=True)
+    name_ger = models.TextField(db_column='ac_name_ger', blank=True)
+    ingress_ger = models.TextField(db_column='ac_ingress_ger', blank=True)
+    content_ger = models.TextField(db_column='ac_content_ger', blank=True)
+    county = models.TextField(db_column='ac_county', blank=True)
+    cat = models.TextField(db_column='ac_cat', blank=True)
+    lat = models.DecimalField(db_column='ac_lat', null=True, max_digits=65535, decimal_places=65535, blank=True)
+    lon = models.DecimalField(db_column='ac_lon', null=True, max_digits=65535, decimal_places=65535, blank=True)
+    publish_date = models.TextField(db_column='ac_publish_date', blank=True)
+
+    class Meta:
+        db_table = u'activity'
+
+class ActivityDate(models.Model):
+    activity = models.ForeignKey(Activity, db_column='ac_id', related_name='dates')
+
+    # Note that we're pretending that this column is the primary key, because Django *needs* a PK column and this
+    # table doesn't have one. Note that this has ramifications for queryset.distinct().count() and instance
+    # comparisons. Additionally, you should NOT call save() on this model (db_routers is configured to disallow it).
+    date_from = models.CharField(db_column='ac_date_from', max_length=12, primary_key=True)
+    date_to = models.CharField(db_column='ac_date_to', max_length=12)
+    date_reg = models.CharField(db_column='ac_date_reg', max_length=12, blank=True)
+    date_cancel = models.CharField(db_column='ac_date_cancel', max_length=12, blank=True)
+    date_billing = models.CharField(db_column='ac_date_billing', max_length=12, blank=True)
+    leader = models.CharField(db_column='ac_leader', max_length=255, blank=True)
+    booking = models.IntegerField(db_column='ac_booking', null=True, blank=True)
+    status = models.CharField(db_column='ac_status', max_length=20, blank=True)
+    online = models.IntegerField(db_column='ac_online', null=True, blank=True)
+    signup_date_from = models.TextField(db_column='ac_signup_date_from', blank=True)
+    signup_date_to = models.TextField(db_column='ac_signup_date_to', blank=True)
+
+    class Meta:
+        db_table = u'activity_date'
