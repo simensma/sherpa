@@ -29,10 +29,22 @@
 
 <div class="aktivitet-listing">
 
+  <div class="navbar navbar-default navbar-fixed-bottom visible-xs toggle-filters-results">
+    <div class="container">
+      <div class="col-xs-12 sm-hidden">
+        <button class="btn btn-danger btn-lg btn-block" data-dnt-action="show-activities-filters">Endre søk</button>
+        <button class="btn btn-danger btn-lg btn-block jq-hide" data-dnt-action="show-activities-results">Vis resultat</button>
+      </div>
+    </div>
+  </div>
+
+  <h1 class="visible-xs">Finn aktiviteter</h1>
+
   <div class="row">
-    <div class="col-sm-4">
-      <div class="column-query-parameters">
-        <h2>Finn en tur</h2>
+
+    <div class="column-filters col-sm-4 hidden-xs">
+      <div class="wrapper">
+        <h2 class="hidden-xs">Finn tur</h2>
 
         <div class="search-filters">
           <div class="section">
@@ -122,14 +134,14 @@
 
     </div>
 
-    <div class="col-sm-8">
-      <div class="column-results">
+    <div class="column-results col-sm-8">
+      <div class="wrapper">
 
         <div class="showing">
           <p>Viser <span data-container-for="selected-activity-types"><a href="#">turer med guide</a>, <a href="#">kurs</a>, <a href="#">fellesturer</a> og <a href="#">dugnader</a></span></p>
         </div>
 
-        <div class="toggle-results-view">
+        <div class="toggle-results-view-type">
           <div class="inline-label"><span>Vis resultat i</span></div>
           <div class="btn-group">
             <button type="button" class="btn btn-default active list">Liste</button>

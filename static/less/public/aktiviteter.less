@@ -1,6 +1,10 @@
 div.aktivitet-listing {
 
-  div.toggle-results-view {
+  div.navbar.toggle-filters-results {
+    padding: 10px 0;
+  }
+
+  div.toggle-results-view-type {
     margin-bottom: 20px;
 
     div.inline-label {
@@ -39,7 +43,7 @@ div.aktivitet-listing {
 
   }
 
-  div.column-query-parameters {
+  div.column-filters {
 
     padding-top: 30px;
 
@@ -50,8 +54,13 @@ div.aktivitet-listing {
   }
 
   div.column-results {
-    background-color: #e4e4e4;
-    padding: 30px;
+
+    @media (min-width: @screen-sm-min) {
+      .wrapper {
+        background-color: #e4e4e4;
+        padding: 30px;
+      }
+    }
 
     table.aktiviteter {
       td {
