@@ -394,6 +394,15 @@ class Activity(models.Model):
     lon = models.DecimalField(db_column='ac_lon', null=True, max_digits=65535, decimal_places=65535, blank=True)
     publish_date = models.TextField(db_column='ac_publish_date', blank=True)
 
+    def convert(self, aktivitet=None):
+        """Converts this aktivitet from sherpa2 to a new aktivitet. If aktivitet is provided, that object will be used
+        instead of a new one."""
+        raise NotImplemented
+
+    @staticmethod
+    def sync_all():
+        raise NotImplemented
+
     class Meta:
         db_table = u'activity'
 
