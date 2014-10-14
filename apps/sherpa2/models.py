@@ -401,12 +401,13 @@ class Activity(models.Model):
     def get_pub_date(self):
         return datetime.strptime(self.pub_date, "%Y-%m-%d").date()
 
-    def convert_foreninger(self, foreninger):
+    def convert_foreninger(self):
         """sherpa2 models foreninger as a flat list, while sherpa3 separates the main forening and co_foreninger.
         We'll assume that the forening with the highest 'type' (sentral/forening/turgruppe) is the main forening.
         If there are >1 of the same highest type, we'll have to pick one at random."""
         from foreninger.models import Forening
 
+        foreninger = self.get_owners()
         foreninger_sorted = Forening.sort(foreninger)
         for type in [t[0] for t in Forening.TYPES]:
             if len(foreninger_sorted[type]) > 0:
@@ -428,7 +429,7 @@ class Activity(models.Model):
             aktivitet = Aktivitet()
 
         aktivitet.sherpa2_id = self.id
-        foreninger = self.convert_foreninger(self.get_owners())
+        foreninger = self.convert_foreninger()
         aktivitet.forening = foreninger['main']
         aktivitet.co_foreninger = foreninger['rest']
         aktivitet.code = self.code.strip()
