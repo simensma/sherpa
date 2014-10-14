@@ -429,6 +429,7 @@ class Activity(models.Model):
 
         aktivitet.sherpa2_id = self.id
         aktivitet.code = self.code.strip()
+        aktivitet.title = self.name.strip()
         foreninger = self.convert_foreninger(self.get_owners())
         aktivitet.forening = foreninger['main']
         aktivitet.co_foreninger = foreninger['rest']
