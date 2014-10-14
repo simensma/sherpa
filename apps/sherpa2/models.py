@@ -394,6 +394,10 @@ class Activity(models.Model):
     lon = models.DecimalField(db_column='ac_lon', null=True, max_digits=65535, decimal_places=65535, blank=True)
     pub_date = models.TextField(db_column='ac_publish_date', blank=True)
 
+    def get_owners(self):
+        from foreninger.models import Forening
+        return [Forening.objects.get(id=id) for id in self.owner.split('|') if id != '']
+
     def get_pub_date(self):
         return datetime.strptime(self.pub_date, "%Y-%m-%d").date()
 
@@ -406,6 +410,7 @@ class Activity(models.Model):
             aktivitet = Aktivitet()
 
         aktivitet.sherpa2_id = self.id
+        aktivitet.forening = self.get_owners()[0]
         aktivitet.pub_date = self.get_pub_date()
 
         aktivitet.save()
