@@ -6,7 +6,7 @@ from django.contrib.gis.db import models
 from django.contrib.gis.geos import Point
 from django.core.cache import cache
 
-from core.models import County
+from core.models import County, Tag
 from sherpa2.util import SHERPA2_COUNTIES_SET1
 
 class Forening(models.Model):
@@ -412,6 +412,9 @@ class Activity(models.Model):
     def get_extras(self):
         return [extra.strip() for extra in self.extras.split('|') if extra.strip() != '']
 
+    def get_categories(self):
+        return [c.strip() for c in self.cat.split('|') if c.strip() != '']
+
     def get_pub_date(self):
         return datetime.strptime(self.pub_date, "%Y-%m-%d").date()
 
@@ -484,6 +487,126 @@ class Activity(models.Model):
         return [Activity.AUDIENCE_CONVERSION_TABLE[extra]
             for extra in self.get_extras() if extra in Activity.AUDIENCE_CONVERSION_TABLE]
 
+    def convert_categories(self):
+        """The wrapper for converting category, category type and subcategories"""
+        main_category = self.convert_category()
+        category_tags = self.convert_category_tags()
+        category_type = self.convert_category_type(main_category, category_tags)
+        return (main_category, category_type, category_tags)
+
+    def convert_category(self):
+        """Figure out the main category"""
+        categories = self.get_categories()
+
+        # Try to infer the main category from the given categories
+
+        if 'fellestur' in categories:
+            return 'organizedhike'
+
+        course_categories = [
+            'brekurs',
+            'instruktorkurs',
+            'klatrekurs',
+            'kurs',
+            'skredkurs',
+            'turlederkurs',
+        ]
+        if any([course in categories for course in course_categories]):
+            return 'course'
+
+        event_categories = [
+            'basecamp',
+            'byfjellstrimmen',
+            'familiecamp',
+            'jubileum',
+            'komdegut',
+            'medlemsmote',
+            'multisport',
+            'oppstart',
+            'opptur',
+            'samling',
+            'seminar',
+            'temamote',
+        ]
+        if any([event in categories for event in event_categories]):
+            return 'event'
+
+        if 'dugnad' in categories:
+            return 'volunteerwork'
+
+        # Couldn't infer the main category from the given categories - fall back to fellestur
+        return 'organizedhike'
+
+    def convert_category_tags(self):
+        """Convert the flat category list; adapting similar but different categories to the new suggested
+        subcategories"""
+        categories = self.get_categories()
+
+        #
+        # æøå is now supported - translate these
+        #
+
+        norwegian_char_categories = [
+            ('battur', u'båttur',),
+            ('bertur', u'bærtur',),
+            ('instruktorkurs', u'instruktørkurs',),
+            ('lopetur', u'løpetur',),
+            ('medlemsmote', u'medlemsmøte',),
+            ('nertur', u'nærtur',),
+            ('skoyter', u'skøyter',),
+            ('snohuletur', u'snøhuletur',),
+            ('temamote', u'temamøte',),
+        ]
+
+        for category in norwegian_char_categories:
+            if category[0] in categories:
+                categories.remove(category[0])
+                categories.append(category[1])
+
+        #
+        # Merge kajakk/kano into padletur
+        #
+
+        if 'kajakk' in categories or 'kanotur' in categories:
+            if 'kajakk' in categories:
+                categories.remove('kajakk')
+            if 'kanotur' in categories:
+                categories.remove('kanotur')
+            categories.append('padletur')
+
+        #
+        # Other renamed categories
+        #
+
+        renamed_categories = [
+            ('klatring', u'klatretur',),
+            ('komdegut', u'kom-deg-ut-dagen',),
+            ('sykkel', u'sykkeltur',),
+        ]
+
+        for category in renamed_categories:
+            if category[0] in categories:
+                categories.remove(category[0])
+                categories.append(category[1])
+
+        return categories
+
+    def convert_category_type(self, category, category_tags):
+        """Applies the category type based on the main category and converted subcategories"""
+        from aktiviteter.models import Aktivitet
+
+        category_type = None
+        for category in Aktivitet.SUBCATEGORIES[category]:
+            if category in category_tags:
+                # Note that we'll overwrite the type if several defined categories matches the subcategory suggestions
+                category_type = category
+
+        if category_type is None:
+            # This is expected to happen and will need to be handled
+            raise Exception("No category_type is specified for this activity")
+
+        return category_type
+
     def convert(self, aktivitet=None):
         """Converts this aktivitet from sherpa2 to a new aktivitet. If aktivitet is provided, that object will be used
         instead of a new one."""
@@ -505,6 +628,13 @@ class Activity(models.Model):
         aktivitet.locations = json.dumps(self.get_counties())
         aktivitet.difficulty = self.convert_difficulty()
         aktivitet.audiences = json.dumps(self.convert_audiences())
+        category, category_type, category_tags = self.convert_categories()
+        aktivitet.category = category
+        aktivitet.category_type = category_type
+        aktivitet.category_tags.clear()
+        for tag in category_tags:
+            obj, created = Tag.objects.get_or_create(name=tag)
+            aktivitet.category_tags.add(obj)
 
         aktivitet.save()
         return aktivitet
