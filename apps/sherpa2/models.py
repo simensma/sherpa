@@ -397,11 +397,27 @@ class Activity(models.Model):
     def convert(self, aktivitet=None):
         """Converts this aktivitet from sherpa2 to a new aktivitet. If aktivitet is provided, that object will be used
         instead of a new one."""
-        raise NotImplemented
+        from aktiviteter.models import Aktivitet
+
+        if aktivitet is None:
+            aktivitet = Aktivitet()
+
+        aktivitet.sherpa2_id = self.id
+
+        aktivitet.save()
+        return aktivitet
 
     @staticmethod
     def sync_all():
-        raise NotImplemented
+        from aktiviteter.models import Aktivitet
+
+        for sherpa2_aktivitet in Activity.objects.prefetch_related('dates'):
+            try:
+                sherpa3_aktivitet = Aktivitet.objects.get(sherpa2_id=sherpa2_aktivitet.id)
+            except Aktivitet.DoesNotExist:
+                sherpa3_aktivitet = None
+
+            sherpa2_aktivitet.convert(sherpa3_aktivitet)
 
     class Meta:
         db_table = u'activity'
