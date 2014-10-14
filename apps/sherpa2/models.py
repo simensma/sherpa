@@ -405,6 +405,10 @@ class Activity(models.Model):
     def get_counties(self):
         return [County.objects.get(code=SHERPA2_COUNTIES_SET1[id]) for id in self.county.split('|') if id != '']
 
+    def get_locations(self):
+        return [Location.get_active().get(code=location_code)
+            for location_code in self.location.split('|') if location_code != '']
+
     def get_pub_date(self):
         return datetime.strptime(self.pub_date, "%Y-%m-%d").date()
 
@@ -455,6 +459,7 @@ class Activity(models.Model):
         aktivitet.pub_date = self.get_pub_date()
         aktivitet.start_point = self.get_start_point()
         aktivitet.counties = self.get_counties()
+        aktivitet.locations = json.dumps(self.get_counties())
 
         aktivitet.save()
         return aktivitet
