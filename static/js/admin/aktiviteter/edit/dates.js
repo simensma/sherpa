@@ -58,6 +58,10 @@ $(function() {
         parent.find('[data-dnt-container="date-signup"]').toggleClass('jq-hide', toggle);
     });
 
+    scope.find('[data-dnt-input="signup-max-allowed-limit"]').on('change', function() {
+        scope.find('[data-dnt-input="signup-max-allowed"]').prop('disabled', !$(this).is(':checked'));
+    });
+
     scope.find('[data-dnt-toggle="date-signup-deadline"]').on('change', function() {
         var parent = $(this).parents('div.panel-body');
         var toggle = $(this).is(':checked');

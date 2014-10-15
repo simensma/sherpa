@@ -209,7 +209,7 @@ class AktivitetDate(models.Model):
     end_date = models.DateTimeField()
     signup_enabled = models.BooleanField(default=True)
     signup_simple_allowed = models.BooleanField()
-    signup_max_allowed = models.PositiveIntegerField(default=0)
+    signup_max_allowed = models.PositiveIntegerField(default=0, null=True)
 
     # Signup start/deadline/cancel should only be null when signup_enabled is False
     signup_start = models.DateField(null=True)
@@ -272,12 +272,18 @@ class AktivitetDate(models.Model):
         return self.participants.count() + self.simple_participants.count()
 
     def is_full(self):
+        if self.signup_max_allowed is None:
+            return False
         return self.total_signup_count() >= self.signup_max_allowed
 
     def is_waitinglist(self):
+        if self.signup_max_allowed is None:
+            return False
         return self.total_signup_count() > self.signup_max_allowed
 
     def total_waitinglist_count(self):
+        if self.signup_max_allowed is None:
+            return 0
         return self.total_signup_count() - self.signup_max_allowed
 
     @staticmethod

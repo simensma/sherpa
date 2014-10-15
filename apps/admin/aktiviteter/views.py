@@ -293,7 +293,11 @@ def edit(request, aktivitet):
 
                 elif date['signup_method'] == 'minside' or date['signup_method'] == 'simple':
                     model.signup_enabled = True
-                    model.signup_max_allowed = date['signup_max_allowed']
+
+                    if date.get('signup_max_allowed_limited'):
+                        model.signup_max_allowed = date['signup_max_allowed']
+                    else:
+                        model.signup_max_allowed = None
 
                     if 'signup_start' in date and date['signup_start'] != '':
                         model.signup_start = datetime.strptime(
