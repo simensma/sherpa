@@ -65,7 +65,7 @@ class DBConnection():
         now = datetime.now()
         for downtime in settings.FOCUS_DOWNTIME_PERIODS:
             if now >= downtime['from'] and now < downtime['to']:
-                request.db_connections[database] = {
+                request.db_connections['focus'] = {
                     'is_available': False,
                     'period_message': downtime['period_message'],
                 }
