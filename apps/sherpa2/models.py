@@ -607,6 +607,11 @@ class Activity(models.Model):
 
         return category_type
 
+    def convert_pub_date(self):
+        if self.pub_date.strip(0) == '':
+            return date.today()
+        return self.get_pub_date()
+
     def convert(self, aktivitet=None):
         """Converts this aktivitet from sherpa2 to a new aktivitet. If aktivitet is provided, that object will be used
         instead of a new one."""
@@ -620,7 +625,7 @@ class Activity(models.Model):
         aktivitet.code = self.code.strip()
         aktivitet.title = self.name.strip()
         aktivitet.description = self.convert_description()
-        aktivitet.pub_date = self.get_pub_date()
+        aktivitet.pub_date = self.convert_pub_date()
         aktivitet.start_point = self.get_start_point()
         aktivitet.locations = json.dumps(self.get_counties())
         aktivitet.difficulty = self.convert_difficulty()
