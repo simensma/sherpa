@@ -500,8 +500,6 @@ class Activity(models.Model):
             # No existing date, let the converter create a new date object
             sherpa2_date.convert()
 
-        return aktivitet
-
     def convert_foreninger(self):
         """sherpa2 models foreninger as a flat list, while sherpa3 separates the main forening and co_foreninger.
         We'll assume that the forening with the lowest 'type' (turgruppe/forening/sentral) is the main forening.
