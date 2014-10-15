@@ -699,13 +699,22 @@ class ActivityDate(models.Model):
     signup_date_from = models.TextField(db_column='ac_signup_date_from', blank=True)
     signup_date_to = models.TextField(db_column='ac_signup_date_to', blank=True)
 
+    def get_date_from(self):
+        return datetime.strptime(self.date_from, "%Y-%m-%d").date()
+
+    def get_date_to(self):
+        return datetime.strptime(self.date_to, "%Y-%m-%d").date()
+
     def convert(self, date=None):
         from aktiviteter.models import AktivitetDate
 
         if date is None:
             date = AktivitetDate()
 
-        raise NotImplementedError
+        date.start_date = self.get_date_from()
+        date.end_date = self.get_date_to()
+
+        date.save()
 
     class Meta:
         db_table = u'activity_date'
