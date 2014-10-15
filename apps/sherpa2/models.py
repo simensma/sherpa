@@ -720,12 +720,12 @@ class ActivityDate(models.Model):
 
         date.start_date = self.get_date_from()
         date.end_date = self.get_date_to()
-        date.signup_deadline = self.convert_signup_deadline()
+        date.signup_cancel_deadline = self.convert_signup_cancel_deadline()
         date.signup_max_allowed = self.convert_signup_max_allowed()
 
         date.save()
 
-    def convert_signup_deadline(self):
+    def convert_signup_cancel_deadline(self):
         if self.date_cancel == '':
             return None
         return self.get_date_cancel()
