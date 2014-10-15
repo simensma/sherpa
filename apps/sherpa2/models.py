@@ -446,6 +446,44 @@ class Activity(models.Model):
         'Tl_disabled': 'disabled',
     }
 
+    def convert(self, aktivitet=None):
+        """Converts this aktivitet from sherpa2 to a new aktivitet. If aktivitet is provided, that object will be used
+        instead of a new one."""
+        from aktiviteter.models import Aktivitet
+
+        if aktivitet is None:
+            aktivitet = Aktivitet()
+
+        aktivitet.sherpa2_id = self.id
+        aktivitet.code = self.code.strip()
+        aktivitet.title = self.name.strip()
+        aktivitet.description = self.convert_description()
+        aktivitet.pub_date = self.convert_pub_date()
+        aktivitet.start_point = self.get_start_point()
+        aktivitet.locations = json.dumps(self.get_counties())
+        aktivitet.difficulty = self.convert_difficulty()
+        aktivitet.audiences = json.dumps(self.convert_audiences())
+        aktivitet.published = True
+        aktivitet.private = False
+
+        # Save before updating relational fields in case this was a new object without a PK
+        aktivitet.save()
+
+        foreninger = self.convert_foreninger()
+        aktivitet.forening = foreninger['main']
+        aktivitet.co_foreninger = foreninger['rest']
+        aktivitet.counties = self.get_counties()
+        category, category_type, category_tags = self.convert_categories()
+        aktivitet.category = category
+        aktivitet.category_type = category_type
+        aktivitet.category_tags.clear()
+        for tag in category_tags:
+            obj, created = Tag.objects.get_or_create(name=tag)
+            aktivitet.category_tags.add(obj)
+        aktivitet.save()
+
+        return aktivitet
+
     def convert_foreninger(self):
         """sherpa2 models foreninger as a flat list, while sherpa3 separates the main forening and co_foreninger.
         We'll assume that the forening with the lowest 'type' (turgruppe/forening/sentral) is the main forening.
@@ -611,44 +649,6 @@ class Activity(models.Model):
         if self.pub_date.strip(0) == '':
             return date.today()
         return self.get_pub_date()
-
-    def convert(self, aktivitet=None):
-        """Converts this aktivitet from sherpa2 to a new aktivitet. If aktivitet is provided, that object will be used
-        instead of a new one."""
-        from aktiviteter.models import Aktivitet
-
-        if aktivitet is None:
-            aktivitet = Aktivitet()
-
-        aktivitet.sherpa2_id = self.id
-        aktivitet.code = self.code.strip()
-        aktivitet.title = self.name.strip()
-        aktivitet.description = self.convert_description()
-        aktivitet.pub_date = self.convert_pub_date()
-        aktivitet.start_point = self.get_start_point()
-        aktivitet.locations = json.dumps(self.get_counties())
-        aktivitet.difficulty = self.convert_difficulty()
-        aktivitet.audiences = json.dumps(self.convert_audiences())
-        aktivitet.published = True
-        aktivitet.private = False
-
-        # Save before updating relational fields in case this was a new object without a PK
-        aktivitet.save()
-
-        foreninger = self.convert_foreninger()
-        aktivitet.forening = foreninger['main']
-        aktivitet.co_foreninger = foreninger['rest']
-        aktivitet.counties = self.get_counties()
-        category, category_type, category_tags = self.convert_categories()
-        aktivitet.category = category
-        aktivitet.category_type = category_type
-        aktivitet.category_tags.clear()
-        for tag in category_tags:
-            obj, created = Tag.objects.get_or_create(name=tag)
-            aktivitet.category_tags.add(obj)
-        aktivitet.save()
-
-        return aktivitet
 
     @staticmethod
     def sync_all():
