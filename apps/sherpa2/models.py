@@ -705,6 +705,13 @@ class ActivityDate(models.Model):
     def get_date_to(self):
         return datetime.strptime(self.date_to, "%Y-%m-%d").date()
 
+    def get_date_cancel(self):
+        return datetime.strptime(self.date_cancel, "%Y-%m-%d").date()
+
+    #
+    # Conversion
+    #
+
     def convert(self, date=None):
         from aktiviteter.models import AktivitetDate
 
@@ -713,8 +720,14 @@ class ActivityDate(models.Model):
 
         date.start_date = self.get_date_from()
         date.end_date = self.get_date_to()
+        date.signup_deadline = self.convert_signup_deadline()
 
         date.save()
+
+    def convert_signup_deadline(self):
+        if self.date_cancel == '':
+            return None
+        return self.get_date_cancel()
 
     class Meta:
         db_table = u'activity_date'
