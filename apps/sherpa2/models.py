@@ -708,6 +708,12 @@ class ActivityDate(models.Model):
     def get_date_cancel(self):
         return datetime.strptime(self.date_cancel, "%Y-%m-%d").date()
 
+    def get_signup_date_from(self):
+        return datetime.strptime(self.signup_date_from, "%Y-%m-%d").date()
+
+    def get_signup_date_to(self):
+        return datetime.strptime(self.signup_date_to, "%Y-%m-%d").date()
+
     #
     # Conversion
     #
@@ -722,6 +728,8 @@ class ActivityDate(models.Model):
         date.end_date = self.get_date_to()
         date.signup_cancel_deadline = self.convert_signup_cancel_deadline()
         date.signup_max_allowed = self.convert_signup_max_allowed()
+        date.signup_start = self.get_signup_date_from()
+        date.signup_deadline = self.get_signup_date_to()
 
         date.save()
 
