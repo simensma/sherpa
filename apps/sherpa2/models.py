@@ -449,7 +449,7 @@ class Activity(models.Model):
     def convert(self, aktivitet=None):
         """Converts this aktivitet from sherpa2 to a new aktivitet. If aktivitet is provided, that object will be used
         instead of a new one."""
-        from aktiviteter.models import Aktivitet, AktivitetDate
+        from aktiviteter.models import Aktivitet
 
         if aktivitet is None:
             aktivitet = Aktivitet()
@@ -492,13 +492,13 @@ class Activity(models.Model):
         for sherpa2_date in self.dates.all():
             # Iterate the dates programmatically to find out if it already exists since the objects are prefetched,
             # and a new filter query would be inefficient.
-            new_date = AktivitetDate() # will be overwritten if the id exists, or used if it doesn't
             for sherpa3_date in aktivitet.dates.all():
                 if sherpa3_date.sherpa2_id == sherpa2_date.id:
-                    new_date = sherpa3_date
+                    # Now let the date object handle its conversion
+                    sherpa2_date.convert(sherpa3_date)
 
-            # Now let the date object handle its conversion
-            sherpa2_date.convert(new_date)
+            # No existing date, let the converter create a new date object
+            sherpa2_date.convert()
 
         return aktivitet
 
@@ -701,7 +701,12 @@ class ActivityDate(models.Model):
     signup_date_from = models.TextField(db_column='ac_signup_date_from', blank=True)
     signup_date_to = models.TextField(db_column='ac_signup_date_to', blank=True)
 
-    def convert(self, date):
+    def convert(self, date=None):
+        from aktiviteter.models import AktivitetDate
+
+        if date is None:
+            date = AktivitetDate()
+
         raise NotImplementedError
 
     class Meta:
