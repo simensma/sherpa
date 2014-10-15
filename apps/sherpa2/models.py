@@ -656,7 +656,7 @@ class Activity(models.Model):
 
         for sherpa2_aktivitet in Activity.objects.prefetch_related('dates'):
             try:
-                sherpa3_aktivitet = Aktivitet.objects.get(sherpa2_id=sherpa2_aktivitet.id)
+                sherpa3_aktivitet = Aktivitet.objects.prefetch_related('dates').get(sherpa2_id=sherpa2_aktivitet.id)
             except Aktivitet.DoesNotExist:
                 sherpa3_aktivitet = None
 
