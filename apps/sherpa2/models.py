@@ -448,13 +448,13 @@ class Activity(models.Model):
 
     def convert_foreninger(self):
         """sherpa2 models foreninger as a flat list, while sherpa3 separates the main forening and co_foreninger.
-        We'll assume that the forening with the highest 'type' (sentral/forening/turgruppe) is the main forening.
-        If there are >1 of the same highest type, we'll have to pick one at random."""
+        We'll assume that the forening with the lowest 'type' (turgruppe/forening/sentral) is the main forening.
+        If there are >1 of the same lowest type, we'll have to pick one at random."""
         from foreninger.models import Forening
 
         foreninger = self.get_owners()
         foreninger_sorted = Forening.sort(foreninger)
-        for type in [t[0] for t in Forening.TYPES]:
+        for type in reversed([t[0] for t in Forening.TYPES]):
             if len(foreninger_sorted[type]) > 0:
                 main_forening = foreninger_sorted[type][0]
                 rest = [f for f in foreninger if f != main_forening]
