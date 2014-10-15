@@ -721,6 +721,7 @@ class ActivityDate(models.Model):
         date.start_date = self.get_date_from()
         date.end_date = self.get_date_to()
         date.signup_deadline = self.convert_signup_deadline()
+        date.signup_max_allowed = self.convert_signup_max_allowed()
 
         date.save()
 
@@ -728,6 +729,11 @@ class ActivityDate(models.Model):
         if self.date_cancel == '':
             return None
         return self.get_date_cancel()
+
+    def convert_signup_max_allowed(self):
+        if self.booking == 0:
+            return None
+        return self.booking
 
     class Meta:
         db_table = u'activity_date'
