@@ -767,17 +767,17 @@ class ActivityDate(models.Model):
         ]
 
     def convert_signup_start(self):
-        if self.signup_date_from == '':
+        if self.signup_date_from is None or self.signup_date_from == '':
             return None
         return self.get_signup_date_from()
 
     def convert_signup_deadline(self):
-        if self.signup_date_to == '':
+        if self.signup_date_to is None or self.signup_date_to == '':
             return None
         return self.get_signup_date_to()
 
     def convert_signup_cancel_deadline(self):
-        if self.date_cancel == '':
+        if self.date_cancel is None or self.date_cancel == '':
             return None
         return self.get_date_cancel()
 
