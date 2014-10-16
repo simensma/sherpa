@@ -650,7 +650,7 @@ class Activity(models.Model):
         return category_type
 
     def convert_pub_date(self):
-        if self.pub_date.strip() == '':
+        if self.pub_date is None or self.pub_date.strip() == '':
             return date.today()
         return self.get_pub_date()
 
