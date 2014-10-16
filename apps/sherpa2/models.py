@@ -767,7 +767,7 @@ class ActivityDate(models.Model):
         ]
 
     def convert_signup_start(self):
-        if self.signup_date_to == '':
+        if self.signup_date_from == '':
             return None
         return self.get_signup_date_from()
 
