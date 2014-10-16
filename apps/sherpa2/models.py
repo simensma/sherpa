@@ -736,12 +736,29 @@ class ActivityDate(models.Model):
 
         date.start_date = self.get_date_from()
         date.end_date = self.get_date_to()
-        date.signup_cancel_deadline = self.convert_signup_cancel_deadline()
-        date.signup_max_allowed = self.convert_signup_max_allowed()
-        date.signup_start = self.get_signup_date_from()
-        date.signup_deadline = self.get_signup_date_to()
+        if self.convert_signup_enabled():
+            date.signup_enabled = True
+            date.signup_cancel_deadline = self.convert_signup_cancel_deadline()
+            date.signup_max_allowed = self.convert_signup_max_allowed()
+            date.signup_start = self.get_signup_date_from()
+            date.signup_deadline = self.get_signup_date_to()
+        else:
+            date.signup_enabled = False
+            date.signup_cancel_deadline = None
+            date.signup_max_allowed = None
+            date.signup_start = None
+            date.signup_deadline = None
+        date.signup_simple_allowed = False
 
         date.save()
+
+    def convert_signup_enabled(self):
+        return self.online in [
+            ActivityDate.ONLINE_SIGNUP,
+            ActivityDate.ONLINE_SIGNUP_PAYMENT,
+            ActivityDate.ONLINE_SIGNUP_REBUS,
+            ActivityDate.ONLINE_SIGNUP_MONTIS,
+        ]
 
     def convert_signup_cancel_deadline(self):
         if self.date_cancel == '':
