@@ -406,8 +406,21 @@ class Activity(models.Model):
         return [County.objects.get(code=SHERPA2_COUNTIES_SET1[int(id)]) for id in self.county.split('|') if id != '']
 
     def get_locations(self):
-        return [Location.get_active().get(code=location_code)
-            for location_code in self.location.split('|') if location_code != '']
+        locations = []
+        for location_code in self.location.split('|'):
+            if location_code == '':
+                continue
+
+            try:
+                locations.append(Location.get_active().get(code=location_code))
+            except Location.DoesNotExist:
+                if Location.objects.filter(code=location_code).exists():
+                    # The Location exists, it's just not active - ignore it
+                    pass
+                else:
+                    # The Location code doesn't exist, we'll need to find out why and handle this
+                    raise
+        return locations
 
     def get_extras(self):
         return [extra.strip() for extra in self.extras.split('|') if extra.strip() != '']
