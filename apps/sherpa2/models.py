@@ -482,22 +482,9 @@ class Activity(models.Model):
             aktivitet.category_tags.add(obj)
         aktivitet.save()
 
-        # Delete date objects that aren't in sherpa2 any more
-        old_date_ids = [d.id for d in self.dates.all()]
-        new_date_ids = [d.id for d in aktivitet.dates.all()]
-        date_ids_to_clear = [id for id in new_date_ids if id not in old_date_ids]
-        aktivitet.dates.filter(id__in=date_ids_to_clear).delete()
-
-        # Now convert all the dates in sherpa2
+        # Now delete and re-convert all date objects
+        aktivitet.dates.all().delete()
         for sherpa2_date in self.dates.all():
-            # Iterate the dates programmatically to find out if it already exists since the objects are prefetched,
-            # and a new filter query would be inefficient.
-            for sherpa3_date in aktivitet.dates.all():
-                if sherpa3_date.sherpa2_id == sherpa2_date.id:
-                    # Now let the date object handle its conversion
-                    sherpa2_date.convert(sherpa3_date)
-
-            # No existing date, let the converter create a new date object
             sherpa2_date.convert()
 
     def convert_foreninger(self):
