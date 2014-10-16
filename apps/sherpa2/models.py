@@ -403,7 +403,7 @@ class Activity(models.Model):
         return [Forening.objects.get(id=id) for id in self.owner.split('|') if id != '']
 
     def get_counties(self):
-        return [County.objects.get(code=SHERPA2_COUNTIES_SET1[id]) for id in self.county.split('|') if id != '']
+        return [County.objects.get(code=SHERPA2_COUNTIES_SET1[int(id)]) for id in self.county.split('|') if id != '']
 
     def get_locations(self):
         return [Location.get_active().get(code=location_code)
