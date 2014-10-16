@@ -578,7 +578,7 @@ class Activity(models.Model):
             for extra in self.get_extras() if extra in Activity.AUDIENCE_CONVERSION_TABLE]
 
     def convert_locations(self):
-        IGNORED_LOCATION_CODES = ['NO_hjelm', 'NO_nordt', 'NO_norfj', 'NO_nordf']
+        IGNORED_LOCATION_CODES = ['NO_hjelm', 'NO_nordt', 'NO_norfj', 'NO_nordf', 'NO_rana']
         try:
             return self.get_locations()
         except Location.DoesNotExist:
