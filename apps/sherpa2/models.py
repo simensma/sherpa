@@ -740,6 +740,8 @@ class ActivityDate(models.Model):
     signup_date_to = models.TextField(db_column='ac_signup_date_to', blank=True)
 
     def get_date_from(self):
+        if self.date_from is None or self.date_from.strip() == '':
+            raise ConversionImpossible("Date entry has no start date")
         return datetime.strptime(self.date_from, "%Y-%m-%d").date()
 
     def get_date_to(self):
