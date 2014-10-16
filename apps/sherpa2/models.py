@@ -403,6 +403,9 @@ class Activity(models.Model):
         from foreninger.models import Forening
         from sherpa2.models import Forening as Sherpa2Forening
 
+        if self.owner is None or self.owner.strip() == '':
+            raise ConversionImpossible("No owners specified for this activity; need at least 1")
+
         foreninger = []
         for id in self.owner.split('|'):
             if id.strip() == '':
