@@ -485,7 +485,7 @@ class Activity(models.Model):
         # Now delete and re-convert all date objects
         aktivitet.dates.all().delete()
         for sherpa2_date in self.dates.all():
-            sherpa2_date.convert()
+            sherpa2_date.convert(aktivitet)
 
     def convert_foreninger(self):
         """sherpa2 models foreninger as a flat list, while sherpa3 separates the main forening and co_foreninger.
@@ -715,12 +715,13 @@ class ActivityDate(models.Model):
     # Conversion
     #
 
-    def convert(self, date=None):
+    def convert(self, aktivitet, date=None):
         from aktiviteter.models import AktivitetDate
 
         if date is None:
             date = AktivitetDate()
 
+        date.aktivitet = aktivitet
         date.start_date = self.get_date_from()
         date.end_date = self.get_date_to()
         if self.convert_signup_enabled():
