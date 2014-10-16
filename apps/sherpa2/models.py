@@ -463,6 +463,9 @@ class Activity(models.Model):
 
         return Point(float(self.lat), float(self.lon))
 
+    def occurs_in_future(self):
+        return any([d.get_date_from() >= date.today() for d in self.dates.all()])
+
     #
     # Conversion to sherpa 3
     #
