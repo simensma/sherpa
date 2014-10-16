@@ -428,6 +428,8 @@ class Activity(models.Model):
         return [extra.strip() for extra in self.extras.split('|') if extra.strip() != '']
 
     def get_categories(self):
+        if self.cat is None:
+            return []
         return [c.strip() for c in self.cat.split('|') if c.strip() != '']
 
     def get_pub_date(self):
