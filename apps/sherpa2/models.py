@@ -686,8 +686,8 @@ class Activity(models.Model):
                 category_type = category
 
         if category_type is None:
-            # This is expected to happen and will need to be handled
-            raise Exception("No category_type is specified for this activity")
+            # TODO: Handle
+            raise ConversionImpossible("No category_type is specified for this activity")
 
         return category_type
 
