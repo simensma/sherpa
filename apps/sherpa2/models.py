@@ -575,6 +575,7 @@ class Activity(models.Model):
             for extra in self.get_extras() if extra in Activity.AUDIENCE_CONVERSION_TABLE]
 
     def convert_locations(self):
+        IGNORED_LOCATION_CODES = ['NO_hjelm', 'NO_nordt', 'NO_norfj', 'NO_nordf']
         try:
             return self.get_locations()
         except Location.DoesNotExist:
@@ -582,11 +583,25 @@ class Activity(models.Model):
                 # TODO: Handle
                 raise ConversionImpossible("Future activity with unknown location relation")
 
-            if self.location == '|NO_hjelm|':
-                # Known special-case - ignore this location relation
-                return []
-            else:
-                raise
+            locations = []
+            for location_code in self.location.split('|'):
+                if location_code == '':
+                    continue
+
+                try:
+                    locations.append(Location.get_active().get(code=location_code))
+                except Location.DoesNotExist:
+                    if Location.objects.filter(code=location_code).exists():
+                        # The Location exists, it's just not active - ignore it
+                        pass
+                    else:
+                        if location_code in IGNORED_LOCATION_CODES:
+                            # Known ignored location code
+                            pass
+                        else:
+                            # Unkown missing location code
+                            raise
+            return locations
 
     def convert_categories(self):
         """The wrapper for converting category, category type and subcategories"""
