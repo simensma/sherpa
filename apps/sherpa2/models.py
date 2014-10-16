@@ -695,7 +695,17 @@ class ActivityDate(models.Model):
     leader = models.CharField(db_column='ac_leader', max_length=255, blank=True)
     booking = models.IntegerField(db_column='ac_booking', null=True, blank=True)
     status = models.CharField(db_column='ac_status', max_length=20, blank=True)
+
+    # The 'online' field decides why type of signup is enabled for this date, these are the known values:
+    ONLINE_NO_SIGNUP = 3
+    ONLINE_SIGNUP_REBUS = 2
+    ONLINE_SIGNUP_MONTIS = 10
+    ONLINE_SIGNUP_PAYMENT = 6
+    ONLINE_SIGNUP = 9
+    ONLINE_DISABLED = 0
+    ONLINE_DISABLED_SIGNUP_PAYMENT = -1
     online = models.IntegerField(db_column='ac_online', null=True, blank=True)
+
     signup_date_from = models.TextField(db_column='ac_signup_date_from', blank=True)
     signup_date_to = models.TextField(db_column='ac_signup_date_to', blank=True)
 
