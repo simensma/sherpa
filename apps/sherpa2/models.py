@@ -578,6 +578,10 @@ class Activity(models.Model):
         try:
             return self.get_locations()
         except Location.DoesNotExist:
+            if self.occurs_in_future():
+                # TODO: Handle
+                raise ConversionImpossible("Future activity with unknown location relation")
+
             if self.location == '|NO_hjelm|':
                 # Known special-case - ignore this location relation
                 return []
