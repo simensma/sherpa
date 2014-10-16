@@ -503,7 +503,7 @@ class Activity(models.Model):
             aktivitet.description = self.convert_description()
             aktivitet.pub_date = self.convert_pub_date()
             aktivitet.start_point = self.get_start_point()
-            aktivitet.locations = json.dumps([location.id for location in self.get_locations()])
+            aktivitet.locations = json.dumps([location.id for location in self.convert_locations()])
             aktivitet.difficulty = self.convert_difficulty()
             aktivitet.audiences = json.dumps(self.convert_audiences())
             aktivitet.published = True
@@ -570,6 +570,16 @@ class Activity(models.Model):
     def convert_audiences(self):
         return [Activity.AUDIENCE_CONVERSION_TABLE[extra]
             for extra in self.get_extras() if extra in Activity.AUDIENCE_CONVERSION_TABLE]
+
+    def convert_locations(self):
+        try:
+            return self.get_locations()
+        except Location.DoesNotExist:
+            if self.location == '|NO_hjelm|':
+                # Known special-case - ignore this location relation
+                return []
+            else:
+                raise
 
     def convert_categories(self):
         """The wrapper for converting category, category type and subcategories"""
