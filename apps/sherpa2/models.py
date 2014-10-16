@@ -460,7 +460,7 @@ class Activity(models.Model):
         aktivitet.description = self.convert_description()
         aktivitet.pub_date = self.convert_pub_date()
         aktivitet.start_point = self.get_start_point()
-        aktivitet.locations = json.dumps(self.get_counties())
+        aktivitet.locations = json.dumps([location.id for location in self.get_locations()])
         aktivitet.difficulty = self.convert_difficulty()
         aktivitet.audiences = json.dumps(self.convert_audiences())
         aktivitet.published = True
