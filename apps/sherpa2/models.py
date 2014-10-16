@@ -558,12 +558,12 @@ class Activity(models.Model):
         for extra in self.get_extras():
             if extra in Activity.DIFFICULTY_CONVERSION_TABLE:
                 if difficulty is not None:
-                    raise Exception("Illegal state: Activity with more than one difficulty defined")
+                    raise ConversionImpossible("Illegal state: Activity with more than one difficulty defined")
 
                 difficulty = Activity.DIFFICULTY_CONVERSION_TABLE[extra]
 
         if difficulty is None:
-            raise Exception("Activity without difficulty")
+            raise ConversionImpossible("Activity without difficulty")
 
         return difficulty
 
