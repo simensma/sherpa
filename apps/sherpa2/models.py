@@ -454,6 +454,9 @@ class Activity(models.Model):
         if aktivitet is None:
             aktivitet = Aktivitet()
 
+        foreninger = self.convert_foreninger()
+
+        aktivitet.forening = foreninger['main']
         aktivitet.sherpa2_id = self.id
         aktivitet.code = self.code.strip()
         aktivitet.title = self.name.strip()
@@ -469,8 +472,6 @@ class Activity(models.Model):
         # Save before updating relational fields in case this was a new object without a PK
         aktivitet.save()
 
-        foreninger = self.convert_foreninger()
-        aktivitet.forening = foreninger['main']
         aktivitet.co_foreninger = foreninger['rest']
         aktivitet.counties = self.get_counties()
         category, category_type, category_tags = self.convert_categories()
