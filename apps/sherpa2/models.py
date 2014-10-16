@@ -401,7 +401,28 @@ class Activity(models.Model):
 
     def get_owners(self):
         from foreninger.models import Forening
-        return [Forening.objects.get(id=id) for id in self.owner.split('|') if id != '']
+        from sherpa2.models import Forening as Sherpa2Forening
+
+        foreninger = []
+        for id in self.owner.split('|'):
+            if id.strip() == '':
+                continue
+
+            try:
+                foreninger.append(Forening.objects.get(id=id))
+            except Forening.DoesNotExist:
+                if not Sherpa2Forening.objects.filter(id=id).exists():
+                    # Ok, this is an age-old Forening; ignore the relation
+                    pass
+                else:
+                    # One of the owner relations is invalid; skip this import
+                    # TODO: handle
+                    raise ConversionImpossible("One of the related 'owner' groups doesn't exist in the new ForeningDB")
+
+        if len(foreninger) == 0:
+            raise ConversionImpossible("No owners left after cleanup; need at least 1")
+
+        return foreninger
 
     def get_counties(self):
         if self.county is None:
