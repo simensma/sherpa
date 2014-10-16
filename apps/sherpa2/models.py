@@ -741,7 +741,7 @@ class ActivityDate(models.Model):
 
         date.aktivitet = aktivitet
         date.start_date = self.get_date_from()
-        date.end_date = self.get_date_to()
+        date.end_date = self.convert_end_date()
         if self.convert_signup_enabled():
             date.signup_enabled = True
             date.signup_max_allowed = self.convert_signup_max_allowed()
@@ -757,6 +757,16 @@ class ActivityDate(models.Model):
         date.signup_simple_allowed = False
 
         date.save()
+
+    def convert_end_date(self):
+        if self.date_to is None or self.date_to.strip() == '':
+            # End date isn't defined even though it has to be!
+            if self.get_date_from() < date.today():
+                # This was an event in the past, so we'll let this slide and just set end date to the same as start
+                return self.get_date_from()
+            else:
+                raise Exception("Future aktivitet with no end date")
+        return self.get_date_to()
 
     def convert_signup_enabled(self):
         return self.online in [
