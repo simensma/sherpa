@@ -154,14 +154,22 @@
               <td>
                 {% if dato.signup_enabled %}
                   {% if dato.is_full %}
-                    {{ dato.signup_max_allowed }} av {{ dato.signup_max_allowed }}<br>
+                    {{ dato.signup_max_allowed }}
+                    {% if dato.signup_max_allowed %}
+                      av {{ dato.signup_max_allowed }}
+                    {% endif %}
+                    <br>
+
                     {% if dato.is_waitinglist %}
                       <span class="label label-warning">{{ dato.total_waitinglist_count }} på venteliste</span>
                     {% else %}
                       <span class="label label-primary">Ingen ledig plass</span>
                     {% endif %}
                   {% else %}
-                    {{ dato.total_signup_count }} av {{ dato.signup_max_allowed }}
+                    {{ dato.total_signup_count }}
+                    {% if dato.signup_max_allowed %}
+                      av {{ dato.signup_max_allowed }}
+                    {% endif %}
                   {% endif %}
                 {% else %}
                   Ingen påmelding
