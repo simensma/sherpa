@@ -143,6 +143,10 @@ def edit(request, aktivitet):
 
         aktivitet = Aktivitet.objects.get(id=aktivitet)
 
+        if aktivitet.is_imported():
+            # Should only be possible by circumventing client-side restrictions
+            return redirect('admin.aktiviteter.views.edit', aktivitet.id)
+
         if 'code' in request.POST:
             aktivitet.code = request.POST['code']
 
