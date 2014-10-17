@@ -92,6 +92,18 @@
         {% endif %}
       {% endfor %}
 
+      {% if aktivitet.is_imported %}
+        <div class="row">
+          <div class="col-md-offset-2 col-md-8">
+            <div class="alert alert-danger">
+              <strong>Denne aktiviteten er hentet fra gamle Sherpa.</strong><br>
+              Du kan se hva slags detaljer den er oppført med, men hvis du vil endre noe, må du <a href="http://www2.turistforeningen.no/admin/activity.php?ac_id={{ aktivitet.sherpa2_id }}&amp;act=egenskaper">gjøre det i gamle Sherpa.</a><br>
+              Hvis detaljene ikke skulle stemme med det som er lagt inn i gamle Sherpa, kan du lese blogg-posten vår om <a href="javascript:alert('Beaklger, vi har ikke skrevet denne ennå, men den kommer!');">hvordan aktivitetene importeres</a>.
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
       <form action="{% url 'admin.aktiviteter.views.edit' aktivitet.id %}" method="post"
         class="edit-aktivitet form-dnt-default form-horizontal"
         data-dnt-container="aktivitet"
@@ -105,7 +117,13 @@
           <div class="col-md-offset-2 col-md-8">
             <div class="row">
               <div class="col-md-6">
-                <button type="submit" class="btn btn-success btn-lg btn-block">
+                <button
+                  type="submit"
+                  class="btn btn-success btn-lg btn-block"
+                  {% if aktivitet.is_imported %}
+                    disabled
+                  {% endif %}>
+
                   <i class="fa fa-check"></i> Lagre alle endringer
                 </button>
               </div>
@@ -513,7 +531,13 @@
           <div class="col-md-offset-2 col-md-8">
             <div class="row">
               <div class="col-md-6">
-                <button type="submit" class="btn btn-success btn-lg btn-block">
+                <button
+                  type="submit"
+                  class="btn btn-success btn-lg btn-block"
+                  {% if aktivitet.is_imported %}
+                    disabled
+                  {% endif %}>
+
                   <i class="fa fa-check"></i> Lagre alle endringer
                 </button>
               </div>
