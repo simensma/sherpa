@@ -1,4 +1,4 @@
-<div class="listing-header">
+<div class="listing-header clearfix">
   <p>
     Viser {{ aktivitet_dates.object_list|length }} av {{ aktivitet_dates.paginator.count }} aktiviteter
   </p>
@@ -21,33 +21,29 @@
 </div>
 
 
-<table class="table aktiviteter">
   {% for date in aktivitet_dates %}
-    <tr>
-      <td>
-        <div class="aktivitet-item">
+    <div class="aktivitet-item">
+      <div class="image">
+        <img src="{{ date.aktivitet.get_image.url }}">
+      </div>
+      <div class="info">
+        <h2>
+          <a href="{% url 'aktiviteter.views.show' date.id %}">{{ date.aktivitet.title|default:"(Mangler navn)" }}</a>
+        </h2>
+        <div class="meta">
           <div class="category">{{ date.aktivitet.get_category }}</div>
-          <div class="image">
-            <img src="{{ date.aktivitet.get_image.url }}">
-          </div>
-          <div class="info">
-            <h2>
-              <a href="{% url 'aktiviteter.views.show' date.id %}">{{ date.aktivitet.title|default:"(Mangler navn)" }}</a>
-            </h2>
-            <div class="meta">
-              <span class="date">
-                {{ date.start_date|date:"j. F Y" }}
-              </span>
-            </div>
-            <p class="description">
-              {{ date.aktivitet.description|truncatewords:"12" }}
-            </p>
+          <div class="date">
+            <span class="long">{{ date.start_date|date:"j. F Y" }}</span>
+            <span class="short" aria-hidden="true">{{ date.start_date|date:"d.m.y" }}</span>
           </div>
         </div>
-      </td>
-    </tr>
+        <p class="description xs" aria-hidden="true">{{ date.aktivitet.description|truncatewords:"6" }}</p>
+        <p class="description sm" aria-hidden="true">{{ date.aktivitet.description|truncatewords:"12" }}</p>
+        <p class="description md" aria-hidden="true">{{ date.aktivitet.description|truncatewords:"24" }}</p>
+        <p class="description lg">{{ date.aktivitet.description|truncatewords:"48" }}</p>
+      </div>
+    </div>
   {% endfor %}
-</table>
 
 <div class="listing-footer clearfix">
   <p>
