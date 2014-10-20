@@ -36,6 +36,9 @@
             <span class="long">{{ date.start_date|date:"j. F Y" }}</span>
             <span class="short" aria-hidden="true">{{ date.start_date|date:"d.m.y" }}</span>
           </div>
+          <div class="duration">
+            <span class="">({{ date.get_duration }})</span>
+          </div>
         </div>
         <p class="description xs" aria-hidden="true">{{ date.aktivitet.description|truncatewords:"6" }}</p>
         <p class="description sm" aria-hidden="true">{{ date.aktivitet.description|truncatewords:"12" }}</p>
