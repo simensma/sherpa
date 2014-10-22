@@ -57,7 +57,7 @@
 
           <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-              <h2>2. Hvilket domene skal nettstedet ha?</h2>
+              <h2>2. Velg et <strong>midlertidig</strong> domene for nettstedet</h2>
 
               {% for message in messages %}
                 {% if message.message == 'malformed' %}
@@ -100,7 +100,11 @@
               <input type="hidden" name="domain-type" value="subdomain">
 
               <p>
-                Dette er et midlertidig domene for nettstedet, som kun skal benyttes i en testperiode. Når nye Sherpa og nye nettsteder skal lanseres vil domenet bli endret til foreningens/turlagets riktige domene.
+                Dette er et midlertidig domene for nettstedet, som kun skal benyttes i en testperiode mens du jobber med å sette det opp.
+              </p>
+
+              <p>
+                Når dere er klare for å lansere nettstedet, tar dere kontakt med DNT Sentralt for å ta i bruk det faktiske domenet.
               </p>
 
               <!--
