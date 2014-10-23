@@ -28,6 +28,9 @@ class Image(models.Model):
     height = models.IntegerField()
     tags = models.ManyToManyField('core.Tag', related_name='images')
 
+    def get_url(self):
+        return '//%s/%s%s.%s' % (s3_bucket(), settings.AWS_IMAGEGALLERY_PREFIX, self.key, self.extension)
+
     @staticmethod
     def generate_random_key():
         def random_alphanumeric():
