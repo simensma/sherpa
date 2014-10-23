@@ -493,48 +493,47 @@ class Activity(models.Model):
 
     def convert(self, aktivitet=None):
         """Converts this aktivitet from sherpa2 to a new aktivitet. If aktivitet is provided, that object will be used
-        instead of a new one."""
+        instead of a new one.
+
+        raises ConversionImpossible if the old aktivitet data is in a state we can't convert from"""
         from aktiviteter.models import Aktivitet
 
         if aktivitet is None:
             aktivitet = Aktivitet()
 
-        try:
-            foreninger = self.convert_foreninger()
+        foreninger = self.convert_foreninger()
 
-            aktivitet.forening = foreninger['main']
-            aktivitet.sherpa2_id = self.id
-            aktivitet.code = self.code.strip()
-            aktivitet.title = self.name.strip()
-            aktivitet.description = self.convert_description()
-            aktivitet.pub_date = self.convert_pub_date()
-            aktivitet.start_point = self.get_start_point()
-            aktivitet.locations = json.dumps([location.id for location in self.convert_locations()])
-            aktivitet.difficulty = self.convert_difficulty()
-            aktivitet.audiences = json.dumps(self.convert_audiences())
-            aktivitet.published = True
-            aktivitet.private = False
+        aktivitet.forening = foreninger['main']
+        aktivitet.sherpa2_id = self.id
+        aktivitet.code = self.code.strip()
+        aktivitet.title = self.name.strip()
+        aktivitet.description = self.convert_description()
+        aktivitet.pub_date = self.convert_pub_date()
+        aktivitet.start_point = self.get_start_point()
+        aktivitet.locations = json.dumps([location.id for location in self.convert_locations()])
+        aktivitet.difficulty = self.convert_difficulty()
+        aktivitet.audiences = json.dumps(self.convert_audiences())
+        aktivitet.published = True
+        aktivitet.private = False
 
-            # Save before updating relational fields in case this was a new object without a PK
-            aktivitet.save()
+        # Save before updating relational fields in case this was a new object without a PK
+        aktivitet.save()
 
-            aktivitet.co_foreninger = foreninger['rest']
-            aktivitet.counties = self.get_counties()
-            category, category_type, category_tags = self.convert_categories()
-            aktivitet.category = category
-            aktivitet.category_type = category_type
-            aktivitet.category_tags.clear()
-            for tag in category_tags:
-                obj, created = Tag.objects.get_or_create(name=tag)
-                aktivitet.category_tags.add(obj)
-            aktivitet.save()
+        aktivitet.co_foreninger = foreninger['rest']
+        aktivitet.counties = self.get_counties()
+        category, category_type, category_tags = self.convert_categories()
+        aktivitet.category = category
+        aktivitet.category_type = category_type
+        aktivitet.category_tags.clear()
+        for tag in category_tags:
+            obj, created = Tag.objects.get_or_create(name=tag)
+            aktivitet.category_tags.add(obj)
+        aktivitet.save()
 
-            # Now delete and re-convert all date objects
-            aktivitet.dates.all().delete()
-            for sherpa2_date in self.dates.all():
-                sherpa2_date.convert(aktivitet)
-        except ConversionImpossible:
-            pass
+        # Now delete and re-convert all date objects
+        aktivitet.dates.all().delete()
+        for sherpa2_date in self.dates.all():
+            sherpa2_date.convert(aktivitet)
 
     def convert_foreninger(self):
         """sherpa2 models foreninger as a flat list, while sherpa3 separates the main forening and co_foreninger.
@@ -741,7 +740,11 @@ class Activity(models.Model):
             except Aktivitet.DoesNotExist:
                 sherpa3_aktivitet = None
 
-            sherpa2_aktivitet.convert(sherpa3_aktivitet)
+            try:
+                sherpa2_aktivitet.convert(sherpa3_aktivitet)
+            except ConversionImpossible:
+                # Ignore anything that can't be imported for now.
+                pass
 
     class Meta:
         db_table = u'activity'
