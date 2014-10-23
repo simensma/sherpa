@@ -2,8 +2,8 @@
 
 $(function() {
 
+    var header = $("div.editor-header");
     var editor = $("div.cms-editor");
-    var header = editor.find("div.editor-header");
     var article = editor.find("article");
 
     header.find("select[name='authors']").chosen();

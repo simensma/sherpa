@@ -41,6 +41,7 @@
   <script src="{{ STATIC_URL }}js/admin/sites/editor/widgets/campaign.js"></script>
   <script src="{{ STATIC_URL }}js/admin/sites/editor/article.js"></script>
   <script src="{{ STATIC_URL }}js/admin/sites/editor/toolbar.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/sites/editor/sticky.js"></script>
 {% endblock %}
 
 {% block extra_css %}
@@ -60,98 +61,124 @@
   {% endif %}
 {% endblock %}
 
+{% block editor_header %}
+  <div
+    class="editor-header article"
+    data-article-id="{{ version.variant.article.id }}"
+    data-version-id="{{ version.id }}">
+
+    <form class="form-horizontal label-align-left" role="form" method="POST">
+      <div class="static">
+        <div class="container">
+          <div class="fields">
+            <div class="row">
+              <div class="col-sm-6">
+
+                <div class="form-group publish">
+                  <label for="publish" class="col-sm-4 control-label">
+                    <input type="checkbox" name="publish"{% if version.variant.article.published %} checked="checked"{% endif %}>
+                    &nbsp; Publiseres
+                  </label>
+                  <div class="col-sm-5">
+                    <div class="input-group date">
+                      <input class="form-control" type="text" name="date" value="{{ version.variant.article.pub_date|date:"d.m.Y" }}" placeholder="dd.mm.åååå">
+                      <span class="input-group-addon">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <input class="form-control" type="text" name="time" value="{{ version.variant.article.pub_date|date:"H:i" }}" placeholder="tt:mm">
+                  </div>
+                </div>
+
+                <div class="form-group author">
+                  <label for="tags" class="col-sm-4 control-label">Forfattere</label>
+                  <div class="col-sm-8">
+                    <select name="authors" multiple="multiple" class="form-control">
+                      {% with version.publishers.all as publishers %}
+                        {% for user in users %}
+                          <option value="{{ user.id }}"{% if user in publishers %} selected="selected"{% endif %}>{{ user.get_full_name }}</option>
+                        {% endfor %}
+                      {% endwith %}
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group tags">
+                  <label for="tags" class="col-sm-4 control-label">Nøkkelord</label>
+                  <div class="col-sm-8">
+                    <input
+                      class="form-control"
+                      name="tags"
+                      data-dnt-existing-tags="{{ version.tags.all|taglist }}"
+                      data-dnt-tags-url="{% url 'core.views.filter_tags' %}">
+                    </div>
+                </div>
+                <div style="clear: both;"></div>
+              </div>
+              <div class="col-sm-6">
+                <div class="preview-image">
+                  <div class="row">
+                    <div class="col-sm-3">
+                      Minibilde til forhåndsvisninger:
+                    </div>
+                    <div class="col-sm-9">
+                      <input type="radio" name="thumbnail" value="none"{% if version.get_thumbnail.hide %} checked{% endif %}> Ikke vis minibilde<br>
+                      <input type="radio" name="thumbnail" value="default"{% if not version.get_thumbnail.hide and not version.variant.article.thumbnail %} checked{% endif %}> Bruk liten versjon av hovedbildet<br>
+                      <input type="radio" name="thumbnail" value="new"{% if not version.get_thumbnail.hide and version.variant.article.thumbnail %} checked{% endif %}> Bruk et annet bilde<br>
+
+                      <div style="width:200px; overflow:hidden; margin-bottom: 10px;">
+                        <img class="article-thumbnail" src="{% if not version.variant.article.thumbnail %}{{ editor_placeholder_image }}{% else %}{{ version.variant.article.thumbnail }}{% endif %}" alt="{{ title|striptags }}">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sticky">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="pull-left">
+                <a class="btn btn-link quit" href="{% url 'admin.sites.pages.page.list' active_site.id %}" class="btn btn-default quit" data-confirm="Er du sikker på at du vil gå tilbake til Sherpa uten å lagre?">Avslutt redigering uten å lagre</a>
+              </div>
+              <div class="pull-right">
+                <div class="status">
+                  <button class="btn btn-success save">
+                    <i class="glyphicon glyphicon-heart"></i> Lagre
+                  </button>
+                  <button
+                    class="btn btn-success preview"
+                    data-href="{% url 'admin.sites.articles.views.preview' active_site.id version.id %}">
+                    <i class="glyphicon glyphicon-search"></i> Forhåndsvisning
+                  </button>
+                  <button
+                    class="btn btn-danger delete-article"
+                    href="{% url 'admin.sites.articles.views.confirm_delete' active_site.id version.variant.article.id %}">
+                    <i class="glyphicon glyphicon-warning-sign"></i> Slett
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div style="clear: both;"></div>
+
+  </div>
+{% endblock %}
+
 {% block body %}
 
 {% load dategtnow %}
 
 <div class="cms-editor">
-
-  <div class="well editor-header article" data-article-id="{{ version.variant.article.id }}" data-version-id="{{ version.id }}">
-    <div class="publish">
-      <div class="row">
-        <div class="col-sm-2">
-          <input type="checkbox" name="publish"{% if version.variant.article.published %} checked="checked"{% endif %}> Publiseres
-        </div>
-
-        <div class="col-sm-3">
-          <div class="input-group date">
-            <input class="form-control" type="text" name="date" value="{{ version.variant.article.pub_date|date:"d.m.Y" }}" placeholder="dd.mm.åååå">
-            <span class="input-group-addon">
-              <i class="glyphicon glyphicon-calendar"></i>
-            </span>
-          </div>
-        </div>
-
-        <div class="col-sm-3">
-          kl. <input class="form-control" type="text" name="time" value="{{ version.variant.article.pub_date|date:"H:i" }}" placeholder="tt:mm">
-        </div>
-      </div>
-    </div>
-
-    <div class="author">
-      <p>
-        Forfattere:
-        <select name="authors" multiple="multiple" class="form-control">
-          {% with version.publishers.all as publishers %}
-            {% for user in users %}
-              <option value="{{ user.id }}"{% if user in publishers %} selected="selected"{% endif %}>{{ user.get_full_name }}</option>
-            {% endfor %}
-          {% endwith %}
-        </select>
-      </p>
-    </div>
-
-    <p>
-      Nøkkelord:
-      <input
-        class="form-control"
-        name="tags"
-        data-dnt-existing-tags="{{ version.tags.all|taglist }}"
-        data-dnt-tags-url="{% url 'core.views.filter_tags' %}">
-    </p>
-
-    <div class="preview-image">
-      <div class="row">
-        <div class="col-sm-3">
-          Minibilde til forhåndsvisninger:
-        </div>
-        <div class="col-sm-9">
-          <input type="radio" name="thumbnail" value="none"{% if version.get_thumbnail.hide %} checked{% endif %}> Ikke vis minibilde<br>
-          <input type="radio" name="thumbnail" value="default"{% if not version.get_thumbnail.hide and not version.variant.article.thumbnail %} checked{% endif %}> Bruk liten versjon av hovedbildet<br>
-          <input type="radio" name="thumbnail" value="new"{% if not version.get_thumbnail.hide and version.variant.article.thumbnail %} checked{% endif %}> Bruk et annet bilde<br>
-
-          <div style="width:200px; overflow:hidden; margin-bottom: 10px;">
-            <img class="article-thumbnail" src="{% if not version.variant.article.thumbnail %}{{ editor_placeholder_image }}{% else %}{{ version.variant.article.thumbnail }}{% endif %}" alt="{{ title|striptags }}">
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div style="clear: both;"></div>
-
-    <div class="status">
-      <button class="btn btn-success save">
-        <i class="glyphicon glyphicon-heart"></i> Lagre
-      </button>
-      <button class="btn btn-success preview" data-href="{% url 'admin.sites.articles.views.preview' active_site.id version.id %}">
-        <i class="glyphicon glyphicon-search"></i> Forhåndsvisning
-      </button>
-      <a class="btn btn-danger delete-article" href="{% url 'admin.sites.articles.views.confirm_delete' active_site.id version.variant.article.id %}">
-        <i class="glyphicon glyphicon-warning-sign"></i> Slett
-      </a>
-      <br><br>
-
-      <button class="btn btn-success save-and-quit" data-href="{% url 'admin.sites.articles.views.list' active_site.id %}">Lagre &amp; Tilbake til Sherpa</button>
-      <a href="{% url 'admin.sites.pages.page.list' active_site.id %}" class="btn btn-default quit" data-confirm="Er du sikker på at du vil gå tilbake til Sherpa uten å lagre?">Tilbake til Sherpa UTEN å lagre</a>
-
-    </div>
-
-    <div style="clear: both;"></div>
-
-  </div>
-
   {% include 'common/admin/sites/editor/editor.html' with toolbar_article=1 %}
-
 </div><!-- /.cms-editor -->
 
 {% endblock %}

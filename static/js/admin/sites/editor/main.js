@@ -366,5 +366,4 @@
         Editor.resetControls();
     };
 
-
 }(window.Editor = window.Editor || {}, jQuery ));

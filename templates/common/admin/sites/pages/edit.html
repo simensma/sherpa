@@ -40,6 +40,7 @@
   <script src="{{ STATIC_URL }}js/admin/sites/editor/widgets/table.js"></script>
   <script src="{{ STATIC_URL }}js/admin/sites/editor/widgets/campaign.js"></script>
   <script src="{{ STATIC_URL }}js/admin/sites/editor/toolbar.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/sites/editor/sticky.js"></script>
 {% endblock %}
 
 {% block extra_css %}
@@ -53,86 +54,117 @@
   </script>
 {% endblock %}
 
+{% block editor_header %}
+  <div
+    class="editor-header page status"
+    {% if version.variant.page.published %} data-published{% endif %}
+    data-page-id="{{ version.variant.page.id }}"
+    data-version-id="{{ version.id }}">
+
+    <form class="form-horizontal label-align-left" role="form" method="POST">
+      <div class="static">
+        <div class="container">
+          <div class="fields">
+            <div class="row">
+              <div class="col-sm-6">
+
+                <div class="form-group title">
+                  <label for="title" class="col-sm-4 control-label">Tittel</label>
+                  <div class="col-sm-8">
+                    <input class="form-control" name="title" type="text" value="{{ version.variant.page.title }}">
+                  </div>
+                </div>
+
+                <div class="form-group parent">
+                  <label for="title" class="col-sm-4 control-label">Ligger under</label>
+                  <div class="col-sm-8">
+                    <select name="parent" class="chosen" data-placeholder="Ingen foreldreside">
+                      <option value=""></option>
+                      {% for page in pages %}
+                        <option value="{{ page.id }}"{% if version.variant.page.parent.id == page.id %} selected class="default"{% endif %}>{{ page.title }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group tags">
+                  <label for="tags" class="col-sm-4 control-label">Nøkkelord</label>
+                  <div class="col-sm-8">
+                    <input
+                      class="form-control"
+                      name="tags"
+                      data-dnt-existing-tags="{{ version.tags.all|taglist }}"
+                      data-dnt-tags-url="{% url 'core.views.filter_tags' %}">
+                  </div>
+                </div>
+
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group publish">
+                  <label for="publish" class="col-sm-4 control-label">
+                    <input type="checkbox" name="publish"{% if version.variant.page.published %} checked="checked"{% endif %}>
+                    &nbsp; Publiseres
+                  </label>
+                  <div class="col-sm-5">
+                    <div class="input-group date">
+                      <input class="form-control" type="text" name="date" value="{{ version.variant.page.pub_date|date:"d.m.Y" }}" placeholder="dd.mm.åååå">
+                      <span class="input-group-addon">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <input class="form-control " type="text" name="time" value="{{ version.variant.page.pub_date|date:"H:i" }}" placeholder="tt:mm">
+                  </div>
+                </div>
+
+                <div class="form-group display-ads">
+                  <label for="display-ads" class="col-sm-12 control-label">
+                    <input type="checkbox" name="display-ads"{% if version.ads %} checked{% endif %}>
+                    &nbsp; Vis annonser
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sticky">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="pull-left">
+                <a
+                  href="{% url 'admin.sites.pages.page.list' active_site.id %}"
+                  class="btn btn-link quit"
+                  data-confirm="Er du sikker på at du vil avslutte redigering uten å lagre?">
+                  Avslutt redigering uten å lagre
+                </a>
+              </div>
+              <div class="pull-right">
+                <button class="btn btn-success save">
+                  <i class="glyphicon glyphicon-heart"></i> Lagre nå
+                </button>
+                <button class="btn btn-success preview" data-href="{% url 'admin.sites.pages.page.preview' active_site.id version.id %}">
+                  <i class="glyphicon glyphicon-search"></i> Forhåndsvisning
+                </button>
+                <button class="btn btn-danger delete-page" href="{% url 'admin.sites.pages.page.delete' active_site.id version.variant.page.id %}">
+                  <i class="glyphicon glyphicon-warning-sign"></i> Slett
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div style="clear: both;"></div>
+  </div>
+{% endblock %}
+
 {% block body %}
 
 <div class="cms-editor">
-
-  <div class="well editor-header page" data-page-id="{{ version.variant.page.id }}" data-version-id="{{ version.id }}">
-    <div class="status"{% if version.variant.page.published %} data-published{% endif %}>
-      <div class="title">
-        Tittel: <input class="form-control" name="title" type="text" value="{{ version.variant.page.title }}">
-      </div>
-
-      <div class="parent">
-        Ligger under:
-        <select name="parent" class="chosen" data-placeholder="Ingen foreldreside">
-          <option value=""></option>
-          {% for page in pages %}
-            <option value="{{ page.id }}"{% if version.variant.page.parent.id == page.id %} selected class="default"{% endif %}>{{ page.title }}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="publish">
-        <div class="row">
-          <div class="col-sm-2">
-            <input type="checkbox" name="publish"{% if version.variant.page.published %} checked="checked"{% endif %}> Publiseres
-          </div>
-
-          <div class="col-sm-3">
-            <div class="input-group date">
-              <input class="form-control" type="text" name="date" value="{{ version.variant.page.pub_date|date:"d.m.Y" }}" placeholder="dd.mm.åååå">
-              <span class="input-group-addon">
-                <i class="glyphicon glyphicon-calendar"></i>
-              </span>
-            </div>
-          </div>
-
-          <div class="col-sm-3">
-            kl. <input class="form-control" type="text" name="time" value="{{ version.variant.page.pub_date|date:"H:i" }}" placeholder="tt:mm">
-          </div>
-        </div>
-      </div>
-
-      <div class="display-ads">
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" name="display-ads"{% if version.ads %} checked{% endif %}>Vis annonser
-          </label>
-        </div>
-      </div>
-
-      <p>
-        Nøkkelord:
-        <input
-          class="form-control"
-          name="tags"
-          data-dnt-existing-tags="{{ version.tags.all|taglist }}"
-          data-dnt-tags-url="{% url 'core.views.filter_tags' %}">
-      </p>
-
-      <div class="save">
-        <button class="btn btn-success save">
-          <i class="glyphicon glyphicon-heart"></i> Lagre nå
-        </button>
-        <button class="btn btn-success preview" data-href="{% url 'admin.sites.pages.page.preview' active_site.id version.id %}">
-          <i class="glyphicon glyphicon-search"></i> Forhåndsvisning
-        </button>
-        <a class="btn btn-danger delete-page" href="{% url 'admin.sites.pages.page.delete' active_site.id version.variant.page.id %}">
-          <i class="glyphicon glyphicon-warning-sign"></i> Slett
-        </a>
-        <br><br>
-
-        <button class="btn btn-success save-and-quit" data-href="{% url 'admin.sites.pages.page.list' active_site.id %}">Lagre &amp; Tilbake til Sherpa</button>
-        <a href="{% url 'admin.sites.pages.page.list' active_site.id %}" class="btn btn-default quit" data-confirm="Er du sikker på at du vil gå tilbake til Sherpa uten å lagre?">Tilbake til Sherpa UTEN å lagre</a>
-      </div>
-    </div>
-
-    <div style="clear: both;"></div>
-  </div>
-
   {% include 'common/admin/sites/editor/editor.html' %}
-
 </div><!-- /.cms-editor -->
 
 {% endblock %}

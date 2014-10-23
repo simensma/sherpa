@@ -3,20 +3,46 @@
 /* Page header editing */
 
 div.editor-header {
-  background-color: rgb(240, 240, 240) !important;
+  @editor-form-background-color: #f8f8f8;
+  @editor-form-border-color: #e7e7e7;
+
+  background-color: @editor-form-background-color !important;
+  border-bottom: 1px solid @editor-form-border-color;
   color: rgb(65, 65, 65) !important;
+  padding-top: 15px;
+
+  label {
+    cursor: pointer;
+  }
+
+  .fields {
+    padding-bottom: 10px;
+    border-bottom: 1px solid @editor-form-border-color;
+  }
+
+  .btn-link.quit {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .sticky {
+    padding: 15px 0;
+
+    &.affix {
+      top: 0;
+      left: 0;
+      background-color: @editor-form-background-color;
+      border-bottom: 1px solid @editor-form-border-color;
+      width: 100%;
+      z-index: 1030; // Same as Bootstrap navbar sticky
+    }
+  }
 
   h1 {
     font-size: 160%;
     font-weight: normal;
   }
 
-  div.publish {
-    input[name='time'] {
-      display: inline-block;
-      width: 75px;
-    }
-  }
 }
 
 /* Article header editing */
@@ -265,7 +291,7 @@ div.cms-editor {
 
   div.cms-editor-toolbar {
     position: fixed;
-    top: 50px;
+    top: 400px;
     right: 50px;
     width: 500px;
     z-index: 1000;
