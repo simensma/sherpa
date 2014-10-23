@@ -120,11 +120,13 @@
       {% if aktivitet.is_imported %}
         <div class="row">
           <div class="col-md-offset-2 col-md-8">
-            <div class="alert alert-danger">
-              <strong>Denne aktiviteten er hentet fra gamle Sherpa.</strong><br>
+            <p>
+              <strong>Denne aktiviteten er hentet fra gamle Sherpa.</strong>
+            </p>
+            <p>
               Du kan se hva slags detaljer den er oppført med, men hvis du vil endre noe, må du <a href="http://www2.turistforeningen.no/admin/activity.php?ac_id={{ aktivitet.sherpa2_id }}&amp;act=egenskaper">gjøre det i gamle Sherpa.</a><br>
               Hvis detaljene ikke skulle stemme med det som er lagt inn i gamle Sherpa, kan du lese blogg-posten vår om <a href="javascript:alert('Beaklger, vi har ikke skrevet denne ennå, men den kommer!');">hvordan aktivitetene importeres</a>.
-            </div>
+            </p>
           </div>
         </div>
       {% endif %}
