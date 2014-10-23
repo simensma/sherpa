@@ -73,6 +73,9 @@ def delete_image_post(sender, **kwargs):
         ))
 
 class Album(models.Model):
+    # Static Album ID reference for images from imported aktiviteter
+    IMPORTED_AKTIVITETER_ALBUM_ID = 66
+
     name = models.CharField(max_length=200)
     parent = models.ForeignKey('admin.Album', null=True)
 

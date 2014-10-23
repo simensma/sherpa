@@ -6,7 +6,12 @@ import re
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import Point
 from django.core.cache import cache
+from django.conf import settings
 
+import requests
+
+from admin.models import Image, Album
+from admin.images.util import upload_image
 from core.models import County, Tag
 from sherpa2.util import SHERPA2_COUNTIES_SET1
 from sherpa2.exceptions import ConversionImpossible
@@ -497,7 +502,7 @@ class Activity(models.Model):
         instead of a new one.
 
         raises ConversionImpossible if the old aktivitet data is in a state we can't convert from"""
-        from aktiviteter.models import Aktivitet
+        from aktiviteter.models import Aktivitet, AktivitetImage
 
         if aktivitet is None:
             aktivitet = Aktivitet()
@@ -529,6 +534,47 @@ class Activity(models.Model):
         for tag in category_tags:
             obj, created = Tag.objects.get_or_create(name=tag)
             aktivitet.category_tags.add(obj)
+
+        converted_images = self.convert_images()
+        for order, old_image in enumerate(converted_images):
+            # Check if this image has already been imported
+            try:
+                aktivitet_image = aktivitet.images.get(sherpa2_url=old_image['url'])
+
+                # Yeah, it already exists - just update the order
+                aktivitet_image.order = order
+                aktivitet_image.save()
+            except AktivitetImage.DoesNotExist:
+                # Doesn't exist - download the image and create it in our image archive
+                downloaded_image = requests.get(old_image['url'])
+                image_data = downloaded_image.content
+                content_type = downloaded_image.headers['Content-Type']
+                extension = old_image['url'].rsplit('.', 1)[1].lower()
+
+                image = upload_image(
+                    image_data=image_data,
+                    extension=extension,
+                    description=old_image['title'],
+                    album=Album.objects.get(id=Album.IMPORTED_AKTIVITETER_ALBUM_ID),
+                    photographer='',
+                    credits='',
+                    licence='',
+                    content_type=content_type,
+                    tags=[],
+                    uploader=None,
+                )
+
+                aktivitet.images.add(AktivitetImage(
+                    url=image.get_url(),
+                    text='',
+                    photographer='',
+                    order=order,
+                ))
+
+        # All converted images are accounted for; delete all others
+        aktivitet.images.filter(order__gte=len(converted_images)).delete()
+
+        # Save all new relations
         aktivitet.save()
 
         # Now delete and re-convert all date objects
@@ -561,6 +607,40 @@ class Activity(models.Model):
         clean_lede = re.sub('<img.*?>', '', self.ingress)
         clean_description = re.sub('<img.*?>', '', self.content)
         return "%s %s" % (clean_lede, clean_description)
+
+    def convert_images(self):
+        # Precompile regular expressions
+        img_tags_re = re.compile('<img.*?>')
+        img_src_regex = re.compile('src=[\'"](.*?)[\'"]')
+        img_title_regex = re.compile('title=[\'"](.*?)[\'"]')
+
+        parsed_images = []
+        for text in [self.ingress, self.content]:
+            for img in img_tags_re.findall(text):
+                src_match = img_src_regex.search(img)
+                if src_match is None:
+                    # Image without a src attribute? Not expecting this to happen
+                    continue
+
+                path = src_match.group(1)
+
+                # If thumbnail, use the original (note: assuming that any external images won't contain the ".thumb."
+                # pattern)
+                path = re.sub('.thumb.', '.', path)
+
+                if path.startswith('http'):
+                    # Absolute URL; assume correctness
+                    url = path
+                else:
+                    # Assume sherpa2 URL, add old site domain
+                    url = "http://%s%s" % (settings.OLD_SITE, path)
+
+                title_match = img_title_regex.search(img)
+                parsed_images.append({
+                    'url': url,
+                    'title': title_match.group(1) if title_match is not None else '',
+                })
+        return parsed_images
 
     def convert_difficulty(self):
         difficulty = None
