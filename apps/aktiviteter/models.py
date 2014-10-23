@@ -150,6 +150,9 @@ class Aktivitet(models.Model):
         today = date.today()
         return self.pub_date <= today
 
+    def is_imported(self):
+        return self.sherpa2_id is not None
+
     @staticmethod
     def get_published():
         today = date.today()

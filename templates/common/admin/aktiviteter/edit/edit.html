@@ -89,8 +89,75 @@
             <strong>dd.mm.åååå</strong> (dato, måned, år), for eksempel vil dagens dato se slik ut:
             <strong>{{ now|date:"d.m.Y" }}</strong></p>
           </div>
+        {% elif message.message == 'cannot_import_unimported_aktivitet' %}
+          <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+              <div class="alert alert-danger">
+                <strong>Her har det skjedd en feil</strong><br>
+                Du prøvde å oppdatere en aktivitet fra gamle Sherpa men aktiviteten finnes kun i nye Sherpa, ikke i gamle.
+              </div>
+            </div>
+          </div>
+        {% elif message.message == 'import_success' %}
+          <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+              <div class="alert alert-success">
+                <strong>Turen har blitt oppdatert med opplysninger <a href="http://www2.turistforeningen.no/admin/activity.php?ac_id={{ aktivitet.sherpa2_id }}&amp;act=egenskaper">hentet fra gamle Sherpa</a>.</strong>
+              </div>
+            </div>
+          </div>
+        {% elif message.message == 'conversion_impossible' %}
+          <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+              <div class="alert alert-danger">
+                <strong>Turen kan ikke importeres! Den må fikses i gamle Sherpa slik at den passer formatet i nye Sherpa. <a href="javascript:alert('Beaklger, vi har ikke skrevet denne ennå, men den kommer!');">Les veiledningen vår om hva du må fikse</a>.</strong>
+              </div>
+            </div>
+          </div>
         {% endif %}
       {% endfor %}
+
+      {% if aktivitet.is_imported %}
+        <div class="row">
+          <div class="col-md-offset-2 col-md-8">
+            <p>
+              <strong>Denne aktiviteten er hentet fra gamle Sherpa.</strong>
+            </p>
+            <p>
+              Du kan se hva slags detaljer den er oppført med, men hvis du vil endre noe, må du <a href="http://www2.turistforeningen.no/admin/activity.php?ac_id={{ aktivitet.sherpa2_id }}&amp;act=egenskaper">gjøre det i gamle Sherpa.</a><br>
+              Hvis detaljene ikke skulle stemme med det som er lagt inn i gamle Sherpa, kan du lese blogg-posten vår om <a href="javascript:alert('Beaklger, vi har ikke skrevet denne ennå, men den kommer!');">hvordan aktivitetene importeres</a>.
+            </p>
+          </div>
+        </div>
+      {% endif %}
+
+      {% if aktivitet.is_imported %}
+        <form
+          class="form-dnt-default form-horizontal import-sherpa2-aktivitet"
+          data-dnt-container="import"
+          action="{% url 'admin.aktiviteter.views.trigger_import' aktivitet.id %}"
+          method="post">
+          {% csrf_token %}
+
+          <div class="form-group">
+            <div class="col-md-offset-2 col-md-8">
+              <button
+                class="btn btn-primary btn-lg btn-block"
+                type="submit"
+                data-dnt-trigger="import">
+                <i class="fa fa-refresh"></i> Hent opplysninger på nytt fra gamle Sherpa
+              </button>
+              <span class="help-block" data-dnt-container="help-block">
+                Opplysningene oppdateres hver natt, men hvis du nylig har gjort endringer i gamle Sherpa kan du
+                trykke her for å oppdatere turen nå, slik at du slipper å vente til i morgen.
+              </span>
+              <p class="loading jq-hide" data-dnt-container="loading">
+                <img src="{{ STATIC_URL }}img/common/ajax-loader-large.gif" class="ajaxloader" alt="Laster...">
+              </p>
+            </div>
+          </div>
+        </form>
+      {% endif %}
 
       <form action="{% url 'admin.aktiviteter.views.edit' aktivitet.id %}" method="post"
         class="edit-aktivitet form-dnt-default form-horizontal"
@@ -101,22 +168,24 @@
 
         <input type="hidden" name="preview" value="false">
 
-        <div class="form-group submit-header">
-          <div class="col-md-offset-2 col-md-8">
-            <div class="row">
-              <div class="col-md-6">
-                <button type="submit" class="btn btn-success btn-lg btn-block">
-                  <i class="fa fa-check"></i> Lagre alle endringer
-                </button>
-              </div>
-              <div class="col-md-6">
-                <button class="btn btn-lg btn-block preview" disabled data-confirm-if-published="Dette vil lagre og publisere datoen. Hvis du ikke vil det må du ta bort krysset for publisering i skjemaet. Gå videre likevel?">
-                  <i class="fa fa-search"></i> Lagre og se forhåndsvisning
-                </button>
+        {% if not aktivitet.is_imported %}
+          <div class="form-group submit-header">
+            <div class="col-md-offset-2 col-md-8">
+              <div class="row">
+                <div class="col-md-6">
+                  <button type="submit" class="btn btn-success btn-lg btn-block">
+                    <i class="fa fa-check"></i> Lagre alle endringer
+                  </button>
+                </div>
+                <div class="col-md-6">
+                  <button class="btn btn-lg btn-block preview" disabled data-confirm-if-published="Dette vil lagre og publisere datoen. Hvis du ikke vil det må du ta bort krysset for publisering i skjemaet. Gå videre likevel?">
+                    <i class="fa fa-search"></i> Lagre og se forhåndsvisning
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        {% endif %}
 
         <div class="section forening">
 
@@ -509,22 +578,24 @@
 
         </div><!-- /.section.publish -->
 
-        <div class="form-group submit-footer">
-          <div class="col-md-offset-2 col-md-8">
-            <div class="row">
-              <div class="col-md-6">
-                <button type="submit" class="btn btn-success btn-lg btn-block">
-                  <i class="fa fa-check"></i> Lagre alle endringer
-                </button>
-              </div>
-              <div class="col-md-6">
-                <button class="btn btn-default btn-lg btn-block preview" disabled>
-                  <i class="fa fa-search"></i> Lagre og se forhåndsvisning
-                </button>
+        {% if not aktivitet.is_imported %}
+          <div class="form-group submit-footer">
+            <div class="col-md-offset-2 col-md-8">
+              <div class="row">
+                <div class="col-md-6">
+                  <button type="submit" class="btn btn-success btn-lg btn-block">
+                    <i class="fa fa-check"></i> Lagre alle endringer
+                  </button>
+                </div>
+                <div class="col-md-6">
+                  <button class="btn btn-default btn-lg btn-block preview" disabled>
+                    <i class="fa fa-search"></i> Lagre og se forhåndsvisning
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        {% endif %}
 
       </form>
 
