@@ -78,7 +78,7 @@ def image_upload_dialog(request):
 
     try:
         extension = image.name.split(".")[-1].lower()
-        image_key = upload_image(
+        image = upload_image(
             image_data=image.read(),
             extension=extension,
             description=request.POST['description'],
@@ -92,7 +92,7 @@ def image_upload_dialog(request):
 
         result = json.dumps({
             'status': 'success',
-            'url': 'http://%s/%s%s.%s' % (s3_bucket(), settings.AWS_IMAGEGALLERY_PREFIX, image_key, extension),
+            'url': 'http://%s/%s%s.%s' % (s3_bucket(), settings.AWS_IMAGEGALLERY_PREFIX, image.key, extension),
         })
         return render(request, 'common/admin/images/iframe.html', {'result': result})
     except(IOError, KeyError):
@@ -153,7 +153,7 @@ def upload_image(image_data, extension, description, photographer, credits, lice
         obj, created = Tag.objects.get_or_create(name=tag)
         image.tags.add(obj)
 
-    return image_key
+    return image
 
 def full_archive_search(query):
     images = Image.objects.all()
