@@ -1,6 +1,7 @@
 # encoding: utf-8
 from datetime import datetime, date, timedelta
 import json
+import re
 
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import Point
@@ -556,7 +557,10 @@ class Activity(models.Model):
 
     def convert_description(self):
         # TODO: Handle HTML
-        return "%s %s" % (self.ingress, self.content)
+        # Remove all image tags and merge lede/description
+        clean_lede = re.sub('<img.*?>', '', self.ingress)
+        clean_description = re.sub('<img.*?>', '', self.content)
+        return "%s %s" % (clean_lede, clean_description)
 
     def convert_difficulty(self):
         difficulty = None
