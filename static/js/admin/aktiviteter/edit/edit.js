@@ -64,3 +64,15 @@ $(function() {
         scope.find('button[type="submit"]').prop('disabled', true);
     });
 });
+
+
+$(function() {
+    var scope = $('[data-dnt-container="import"]');
+
+    // On submit, disable submit button and display loading gif
+    scope.submit(function() {
+        scope.find('button[type="submit"]').prop('disabled', true);
+        scope.find('[data-dnt-container="help-block"]').hide();
+        scope.find('[data-dnt-container="loading"]').show();
+    });
+});

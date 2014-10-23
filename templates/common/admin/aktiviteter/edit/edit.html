@@ -89,6 +89,23 @@
             <strong>dd.mm.åååå</strong> (dato, måned, år), for eksempel vil dagens dato se slik ut:
             <strong>{{ now|date:"d.m.Y" }}</strong></p>
           </div>
+        {% elif message.message == 'cannot_import_unimported_aktivitet' %}
+          <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+              <div class="alert alert-danger">
+                <strong>Her har det skjedd en feil</strong><br>
+                Du prøvde å oppdatere en aktivitet fra gamle Sherpa men aktiviteten finnes kun i nye Sherpa, ikke i gamle.
+              </div>
+            </div>
+          </div>
+        {% elif message.message == 'import_success' %}
+          <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+              <div class="alert alert-success">
+                <strong>Turen har blitt oppdatert med opplysninger <a href="http://www2.turistforeningen.no/admin/activity.php?ac_id={{ aktivitet.sherpa2_id }}&amp;act=egenskaper">hentet fra gamle Sherpa</a>.</strong>
+              </div>
+            </div>
+          </div>
         {% endif %}
       {% endfor %}
 
@@ -102,6 +119,34 @@
             </div>
           </div>
         </div>
+      {% endif %}
+
+      {% if aktivitet.is_imported %}
+        <form
+          class="form-dnt-default form-horizontal import-sherpa2-aktivitet"
+          data-dnt-container="import"
+          action="{% url 'admin.aktiviteter.views.trigger_import' aktivitet.id %}"
+          method="post">
+          {% csrf_token %}
+
+          <div class="form-group">
+            <div class="col-md-offset-2 col-md-8">
+              <button
+                class="btn btn-primary btn-lg btn-block"
+                type="submit"
+                data-dnt-trigger="import">
+                <i class="fa fa-refresh"></i> Hent opplysninger på nytt fra gamle Sherpa
+              </button>
+              <span class="help-block" data-dnt-container="help-block">
+                Opplysningene oppdateres hver natt, men hvis du nylig har gjort endringer i gamle Sherpa kan du
+                trykke her for å oppdatere turen nå, slik at du slipper å vente til i morgen.
+              </span>
+              <p class="loading jq-hide" data-dnt-container="loading">
+                <img src="{{ STATIC_URL }}img/common/ajax-loader-large.gif" class="ajaxloader" alt="Laster...">
+              </p>
+            </div>
+          </div>
+        </form>
       {% endif %}
 
       <form action="{% url 'admin.aktiviteter.views.edit' aktivitet.id %}" method="post"
