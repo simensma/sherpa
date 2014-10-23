@@ -20,7 +20,7 @@ import PIL.Image
 
 from admin.models import Image, Fotokonkurranse
 from core.models import Tag
-from admin.images.util import generate_unique_random_image_key, get_exif_tags, create_thumb
+from admin.images.util import get_exif_tags, create_thumb
 from core import xmp, validator
 from core.util import s3_bucket
 
@@ -62,7 +62,7 @@ def upload(request):
         conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
         bucket = conn.get_bucket(s3_bucket())
 
-        image_key = generate_unique_random_image_key()
+        image_key = Image.generate_unique_random_key()
         data = image_file.read()
         ext = image_file.name.split(".")[-1].lower()
         pil_image = PIL.Image.open(StringIO(data))

@@ -21,7 +21,7 @@ from admin.models import Image, Album, Fotokonkurranse
 from user.models import User
 from core import xmp
 from core.util import s3_bucket
-from admin.images.util import parse_objects, list_parents, list_parents_values, full_archive_search, get_exif_tags, create_thumb, generate_unique_random_image_key
+from admin.images.util import parse_objects, list_parents, list_parents_values, full_archive_search, get_exif_tags, create_thumb
 
 logger = logging.getLogger('sherpa')
 
@@ -307,7 +307,7 @@ def upload_image(request):
         ids = []
         album = None if request.POST['album'] == '' else Album.objects.get(id=request.POST['album'])
         for image in request.FILES.getlist('files'):
-            image_key = generate_unique_random_image_key()
+            image_key = Image.generate_unique_random_key()
             data = image.read()
             ext = image.name.split(".")[-1].lower()
             pil_image = PIL.Image.open(StringIO(data))

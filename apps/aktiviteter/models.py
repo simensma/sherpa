@@ -37,7 +37,6 @@ class Aktivitet(models.Model):
     # and probably faster.
     audiences = models.CharField(max_length=1023)
     CATEGORY_CHOICES = (
-        # ('trip', 'Tur/Aktivitet'),
         ('organizedhike', 'Fellestur'),
         ('course', 'Kurs'),
         ('event', 'Arrangement'),
@@ -48,6 +47,9 @@ class Aktivitet(models.Model):
     pub_date = models.DateField()
     published = models.BooleanField(default=False)
     private = models.BooleanField(default=False)
+
+    # Applicable for aktiviteter imported from sherpa2
+    sherpa2_id = models.IntegerField(null=True)
 
     def __unicode__(self):
         return u'%s: %s' % (self.pk, self.title)
@@ -148,6 +150,9 @@ class Aktivitet(models.Model):
         today = date.today()
         return self.pub_date <= today
 
+    def is_imported(self):
+        return self.sherpa2_id is not None
+
     @staticmethod
     def get_published():
         today = date.today()
@@ -156,29 +161,6 @@ class Aktivitet(models.Model):
     # A predefined list of subcategory suggestions - they're simply implemented
     # as tags ('core.Tag'), though.
     SUBCATEGORIES = {
-        'trip': [
-            u'fottur',
-            u'skitur',
-            u'sykkeltur',
-            u'klatring',
-            u'padling',
-            u'skøytetur',
-            u'topptur',
-            u'kiting',
-            u'surfing',
-            u'brevandring',
-            u'grottetur',
-            u'snøhuletur',
-            u'trilletur',
-            u'bærtur',
-            u'sopptur',
-            u'fisketur',
-            u'ridetur',
-            u'singeltur',
-            u'naturlos',
-            u'utenlandstur',
-            u'orientering',
-        ],
         'organizedhike': [
             u'fottur',
             u'skitur',
@@ -230,7 +212,7 @@ class AktivitetDate(models.Model):
     end_date = models.DateTimeField()
     signup_enabled = models.BooleanField(default=True)
     signup_simple_allowed = models.BooleanField()
-    signup_max_allowed = models.PositiveIntegerField(default=0)
+    signup_max_allowed = models.PositiveIntegerField(default=0, null=True)
 
     # Signup start/deadline/cancel should only be null when signup_enabled is False
     signup_start = models.DateField(null=True)
@@ -293,12 +275,18 @@ class AktivitetDate(models.Model):
         return self.participants.count() + self.simple_participants.count()
 
     def is_full(self):
+        if self.signup_max_allowed is None:
+            return False
         return self.total_signup_count() >= self.signup_max_allowed
 
     def is_waitinglist(self):
+        if self.signup_max_allowed is None:
+            return False
         return self.total_signup_count() > self.signup_max_allowed
 
     def total_waitinglist_count(self):
+        if self.signup_max_allowed is None:
+            return 0
         return self.total_signup_count() - self.signup_max_allowed
 
     @staticmethod
@@ -312,6 +300,10 @@ class AktivitetImage(models.Model):
     text = models.CharField(max_length=1024)
     photographer = models.CharField(max_length=255)
     order = models.IntegerField()
+
+    # If not NULL, this is an image that has been imported from Sherpa 2. The old URL reference is saved to detect
+    # duplicates during subsequent imports.
+    sherpa2_url = models.CharField(max_length=1023, null=True)
 
     def __unicode__(self):
         return u'%s' % self.pk

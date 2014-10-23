@@ -17,7 +17,8 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from aktiviteter.models import Aktivitet, AktivitetDate, AktivitetImage
 from admin.aktiviteter.util import parse_html_array
 from core.models import Tag, County, Municipality
-from sherpa2.models import Location, Turforslag
+from sherpa2.models import Location, Turforslag, Activity as Sherpa2Aktivitet
+from sherpa2.exceptions import ConversionImpossible
 from user.models import User
 from focus.models import Actor
 from foreninger.models import Forening
@@ -142,6 +143,10 @@ def edit(request, aktivitet):
         errors = False
 
         aktivitet = Aktivitet.objects.get(id=aktivitet)
+
+        if aktivitet.is_imported():
+            # Should only be possible by circumventing client-side restrictions
+            return redirect('admin.aktiviteter.views.edit', aktivitet.id)
 
         if 'code' in request.POST:
             aktivitet.code = request.POST['code']
@@ -293,7 +298,11 @@ def edit(request, aktivitet):
 
                 elif date['signup_method'] == 'minside' or date['signup_method'] == 'simple':
                     model.signup_enabled = True
-                    model.signup_max_allowed = date['signup_max_allowed']
+
+                    if date.get('signup_max_allowed_limited'):
+                        model.signup_max_allowed = date['signup_max_allowed']
+                    else:
+                        model.signup_max_allowed = None
 
                     if 'signup_start' in date and date['signup_start'] != '':
                         model.signup_start = datetime.strptime(
@@ -367,6 +376,20 @@ def preview(request, aktivitet):
         'user_is_participating': request.user.is_authenticated() and request.user in aktivitet_date.participants.all()
     }
     return render(request, 'common/aktiviteter/show/preview.html', context)
+
+def trigger_import(request, aktivitet):
+    aktivitet = Aktivitet.objects.get(id=aktivitet)
+    if not aktivitet.is_imported():
+        messages.error(request, 'cannot_import_unimported_aktivitet')
+        return redirect('admin.aktiviteter.views.edit', aktivitet.id)
+
+    try:
+        old_activity = Sherpa2Aktivitet.objects.get(id=aktivitet.sherpa2_id)
+        old_activity.convert(aktivitet)
+        messages.success(request, 'import_success')
+    except ConversionImpossible:
+        messages.error(request, 'conversion_impossible')
+    return redirect('admin.aktiviteter.views.edit', aktivitet.id)
 
 def turforslag_search(request):
     query = request.GET['q'].strip()

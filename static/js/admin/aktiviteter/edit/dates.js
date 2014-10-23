@@ -11,7 +11,7 @@ $(function() {
             autoclose: true,
             weekStart: 1
         });
-    }
+    };
 
     /**
      * Logic for adding a new date to the DOM
@@ -58,6 +58,10 @@ $(function() {
         parent.find('[data-dnt-container="date-signup"]').toggleClass('jq-hide', toggle);
     });
 
+    scope.find('[data-dnt-input="signup-max-allowed-limit"]').on('change', function() {
+        scope.find('[data-dnt-input="signup-max-allowed"]').prop('disabled', !$(this).is(':checked'));
+    });
+
     scope.find('[data-dnt-toggle="date-signup-deadline"]').on('change', function() {
         var parent = $(this).parents('div.panel-body');
         var toggle = $(this).is(':checked');
@@ -93,7 +97,7 @@ $(function() {
             row.find('button').on('click', dateTurlederRemoveHandler);
             row.find('input').attr('name', 'dates[' + i + '][turleder][]');
             table.append(row);
-        };
+        }
 
         // Attach modal event handlers and show
         $('[data-dnt-container="turleder-search"]')
@@ -108,5 +112,5 @@ $(function() {
 
     function dateTurlederRemoveHandler() {
         $(this).parents('tr').remove();
-    };
+    }
 });

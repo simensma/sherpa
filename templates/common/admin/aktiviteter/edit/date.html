@@ -119,8 +119,20 @@
             <div class="form-group">
               <label for="" class="col-sm-3 control-label">Maks deltakere</label>
               <div class="col-sm-5">
-                <input type="number" class="form-control" name="dates[{{ i }}][signup_max_allowed]"
-                  step="1" min="0" value="{{ date.signup_max_allowed }}">
+                <div class="input-group">
+                  <span class="input-group-addon">
+                    <input type="checkbox" name="dates[{{ i }}][signup_max_allowed_limited]"
+                      data-dnt-input="signup-max-allowed-limit"
+                      {% if date.signup_max_allowed != None %} checked{% endif %}>
+                  </span>
+                  <input type="number" class="form-control" name="dates[{{ i }}][signup_max_allowed]"
+                    step="1" min="0" value="{{ date.signup_max_allowed }}"
+                    data-dnt-input="signup-max-allowed"
+                    {% if date.signup_max_allowed == None %} disabled{% endif %}>
+                </div>
+                <span class="help-block">
+                  Hvis du ikke oppgir noe her, blir antall deltakere ubegrenset.
+                </span>
               </div>
             </div>
 
