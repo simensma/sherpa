@@ -22,4 +22,7 @@ $(function() {
         'allow_single_deselect': true
     });
 
+    // Init Tooltip
+    header.find('.preview').tooltip();
+
 });

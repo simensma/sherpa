@@ -59,4 +59,7 @@ $(function() {
         });
     });
 
+    // Init Tooltip
+    header.find('.preview').tooltip();
+
 });
