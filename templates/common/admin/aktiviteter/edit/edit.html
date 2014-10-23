@@ -168,28 +168,24 @@
 
         <input type="hidden" name="preview" value="false">
 
-        <div class="form-group submit-header">
-          <div class="col-md-offset-2 col-md-8">
-            <div class="row">
-              <div class="col-md-6">
-                <button
-                  type="submit"
-                  class="btn btn-success btn-lg btn-block"
-                  {% if aktivitet.is_imported %}
-                    disabled
-                  {% endif %}>
-
-                  <i class="fa fa-check"></i> Lagre alle endringer
-                </button>
-              </div>
-              <div class="col-md-6">
-                <button class="btn btn-lg btn-block preview" disabled data-confirm-if-published="Dette vil lagre og publisere datoen. Hvis du ikke vil det må du ta bort krysset for publisering i skjemaet. Gå videre likevel?">
-                  <i class="fa fa-search"></i> Lagre og se forhåndsvisning
-                </button>
+        {% if not aktivitet.is_imported %}
+          <div class="form-group submit-header">
+            <div class="col-md-offset-2 col-md-8">
+              <div class="row">
+                <div class="col-md-6">
+                  <button type="submit" class="btn btn-success btn-lg btn-block">
+                    <i class="fa fa-check"></i> Lagre alle endringer
+                  </button>
+                </div>
+                <div class="col-md-6">
+                  <button class="btn btn-lg btn-block preview" disabled data-confirm-if-published="Dette vil lagre og publisere datoen. Hvis du ikke vil det må du ta bort krysset for publisering i skjemaet. Gå videre likevel?">
+                    <i class="fa fa-search"></i> Lagre og se forhåndsvisning
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        {% endif %}
 
         <div class="section forening">
 
@@ -582,28 +578,24 @@
 
         </div><!-- /.section.publish -->
 
-        <div class="form-group submit-footer">
-          <div class="col-md-offset-2 col-md-8">
-            <div class="row">
-              <div class="col-md-6">
-                <button
-                  type="submit"
-                  class="btn btn-success btn-lg btn-block"
-                  {% if aktivitet.is_imported %}
-                    disabled
-                  {% endif %}>
-
-                  <i class="fa fa-check"></i> Lagre alle endringer
-                </button>
-              </div>
-              <div class="col-md-6">
-                <button class="btn btn-default btn-lg btn-block preview" disabled>
-                  <i class="fa fa-search"></i> Lagre og se forhåndsvisning
-                </button>
+        {% if not aktivitet.is_imported %}
+          <div class="form-group submit-footer">
+            <div class="col-md-offset-2 col-md-8">
+              <div class="row">
+                <div class="col-md-6">
+                  <button type="submit" class="btn btn-success btn-lg btn-block">
+                    <i class="fa fa-check"></i> Lagre alle endringer
+                  </button>
+                </div>
+                <div class="col-md-6">
+                  <button class="btn btn-default btn-lg btn-block preview" disabled>
+                    <i class="fa fa-search"></i> Lagre og se forhåndsvisning
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        {% endif %}
 
       </form>
 
