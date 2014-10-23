@@ -18,6 +18,7 @@ from aktiviteter.models import Aktivitet, AktivitetDate, AktivitetImage
 from admin.aktiviteter.util import parse_html_array
 from core.models import Tag, County, Municipality
 from sherpa2.models import Location, Turforslag, Activity as Sherpa2Aktivitet
+from sherpa2.exceptions import ConversionImpossible
 from user.models import User
 from focus.models import Actor
 from foreninger.models import Forening
@@ -382,9 +383,12 @@ def trigger_import(request, aktivitet):
         messages.error(request, 'cannot_import_unimported_aktivitet')
         return redirect('admin.aktiviteter.views.edit', aktivitet.id)
 
-    old_activity = Sherpa2Aktivitet.objects.get(id=aktivitet.sherpa2_id)
-    old_activity.convert(aktivitet)
-    messages.success(request, 'import_success')
+    try:
+        old_activity = Sherpa2Aktivitet.objects.get(id=aktivitet.sherpa2_id)
+        old_activity.convert(aktivitet)
+        messages.success(request, 'import_success')
+    except ConversionImpossible:
+        messages.error(request, 'conversion_impossible')
     return redirect('admin.aktiviteter.views.edit', aktivitet.id)
 
 def turforslag_search(request):

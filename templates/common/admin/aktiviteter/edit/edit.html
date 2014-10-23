@@ -106,6 +106,14 @@
               </div>
             </div>
           </div>
+        {% elif message.message == 'conversion_impossible' %}
+          <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+              <div class="alert alert-danger">
+                <strong>Turen kan ikke importeres! Den må fikses i gamle Sherpa slik at den passer formatet i nye Sherpa. <a href="javascript:alert('Beaklger, vi har ikke skrevet denne ennå, men den kommer!');">Les veiledningen vår om hva du må fikse</a>.</strong>
+              </div>
+            </div>
+          </div>
         {% endif %}
       {% endfor %}
 
