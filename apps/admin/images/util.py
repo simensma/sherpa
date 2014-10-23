@@ -82,6 +82,7 @@ def image_upload_dialog(request):
             image_data=image.read(),
             extension=extension,
             description=request.POST['description'],
+            album=None,
             photographer=request.POST['photographer'],
             credits=request.POST['credits'],
             licence=request.POST['licence'],
@@ -115,7 +116,7 @@ def image_upload_dialog(request):
 # Actual utilities
 #
 
-def upload_image(image_data, extension, description, photographer, credits, licence, content_type, tags, uploader):
+def upload_image(image_data, extension, description, album, photographer, credits, licence, content_type, tags, uploader):
     conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
     bucket = conn.get_bucket(s3_bucket())
 
@@ -139,7 +140,7 @@ def upload_image(image_data, extension, description, photographer, credits, lice
         extension=extension,
         hash=sha1(image_data).hexdigest(),
         description=description,
-        album=None,
+        album=album,
         photographer=photographer,
         credits=credits,
         licence=licence,
