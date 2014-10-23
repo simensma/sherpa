@@ -77,49 +77,22 @@ def image_upload_dialog(request):
         return render(request, 'common/admin/images/iframe.html', {'result': result})
 
     try:
-        conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
-        bucket = conn.get_bucket(s3_bucket())
-
-        image_key = Image.generate_unique_random_key()
-        data = image.read()
-        ext = image.name.split(".")[-1].lower()
-        pil_image = PIL.Image.open(StringIO(data))
-        exif_json = json.dumps(get_exif_tags(pil_image))
-        image_file_tags = xmp.find_keywords(data)
-        user_provided_tags = [tag.strip() for tag in request.POST['tags'].split(',') if tag.strip() != '']
-        thumbs = [{'size': size, 'data': create_thumb(pil_image, ext, size)} for size in settings.THUMB_SIZES]
-
-        key = bucket.new_key("%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, image_key, ext))
-        key.content_type = image.content_type
-        key.set_contents_from_string(data, policy='public-read')
-
-        for thumb in thumbs:
-            key = bucket.new_key("%s%s-%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, image_key, thumb['size'], ext))
-            key.content_type = image.content_type
-            key.set_contents_from_string(thumb['data'], policy='public-read')
-
-        image = Image(
-            key=image_key,
-            extension=ext,
-            hash=sha1(data).hexdigest(),
+        extension = image.name.split(".")[-1].lower()
+        image_key = upload_image(
+            image_data=image.read(),
+            extension=extension,
             description=request.POST['description'],
-            album=None,
             photographer=request.POST['photographer'],
             credits=request.POST['credits'],
             licence=request.POST['licence'],
-            exif=exif_json,
+            content_type=image.content_type,
+            tags=[tag.strip() for tag in request.POST['tags'].split(',') if tag.strip() != ''],
             uploader=request.user,
-            width=pil_image.size[0],
-            height=pil_image.size[1])
-        image.save()
-
-        for tag in [tag.lower() for tag in image_file_tags + user_provided_tags]:
-            obj, created = Tag.objects.get_or_create(name=tag)
-            image.tags.add(obj)
+        )
 
         result = json.dumps({
             'status': 'success',
-            'url': 'http://%s/%s%s.%s' % (s3_bucket(), settings.AWS_IMAGEGALLERY_PREFIX, image_key, ext),
+            'url': 'http://%s/%s%s.%s' % (s3_bucket(), settings.AWS_IMAGEGALLERY_PREFIX, image_key, extension),
         })
         return render(request, 'common/admin/images/iframe.html', {'result': result})
     except(IOError, KeyError):
@@ -141,6 +114,46 @@ def image_upload_dialog(request):
 #
 # Actual utilities
 #
+
+def upload_image(image_data, extension, description, photographer, credits, licence, content_type, tags, uploader):
+    conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+    bucket = conn.get_bucket(s3_bucket())
+
+    image_key = Image.generate_unique_random_key()
+    pil_image = PIL.Image.open(StringIO(image_data))
+    exif_json = json.dumps(get_exif_tags(pil_image))
+    image_file_tags = xmp.find_keywords(image_data)
+    thumbs = [{'size': size, 'data': create_thumb(pil_image, extension, size)} for size in settings.THUMB_SIZES]
+
+    key = bucket.new_key("%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, image_key, extension))
+    key.content_type = content_type
+    key.set_contents_from_string(image_data, policy='public-read')
+
+    for thumb in thumbs:
+        key = bucket.new_key("%s%s-%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, image_key, thumb['size'], extension))
+        key.content_type = content_type
+        key.set_contents_from_string(thumb['data'], policy='public-read')
+
+    image = Image(
+        key=image_key,
+        extension=extension,
+        hash=sha1(image_data).hexdigest(),
+        description=description,
+        album=None,
+        photographer=photographer,
+        credits=credits,
+        licence=licence,
+        exif=exif_json,
+        uploader=uploader,
+        width=pil_image.size[0],
+        height=pil_image.size[1])
+    image.save()
+
+    for tag in [tag.lower() for tag in image_file_tags + tags]:
+        obj, created = Tag.objects.get_or_create(name=tag)
+        image.tags.add(obj)
+
+    return image_key
 
 def full_archive_search(query):
     images = Image.objects.all()
