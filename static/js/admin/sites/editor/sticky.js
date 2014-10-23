@@ -12,7 +12,9 @@ $(function () {
 
     sticky.affix({
         offset: {
-            top: stickyTopOffset
+            // NOTE: This has to be dynamic, should be solved by
+            // making a function that returns the right value
+            top: stickyTopOffset - bodyOriginalPadding
         }
     });
 

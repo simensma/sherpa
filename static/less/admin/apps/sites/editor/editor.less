@@ -1,5 +1,46 @@
 // This sheet needs a good refactoring
 
+body {
+  padding-top: 50px;
+}
+
+/* For demonstration of Sherpa navbar in editor */
+
+nav.navbar {
+
+  a {
+    font-family: "Open Sans", sans-serif;
+    font-weight: 100;
+  }
+
+  @media (min-width: 768px) {
+    > .container .navbar-brand,
+    > .container-fluid .navbar-brand {
+      margin-left: 0;
+    }
+    > .container .navbar-right,
+    > .container-fluid .navbar-right {
+      margin-right: 0;
+    }
+  }
+
+  max-height: 50px;
+
+  .navbar-brand {
+    background-image: url('/static/img/admin/dnt_logo_2x.png');
+    background-repeat: no-repeat;
+    min-height: 50px;
+    padding: 15px 15px 15px 60px;
+    background-size: 50px;
+  }
+
+  ul.nav.navbar-user {
+    > li {
+      margin-left: 10px;
+    }
+  }
+}
+
 /* Page header editing */
 
 div.editor-header {
@@ -29,7 +70,7 @@ div.editor-header {
     padding: 15px 0;
 
     &.affix {
-      top: 0;
+      top: 50px;
       left: 0;
       background-color: @editor-form-background-color;
       border-bottom: 1px solid @editor-form-border-color;
