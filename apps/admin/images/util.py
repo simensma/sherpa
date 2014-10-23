@@ -2,7 +2,6 @@
 from cStringIO import StringIO
 from hashlib import sha1
 import json
-import random
 import logging
 import sys
 
@@ -81,7 +80,7 @@ def image_upload_dialog(request):
         conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
         bucket = conn.get_bucket(s3_bucket())
 
-        image_key = generate_unique_random_image_key()
+        image_key = Image.generate_unique_random_key()
         data = image.read()
         ext = image.name.split(".")[-1].lower()
         pil_image = PIL.Image.open(StringIO(data))
@@ -208,23 +207,6 @@ def list_parents_values(album):
         album = Album.objects.get(id=album.parent.id)
         parents.insert(0, {'id': album.id, 'name': album.name})
     return parents
-
-def generate_random_image_key():
-    def random_alphanumeric():
-        # These "magic" numbers generate one of [a-zA-Z0-9] based on the ascii table.
-        r = random.randint(0, 61)
-        if  (r < 10): return chr(r + 48)
-        elif(r < 36): return chr(r + 55)
-        else        : return chr(r + 61)
-    return "%s%s/%s%s/%s%s" % (random_alphanumeric(), random_alphanumeric(), random_alphanumeric(), random_alphanumeric(), random_alphanumeric(), random_alphanumeric())
-
-def generate_unique_random_image_key():
-    key = generate_random_image_key()
-    while Image.objects.filter(key=key).exists():
-        # Potential weak spot here if the amount of objects
-        # were to close in on the amount of available keys.
-        key = generate_random_image_key()
-    return key
 
 def get_exif_tags(pil_image):
     try:

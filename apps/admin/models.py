@@ -1,6 +1,7 @@
 # encoding: utf-8
 from datetime import date
 import json
+import random
 
 from django.db.models.signals import pre_delete, post_delete
 from django.dispatch import receiver
@@ -26,6 +27,25 @@ class Image(models.Model):
     width = models.IntegerField()
     height = models.IntegerField()
     tags = models.ManyToManyField('core.Tag', related_name='images')
+
+    @staticmethod
+    def generate_random_key():
+        def random_alphanumeric():
+            # These "magic" numbers generate one of [a-zA-Z0-9] based on the ascii table.
+            r = random.randint(0, 61)
+            if  (r < 10): return chr(r + 48)
+            elif(r < 36): return chr(r + 55)
+            else        : return chr(r + 61)
+        return "%s%s/%s%s/%s%s" % (random_alphanumeric(), random_alphanumeric(), random_alphanumeric(), random_alphanumeric(), random_alphanumeric(), random_alphanumeric())
+
+    @staticmethod
+    def generate_unique_random_key():
+        key = Image.generate_random_key()
+        while Image.objects.filter(key=key).exists():
+            # Potential weak spot here if the amount of objects
+            # were to close in on the amount of available keys.
+            key = Image.generate_random_key()
+        return key
 
     def __unicode__(self):
         return u'%s' % self.pk
