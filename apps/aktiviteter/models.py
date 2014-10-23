@@ -301,6 +301,10 @@ class AktivitetImage(models.Model):
     photographer = models.CharField(max_length=255)
     order = models.IntegerField()
 
+    # If not NULL, this is an image that has been imported from Sherpa 2. The old URL reference is saved to detect
+    # duplicates during subsequent imports.
+    sherpa2_url = models.CharField(max_length=1023, null=True)
+
     def __unicode__(self):
         return u'%s' % self.pk
 
