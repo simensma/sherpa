@@ -111,8 +111,29 @@
 
           <div class="section">
             <h3>Arrangør</h3>
-            <select name="organizer" data-chosen data-placeholder="Velg arrangør" multiple>
-              <option value="" selected>Alle arrangører</option>
+            <select name="organizer" data-chosen data-placeholder="Velg arrangør..." multiple>
+              <option value=""></option>
+
+              {% for type in all_foreninger %}
+                {% if type.foreninger|length > 0 %}
+                  <optgroup label="{{ type.name }}">
+                    {% for forening in type.foreninger %}
+                      <option value="forening:{{ forening.id }}">{{ forening.name }}</option>
+                    {% endfor %}
+                  </optgroup>
+                {% endif %}
+              {% endfor %}
+
+              <optgroup label="Hytter">
+                {% for cabin in cabins %}
+                  {% if aktivitet.forening_cabin == cabin %}
+                    <option value="cabin:{{ cabin.id }}" selected>{{ cabin.name }}</option>
+                  {% else %}
+                    <option value="cabin:{{ cabin.id }}">{{ cabin.name }}</option>
+                  {% endif %}
+                {% endfor %}
+              </optgroup>
+
             </select>
           </div>
 

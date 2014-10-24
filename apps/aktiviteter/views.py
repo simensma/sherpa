@@ -9,9 +9,10 @@ from django.contrib import messages
 
 from sherpa.decorators import user_requires_login
 from sherpa2.models import Location
-from aktiviteter.models import Aktivitet, AktivitetDate, SimpleParticipant
+from aktiviteter.models import Aktivitet, AktivitetDate, SimpleParticipant, Cabin
 from aktiviteter.util import filter_aktivitet_dates
 from core import validator
+from foreninger.models import Forening
 
 def index(request):
     aktivitet_dates = filter_aktivitet_dates({
@@ -31,6 +32,8 @@ def index(request):
         'categories': Aktivitet.CATEGORY_CHOICES,
         'audiences': Aktivitet.AUDIENCE_CHOICES,
         'locations': Location.get_active().order_by('name'),
+        'all_foreninger': Forening.get_all_sorted_with_type_data(),
+        'cabins': Cabin.objects.order_by('name'),
     }
     return render(request, 'common/aktiviteter/index.html', context)
 
