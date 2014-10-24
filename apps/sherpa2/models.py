@@ -619,8 +619,15 @@ class Activity(models.Model):
     def convert_description(self):
         # TODO: Handle HTML
         # Remove all image tags and merge lede/description
-        clean_lede = re.sub('<img.*?>', '', self.ingress)
-        clean_description = re.sub('<img.*?>', '', self.content)
+        if self.ingress is None:
+            clean_lede = ""
+        else:
+            clean_lede = re.sub('<img.*?>', '', self.ingress)
+
+        if self.content is None:
+            clean_description = ""
+        else:
+            clean_description = re.sub('<img.*?>', '', self.content)
         return "%s %s" % (clean_lede, clean_description)
 
     def convert_images(self):
@@ -631,6 +638,9 @@ class Activity(models.Model):
 
         parsed_images = []
         for text in [self.ingress, self.content]:
+            if text is None:
+                continue
+
             for img in img_tags_re.findall(text):
                 src_match = img_src_regex.search(img)
                 if src_match is None:
