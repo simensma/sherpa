@@ -829,7 +829,7 @@ class Activity(models.Model):
     def sync_all():
         from aktiviteter.models import Aktivitet
 
-        for sherpa2_aktivitet in Activity.objects.prefetch_related('dates'):
+        for sherpa2_aktivitet in Activity.objects.prefetch_related('dates').order_by('id'):
             try:
                 sherpa3_aktivitet = Aktivitet.objects.prefetch_related('dates').get(sherpa2_id=sherpa2_aktivitet.id)
             except Aktivitet.DoesNotExist:
