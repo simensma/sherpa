@@ -61,6 +61,10 @@ $(function() {
         refreshContent(results_content.attr('data-current-page'));
     });
 
+    filters.find("select[name='organizers']").select2().on('change', function() {
+        refreshContent(results_content.attr('data-current-page'));
+    });
+
     $(document).on('click', results_content.selector + ' div.pagination li:not(.disabled):not(.active) a.page', function() {
         refreshContent($(this).attr('data-page'));
     });
@@ -104,6 +108,10 @@ $(function() {
         filters.find("select[name='location'] option:selected").each(function() {
             locations.push($(this).val());
         });
+        var organizers = [];
+        filters.find("select[name='organizers'] option:selected").each(function() {
+            organizers.push($(this).val());
+        });
         var start_date = filters.find("input[name='start_date']").val();
         var end_date = filters.find("input[name='end_date']").val();
         var search = filters.find("input[name='search']").val();
@@ -114,10 +122,10 @@ $(function() {
             locations: locations,
             start_date: start_date,
             end_date: end_date,
-            search: search
+            search: search,
+            organizers: organizers,
         };
     }
-
 
     $('input[name="ssr_id"]').select2({
         placeholder: 'Finn sted',

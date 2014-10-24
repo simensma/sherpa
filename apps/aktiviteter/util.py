@@ -1,6 +1,7 @@
 from datetime import datetime
 import json
 
+from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage
 
 from aktiviteter.models import AktivitetDate
@@ -31,6 +32,28 @@ def filter_aktivitet_dates(filter):
             dates = dates.filter(end_date__lte=datetime.strptime(filter['end_date'], "%d.%m.%Y"))
     except (ValueError, KeyError):
         pass
+
+    if 'organizers' in filter:
+        foreninger = []
+        cabins = []
+        for organizer in filter['organizers']:
+            type, id = organizer.split(':')
+            if type == 'forening':
+                foreninger.append(id)
+            elif type == 'cabin':
+                cabins.append(id)
+
+        if len(foreninger) > 0:
+            dates = dates.filter(
+                Q(aktivitet__forening__in=foreninger) |
+                Q(aktivitet__co_foreninger__in=foreninger)
+            )
+
+        if len(cabins) > 0:
+            dates = dates.filter(
+                Q(aktivitet__forening_cabin__in=cabins) |
+                Q(aktivitet__co_foreninger_cabin__in=cabins)
+            )
 
     dates = dates.order_by(
         '-start_date'
