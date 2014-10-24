@@ -553,30 +553,34 @@ class Activity(models.Model):
                 aktivitet_image.save()
             except AktivitetImage.DoesNotExist:
                 # Doesn't exist - download the image and create it in our image archive
-                downloaded_image = requests.get(old_image['url'])
-                image_data = downloaded_image.content
-                content_type = downloaded_image.headers['Content-Type']
-                extension = old_image['url'].rsplit('.', 1)[1].lower()
+                try:
+                    downloaded_image = requests.get(old_image['url'])
+                    image_data = downloaded_image.content
+                    content_type = downloaded_image.headers['Content-Type']
+                    extension = old_image['url'].rsplit('.', 1)[1].lower()
 
-                image = upload_image(
-                    image_data=image_data,
-                    extension=extension,
-                    description=old_image['title'],
-                    album=Album.objects.get(id=Album.IMPORTED_AKTIVITETER_ALBUM_ID),
-                    photographer='',
-                    credits='',
-                    licence='',
-                    content_type=content_type,
-                    tags=[],
-                    uploader=None,
-                )
+                    image = upload_image(
+                        image_data=image_data,
+                        extension=extension,
+                        description=old_image['title'],
+                        album=Album.objects.get(id=Album.IMPORTED_AKTIVITETER_ALBUM_ID),
+                        photographer='',
+                        credits='',
+                        licence='',
+                        content_type=content_type,
+                        tags=[],
+                        uploader=None,
+                    )
 
-                aktivitet.images.add(AktivitetImage(
-                    url=image.get_url(),
-                    text='',
-                    photographer='',
-                    order=order,
-                ))
+                    aktivitet.images.add(AktivitetImage(
+                        url=image.get_url(),
+                        text='',
+                        photographer='',
+                        order=order,
+                    ))
+                except requests.ConnectionError:
+                    # We're unable to download the referenced image - skip it for now.
+                    pass
 
         # All converted images are accounted for; delete all others
         aktivitet.images.filter(order__gte=len(converted_images)).delete()
