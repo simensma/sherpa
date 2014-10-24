@@ -668,18 +668,21 @@ class Activity(models.Model):
         return parsed_images
 
     def convert_difficulty(self):
-        difficulty = None
-        for extra in self.get_extras():
-            if extra in Activity.DIFFICULTY_CONVERSION_TABLE:
-                if difficulty is not None:
-                    raise ConversionImpossible("Illegal state: Activity with more than one difficulty defined")
+        from aktiviteter.models import Aktivitet
 
-                difficulty = Activity.DIFFICULTY_CONVERSION_TABLE[extra]
+        difficulties = [
+            Activity.DIFFICULTY_CONVERSION_TABLE[extra]
+            for extra in self.get_extras()
+            if extra in Activity.DIFFICULTY_CONVERSION_TABLE
+        ]
 
-        if difficulty is None:
+        if len(difficulties) == 0:
             raise ConversionImpossible("Activity without difficulty")
 
-        return difficulty
+        # Use the single highest valued difficulty
+        difficulty_priority = {d[1][0]: d[0] for d in enumerate(Aktivitet.DIFFICULTY_CHOICES)}
+        highest_difficulty = sorted(difficulties, key=lambda d: difficulty_priority[d])[-1]
+        return highest_difficulty
 
     def convert_audiences(self):
         return [Activity.AUDIENCE_CONVERSION_TABLE[extra]
