@@ -10,7 +10,7 @@ $(function() {
 
     var now = new Date();
     var today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
-    filters.find("div.input-append.date").datepicker({
+    filters.find('[data-dnt-container="start-date"],[data-dnt-container="end-date"]').datepicker({
         format: 'dd.mm.yyyy',
         weekStart: 1,
         autoclose: true,
@@ -57,7 +57,7 @@ $(function() {
         refreshContent(results_content.attr('data-current-page'));
     });
 
-    filters.find("div.input-append.date").on('changeDate', function() {
+    filters.find('[data-dnt-container="start-date"],[data-dnt-container="end-date"]').on('changeDate', function() {
         refreshContent(results_content.attr('data-current-page'));
     });
 
