@@ -29,10 +29,22 @@
 
 <div class="aktivitet-listing">
 
+  <div class="navbar navbar-default navbar-fixed-bottom visible-xs toggle-filters-results">
+    <div class="container">
+      <div class="col-xs-12 sm-hidden">
+        <button class="btn btn-danger btn-lg btn-block" data-dnt-action="show-activities-filters">Endre søk</button>
+        <button class="btn btn-danger btn-lg btn-block jq-hide" data-dnt-action="show-activities-results">Vis resultat</button>
+      </div>
+    </div>
+  </div>
+
+  <h1 class="visible-xs">Finn aktiviteter</h1>
+
   <div class="row">
-    <div class="col-md-4">
-      <div class="column-query-parameters">
-        <h2>Finn en tur</h2>
+
+    <div class="column-filters col-sm-4 hidden-xs">
+      <div class="wrapper">
+        <h2 class="hidden-xs">Finn tur</h2>
 
         <div class="search-filters">
           <div class="section">
@@ -141,35 +153,44 @@
 
     </div>
 
-    <div class="col-md-8">
-      <div class="column-results">
+    <div class="column-results col-sm-8">
+      <div class="wrapper">
 
         <div class="showing">
           <p>Viser <span data-container-for="selected-activity-types"><a href="#">turer med guide</a>, <a href="#">kurs</a>, <a href="#">fellesturer</a> og <a href="#">dugnader</a></span></p>
         </div>
 
+        <div class="toggle-results-view-type">
+          <div class="inline-label"><span>Vis resultat i</span></div>
+          <div class="btn-group">
+            <button type="button" class="btn btn-default active list">Liste</button>
+            <button type="button" class="btn btn-default map">Kart</button>
+          </div>
+        </div>
+
         <div class="results" data-filter-url="{% url 'aktiviteter.views.filter' %}">
+          <div class="results-view results-view-list">
+            <div class="content" data-current-page="{{ aktivitet_dates.number }}">
+              {% include 'common/aktiviteter/listing.html' %}
+            </div>
 
-          <div class="content" data-current-page="{{ aktivitet_dates.number }}">
-            {% include 'common/aktiviteter/listing.html' %}
+            <div class="loading jq-hide">
+              <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" alt="Laster, vennligst vent...">
+              Laster, vennligst vent...
+            </div>
+
+            <div class="fail jq-hide alert alert-error">
+              <strong>Beklager, det oppstod en teknisk feil!</strong><br>
+              Feilen har blitt logget i vårt system, og vi vil rette den så snart som mulig. I mellomtiden kan du forsøke å <a href="javascript:document.location.reload(true);">oppdatere siden</a>.
+            </div>
           </div>
-
-          <div class="loading jq-hide">
-            <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" alt="Laster, vennligst vent...">
-            Laster, vennligst vent...
+          <div class="results-view results-view-map jq-hide">
+            <div id="map" class="leaflet-map"></div>
           </div>
-
-          <div class="fail jq-hide alert alert-error">
-            <strong>Beklager, det oppstod en teknisk feil!</strong><br>
-            Feilen har blitt logget i vårt system, og vi vil rette den så snart som mulig. I mellomtiden kan du forsøke å <a href="javascript:document.location.reload(true);">oppdatere siden</a>.
-          </div>
-
         </div>
       </div>
     </div>
   </div>
-
-  <div id="map" class="leaflet-map"></div>
   <div class="popups jq-hide">
     {% for aktivitet in aktivitet_positions %}
       <div class="popup-content" data-aktivitet-date-id="{{ aktivitet.id }}">

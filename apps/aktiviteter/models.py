@@ -276,6 +276,16 @@ class AktivitetDate(models.Model):
     def get_other_dates_ordered(self):
         return self.other_dates().order_by('-start_date')
 
+    def get_duration(self):
+        diff = self.end_date-self.start_date
+        days = diff.days
+
+        if days == 0:
+            hours = diff.seconds / 3600
+            return u'%s timer' % (hours)
+        else:
+            return u'%s dager' % (days)
+
     def get_turledere_ordered(self):
         return sorted(self.turledere.all(), key=lambda p: p.get_first_name())
 

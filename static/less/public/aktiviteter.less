@@ -1,4 +1,28 @@
 div.aktivitet-listing {
+
+  div.navbar.toggle-filters-results {
+    padding: 10px 0;
+  }
+
+  div.toggle-results-view-type {
+    margin-bottom: 20px;
+
+    div.inline-label {
+      display: inline-block;
+      margin-right: 10px;
+      font-family: "DTL Nobel" !important;
+    }
+
+    button{
+      &.active {
+        background-color: @profile-red;
+        color: #fff;
+        box-shadow: none;
+      }
+    }
+
+  }
+
   div.search-filters {
     font-family: "DTL Nobel" !important;
 
@@ -18,7 +42,7 @@ div.aktivitet-listing {
 
   }
 
-  div.column-query-parameters {
+  div.column-filters {
 
     padding-top: 30px;
 
@@ -29,18 +53,83 @@ div.aktivitet-listing {
   }
 
   div.column-results {
-    background-color: #e4e4e4;
-    padding: 30px;
 
-    table.aktiviteter {
-      td {
-        padding: 0;
+    @media (min-width: @screen-sm-min) {
+      .wrapper {
+        background-color: #e4e4e4;
+        padding: 30px;
+      }
+    }
 
-        div.aktivitet-item {
-          .aktivitet-item();
+    div.aktivitet-item {
+      .aktivitet-item();
+
+      // Up to 1/4
+      &[max-width~="439px"] {
+
+        p.description {
+          &.sm, &.md, &.lg {
+            display: none;
+          }
+          &.xs {
+            display: block;
+          }
+        }
+      }
+
+      &[max-width~="439px"] {
+
+        @height: 110px;
+        height: @height;
+
+        h2 {
+          white-space: nowrap;
+          a {
+            text-overflow: ellipsis;
+          }
+        }
+
+        .image {
+          display: block;
+          height: @height;
+          width: @height;
+        }
+
+        div.meta div {
+          display: inline-block;
+        }
+
+        div.date {
+          span.short {
+            display: inline-block;
+          }
+          span.long {
+            display: none;
+          }
+        }
+      }
+
+      // From 2/3
+      &[min-width~="549px"] {
+
+        p.description {
+          &.xs, &.sm, &.lg {
+            display: none;
+          }
+          &.md {
+            display: block;
+          }
+        }
+
+      }
+
+      @media (min-width: @screen-sm-min) {
+        .info {
+          padding: 10px 15px;
         }
       }
     }
+
   }
 
   div.listing-footer,
