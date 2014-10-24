@@ -698,7 +698,8 @@ class Activity(models.Model):
         ]
 
         if len(difficulties) == 0:
-            raise ConversionImpossible("Activity without difficulty")
+            # No difficulty specified - assume medium difficulty
+            return 'medium'
 
         # Use the single highest valued difficulty
         difficulty_priority = {d[1][0]: d[0] for d in enumerate(Aktivitet.DIFFICULTY_CHOICES)}
