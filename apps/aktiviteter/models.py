@@ -330,3 +330,6 @@ class Cabin(models.Model):
     implemented, this model should be replaced with references to cabins in NTB."""
     name = models.CharField(max_length=255)
     sherpa2_id = models.PositiveIntegerField()
+
+    def __unicode__(self):
+        return u'%s/%s: %s' % (self.pk, self.sherpa2_id, self.name)
