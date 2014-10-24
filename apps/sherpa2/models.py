@@ -637,7 +637,7 @@ class Activity(models.Model):
 
                 # If thumbnail, use the original (note: assuming that any external images won't contain the ".thumb."
                 # pattern)
-                path = re.sub('.thumb.', '.', path)
+                path = re.sub('\.thumb\.', '.', path)
 
                 if path.startswith('http'):
                     # Absolute URL; assume correctness
