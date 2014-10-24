@@ -58,6 +58,10 @@ class Aktivitet(models.Model):
     def __unicode__(self):
         return u'%s: %s' % (self.pk, self.title)
 
+    def get_co_foreninger_mixed(self):
+        """Returns a list of foreninger and/or cabins related to this aktivitet"""
+        return list(self.co_foreninger.all()) + list(self.co_foreninger_cabin.all())
+
     def get_dates_ordered(self):
         return enumerate(self.dates.all().order_by('start_date'))
 

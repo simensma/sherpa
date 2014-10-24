@@ -52,14 +52,14 @@
                 </dd>
                 {% endif %}
 
-                {% with aktivitet_date.aktivitet.co_foreninger.all as co_foreninger %}
-                <dt>Arrangør{% if co_foreninger %}er{% endif %}</dt>
-                <dd>
-                  {{ aktivitet_date.aktivitet.forening }}
-                  {% for co_forening in co_foreninger %}
-                    , {{ co_forening }}
-                  {% endfor %}
-                </dd>
+                {% with aktivitet_date.aktivitet.get_co_foreninger_mixed as co_foreninger %}
+                  <dt>Arrangør{% if co_foreninger %}er{% endif %}</dt>
+                  <dd>
+                    {% firstof aktivitet_date.aktivitet.forening.name aktivitet_date.aktivitet.forening_cabin.name %}
+                    {% for co_forening in co_foreninger %}
+                      , {{ co_forening.name }}
+                    {% endfor %}
+                  </dd>
                 {% endwith %}
 
                 <dt>Turområde</dt>

@@ -2,11 +2,19 @@
 
 {% if aktivitet_date.contact_type == 'arrangør' %}
 
-  {% with forening=aktivitet_date.aktivitet.forening %}
-    {{ forening.name }}<br>
-    Tlf. {{ forening.phone }}<br>
-    E-post: <a href="mailto:{{ forening.email }}">{{ forening.email }}</a>
-  {% endwith %}
+  {% if aktivitet_date.aktivitet.forening %}
+
+    {% with forening=aktivitet_date.aktivitet.forening %}
+      {{ forening.name }}<br>
+      Tlf. {{ forening.phone }}<br>
+      E-post: <a href="mailto:{{ forening.email }}">{{ forening.email }}</a>
+    {% endwith %}
+
+  {% elif aktivitet_date.aktivitet.forening_cabin %}
+
+    {# TODO: Display contact information for cabins #}
+
+  {% endif %}
 
 {% elif aktivitet_date.contact_type == 'turleder' %}
 
