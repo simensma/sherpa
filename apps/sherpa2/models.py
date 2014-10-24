@@ -407,12 +407,14 @@ class Activity(models.Model):
 
     def get_owners(self):
         from foreninger.models import Forening
+        from aktiviteter.models import Cabin
         from sherpa2.models import Forening as Sherpa2Forening
 
         if self.owner is None or self.owner.strip() == '':
             raise ConversionImpossible("No owners specified for this activity; need at least 1")
 
         foreninger = []
+        cabins = []
         for id in self.owner.split('|'):
             if id.strip() == '':
                 continue
@@ -420,18 +422,22 @@ class Activity(models.Model):
             try:
                 foreninger.append(Forening.objects.get(id=id))
             except Forening.DoesNotExist:
-                if not Sherpa2Forening.objects.filter(id=id).exists():
-                    # Ok, this is an age-old Forening; ignore the relation
-                    pass
-                else:
-                    # One of the owner relations is invalid; skip this import
-                    # TODO: handle
-                    raise ConversionImpossible("One of the related 'owner' groups doesn't exist in the new ForeningDB")
+                # Might be a forening of type 'cabin', check if it exists in our imported Cabin table
+                try:
+                    cabins.append(Cabin.objects.get(sherpa2_id=id))
+                except Cabin.DoesNotExist:
+                    if not Sherpa2Forening.objects.filter(id=id).exists():
+                        # Ok, this is an age-old Forening; ignore the relation
+                        pass
+                    else:
+                        # One of the owner relations is invalid; skip this import
+                        # TODO: handle
+                        raise ConversionImpossible("One of the related 'owner' groups doesn't exist in the new ForeningDB")
 
-        if len(foreninger) == 0:
+        if len(foreninger) == 0 and len(cabins) == 0:
             raise ConversionImpossible("No owners left after cleanup; need at least 1")
 
-        return foreninger
+        return foreninger, cabins
 
     def get_counties(self):
         if self.county is None:
@@ -518,7 +524,8 @@ class Activity(models.Model):
         converted_images = self.convert_images()
 
         # Conversions succeeded, save the data to the model object
-        aktivitet.forening = foreninger['main']
+        aktivitet.forening = foreninger['main:forening']
+        aktivitet.forening_cabin = foreninger['main:cabin']
         aktivitet.sherpa2_id = self.id
         aktivitet.code = self.code.strip()
         aktivitet.title = self.name.strip()
@@ -534,7 +541,8 @@ class Activity(models.Model):
         # Save before updating relational fields in case this was a new object without a PK
         aktivitet.save()
 
-        aktivitet.co_foreninger = foreninger['rest']
+        aktivitet.co_foreninger = foreninger['rest:forening']
+        aktivitet.co_foreninger_cabin = foreninger['rest:cabin']
         aktivitet.counties = self.get_counties()
         aktivitet.category = category
         aktivitet.category_type = category_type
@@ -603,15 +611,28 @@ class Activity(models.Model):
         If there are >1 of the same lowest type, we'll have to pick one at random."""
         from foreninger.models import Forening
 
-        foreninger = self.get_owners()
+        foreninger, cabins = self.get_owners()
+
+        # Check if there's only cabins and use a random one as main
+        if len(foreninger) == 0 and len(cabins) > 0:
+            return {
+                'main:forening': None,
+                'rest:forening': [],
+                'main:cabin': cabins[0],
+                'rest:cabin': cabins[1:],
+            }
+
+        # Not only cabins; figure out the main forening and append cabins to the rest
         foreninger_sorted = Forening.sort(foreninger)
         for type in reversed([t[0] for t in Forening.TYPES]):
             if len(foreninger_sorted[type]) > 0:
                 main_forening = foreninger_sorted[type][0]
                 rest = [f for f in foreninger if f != main_forening]
                 return {
-                    'main': main_forening,
-                    'rest': rest,
+                    'main:forening': main_forening,
+                    'rest:forening': rest,
+                    'main:cabin': None,
+                    'rest:cabin': cabins,
                 }
 
         raise Exception("Tried to convert empty list of foreninger")
