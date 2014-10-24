@@ -890,21 +890,19 @@ class ActivityDate(models.Model):
     signup_date_to = models.TextField(db_column='ac_signup_date_to', blank=True)
 
     def get_date_from(self):
-        if self.date_from is None or self.date_from.strip() == '':
-            raise ConversionImpossible("Date entry has no start date")
-        return datetime.strptime(self.date_from, "%Y-%m-%d").date()
+        return datetime.strptime(self.date_from.strip(), "%Y-%m-%d").date()
 
     def get_date_to(self):
-        return datetime.strptime(self.date_to, "%Y-%m-%d").date()
+        return datetime.strptime(self.date_to.strip(), "%Y-%m-%d").date()
 
     def get_date_cancel(self):
-        return datetime.strptime(self.date_cancel, "%Y-%m-%d").date()
+        return datetime.strptime(self.date_cancel.strip(), "%Y-%m-%d").date()
 
     def get_signup_date_from(self):
-        return datetime.strptime(self.signup_date_from, "%Y-%m-%d").date()
+        return datetime.strptime(self.signup_date_from.strip(), "%Y-%m-%d").date()
 
     def get_signup_date_to(self):
-        return datetime.strptime(self.signup_date_to, "%Y-%m-%d").date()
+        return datetime.strptime(self.signup_date_to.strip(), "%Y-%m-%d").date()
 
     #
     # Conversion
@@ -917,7 +915,7 @@ class ActivityDate(models.Model):
             date = AktivitetDate()
 
         date.aktivitet = aktivitet
-        date.start_date = self.get_date_from()
+        date.start_date = self.convert_start_date()
         date.end_date = self.convert_end_date()
         if self.convert_signup_enabled():
             date.signup_enabled = True
@@ -935,15 +933,26 @@ class ActivityDate(models.Model):
 
         date.save()
 
+    def convert_start_date(self):
+        try:
+            if self.date_from is None or self.date_from.strip() == '':
+                raise ConversionImpossible("Date entry has no start date")
+            return self.get_date_from()
+        except ValueError:
+            raise ConversionImpossible("Invalid date_from: '%s'" % self.date_from.strip())
+
     def convert_end_date(self):
-        if self.date_to is None or self.date_to.strip() == '':
-            # End date isn't defined even though it has to be!
-            if self.get_date_from() < date.today():
-                # This was an event in the past, so we'll let this slide and just set end date to the same as start
-                return self.get_date_from()
-            else:
-                raise Exception("Future aktivitet with no end date")
-        return self.get_date_to()
+        try:
+            if self.date_to is None or self.date_to.strip() == '':
+                # End date isn't defined even though it has to be!
+                if self.get_date_from() < date.today():
+                    # This was an event in the past, so we'll let this slide and just set end date to the same as start
+                    return self.get_date_from()
+                else:
+                    raise ConversionImpossible("Future aktivitet with no end date")
+            return self.get_date_to()
+        except ValueError:
+            raise ConversionImpossible("Invalid date_to: '%s'" % self.date_to.strip())
 
     def convert_signup_enabled(self):
         return self.online in [
@@ -954,19 +963,28 @@ class ActivityDate(models.Model):
         ]
 
     def convert_signup_start(self):
-        if self.signup_date_from is None or self.signup_date_from.strip() == '':
+        try:
+            if self.signup_date_from is None or self.signup_date_from.strip() == '':
+                return None
+            return self.get_signup_date_from()
+        except ValueError:
             return None
-        return self.get_signup_date_from()
 
     def convert_signup_deadline(self):
-        if self.signup_date_to is None or self.signup_date_to.strip() == '':
+        try:
+            if self.signup_date_to is None or self.signup_date_to.strip() == '':
+                return None
+            return self.get_signup_date_to()
+        except ValueError:
             return None
-        return self.get_signup_date_to()
 
     def convert_signup_cancel_deadline(self):
-        if self.date_cancel is None or self.date_cancel.strip() == '':
+        try:
+            if self.date_cancel is None or self.date_cancel.strip() == '':
+                return None
+            return self.get_date_cancel()
+        except ValueError:
             return None
-        return self.get_date_cancel()
 
     def convert_signup_max_allowed(self):
         if self.booking == 0:
