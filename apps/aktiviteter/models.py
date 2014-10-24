@@ -7,8 +7,12 @@ from django.contrib.gis.db import models
 from sherpa2.models import Location, Turforslag
 
 class Aktivitet(models.Model):
-    forening = models.ForeignKey('foreninger.Forening', related_name='+')
+    # Note that *either* forening or forening_cabin should be defined at any time
+    forening = models.ForeignKey('foreninger.Forening', null=True, related_name='+')
+    forening_cabin = models.ForeignKey('aktiviteter.Cabin', null=True, related_name='+')
     co_foreninger = models.ManyToManyField('foreninger.Forening', null=True, related_name='aktiviteter')
+    co_foreninger_cabin = models.ManyToManyField('aktiviteter.Cabin', null=True, related_name='+')
+
     code = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
     description = models.TextField()
