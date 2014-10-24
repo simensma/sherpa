@@ -316,3 +316,9 @@ class SimpleParticipant(models.Model):
 
     def __unicode__(self):
         return u'%s: %s' % (self.pk, self.name)
+
+class Cabin(models.Model):
+    """This temporary model is used to store cabin names with a relation to aktiviteter. When NTB-integration is
+    implemented, this model should be replaced with references to cabins in NTB."""
+    name = models.CharField(max_length=255)
+    sherpa2_id = models.PositiveIntegerField()
