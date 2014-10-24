@@ -110,7 +110,13 @@
         <div class="col-md-8 pull-left">
 
           <div class="description">
-            <p>{{ aktivitet_date.aktivitet.description|linebreaksbr }}</p>
+            <p>
+              {% if aktivitet_date.aktivitet.is_imported %}
+                {{ aktivitet_date.aktivitet.description|safe }}
+              {% else %}
+                {{ aktivitet_date.aktivitet.description|linebreaksbr }}
+              {% endif %}
+            </p>
           </div>
 
           {% if aktivitet_date.aktivitet.images.count > 0 %}
@@ -170,7 +176,13 @@
               <div id="map" class="leaflet-map"></div>
               <div class="leaflet-popup-content jq-hide">
                 <h3>{{ aktivitet_date.aktivitet.title }}</h3>
-                <p>{{ aktivitet_date.aktivitet.description|truncatewords:"30" }}</p>
+                <p>
+                  {% if aktivitet_date.aktivitet.is_imported %}
+                    {{ aktivitet_date.aktivitet.description|striptags|truncatewords:"30" }}
+                  {% else %}
+                    {{ aktivitet_date.aktivitet.description|truncatewords:"30" }}
+                  {% endif %}
+                </p>
               </div>
             </div>
           {% endif %}

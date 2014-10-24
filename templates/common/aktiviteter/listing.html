@@ -40,7 +40,11 @@
               </span>
             </div>
             <p class="description">
-              {{ date.aktivitet.description|truncatewords:"12" }}
+              {% if date.aktivitet.is_imported %}
+                {{ date.aktivitet.description|striptags|truncatewords:"12" }}
+              {% else %}
+                {{ date.aktivitet.description|truncatewords:"12" }}
+              {% endif %}
             </p>
           </div>
         </div>

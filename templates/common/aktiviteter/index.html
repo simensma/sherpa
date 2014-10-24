@@ -155,7 +155,13 @@
     {% for aktivitet in aktivitet_positions %}
       <div class="popup-content" data-aktivitet-date-id="{{ aktivitet.id }}">
         <h3>{{ aktivitet.title }}</h3>
-        <p>{{ aktivitet.description|truncatewords:"30" }}</p>
+        <p>
+          {% if aktivitet.is_imported %}
+            {{ aktivitet.description|striptags|truncatewords:"30" }}
+          {% else %}
+            {{ aktivitet.description|truncatewords:"30" }}
+          {% endif %}
+        </p>
       </div>
     {% endfor %}
   </div>
