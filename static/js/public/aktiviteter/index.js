@@ -59,6 +59,8 @@ $(function() {
 
     filters.find('[data-dnt-container="start-date"],[data-dnt-container="end-date"]').on('changeDate', function() {
         refreshContent(results_content.attr('data-current-page'));
+    }).on('change', function() {
+        refreshContent(results_content.attr('data-current-page'));
     });
 
     filters.find("select[name='organizers']").select2().on('change', function() {
