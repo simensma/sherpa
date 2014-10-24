@@ -7,8 +7,12 @@ from django.contrib.gis.db import models
 from sherpa2.models import Location, Turforslag
 
 class Aktivitet(models.Model):
-    forening = models.ForeignKey('foreninger.Forening', related_name='+')
+    # Note that *either* forening or forening_cabin should be defined at any time
+    forening = models.ForeignKey('foreninger.Forening', null=True, related_name='+')
+    forening_cabin = models.ForeignKey('aktiviteter.Cabin', null=True, related_name='+')
     co_foreninger = models.ManyToManyField('foreninger.Forening', null=True, related_name='aktiviteter')
+    co_foreninger_cabin = models.ManyToManyField('aktiviteter.Cabin', null=True, related_name='+')
+
     code = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
     description = models.TextField()
@@ -53,6 +57,10 @@ class Aktivitet(models.Model):
 
     def __unicode__(self):
         return u'%s: %s' % (self.pk, self.title)
+
+    def get_co_foreninger_mixed(self):
+        """Returns a list of foreninger and/or cabins related to this aktivitet"""
+        return list(self.co_foreninger.all()) + list(self.co_foreninger_cabin.all())
 
     def get_dates_ordered(self):
         return enumerate(self.dates.all().order_by('start_date'))
@@ -316,3 +324,12 @@ class SimpleParticipant(models.Model):
 
     def __unicode__(self):
         return u'%s: %s' % (self.pk, self.name)
+
+class Cabin(models.Model):
+    """This temporary model is used to store cabin names with a relation to aktiviteter. When NTB-integration is
+    implemented, this model should be replaced with references to cabins in NTB."""
+    name = models.CharField(max_length=255)
+    sherpa2_id = models.PositiveIntegerField()
+
+    def __unicode__(self):
+        return u'%s/%s: %s' % (self.pk, self.sherpa2_id, self.name)

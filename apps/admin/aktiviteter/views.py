@@ -14,7 +14,7 @@ from django.contrib.gis.geos import Point
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from aktiviteter.models import Aktivitet, AktivitetDate, AktivitetImage
+from aktiviteter.models import Aktivitet, AktivitetDate, AktivitetImage, Cabin
 from admin.aktiviteter.util import parse_html_array
 from core.models import Tag, County, Municipality
 from sherpa2.models import Location, Turforslag, Activity as Sherpa2Aktivitet
@@ -132,6 +132,7 @@ def edit(request, aktivitet):
             'categories': Aktivitet.CATEGORY_CHOICES,
             'subcategories': Aktivitet.SUBCATEGORIES,
             'all_foreninger': Forening.get_all_sorted(),
+            'cabins': Cabin.objects.order_by('name'),
             'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH,
             'counties': County.typical_objects().order_by('name'),
             'municipalities': Municipality.objects.order_by('name'),
@@ -192,17 +193,34 @@ def edit(request, aktivitet):
                 errors = True
                 messages.error(request, 'invalid_date_format')
 
-        forening = Forening.objects.get(id=request.POST['forening'])
-        if not forening in request.user.children_foreninger():
+        forening_type, forening_id = request.POST['forening'].split(':')
+        if forening_type == 'forening':
+            forening = Forening.objects.get(id=forening_id)
+            if not forening in request.user.children_foreninger():
+                raise PermissionDenied
+            aktivitet.forening = forening
+        elif forening_type == 'cabin':
+            aktivitet.forening_cabin = Cabin.objects.get(id=forening_id)
+        else:
             raise PermissionDenied
 
         if 'co_foreninger[]' in request.POST and request.POST['co_foreninger[]'] != '':
-            co_foreninger = request.POST.getlist('co_foreninger[]')
-        else:
             co_foreninger = []
+            co_foreninger_cabin = []
+            for co_forening in request.POST.getlist('co_foreninger[]'):
+                type, id = co_forening.split(':')
+                if type == 'forening':
+                    co_foreninger.append(id)
+                elif type == 'cabin':
+                    co_foreninger_cabin.append(id)
+                else:
+                    raise PermissionDenied
 
-        aktivitet.forening = forening
-        aktivitet.co_foreninger = co_foreninger
+            aktivitet.co_foreninger = co_foreninger
+            aktivitet.co_foreninger_cabin = co_foreninger_cabin
+        else:
+            aktivitet.co_foreninger = []
+            aktivitet.co_foreninger_cabin = []
 
         if request.POST['latlng']:
             latlng = request.POST['latlng'].split(',')

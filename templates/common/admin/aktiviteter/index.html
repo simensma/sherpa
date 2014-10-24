@@ -179,9 +179,13 @@
                 {% endif %}
               </td>
               <td>
-                <a href="?{% query_transform forening=dato.aktivitet.forening.id page="" %}">
-                  {{ dato.aktivitet.forening.name }}
-                </a>
+                {% if dato.aktivitet.forening %}
+                  <a href="?{% query_transform forening=dato.aktivitet.forening.id page="" %}">
+                    {{ dato.aktivitet.forening.name }}
+                  </a>
+                {% elif dato.aktivitet.forening_cabin %}
+                  {{ dato.aktivitet.forening_cabin.name }}
+                {% endif %}
               </td>
               <td>
                 {% if dato.aktivitet.published %}

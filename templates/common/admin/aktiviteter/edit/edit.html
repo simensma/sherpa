@@ -209,14 +209,24 @@
                     <optgroup label="{{ type | capfirst }}">
                       {% for g in groups %}
                         {% if aktivitet.forening == g %}
-                          <option value="{{ g.id }}" selected>{{ g.name }}</option>
+                          <option value="forening:{{ g.id }}" selected>{{ g.name }}</option>
                         {% else %}
-                          <option value="{{ g.id }}">{{ g.name }}</option>
+                          <option value="forening:{{ g.id }}">{{ g.name }}</option>
                         {% endif %}
                       {% endfor %}
                     </optgroup>
                   {% endif %}
                 {% endfor %}
+
+                <optgroup label="Hytter">
+                  {% for cabin in cabins %}
+                    {% if aktivitet.forening_cabin == cabin %}
+                      <option value="cabin:{{ cabin.id }}" selected>{{ cabin.name }}</option>
+                    {% else %}
+                      <option value="cabin:{{ cabin.id }}">{{ cabin.name }}</option>
+                    {% endif %}
+                  {% endfor %}
+                </optgroup>
 
               </select>
               <div class="help-block">
@@ -237,14 +247,24 @@
                     <optgroup label="{{ type | capfirst }}">
                       {% for g in groups %}
                         {% if g in aktivitet.co_foreninger.all %}
-                          <option value="{{ g.id }}" selected>{{ g.name }}</option>
+                          <option value="forening:{{ g.id }}" selected>{{ g.name }}</option>
                         {% else %}
-                          <option value="{{ g.id }}">{{ g.name }}</option>
+                          <option value="forening:{{ g.id }}">{{ g.name }}</option>
                         {% endif %}
                       {% endfor %}
                     </optgroup>
                   {% endif %}
                 {% endfor %}
+
+                <optgroup label="Hytter">
+                  {% for cabin in cabins %}
+                    {% if aktivitet.forening_cabin == cabin %}
+                      <option value="cabin:{{ cabin.id }}" selected>{{ cabin.name }}</option>
+                    {% else %}
+                      <option value="cabin:{{ cabin.id }}">{{ cabin.name }}</option>
+                    {% endif %}
+                  {% endfor %}
+                </optgroup>
 
               </select>
               <div class="help-block">
