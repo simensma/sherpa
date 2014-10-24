@@ -824,14 +824,16 @@ class Activity(models.Model):
                 categories.append(category[1])
 
         #
-        # Merge kajakk/kano into padletur
+        # Merge kajakk/kano/elvepadling into padletur
         #
 
-        if 'kajakk' in categories or 'kanotur' in categories:
+        if 'kajakk' in categories or 'kanotur' in categories or 'elvepadling' in categories:
             if 'kajakk' in categories:
                 categories.remove('kajakk')
             if 'kanotur' in categories:
                 categories.remove('kanotur')
+            if 'elvepadling' in categories:
+                categories.remove('elvepadling')
             categories.append('padletur')
 
         #
