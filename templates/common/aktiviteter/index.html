@@ -86,7 +86,7 @@
 
           <div class="section">
             <h3>Turområde</h3>
-            <select name="location" data-chosen data-placeholder="Velg turområder..." multiple>
+            <select class="form-control" name="location" data-placeholder="Velg turområder..." multiple>
               <option value=""></option>
               {% for location in locations %}
                 <option value="{{ location.id }}">{{ location.name }}</option>

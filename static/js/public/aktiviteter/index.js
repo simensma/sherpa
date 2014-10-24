@@ -53,7 +53,7 @@ $(function() {
         refreshContent(results_content.attr('data-current-page'));
     });
 
-    filters.find("select[name='location']").change(function() {
+    filters.find("select[name='location']").select2().change(function() {
         refreshContent(results_content.attr('data-current-page'));
     });
 
