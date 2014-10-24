@@ -674,6 +674,14 @@ class Activity(models.Model):
                 # pattern)
                 path = re.sub('\.thumb\.', '.', path)
 
+                # Handle relative paths
+                while path.startswith('../'):
+                    path = path[2:]
+
+                # If it still starts with a dot, not sure exactly how it's formatted; skip it
+                if path.startswith('.'):
+                    continue
+
                 if path.startswith('http'):
                     # Absolute URL; assume correctness
                     url = path
