@@ -507,18 +507,27 @@ class Activity(models.Model):
         if aktivitet is None:
             aktivitet = Aktivitet()
 
+        # Perform conversions - these may throw exceptions
         foreninger = self.convert_foreninger()
+        description = self.convert_description()
+        pub_date = self.convert_pub_date()
+        locations = [location.id for location in self.convert_locations()]
+        difficulty = self.convert_difficulty()
+        audiences = self.convert_audiences()
+        category, category_type, category_tags = self.convert_categories()
+        converted_images = self.convert_images()
 
+        # Conversions succeeded, save the data to the model object
         aktivitet.forening = foreninger['main']
         aktivitet.sherpa2_id = self.id
         aktivitet.code = self.code.strip()
         aktivitet.title = self.name.strip()
-        aktivitet.description = self.convert_description()
-        aktivitet.pub_date = self.convert_pub_date()
+        aktivitet.description = description
+        aktivitet.pub_date = pub_date
         aktivitet.start_point = self.get_start_point()
-        aktivitet.locations = json.dumps([location.id for location in self.convert_locations()])
-        aktivitet.difficulty = self.convert_difficulty()
-        aktivitet.audiences = json.dumps(self.convert_audiences())
+        aktivitet.locations = json.dumps(locations)
+        aktivitet.difficulty = difficulty
+        aktivitet.audiences = json.dumps(audiences)
         aktivitet.published = True
         aktivitet.private = False
 
@@ -527,7 +536,6 @@ class Activity(models.Model):
 
         aktivitet.co_foreninger = foreninger['rest']
         aktivitet.counties = self.get_counties()
-        category, category_type, category_tags = self.convert_categories()
         aktivitet.category = category
         aktivitet.category_type = category_type
         aktivitet.category_tags.clear()
@@ -535,7 +543,6 @@ class Activity(models.Model):
             obj, created = Tag.objects.get_or_create(name=tag)
             aktivitet.category_tags.add(obj)
 
-        converted_images = self.convert_images()
         for order, old_image in enumerate(converted_images):
             # Check if this image has already been imported
             try:
