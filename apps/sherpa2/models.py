@@ -689,6 +689,10 @@ class Activity(models.Model):
                     # Assume sherpa2 URL, add old site domain
                     url = "http://%s%s" % (settings.OLD_SITE, path)
 
+                # Strip query parameters
+                if '?' in url:
+                    url = url[:url.find('?')]
+
                 title_match = img_title_regex.search(img)
                 parsed_images.append({
                     'url': url,
