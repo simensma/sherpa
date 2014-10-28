@@ -26,39 +26,126 @@
 <div class="site-admin">
   <div class="row">
     <div class="col-lg-2">
-      <a class="navigation-block" href="{% url 'admin.sites.pages.page.list' active_site.id %}" data-toogle="tooltip" title="Opprett eller rediger nettsidene for dette nettstedet">
-        <p><i class="fa fa-file fa-5x"></i></p>
-        <p>Sider</p>
+      <a class="navigation-block" href="{% url 'admin.sites.pages.page.list' active_site.id %}" data-toogle="tooltip" title="Opprett eller rediger websidene for dette nettstedet">
+
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-xs-4">
+              <div class="icon">
+                <i class="fa fa-file fa-5x"></i>
+              </div>
+            </div>
+            <div class="col-xs-8">
+              <div class="pull-right text-right">
+                <p class="status">{{ active_site.get_page_count }}</p>
+              </div>
+            </div>
+          </div>
+          <p class="caption">publiserte sider</p>
+        </div>
+        <div class="navigation-block-title">Websider</div>
+
       </a>
     </div>
+
     <div class="col-lg-2">
       <a class="navigation-block" href="{% url 'admin.sites.articles.views.list' active_site.id %}" data-toogle="tooltip" title="Legg ut nyheter">
-        <p><i class="fa fa-bullhorn fa-5x"></i></p>
-        <p>Nyheter</p>
+
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-xs-4">
+              <div class="icon">
+                <i class="fa fa-bullhorn fa-5x"></i>
+              </div>
+            </div>
+            <div class="col-xs-8">
+              <div class="pull-right text-right">
+                <p class="status">{{ active_site.get_news_count }}</p>
+              </div>
+            </div>
+          </div>
+          <p class="caption">publiserte nyheter</p>
+        </div>
+        <div class="navigation-block-title">Nyheter</div>
+
       </a>
     </div>
+
     <div class="col-lg-2">
       <a class="navigation-block" href="{% url 'admin.sites.navigation.views.index' active_site.id %}" data-toogle="tooltip" title="Endre lenkene i toppmenyen og hva slags innhold som skal vises i footeren på alle sidene">
-        <p><i class="fa fa-bars fa-5x"></i></p>
-        <p>Navigasjon</p>
+
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-xs-4">
+              <i class="fa fa-bars fa-5x"></i>
+            </div>
+            <div class="col-xs-8">
+              <div class="pull-right text-right">
+                <p class="status">{{ active_site.get_menu_count }}</p>
+              </div>
+            </div>
+          </div>
+          <p class="caption">menyelementer</p>
+        </div>
+        <div class="navigation-block-title">Navigasjon</div>
+
       </a>
     </div>
+
     <div class="col-lg-2">
       <a class="navigation-block" href="{% url 'admin.sites.campaigns.views.index' active_site.id %}" data-toogle="tooltip" title="Legg ut kampanjer som kan inkluderes på nettsidene">
-        <p><i class="fa fa-picture-o fa-5x"></i></p>
-        <p>Kampanjer</p>
+
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-xs-4">
+              <i class="fa fa-picture-o fa-5x"></i>
+            </div>
+            <div class="col-xs-8">
+              <div class="pull-right text-right">
+                <p class="status">{{ active_site.get_campaign_count }}</p>
+              </div>
+            </div>
+          </div>
+          <p class="caption">kampanjer</p>
+        </div>
+        <div class="navigation-block-title">Kampanjer</div>
+
       </a>
     </div>
+
     <div class="col-lg-2">
       <a class="navigation-block" href="{% url 'admin.sites.ads.views.list' active_site.id %}" data-toogle="tooltip" title="Legg ut reklameannonser som vises på nettisdene">
-        <p><i class="fa fa-desktop fa-5x"></i></p>
-        <p>Annonser</p>
+
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-xs-4">
+              <i class="fa fa-desktop fa-5x"></i>
+            </div>
+            <div class="col-xs-8">
+              <div class="pull-right text-right">
+                <p class="status">{{ active_site.get_ad_count }}</p>
+              </div>
+            </div>
+          </div>
+          <p class="caption">i rotasjon</p>
+        </div>
+        <div class="navigation-block-title">Annonser</div>
+
       </a>
     </div>
+
     <div class="col-lg-2">
       <a class="navigation-block" href="{% url 'admin.sites.settings.views.index' active_site.id %}" data-toogle="tooltip" title="Vis avanserte innstillinger for nettstedet som for eksempel domeneadresse, google analytics og annen statistikk, med mer">
-        <p><i class="fa fa-wrench fa-5x"></i></p>
-        <p>Innstillinger</p>
+
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-xs-4">
+              <i class="fa fa-wrench fa-5x"></i>
+            </div>
+          </div>
+        </div>
+        <div class="navigation-block-title">Innstillinger</div>
+
       </a>
     </div>
   </div>

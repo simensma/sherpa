@@ -1,5 +1,11 @@
 # encoding: utf-8
+from datetime import datetime, date
+
 from django.contrib.gis.db import models
+
+from admin.models import Campaign
+from articles.models import Article
+from page.models import Menu, Page, AdPlacement
 
 class Tag(models.Model):
     """
@@ -69,6 +75,31 @@ class Site(models.Model):
             return self.title
         else:
             raise Exception("Unrecognized site type '%s'" % self.type)
+
+    def get_page_count(self):
+        return Page.on(self).filter(
+            pub_date__lte=datetime.now(),
+            published=True,
+        ).count()
+
+    def get_news_count(self):
+        return Article.on(self).filter(
+            pub_date__lte=datetime.now(),
+            published=True,
+        ).count()
+
+    def get_menu_count(self):
+        return Menu.on(self).count()
+
+    def get_campaign_count(self):
+        return Campaign.on(self).count()
+
+    def get_ad_count(self):
+        today = date.today()
+        return AdPlacement.on(self).filter(
+            start_date__lte=today,
+            end_date__gte=today,
+        ).count()
 
     @staticmethod
     def sort(sites):

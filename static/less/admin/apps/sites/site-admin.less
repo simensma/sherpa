@@ -1,11 +1,36 @@
 div.site-admin, div.site-settings {
   a.navigation-block {
     display: block;
-    min-height: 140px;
-    border: 1px solid rgb(200, 200, 200);
-    margin-bottom: 20px;
-    padding: 15px;
-    text-align: center;
-    font-weight: bold;
+    background-color: rgb(250, 250, 250);
+
+    .content-wrapper {
+      min-height: 120px;
+      padding: 10px 15px 10px 15px;
+
+      .status {
+        margin-bottom: 0;
+        font-size: 50px;
+      }
+
+      .caption {
+        text-align: right;
+        margin-bottom: 0;
+      }
+    }
+
+    .navigation-block-title {
+      padding: 5px 15px 5px 15px;
+      background-color: rgb(235, 235, 235);
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    &:hover {
+      text-decoration: none;
+
+      .navigation-block-title {
+        background-color: rgb(220, 220, 220);
+      }
+    }
   }
 }
