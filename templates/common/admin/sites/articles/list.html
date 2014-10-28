@@ -17,7 +17,7 @@
       <ol class="breadcrumb">
         <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
         <li><a href="{% url 'admin.sites.views.index' %}">Nettsteder</a></li>
-        <li><a href="{% url 'admin.sites.views.show' active_site.id %}">{{ active_site.domain }}</a></li>
+        <li><a href="{% url 'admin.sites.views.show' active_site.id %}">{{ active_site.get_title }}</a></li>
         <li><a href="{% url 'admin.sites.articles.views.list' active_site.id %}">Nyheter</a></li>
       </ol>
     </div>
