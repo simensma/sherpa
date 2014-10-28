@@ -79,6 +79,17 @@ class Site(models.Model):
         return {t: [s for s in sites if s.type == t] for t in types}
 
     @staticmethod
+    def sort_by_type(sites):
+        """Sort the given sites iterable by (type, title) return the result as a flat list"""
+        sites_by_title = sorted(sites, key=lambda s: s.get_title())
+        sites_by_type = []
+        for type in Site.TYPE_CHOICES:
+            for site in sites_by_title:
+                if site.type == type[0]:
+                    sites_by_type.append(site)
+        return sites_by_type
+
+    @staticmethod
     def verify_domain(domain):
         """Very simple syntax verification, and a few business rules"""
         domain = domain.strip()
