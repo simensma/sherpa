@@ -10,8 +10,8 @@
     <h1>Innstillinger <small>endre oppsettet for {{ active_site.domain }}</small></h1>
     <ol class="breadcrumb">
       <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
-      <li><a href="{% url 'admin.sites.views.index' active_site.id %}">Nettsteder</a></li>
-      <li><a href="{% url 'admin.sites.views.index' active_site.id %}">{{ active_site.domain }}</a></li>
+      <li><a href="{% url 'admin.sites.views.index' %}">Nettsteder</a></li>
+      <li><a href="{% url 'admin.sites.views.show' active_site.id %}">{{ active_site.get_title }}</a></li>
       <li><a href="{% url 'admin.sites.settings.views.index' active_site.id %}">Innstillinger</a></li>
     </ol>
   </div>
@@ -21,26 +21,66 @@
   <div class="row">
     <div class="col-lg-2">
       <a class="navigation-block" href="{% url 'admin.sites.settings.domain.views.index' active_site.id %}">
-        <p><i class="fa fa-link fa-5x"></i></p>
-        <p>Domene</p>
+
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-xs-4">
+              <div class="icon">
+                <i class="fa fa-link fa-5x"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="navigation-block-title">Domene</div>
+
       </a>
     </div>
     <div class="col-lg-2">
       <a class="navigation-block" href="{% url 'admin.sites.settings.analytics.views.index' active_site.id %}">
-        <p><i class="fa fa-bar-chart-o fa-5x"></i></p>
-        <p>Analyse</p>
+
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-xs-4">
+              <div class="icon">
+                <i class="fa fa-bar-chart-o fa-5x"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="navigation-block-title">Analyse</div>
+
       </a>
     </div>
     <div class="col-lg-2">
       <a class="navigation-block" href="{% url 'admin.sites.settings.cache.views.index' active_site.id %}">
-        <p><i class="fa fa-bolt fa-5x"></i></p>
-        <p>Caching</p>
+
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-xs-4">
+              <div class="icon">
+                <i class="fa fa-bolt fa-5x"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="navigation-block-title">Caching</div>
+
       </a>
     </div>
     <div class="col-lg-2">
       <a class="navigation-block" href="{% url 'admin.sites.settings.publish.views.index' active_site.id %}">
-        <p><i class="fa fa-eye fa-5x"></i></p>
-        <p>Publisering</p>
+
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-xs-4">
+              <div class="icon">
+                <i class="fa fa-eye fa-5x"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="navigation-block-title">Publisering</div>
+
       </a>
     </div>
   </div>

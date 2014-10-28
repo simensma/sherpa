@@ -1,5 +1,11 @@
 # encoding: utf-8
+from datetime import datetime, date
+
 from django.contrib.gis.db import models
+
+from admin.models import Campaign
+from articles.models import Article
+from page.models import Menu, Page, AdPlacement
 
 class Tag(models.Model):
     """
@@ -39,6 +45,12 @@ class Site(models.Model):
     # Hardcoded site IDs that we may need to know
     DNT_CENTRAL_ID = 1
 
+    # Quick and dirty static table for mapping a GA Tracking ID to a Profile (View) ID for testing
+    # TODO: Use the management API to perform this mapping automatically
+    GA_PROFILE_ID_MAPPING = {
+        'UA-266436-2': 'ga:385554',
+    }
+
     def __unicode__(self):
         return u'%s: %s' % (self.pk, self.domain)
 
@@ -70,6 +82,41 @@ class Site(models.Model):
         else:
             raise Exception("Unrecognized site type '%s'" % self.type)
 
+    def get_page_count(self):
+        return Page.on(self).filter(
+            pub_date__lte=datetime.now(),
+            published=True,
+        ).count()
+
+    def get_news_count(self):
+        return Article.on(self).filter(
+            pub_date__lte=datetime.now(),
+            published=True,
+        ).count()
+
+    def get_menu_count(self):
+        return Menu.on(self).count()
+
+    def get_campaign_count(self):
+        return Campaign.on(self).count()
+
+    def get_ad_count(self):
+        today = date.today()
+        return AdPlacement.on(self).filter(
+            start_date__lte=today,
+            end_date__gte=today,
+        ).count()
+
+    def has_front_page(self):
+        return Page.on(self).filter(slug='').exists()
+
+    def has_published_front_page(self):
+        return Page.on(self).filter(
+            slug='',
+            published=True,
+            pub_date__lte=date.today(),
+        ).exists()
+
     @staticmethod
     def sort(sites):
         """Sort the given sites iterable by title and return a dict with a key for each site type, containing
@@ -77,6 +124,17 @@ class Site(models.Model):
         sites = sorted(sites, key=lambda s: s.get_title())
         types = [t[0] for t in Site.TYPE_CHOICES]
         return {t: [s for s in sites if s.type == t] for t in types}
+
+    @staticmethod
+    def sort_by_type(sites):
+        """Sort the given sites iterable by (type, title) return the result as a flat list"""
+        sites_by_title = sorted(sites, key=lambda s: s.get_title())
+        sites_by_type = []
+        for type in Site.TYPE_CHOICES:
+            for site in sites_by_title:
+                if site.type == type[0]:
+                    sites_by_type.append(site)
+        return sites_by_type
 
     @staticmethod
     def verify_domain(domain):

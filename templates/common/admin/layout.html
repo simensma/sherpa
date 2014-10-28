@@ -83,17 +83,17 @@
                   {% else %}
 
                     {# Only homepage - let the link go directly there #}
-                    <li{% if active_entry == 'sites' or active_entry == 'sites.setup_site'%} class="active"{% endif %}><a href="{% url 'admin.sites.views.index' sites.forening.0.id %}"><i class="fa fa-file"></i> Hjemmeside</a></li>
+                    <li{% if active_entry == 'sites' or active_entry == 'sites.setup_site'%} class="active"{% endif %}><a href="{% url 'admin.sites.views.show' sites.forening.0.id %}"><i class="fa fa-file"></i> Hjemmeside</a></li>
 
                   {% endif %}
 
                 {% else %}
 
                   {# More than one site which is not homepage - use a dropdown #}
-                  <li{% if active_entry == 'sites.setup_site' %} class="active"{% endif %}>
-                    <a href="javascript:undefined" data-toggle="sites">
+                  <li{% if active_entry == 'sites' and not active_site %} class="active"{% endif %}>
+                    <a href="{% url 'admin.sites.views.index' %}">
                       <i class="fa fa-file"></i> Nettsteder
-                      <span class="pull-right">
+                      <span class="dropdown-toggle pull-right" data-toggle="sites">
                         <i class="fa fa-toggle-down"></i>
                       </span>
                     </a>
@@ -101,22 +101,22 @@
 
                   {% for site in sites.forening %}
                     <li class="submenu{% if active_entry == 'sites' %} visible{% endif %}{% if active_site == site %} active{% endif %}" data-type="sites">
-                      <a href="{% url 'admin.sites.views.index' site.id %}">
-                        {{ site.domain }}
+                      <a href="{% url 'admin.sites.views.show' site.id %}">
+                        {{ site.get_title }}
                       </a>
                     </li>
                   {% endfor %}
                   {% for site in sites.hytte %}
                     <li class="submenu{% if active_entry == 'sites' %} visible{% endif %}{% if active_site == site %} active{% endif %}" data-type="sites">
-                      <a href="{% url 'admin.sites.views.index' site.id %}">
-                        {{ site.domain }}
+                      <a href="{% url 'admin.sites.views.show' site.id %}">
+                        {{ site.get_title }}
                       </a>
                     </li>
                   {% endfor %}
                   {% for site in sites.kampanje %}
                     <li class="submenu{% if active_entry == 'sites' %} visible{% endif %}{% if active_site == site %} active{% endif %}" data-type="sites">
-                      <a href="{% url 'admin.sites.views.index' site.id %}">
-                        {{ site.domain }}
+                      <a href="{% url 'admin.sites.views.show' site.id %}">
+                        {{ site.get_title }}
                       </a>
                     </li>
                   {% endfor %}

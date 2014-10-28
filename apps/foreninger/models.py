@@ -177,6 +177,9 @@ class Forening(models.Model):
     def get_sites_sorted(self):
         return Site.sort(self.sites.all())
 
+    def get_sites_sorted_by_type(self):
+        return Site.sort_by_type(self.sites.all())
+
     def validate_relationships(self, simulate_type=None, simulate_parents=None):
         """Validate a forening's relationships based on its type and its relationships types
         See https://turistforeningen.atlassian.net/wiki/pages/viewpage.action?pageId=1540233"""

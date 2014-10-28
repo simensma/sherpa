@@ -14,107 +14,89 @@
 
 <div class="row">
   <div class="col-lg-12">
-    <h1>{{ active_site.domain }} <small>{{ active_site.get_title }}</small></h1>
+    <h1>Nettsteder <small>tilknyttet {{ active_forening.name }}</small></h1>
     <ol class="breadcrumb">
       <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
-      <li><a href="{% url 'admin.sites.views.index' active_site.id %}">Nettsteder</a></li>
-      <li><a href="{% url 'admin.sites.views.index' active_site.id %}">{{ active_site.domain }}</a></li>
+      <li><a href="{% url 'admin.sites.views.index' %}">Nettsteder</a></li>
     </ol>
   </div>
 </div><!-- /.row -->
 
-<div class="site-admin">
-  <div class="row">
-    <div class="col-lg-2">
-      <a class="navigation-block" href="{% url 'admin.sites.pages.page.list' active_site.id %}" data-toogle="tooltip" title="Opprett eller rediger nettsidene for dette nettstedet">
-        <p><i class="fa fa-file fa-5x"></i></p>
-        <p>Sider</p>
-      </a>
-    </div>
-    <div class="col-lg-2">
-      <a class="navigation-block" href="{% url 'admin.sites.articles.views.list' active_site.id %}" data-toogle="tooltip" title="Legg ut nyheter">
-        <p><i class="fa fa-bullhorn fa-5x"></i></p>
-        <p>Nyheter</p>
-      </a>
-    </div>
-    <div class="col-lg-2">
-      <a class="navigation-block" href="{% url 'admin.sites.navigation.views.index' active_site.id %}" data-toogle="tooltip" title="Endre lenkene i toppmenyen og hva slags innhold som skal vises i footeren på alle sidene">
-        <p><i class="fa fa-bars fa-5x"></i></p>
-        <p>Navigasjon</p>
-      </a>
-    </div>
-    <div class="col-lg-2">
-      <a class="navigation-block" href="{% url 'admin.sites.campaigns.views.index' active_site.id %}" data-toogle="tooltip" title="Legg ut kampanjer som kan inkluderes på nettsidene">
-        <p><i class="fa fa-picture-o fa-5x"></i></p>
-        <p>Kampanjer</p>
-      </a>
-    </div>
-    <div class="col-lg-2">
-      <a class="navigation-block" href="{% url 'admin.sites.ads.views.list' active_site.id %}" data-toogle="tooltip" title="Legg ut reklameannonser som vises på nettisdene">
-        <p><i class="fa fa-desktop fa-5x"></i></p>
-        <p>Annonser</p>
-      </a>
-    </div>
-    <div class="col-lg-2">
-      <a class="navigation-block" href="{% url 'admin.sites.settings.views.index' active_site.id %}" data-toogle="tooltip" title="Vis avanserte innstillinger for nettstedet som for eksempel domeneadresse, google analytics og annen statistikk, med mer">
-        <p><i class="fa fa-wrench fa-5x"></i></p>
-        <p>Innstillinger</p>
-      </a>
-    </div>
-  </div>
-
-  {% with sites=active_forening.get_sites_sorted %}
-
-    <h2>Nettsteder under {{ active_forening.name }}</h2>
-
-    <table class="table">
-      <tr>
-        <th>Type</th>
-        <th>Nettsted</th>
-        <th>Tittel</th>
-      </tr>
-      {% for site in active_forening.get_sites_sorted.forening %}
-        <tr{% if site == active_site %} class="active"{% endif %}>
-          <td>Hjemmeside</td>
-          <td><a href="{% url 'admin.sites.views.index' site.id %}">{{ site.domain }}</a></td>
-          <td>{{ site.get_title }}</td>
-        </tr>
-      {% endfor %}
-      {% for site in active_forening.get_sites_sorted.hytte %}
-        <tr{% if site == active_site %} class="active"{% endif %}>
-          <td>Hytteside</td>
-          <td><a href="{% url 'admin.sites.views.index' site.id %}">{{ site.domain }}</a></td>
-          <td>{{ site.get_title }}</td>
-        </tr>
-      {% endfor %}
-      {% for site in active_forening.get_sites_sorted.kampanje %}
-        <tr{% if site == active_site %} class="active"{% endif %}>
-          <td>Kampanjeside</td>
-          <td><a href="{% url 'admin.sites.views.index' site.id %}">{{ site.domain }}</a></td>
-          <td>{{ site.get_title }}</td>
-        </tr>
-      {% endfor %}
-
-      {% if active_forening.sites.count == 0 %}
-        {# This can happen if the active forening has no sites but we're editing the site for another forening #}
-        <tr>
-          <td colspan="3">
-            <em>{{ active_forening.name }} har ingen nettsteder.
-            {% if user|role_for:active_forening == 'admin' %}
-              <a href="{% url 'admin.views.setup_site' %}">Opprett en hjemmeside for {{ active_forening.name }}</a></em>
-            {% endif %}
-          </td>
-        </tr>
-      {% endif %}
-    </table>
-
-  {% endwith %}
+<div class="site-admin-index" data-dnt-container="site-admin-index">
 
   {% if user|role_for:active_forening == 'admin' %}
-    <p>
-      <a href="{% url 'admin.views.setup_site' %}" class="btn btn-default">Opprett et nytt nettsted tilknyttet {{ active_forening.name }}</a>
+    <p class="pull-right">
+      <a href="{% url 'admin.views.setup_site' %}" class="btn btn-primary">Opprett et nytt nettsted tilknyttet {{ active_forening.name }}</a>
     </p>
   {% endif %}
+
+  <table class="table table-striped sites">
+    <thead>
+      <tr>
+        <th>Navn</th>
+        <th>Hva slags nettsted</th>
+        <th>Adresse</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+
+    {% for site in active_forening.get_sites_sorted_by_type %}
+      <tr
+        {% if site == active_site %} class="active"{% endif %}
+        {% if not site.has_published_front_page %}
+          data-tooltip
+          title="{{ site.get_title }} har ikke en publisert forside, du vil derfor få feilmelding hvis du prøver å vise siden!"
+        {% endif %}
+        >
+        <td>
+          {{ site.get_title }}
+          {% if not site.has_published_front_page %}
+            <span class="label label-danger">Mangler forside</span>
+          {% endif %}
+          <br>
+
+          <ul class="list-inline">
+            <li><a href="{% url 'admin.sites.views.show' site.id %}">Rediger</a></li>
+            <li>
+              {% if site.has_published_front_page %}
+                <a href="http://{{ site.domain }}/">Vis</a>
+              {% else %}
+                <a
+                  data-dnt-trigger="no-frontpage-warning"
+                  data-dnt-message="{{ site.get_title }} har ikke en publisert forside. Du må opprette eller publisere forsiden før du kan besøke siden."
+                  href="javascript:undefined">
+                  Vis
+                </a>
+              {% endif %}
+            </li>
+          </ul>
+        </td>
+        <td>{{ site.get_type }}</td>
+        <td>{{ site.domain }}</td>
+        <td>
+          {% if site.is_published %}
+            <span class="label label-success">Lansert</span>
+          {% else %}
+            <span class="label label-danger">Oppbygning</span>
+          {% endif %}
+        </td>
+      </tr>
+
+    {% empty %}
+
+      {# This can happen if the active forening has no sites but we're editing the site for another forening #}
+      <tr>
+        <td colspan="3">
+          <em>{{ active_forening.name }} har ingen nettsteder.
+          {% if user|role_for:active_forening == 'admin' %}
+            <a href="{% url 'admin.views.setup_site' %}">Opprett en hjemmeside for {{ active_forening.name }}</a></em>
+          {% endif %}
+        </td>
+      </tr>
+
+    {% endfor %}
+
+  </table>
 
   {% if children_foreninger_with_site|length > 0 %}
 
@@ -138,7 +120,7 @@
               {% endif %}
             </td>
             <td>{{ site.get_type_short }}</td>
-            <td><a href="{% url 'admin.sites.views.index' site.id %}">{{ site.domain }}</a></td>
+            <td><a href="{% url 'admin.sites.views.show' site.id %}">{{ site.domain }}</a></td>
             <td>{{ site.get_title }}</td>
           </tr>
 
