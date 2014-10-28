@@ -30,31 +30,45 @@
 
 {% with sites=active_forening.get_sites_sorted %}
 
-  <table class="table">
-    <tr>
-      <th>Type</th>
-      <th>Nettsted</th>
-      <th>Tittel</th>
-    </tr>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Navn</th>
+        <th>Type</th>
+        <th>Adresse</th>
+      </tr>
+    </thead>
     {% for site in active_forening.get_sites_sorted.forening %}
       <tr{% if site == active_site %} class="active"{% endif %}>
+        <td>
+          <a href="{% url 'admin.sites.views.show' site.id %}">
+            {{ site.get_title }}
+          </a>
+        </td>
         <td>Hjemmeside</td>
-        <td><a href="{% url 'admin.sites.views.show' site.id %}">{{ site.domain }}</a></td>
-        <td>{{ site.get_title }}</td>
+        <td>{{ site.domain }}</td>
       </tr>
     {% endfor %}
     {% for site in active_forening.get_sites_sorted.hytte %}
       <tr{% if site == active_site %} class="active"{% endif %}>
+        <td>
+          <a href="{% url 'admin.sites.views.show' site.id %}">
+            {{ site.get_title }}
+          </a>
+        </td>
         <td>Hytteside</td>
-        <td><a href="{% url 'admin.sites.views.show' site.id %}">{{ site.domain }}</a></td>
-        <td>{{ site.get_title }}</td>
+        <td>{{ site.domain }}</td>
       </tr>
     {% endfor %}
     {% for site in active_forening.get_sites_sorted.kampanje %}
       <tr{% if site == active_site %} class="active"{% endif %}>
+        <td>
+          <a href="{% url 'admin.sites.views.show' site.id %}">
+            {{ site.get_title }}
+          </a>
+        </td>
         <td>Kampanjeside</td>
-        <td><a href="{% url 'admin.sites.views.show' site.id %}">{{ site.domain }}</a></td>
-        <td>{{ site.get_title }}</td>
+        <td>{{ site.domain }}</td>
       </tr>
     {% endfor %}
 
