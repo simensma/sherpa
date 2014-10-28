@@ -22,102 +22,107 @@
   </div>
 </div><!-- /.row -->
 
-{% if user|role_for:active_forening == 'admin' %}
-  <p class="pull-right">
-    <a href="{% url 'admin.views.setup_site' %}" class="btn btn-primary">Opprett et nytt nettsted tilknyttet {{ active_forening.name }}</a>
-  </p>
-{% endif %}
+<div class="site-admin-index">
 
-{% with sites=active_forening.get_sites_sorted %}
+  {% if user|role_for:active_forening == 'admin' %}
+    <p class="pull-right">
+      <a href="{% url 'admin.views.setup_site' %}" class="btn btn-primary">Opprett et nytt nettsted tilknyttet {{ active_forening.name }}</a>
+    </p>
+  {% endif %}
 
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Navn</th>
-        <th>Type</th>
-        <th>Adresse</th>
-      </tr>
-    </thead>
-    {% for site in active_forening.get_sites_sorted.forening %}
-      <tr{% if site == active_site %} class="active"{% endif %}>
-        <td>
-          <a href="{% url 'admin.sites.views.show' site.id %}">
-            {{ site.get_title }}
-          </a>
-        </td>
-        <td>Hjemmeside</td>
-        <td>{{ site.domain }}</td>
-      </tr>
-    {% endfor %}
-    {% for site in active_forening.get_sites_sorted.hytte %}
-      <tr{% if site == active_site %} class="active"{% endif %}>
-        <td>
-          <a href="{% url 'admin.sites.views.show' site.id %}">
-            {{ site.get_title }}
-          </a>
-        </td>
-        <td>Hytteside</td>
-        <td>{{ site.domain }}</td>
-      </tr>
-    {% endfor %}
-    {% for site in active_forening.get_sites_sorted.kampanje %}
-      <tr{% if site == active_site %} class="active"{% endif %}>
-        <td>
-          <a href="{% url 'admin.sites.views.show' site.id %}">
-            {{ site.get_title }}
-          </a>
-        </td>
-        <td>Kampanjeside</td>
-        <td>{{ site.domain }}</td>
-      </tr>
-    {% endfor %}
+  {% with sites=active_forening.get_sites_sorted %}
 
-    {% if active_forening.sites.count == 0 %}
-      {# This can happen if the active forening has no sites but we're editing the site for another forening #}
-      <tr>
-        <td colspan="3">
-          <em>{{ active_forening.name }} har ingen nettsteder.
-          {% if user|role_for:active_forening == 'admin' %}
-            <a href="{% url 'admin.views.setup_site' %}">Opprett en hjemmeside for {{ active_forening.name }}</a></em>
-          {% endif %}
-        </td>
-      </tr>
-    {% endif %}
-  </table>
-
-{% endwith %}
-
-{% if children_foreninger_with_site|length > 0 %}
-
-  <h2>Nettsteder for turlag og turgrupper</h2>
-
-  <table class="table">
-    <tr>
-      <th>Forening</th>
-      <th>Type</th>
-      <th>Nettsted</th>
-      <th>Tittel</th>
-    </tr>
-
-    {% for forening in children_foreninger_with_site %}
-      {% for site in forening.sites.all %}
-
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Navn</th>
+          <th>Type</th>
+          <th>Adresse</th>
+        </tr>
+      </thead>
+      {% for site in active_forening.get_sites_sorted.forening %}
         <tr{% if site == active_site %} class="active"{% endif %}>
           <td>
-            {% if forloop.first %}
-              {{ forening.name }}
+            <a href="{% url 'admin.sites.views.show' site.id %}">
+              {{ site.get_title }}
+            </a>
+            <br>
+          </td>
+          <td>Hjemmeside</td>
+          <td>{{ site.domain }}</td>
+        </tr>
+      {% endfor %}
+      {% for site in active_forening.get_sites_sorted.hytte %}
+        <tr{% if site == active_site %} class="active"{% endif %}>
+          <td>
+            <a href="{% url 'admin.sites.views.show' site.id %}">
+              {{ site.get_title }}
+            </a>
+          </td>
+          <td>Hytteside</td>
+          <td>{{ site.domain }}</td>
+        </tr>
+      {% endfor %}
+      {% for site in active_forening.get_sites_sorted.kampanje %}
+        <tr{% if site == active_site %} class="active"{% endif %}>
+          <td>
+            <a href="{% url 'admin.sites.views.show' site.id %}">
+              {{ site.get_title }}
+            </a>
+          </td>
+          <td>Kampanjeside</td>
+          <td>{{ site.domain }}</td>
+        </tr>
+      {% endfor %}
+
+      {% if active_forening.sites.count == 0 %}
+        {# This can happen if the active forening has no sites but we're editing the site for another forening #}
+        <tr>
+          <td colspan="3">
+            <em>{{ active_forening.name }} har ingen nettsteder.
+            {% if user|role_for:active_forening == 'admin' %}
+              <a href="{% url 'admin.views.setup_site' %}">Opprett en hjemmeside for {{ active_forening.name }}</a></em>
             {% endif %}
           </td>
-          <td>{{ site.get_type_short }}</td>
-          <td><a href="{% url 'admin.sites.views.show' site.id %}">{{ site.domain }}</a></td>
-          <td>{{ site.get_title }}</td>
         </tr>
+      {% endif %}
+    </table>
 
+  {% endwith %}
+
+  {% if children_foreninger_with_site|length > 0 %}
+
+    <h2>Nettsteder for turlag og turgrupper</h2>
+
+    <table class="table">
+      <tr>
+        <th>Forening</th>
+        <th>Type</th>
+        <th>Nettsted</th>
+        <th>Tittel</th>
+      </tr>
+
+      {% for forening in children_foreninger_with_site %}
+        {% for site in forening.sites.all %}
+
+          <tr{% if site == active_site %} class="active"{% endif %}>
+            <td>
+              {% if forloop.first %}
+                {{ forening.name }}
+              {% endif %}
+            </td>
+            <td>{{ site.get_type_short }}</td>
+            <td><a href="{% url 'admin.sites.views.show' site.id %}">{{ site.domain }}</a></td>
+            <td>{{ site.get_title }}</td>
+          </tr>
+
+        {% endfor %}
       {% endfor %}
-    {% endfor %}
 
-  </table>
+    </table>
 
-{% endif %}
+  {% endif %}
+
+</div>
 
 {% endblock %}
