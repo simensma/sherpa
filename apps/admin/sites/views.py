@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.conf import settings
 
 from core.models import Site
 
@@ -23,7 +24,11 @@ def index(request):
 
 def show(request, site):
     active_site = Site.objects.get(id=site)
+
     context = {
         'active_site': active_site,
+        'ga_profile_id': Site.GA_PROFILE_ID_MAPPING.get(active_site.analytics_ua),
+        'ga_account_username': settings.GA_ACCOUNT_USERNAME,
+        'ga_account_password': settings.GA_ACCOUNT_PASSWORD,
     }
     return render(request, 'common/admin/sites/show.html', context)

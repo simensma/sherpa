@@ -8,6 +8,53 @@
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/sites/index.js"></script>
+
+  {% if ga_profile_id %}
+
+    <script>
+      (function(w,d,s,g,js,fjs){
+        g=w.gapi||(w.gapi={});g.analytics={q:[],ready:function(cb){this.q.push(cb)}};
+        js=d.createElement(s);fjs=d.getElementsByTagName(s)[0];
+        js.src='https://apis.google.com/js/platform.js';
+        fjs.parentNode.insertBefore(js,fjs);js.onload=function(){g.load('analytics')};
+      }(window,document,'script'));
+
+      gapi.analytics.ready(function() {
+
+        var CLIENT_ID = '299030988045-03dengnm0jm7tk92c56qprbkvog84fb3.apps.googleusercontent.com';
+
+        gapi.analytics.auth.authorize({
+          container: 'auth-button',
+          clientid: CLIENT_ID,
+        });
+
+        var viewSelector = new gapi.analytics.ViewSelector({
+          container: 'view-selector'
+        });
+
+        var timeline = new gapi.analytics.googleCharts.DataChart({
+          reportType: 'ga',
+          query: {
+            'ids': ['{{ ga_profile_id }}'],
+            'dimensions': 'ga:date',
+            'metrics': 'ga:sessions',
+            'start-date': '30daysAgo',
+            'end-date': 'yesterday',
+          },
+          chart: {
+            type: 'LINE',
+            container: 'timeline'
+          }
+        });
+
+        gapi.analytics.auth.on('success', function(response) {
+          timeline.execute();
+        });
+
+      });
+    </script>
+
+  {% endif %}
 {% endblock %}
 
 {% block body %}
@@ -149,6 +196,33 @@
       </a>
     </div>
   </div>
+
+  {% if ga_profile_id %}
+
+    {# This is just a quick and dirty test to see how it looks if we fetch some GA data with the Embed API #}
+    <hr>
+
+    <h2>Besøksstatistikk</h2>
+
+    <div class="row">
+      <div class="col-md-6">
+        <p>
+          Her kan du se antall besøk på nettsiden de siste 30 dagene direkte i Sherpa hentet fra <a href="http://www.google.com/analytics">Google Analytics</a>.
+        </p>
+
+        <p>
+          Brukernavn: <strong>{{ ga_account_username }}</strong><br>
+          Passord: <strong>{{ ga_account_password }}</strong>
+        </p>
+
+        <div id="auth-button"></div>
+      </div>
+      <div class="col-md-6">
+        <div id="timeline"></div>
+      </div>
+    </div>
+
+  {% endif %}
 
 </div>
 

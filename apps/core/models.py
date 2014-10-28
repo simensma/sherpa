@@ -45,6 +45,12 @@ class Site(models.Model):
     # Hardcoded site IDs that we may need to know
     DNT_CENTRAL_ID = 1
 
+    # Quick and dirty static table for mapping a GA Tracking ID to a Profile (View) ID for testing
+    # TODO: Use the management API to perform this mapping automatically
+    GA_PROFILE_ID_MAPPING = {
+        'UA-266436-2': 'ga:385554',
+    }
+
     def __unicode__(self):
         return u'%s: %s' % (self.pk, self.domain)
 
