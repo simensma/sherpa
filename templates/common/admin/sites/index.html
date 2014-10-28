@@ -22,7 +22,7 @@
   </div>
 </div><!-- /.row -->
 
-<div class="site-admin-index">
+<div class="site-admin-index" data-dnt-container="site-admin-index">
 
   {% if user|role_for:active_forening == 'admin' %}
     <p class="pull-right">
@@ -41,15 +41,33 @@
     </thead>
 
     {% for site in active_forening.get_sites_sorted_by_type %}
-      <tr{% if site == active_site %} class="active"{% endif %}>
+      <tr
+        {% if site == active_site %} class="active"{% endif %}
+        {% if not site.has_published_front_page %}
+          data-tooltip
+          title="{{ site.get_title }} har ikke en publisert forside, du vil derfor få feilmelding hvis du prøver å vise siden!"
+        {% endif %}
+        >
         <td>
-          {{ site.get_title }}<br>
+          {{ site.get_title }}
+          {% if not site.has_published_front_page %}
+            <span class="label label-danger">Mangler forside</span>
+          {% endif %}
+          <br>
 
           <ul class="list-inline">
             <li><a href="{% url 'admin.sites.views.show' site.id %}">Rediger</a></li>
             <li>
-              {# TODO: Verify that the front page is published #}
-              <a href="http://{{ site.domain }}/">Vis</a>
+              {% if site.has_published_front_page %}
+                <a href="http://{{ site.domain }}/">Vis</a>
+              {% else %}
+                <a
+                  data-dnt-trigger="no-frontpage-warning"
+                  data-dnt-message="{{ site.get_title }} har ikke en publisert forside. Du må opprette eller publisere forsiden før du kan besøke siden."
+                  href="javascript:undefined">
+                  Vis
+                </a>
+              {% endif %}
             </li>
           </ul>
         </td>

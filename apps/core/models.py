@@ -107,6 +107,16 @@ class Site(models.Model):
             end_date__gte=today,
         ).count()
 
+    def has_front_page(self):
+        return Page.on(self).filter(slug='').exists()
+
+    def has_published_front_page(self):
+        return Page.on(self).filter(
+            slug='',
+            published=True,
+            pub_date__lte=date.today(),
+        ).exists()
+
     @staticmethod
     def sort(sites):
         """Sort the given sites iterable by title and return a dict with a key for each site type, containing
