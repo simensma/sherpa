@@ -102,21 +102,21 @@
                   {% for site in sites.forening %}
                     <li class="submenu{% if active_entry == 'sites' %} visible{% endif %}{% if active_site == site %} active{% endif %}" data-type="sites">
                       <a href="{% url 'admin.sites.views.show' site.id %}">
-                        {{ site.domain }}
+                        {{ site.get_title }}
                       </a>
                     </li>
                   {% endfor %}
                   {% for site in sites.hytte %}
                     <li class="submenu{% if active_entry == 'sites' %} visible{% endif %}{% if active_site == site %} active{% endif %}" data-type="sites">
                       <a href="{% url 'admin.sites.views.show' site.id %}">
-                        {{ site.domain }}
+                        {{ site.get_title }}
                       </a>
                     </li>
                   {% endfor %}
                   {% for site in sites.kampanje %}
                     <li class="submenu{% if active_entry == 'sites' %} visible{% endif %}{% if active_site == site %} active{% endif %}" data-type="sites">
                       <a href="{% url 'admin.sites.views.show' site.id %}">
-                        {{ site.domain }}
+                        {{ site.get_title }}
                       </a>
                     </li>
                   {% endfor %}
