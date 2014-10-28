@@ -7,7 +7,11 @@ $(function() {
 
     // Toggle dropdowns in the main admin menu
     var nav = $("nav.navbar ul.nav");
-    nav.find("li a[data-toggle]").click(function() {
+    nav.find("[data-toggle]").click(function(e) {
+        // This element is expected to be contained within an anchor, and we want to prevent the anchor click if the
+        // toggler was clicked.
+        e.preventDefault();
+
         nav.find("li[data-type='" + $(this).attr('data-toggle') + "']").slideToggle('fast');
     });
 
