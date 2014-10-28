@@ -83,7 +83,7 @@ def registration(request, user):
             user = EnrollmentUser(enrollment=enrollment)
 
         try:
-            dob = datetime.strptime(request.POST['dob'], "%d.%m.%Y")
+            dob = datetime.strptime(request.POST['dob'], "%d.%m.%Y").date()
         except ValueError:
             dob = None
 
