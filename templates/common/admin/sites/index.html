@@ -22,6 +22,12 @@
   </div>
 </div><!-- /.row -->
 
+{% if user|role_for:active_forening == 'admin' %}
+  <p class="pull-right">
+    <a href="{% url 'admin.views.setup_site' %}" class="btn btn-primary">Opprett et nytt nettsted tilknyttet {{ active_forening.name }}</a>
+  </p>
+{% endif %}
+
 {% with sites=active_forening.get_sites_sorted %}
 
   <table class="table">
@@ -66,12 +72,6 @@
   </table>
 
 {% endwith %}
-
-{% if user|role_for:active_forening == 'admin' %}
-  <p>
-    <a href="{% url 'admin.views.setup_site' %}" class="btn btn-default">Opprett et nytt nettsted tilknyttet {{ active_forening.name }}</a>
-  </p>
-{% endif %}
 
 {% if children_foreninger_with_site|length > 0 %}
 
