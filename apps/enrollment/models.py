@@ -241,6 +241,10 @@ class User(models.Model):
         if self.dob.year < 1900 or self.dob.year > 2078:
             return False
 
+        # Birthdate can't be in the future
+        if self.dob > date.today():
+            return False
+
         # All tests passed!
         return True
 
