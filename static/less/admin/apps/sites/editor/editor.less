@@ -67,15 +67,30 @@ div.editor-header {
   }
 
   .sticky {
-    padding: 15px 0;
 
     &.affix {
       top: 50px;
       left: 0;
-      background-color: @editor-form-background-color;
-      border-bottom: 1px solid @editor-form-border-color;
       width: 100%;
       z-index: 1030; // Same as Bootstrap navbar sticky
+    }
+
+    .wrapper {
+      .actions {
+        padding: 15px 0;
+        background-color: @editor-form-background-color;
+        border-bottom: 1px solid @editor-form-border-color;
+      }
+
+      .toolbar {
+        position: relative;
+
+        > div {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+        }
+      }
     }
   }
 

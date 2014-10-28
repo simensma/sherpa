@@ -204,35 +204,40 @@
         </div>
       </div>
       <div class="sticky">
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-12">
-              <div class="pull-left">
-                <a
-                  href="{% url 'admin.sites.pages.page.list' active_site.id %}"
-                  class="btn btn-link quit"
-                  data-confirm="Er du sikker på at du vil avslutte redigering uten å lagre?">
-                  Avslutt redigering uten å lagre
-                </a>
-              </div>
-              <div class="pull-right">
-                <button class="btn btn-success save">
-                  <i class="glyphicon glyphicon-heart"></i> Lagre nå
-                </button>
-                <button
-                  class="btn btn-success preview"
-                  data-href="{% url 'admin.sites.pages.page.preview' active_site.id version.id %}"
-                  data-toggle="tooltip"
-                  data-placement="top"
-                  title="OBS! Når du forhåndsviser siden lagres den først, slik at alle endringer du har gjort blir lagret og evt. publisert dersom siden er publisert.">
-                  <i class="glyphicon glyphicon-search"></i> Forhåndsvisning
-                </button>
-                <button class="btn btn-danger delete-page" href="{% url 'admin.sites.pages.page.delete' active_site.id version.variant.page.id %}">
-                  <i class="glyphicon glyphicon-warning-sign"></i> Slett
-                </button>
+        <div class="wrapper">
+          <div class="actions">
+            <div class="container">
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="pull-left">
+                    <a
+                      href="{% url 'admin.sites.pages.page.list' active_site.id %}"
+                      class="btn btn-link quit"
+                      data-confirm="Er du sikker på at du vil avslutte redigering uten å lagre?">
+                      Avslutt redigering uten å lagre
+                    </a>
+                  </div>
+                  <div class="pull-right">
+                    <button class="btn btn-success save">
+                      <i class="glyphicon glyphicon-heart"></i> Lagre nå
+                    </button>
+                    <button
+                      class="btn btn-success preview"
+                      data-href="{% url 'admin.sites.pages.page.preview' active_site.id version.id %}"
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title="OBS! Når du forhåndsviser siden lagres den først, slik at alle endringer du har gjort blir lagret og evt. publisert dersom siden er publisert.">
+                      <i class="glyphicon glyphicon-search"></i> Forhåndsvisning
+                    </button>
+                    <button class="btn btn-danger delete-page" href="{% url 'admin.sites.pages.page.delete' active_site.id version.variant.page.id %}">
+                      <i class="glyphicon glyphicon-warning-sign"></i> Slett
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+          <div class="toolbar" data-dnt-container="toolbar"></div>
         </div>
       </div>
     </form>

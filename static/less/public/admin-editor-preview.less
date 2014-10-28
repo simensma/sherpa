@@ -17,16 +17,20 @@ div.editor-header {
   }
 
   .sticky {
-    padding: 15px 0;
-
     &.affix {
       top: 0;
       left: 0;
-      color: #31708f;
-      background-color: #d9edf7; // Same as Bootstrap alert-info
-      border-bottom: 1px solid #bce8f1; // Same as Bootstrap alert-info
       width: 100%;
       z-index: 1030; // Same as Bootstrap navbar sticky
+    }
+
+    .wrapper {
+      .actions {
+        padding: 15px 0;
+        background-color: #d9edf7; // Same as Bootstrap alert-info
+        border-bottom: 1px solid #bce8f1; // Same as Bootstrap alert-info
+        color: #31708f;
+      }
     }
   }
 }
