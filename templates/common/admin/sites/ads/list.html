@@ -15,8 +15,8 @@
     <h1>Annonser <small>legg ut annonser som vises på websidene</small></h1>
     <ol class="breadcrumb">
       <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
-      <li><a href="{% url 'admin.sites.views.index' active_site.id %}">Nettsteder</a></li>
-      <li><a href="{% url 'admin.sites.views.index' active_site.id %}">{{ active_site.domain }}</a></li>
+      <li><a href="{% url 'admin.sites.views.index' %}">Nettsteder</a></li>
+      <li><a href="{% url 'admin.sites.views.show' active_site.id %}">{{ active_site.domain }}</a></li>
       <li><a href="{% url 'admin.sites.ads.views.list' active_site.id %}">Annonser</a></li>
     </ol>
   </div>

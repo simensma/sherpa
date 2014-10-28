@@ -2,7 +2,10 @@ from django.shortcuts import render
 
 from core.models import Site
 
-def index(request, site):
+def index(request):
+    return render(request, 'common/admin/sites/index.html')
+
+def show(request, site):
     active_site = Site.objects.get(id=site)
 
     # Generate a list of children-foreninger with site to display
@@ -22,4 +25,4 @@ def index(request, site):
         'active_site': active_site,
         'children_foreninger_with_site': children_foreninger_with_site,
     }
-    return render(request, 'common/admin/sites/index.html', context)
+    return render(request, 'common/admin/sites/show.html', context)
