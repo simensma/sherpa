@@ -1,5 +1,6 @@
 # encoding: utf-8
 from datetime import datetime, date, timedelta
+from cStringIO import StringIO
 import json
 import re
 
@@ -9,6 +10,7 @@ from django.core.cache import cache
 from django.conf import settings
 
 import requests
+import PIL.Image
 
 from admin.models import Image, Album
 from admin.images.util import upload_image
@@ -570,6 +572,11 @@ class Activity(models.Model):
 
                     image_data = downloaded_image.content
                     extension = old_image['url'].rsplit('.', 1)[1].lower()
+
+                    # Require a certain dimension size for the image
+                    pil_image = PIL.Image.open(StringIO(image_data))
+                    if pil_image.size[0] < 100 or pil_image.size[1] < 100:
+                        continue
 
                     image = upload_image(
                         image_data=image_data,
