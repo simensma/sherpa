@@ -30,7 +30,7 @@
     </p>
   {% endif %}
 
-  <table class="table table-striped">
+  <table class="table table-striped sites">
     <thead>
       <tr>
         <th>Navn</th>
@@ -42,10 +42,15 @@
     {% for site in active_forening.get_sites_sorted_by_type %}
       <tr{% if site == active_site %} class="active"{% endif %}>
         <td>
-          <a href="{% url 'admin.sites.views.show' site.id %}">
-            {{ site.get_title }}
-          </a>
-          <br>
+          {{ site.get_title }}<br>
+
+          <ul class="list-inline">
+            <li><a href="{% url 'admin.sites.views.show' site.id %}">Rediger</a></li>
+            <li>
+              {# TODO: Verify that the front page is published #}
+              <a href="http://{{ site.domain }}/">Vis</a>
+            </li>
+          </ul>
         </td>
         <td>{{ site.get_type }}</td>
         <td>{{ site.domain }}</td>
