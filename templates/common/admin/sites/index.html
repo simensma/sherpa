@@ -36,6 +36,7 @@
         <th>Navn</th>
         <th>Hva slags nettsted</th>
         <th>Adresse</th>
+        <th>Status</th>
       </tr>
     </thead>
 
@@ -54,6 +55,13 @@
         </td>
         <td>{{ site.get_type }}</td>
         <td>{{ site.domain }}</td>
+        <td>
+          {% if site.is_published %}
+            <span class="label label-success">Lansert</span>
+          {% else %}
+            <span class="label label-danger">Oppbygning</span>
+          {% endif %}
+        </td>
       </tr>
 
     {% empty %}
