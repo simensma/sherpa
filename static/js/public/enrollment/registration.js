@@ -54,6 +54,12 @@ $(function() {
             req: true,
             opts: {'min_year': 1900, 'max_year': 2078}
         });
+
+        // The datepicker will return an invalid date if it's in the future
+        var date = form.find('.date').datepicker('getDate');
+        if(date.toString() === "Invalid Date") {
+            form.find('[data-dnt-form-group="dob"]').removeClass('has-success').addClass('has-error');
+        }
     }
 
     function validateGender() {
