@@ -482,10 +482,16 @@ class Activity(models.Model):
         instead of a new one.
 
         raises ConversionImpossible if the old aktivitet data is in a state we can't convert from"""
-        from aktiviteter.models import Aktivitet, AktivitetImage
+        from aktiviteter.models import Aktivitet, AktivitetImage, ImportFailure
 
         if aktivitet is None:
             aktivitet = Aktivitet()
+
+        # Delete any existing conversion failure object
+        try:
+            ImportFailure.objects.get(id=self.id).delete()
+        except ImportFailure.DoesNotExist:
+            pass
 
         # Perform conversions - these may throw exceptions
         foreninger = self.convert_foreninger()
