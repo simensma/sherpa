@@ -14,7 +14,7 @@ from django.contrib.gis.geos import Point
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from aktiviteter.models import Aktivitet, AktivitetDate, AktivitetImage, Cabin
+from aktiviteter.models import Aktivitet, AktivitetDate, AktivitetImage, Cabin, ConversionFailure
 from admin.aktiviteter.util import parse_html_array
 from core.models import Tag, County, Municipality
 from sherpa2.models import Location, Turforslag, Activity as Sherpa2Aktivitet
@@ -99,6 +99,9 @@ def index(request):
     except EmptyPage:
         datoer = paginator.page(paginator.num_pages)
 
+    # Failed import counts
+    failed_import_count = ConversionFailure.objects.filter(foreninger=request.active_forening).count()
+
     context = {
         'active_forening_children': children,
         'selected_forening': forening,
@@ -108,6 +111,7 @@ def index(request):
             'tid': request.GET.get('tid'),
             'kladd': request.GET.get('kladd')
         },
+        'failed_import_count': failed_import_count,
     }
     return render(request, 'common/admin/aktiviteter/index.html', context)
 
