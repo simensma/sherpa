@@ -2,7 +2,7 @@ class ConversionImpossible(Exception):
     """Utility exception class used by conversion methods to signal that this object cannot be converted"""
     pass
 
-class OwnerDoesntExist(ConversionImpossible):
+class OwnerDoesNotExist(ConversionImpossible):
     pass
 
 class NoOwners(ConversionImpossible):

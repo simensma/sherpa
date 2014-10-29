@@ -16,7 +16,7 @@ from admin.models import Image, Album
 from admin.images.util import upload_image
 from core.models import County, Tag
 from sherpa2.util import SHERPA2_COUNTIES_SET1
-from sherpa2.exceptions import ConversionImpossible, OwnerDoesntExist, NoOwners, NoCategoryType, \
+from sherpa2.exceptions import ConversionImpossible, OwnerDoesNotExist, NoOwners, NoCategoryType, \
     DateWithoutStartDate, DateWithInvalidStartDate, DateWithoutEndDate, DateWithInvalidEndDate
 
 class Forening(models.Model):
@@ -621,7 +621,7 @@ class Activity(models.Model):
                     else:
                         # One of the owner relations is invalid; skip this import
                         # TODO: handle
-                        raise OwnerDoesntExist("One of the related 'owner' groups doesn't exist in the new ForeningDB")
+                        raise OwnerDoesNotExist("One of the related 'owner' groups doesn't exist in the new ForeningDB")
 
         if len(foreninger) == 0 and len(cabins) == 0:
             raise NoOwners("No known owners exist for this activity; need at least 1")
