@@ -12,14 +12,22 @@ $(function() {
     var article = $("article");
     var placeholder_image_path = article.attr('data-dnt-placeholder-image-path');
     var placeholder_image_warning = article.attr('data-dnt-placeholder-image-warning').replace(/\\n/g, '\n');
+    var last_saved_msg_container = header.find('[data-dnt-container="last-saved-msg"]');
 
     var lastSaveCount = 0;
+    var lastSavedMinutesAgo = 0;
     var updateSaveCountID;
     var statusIcon = '<i class="glyphicon glyphicon-heart"></i>';
+
     function updateSaveCount() {
         lastSaveCount += 1;
 
-        if(lastSaveCount == NO_SAVE_WARNING_TIMEOUT) {
+        if (lastSaveCount % 60 === 0) {
+            lastSavedMinutesAgo = lastSaveCount / 60;
+            last_saved_msg_container.html('Sist lagret for ' + lastSavedMinutesAgo + ' min. siden');
+        }
+
+        if (lastSaveCount == NO_SAVE_WARNING_TIMEOUT) {
             no_save_warning.show();
         }
         updateSaveCountID = setTimeout(updateSaveCount, 1000);
