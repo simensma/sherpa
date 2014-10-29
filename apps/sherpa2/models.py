@@ -907,8 +907,12 @@ class Activity(models.Model):
         from aktiviteter.models import ConversionFailure
         if include_foreninger:
             converted = self.convert_foreninger()
-            foreninger = [converted['main:forening']] + converted['rest:forening']
-            cabins = [converted['main:cabin']] + converted['rest:cabin']
+            foreninger = converted['rest:forening']
+            if converted['main:forening'] is not None:
+                foreninger.append(converted['main:forening'])
+            cabins = converted['rest:cabin']
+            if converted['main:cabin'] is not None:
+                cabins.append(converted['main:cabin'])
         else:
             foreninger = []
             cabins = []
