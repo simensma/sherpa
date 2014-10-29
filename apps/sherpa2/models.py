@@ -489,7 +489,7 @@ class Activity(models.Model):
 
         # Delete any existing conversion failure object
         try:
-            ConversionFailure.objects.get(id=self.id).delete()
+            ConversionFailure.objects.get(sherpa2_id=self.id).delete()
         except ConversionFailure.DoesNotExist:
             pass
 
