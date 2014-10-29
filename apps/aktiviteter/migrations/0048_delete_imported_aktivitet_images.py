@@ -16,8 +16,7 @@ class Migration(DataMigration):
 
         # Delete all images in the album - note that post-delete hooks don't work here, so we'll delete the images
         # from S3 explicitly
-        for image in orm['admin.Image'].objects.filter(id=4441):
-        # for image in orm['admin.Image'].objects.filter(album=66):
+        for image in orm['admin.Image'].objects.filter(album=66):
             conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
             bucket = conn.get_bucket(s3_bucket())
             bucket.delete_key("%s%s.%s" % (
