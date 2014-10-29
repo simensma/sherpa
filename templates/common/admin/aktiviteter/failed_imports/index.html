@@ -32,7 +32,7 @@
     Viser {{ failed_imports.object_list|length }} av {{ failed_imports.paginator.count }} feilede importeringer
   </p>
 
-  {% include "common/admin/aktiviteter/failed_imports_pagination.html" %}
+  {% include "common/admin/aktiviteter/failed_imports/pagination.html" %}
 
   <div class="table-responsive">
     <table class="table table-striped">
@@ -70,7 +70,7 @@
     </table>
   </div>
 
-  {% include "common/admin/aktiviteter/failed_imports_pagination.html" %}
+  {% include "common/admin/aktiviteter/failed_imports/pagination.html" %}
 
 </div>
 

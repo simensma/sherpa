@@ -534,4 +534,4 @@ def failed_imports(request):
         failed_imports = paginator.page(paginator.num_pages)
 
     context = {'failed_imports': failed_imports}
-    return render(request, 'common/admin/aktiviteter/failed_imports.html', context)
+    return render(request, 'common/admin/aktiviteter/failed_imports/index.html', context)
