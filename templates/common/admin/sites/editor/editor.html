@@ -322,29 +322,33 @@
 
   {# Editor-control: Cropping controls to display during cropping #}
   <div class="crop-control">
-    <div class="submit pull-right">
-      <button class="btn btn-success use">
-        <i class="glyphicon glyphicon-check"></i> Bruk dette utsnittet
-      </button>
-      <button class="btn btn-default remove">
-        <i class="glyphicon glyphicon-remove"></i> Vis hele bildet
-      </button>
-    </div>
-
-    <div class="choose-ratio">
-      <p>
-        <strong>Velg utsnitt:</strong>
-      </p>
-      <div class="btn-group" data-toggle="buttons-radio">
-        <button class="btn btn-default" data-ratio="free">Fri</button>
-        <button class="btn btn-default" data-ratio="16:9">Widescreen</button>
-        <button class="btn btn-default" data-ratio="12:8">Landskap</button>
-        <button class="btn btn-default" data-ratio="3:4">Portrett</button>
-        <button class="btn btn-default" data-ratio="1:1">Firkant</button>
+    <div class="row">
+      <div class="choose-ratio">
+        <div class="col-sm-2">
+          <span class="inline-label">
+            <strong>Velg utsnitt</strong>
+          </span>
+        </div>
+        <div class="col-sm-6">
+          <div class="btn-group" data-toggle="buttons-radio">
+            <button class="btn btn-default" data-ratio="free">Fri</button>
+            <button class="btn btn-default" data-ratio="16:9">Widescreen</button>
+            <button class="btn btn-default" data-ratio="12:8">Landskap</button>
+            <button class="btn btn-default" data-ratio="3:4">Portrett</button>
+            <button class="btn btn-default" data-ratio="1:1">Firkant</button>
+          </div>
+        </div>
+      </div>
+      <div class="submit pull-right">
+        <button class="btn btn-success use">
+          <i class="glyphicon glyphicon-check"></i> Bruk utsnittet
+        </button>
+        <button class="btn btn-default remove">
+          <i class="glyphicon glyphicon-remove"></i> Vis hele bildet
+        </button>
       </div>
     </div>
   </div>
-</div>
 
 {# Widget edit-dialogs #}
 {% include 'common/widgets/quote/edit.html' %}

@@ -135,7 +135,7 @@
     data-page-id="{{ version.variant.page.id }}"
     data-version-id="{{ version.id }}">
 
-    <form class="form-horizontal label-align-left" role="form" method="POST">
+    <div class="form-horizontal label-align-left">
       <div class="static">
         <div class="container">
           <div class="fields">
@@ -237,10 +237,14 @@
               </div>
             </div>
           </div>
-          <div class="toolbar" data-dnt-container="toolbar"></div>
+          <div class="toolbar">
+            <div class="wrapper jq-hide">
+              <div class="container" data-dnt-container="toolbar"></div>
+            </div>
+          </div>
         </div>
       </div>
-    </form>
+    </div>
     <div style="clear: both;"></div>
   </div>
 {% endblock %}

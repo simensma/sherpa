@@ -5,6 +5,8 @@ $(function() {
     var editor = $("div.cms-editor");
     var article = editor.find("article");
     var insertion_templates = editor.find('[data-dnt-container="insertion-templates"]');
+    var editor_header =$('.editor-header');
+    var toolbar = editor_header.find('.toolbar .wrapper');
 
     disableIframes(article.find('[data-dnt-container="content-widget"]'));
 
@@ -195,6 +197,11 @@ $(function() {
     // Choose crop ratio on 'crop-content' icon click
     var JcropApi;
     $(document).on('click', 'article div.crop-content', function(e) {
+
+        if (JcropApi) {
+            toolbar.find('div.crop-control button.use').first().click();
+        }
+
         e.stopPropagation(); // Avoid click-event on an image or widget
         var content = $(this).nextAll("div.content").first();
         var crop = JSON.parse(content.attr('data-json')).crop;
@@ -209,13 +216,20 @@ $(function() {
         }
 
         // Set up crop control elements
-        var crop_control = insertion_templates.find("div.crop-control").clone().insertBefore(content);
-        crop_control.data('original-content', content);
-        crop_control.data('content-clone', content.clone());
-        crop_control.offset({
-            top: crop_control.offset().top - crop_control.outerHeight(),
-            right: 0,
+        var toolbar_container = $('.sticky [data-dnt-container="toolbar"]');
+        var crop_control = insertion_templates.find("div.crop-control").clone().appendTo(toolbar_container);
+        var toolbar_height = toolbar.outerHeight();
+        toolbar.css('top', -toolbar_height);
+        toolbar.removeClass('jq-hide');
+        toolbar.animate({
+            top: 0,
+            easing: 'easeOutCubic',
+            duration: 200
         });
+
+
+        crop_control.data('original-content', content);
+        crop_control.data('content-clone', content.clone().removeClass('hover'));
         if(crop === undefined) {
             // Hide the controls by default for the first selection; until cropping selection has been made
             crop_control.find("div.submit").css('display', 'none');
@@ -228,7 +242,8 @@ $(function() {
         crop_control.find("div.choose-ratio button[data-ratio='free']").click();
     });
 
-    $(document).on('click', 'article div.crop-control div.choose-ratio button', function() {
+    // Selecting a cropping ratio
+    $(document).on('click', 'div.crop-control div.choose-ratio button', function() {
         var crop_control = $(this).parents("div.crop-control");
         var content = crop_control.data('original-content');
         var original_crop = JSON.parse(content.attr('data-json')).crop;
@@ -275,10 +290,11 @@ $(function() {
         }
     });
 
-    $(document).on('click', 'article div.crop-control div.submit button.use', function(e) {
+    $(document).on('click', 'div.crop-control div.submit button.use', function(e) {
         var crop_control = $(this).parents("div.crop-control");
         var original_content = crop_control.data('original-content');
         var original_image = original_content.find("img");
+        var jcrop_holder = original_content.parents('.jcrop-holder').first();
         var new_content = crop_control.data('content-clone');
         var new_image = new_content.find("img");
         var crop = JSON.parse(original_content.attr('data-json')).crop;
@@ -289,26 +305,30 @@ $(function() {
         }
 
         new_content.attr('data-json', original_content.attr('data-json'));
-        new_content.insertAfter(crop_control);
+        new_content.insertAfter(jcrop_holder);
         cropContent(new_content);
         endCropping(crop_control);
     });
 
-    $(document).on('click', 'article div.crop-control div.submit button.remove', function(e) {
+    // Remove crop, restore image to original
+    $(document).on('click', 'div.crop-control div.submit button.remove', function(e) {
         var crop_control = $(this).parents("div.crop-control");
         var clone = crop_control.data('content-clone');
+        var original_content = crop_control.data('original-content');
+        var jcrop_holder = original_content.parents('.jcrop-holder').first();
         var json = JSON.parse(clone.attr('data-json'));
         json.crop = undefined;
-        clone.attr('data-json', JSON.stringify(json)).insertAfter(crop_control);
+        clone.attr('data-json', JSON.stringify(json)).insertAfter(jcrop_holder);
         endCropping(crop_control);
     });
 
     function endCropping(crop_control) {
-        if(JcropApi !== undefined) {
+        if (JcropApi !== undefined) {
             JcropApi.destroy();
             JcropApi = undefined;
         }
         crop_control.remove();
+        toolbar.addClass('jq-hide');
     }
 
     // Doesn't really need to be its own method as its semantics are:
