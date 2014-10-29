@@ -53,7 +53,10 @@
             <a href="http://{{ old_site }}/admin/activity.php?ac_id={{ fail.sherpa2_id }}&amp;act=egenskaper">{{ fail.name }}</a>
           </td>
           <td>
-            {{ fail.get_reason }}
+            {{ fail.get_reason }} <a href="javascript:undefined" data-dnt-trigger="helptext">Les mer...</a>
+            <div class="helptext jq-hide" data-dnt-container="helptext">
+              {{ fail.get_reason_helptext|safe }}
+            </div>
           </td>
         </tr>
 

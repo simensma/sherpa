@@ -370,5 +370,32 @@ class ConversionFailure(models.Model):
     )
     reason = models.CharField(max_length=255, choices=REASON_CHOICES)
 
+    REASON_HELPTEXTS = {
+        'owner_doesnotexist':
+            'Vi har flyttet alle foreninger og hytter over til nye Sherpa, men denne turen er koblet til en ' \
+            'forening, hytte eller annen gruppe som ikke finnes i nye Sherpa.<br>For å få flyttet over turen ' \
+            'må du finne ut hvilken gruppe som ikke skal være arrangør for turen.<br>Hvis du mener at alle ' \
+            'arrangørene står riktig oppført, bør du høre med DNT Sentralt - bruk den røde knappen til høyre på ' \
+            'skjermen.',
+        'no_owners':
+            'Alle turer må være koblet til minst én arrangørforening.',
+        'no_category_type':
+            'Turene i nye Sherpa har både en <em>kategori</em> og en <em>kategoritype</em>. For eksempel er ' \
+            'Fellestur en kategori, mens kategoritypen kan være fottur, skitur, og så videre.<br>' \
+            'Alle turer må ha både en kategori og en kategoritype, men denne turen mangler kategoritypen.',
+        'date_without_start_date':
+            'Sjekk datoene i bunnen av gamle Sherpa. En av linjene mangler startdato, og den må du legge inn.',
+        'date_with_invalid_start_date':
+            'Sjekk datoene i bunnen av gamle Sherpa. En av linjene har oppgitt startdato på feil format. Datoen må ' \
+            'se slik ut: "2014-12-31".',
+        'date_without_end_date':
+            'Sjekk datoene i bunnen av gamle Sherpa. En av linjene mangler sluttdato, og den må du legge inn.',
+        'date_with_invalid_end_date': 'Sjekk datoene i bunnen av gamle Sherpa. En av linjene har oppgitt sluttdato ' \
+            'på feil format. Datoen må se slik ut: "2014-12-31".',
+    }
+
     def get_reason(self):
         return [r[1] for r in self.REASON_CHOICES if r[0] == self.reason][0]
+
+    def get_reason_helptext(self):
+        return ConversionFailure.REASON_HELPTEXTS[self.reason]
