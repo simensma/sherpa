@@ -28,8 +28,17 @@ def get_request_data(request):
     else:
         client = settings.DNT_CONNECT[request.GET['client']]
 
-    request_data, auth_index = try_keys(decrypt, client['auths'], request.GET['data'], request.GET.get('hmac'))
-    request_data = json.loads(request_data)
+    try:
+        request_data, auth_index = try_keys(decrypt, client['auths'], request.GET['data'], request.GET.get('hmac'))
+        request_data = json.loads(request_data)
+    except ValueError:
+        logger.warning(u"DNT Connect: ValueError ved dekryptering",
+            exc_info=sys.exc_info(),
+            extra={
+                'request_data': request_data,
+            }
+        )
+        raise PermissionDenied
 
     # Check the transmit datestamp
     request_time = datetime.fromtimestamp(request_data['timestamp'])
