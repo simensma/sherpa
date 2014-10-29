@@ -348,7 +348,7 @@ class Cabin(models.Model):
     def __unicode__(self):
         return u'%s/%s: %s' % (self.pk, self.sherpa2_id, self.name)
 
-class ImportFailure(models.Model):
+class ConversionFailure(models.Model):
     """A list of aktiviteter that we couldn't import from Sherpa2"""
     # Note that aktiviteter with no owners should be explicitly listed as they can't be filtered to any forening
     # Not quite sure why related_name can't be set to '+' here
