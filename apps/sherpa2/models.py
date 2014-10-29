@@ -16,7 +16,8 @@ from admin.models import Image, Album
 from admin.images.util import upload_image
 from core.models import County, Tag
 from sherpa2.util import SHERPA2_COUNTIES_SET1
-from sherpa2.exceptions import ConversionImpossible
+from sherpa2.exceptions import ConversionImpossible, OwnerDoesntExist, NoOwners, NoCategoryType, \
+    DateWithoutStartDate, DateWithInvalidStartDate, DateWithoutEndDate, DateWithInvalidEndDate
 
 class Forening(models.Model):
     id = models.IntegerField(db_column='gr_id', primary_key=True)
