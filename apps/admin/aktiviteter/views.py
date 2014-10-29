@@ -521,4 +521,8 @@ def turleder_search(request):
     }))
 
 def failed_imports(request):
-    return render(request, 'common/admin/aktiviteter/failed_imports.html')
+    # Look up failed imports for all underlying foreninger as well
+    foreninger = request.active_forening.get_with_children_deep()
+    failed_imports = ConversionFailure.objects.filter(foreninger__in=foreninger).order_by('name')
+    context = {'failed_imports': failed_imports}
+    return render(request, 'common/admin/aktiviteter/failed_imports.html', context)

@@ -24,6 +24,39 @@
 
 <div class="aktivitet-failed-imports">
 
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Arrangør</th>
+          <th>Aktivitet</th>
+          <th>Problem</th>
+        </tr>
+      </thead>
+
+      {% for fail in failed_imports %}
+
+        <tr>
+          <td>
+            {% for forening in fail.foreninger.all %}
+              {{ forening.name }}
+              {% if not forloop.last %}
+                <br>
+              {% endif %}
+            {% endfor %}
+          </td>
+          <td>
+            <a href="http://{{ old_site }}/admin/activity.php?ac_id={{ fail.sherpa2_id }}&amp;act=egenskaper">{{ fail.name }}</a>
+          </td>
+          <td>
+            {{ fail.reason }}
+          </td>
+        </tr>
+
+      {% endfor %}
+    </table>
+  </div>
+
 </div>
 
 {% endblock %}
