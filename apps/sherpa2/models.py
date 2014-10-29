@@ -614,10 +614,10 @@ class Activity(models.Model):
                     else:
                         # One of the owner relations is invalid; skip this import
                         # TODO: handle
-                        raise ConversionImpossible("One of the related 'owner' groups doesn't exist in the new ForeningDB")
+                        raise OwnerDoesntExist("One of the related 'owner' groups doesn't exist in the new ForeningDB")
 
         if len(foreninger) == 0 and len(cabins) == 0:
-            raise ConversionImpossible("No known owners exist for this activity; need at least 1")
+            raise NoOwners("No known owners exist for this activity; need at least 1")
 
         # Check if there's only cabins and use a random one as main
         if len(foreninger) == 0 and len(cabins) > 0:
@@ -730,13 +730,15 @@ class Activity(models.Model):
             for extra in self.get_extras() if extra in Activity.AUDIENCE_CONVERSION_TABLE]
 
     def convert_locations(self):
-        IGNORED_LOCATION_CODES = ['NO_hjelm', 'NO_nordt', 'NO_norfj', 'NO_nordf', 'NO_rana']
         try:
             return self.get_locations()
         except Location.DoesNotExist:
             if self.occurs_in_future():
-                # TODO: Handle
-                raise ConversionImpossible("Future activity with unknown location relation")
+                raise UnknownLocationRelation("Future activity with unknown location relation")
+
+            # For passed activities, we have a hardcoded list of locations we know aren't in use anymore and can
+            # ignore. Reimplement the get_locations() method and ignore any of tose location codes
+            IGNORED_LOCATION_CODES = ['NO_hjelm', 'NO_nordt', 'NO_norfj', 'NO_nordf', 'NO_rana']
 
             locations = []
             for location_code in self.location.split('|'):
@@ -875,8 +877,7 @@ class Activity(models.Model):
                 category_type = category
 
         if category_type is None:
-            # TODO: Handle
-            raise ConversionImpossible("No category_type is specified for this activity")
+            raise NoCategoryType("No category_type is specified for this activity")
 
         return category_type
 
@@ -982,10 +983,10 @@ class ActivityDate(models.Model):
     def convert_start_date(self):
         try:
             if self.date_from is None or self.date_from.strip() == '':
-                raise ConversionImpossible("Date entry has no start date")
+                raise DateWithoutStartDate("Date entry has no start date")
             return self.get_date_from()
         except ValueError:
-            raise ConversionImpossible("Invalid date_from: '%s'" % self.date_from.strip())
+            raise DateWithInvalidStartDate("Invalid date_from: '%s'" % self.date_from.strip())
 
     def convert_end_date(self):
         try:
@@ -995,10 +996,10 @@ class ActivityDate(models.Model):
                     # This was an event in the past, so we'll let this slide and just set end date to the same as start
                     return self.get_date_from()
                 else:
-                    raise ConversionImpossible("Future aktivitet with no end date")
+                    raise DateWithoutEndDate("Future aktivitet with no end date")
             return self.get_date_to()
         except ValueError:
-            raise ConversionImpossible("Invalid date_to: '%s'" % self.date_to.strip())
+            raise DateWithInvalidEndDate("Invalid date_to: '%s'" % self.date_to.strip())
 
     def convert_signup_enabled(self):
         return self.online in [
