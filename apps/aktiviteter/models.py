@@ -353,6 +353,7 @@ class ConversionFailure(models.Model):
     # Note that aktiviteter with no owners should be explicitly listed as they can't be filtered to any forening
     # Not quite sure why related_name can't be set to '+' here
     foreninger = models.ManyToManyField('foreninger.Forening', null=True, related_name='failed_imports')
+    cabins = models.ManyToManyField('aktiviteter.Cabin', null=True, related_name='failed_imports')
     sherpa2_id = models.PositiveIntegerField()
     name = models.CharField(max_length=255)
 
