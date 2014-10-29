@@ -413,7 +413,7 @@ class Activity(models.Model):
         from sherpa2.models import Forening as Sherpa2Forening
 
         if self.owner is None or self.owner.strip() == '':
-            raise ConversionImpossible("No owners specified for this activity; need at least 1")
+            return [], []
 
         foreninger = []
         cabins = []
@@ -626,6 +626,9 @@ class Activity(models.Model):
         from foreninger.models import Forening
 
         foreninger, cabins = self.get_owners()
+
+        if len(foreninger) == 0 and len(cabins) == 0:
+            raise ConversionImpossible("No owners specified for this activity; need at least 1")
 
         # Check if there's only cabins and use a random one as main
         if len(foreninger) == 0 and len(cabins) > 0:
