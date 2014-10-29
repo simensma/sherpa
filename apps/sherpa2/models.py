@@ -407,39 +407,10 @@ class Activity(models.Model):
     lon = models.DecimalField(db_column='ac_lon', null=True, max_digits=65535, decimal_places=65535, blank=True)
     pub_date = models.TextField(db_column='ac_publish_date', blank=True)
 
-    def get_owners(self):
-        from foreninger.models import Forening
-        from aktiviteter.models import Cabin
-        from sherpa2.models import Forening as Sherpa2Forening
-
+    def get_owner_ids(self):
         if self.owner is None or self.owner.strip() == '':
-            return [], []
-
-        foreninger = []
-        cabins = []
-        for id in self.owner.split('|'):
-            if id.strip() == '':
-                continue
-
-            try:
-                foreninger.append(Forening.objects.get(id=id))
-            except Forening.DoesNotExist:
-                # Might be a forening of type 'cabin', check if it exists in our imported Cabin table
-                try:
-                    cabins.append(Cabin.objects.get(sherpa2_id=id))
-                except Cabin.DoesNotExist:
-                    if not Sherpa2Forening.objects.filter(id=id).exists():
-                        # Ok, this is an age-old Forening; ignore the relation
-                        pass
-                    else:
-                        # One of the owner relations is invalid; skip this import
-                        # TODO: handle
-                        raise ConversionImpossible("One of the related 'owner' groups doesn't exist in the new ForeningDB")
-
-        if len(foreninger) == 0 and len(cabins) == 0:
-            raise ConversionImpossible("No owners left after cleanup; need at least 1")
-
-        return foreninger, cabins
+            return []
+        return [int(id) for id in self.owner.split('|') if id.strip() != '']
 
     def get_counties(self):
         if self.county is None:
@@ -624,11 +595,29 @@ class Activity(models.Model):
         We'll assume that the forening with the lowest 'type' (turgruppe/forening/sentral) is the main forening.
         If there are >1 of the same lowest type, we'll have to pick one at random."""
         from foreninger.models import Forening
+        from aktiviteter.models import Cabin
+        from sherpa2.models import Forening as Sherpa2Forening
 
-        foreninger, cabins = self.get_owners()
+        foreninger = []
+        cabins = []
+        for id in self.get_owner_ids():
+            try:
+                foreninger.append(Forening.objects.get(id=id))
+            except Forening.DoesNotExist:
+                # Might be a forening of type 'cabin', check if it exists in our imported Cabin table
+                try:
+                    cabins.append(Cabin.objects.get(sherpa2_id=id))
+                except Cabin.DoesNotExist:
+                    if not Sherpa2Forening.objects.filter(id=id).exists():
+                        # Ok, this is an age-old Forening; ignore the relation
+                        pass
+                    else:
+                        # One of the owner relations is invalid; skip this import
+                        # TODO: handle
+                        raise ConversionImpossible("One of the related 'owner' groups doesn't exist in the new ForeningDB")
 
         if len(foreninger) == 0 and len(cabins) == 0:
-            raise ConversionImpossible("No owners specified for this activity; need at least 1")
+            raise ConversionImpossible("No known owners exist for this activity; need at least 1")
 
         # Check if there's only cabins and use a random one as main
         if len(foreninger) == 0 and len(cabins) > 0:
@@ -652,7 +641,8 @@ class Activity(models.Model):
                     'rest:cabin': cabins,
                 }
 
-        raise Exception("Tried to convert empty list of foreninger")
+        # Note that we should never reach this code path
+        raise Exception("Invalid code path; expected one of the previous clauses to return")
 
     def convert_description(self):
         # TODO: Handle HTML
