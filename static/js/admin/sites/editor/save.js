@@ -18,7 +18,6 @@ $(function() {
     var statusIcon = '<i class="glyphicon glyphicon-heart"></i>';
     function updateSaveCount() {
         lastSaveCount += 1;
-        save_button.html(statusIcon + ' Lagre (' + lastSaveCount + ')');
 
         if(lastSaveCount == NO_SAVE_WARNING_TIMEOUT) {
             no_save_warning.show();
@@ -200,7 +199,9 @@ $(function() {
 
         if(abort) {
             updateSaveCount();
+            statusIcon = '<i class="glyphicon glyphicon-heart"></i>';
             save_button.prop('disabled', false);
+            save_button.html(statusIcon + ' Lagre');
             if(typeof(fail) == 'function') {
                 fail();
             }
@@ -215,7 +216,11 @@ $(function() {
             result = JSON.parse(result);
 
             lastSaveCount = 0;
+
             statusIcon = '<i class="glyphicon glyphicon-heart"></i>';
+            save_button.prop('disabled', false);
+            save_button.html(statusIcon + ' Lagre');
+
             save_button.removeClass('btn-danger').addClass('btn-success');
             if(typeof(done) == 'function') {
                 done();
