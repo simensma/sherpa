@@ -626,10 +626,11 @@ class Activity(models.Model):
                         pass
                     else:
                         # One of the owner relations is invalid; skip this import
-                        # TODO: handle
+                        self.save_conversion_failure(reason='owner_doesnotexist', include_foreninger=False)
                         raise OwnerDoesNotExist("One of the related 'owner' groups doesn't exist in the new ForeningDB")
 
         if len(foreninger) == 0 and len(cabins) == 0:
+            self.save_conversion_failure(reason='no_owners', include_foreninger=False)
             raise NoOwners("No known owners exist for this activity; need at least 1")
 
         # Check if there's only cabins and use a random one as main
@@ -891,6 +892,7 @@ class Activity(models.Model):
                 category_type = category
 
         if category_type is None:
+            self.save_conversion_failure(reason='no_category_type')
             raise NoCategoryType("No category_type is specified for this activity")
 
         return category_type
@@ -899,6 +901,29 @@ class Activity(models.Model):
         if self.pub_date is None or self.pub_date.strip() == '':
             return date.today()
         return self.get_pub_date()
+
+    def save_conversion_failure(self, reason, include_foreninger=True):
+        """Should be called if a conversion for this activity failed.
+        include_foreninger can be set to False if foreninger were part of the reason for failure, in which
+        case these relations won't be saved. Otherwise, we'll try to save a reference to the owners in order to
+        filter on failures later."""
+        from aktiviteter.models import ConversionFailure
+        if include_foreninger:
+            converted = self.convert_foreninger()
+            foreninger = [converted['main:forening']] + converted['rest:forening']
+            cabins = [converted['main:cabin']] + converted['rest:cabin']
+        else:
+            foreninger = []
+            cabins = []
+
+        failure = ConversionFailure(
+            sherpa2_id=self.id,
+            name=self.name.strip(),
+            reason=reason,
+        )
+        failure.save()
+        failure.foreninger = foreninger
+        failure.cabins = cabins
 
     def __unicode__(self):
         return u'%s: %s' % (self.pk, self.name)
@@ -997,9 +1022,11 @@ class ActivityDate(models.Model):
     def convert_start_date(self):
         try:
             if self.date_from is None or self.date_from.strip() == '':
+                self.activity.save_conversion_failure(reason='date_without_start_date')
                 raise DateWithoutStartDate("Date entry has no start date")
             return self.get_date_from()
         except ValueError:
+            self.activity.save_conversion_failure(reason='date_with_invalid_start_date')
             raise DateWithInvalidStartDate("Invalid date_from: '%s'" % self.date_from.strip())
 
     def convert_end_date(self):
@@ -1010,9 +1037,11 @@ class ActivityDate(models.Model):
                     # This was an event in the past, so we'll let this slide and just set end date to the same as start
                     return self.get_date_from()
                 else:
+                    self.activity.save_conversion_failure(reason='date_without_end_date')
                     raise DateWithoutEndDate("Future aktivitet with no end date")
             return self.get_date_to()
         except ValueError:
+            self.activity.save_conversion_failure(reason='date_with_invalid_end_date')
             raise DateWithInvalidEndDate("Invalid date_to: '%s'" % self.date_to.strip())
 
     def convert_signup_enabled(self):
