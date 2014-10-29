@@ -347,3 +347,24 @@ class Cabin(models.Model):
 
     def __unicode__(self):
         return u'%s/%s: %s' % (self.pk, self.sherpa2_id, self.name)
+
+class ImportFailure(models.Model):
+    """A list of aktiviteter that we couldn't import from Sherpa2"""
+    # Note that aktiviteter with no owners should be explicitly listed as they can't be filtered to any forening
+    # Not quite sure why related_name can't be set to '+' here
+    foreninger = models.ManyToManyField('foreninger.Forening', null=True, related_name='failed_imports')
+    sherpa2_id = models.PositiveIntegerField()
+    name = models.CharField(max_length=255)
+
+    # The list of reason choices should correspond to the exceptions in the sherpa2 app inheriting from
+    # ConversionImpossible
+    REASON_CHOICES = (
+        ('owner_doesnotexist', ''),
+        ('no_owners', ''),
+        ('no_category_type', ''),
+        ('date_without_start_date', ''),
+        ('date_with_invalid_start_date', ''),
+        ('date_without_end_date', ''),
+        ('date_with_invalid_end_date', ''),
+    )
+    reason = models.CharField(max_length=255, choices=REASON_CHOICES)
