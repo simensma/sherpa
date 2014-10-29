@@ -587,9 +587,15 @@ class Activity(models.Model):
         aktivitet.save()
 
         # Now delete and re-convert all date objects
-        aktivitet.dates.all().delete()
-        for sherpa2_date in self.dates.all():
-            sherpa2_date.convert(aktivitet)
+        try:
+            aktivitet.dates.all().delete()
+            for sherpa2_date in self.dates.all():
+                sherpa2_date.convert(aktivitet)
+        except ConversionImpossible:
+            # One of the dates can't be converted - we're not handling the exception here, but we've already created
+            # the Aktivitet-object, so we should delete that
+            aktivitet.delete()
+            raise
 
     def convert_foreninger(self):
         """sherpa2 models foreninger as a flat list, while sherpa3 separates the main forening and co_foreninger.
