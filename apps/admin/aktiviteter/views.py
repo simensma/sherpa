@@ -524,5 +524,14 @@ def failed_imports(request):
     # Look up failed imports for all underlying foreninger as well
     foreninger = request.active_forening.get_with_children_deep()
     failed_imports = ConversionFailure.objects.filter(foreninger__in=foreninger).order_by('name')
+
+    paginator = Paginator(failed_imports, 25)
+    try:
+        failed_imports = paginator.page(request.GET.get('page'))
+    except PageNotAnInteger:
+        failed_imports = paginator.page(1)
+    except EmptyPage:
+        failed_imports = paginator.page(paginator.num_pages)
+
     context = {'failed_imports': failed_imports}
     return render(request, 'common/admin/aktiviteter/failed_imports.html', context)

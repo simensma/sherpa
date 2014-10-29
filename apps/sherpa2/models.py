@@ -940,6 +940,7 @@ class Activity(models.Model):
                 sherpa3_aktivitet = None
 
             try:
+                print("Doing: %s" % sherpa2_aktivitet.id)
                 sherpa2_aktivitet.convert(sherpa3_aktivitet)
             except ConversionImpossible:
                 # Ignore anything that can't be imported for now.

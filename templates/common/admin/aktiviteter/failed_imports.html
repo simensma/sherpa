@@ -28,6 +28,12 @@
 
 <div class="aktivitet-failed-imports" data-dnt-container="aktivitet-failed-imports">
 
+  <p>
+    Viser {{ failed_imports.object_list|length }} av {{ failed_imports.paginator.count }} feilede importeringer
+  </p>
+
+  {% include "common/admin/aktiviteter/failed_imports_pagination.html" %}
+
   <div class="table-responsive">
     <table class="table table-striped">
       <thead>
@@ -63,6 +69,8 @@
       {% endfor %}
     </table>
   </div>
+
+  {% include "common/admin/aktiviteter/failed_imports_pagination.html" %}
 
 </div>
 
