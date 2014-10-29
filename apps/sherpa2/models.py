@@ -600,6 +600,12 @@ class Activity(models.Model):
                 except requests.ConnectionError:
                     # We're unable to download the referenced image - skip it for now.
                     pass
+                except requests.packages.urllib3.exceptions.LocationParseError:
+                    # Any problems with the URI might throw this. One example of this:
+                    # http://www2.turistforeningen.nofile://server/eva/mail/eudora/attach/017%20Lavendel.jpg
+                    # See https://sentry.turistforeningen.no/turistforeningen/sherpa/group/34471/
+                    # Simply ignore images with this occurence
+                    pass
 
         # All converted images are accounted for; delete all others
         aktivitet.images.filter(order__gte=len(converted_images)).delete()
