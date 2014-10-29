@@ -488,10 +488,7 @@ class Activity(models.Model):
             aktivitet = Aktivitet()
 
         # Delete any existing conversion failure object
-        try:
-            ConversionFailure.objects.get(sherpa2_id=self.id).delete()
-        except ConversionFailure.DoesNotExist:
-            pass
+        ConversionFailure.objects.filter(sherpa2_id=self.id).delete()
 
         # Perform conversions - these may throw exceptions
         foreninger = self.convert_foreninger()
