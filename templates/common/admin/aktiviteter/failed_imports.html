@@ -7,6 +7,10 @@
 
 {% block title %}Aktiviteter — {{ block.super }}{% endblock %}
 
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/aktiviteter/failed_imports.js"></script>
+{% endblock %}
+
 {% block admin_menu %}{% with 'aktiviteter' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
 
 {% block body %}
@@ -22,7 +26,7 @@
   </div>
 </div><!-- /.row -->
 
-<div class="aktivitet-failed-imports">
+<div class="aktivitet-failed-imports" data-dnt-container="aktivitet-failed-imports">
 
   <div class="table-responsive">
     <table class="table table-striped">
