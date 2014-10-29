@@ -12,4 +12,5 @@ urlpatterns = patterns('admin.aktiviteter.views',
     url(r'^rediger/dato/slett/$', 'delete_date_preview'),
     url(r'^pameldte/(?P<aktivitet>\d+)/$', 'participants'),
     url(ur'^turledersøk/$', 'turleder_search'),
+    url(r'^manglende/$', 'failed_imports'),
 )

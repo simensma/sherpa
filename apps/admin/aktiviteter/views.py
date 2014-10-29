@@ -515,3 +515,6 @@ def turleder_search(request):
         'results': render_to_string('common/admin/aktiviteter/edit/turleder_search_results.html', context),
         'max_hits_exceeded': len(users) > MAX_HITS or len(actors) > MAX_HITS
     }))
+
+def failed_imports(request):
+    return render(request, 'common/admin/aktiviteter/failed_imports.html')

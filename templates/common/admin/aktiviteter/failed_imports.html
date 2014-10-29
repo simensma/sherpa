@@ -1,0 +1,29 @@
+{% extends 'common/admin/layout.html' %}
+
+{% load rowiterator %}
+{% load date_fromto %}
+{% load query_transform %}
+{% load highlight %}
+
+{% block title %}Aktiviteter — {{ block.super }}{% endblock %}
+
+{% block admin_menu %}{% with 'aktiviteter' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="col-lg-12">
+    <h1>Turer og aktiviteter <small>publisér turer, aktiviteter, kurs og dugnadsarbeid</small></h1>
+    <ol class="breadcrumb">
+      <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
+      <li><a href="{% url 'admin.aktiviteter.views.index' %}">Turer og aktiviteter</a></li>
+      <li><a href="{% url 'admin.aktiviteter.views.index' %}">Manglende turer</a></li>
+    </ol>
+  </div>
+</div><!-- /.row -->
+
+<div class="aktivitet-failed-imports">
+
+</div>
+
+{% endblock %}
