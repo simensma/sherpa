@@ -360,12 +360,15 @@ class ConversionFailure(models.Model):
     # The list of reason choices should correspond to the exceptions in the sherpa2 app inheriting from
     # ConversionImpossible
     REASON_CHOICES = (
-        ('owner_doesnotexist', ''),
-        ('no_owners', ''),
-        ('no_category_type', ''),
-        ('date_without_start_date', ''),
-        ('date_with_invalid_start_date', ''),
-        ('date_without_end_date', ''),
-        ('date_with_invalid_end_date', ''),
+        ('owner_doesnotexist', 'Aktiviteten er koblet til en arrangør som ikke finnes i nye Sherpa'),
+        ('no_owners', 'Aktiviteten har ingen arrangør.'),
+        ('no_category_type', 'Aktiviteten er ikke koblet til riktige kategorier.'),
+        ('date_without_start_date', 'Aktiviteten har en avgang uten noen startdato.'),
+        ('date_with_invalid_start_date', 'Aktiviteten har en avgang med ugyldig startdato.'),
+        ('date_without_end_date', 'Aktiviteten har en avgang uten noen sluttdato.'),
+        ('date_with_invalid_end_date', 'Aktiviteten har en avgang med ugyldig sluttdato.'),
     )
     reason = models.CharField(max_length=255, choices=REASON_CHOICES)
+
+    def get_reason(self):
+        return [r[1] for r in self.REASON_CHOICES if r[0] == self.reason][0]
