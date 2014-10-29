@@ -596,6 +596,7 @@ class Activity(models.Model):
                         text='',
                         photographer='',
                         order=order,
+                        sherpa2_url=old_image['url'],
                     ))
                 except requests.ConnectionError:
                     # We're unable to download the referenced image - skip it for now.
