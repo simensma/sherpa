@@ -1,4 +1,5 @@
 # encoding: utf-8
+from datetime import datetime
 import logging
 import sys
 
@@ -15,6 +16,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         try:
             Activity.sync_all()
+            logger.info(u"Aktivitetssynkronisering fullført uten feil: %s" % datetime.now())
         except:
             logger.error(u"Uhåndtert exception ved synkronisering av aktiviteter",
                 exc_info=sys.exc_info(),
