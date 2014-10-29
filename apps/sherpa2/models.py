@@ -734,7 +734,8 @@ class Activity(models.Model):
             return self.get_locations()
         except Location.DoesNotExist:
             if self.occurs_in_future():
-                raise UnknownLocationRelation("Future activity with unknown location relation")
+                # Isn't known to occur, so we're not handling it explicitly for now - just re-raise the exception
+                raise
 
             # For passed activities, we have a hardcoded list of locations we know aren't in use anymore and can
             # ignore. Reimplement the get_locations() method and ignore any of tose location codes

@@ -8,9 +8,6 @@ class OwnerDoesntExist(ConversionImpossible):
 class NoOwners(ConversionImpossible):
     pass
 
-class UnknownLocationRelation(ConversionImpossible):
-    pass
-
 class NoCategoryType(ConversionImpossible):
     pass
 
