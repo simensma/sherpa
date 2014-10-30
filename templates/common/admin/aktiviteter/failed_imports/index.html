@@ -48,6 +48,24 @@
     </div>
   {% endif %}
 
+  <form action="{% url 'admin.aktiviteter.views.failed_imports' %}" method="post">
+    {% csrf_token %}
+    <div class="input-group">
+      <input class="form-control" type="text" name="search" placeholder="Søk etter turer fra gamle Sherpa (kun navn/tittel)..." value="{{ search_query }}">
+      <span class="input-group-btn">
+        <button class="btn btn-default member-search">
+          <i class="fa fa-search"></i>
+        </button>
+      </span>
+    </div>
+  </form>
+
+  {% if search_query %}
+    <p>
+      Søker etter "<strong>{{ search_query }}</strong>". <a href="{% url 'admin.aktiviteter.views.failed_imports' %}">Vis alle manglende turer for {{ active_forening.name }}</a>
+    </p>
+  {% endif %}
+
   {% include "common/admin/aktiviteter/failed_imports/pagination.html" %}
 
   <div class="table-responsive">

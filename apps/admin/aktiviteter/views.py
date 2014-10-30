@@ -536,8 +536,15 @@ def failed_imports(request):
     }
 
     just_forening = 'inkluder-turgrupper' not in request.GET
+    search_query = ''
 
-    if just_forening:
+    if request.method == 'POST' and 'search' in request.POST:
+        search_query = request.POST['search'].strip()
+        failed_imports = ConversionFailure.objects.all()
+        for word in search_query.split():
+            failed_imports = failed_imports.filter(name__icontains=word.strip())
+        failed_imports = failed_imports.order_by('-latest_date')
+    elif just_forening:
         failed_imports = failed_imports_just_forening.order_by('-latest_date')
     else:
         failed_imports = failed_imports_with_children.order_by('-latest_date')
@@ -554,5 +561,6 @@ def failed_imports(request):
         'just_forening': just_forening,
         'failed_imports': failed_imports,
         'counts': counts,
+        'search_query': search_query,
     }
     return render(request, 'common/admin/aktiviteter/failed_imports/index.html', context)
