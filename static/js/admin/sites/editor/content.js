@@ -32,6 +32,7 @@ $(function() {
         $(this).attr('contenteditable', 'true');
         $(this).focus();
     });
+
     $(document).on('focusout', 'article div.content.html, article div.content.lede', function() {
         if($(this).text().trim() === "" && $(this).children("hr").length === 0) {
             $(this).removeAttr('contenteditable');
@@ -255,8 +256,11 @@ $(function() {
         var original_crop = JSON.parse(content.attr('data-json')).crop;
         var ratio = $(this).attr('data-ratio');
         var aspect_ratio;
-        if(ratio !== 'free') {
+
+        if (ratio !== 'free') {
             aspect_ratio = ratio.split(":")[0] / ratio.split(":")[1];
+        } else {
+            aspect_ratio = false;
         }
 
         // Highlight the marked button
@@ -280,20 +284,39 @@ $(function() {
             JcropApi = this;
         });
 
-        // Reapply the original selection to the cropper ui, if any
-        if(original_crop !== undefined) {
-            // In case we're cropping in a different column size, factor in the difference
-            var image_width_ratio = content.width() / original_crop.width;
-            var image_height_ratio = content.height() / original_crop.height;
+        var x1, y1, x2, y2;
+        var content_width = content.width();
+        var content_height = content.height();
 
+        // Reapply the original selection to the cropper ui, if any
+        if (original_crop !== undefined) {
+
+            // In case we're cropping in a different column size, factor in the difference
+            var image_width_ratio = content_width / original_crop.width;
+            var image_height_ratio = content_height / original_crop.height;
+
+            x1 = original_crop.selection.x * image_width_ratio;
+            y1 = original_crop.selection.y * image_height_ratio;
+            x2 = original_crop.selection.x2 * image_width_ratio;
+            y2 = original_crop.selection.y2 * image_height_ratio;
+
+        } else {
+
+            if (ratio === 'free') {
+                x1 = 0;
+                y1 = 0;
+                x2 = content_width;
+                y2 = content_height;
+            }
+        }
+
+        if (typeof x1 === 'number' && typeof x2 === 'number' && typeof y1 === 'number' && typeof y2 === 'number') {
             // Why does it take an array here, while it gives us an object in the event!? Tsk
             JcropApi.setSelect([
-                original_crop.selection.x * image_width_ratio,
-                original_crop.selection.y * image_height_ratio,
-                original_crop.selection.x2 * image_width_ratio,
-                original_crop.selection.y2 * image_height_ratio,
+                x1, y1, x2, y2
             ]);
         }
+
     });
 
     $(document).on('click', 'div.crop-control div.submit button.use', function(e) {
