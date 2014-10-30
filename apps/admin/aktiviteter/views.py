@@ -538,8 +538,8 @@ def failed_imports(request):
     just_forening = 'inkluder-turgrupper' not in request.GET
     search_query = ''
 
-    if request.method == 'POST' and 'search' in request.POST:
-        search_query = request.POST['search'].strip()
+    if 'q' in request.GET:
+        search_query = request.GET['q'].strip()
         failed_imports = ConversionFailure.objects.all()
         for word in search_query.split():
             failed_imports = failed_imports.filter(name__icontains=word.strip())

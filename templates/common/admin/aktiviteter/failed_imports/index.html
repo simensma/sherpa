@@ -48,10 +48,9 @@
     </div>
   {% endif %}
 
-  <form action="{% url 'admin.aktiviteter.views.failed_imports' %}" method="post">
-    {% csrf_token %}
+  <form action="{% url 'admin.aktiviteter.views.failed_imports' %}" method="get">
     <div class="input-group">
-      <input class="form-control" type="text" name="search" placeholder="Søk etter turer fra gamle Sherpa (kun navn/tittel)..." value="{{ search_query }}">
+      <input class="form-control" type="text" name="q" placeholder="Søk etter turer fra gamle Sherpa (kun navn/tittel)..." value="{{ search_query }}">
       <span class="input-group-btn">
         <button class="btn btn-default member-search">
           <i class="fa fa-search"></i>
