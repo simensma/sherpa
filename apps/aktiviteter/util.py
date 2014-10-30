@@ -2,6 +2,7 @@ from datetime import datetime
 import json
 
 from django.db.models import Q
+from django.contrib.gis import geos
 from django.core.paginator import Paginator, EmptyPage
 
 from aktiviteter.models import AktivitetDate
@@ -21,6 +22,14 @@ def filter_aktivitet_dates(filter):
 
     if 'difficulties' in filter and len(filter['difficulties']) > 0:
         dates = dates.filter(aktivitet__difficulty__in=filter['difficulties'])
+
+    if 'lat_lng' in filter and len(filter['lat_lng'].split(',')) == 2:
+        latlng = filter['lat_lng'].split(',')
+
+        # Rule of thumb for buffer; 1 degree is about 100 km
+        boundary = geos.Point(float(latlng[0]), float(latlng[1])).buffer(0.5)
+
+        dates = dates.filter(aktivitet__start_point__within=boundary)
 
     try:
         if 'start_date' in filter and filter['start_date'] != '':
