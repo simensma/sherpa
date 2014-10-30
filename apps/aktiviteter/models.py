@@ -55,6 +55,8 @@ class Aktivitet(models.Model):
     # Applicable for aktiviteter imported from sherpa2
     sherpa2_id = models.IntegerField(null=True)
 
+    objects = models.GeoManager()
+
     def __unicode__(self):
         return u'%s: %s' % (self.pk, self.title)
 
@@ -241,6 +243,8 @@ class AktivitetDate(models.Model):
     contact_custom_name = models.CharField(max_length=255)
     contact_custom_phone = models.CharField(max_length=255)
     contact_custom_email = models.CharField(max_length=255)
+
+    objects = models.GeoManager()
 
     def __unicode__(self):
         return u'%s (%s, aktivitet: <%s>)' % (self.pk, self.start_date, self.aktivitet)
