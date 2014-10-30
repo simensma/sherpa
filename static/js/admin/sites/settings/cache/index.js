@@ -24,11 +24,6 @@ $(function() {
         deleteCache($(this), 'page', id);
     });
 
-    table.find("button.blog-widget").click(function() {
-        $("div.delete-success span.name").text("Bloggwidget-cachen");
-        deleteCache($(this), 'blog-widget');
-    });
-
     table.find("button.article").click(function() {
         var id = $("select[name='article']").val();
         if(id == "" || isNaN(id)) {

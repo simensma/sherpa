@@ -53,19 +53,6 @@ def delete(request, site):
         cache.delete('version.%s.title' % version.id)
         cache.delete('version.%s.thumbnail.small' % version.id)
         cache.delete('version.%s.thumbnail.medium' % version.id)
-    elif request.POST['key'] == 'blog-widget':
-        cache.delete('widgets.blog.category.Alle')
-        # Chances are, this was done to show it on the frontpage, so just delete the frontpage-cache too since it's cached twice.
-        try:
-            id = Version.objects.get(
-                active=True,
-                variant__segment__isnull=True,
-                variant__page__slug='',
-                variant__page__site=active_site,
-            ).id
-            cache.delete('content.version.%s' % id)
-        except Version.DoesNotExist:
-            pass
     elif request.POST['key'] == 'instagram':
         cache.delete('instagram.url.%s' % instagram_initial_url)
     return HttpResponse()

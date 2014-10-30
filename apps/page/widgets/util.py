@@ -15,7 +15,6 @@ from page.widgets.quote import QuoteWidget
 from page.widgets.carousel import CarouselWidget
 from page.widgets.articles import ArticlesWidget
 from page.widgets.aktivitet_listing import AktivitetListingWidget
-from page.widgets.blog import BlogWidget
 from page.widgets.embed import EmbedWidget
 from page.widgets.fact import FactWidget
 from page.widgets.button import ButtonWidget
@@ -27,7 +26,6 @@ WIDGETS = {
     'carousel': CarouselWidget(),
     'articles': ArticlesWidget(),
     'aktivitet_listing': AktivitetListingWidget(),
-    'blog': BlogWidget(),
     'embed': EmbedWidget(),
     'fact': FactWidget(),
     'button': ButtonWidget(),
