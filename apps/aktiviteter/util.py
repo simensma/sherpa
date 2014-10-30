@@ -26,7 +26,7 @@ def filter_aktivitet_dates(filter):
     if 'lat_lng' in filter and len(filter['lat_lng'].split(',')) == 2:
         latlng = filter['lat_lng'].split(',')
 
-        # Rule of thumb for butter; 1 degree is about 100 km
+        # Rule of thumb for buffer; 1 degree is about 100 km
         boundary = geos.Point(float(latlng[0]), float(latlng[1])).buffer(0.5)
 
         dates = dates.filter(
