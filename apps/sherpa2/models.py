@@ -775,6 +775,9 @@ class Activity(models.Model):
     def convert_categories(self):
         """The wrapper for converting category, category type and subcategories"""
         main_category = self.convert_category()
+        # Note that while category_type "semantically" should come before category_tags, we will convert category_tags
+        # first here because they will rename some tags, and the category_type logic is more likely to find matches
+        # after that conversion is done.
         category_tags = self.convert_category_tags()
         category_type = self.convert_category_type(main_category, category_tags)
         return (main_category, category_type, category_tags)
