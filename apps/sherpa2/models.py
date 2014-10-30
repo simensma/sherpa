@@ -507,6 +507,8 @@ class Activity(models.Model):
         aktivitet.code = self.code.strip()
         aktivitet.title = self.name.strip()
         aktivitet.description = description
+        aktivitet.category = category
+        aktivitet.category_type = category_type
         aktivitet.pub_date = pub_date
         aktivitet.start_point = self.get_start_point()
         aktivitet.locations = json.dumps(locations)
@@ -521,8 +523,6 @@ class Activity(models.Model):
         aktivitet.co_foreninger = foreninger['rest:forening']
         aktivitet.co_foreninger_cabin = foreninger['rest:cabin']
         aktivitet.counties = self.get_counties()
-        aktivitet.category = category
-        aktivitet.category_type = category_type
         aktivitet.category_tags.clear()
         for tag in category_tags:
             obj, created = Tag.objects.get_or_create(name=tag)
