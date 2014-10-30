@@ -8,12 +8,19 @@ $(function() {
 
     var header = $("div.editor-header");
     var save_button = header.find("button.save");
-    var no_save_warning = $("div.no-save-warning");
     var article = $("article");
     var placeholder_image_path = article.attr('data-dnt-placeholder-image-path');
     var placeholder_image_warning = article.attr('data-dnt-placeholder-image-warning').replace(/\\n/g, '\n');
     var last_saved_msg_container = header.find('[data-dnt-container="last-saved-msg"]');
-
+    var alerts_container = header.find('[data-dnt-container="alerts"]');
+    var no_save_warning = $(
+        '<div class="alert alert-danger alert-dismissible no-save-warning jq-hide" role="alert">' +
+        '<div class="container">' +
+        '<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
+        '<p><strong>Advarsel!</strong> Du har ikke lagret på over 5 minutter! Du bør vurdere å lagre nå. Hvis et uhell skulle oppstå vil du miste ulagrede endringer.</p>' +
+        '</div>' +
+        '</div>'
+    );
     var lastSaveCount = 0;
     var lastSavedMinutesAgo = 0;
     var updateSaveCountID;
@@ -28,7 +35,25 @@ $(function() {
         }
 
         if (lastSaveCount == NO_SAVE_WARNING_TIMEOUT) {
-            no_save_warning.show();
+
+            no_save_warning.appendTo(alerts_container);
+
+            var no_save_warning_height = no_save_warning.outerHeight();
+            no_save_warning.css('margin-top', -no_save_warning_height);
+
+            no_save_warning.removeClass('jq-hide');
+
+            no_save_warning.animate(
+                {
+                    'margin-top': 0
+                },
+                {
+                    duration: 250,
+                    complete: function() {
+                        $(this).css('z-index', 0);
+                    }
+                }
+            );
         }
         updateSaveCountID = setTimeout(updateSaveCount, 1000);
     }

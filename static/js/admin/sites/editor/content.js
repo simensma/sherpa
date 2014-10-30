@@ -219,13 +219,19 @@ $(function() {
         var toolbar_container = $('.sticky [data-dnt-container="toolbar"]');
         var crop_control = insertion_templates.find("div.crop-control").clone().appendTo(toolbar_container);
         var toolbar_height = toolbar.outerHeight();
-        toolbar.css('top', -toolbar_height);
+        toolbar.css('margin-top', -toolbar_height);
         toolbar.removeClass('jq-hide');
-        toolbar.animate({
-            top: 0,
-            easing: 'easeOutCubic',
-            duration: 200
-        });
+        toolbar.animate(
+            {
+                'margin-top': 0
+            },
+            {
+                duration: 250,
+                complete: function() {
+                    $(this).css('z-index', 0);
+                }
+            }
+        );
 
 
         crop_control.data('original-content', content);

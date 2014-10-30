@@ -224,7 +224,6 @@
                     </button>
                     <button
                       class="btn btn-success preview"
-                      data-href="{% url 'admin.sites.pages.page.preview' active_site.id version.id %}"
                       data-toggle="tooltip"
                       data-placement="top"
                       title="OBS! Når du forhåndsviser siden lagres den først, slik at alle endringer du har gjort blir lagret og evt. publisert dersom siden er publisert.">
@@ -238,9 +237,16 @@
               </div>
             </div>
           </div>
-          <div class="toolbar">
-            <div class="wrapper jq-hide">
-              <div class="container" data-dnt-container="toolbar"></div>
+          <div class="absolutes">
+            <div class="wrapper">
+              <div class="toolbar">
+                <div class="wrapper jq-hide">
+                  <div class="container" data-dnt-container="toolbar"></div>
+                </div>
+              </div>
+              <div class="alerts">
+                <div class="wrapper" data-dnt-container="alerts"></div>
+              </div>
             </div>
           </div>
         </div>

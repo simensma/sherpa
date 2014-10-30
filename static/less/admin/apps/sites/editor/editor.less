@@ -47,6 +47,7 @@ nav.navbar {
   display: inline-block;
   padding: 6px 12px 6px 0;
   margin-bottom: 0;
+  line-height: 1.42857143;
 }
 
 div.editor-header {
@@ -95,14 +96,48 @@ div.editor-header {
         border-bottom: 1px solid @editor-form-border-color;
       }
 
-      .toolbar {
+      .absolutes {
         position: relative;
-        z-index: -1;
 
         > .wrapper {
           position: absolute;
-          top: 0;
-          left: 0;
+          width: 100%;
+
+          .alerts {
+            .alert {
+              margin-bottom: 0;
+              border-width: 0 0 1px 0;
+              border-radius: 0;
+              padding: 10px;
+              z-index: -1;
+              position: relative;
+
+              &.alert-dismissable {
+                .container {
+                  padding-right: 35px;
+                }
+              }
+
+              .close {
+                top: 2px;
+                right: 0;
+                font-size: 21px !important;
+              }
+            }
+            p:last-child {
+              margin-bottom: 0;
+            }
+          }
+        }
+      }
+
+      .toolbar {
+        > .wrapper {
+          position: relative;
+          z-index: -1;
+          // position: absolute;
+          // top: 0;
+          // left: 0;
           width: 100%;
           padding: 15px 0;
           background-color: @editor-form-background-color;

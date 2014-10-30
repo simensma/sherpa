@@ -1,15 +1,5 @@
 {% load render_widget %}
 
-<div class="row">
-  <div class="col-md-6 col-md-offset-3">
-    <div class="no-save-warning alert alert-danger jq-hide">
-      <a class="close">x</a>
-      <strong>Advarsel!</strong><br>
-      Du har ikke lagret artikkelen på over 5 minutter! Du bør vurdere å lagre nå, hvis ikke kan du miste endringene du har gjort hvis et uhell oppstår.
-    </div>
-  </div>
-</div>
-
 <article
   data-dnt-save-url="{% url 'admin.sites.pages.content.save' active_site.id version.id %}"
   data-dnt-render-widget-url="{% url 'admin.sites.pages.content.reload_raw_widget' active_site.id %}"
@@ -340,12 +330,14 @@
         </div>
       </div>
       <div class="submit pull-right">
-        <button class="btn btn-success use">
-          <i class="glyphicon glyphicon-check"></i> Bruk utsnittet
-        </button>
-        <button class="btn btn-default remove">
-          <i class="glyphicon glyphicon-remove"></i> Vis hele bildet
-        </button>
+        <div class="col-sm-12">
+          <button class="btn btn-success use">
+            <i class="glyphicon glyphicon-check"></i> Bruk utsnittet
+          </button>
+          <button class="btn btn-default remove">
+            <i class="glyphicon glyphicon-remove"></i> Vis hele bildet
+          </button>
+        </div>
       </div>
     </div>
   </div>
