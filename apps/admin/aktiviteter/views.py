@@ -525,7 +525,7 @@ def failed_imports(request):
     foreninger = request.active_forening.get_with_children_deep()
     failed_imports = ConversionFailure.objects.filter(foreninger__in=foreninger).order_by('-latest_date')
 
-    paginator = Paginator(failed_imports, 25)
+    paginator = Paginator(failed_imports, 40)
     try:
         failed_imports = paginator.page(request.GET.get('page'))
     except PageNotAnInteger:
