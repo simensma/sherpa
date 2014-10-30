@@ -165,6 +165,7 @@ $(function() {
     }
 
     $('input[name="ssr_id"]').select2({
+        allowClear: true,
         placeholder: 'Finn sted',
         minimumInputLength: 2,
         escapeMarkup: function (m) { return m; },
