@@ -917,10 +917,21 @@ class Activity(models.Model):
             foreninger = []
             cabins = []
 
+        # If any date objects are parseable, save the latest known date
+        latest_date = None
+        for date in self.dates.all():
+            try:
+                new_date = date.get_date_from()
+                if latest_date is None or new_date > latest_date:
+                    latest_date = new_date
+            except:
+                pass
+
         failure = ConversionFailure(
             sherpa2_id=self.id,
             name=self.name.strip(),
             reason=reason,
+            latest_date=latest_date,
         )
         failure.save()
         failure.foreninger = foreninger
