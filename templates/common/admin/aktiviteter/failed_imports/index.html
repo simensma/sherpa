@@ -28,9 +28,21 @@
 
 <div class="aktivitet-failed-imports" data-dnt-container="aktivitet-failed-imports">
 
-  <p>
-    Viser {{ failed_imports.object_list|length }} av {{ failed_imports.paginator.count }} manglende turer
-  </p>
+  {% if counts.only_forening == counts.with_children %}
+    <p>
+      {{ active_forening.name }} har {{ counts.only_forening }} turer i gamle Sherpa som ikke kunne flyttes over.
+    </p>
+  {% else %}
+    <div class="btn-group">
+      <a class="btn btn-default{% if just_forening %} active{% endif %}" href="{% url 'admin.aktiviteter.views.failed_imports' %}">
+        Vis kun for {{ active_forening.name }} ({{ counts.only_forening}})
+      </a>
+
+      <a class="btn btn-default{% if not just_forening %} active{% endif %}" href="{% url 'admin.aktiviteter.views.failed_imports' %}?inkluder-turgrupper">
+        Ta med underliggende turlag og turgrupper ({{ counts.with_children }})
+      </a>
+    </div>
+  {% endif %}
 
   {% include "common/admin/aktiviteter/failed_imports/pagination.html" %}
 

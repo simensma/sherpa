@@ -521,9 +521,26 @@ def turleder_search(request):
     }))
 
 def failed_imports(request):
-    # Look up failed imports for all underlying foreninger as well
-    foreninger = request.active_forening.get_with_children_deep()
-    failed_imports = ConversionFailure.objects.filter(foreninger__in=foreninger).distinct().order_by('-latest_date')
+    # Lookup both the failed for the active forening, and with included children - we'll need the numbers for both
+    failed_imports_just_forening = ConversionFailure.objects.filter(
+        foreninger=request.active_forening
+    )
+
+    failed_imports_with_children = ConversionFailure.objects.filter(
+        foreninger__in=request.active_forening.get_with_children_deep(),
+    ).distinct()
+
+    counts = {
+        'only_forening': failed_imports_just_forening.count(),
+        'with_children': failed_imports_with_children.count(),
+    }
+
+    just_forening = 'inkluder-turgrupper' not in request.GET
+
+    if just_forening:
+        failed_imports = failed_imports_just_forening.order_by('-latest_date')
+    else:
+        failed_imports = failed_imports_with_children.order_by('-latest_date')
 
     paginator = Paginator(failed_imports, 40)
     try:
@@ -533,5 +550,9 @@ def failed_imports(request):
     except EmptyPage:
         failed_imports = paginator.page(paginator.num_pages)
 
-    context = {'failed_imports': failed_imports}
+    context = {
+        'just_forening': just_forening,
+        'failed_imports': failed_imports,
+        'counts': counts,
+    }
     return render(request, 'common/admin/aktiviteter/failed_imports/index.html', context)
