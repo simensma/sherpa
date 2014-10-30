@@ -149,16 +149,22 @@ div.user-aktiviteter-list {
 
 div.publications {
   div.content-wrapper {
+    position: relative;
+
     div.hover-content {
       position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       padding: 15px;
-      opacity: 0.95;
-      filter: alpha(opacity=95);
       font-family: "DTL Nobel" !important;
       font-size: 20px;
-      text-align: center;
       color: rgb(0, 0, 0);
+      text-align: center;
       background-color: rgb(255, 255, 255);
+      opacity: 0.95;
+      filter: alpha(opacity=95);
 
       a.cta {
         display: inline-block;
