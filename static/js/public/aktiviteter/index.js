@@ -182,6 +182,13 @@ $(function() {
                 });
             }).always(function() { options.callback({results: res}); });
         }
+    }).on('change', function(e) {
+        if (e.added) {
+            $("input[name='lat_lng']").val(e.added.nord + ',' + e.added.aust);
+        } else {
+            $("input[name='lat_lng']").val('');
+        }
+        refreshContent(0);
     });
 
     function positionSsrToHtml(sted) {
