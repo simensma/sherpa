@@ -14,7 +14,7 @@ from django.contrib.gis.geos import Point
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from aktiviteter.models import Aktivitet, AktivitetDate, AktivitetImage, Cabin
+from aktiviteter.models import Aktivitet, AktivitetDate, AktivitetImage, Cabin, ConversionFailure
 from admin.aktiviteter.util import parse_html_array
 from core.models import Tag, County, Municipality
 from sherpa2.models import Location, Turforslag, Activity as Sherpa2Aktivitet
@@ -99,6 +99,9 @@ def index(request):
     except EmptyPage:
         datoer = paginator.page(paginator.num_pages)
 
+    # Failed import counts
+    failed_import_count = ConversionFailure.objects.filter(foreninger=request.active_forening).count()
+
     context = {
         'active_forening_children': children,
         'selected_forening': forening,
@@ -108,6 +111,7 @@ def index(request):
             'tid': request.GET.get('tid'),
             'kladd': request.GET.get('kladd')
         },
+        'failed_import_count': failed_import_count,
     }
     return render(request, 'common/admin/aktiviteter/index.html', context)
 
@@ -515,3 +519,48 @@ def turleder_search(request):
         'results': render_to_string('common/admin/aktiviteter/edit/turleder_search_results.html', context),
         'max_hits_exceeded': len(users) > MAX_HITS or len(actors) > MAX_HITS
     }))
+
+def failed_imports(request):
+    # Lookup both the failed for the active forening, and with included children - we'll need the numbers for both
+    failed_imports_just_forening = ConversionFailure.objects.filter(
+        foreninger=request.active_forening
+    )
+
+    failed_imports_with_children = ConversionFailure.objects.filter(
+        foreninger__in=request.active_forening.get_with_children_deep(),
+    ).distinct()
+
+    counts = {
+        'only_forening': failed_imports_just_forening.count(),
+        'with_children': failed_imports_with_children.count(),
+    }
+
+    just_forening = 'inkluder-turgrupper' not in request.GET
+    search_query = ''
+
+    if 'q' in request.GET:
+        search_query = request.GET['q'].strip()
+        failed_imports = ConversionFailure.objects.all()
+        for word in search_query.split():
+            failed_imports = failed_imports.filter(name__icontains=word.strip())
+        failed_imports = failed_imports.order_by('-latest_date')
+    elif just_forening:
+        failed_imports = failed_imports_just_forening.order_by('-latest_date')
+    else:
+        failed_imports = failed_imports_with_children.order_by('-latest_date')
+
+    paginator = Paginator(failed_imports, 40)
+    try:
+        failed_imports = paginator.page(request.GET.get('page'))
+    except PageNotAnInteger:
+        failed_imports = paginator.page(1)
+    except EmptyPage:
+        failed_imports = paginator.page(paginator.num_pages)
+
+    context = {
+        'just_forening': just_forening,
+        'failed_imports': failed_imports,
+        'counts': counts,
+        'search_query': search_query,
+    }
+    return render(request, 'common/admin/aktiviteter/failed_imports/index.html', context)

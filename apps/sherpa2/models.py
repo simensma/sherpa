@@ -16,7 +16,8 @@ from admin.models import Image, Album
 from admin.images.util import upload_image
 from core.models import County, Tag
 from sherpa2.util import SHERPA2_COUNTIES_SET1
-from sherpa2.exceptions import ConversionImpossible
+from sherpa2.exceptions import ConversionImpossible, OwnerDoesNotExist, NoOwners, DateWithoutStartDate, \
+    DateWithInvalidStartDate, DateWithoutEndDate, DateWithInvalidEndDate
 
 class Forening(models.Model):
     id = models.IntegerField(db_column='gr_id', primary_key=True)
@@ -407,39 +408,10 @@ class Activity(models.Model):
     lon = models.DecimalField(db_column='ac_lon', null=True, max_digits=65535, decimal_places=65535, blank=True)
     pub_date = models.TextField(db_column='ac_publish_date', blank=True)
 
-    def get_owners(self):
-        from foreninger.models import Forening
-        from aktiviteter.models import Cabin
-        from sherpa2.models import Forening as Sherpa2Forening
-
+    def get_owner_ids(self):
         if self.owner is None or self.owner.strip() == '':
-            raise ConversionImpossible("No owners specified for this activity; need at least 1")
-
-        foreninger = []
-        cabins = []
-        for id in self.owner.split('|'):
-            if id.strip() == '':
-                continue
-
-            try:
-                foreninger.append(Forening.objects.get(id=id))
-            except Forening.DoesNotExist:
-                # Might be a forening of type 'cabin', check if it exists in our imported Cabin table
-                try:
-                    cabins.append(Cabin.objects.get(sherpa2_id=id))
-                except Cabin.DoesNotExist:
-                    if not Sherpa2Forening.objects.filter(id=id).exists():
-                        # Ok, this is an age-old Forening; ignore the relation
-                        pass
-                    else:
-                        # One of the owner relations is invalid; skip this import
-                        # TODO: handle
-                        raise ConversionImpossible("One of the related 'owner' groups doesn't exist in the new ForeningDB")
-
-        if len(foreninger) == 0 and len(cabins) == 0:
-            raise ConversionImpossible("No owners left after cleanup; need at least 1")
-
-        return foreninger, cabins
+            return []
+        return [int(id) for id in self.owner.split('|') if id.strip() != '']
 
     def get_counties(self):
         if self.county is None:
@@ -510,10 +482,13 @@ class Activity(models.Model):
         instead of a new one.
 
         raises ConversionImpossible if the old aktivitet data is in a state we can't convert from"""
-        from aktiviteter.models import Aktivitet, AktivitetImage
+        from aktiviteter.models import Aktivitet, AktivitetImage, ConversionFailure
 
         if aktivitet is None:
             aktivitet = Aktivitet()
+
+        # Delete any existing conversion failure object
+        ConversionFailure.objects.filter(sherpa2_id=self.id).delete()
 
         # Perform conversions - these may throw exceptions
         foreninger = self.convert_foreninger()
@@ -532,6 +507,8 @@ class Activity(models.Model):
         aktivitet.code = self.code.strip()
         aktivitet.title = self.name.strip()
         aktivitet.description = description
+        aktivitet.category = category
+        aktivitet.category_type = category_type
         aktivitet.pub_date = pub_date
         aktivitet.start_point = self.get_start_point()
         aktivitet.locations = json.dumps(locations)
@@ -546,8 +523,6 @@ class Activity(models.Model):
         aktivitet.co_foreninger = foreninger['rest:forening']
         aktivitet.co_foreninger_cabin = foreninger['rest:cabin']
         aktivitet.counties = self.get_counties()
-        aktivitet.category = category
-        aktivitet.category_type = category_type
         aktivitet.category_tags.clear()
         for tag in category_tags:
             obj, created = Tag.objects.get_or_create(name=tag)
@@ -615,17 +590,45 @@ class Activity(models.Model):
         aktivitet.save()
 
         # Now delete and re-convert all date objects
-        aktivitet.dates.all().delete()
-        for sherpa2_date in self.dates.all():
-            sherpa2_date.convert(aktivitet)
+        try:
+            aktivitet.dates.all().delete()
+            for sherpa2_date in self.dates.all():
+                sherpa2_date.convert(aktivitet)
+        except ConversionImpossible:
+            # One of the dates can't be converted - we're not handling the exception here, but we've already created
+            # the Aktivitet-object, so we should delete that
+            aktivitet.delete()
+            raise
 
     def convert_foreninger(self):
         """sherpa2 models foreninger as a flat list, while sherpa3 separates the main forening and co_foreninger.
         We'll assume that the forening with the lowest 'type' (turgruppe/forening/sentral) is the main forening.
         If there are >1 of the same lowest type, we'll have to pick one at random."""
         from foreninger.models import Forening
+        from aktiviteter.models import Cabin
+        from sherpa2.models import Forening as Sherpa2Forening
 
-        foreninger, cabins = self.get_owners()
+        foreninger = []
+        cabins = []
+        for id in self.get_owner_ids():
+            try:
+                foreninger.append(Forening.objects.get(id=id))
+            except Forening.DoesNotExist:
+                # Might be a forening of type 'cabin', check if it exists in our imported Cabin table
+                try:
+                    cabins.append(Cabin.objects.get(sherpa2_id=id))
+                except Cabin.DoesNotExist:
+                    if not Sherpa2Forening.objects.filter(id=id).exists():
+                        # Ok, this is an age-old Forening; ignore the relation
+                        pass
+                    else:
+                        # One of the owner relations is invalid; skip this import
+                        self.save_conversion_failure(reason='owner_doesnotexist', include_foreninger=False)
+                        raise OwnerDoesNotExist("One of the related 'owner' groups doesn't exist in the new ForeningDB")
+
+        if len(foreninger) == 0 and len(cabins) == 0:
+            self.save_conversion_failure(reason='no_owners', include_foreninger=False)
+            raise NoOwners("No known owners exist for this activity; need at least 1")
 
         # Check if there's only cabins and use a random one as main
         if len(foreninger) == 0 and len(cabins) > 0:
@@ -649,7 +652,8 @@ class Activity(models.Model):
                     'rest:cabin': cabins,
                 }
 
-        raise Exception("Tried to convert empty list of foreninger")
+        # Note that we should never reach this code path
+        raise Exception("Invalid code path; expected one of the previous clauses to return")
 
     def convert_description(self):
         # TODO: Handle HTML
@@ -737,13 +741,16 @@ class Activity(models.Model):
             for extra in self.get_extras() if extra in Activity.AUDIENCE_CONVERSION_TABLE]
 
     def convert_locations(self):
-        IGNORED_LOCATION_CODES = ['NO_hjelm', 'NO_nordt', 'NO_norfj', 'NO_nordf', 'NO_rana']
         try:
             return self.get_locations()
         except Location.DoesNotExist:
             if self.occurs_in_future():
-                # TODO: Handle
-                raise ConversionImpossible("Future activity with unknown location relation")
+                # Isn't known to occur, so we're not handling it explicitly for now - just re-raise the exception
+                raise
+
+            # For passed activities, we have a hardcoded list of locations we know aren't in use anymore and can
+            # ignore. Reimplement the get_locations() method and ignore any of tose location codes
+            IGNORED_LOCATION_CODES = ['NO_hjelm', 'NO_nordt', 'NO_norfj', 'NO_nordf', 'NO_rana']
 
             locations = []
             for location_code in self.location.split('|'):
@@ -768,6 +775,9 @@ class Activity(models.Model):
     def convert_categories(self):
         """The wrapper for converting category, category type and subcategories"""
         main_category = self.convert_category()
+        # Note that while category_type "semantically" should come before category_tags, we will convert category_tags
+        # first here because they will rename some tags, and the category_type logic is more likely to find matches
+        # after that conversion is done.
         category_tags = self.convert_category_tags()
         category_type = self.convert_category_type(main_category, category_tags)
         return (main_category, category_type, category_tags)
@@ -875,15 +885,11 @@ class Activity(models.Model):
         """Applies the category type based on the main category and converted subcategories"""
         from aktiviteter.models import Aktivitet
 
-        category_type = None
+        category_type = '' # This empty value will be used if no matches are found
         for category in Aktivitet.SUBCATEGORIES[category]:
             if category in category_tags:
                 # Note that we'll overwrite the type if several defined categories matches the subcategory suggestions
                 category_type = category
-
-        if category_type is None:
-            # TODO: Handle
-            raise ConversionImpossible("No category_type is specified for this activity")
 
         return category_type
 
@@ -891,6 +897,44 @@ class Activity(models.Model):
         if self.pub_date is None or self.pub_date.strip() == '':
             return date.today()
         return self.get_pub_date()
+
+    def save_conversion_failure(self, reason, include_foreninger=True):
+        """Should be called if a conversion for this activity failed.
+        include_foreninger can be set to False if foreninger were part of the reason for failure, in which
+        case these relations won't be saved. Otherwise, we'll try to save a reference to the owners in order to
+        filter on failures later."""
+        from aktiviteter.models import ConversionFailure
+        if include_foreninger:
+            converted = self.convert_foreninger()
+            foreninger = converted['rest:forening']
+            if converted['main:forening'] is not None:
+                foreninger.append(converted['main:forening'])
+            cabins = converted['rest:cabin']
+            if converted['main:cabin'] is not None:
+                cabins.append(converted['main:cabin'])
+        else:
+            foreninger = []
+            cabins = []
+
+        # If any date objects are parseable, save the latest known date
+        latest_date = None
+        for date in self.dates.all():
+            try:
+                new_date = date.get_date_from()
+                if latest_date is None or new_date > latest_date:
+                    latest_date = new_date
+            except:
+                pass
+
+        failure = ConversionFailure(
+            sherpa2_id=self.id,
+            name=self.name.strip(),
+            reason=reason,
+            latest_date=latest_date,
+        )
+        failure.save()
+        failure.foreninger = foreninger
+        failure.cabins = cabins
 
     def __unicode__(self):
         return u'%s: %s' % (self.pk, self.name)
@@ -989,10 +1033,12 @@ class ActivityDate(models.Model):
     def convert_start_date(self):
         try:
             if self.date_from is None or self.date_from.strip() == '':
-                raise ConversionImpossible("Date entry has no start date")
+                self.activity.save_conversion_failure(reason='date_without_start_date')
+                raise DateWithoutStartDate("Date entry has no start date")
             return self.get_date_from()
         except ValueError:
-            raise ConversionImpossible("Invalid date_from: '%s'" % self.date_from.strip())
+            self.activity.save_conversion_failure(reason='date_with_invalid_start_date')
+            raise DateWithInvalidStartDate("Invalid date_from: '%s'" % self.date_from.strip())
 
     def convert_end_date(self):
         try:
@@ -1002,10 +1048,12 @@ class ActivityDate(models.Model):
                     # This was an event in the past, so we'll let this slide and just set end date to the same as start
                     return self.get_date_from()
                 else:
-                    raise ConversionImpossible("Future aktivitet with no end date")
+                    self.activity.save_conversion_failure(reason='date_without_end_date')
+                    raise DateWithoutEndDate("Future aktivitet with no end date")
             return self.get_date_to()
         except ValueError:
-            raise ConversionImpossible("Invalid date_to: '%s'" % self.date_to.strip())
+            self.activity.save_conversion_failure(reason='date_with_invalid_end_date')
+            raise DateWithInvalidEndDate("Invalid date_to: '%s'" % self.date_to.strip())
 
     def convert_signup_enabled(self):
         return self.online in [

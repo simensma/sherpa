@@ -46,6 +46,11 @@ class Aktivitet(models.Model):
         ('event', 'Arrangement'),
         ('volunteerwork', 'Dugnad'),)
     category = models.CharField(max_length=255, choices=CATEGORY_CHOICES)
+    # Note that while a value for category_type is required in the admin UI, there could still exists objects
+    # without a value if:
+    # - This is a new object created when opening the edit-form, but hasn't been saved
+    # - It's an imported aktivitet from sherpa 2 - not all of these have a category_type and we've chosen to ignore
+    #   them
     category_type = models.CharField(max_length=255, default='')
     category_tags = models.ManyToManyField('core.Tag', related_name='aktiviteter')
     pub_date = models.DateField()
@@ -347,3 +352,51 @@ class Cabin(models.Model):
 
     def __unicode__(self):
         return u'%s/%s: %s' % (self.pk, self.sherpa2_id, self.name)
+
+class ConversionFailure(models.Model):
+    """A list of aktiviteter that we couldn't import from Sherpa2"""
+    # Note that aktiviteter with no owners should be explicitly listed as they can't be filtered to any forening
+    # Not quite sure why related_name can't be set to '+' here
+    foreninger = models.ManyToManyField('foreninger.Forening', null=True, related_name='failed_imports')
+    cabins = models.ManyToManyField('aktiviteter.Cabin', null=True, related_name='failed_imports')
+    sherpa2_id = models.PositiveIntegerField()
+    name = models.CharField(max_length=255)
+    latest_date = models.DateField(null=True)
+
+    # The list of reason choices should correspond to the exceptions in the sherpa2 app inheriting from
+    # ConversionImpossible
+    REASON_CHOICES = (
+        ('owner_doesnotexist', 'Aktiviteten er koblet til en arrangør som ikke finnes i nye Sherpa'),
+        ('no_owners', 'Aktiviteten har ingen arrangør.'),
+        ('date_without_start_date', 'Aktiviteten har en avgang uten noen startdato.'),
+        ('date_with_invalid_start_date', 'Aktiviteten har en avgang med ugyldig startdato.'),
+        ('date_without_end_date', 'Aktiviteten har en avgang uten noen sluttdato.'),
+        ('date_with_invalid_end_date', 'Aktiviteten har en avgang med ugyldig sluttdato.'),
+    )
+    reason = models.CharField(max_length=255, choices=REASON_CHOICES)
+
+    REASON_HELPTEXTS = {
+        'owner_doesnotexist':
+            'Vi har flyttet alle foreninger og hytter over til nye Sherpa, men denne turen er koblet til en ' \
+            'forening, hytte eller annen gruppe som ikke finnes i nye Sherpa.<br>For å få flyttet over turen ' \
+            'må du finne ut hvilken gruppe som ikke skal være arrangør for turen.<br>Hvis du mener at alle ' \
+            'arrangørene står riktig oppført, bør du høre med DNT Sentralt - bruk den røde knappen til høyre på ' \
+            'skjermen.',
+        'no_owners':
+            'Alle turer må være koblet til minst én arrangørforening.',
+        'date_without_start_date':
+            'Sjekk datoene i bunnen av gamle Sherpa. En av linjene mangler startdato, og den må du legge inn.',
+        'date_with_invalid_start_date':
+            'Sjekk datoene i bunnen av gamle Sherpa. En av linjene har oppgitt startdato på feil format. Datoen må ' \
+            'se slik ut: "2014-12-31".',
+        'date_without_end_date':
+            'Sjekk datoene i bunnen av gamle Sherpa. En av linjene mangler sluttdato, og den må du legge inn.',
+        'date_with_invalid_end_date': 'Sjekk datoene i bunnen av gamle Sherpa. En av linjene har oppgitt sluttdato ' \
+            'på feil format. Datoen må se slik ut: "2014-12-31".',
+    }
+
+    def get_reason(self):
+        return [r[1] for r in self.REASON_CHOICES if r[0] == self.reason][0]
+
+    def get_reason_helptext(self):
+        return ConversionFailure.REASON_HELPTEXTS[self.reason]

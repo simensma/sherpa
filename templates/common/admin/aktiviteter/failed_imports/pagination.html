@@ -1,0 +1,15 @@
+<ul class="pagination pagination-sm">
+  <li{% if failed_imports.number == 1 %} class="disabled"{% endif %}>
+    <a href="?page=1{% if search_query %}&amp;q={{ search_query }}{% endif %}" class="page">«</a>
+  </li>
+
+  {% for number in failed_imports.paginator.page_range %}
+    <li{% if number == failed_imports.number %} class="active"{% endif %}>
+      <a href="?page={{ number }}{% if search_query %}&amp;q={{ search_query }}{% endif %}" class="page">{{ number }}</a>
+    </li>
+  {% endfor %}
+
+  <li{% if failed_imports.number == failed_imports.paginator.num_pages %} class="disabled"{% endif %}>
+    <a href="?page={{ failed_imports.paginator.num_pages }}{% if search_query %}&amp;q={{ search_query }}{% endif %}" class="page">»</a>
+  </li>
+</ul>

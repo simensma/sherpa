@@ -25,15 +25,17 @@
   </div>
 </div><!-- /.row -->
 
-<div class="row">
-  <div class="col-md-12">
-    <div class="alert alert-warning">
-      <a class="close">x</a>
-      <strong>Dette er testsystem</strong><br>
-      Du må benytte <a href="http://{{ old_site }}/admin/activity.php">gamle Sherpa</a> om du vil
-      behandle aktiviteter som skal publiseres på nettsidene.
-    </div>
-  </div>
+<div class="alert alert-warning">
+  <a class="close">x</a>
+  <strong>Dette er testsystem</strong><br>
+  Du må benytte <a href="http://{{ old_site }}/admin/activity.php">gamle Sherpa</a> om du vil
+  behandle aktiviteter som skal publiseres på nettsidene.
+
+  {% if failed_import_count > 0 %}
+    <br><br>
+    <strong>{{ active_forening.name }} har {{ failed_import_count }} turer som ikke kunne importeres fra Sherpa 2.</strong><br>
+    <a href="{% url 'admin.aktiviteter.views.failed_imports' %}">Sjekk hvilke turer som ikke kunne importeres, og hvorfor</a>.
+  {% endif %}
 </div>
 
 <div class="aktivitet-listing">
@@ -106,99 +108,97 @@
   </div>
 
   {% if datoer %}
-    <div class="row">
-      <div class="table-responsive">
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th><input type="checkbox"></th>
-              <th>Tittel</th>
-              <th>Turkode</th>
-              <th>Dato fra</th>
-              <th>Dato til</th>
-              <th>Deltakere</th>
-              <th>Arrangeres av</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-          {% for dato in datoer %}
-            <tr>
-              <td><input type="checkbox"></td>
-              <td>
-                {{ dato.aktivitet.title|default:"(Mangler navn)"|highlight:params.sok }}
-                {% if dato.aktivitet.is_imported %}
-                  <span class="label label-info">Importert</span>
-                {% endif %}
-                <br>
-                <ul class="list-inline">
-                  <li><a href="{% url 'admin.aktiviteter.views.edit' dato.aktivitet.id %}">Rediger</a></li>
-                  {% if dato.signup_enabled %}
-                    <li>
-                      <a href="{% url 'admin.aktiviteter.views.participants' dato.aktivitet.id %}">
-                        Deltakere
-                      </a>
-                    </li>
-                  {% endif %}
-                  <li>Kopi</li>
-                  <li>
-                    {% if dato.aktivitet.published %}
-                      <a href="{% url 'aktiviteter.views.show' dato.id %}">Vis</a>
-                    {% else %}
-                      Vis
-                    {% endif %}
-                  </li>
-                  <li>Avlys</li>
-                </ul>
-              </td>
-              <td>{{ dato.aktivitet.code|highlight:params.sok }}</td>
-              <td>{{ dato.start_date|date:"Y-m-d" }}</td>
-              <td>{{ dato.end_date|date:"Y-m-d" }}</td>
-              <td>
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th><input type="checkbox"></th>
+            <th>Tittel</th>
+            <th>Turkode</th>
+            <th>Dato fra</th>
+            <th>Dato til</th>
+            <th>Deltakere</th>
+            <th>Arrangeres av</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for dato in datoer %}
+          <tr>
+            <td><input type="checkbox"></td>
+            <td>
+              {{ dato.aktivitet.title|default:"(Mangler navn)"|highlight:params.sok }}
+              {% if dato.aktivitet.is_imported %}
+                <span class="label label-info">Importert</span>
+              {% endif %}
+              <br>
+              <ul class="list-inline">
+                <li><a href="{% url 'admin.aktiviteter.views.edit' dato.aktivitet.id %}">Rediger</a></li>
                 {% if dato.signup_enabled %}
-                  {% if dato.is_full %}
-                    {{ dato.signup_max_allowed }}
-                    {% if dato.signup_max_allowed %}
-                      av {{ dato.signup_max_allowed }}
-                    {% endif %}
-                    <br>
-
-                    {% if dato.is_waitinglist %}
-                      <span class="label label-warning">{{ dato.total_waitinglist_count }} på venteliste</span>
-                    {% else %}
-                      <span class="label label-primary">Ingen ledig plass</span>
-                    {% endif %}
+                  <li>
+                    <a href="{% url 'admin.aktiviteter.views.participants' dato.aktivitet.id %}">
+                      Deltakere
+                    </a>
+                  </li>
+                {% endif %}
+                <li>Kopi</li>
+                <li>
+                  {% if dato.aktivitet.published %}
+                    <a href="{% url 'aktiviteter.views.show' dato.id %}">Vis</a>
                   {% else %}
-                    {{ dato.total_signup_count }}
-                    {% if dato.signup_max_allowed %}
-                      av {{ dato.signup_max_allowed }}
-                    {% endif %}
+                    Vis
+                  {% endif %}
+                </li>
+                <li>Avlys</li>
+              </ul>
+            </td>
+            <td>{{ dato.aktivitet.code|highlight:params.sok }}</td>
+            <td>{{ dato.start_date|date:"Y-m-d" }}</td>
+            <td>{{ dato.end_date|date:"Y-m-d" }}</td>
+            <td>
+              {% if dato.signup_enabled %}
+                {% if dato.is_full %}
+                  {{ dato.signup_max_allowed }}
+                  {% if dato.signup_max_allowed %}
+                    av {{ dato.signup_max_allowed }}
+                  {% endif %}
+                  <br>
+
+                  {% if dato.is_waitinglist %}
+                    <span class="label label-warning">{{ dato.total_waitinglist_count }} på venteliste</span>
+                  {% else %}
+                    <span class="label label-primary">Ingen ledig plass</span>
                   {% endif %}
                 {% else %}
-                  Ingen påmelding
+                  {{ dato.total_signup_count }}
+                  {% if dato.signup_max_allowed %}
+                    av {{ dato.signup_max_allowed }}
+                  {% endif %}
                 {% endif %}
-              </td>
-              <td>
-                {% if dato.aktivitet.forening %}
-                  <a href="?{% query_transform forening=dato.aktivitet.forening.id page="" %}">
-                    {{ dato.aktivitet.forening.name }}
-                  </a>
-                {% elif dato.aktivitet.forening_cabin %}
-                  {{ dato.aktivitet.forening_cabin.name }}
-                {% endif %}
-              </td>
-              <td>
-                {% if dato.aktivitet.published %}
-                  <span class="label label-success">Publisert</span>
-                {% else %}
-                  <span class="label label-default">Kladd</span>
-                {% endif %}
-              </td>
-            </tr>
-          {% endfor %}
-          </tbody>
-        </table>
-      </div>
+              {% else %}
+                Ingen påmelding
+              {% endif %}
+            </td>
+            <td>
+              {% if dato.aktivitet.forening %}
+                <a href="?{% query_transform forening=dato.aktivitet.forening.id page="" %}">
+                  {{ dato.aktivitet.forening.name }}
+                </a>
+              {% elif dato.aktivitet.forening_cabin %}
+                {{ dato.aktivitet.forening_cabin.name }}
+              {% endif %}
+            </td>
+            <td>
+              {% if dato.aktivitet.published %}
+                <span class="label label-success">Publisert</span>
+              {% else %}
+                <span class="label label-default">Kladd</span>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
     </div>
 
     <hr>

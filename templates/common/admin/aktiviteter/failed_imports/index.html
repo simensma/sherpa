@@ -1,0 +1,118 @@
+{% extends 'common/admin/layout.html' %}
+
+{% load rowiterator %}
+{% load date_fromto %}
+{% load query_transform %}
+{% load highlight %}
+
+{% block title %}Aktiviteter — {{ block.super }}{% endblock %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/aktiviteter/failed_imports.js"></script>
+{% endblock %}
+
+{% block admin_menu %}{% with 'aktiviteter' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
+
+{% block body %}
+
+<div class="row">
+  <div class="col-lg-12">
+    <h1>Turer og aktiviteter <small>publisér turer, aktiviteter, kurs og dugnadsarbeid</small></h1>
+    <ol class="breadcrumb">
+      <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
+      <li><a href="{% url 'admin.aktiviteter.views.index' %}">Turer og aktiviteter</a></li>
+      <li><a href="{% url 'admin.aktiviteter.views.index' %}">Manglende turer</a></li>
+    </ol>
+  </div>
+</div><!-- /.row -->
+
+<div class="aktivitet-failed-imports" data-dnt-container="aktivitet-failed-imports">
+
+  <p>
+    Her kan du se alle turene i gamle Sherpa som <strong>ikke</strong> kunne flyttes over til nye Sherpa, samt hvorfor, og hva du må gjøre for å fikse det. Du kan også søke etter navnet på en bestemt tur som du savner.
+  </p>
+
+  {% if counts.only_forening == counts.with_children %}
+    <p>
+      {{ active_forening.name }} har {{ counts.only_forening }} turer i gamle Sherpa som ikke kunne flyttes over.
+    </p>
+  {% else %}
+    <div class="btn-group">
+      <a class="btn btn-default{% if just_forening %} active{% endif %}" href="{% url 'admin.aktiviteter.views.failed_imports' %}">
+        Vis kun for {{ active_forening.name }} ({{ counts.only_forening}})
+      </a>
+
+      <a class="btn btn-default{% if not just_forening %} active{% endif %}" href="{% url 'admin.aktiviteter.views.failed_imports' %}?inkluder-turgrupper">
+        Ta med underliggende turlag og turgrupper ({{ counts.with_children }})
+      </a>
+    </div>
+  {% endif %}
+
+  <form action="{% url 'admin.aktiviteter.views.failed_imports' %}" method="get">
+    <div class="input-group">
+      <input class="form-control" type="text" name="q" placeholder="Søk etter turer fra gamle Sherpa (kun navn/tittel)..." value="{{ search_query }}">
+      <span class="input-group-btn">
+        <button class="btn btn-default member-search">
+          <i class="fa fa-search"></i>
+        </button>
+      </span>
+    </div>
+  </form>
+
+  {% if search_query %}
+    <p>
+      Søker etter "<strong>{{ search_query }}</strong>". <a href="{% url 'admin.aktiviteter.views.failed_imports' %}">Vis alle manglende turer for {{ active_forening.name }}</a>
+    </p>
+  {% endif %}
+
+  {% include "common/admin/aktiviteter/failed_imports/pagination.html" %}
+
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Nyeste turdato</th>
+          <th>Arrangør</th>
+          <th>Aktivitet</th>
+          <th>Problem</th>
+        </tr>
+      </thead>
+
+      {% for fail in failed_imports %}
+
+        <tr>
+          <td>
+            {% if fail.latest_date %}
+              {{ fail.latest_date|date:"j. F Y" }}
+            {% else %}
+              Ukjent
+            {% endif %}
+          </td>
+          <td>
+            {% for forening in fail.foreninger.all %}
+              {{ forening.name }}
+              {% if not forloop.last %}
+                <br>
+              {% endif %}
+            {% endfor %}
+          </td>
+          <td>
+            <a href="http://{{ old_site }}/admin/activity.php?ac_id={{ fail.sherpa2_id }}&amp;act=egenskaper">{{ fail.name }}</a>
+          </td>
+          <td>
+            {{ fail.get_reason }} <a href="javascript:undefined" data-dnt-trigger="helptext">Les mer...</a>
+            <div class="helptext jq-hide" data-dnt-container="helptext">
+              {{ fail.get_reason_helptext|safe }}
+            </div>
+          </td>
+        </tr>
+
+      {% endfor %}
+    </table>
+  </div>
+
+  {% include "common/admin/aktiviteter/failed_imports/pagination.html" %}
+
+</div>
+
+{% endblock %}
