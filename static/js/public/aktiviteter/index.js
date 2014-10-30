@@ -150,6 +150,7 @@ $(function() {
         var start_date = filters.find("input[name='start_date']").val();
         var end_date = filters.find("input[name='end_date']").val();
         var search = filters.find("input[name='search']").val();
+        var lat_lng = filters.find("input[name='lat_lng']").val();
         return {
             categories: categories,
             audiences: audiences,
@@ -159,6 +160,7 @@ $(function() {
             end_date: end_date,
             search: search,
             organizers: organizers,
+            lat_lng: lat_lng,
         };
     }
 
