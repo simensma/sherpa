@@ -892,6 +892,9 @@ class Activity(models.Model):
             return date.today()
         return self.get_pub_date()
 
+    def __unicode__(self):
+        return u'%s: %s' % (self.pk, self.name)
+
     @staticmethod
     def sync_all():
         from aktiviteter.models import Aktivitet
