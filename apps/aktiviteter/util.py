@@ -29,10 +29,7 @@ def filter_aktivitet_dates(filter):
         # Rule of thumb for buffer; 1 degree is about 100 km
         boundary = geos.Point(float(latlng[0]), float(latlng[1])).buffer(0.5)
 
-        dates = dates.filter(
-                aktivitet__start_point__isnull=False,
-                aktivitet__start_point__within=boundary,
-        )
+        dates = dates.filter(aktivitet__start_point__within=boundary)
 
     try:
         if 'start_date' in filter and filter['start_date'] != '':
