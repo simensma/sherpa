@@ -38,6 +38,7 @@
     <table class="table table-striped">
       <thead>
         <tr>
+          <th>Nyeste turdato</th>
           <th>Arrangør</th>
           <th>Aktivitet</th>
           <th>Problem</th>
@@ -47,6 +48,13 @@
       {% for fail in failed_imports %}
 
         <tr>
+          <td>
+            {% if fail.latest_date %}
+              {{ fail.latest_date|date:"j. F Y" }}
+            {% else %}
+              Ukjent
+            {% endif %}
+          </td>
           <td>
             {% for forening in fail.foreninger.all %}
               {{ forening.name }}

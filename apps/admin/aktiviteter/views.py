@@ -523,7 +523,7 @@ def turleder_search(request):
 def failed_imports(request):
     # Look up failed imports for all underlying foreninger as well
     foreninger = request.active_forening.get_with_children_deep()
-    failed_imports = ConversionFailure.objects.filter(foreninger__in=foreninger).order_by('name')
+    failed_imports = ConversionFailure.objects.filter(foreninger__in=foreninger).order_by('-latest_date')
 
     paginator = Paginator(failed_imports, 25)
     try:
