@@ -8,9 +8,6 @@ class OwnerDoesNotExist(ConversionImpossible):
 class NoOwners(ConversionImpossible):
     pass
 
-class NoCategoryType(ConversionImpossible):
-    pass
-
 class DateWithoutStartDate(ConversionImpossible):
     pass
 

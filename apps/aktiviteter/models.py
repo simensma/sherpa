@@ -46,6 +46,11 @@ class Aktivitet(models.Model):
         ('event', 'Arrangement'),
         ('volunteerwork', 'Dugnad'),)
     category = models.CharField(max_length=255, choices=CATEGORY_CHOICES)
+    # Note that while a value for category_type is required in the admin UI, there could still exists objects
+    # without a value if:
+    # - This is a new object created when opening the edit-form, but hasn't been saved
+    # - It's an imported aktivitet from sherpa 2 - not all of these have a category_type and we've chosen to ignore
+    #   them
     category_type = models.CharField(max_length=255, default='')
     category_tags = models.ManyToManyField('core.Tag', related_name='aktiviteter')
     pub_date = models.DateField()
@@ -363,7 +368,6 @@ class ConversionFailure(models.Model):
     REASON_CHOICES = (
         ('owner_doesnotexist', 'Aktiviteten er koblet til en arrangør som ikke finnes i nye Sherpa'),
         ('no_owners', 'Aktiviteten har ingen arrangør.'),
-        ('no_category_type', 'Aktiviteten er ikke koblet til riktige kategorier.'),
         ('date_without_start_date', 'Aktiviteten har en avgang uten noen startdato.'),
         ('date_with_invalid_start_date', 'Aktiviteten har en avgang med ugyldig startdato.'),
         ('date_without_end_date', 'Aktiviteten har en avgang uten noen sluttdato.'),
@@ -380,10 +384,6 @@ class ConversionFailure(models.Model):
             'skjermen.',
         'no_owners':
             'Alle turer må være koblet til minst én arrangørforening.',
-        'no_category_type':
-            'Turene i nye Sherpa har både en <em>kategori</em> og en <em>kategoritype</em>. For eksempel er ' \
-            'Fellestur en kategori, mens kategoritypen kan være fottur, skitur, og så videre.<br>' \
-            'Alle turer må ha både en kategori og en kategoritype, men denne turen mangler kategoritypen.',
         'date_without_start_date':
             'Sjekk datoene i bunnen av gamle Sherpa. En av linjene mangler startdato, og den må du legge inn.',
         'date_with_invalid_start_date':

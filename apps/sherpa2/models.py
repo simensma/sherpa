@@ -16,8 +16,8 @@ from admin.models import Image, Album
 from admin.images.util import upload_image
 from core.models import County, Tag
 from sherpa2.util import SHERPA2_COUNTIES_SET1
-from sherpa2.exceptions import ConversionImpossible, OwnerDoesNotExist, NoOwners, NoCategoryType, \
-    DateWithoutStartDate, DateWithInvalidStartDate, DateWithoutEndDate, DateWithInvalidEndDate
+from sherpa2.exceptions import ConversionImpossible, OwnerDoesNotExist, NoOwners, DateWithoutStartDate, \
+    DateWithInvalidStartDate, DateWithoutEndDate, DateWithInvalidEndDate
 
 class Forening(models.Model):
     id = models.IntegerField(db_column='gr_id', primary_key=True)
@@ -882,15 +882,11 @@ class Activity(models.Model):
         """Applies the category type based on the main category and converted subcategories"""
         from aktiviteter.models import Aktivitet
 
-        category_type = None
+        category_type = '' # This empty value will be used if no matches are found
         for category in Aktivitet.SUBCATEGORIES[category]:
             if category in category_tags:
                 # Note that we'll overwrite the type if several defined categories matches the subcategory suggestions
                 category_type = category
-
-        if category_type is None:
-            self.save_conversion_failure(reason='no_category_type')
-            raise NoCategoryType("No category_type is specified for this activity")
 
         return category_type
 
