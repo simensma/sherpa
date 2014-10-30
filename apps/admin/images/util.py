@@ -122,6 +122,12 @@ def upload_image(image_data, extension, description, album, photographer, credit
 
     image_key = Image.generate_unique_random_key()
     pil_image = PIL.Image.open(StringIO(image_data))
+    extension = standardize_extension(extension)
+
+    # cannot write P mode as JPEG; see http://stackoverflow.com/q/21669657/302484
+    if extension == 'jpeg' and pil_image.mode == 'P':
+        pil_image = pil_image.convert('RGB')
+
     exif_json = json.dumps(get_exif_tags(pil_image))
     image_file_tags = xmp.find_keywords(image_data)
     thumbs = [{'size': size, 'data': create_thumb(pil_image, extension, size)} for size in settings.THUMB_SIZES]
