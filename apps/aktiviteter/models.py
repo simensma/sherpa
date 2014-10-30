@@ -356,6 +356,7 @@ class ConversionFailure(models.Model):
     cabins = models.ManyToManyField('aktiviteter.Cabin', null=True, related_name='failed_imports')
     sherpa2_id = models.PositiveIntegerField()
     name = models.CharField(max_length=255)
+    latest_date = models.DateField(null=True)
 
     # The list of reason choices should correspond to the exceptions in the sherpa2 app inheriting from
     # ConversionImpossible
