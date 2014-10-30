@@ -264,7 +264,7 @@ $(function() {
         }
 
         // Highlight the marked button
-        $(this).siblings().removeClass('btn-danger');
+        $(this).siblings().removeClass('btn-danger active');
         $(this).addClass('btn-danger');
 
         // Enable the actual cropping
