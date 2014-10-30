@@ -103,14 +103,25 @@ div.editor-header {
           position: absolute;
           width: 100%;
 
+          .toolbars {
+            .toolbar {
+              position: relative;
+              z-index: -1;
+              padding: 15px 0;
+              width: 100%;
+              background-color: @editor-form-background-color;
+              border-bottom: 1px solid @editor-form-border-color;
+            }
+          }
+
           .alerts {
             .alert {
+              position: relative;
+              z-index: -1;
+              padding: 10px;
               margin-bottom: 0;
               border-width: 0 0 1px 0;
               border-radius: 0;
-              padding: 10px;
-              z-index: -1;
-              position: relative;
 
               &.alert-dismissable {
                 .container {
@@ -124,24 +135,11 @@ div.editor-header {
                 font-size: 21px !important;
               }
             }
+
             p:last-child {
               margin-bottom: 0;
             }
           }
-        }
-      }
-
-      .toolbar {
-        > .wrapper {
-          position: relative;
-          z-index: -1;
-          // position: absolute;
-          // top: 0;
-          // left: 0;
-          width: 100%;
-          padding: 15px 0;
-          background-color: @editor-form-background-color;
-          border-bottom: 1px solid @editor-form-border-color;
         }
       }
     }
@@ -386,14 +384,6 @@ div.cms-editor {
 
     div.crop-content:hover {
       background-image: url('/static/img/admin/sites/editor/content/crop-content-active.png');
-    }
-
-    div.crop-control {
-      position: absolute;
-      background-color: rgb(245, 245, 245);
-      border: 1px solid rgb(221, 221, 221);
-      padding: 10px;
-      width: 100%;
     }
 
   }

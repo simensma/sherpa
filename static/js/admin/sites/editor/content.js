@@ -6,7 +6,7 @@ $(function() {
     var article = editor.find("article");
     var insertion_templates = editor.find('[data-dnt-container="insertion-templates"]');
     var editor_header =$('.editor-header');
-    var toolbar = editor_header.find('.toolbar .wrapper');
+    var toolbars_container = $('.sticky [data-dnt-container="toolbars"]');
 
     disableIframes(article.find('[data-dnt-container="content-widget"]'));
 
@@ -199,7 +199,7 @@ $(function() {
     $(document).on('click', 'article div.crop-content', function(e) {
 
         if (JcropApi) {
-            toolbar.find('div.crop-control button.use').first().click();
+            toolbars_container.find('div.crop-control button.use').first().click();
         }
 
         e.stopPropagation(); // Avoid click-event on an image or widget
@@ -216,12 +216,13 @@ $(function() {
         }
 
         // Set up crop control elements
-        var toolbar_container = $('.sticky [data-dnt-container="toolbar"]');
-        var crop_control = insertion_templates.find("div.crop-control").clone().appendTo(toolbar_container);
-        var toolbar_height = toolbar.outerHeight();
-        toolbar.css('margin-top', -toolbar_height);
-        toolbar.removeClass('jq-hide');
-        toolbar.animate(
+        var crop_control = insertion_templates.find("div.toolbar-crop-control").clone().addClass('jq-hide');
+        toolbars_container.html(crop_control);
+
+        var crop_control_height = crop_control.outerHeight();
+        crop_control.css('margin-top', -crop_control_height);
+        crop_control.removeClass('jq-hide');
+        crop_control.animate(
             {
                 'margin-top': 0
             },
@@ -232,7 +233,6 @@ $(function() {
                 }
             }
         );
-
 
         crop_control.data('original-content', content);
         crop_control.data('content-clone', content.clone().removeClass('hover'));
@@ -334,7 +334,6 @@ $(function() {
             JcropApi = undefined;
         }
         crop_control.remove();
-        toolbar.addClass('jq-hide');
     }
 
     // Doesn't really need to be its own method as its semantics are:
