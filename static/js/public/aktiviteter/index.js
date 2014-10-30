@@ -197,5 +197,5 @@ $(function() {
             '<small>' + [sted.navnetype, sted.kommunenavn, sted.fylkesnavn].join(' i ') + '</small>'
         ].join('');
     };
-
 });
+
