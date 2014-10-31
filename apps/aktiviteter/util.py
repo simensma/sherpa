@@ -4,6 +4,8 @@ import json
 from django.db.models import Q
 from django.contrib.gis import geos
 from django.core.paginator import Paginator, EmptyPage
+from django.utils.html import strip_tags
+from django.utils.text import truncate_words
 
 from aktiviteter.models import AktivitetDate
 
@@ -90,6 +92,9 @@ def filter_aktivitet_dates(filter):
         for d in dates_to_remove:
             dates.remove(d)
 
+    return dates
+
+def paginate_aktivitet_dates(filter, dates):
     paginator = Paginator(dates, HITS_PER_PAGE)
 
     # Parse "special" values
