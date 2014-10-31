@@ -947,6 +947,8 @@ class Activity(models.Model):
 
         for sherpa2_aktivitet in Activity.objects.filter(id__gte=start_id).prefetch_related('dates').order_by('id'):
             try:
+                if start_id != 0:
+                    print("Progress: %s/%s" % (sherpa2_aktivitet.id, sherpa2_aktivitet.name))
                 sherpa3_aktivitet = Aktivitet.objects.prefetch_related('dates').get(sherpa2_id=sherpa2_aktivitet.id)
             except Aktivitet.DoesNotExist:
                 sherpa3_aktivitet = None
