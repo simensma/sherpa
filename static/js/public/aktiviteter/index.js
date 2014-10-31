@@ -86,6 +86,8 @@ $(function() {
 
             toggle_results_view_type.find('button').toggleClass('active');
         }
+
+        map_init();
     });
 
     toggle_filters_and_results.find('button').bind('click', function (e) {
