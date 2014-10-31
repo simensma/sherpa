@@ -67,7 +67,7 @@ def filter_aktivitet_dates(filter):
             )
 
     dates = dates.order_by(
-        '-start_date'
+        'start_date'
     )
 
     dates = list(dates)
