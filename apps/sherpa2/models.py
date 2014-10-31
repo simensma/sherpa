@@ -707,6 +707,10 @@ class Activity(models.Model):
                 if path.startswith('.'):
                     continue
 
+                # Some incorrect image references contains base64 data, detect and skip them
+                if 'data:image/' in path:
+                    continue
+
                 if path.startswith('http'):
                     # Absolute URL; assume correctness
                     url = path
