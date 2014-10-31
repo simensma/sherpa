@@ -169,6 +169,7 @@ $(function() {
         }).fail(function(result) {
             results_content.empty();
             results_fail.show();
+            map_update([]);
         }).always(function(result) {
             results_loading.hide();
         });
