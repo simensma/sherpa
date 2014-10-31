@@ -15,7 +15,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         try:
-            Activity.sync_all(start_id=38198)
+            Activity.sync_all(start_id=42130)
             logger.info(u"Aktivitetssynkronisering fullført uten feil: %s" % datetime.now())
         except:
             logger.error(u"Uhåndtert exception ved synkronisering av aktiviteter",
