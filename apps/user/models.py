@@ -317,7 +317,8 @@ class User(AbstractBaseUser):
 
             # Business rule: If they've paid for next year, it includes the current year regardless of whether or not
             # that was paid previously. So override it to True.
-            status['current_year'] = True
+            if status['next_year']:
+                status['current_year'] = True
         else:
             status['next_year'] = None
 
