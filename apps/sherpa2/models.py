@@ -546,7 +546,12 @@ class Activity(models.Model):
                         continue
 
                     image_data = downloaded_image.content
-                    extension = old_image['url'].rsplit('.', 1)[1].lower()
+                    try:
+                        extension = old_image['url'].rsplit('.', 1)[1].lower()
+                        if extension not in ['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff']:
+                            continue
+                    except KeyError:
+                        continue
 
                     # Require a certain dimension size for the image
                     pil_image = PIL.Image.open(StringIO(image_data))
