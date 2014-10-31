@@ -22,18 +22,58 @@ $(function() {
         forceParse: false
     });
 
-    var map = L.map('map').setView([65, 12], 5);
-    L.tileLayer('http://opencache.statkart.no/gatekeeper/gk/gk.open_gmaps?layers=topo2&zoom={z}&x={x}&y={y}', {
-        attribution: 'Kartverket'
-    }).addTo(map);
+    var map = markers = null;
 
-    var p = Turistforeningen.aktivitet_points;
-    for(var i=0; i<p.length; i++) {
-        var popup_content = popups.find("div[data-aktivitet-date-id='" + p[i].id + "']");
-        marker = new L.Marker(new L.LatLng(p[i].lat, p[i].lng), {
-            'title': popup_content.find("h3").text()
-        }).bindPopup(popup_content.html()).addTo(map);
+    function map_init() {
+        if (!map) {
+            map = L.map('map');
+            markers = L.featureGroup().addTo(map);
+            L.tileLayer('http://opencache.statkart.no/gatekeeper/gk/gk.open_gmaps?layers=topo2&zoom={z}&x={x}&y={y}', {
+                attribution: 'Kartverket'
+            }).addTo(map);
+        }
+        map_update();
     }
+
+    function map_update(positions) {
+        if (positions) {
+            Turistforeningen.aktivitet_points = positions;
+        }
+
+        if (map && markers) {
+            markers.clearLayers();
+
+            var p = Turistforeningen.aktivitet_points;
+
+            if (p && p.length > 0) {
+                for (var i = 0; i < p.length; i++) {
+                    console.log(p[i]);
+
+                    // @TODO these are aktivity dates – there may be duplicates.
+
+                    // @TODO there should not be any dates without position
+                    if (!p[i].lat || !p[i].lng) {
+                        continue;
+                    }
+
+                    new L.Marker(new L.LatLng(p[i].lat, p[i].lng), {
+                        title: p[i].title
+                    }).bindPopup(
+                        [
+                            '<h3>' + p[i].title + '</h3>',
+                            '<p>' + p[i].desc + '</p>'
+                        ].join('')
+                    ).addTo(markers);
+                }
+
+                map.fitBounds(markers.getBounds(), {maxZoom: 10});
+            } else {
+                // @TODO where should we zoome to here?
+                map.setView([65, 12], 5);
+            }
+        }
+    }
+
 
     toggle_results_view_type.find('button').bind('click', function (e) {
         if (!$(this).hasClass('active')) {
