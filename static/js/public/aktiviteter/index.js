@@ -4,6 +4,7 @@ $(function() {
     var button_selections = filters.find("div.button-selections");
     var popups = listing.find("div.popups");
     var results = listing.find("div.results");
+    var results_map = results.find(".results-view-map");
     var results_content = results.find("div.content");
     var results_loading = results.find("div.loading");
     var results_fail = results.find("div.fail");
@@ -38,6 +39,12 @@ $(function() {
     function map_update(positions) {
         if (positions) {
             Turistforeningen.aktivitet_points = positions;
+        }
+
+        // If map is not visible, don't bother updating it.
+        // The map will be updated when the view is switched.
+        if (!results_map.is(':visible')) {
+            return;
         }
 
         if (map && markers) {
