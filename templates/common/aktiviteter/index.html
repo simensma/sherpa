@@ -19,7 +19,7 @@
 
 {% block js_globals %}
   <script>
-    Turistforeningen.aktivitet_points = JSON.parse("{{ aktivitet_positions_json|escapejs }}");
+    Turistforeningen.aktivitet_points = JSON.parse("{{ aktivitet_dates_positions|escapejs }}");
   </script>
 {% endblock %}
 
