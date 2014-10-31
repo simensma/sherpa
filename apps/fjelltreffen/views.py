@@ -22,6 +22,7 @@ from admin.images.util import standardize_extension
 from sherpa.decorators import user_requires, user_requires_login
 from fjelltreffen.models import Annonse
 from fjelltreffen.forms import ReplyForm, ReplyAnonForm
+from fjelltreffen.util import parse_for_spam
 from core import validator, librato
 from core.models import County
 from core.util import s3_bucket
@@ -91,6 +92,7 @@ def show(request, id):
                     }
                 })
                 content = render_to_string('central/fjelltreffen/reply_email.txt', email_context)
+                parse_for_spam(request, form.cleaned_data['name'], form.cleaned_data['email'], form.cleaned_data['text'], annonse)
                 send_mail('DNT Fjelltreffen - Svar fra %s' % form.cleaned_data['name'], content, settings.DEFAULT_FROM_EMAIL, [annonse.email], fail_silently=False)
                 librato.increment('sherpa.fjelltreffen_svar')
                 request.session['fjelltreffen.reply'] = {
