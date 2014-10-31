@@ -1090,6 +1090,9 @@ class ActivityDate(models.Model):
     def convert_signup_max_allowed(self):
         if self.booking == 0:
             return None
+        if self.booking < 0:
+            # Yes, there are cases of a negative number of signups being stored - assume no limit
+            return None
         return self.booking
 
     class Meta:
