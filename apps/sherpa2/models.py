@@ -608,10 +608,17 @@ class Activity(models.Model):
         from aktiviteter.models import Cabin
         from sherpa2.models import Forening as Sherpa2Forening
 
+        # A list of forening IDs which we're remapping at the time of import
+        FORENING_MAPPINGS = {
+            165: 724, # DNT ung Trondheim -> DNT ung Trøndelag
+        }
+
         foreninger = []
         cabins = []
         for id in self.get_owner_ids():
             try:
+                if id in FORENING_MAPPINGS:
+                    id = FORENING_MAPPINGS[id]
                 foreninger.append(Forening.objects.get(id=id))
             except Forening.DoesNotExist:
                 # Might be a forening of type 'cabin', check if it exists in our imported Cabin table
