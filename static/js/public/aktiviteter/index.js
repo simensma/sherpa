@@ -157,9 +157,15 @@ $(function() {
             data: { filter: JSON.stringify(filter) }
         }).done(function(result) {
             result = JSON.parse(result);
+
+            // Update list view
             results_content.attr('data-current-page', result.page);
             results_content.empty();
             results_content.append(result.html);
+
+            // Update map view
+            map_update(result.positions);
+
         }).fail(function(result) {
             results_content.empty();
             results_fail.show();
