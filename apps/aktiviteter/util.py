@@ -4,6 +4,8 @@ import json
 from django.db.models import Q
 from django.contrib.gis import geos
 from django.core.paginator import Paginator, EmptyPage
+from django.utils.html import strip_tags
+from django.utils.text import truncate_words
 
 from aktiviteter.models import AktivitetDate
 
@@ -90,6 +92,9 @@ def filter_aktivitet_dates(filter):
         for d in dates_to_remove:
             dates.remove(d)
 
+    return dates
+
+def paginate_aktivitet_dates(filter, dates):
     paginator = Paginator(dates, HITS_PER_PAGE)
 
     # Parse "special" values
@@ -103,4 +108,22 @@ def filter_aktivitet_dates(filter):
         aktivitet_dates = paginator.page(page)
     except EmptyPage:
         aktivitet_dates = paginator.page(1)
+
     return aktivitet_dates
+
+def mapify_aktivitet_dates(filter, dates):
+    dates_to_remove = []
+    for date in dates:
+        if not date.aktivitet.start_point:
+            dates_to_remove.append(date)
+    for date in dates_to_remove:
+        dates.remove(date)
+
+    return [{
+        'id': date.aktivitet.id,
+        'title': date.aktivitet.title,
+        'desc': truncate_words(strip_tags(date.aktivitet.description), 30),
+        'lat': date.aktivitet.start_point.get_coords()[0],
+        'lng': date.aktivitet.start_point.get_coords()[1],
+    } for date in dates]
+

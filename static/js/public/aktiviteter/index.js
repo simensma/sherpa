@@ -4,6 +4,7 @@ $(function() {
     var button_selections = filters.find("div.button-selections");
     var popups = listing.find("div.popups");
     var results = listing.find("div.results");
+    var results_map = results.find(".results-view-map");
     var results_content = results.find("div.content");
     var results_loading = results.find("div.loading");
     var results_fail = results.find("div.fail");
@@ -22,21 +23,65 @@ $(function() {
         forceParse: false
     });
 
-    var map = L.map('map').setView([65, 12], 5);
-    L.tileLayer('http://opencache.statkart.no/gatekeeper/gk/gk.open_gmaps?layers=topo2&zoom={z}&x={x}&y={y}', {
-        attribution: 'Kartverket'
-    }).addTo(map);
+    var map = markers = null;
 
-    var p = Turistforeningen.aktivitet_points;
-    for(var i=0; i<p.length; i++) {
-        var popup_content = popups.find("div[data-aktivitet-date-id='" + p[i].id + "']");
-        marker = new L.Marker(new L.LatLng(p[i].lat, p[i].lng), {
-            'title': popup_content.find("h3").text()
-        }).bindPopup(popup_content.html()).addTo(map);
+    function map_init() {
+        if(!map) {
+            map = L.map('map');
+            markers = L.featureGroup().addTo(map);
+            L.tileLayer('http://opencache.statkart.no/gatekeeper/gk/gk.open_gmaps?layers=topo2&zoom={z}&x={x}&y={y}', {
+                attribution: 'Kartverket'
+            }).addTo(map);
+        }
+        map_update();
     }
 
+    function map_update(positions) {
+        if(positions) {
+            Turistforeningen.aktivitet_points = positions;
+        }
+
+        // If map is not visible, don't bother updating it.
+        // The map will be updated when the view is switched.
+        if(!results_map.is(':visible')) {
+            return;
+        }
+
+        if(map && markers) {
+            markers.clearLayers();
+
+            var p = Turistforeningen.aktivitet_points;
+
+            if(p && p.length > 0) {
+                for(var i = 0; i < p.length; i++) {
+                    // @TODO these are aktivity dates – there may be duplicates.
+
+                    // @TODO there should not be any dates without position
+                    if(!p[i].lat || !p[i].lng) {
+                        continue;
+                    }
+
+                    new L.Marker(new L.LatLng(p[i].lat, p[i].lng), {
+                        title: p[i].title
+                    }).bindPopup(
+                        [
+                            '<h3>' + p[i].title + '</h3>',
+                            '<p>' + p[i].desc + '</p>'
+                        ].join('')
+                    ).addTo(markers);
+                }
+
+                map.fitBounds(markers.getBounds(), {maxZoom: 10});
+            } else {
+                // @TODO where should we zoome to here?
+                map.setView([65, 12], 5);
+            }
+        }
+    }
+
+
     toggle_results_view_type.find('button').bind('click', function (e) {
-        if (!$(this).hasClass('active')) {
+        if(!$(this).hasClass('active')) {
             var activeView = results.find('.results-view:not(.jq-hide)');
             var results_list = results.find('.results-view-list');
             var results_map = results.find('.results-view-map');
@@ -46,6 +91,8 @@ $(function() {
 
             toggle_results_view_type.find('button').toggleClass('active');
         }
+
+        map_init();
     });
 
     toggle_filters_and_results.find('button').bind('click', function (e) {
@@ -54,11 +101,11 @@ $(function() {
         toggle_filters_and_results.find('button').show();
         $(this).hide();
 
-        if (action === 'show-activities-filters') {
+        if(action === 'show-activities-filters') {
             column_filters.removeClass('hidden-xs');
             column_results.addClass('hidden-xs');
 
-        } else if (action === 'show-activities-results') {
+        } else if(action === 'show-activities-results') {
             column_filters.addClass('hidden-xs');
             column_results.removeClass('hidden-xs');
         }
@@ -76,7 +123,7 @@ $(function() {
 
     // Disable enter submit on forms
     filters.find("form").bind("keypress", function(e) {
-        if (e.keyCode == 13) {
+        if(e.keyCode == 13) {
             refreshContent(results_content.attr('data-current-page'));
             return false;
         }
@@ -115,12 +162,19 @@ $(function() {
             data: { filter: JSON.stringify(filter) }
         }).done(function(result) {
             result = JSON.parse(result);
+
+            // Update list view
             results_content.attr('data-current-page', result.page);
             results_content.empty();
             results_content.append(result.html);
+
+            // Update map view
+            map_update(result.positions);
+
         }).fail(function(result) {
             results_content.empty();
             results_fail.show();
+            map_update([]);
         }).always(function(result) {
             results_loading.hide();
         });
@@ -183,7 +237,7 @@ $(function() {
             }).always(function() { options.callback({results: res}); });
         }
     }).on('change', function(e) {
-        if (e.added) {
+        if(e.added) {
             $("input[name='lat_lng']").val(e.added.nord + ',' + e.added.aust);
         } else {
             $("input[name='lat_lng']").val('');
