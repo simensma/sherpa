@@ -108,4 +108,22 @@ def paginate_aktivitet_dates(filter, dates):
         aktivitet_dates = paginator.page(page)
     except EmptyPage:
         aktivitet_dates = paginator.page(1)
+
     return aktivitet_dates
+
+def mapify_aktivitet_dates(filter, dates):
+    dates_to_remove = []
+    for date in dates:
+        if not date.aktivitet.start_point:
+            dates_to_remove.append(date)
+    for date in dates_to_remove:
+        dates.remove(date)
+
+    return [{
+        'id': date.aktivitet.id,
+        'title': date.aktivitet.title,
+        'desc': truncate_words(strip_tags(date.aktivitet.description), 30),
+        'lat': date.aktivitet.start_point.get_coords()[0],
+        'lng': date.aktivitet.start_point.get_coords()[1],
+    } for date in dates]
+
