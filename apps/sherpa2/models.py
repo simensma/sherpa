@@ -721,6 +721,8 @@ class Activity(models.Model):
                 # Strip query parameters
                 if '?' in url:
                     url = url[:url.find('?')]
+                if '#' in url:
+                    url = url[:url.find('#')]
 
                 title_match = img_title_regex.search(img)
                 parsed_images.append({
