@@ -47,8 +47,6 @@ $(function() {
 
             if (p && p.length > 0) {
                 for (var i = 0; i < p.length; i++) {
-                    console.log(p[i]);
-
                     // @TODO these are aktivity dates – there may be duplicates.
 
                     // @TODO there should not be any dates without position
