@@ -77,10 +77,9 @@ def image_upload_dialog(request):
         return render(request, 'common/admin/images/iframe.html', {'result': result})
 
     try:
-        extension = image.name.split(".")[-1].lower()
         image = upload_image(
             image_data=image.read(),
-            extension=extension,
+            extension=image.name.split(".")[-1].lower(),
             description=request.POST['description'],
             album=None,
             photographer=request.POST['photographer'],
@@ -93,7 +92,7 @@ def image_upload_dialog(request):
 
         result = json.dumps({
             'status': 'success',
-            'url': 'http://%s/%s%s.%s' % (s3_bucket(), settings.AWS_IMAGEGALLERY_PREFIX, image.key, extension),
+            'url': 'http://%s/%s%s.%s' % (s3_bucket(), settings.AWS_IMAGEGALLERY_PREFIX, image.key, image.extension),
         })
         return render(request, 'common/admin/images/iframe.html', {'result': result})
     except(IOError, KeyError):
@@ -117,6 +116,8 @@ def image_upload_dialog(request):
 #
 
 def upload_image(image_data, extension, description, album, photographer, credits, licence, content_type, tags, uploader):
+    """Note that the provided file extension will be standardized and may change, so callers should take care to use
+    the extension of the returned image object if needed further."""
     conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
     bucket = conn.get_bucket(s3_bucket())
 
