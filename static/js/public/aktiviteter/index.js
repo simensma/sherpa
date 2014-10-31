@@ -26,7 +26,7 @@ $(function() {
     var map = markers = null;
 
     function map_init() {
-        if (!map) {
+        if(!map) {
             map = L.map('map');
             markers = L.featureGroup().addTo(map);
             L.tileLayer('http://opencache.statkart.no/gatekeeper/gk/gk.open_gmaps?layers=topo2&zoom={z}&x={x}&y={y}', {
@@ -37,27 +37,27 @@ $(function() {
     }
 
     function map_update(positions) {
-        if (positions) {
+        if(positions) {
             Turistforeningen.aktivitet_points = positions;
         }
 
         // If map is not visible, don't bother updating it.
         // The map will be updated when the view is switched.
-        if (!results_map.is(':visible')) {
+        if(!results_map.is(':visible')) {
             return;
         }
 
-        if (map && markers) {
+        if(map && markers) {
             markers.clearLayers();
 
             var p = Turistforeningen.aktivitet_points;
 
-            if (p && p.length > 0) {
-                for (var i = 0; i < p.length; i++) {
+            if(p && p.length > 0) {
+                for(var i = 0; i < p.length; i++) {
                     // @TODO these are aktivity dates – there may be duplicates.
 
                     // @TODO there should not be any dates without position
-                    if (!p[i].lat || !p[i].lng) {
+                    if(!p[i].lat || !p[i].lng) {
                         continue;
                     }
 
@@ -81,7 +81,7 @@ $(function() {
 
 
     toggle_results_view_type.find('button').bind('click', function (e) {
-        if (!$(this).hasClass('active')) {
+        if(!$(this).hasClass('active')) {
             var activeView = results.find('.results-view:not(.jq-hide)');
             var results_list = results.find('.results-view-list');
             var results_map = results.find('.results-view-map');
@@ -101,11 +101,11 @@ $(function() {
         toggle_filters_and_results.find('button').show();
         $(this).hide();
 
-        if (action === 'show-activities-filters') {
+        if(action === 'show-activities-filters') {
             column_filters.removeClass('hidden-xs');
             column_results.addClass('hidden-xs');
 
-        } else if (action === 'show-activities-results') {
+        } else if(action === 'show-activities-results') {
             column_filters.addClass('hidden-xs');
             column_results.removeClass('hidden-xs');
         }
@@ -123,7 +123,7 @@ $(function() {
 
     // Disable enter submit on forms
     filters.find("form").bind("keypress", function(e) {
-        if (e.keyCode == 13) {
+        if(e.keyCode == 13) {
             refreshContent(results_content.attr('data-current-page'));
             return false;
         }
@@ -237,7 +237,7 @@ $(function() {
             }).always(function() { options.callback({results: res}); });
         }
     }).on('change', function(e) {
-        if (e.added) {
+        if(e.added) {
             $("input[name='lat_lng']").val(e.added.nord + ',' + e.added.aust);
         } else {
             $("input[name='lat_lng']").val('');
