@@ -104,7 +104,7 @@ def setup_site(request):
         if not request.POST['domain-type'] in ['fqdn', 'subdomain']:
             raise PermissionDenied
 
-        domain = request.POST['domain'].strip()
+        domain = request.POST['domain'].strip().lower()
         subdomain = domain
         if request.POST['domain-type'] == 'subdomain':
             domain = '%s.test.turistforeningen.no' % domain

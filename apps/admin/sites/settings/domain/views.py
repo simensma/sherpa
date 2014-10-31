@@ -11,7 +11,7 @@ def index(request, site):
         return render(request, 'common/admin/sites/settings/domain/index.html', context)
 
     elif request.method == 'POST':
-        domain = request.POST['domain'].strip()
+        domain = request.POST['domain'].strip().lower()
 
         if domain.replace('http://', '').rstrip('/') == active_site.domain:
             # Special case; the domain wasn't changed - so just say that it worked
