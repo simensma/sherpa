@@ -1034,8 +1034,18 @@ class ActivityDate(models.Model):
             date = AktivitetDate()
 
         date.aktivitet = aktivitet
-        date.start_date = self.convert_start_date()
-        date.end_date = self.convert_end_date()
+        try:
+            date.start_date = self.convert_start_date()
+            date.end_date = self.convert_end_date()
+        except ConversionImpossible:
+            if self.online == ActivityDate.ONLINE_DISABLED:
+                # Couldn't convert the start/end date, but this date object isn't online anyway, so ignore it
+                if date.id is not None:
+                    date.delete()
+                return
+            else:
+                raise
+
         if self.convert_signup_enabled():
             date.signup_enabled = True
             date.signup_max_allowed = self.convert_signup_max_allowed()
