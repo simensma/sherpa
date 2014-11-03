@@ -216,6 +216,15 @@
           {% endif %}
 
           {% trans "Medlemskapet gjelder for" %} <strong>{{ membership_year_start.initiation_date|samtut }}</strong>.
+
+          {% if membership_year_start.public_date.has_passed %}
+            <br>
+            {% blocktrans with next_year=membership_year_start.public_date.applicable_year count users=enrollment.users.count %}
+              Du vil motta Fjell og Vidde og Årboken fra 1. januar {{ next_year }}.
+            {% plural %}
+              Dere vil motta Fjell og Vidde og Årboken fra 1. januar {{ next_year }}.
+            {% endblocktrans %}
+          {% endif %}
         </p>
 
         <p>
