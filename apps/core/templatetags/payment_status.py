@@ -5,7 +5,7 @@ from django import template
 register = template.Library()
 
 @register.filter
-def payment_status(user, prefix='Betalt,Ikke betalt'):
+def payment_status(user, prefix='Medlem,Ikke medlem'):
     """
     Outputs the user's payment status in text format. Could be done with template logic, but requires
     a fair amount of logic and it's a fairly typical pattern.
@@ -24,15 +24,15 @@ def payment_status(user, prefix='Betalt,Ikke betalt'):
 
     if status['new_membership_year']:
         if status['current_year'] and status['next_year']:
-            return '%s for %s, samt ut %s'% (prefix_paid, next_year, current_year)
+            return '%s ut %s, samt hele %s' % (prefix_paid, current_year, next_year)
         elif status['current_year'] and not status['next_year']:
-            return '%s ut %s, men ikke for %s' % (prefix_paid, current_year, next_year)
+            return '%s ut %s, men ikke %s' % (prefix_paid, current_year, next_year)
         elif not status['current_year'] and status['next_year']:
             raise Exception("Illegal state: current_year should always be paid when next_year is. Go debug!")
         elif not status['current_year'] and not status['next_year']:
-            return '%s for %s eller %s' % (prefix_not_paid, current_year, next_year)
+            return '%s %s eller %s' % (prefix_not_paid, current_year, next_year)
     else:
         if status['current_year']:
-            return '%s for %s' % (prefix_paid, current_year)
+            return '%s %s' % (prefix_paid, current_year)
         else:
-            return '%s for %s' % (prefix_not_paid, current_year)
+            return '%s %s' % (prefix_not_paid, current_year)
