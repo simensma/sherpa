@@ -57,6 +57,7 @@ def show(request, aktivitet_date):
         raise Http404
 
     context = {
+        'hide_unpublished_warning': True,
         'aktivitet_date': aktivitet_date,
         'user_is_participating': request.user.is_authenticated() and request.user in aktivitet_date.participants.all()
     }
