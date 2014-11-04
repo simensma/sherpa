@@ -45,6 +45,7 @@
         {% if site == active_site %} class="active"{% endif %}
         {% if not site.has_published_front_page %}
           data-tooltip
+          data-container="body"
           title="{{ site.get_title }} har ikke en publisert forside, du vil derfor få feilmelding hvis du prøver å vise siden!"
         {% endif %}
         >
