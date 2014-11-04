@@ -14,7 +14,7 @@ from django.conf import settings
 from sherpa.decorators import user_requires_login
 from foreninger.models import Forening
 from focus.models import FocusZipcode, Price, Actor
-from focus.util import ACTOR_ENDCODE_DUBLETT, DNT_OSLO_ID as DNT_OSLO_ID_FOCUS
+from focus.util import ACTOR_ENDCODE_DUBLETT, DNT_CENTRAL_ID as DNT_CENTRAL_ID_FOCUS
 from core.models import Zipcode
 from enrollment.models import State
 from membership.models import SMSServiceRequest
@@ -25,9 +25,9 @@ logger = logging.getLogger('sherpa')
 
 def benefits(request, forening_id):
     if forening_id is None:
-        # No forening-attachment provided, use default prices (DNT Oslo og Omegn).
+        # No forening-attachment provided, use default prices; those connected to the DNT central group
         forening = None
-        forening_focus_id = DNT_OSLO_ID_FOCUS
+        forening_focus_id = DNT_CENTRAL_ID_FOCUS
     else:
         forening = cache.get('forening.%s' % forening_id)
         if forening is None:
