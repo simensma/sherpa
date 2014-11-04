@@ -4,32 +4,43 @@
  */
 
 .aktivitet-item() {
+  display: block;
   position: relative;
   margin-bottom: 20px;
-  background-color: #fff;
   overflow: hidden;
+  background-color: #fff;
 
+  // This is an anchor element, but default to displaying text as normal...
+  color: @default-text-color;
+  text-decoration: none;
+
+  // Except for the header, which should look and behave like an anchor
   h2 {
     .header3();
     margin-bottom: 0;
     line-height: 1.4;
+    color: @profile-red;
+  }
+
+  &:hover h2 {
+    text-decoration: underline;
   }
 
   div.image {
+    position: relative;
     display: none;
     float: left;
-    overflow: hidden;
     margin-right: 15px;
-    background-color: #999;
-    position: relative;
+    overflow: hidden;
     text-align: center;
+    background-color: #999;
 
     > img {
+      position: relative;
+      display: block;
+      z-index: 100;
       max-width: none;
       max-height: 100%;
-      display: block;
-      position: relative;
-      z-index: 100;
 
       &.image-replacement {
         display: inline-block;
