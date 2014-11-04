@@ -168,6 +168,9 @@ $(function() {
             results_content.empty();
             results_content.append(result.html);
 
+            // Force media-query style update since it listens only on size changes
+            new ElementQueries().update()
+
             // Update map view
             map_update(result.positions);
 
