@@ -226,8 +226,9 @@ $(function() {
         placeholder: 'Finn sted',
         minimumInputLength: 2,
         escapeMarkup: function (m) { return m; },
-        formatSearching: function () { return 'Søker'; },
-        formatInputTooShort: function (term, minLength) { return 'Minimum to bokstaver'; },
+        formatSearching: 'Søker...',
+        formatNoMatches: 'Ingen treff i Kartverket!',
+        formatInputTooShort: 'Minimum to bokstaver',
         formatResult: positionSsrToHtml,
         query: function(options) {
             var res = [];
