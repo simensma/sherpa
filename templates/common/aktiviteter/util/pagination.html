@@ -1,0 +1,26 @@
+<ul class="pagination pagination-sm">
+  <li{% if current == 1 %} class="disabled"{% endif %}>
+    <a href="javascript:undefined" class="page" data-page="min">«</a>
+  </li>
+
+  {% for i in paginator.page_range %}
+    {% if i == current|add:"-3" %}
+      <li class="disabled"><a href=javascript:undefiend" class="page">…</a></li>
+    {% endif %}
+
+    {% if i > current|add:"-3" and i < current|add:"3" %}
+      <li{% if i == current %} class="active"{% endif %}>
+        <a href="javascript:undefined" class="page" data-page="{{ i }}">{{ i }}</a>
+      </li>
+    {% endif %}
+
+    {% if i == current|add:"3" %}
+      <li class="disabled"><a href=javascript:undefiend" class="page">…</a></li>
+    {% endif %}
+  {% endfor %}
+
+  <li{% if current == paginator.num_pages %} class="disabled"{% endif %}>
+    <a href="javascript:undefined" class="page" data-page="max">»</a>
+  </li>
+</ul>
+
