@@ -1,5 +1,5 @@
 {% with aktivitet_date.aktivitet.get_image as header_image %}
-<div class="aktivitet{% if header_image %} has-headerimage{% endif %}">
+<div class="aktivitet{% if header_image %} has-headerimage{% endif %}" data-dnt-container="aktivitet">
   <div class="row">
     <div class="header">
       {% if header_image %}
@@ -25,9 +25,14 @@
                   <dt>Alternative datoer</dt>
                   <dd>
                     {% if aktivitet_date.other_dates|length > 1 %}
-                      <a href="javascript:undefined" class="show-alternative-dates">Vis {{ aktivitet_date.other_dates|length }} andre datoer</a>
+                      <a href="javascript:undefined" data-dnt-trigger="alternative-dates">
+                        Vis {{ aktivitet_date.other_dates|length }} andre datoer
+                      </a>
                     {% endif %}
-                    <span class="alternatives{% if aktivitet_date.other_dates|length > 1 %} hide{% endif %}">
+                    <span
+                      {% if aktivitet_date.other_dates|length > 1 %}class="jq-hide"{% endif %}
+                      data-dnt-container="alternative-dates">
+
                       {% for date in aktivitet_date.get_other_dates_ordered %}
                         <a href="{% url 'aktiviteter.views.show' date.id %}">
                           {{ date.start_date|date:"j. F Y" }}

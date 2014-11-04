@@ -1,9 +1,8 @@
 $(function() {
-    var aktivitet = $("div.aktivitet");
+    var aktivitet = $('[data-dnt-container="aktivitet"]');
 
-    aktivitet.find("a.show-alternative-dates").click(function() {
-        var alternatives = $(this).siblings("div.alternatives");
+    aktivitet.find('[data-dnt-trigger="alternative-dates"]').click(function() {
+        $(this).siblings('[data-dnt-container="alternative-dates"]').show();
         $(this).remove();
-        alternatives.slideDown();
     });
 });
