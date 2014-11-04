@@ -1,6 +1,7 @@
 # encoding: utf-8
 from django import template
 from django.template.defaultfilters import date
+from django.utils.translation import ugettext as _
 
 register = template.Library()
 
@@ -10,9 +11,8 @@ def date_fromto(date1, date2):
         # A 1-day event, we only need to show one date
         return date(date1, "j. F Y")
     else:
-        # TODO translations
         if date1.month == date2.month and date1.year == date2.year:
             # Same month, display the month only once
-            return "%s til %s" % (date(date1, "j."), date(date2, "j. F Y"))
+            return "%s %s %s" % (date(date1, "j."), _('til'), date(date2, "j. F Y"))
         else:
-            return "%s til %s" % (date(date1, "j. F"), date(date2, "j. F Y"))
+            return "%s %s %s" % (date(date1, "j. F"), _('til'), date(date2, "j. F Y"))
