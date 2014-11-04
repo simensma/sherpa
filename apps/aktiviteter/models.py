@@ -289,7 +289,9 @@ class AktivitetDate(models.Model):
         diff = self.end_date-self.start_date
         days = diff.days
 
-        if days == 0:
+        if diff.seconds == 0:
+            return u'1 dag'
+        elif days == 0:
             hours = diff.seconds / 3600
             return u'%s timer' % (hours)
         else:
