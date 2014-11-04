@@ -118,7 +118,7 @@
 
 </header>
 
-{% if not site.is_published %}
+{% if site.is_published and not hide_unpublished_warning %}
   <div class="alert alert-error">
     <strong>
       Dette er en test-side!
