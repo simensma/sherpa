@@ -22,45 +22,7 @@
 
 
   {% for date in aktivitet_dates %}
-    <div class="aktivitet-item">
-      <div class="image">
-        {% with date.aktivitet.get_image.url as aktivitet_image_url %}
-          {% if aktivitet_image_url %}
-            <img src="{{ aktivitet_image_url }}" alt="Aktivitetens hovedbilde">
-          {% else %}
-            <img src="/static/img/icons/thenounproject/icon_385/icon_385.svg" class="image-replacement" alt="Aktivitet ikon">
-          {% endif %}
-        {% endwith %}
-      </div>
-      <div class="info">
-        <h2>
-          <a href="{% url 'aktiviteter.views.show' date.id %}">{{ date.aktivitet.title|default:"(Mangler navn)" }}</a>
-        </h2>
-        <div class="meta">
-          <div class="category">{{ date.aktivitet.get_category }}</div>
-          <div class="date">
-            <span class="long">{{ date.start_date|date:"j. F Y" }}</span>
-            <span class="short" aria-hidden="true">{{ date.start_date|date:"d.m.y" }}</span>
-          </div>
-          <div class="duration">
-            <span class="">({{ date.get_duration }})</span>
-          </div>
-        </div>
-
-        {% if date.aktivitet.is_imported %}
-          <p class="description xs" aria-hidden="true">{{ date.aktivitet.description|striptags|truncatewords:"6" }}</p>
-          <p class="description sm" aria-hidden="true">{{ date.aktivitet.description|striptags|truncatewords:"12" }}</p>
-          <p class="description md" aria-hidden="true">{{ date.aktivitet.description|striptags|truncatewords:"24" }}</p>
-          <p class="description lg">{{ date.aktivitet.description|striptags|truncatewords:"48" }}</p>
-        {% else %}
-          <p class="description xs" aria-hidden="true">{{ date.aktivitet.description|truncatewords:"6" }}</p>
-          <p class="description sm" aria-hidden="true">{{ date.aktivitet.description|truncatewords:"12" }}</p>
-          <p class="description md" aria-hidden="true">{{ date.aktivitet.description|truncatewords:"24" }}</p>
-          <p class="description lg">{{ date.aktivitet.description|truncatewords:"48" }}</p>
-        {% endif %}
-
-      </div>
-    </div>
+    {% include 'common/aktiviteter/listing_item.html' with date=date %}
   {% endfor %}
 
 <div class="listing-footer clearfix">
