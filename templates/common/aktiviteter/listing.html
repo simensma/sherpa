@@ -3,21 +3,9 @@
     Viser {{ aktivitet_dates.object_list|length }} av {{ aktivitet_dates.paginator.count }} aktiviteter
   </p>
 
-  <ul class="pagination pagination-sm">
-    <li{% if aktivitet_dates.number == 1 %} class="disabled"{% endif %}>
-      <a href="javascript:undefined" class="page" data-page="min">«</a>
-    </li>
-
-    {% for number in aktivitet_dates.paginator.page_range %}
-      <li{% if number == aktivitet_dates.number %} class="active"{% endif %}>
-        <a href="javascript:undefined" class="page" data-page="{{ number }}">{{ number }}</a>
-      </li>
-    {% endfor %}
-
-    <li{% if aktivitet_dates.number == aktivitet_dates.paginator.num_pages %} class="disabled"{% endif %}>
-      <a href="javascript:undefined" class="page" data-page="max">»</a>
-    </li>
-  </ul>
+  {% with paginator=aktivitet_dates.paginator current=aktivitet_dates.number %}
+    {% include 'common/aktiviteter/util/pagination.html' %}
+  {% endwith %}
 </div>
 
 
@@ -30,19 +18,7 @@
     Viser {{ aktivitet_dates.object_list|length }} av {{ aktivitet_dates.paginator.count }} aktiviteter
   </p>
 
-  <ul class="pagination pagination-sm">
-    <li{% if aktivitet_dates.number == 1 %} class="disabled"{% endif %}>
-      <a href="javascript:undefined" class="page" data-page="min">«</a>
-    </li>
-
-    {% for number in aktivitet_dates.paginator.page_range %}
-      <li{% if number == aktivitet_dates.number %} class="active"{% endif %}>
-        <a href="javascript:undefined" class="page" data-page="{{ number }}">{{ number }}</a>
-      </li>
-    {% endfor %}
-
-    <li{% if aktivitet_dates.number == aktivitet_dates.paginator.num_pages %} class="disabled"{% endif %}>
-      <a href="javascript:undefined" class="page" data-page="max">»</a>
-    </li>
-  </ul>
+  {% with paginator=aktivitet_dates.paginator current=aktivitet_dates.number %}
+    {% include 'common/aktiviteter/util/pagination.html' %}
+  {% endwith %}
 </div>
