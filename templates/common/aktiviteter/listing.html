@@ -8,10 +8,9 @@
   {% endwith %}
 </div>
 
-
-  {% for date in aktivitet_dates %}
-    {% include 'common/aktiviteter/listing_item.html' with date=date %}
-  {% endfor %}
+{% for date in aktivitet_dates %}
+  {% include 'common/aktiviteter/listing_item.html' with date=date %}
+{% endfor %}
 
 <div class="listing-footer clearfix">
   <p>
@@ -22,3 +21,4 @@
     {% include 'common/aktiviteter/util/pagination.html' %}
   {% endwith %}
 </div>
+
