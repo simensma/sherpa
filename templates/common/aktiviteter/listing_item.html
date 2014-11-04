@@ -1,3 +1,5 @@
+{% load stripcomments %}
+
 <div class="aktivitet-item">
   <div class="image">
     {% with date.aktivitet.get_image.url as aktivitet_image_url %}
@@ -24,10 +26,10 @@
     </div>
 
     {% if date.aktivitet.is_imported %}
-      <p class="description xs" aria-hidden="true">{{ date.aktivitet.description|striptags|truncatewords:"6" }}</p>
-      <p class="description sm" aria-hidden="true">{{ date.aktivitet.description|striptags|truncatewords:"12" }}</p>
-      <p class="description md" aria-hidden="true">{{ date.aktivitet.description|striptags|truncatewords:"24" }}</p>
-      <p class="description lg">{{ date.aktivitet.description|striptags|truncatewords:"48" }}</p>
+      <p class="description xs" aria-hidden="true">{{ date.aktivitet.description|stripcomments|truncatewords:"6"|safe }}</p>
+      <p class="description sm" aria-hidden="true">{{ date.aktivitet.description|stripcomments|truncatewords:"12"|safe }}</p>
+      <p class="description md" aria-hidden="true">{{ date.aktivitet.description|stripcomments|truncatewords:"24"|safe }}</p>
+      <p class="description lg">{{ date.aktivitet.description|stripcomments|truncatewords:"48" }}</p>
     {% else %}
       <p class="description xs" aria-hidden="true">{{ date.aktivitet.description|truncatewords:"6" }}</p>
       <p class="description sm" aria-hidden="true">{{ date.aktivitet.description|truncatewords:"12" }}</p>
