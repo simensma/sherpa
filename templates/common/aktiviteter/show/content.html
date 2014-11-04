@@ -1,3 +1,5 @@
+{% load date_fromto %}
+
 {% with aktivitet_date.aktivitet.get_image as header_image %}
 <div class="aktivitet{% if header_image %} has-headerimage{% endif %}" data-dnt-container="aktivitet">
   <div class="row">
@@ -35,9 +37,7 @@
 
                       {% for date in aktivitet_date.get_other_dates_ordered %}
                         <a href="{% url 'aktiviteter.views.show' date.id %}">
-                          {{ date.start_date|date:"j. F Y" }}
-                          til
-                          {{ date.end_date|date:"j. F Y" }}
+                          {{ date.start_date|date_fromto:date.end_date }}
                         </a>
                         {% if not forloop.last %}<br>{% endif %}
                       {% endfor %}
