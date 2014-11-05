@@ -198,6 +198,7 @@ $(function() {
     // Choose crop ratio on 'crop-content' icon click
     var JcropApi;
     $(document).on('click', 'article div.crop-content', function(e) {
+        var ratio;
 
         if (JcropApi) {
             toolbars_container.find('div.crop-control button.use').first().click();
@@ -214,6 +215,7 @@ $(function() {
             image.removeAttr('style');
             image.removeClass('cropped');
             content.removeAttr('style');
+            ratio = crop.ratio;
         }
 
         // Set up crop control elements
@@ -246,7 +248,10 @@ $(function() {
         $(this).tooltip('destroy').remove();
 
         // Default to free
-        crop_control.find("div.choose-ratio button[data-ratio='free']").click();
+        ratio = ratio || 'free';
+
+        // Select crop version in toolbar to apply selection
+        crop_control.find('div.choose-ratio button[data-ratio="' + ratio + '"]').click();
     });
 
     // Selecting a cropping ratio
@@ -277,6 +282,7 @@ $(function() {
                     selection: selection,
                     width: content.find("img").width(),
                     height: content.find("img").height(),
+                    ratio: ratio
                 };
                 content.attr('data-json', JSON.stringify(image_json));
             },
