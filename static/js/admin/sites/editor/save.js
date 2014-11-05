@@ -40,7 +40,7 @@ $(function() {
 
             var no_save_warning_height = no_save_warning.outerHeight();
             no_save_warning.css('margin-top', -no_save_warning_height);
-
+            no_save_warning.css('display', 'block');
             no_save_warning.removeClass('jq-hide');
 
             no_save_warning.animate(
