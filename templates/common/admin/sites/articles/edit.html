@@ -220,7 +220,12 @@
               <div class="row">
                 <div class="col-lg-12">
                   <div class="pull-left">
-                    <a class="btn btn-link quit" href="{% url 'admin.sites.pages.page.list' active_site.id %}" class="btn btn-default quit" data-confirm="Er du sikker på at du vil gå tilbake til Sherpa uten å lagre?">Avslutt redigering uten å lagre</a>
+                    <a
+                      class="btn btn-link quit"
+                      href="{% url 'admin.sites.pages.page.list' active_site.id %}"
+                      data-confirm="Husk å lagre eventuelle endringer før du avslutter redigering! Dersom du har ulagrede endringer og avslutter vil disse gå tapt. Er du sikker på at du vil avslutte redigering?">
+                      Avslutt redigering
+                    </a>
                   </div>
                   <div class="pull-right">
                     <div class="status">
