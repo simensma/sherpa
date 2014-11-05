@@ -19,6 +19,7 @@ from django.core.exceptions import PermissionDenied
 import requests
 from lxml import etree
 
+from core import librato
 from core.models import Zipcode, FocusCountry
 from focus.models import FocusZipcode, Enrollment as FocusEnrollment, Actor, ActorAddress
 from focus.util import get_membership_type_by_codename
@@ -528,6 +529,7 @@ def process_invoice(request):
     for user in enrollment.users.all():
         user.pending_user = User.create_pending_user(user.memberid)
         user.save()
+        librato.increment('sherpa.medlemmer.innmeldinger')
 
     prepare_and_send_email(request, enrollment)
     enrollment.state = 'complete'
@@ -644,6 +646,7 @@ def process_card(request):
                     focus_user.save()
                     user.pending_user = User.create_pending_user(user.memberid)
                     user.save()
+                    librato.increment('sherpa.medlemmer.innmeldinger')
                 prepare_and_send_email(request, enrollment)
                 enrollment.state = 'complete'
                 enrollment.result = 'success_card'
