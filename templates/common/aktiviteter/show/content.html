@@ -33,7 +33,7 @@
                     {% endif %}
                     <span
                       {% if aktivitet_date.other_dates|length > 1 %}class="jq-hide"{% endif %}
-                      data-dnt-container="alternative-dates">
+                      data-dnt-container="alternative-dates"><br>
 
                       {% for date in aktivitet_date.get_other_dates_ordered %}
                         <a href="{% url 'aktiviteter.views.show' date.id %}">
