@@ -33,20 +33,15 @@
     margin-right: 15px;
     overflow: hidden;
     text-align: center;
+
     background-color: #999;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
 
-    > img {
-      position: relative;
-      display: block;
-      z-index: 100;
-      max-width: none;
-      max-height: 100%;
-
-      &.image-replacement {
-        display: inline-block;
-        height: 53%;
-        margin-top: 25%;
-      }
+    &.image-replacement {
+      background-position: 30px 40px;
+      background-size: 60%;
     }
 
   }
