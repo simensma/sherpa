@@ -249,6 +249,7 @@ $(function() {
             result = JSON.parse(result);
 
             lastSaveCount = 0;
+            last_saved_msg_container.html('');
 
             statusIcon = '<i class="glyphicon glyphicon-heart"></i>';
             save_button.prop('disabled', false);
