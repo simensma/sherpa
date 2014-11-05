@@ -21,7 +21,17 @@
               <h3 class="heading">Tur med turleder</h3>
               <dl>
                 <dt>Turdato</dt>
-                <dd>{{ aktivitet_date.start_date|date:"j. F Y H:i" }} til {{ aktivitet_date.end_date|date:"j. F Y H:i" }}</dd>
+                <dd>
+                  {{ aktivitet_date.start_date|date:"j. F Y" }}
+                  {% if aktivitet_date.get_duration_days == 0 %}
+                    {% if aktivitet_date.get_duration_hours != 0%}
+                      fra kl. {{ aktivitet_date.start_date|date:"H:i" }}
+                      til kl. {{ aktivitet_date.end_date|date:"H:i" }}
+                    {% endif %}
+                  {% else %}
+                    til {{ aktivitet_date.end_date|date:"j. F Y" }}
+                  {% endif %}
+                </dd>
 
                 {% if aktivitet_date.other_dates|length > 0 %}
                   <dt>Alternative datoer</dt>
