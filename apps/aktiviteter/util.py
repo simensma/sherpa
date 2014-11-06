@@ -13,7 +13,7 @@ HITS_PER_PAGE = 20
 
 def filter_aktivitet_dates(filter):
 
-    dates = AktivitetDate.get_published().filter(aktivitet__private=False)
+    dates = AktivitetDate.get_published().prefetch_related('aktivitet').filter(aktivitet__private=False)
 
     if 'search' in filter and len(filter['search']) > 2:
         # @TODO add search on aktivitet__code
