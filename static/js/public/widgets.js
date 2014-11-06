@@ -5,6 +5,7 @@ $(function() {
     Widgets.runIfExists('carousel', $("div.widget.carousel"));
     Widgets.runIfExists('articles', $("div.widget.articles"));
     Widgets.runIfExists('campaign', $("div.widget.campaign"), true);
+    // Note that there's no need to run the aktivitet_listing widget
 
 });
 
@@ -93,6 +94,12 @@ $(function() {
                     $(this).addClass('font-size-limit-exceeded');
                 }
             });
+
+        } else if(type === 'aktivitet_listing') {
+
+            // Make sure the media query has been executed. This works automatically on the public pages and is only
+            // used in the admin UI when inserting a new instance of this widget.
+            new ElementQueries().update();
 
         }
     };
