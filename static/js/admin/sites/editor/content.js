@@ -5,6 +5,8 @@ $(function() {
     var editor = $("div.cms-editor");
     var article = editor.find("article");
     var insertion_templates = editor.find('[data-dnt-container="insertion-templates"]');
+    var editor_header =$('.editor-header');
+    var toolbars_container = $('.sticky [data-dnt-container="toolbars"]');
 
     disableIframes(article.find('[data-dnt-container="content-widget"]'));
 
@@ -30,6 +32,7 @@ $(function() {
         $(this).attr('contenteditable', 'true');
         $(this).focus();
     });
+
     $(document).on('focusout', 'article div.content.html, article div.content.lede', function() {
         if($(this).text().trim() === "" && $(this).children("hr").length === 0) {
             $(this).removeAttr('contenteditable');
@@ -195,6 +198,12 @@ $(function() {
     // Choose crop ratio on 'crop-content' icon click
     var JcropApi;
     $(document).on('click', 'article div.crop-content', function(e) {
+        var ratio;
+
+        if (JcropApi) {
+            toolbars_container.find('div.crop-control button.use').first().click();
+        }
+
         e.stopPropagation(); // Avoid click-event on an image or widget
         var content = $(this).nextAll("div.content").first();
         var crop = JSON.parse(content.attr('data-json')).crop;
@@ -206,16 +215,30 @@ $(function() {
             image.removeAttr('style');
             image.removeClass('cropped');
             content.removeAttr('style');
+            ratio = crop.ratio;
         }
 
         // Set up crop control elements
-        var crop_control = insertion_templates.find("div.crop-control").clone().insertBefore(content);
+        var crop_control = insertion_templates.find("div.toolbar-crop-control").clone().addClass('jq-hide');
+        toolbars_container.html(crop_control);
+
+        var crop_control_height = crop_control.outerHeight();
+        crop_control.css('margin-top', -crop_control_height);
+        crop_control.removeClass('jq-hide');
+        crop_control.animate(
+            {
+                'margin-top': 0
+            },
+            {
+                duration: 250,
+                complete: function() {
+                    $(this).css('z-index', 0);
+                }
+            }
+        );
+
         crop_control.data('original-content', content);
-        crop_control.data('content-clone', content.clone());
-        crop_control.offset({
-            top: crop_control.offset().top - crop_control.outerHeight(),
-            right: 0,
-        });
+        crop_control.data('content-clone', content.clone().removeClass('hover'));
         if(crop === undefined) {
             // Hide the controls by default for the first selection; until cropping selection has been made
             crop_control.find("div.submit").css('display', 'none');
@@ -225,21 +248,28 @@ $(function() {
         $(this).tooltip('destroy').remove();
 
         // Default to free
-        crop_control.find("div.choose-ratio button[data-ratio='free']").click();
+        ratio = ratio || 'free';
+
+        // Select crop version in toolbar to apply selection
+        crop_control.find('div.choose-ratio button[data-ratio="' + ratio + '"]').click();
     });
 
-    $(document).on('click', 'article div.crop-control div.choose-ratio button', function() {
+    // Selecting a cropping ratio
+    $(document).on('click', 'div.crop-control div.choose-ratio button', function() {
         var crop_control = $(this).parents("div.crop-control");
         var content = crop_control.data('original-content');
         var original_crop = JSON.parse(content.attr('data-json')).crop;
         var ratio = $(this).attr('data-ratio');
         var aspect_ratio;
-        if(ratio !== 'free') {
+
+        if (ratio !== 'free') {
             aspect_ratio = ratio.split(":")[0] / ratio.split(":")[1];
+        } else {
+            aspect_ratio = false;
         }
 
         // Highlight the marked button
-        $(this).siblings().removeClass('btn-danger');
+        $(this).siblings().removeClass('btn-danger active');
         $(this).addClass('btn-danger');
 
         // Enable the actual cropping
@@ -252,6 +282,7 @@ $(function() {
                     selection: selection,
                     width: content.find("img").width(),
                     height: content.find("img").height(),
+                    ratio: ratio
                 };
                 content.attr('data-json', JSON.stringify(image_json));
             },
@@ -259,26 +290,46 @@ $(function() {
             JcropApi = this;
         });
 
-        // Reapply the original selection to the cropper ui, if any
-        if(original_crop !== undefined) {
-            // In case we're cropping in a different column size, factor in the difference
-            var image_width_ratio = content.width() / original_crop.width;
-            var image_height_ratio = content.height() / original_crop.height;
+        var x1, y1, x2, y2;
+        var content_width = content.width();
+        var content_height = content.height();
 
+        // Reapply the original selection to the cropper ui, if any
+        if (original_crop !== undefined) {
+
+            // In case we're cropping in a different column size, factor in the difference
+            var image_width_ratio = content_width / original_crop.width;
+            var image_height_ratio = content_height / original_crop.height;
+
+            x1 = original_crop.selection.x * image_width_ratio;
+            y1 = original_crop.selection.y * image_height_ratio;
+            x2 = original_crop.selection.x2 * image_width_ratio;
+            y2 = original_crop.selection.y2 * image_height_ratio;
+
+        } else {
+
+            if (ratio === 'free') {
+                x1 = 0;
+                y1 = 0;
+                x2 = content_width;
+                y2 = content_height;
+            }
+        }
+
+        if (typeof x1 === 'number' && typeof x2 === 'number' && typeof y1 === 'number' && typeof y2 === 'number') {
             // Why does it take an array here, while it gives us an object in the event!? Tsk
             JcropApi.setSelect([
-                original_crop.selection.x * image_width_ratio,
-                original_crop.selection.y * image_height_ratio,
-                original_crop.selection.x2 * image_width_ratio,
-                original_crop.selection.y2 * image_height_ratio,
+                x1, y1, x2, y2
             ]);
         }
+
     });
 
-    $(document).on('click', 'article div.crop-control div.submit button.use', function(e) {
+    $(document).on('click', 'div.crop-control div.submit button.use', function(e) {
         var crop_control = $(this).parents("div.crop-control");
         var original_content = crop_control.data('original-content');
         var original_image = original_content.find("img");
+        var jcrop_holder = original_content.parents('.jcrop-holder').first();
         var new_content = crop_control.data('content-clone');
         var new_image = new_content.find("img");
         var crop = JSON.parse(original_content.attr('data-json')).crop;
@@ -289,22 +340,25 @@ $(function() {
         }
 
         new_content.attr('data-json', original_content.attr('data-json'));
-        new_content.insertAfter(crop_control);
+        new_content.insertAfter(jcrop_holder);
         cropContent(new_content);
         endCropping(crop_control);
     });
 
-    $(document).on('click', 'article div.crop-control div.submit button.remove', function(e) {
+    // Remove crop, restore image to original
+    $(document).on('click', 'div.crop-control div.submit button.remove', function(e) {
         var crop_control = $(this).parents("div.crop-control");
         var clone = crop_control.data('content-clone');
+        var original_content = crop_control.data('original-content');
+        var jcrop_holder = original_content.parents('.jcrop-holder').first();
         var json = JSON.parse(clone.attr('data-json'));
         json.crop = undefined;
-        clone.attr('data-json', JSON.stringify(json)).insertAfter(crop_control);
+        clone.attr('data-json', JSON.stringify(json)).insertAfter(jcrop_holder);
         endCropping(crop_control);
     });
 
     function endCropping(crop_control) {
-        if(JcropApi !== undefined) {
+        if (JcropApi !== undefined) {
             JcropApi.destroy();
             JcropApi = undefined;
         }

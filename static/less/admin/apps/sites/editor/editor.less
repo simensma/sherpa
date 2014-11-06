@@ -2,21 +2,113 @@
 
 /* Page header editing */
 
+.inline-label {
+  display: inline-block;
+  padding: 6px 12px 6px 0;
+  margin-bottom: 0;
+  line-height: 1.42857143;
+}
+
 div.editor-header {
-  background-color: rgb(240, 240, 240) !important;
+  @editor-form-background-color: #f8f8f8;
+  @editor-form-border-color: #e7e7e7;
+
+  background-color: @editor-form-background-color !important;
+  border-bottom: 1px solid @editor-form-border-color;
   color: rgb(65, 65, 65) !important;
+  padding-top: 15px;
+  z-index: 1000;
+
+  label {
+    cursor: pointer;
+  }
+
+  .fields {
+    padding-bottom: 10px;
+    border-bottom: 1px solid @editor-form-border-color;
+  }
+
+  .btn-link.quit {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .sticky {
+    position: relative;
+    z-index: 1000; // Same as Bootstrap navbar sticky
+
+    .last-saved-msg {
+      color: #999;
+    }
+
+    &.affix {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+    }
+
+    > .wrapper {
+      .actions {
+        padding: 15px 0;
+        background-color: @editor-form-background-color;
+        border-bottom: 1px solid @editor-form-border-color;
+      }
+
+      .absolutes {
+        position: relative;
+
+        > .wrapper {
+          position: absolute;
+          width: 100%;
+
+          .toolbars {
+            .toolbar {
+              position: relative;
+              z-index: -1;
+              padding: 15px 0;
+              width: 100%;
+              background-color: @editor-form-background-color;
+              border-bottom: 1px solid @editor-form-border-color;
+            }
+          }
+
+          .alerts {
+            .alert {
+              position: relative;
+              z-index: -1;
+              padding: 10px;
+              margin-bottom: 0;
+              border-width: 0 0 1px 0;
+              border-radius: 0;
+
+              &.alert-dismissable {
+                .container {
+                  padding-right: 35px;
+                }
+              }
+
+              .close {
+                top: 2px;
+                right: 0;
+                font-size: 21px !important;
+              }
+            }
+
+            p:last-child {
+              margin-bottom: 0;
+            }
+          }
+        }
+      }
+    }
+  }
 
   h1 {
     font-size: 160%;
     font-weight: normal;
   }
 
-  div.publish {
-    input[name='time'] {
-      display: inline-block;
-      width: 75px;
-    }
-  }
 }
 
 /* Article header editing */
@@ -253,19 +345,11 @@ div.cms-editor {
       background-image: url('/static/img/admin/sites/editor/content/crop-content-active.png');
     }
 
-    div.crop-control {
-      position: absolute;
-      background-color: rgb(245, 245, 245);
-      border: 1px solid rgb(221, 221, 221);
-      padding: 10px;
-      width: 100%;
-    }
-
   }
 
   div.cms-editor-toolbar {
     position: fixed;
-    top: 50px;
+    top: 400px;
     right: 50px;
     width: 500px;
     z-index: 1000;

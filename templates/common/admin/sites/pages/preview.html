@@ -2,15 +2,35 @@
 {% extends active_site.template|add:"/layout.html" %}
 
 {% block title %}{{ version.variant.page.title }}{% endblock %}
-{% block header %}<a href="{% url 'admin.sites.articles.views.list' active_site.id %}">Nyheter</a>{% endblock %}
-{% block body %}
 
-<div class="alert alert-info">
-  <a class="btn btn-default btn-lg" href="{% url 'admin.sites.pages.page.edit' active_site.id version.id %}">
-    <i class="glyphicon glyphicon-arrow-left"></i> Tilbake til redigering
-  </a>
-  <span class="preview-notice pull-right">Dette er en forhåndsvisning av siden.</span>
-</div>
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/sites/editor/sticky.js"></script>
+{% endblock %}
+
+{% block header %}<a href="{% url 'admin.sites.articles.views.list' active_site.id %}">Nyheter</a>{% endblock %}
+
+{% block editor_header %}
+  <div class="editor-header page preview">
+    <div class="sticky">
+      <div class="wrapper">
+        <div class="actions">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-12">
+                <a class="btn btn-primary btn-lg" href="{% url 'admin.sites.pages.page.edit' active_site.id version.id %}">
+                  <i class="glyphicon glyphicon-arrow-left"></i> Tilbake til redigering
+                </a>
+                <span class="preview-notice pull-right">Dette er en forhåndsvisning av siden</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block body %}
 
 {% include 'common/page/display-content.html' %}
 
