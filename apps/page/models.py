@@ -11,6 +11,7 @@ from django.db.models import Q, F
 from django.conf import settings
 from django.core.cache import cache
 
+from mptt.models import MPTTModel
 import boto
 
 from core.util import s3_bucket
@@ -35,7 +36,7 @@ def delete_menu(sender, **kwargs):
         menu.order = (menu.order-1)
         menu.save();
 
-class Page(models.Model):
+class Page(MPTTModel):
     title = models.CharField(max_length=255)
     slug = models.CharField(max_length=255)
     published = models.BooleanField()
