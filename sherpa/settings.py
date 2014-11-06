@@ -226,6 +226,7 @@ INSTALLED_APPS = (
     'raven.contrib.django', # Error logging
     'captcha', # django-recaptcha
     'south', # Database migrations
+    'mptt', # Modified Preorder Tree Traversal - see https://django-mptt.github.io/django-mptt/
     'focus', # Only db-models from Focus
     'sherpa2', # Only db-models from Sherpa 2
     'sherpa25', # Only db-models from Sherpa 2.5

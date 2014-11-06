@@ -11,6 +11,7 @@ from django.db.models import Q, F
 from django.conf import settings
 from django.core.cache import cache
 
+from mptt.models import MPTTModel, TreeForeignKey
 import boto
 
 from core.util import s3_bucket
@@ -35,7 +36,7 @@ def delete_menu(sender, **kwargs):
         menu.order = (menu.order-1)
         menu.save();
 
-class Page(models.Model):
+class Page(MPTTModel):
     title = models.CharField(max_length=255)
     slug = models.CharField(max_length=255)
     published = models.BooleanField()
@@ -44,7 +45,7 @@ class Page(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     modified_by = models.ForeignKey('user.User', related_name='pages_modified', null=True)
     modified_date = models.DateTimeField(null=True)
-    parent = models.ForeignKey('page.Page', null=True)
+    parent = TreeForeignKey('page.Page', null=True)
     site = models.ForeignKey('core.Site')
 
     def __unicode__(self):
