@@ -171,6 +171,9 @@ $(function() {
             // Force media-query style update since it listens only on size changes
             new ElementQueries().update();
 
+            // Initiate tooltips
+            results_content.find('[data-tooltip]').tooltip();
+
             // Update map view
             map_update(result.positions);
 

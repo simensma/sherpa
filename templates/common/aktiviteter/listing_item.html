@@ -11,8 +11,10 @@
 
     {% else %}
 
-      {# Going to an external URL #}
+      {# Going to an external URL - link to the other site, and add a tooltip #}
+      data-tooltip
       href="http://{{ destination_forening.get_homepage_site.domain }}{% url 'aktiviteter.views.show' date.id %}"
+      title="Vis denne turen på {{ destination_forening.name }} sine nettsider."
 
     {% endif %}
   {% endwith %}>
