@@ -1,4 +1,5 @@
-from datetime import datetime
+# encoding: utf-8
+from datetime import datetime, date
 
 from django.core.cache import cache
 from django.conf import settings
@@ -188,6 +189,18 @@ class ActorProxy:
 
     def has_paid(self):
         return self.enrollment.has_paid()
+
+    def has_paid_this_year(self):
+        # Whether or not we have passed årskravet, a newly enrollment that's paid means paid for this year.
+        return self.has_paid()
+
+    def has_paid_next_year(self):
+        from core.util import membership_year_start
+        if not date.today() >= membership_year_start()['actual_date']:
+            raise Exception("Doesn't make sense to call this method before årskravet")
+
+        # If their payment is paid, and we're past årskravet, then it's a valid payment for next year
+        return self.has_paid()
 
     def get_clean_address(self):
         return ActorAddressClean(ActorAddressProxy(self.enrollment))
