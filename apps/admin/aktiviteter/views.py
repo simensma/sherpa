@@ -14,7 +14,7 @@ from django.contrib.gis.geos import Point
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from aktiviteter.models import Aktivitet, AktivitetDate, AktivitetImage, Cabin, ConversionFailure
+from aktiviteter.models import Aktivitet, AktivitetDate, AktivitetImage, Cabin, ConversionFailure, SynchronizationDate
 from admin.aktiviteter.util import parse_html_array
 from core.models import Tag, County, Municipality
 from sherpa2.models import Location, Turforslag, Activity as Sherpa2Aktivitet
@@ -112,6 +112,7 @@ def index(request):
             'kladd': request.GET.get('kladd')
         },
         'failed_import_count': failed_import_count,
+        'last_sync': SynchronizationDate.objects.get().date,
     }
     return render(request, 'common/admin/aktiviteter/index.html', context)
 

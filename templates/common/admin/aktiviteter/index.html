@@ -30,13 +30,20 @@
   <strong>Dette er testsystem</strong><br>
   Du må benytte <a href="http://{{ old_site }}/admin/activity.php">gamle Sherpa</a> om du vil
   behandle aktiviteter som skal publiseres på nettsidene.
+</div>
 
-  {% if failed_import_count > 0 %}
-    <br><br>
-    <strong>{{ active_forening.name }} har {{ failed_import_count }} turer som ikke kunne importeres fra Sherpa 2.</strong><br>
+<h4>Flytting fra gamle Sherpa</h4>
+<p>
+  Turer og aktiviteter ble sist oppdatert <strong>{{ last_sync|date:"j. F H:i" }}</strong>.
+  {% if failed_import_count == 0 %}
+    Alle turene under {{ active_forening.name }} har blitt importert uten problemer!
+  {% else %}
+    {{ active_forening.name }} har <strong>{{ failed_import_count }} turer</strong> som ikke kunne importeres fra gamle Sherpa.<br>
     <a href="{% url 'admin.aktiviteter.views.failed_imports' %}">Sjekk hvilke turer som ikke kunne importeres, og hvorfor</a>.
   {% endif %}
-</div>
+</p>
+
+<hr>
 
 <div class="aktivitet-listing">
 
