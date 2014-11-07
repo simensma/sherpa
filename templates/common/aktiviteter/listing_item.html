@@ -1,6 +1,24 @@
 {% load stripcomments %}
+{% load aktivitet_destination %}
 
-<a class="aktivitet-item" href="{% url 'aktiviteter.views.show' date.id %}">
+<a
+  class="aktivitet-item"
+  {% with date|aktivitet_destination:request as destination_site %}
+    {% if destination_site == site %}
+
+      {# Staying where we are - just link to the URL #}
+      href="{% url 'aktiviteter.views.show' date.id %}"
+
+    {% else %}
+
+      {# Going to an external URL - link to the other site, and add a tooltip #}
+      data-tooltip
+      href="http://{{ destination_site.domain }}{% url 'aktiviteter.views.show' date.id %}"
+      title="Vis denne turen på {{ destination_site.forening.name }} sine nettsider."
+
+    {% endif %}
+  {% endwith %}>
+
   {% with date.aktivitet.get_image.url as aktivitet_image_url %}
     {% if aktivitet_image_url %}
       <div class="image" style="background-image: url('{{ aktivitet_image_url }}');"></div>
