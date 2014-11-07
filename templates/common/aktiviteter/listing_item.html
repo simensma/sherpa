@@ -1,7 +1,22 @@
 {% load stripcomments %}
-{% load aktivitet_destination_url %}
+{% load aktivitet_destination %}
 
-<a class="aktivitet-item" href="{% aktivitet_destination_url date %}">
+<a
+  class="aktivitet-item"
+  {% with date|aktivitet_destination:request as destination_forening %}
+    {% if destination_forening == site.forening %}
+
+      {# Staying where we are - just link to the URL #}
+      href="{% url 'aktiviteter.views.show' date.id %}"
+
+    {% else %}
+
+      {# Going to an external URL #}
+      href="http://{{ destination_forening.get_homepage_site.domain }}{% url 'aktiviteter.views.show' date.id %}"
+
+    {% endif %}
+  {% endwith %}>
+
   {% with date.aktivitet.get_image.url as aktivitet_image_url %}
     {% if aktivitet_image_url %}
       <div class="image" style="background-image: url('{{ aktivitet_image_url }}');"></div>
