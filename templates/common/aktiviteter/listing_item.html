@@ -3,8 +3,8 @@
 
 <a
   class="aktivitet-item"
-  {% with date|aktivitet_destination:request as destination_forening %}
-    {% if destination_forening == site.forening %}
+  {% with date|aktivitet_destination:request as destination_site %}
+    {% if destination_site == site %}
 
       {# Staying where we are - just link to the URL #}
       href="{% url 'aktiviteter.views.show' date.id %}"
@@ -13,8 +13,8 @@
 
       {# Going to an external URL - link to the other site, and add a tooltip #}
       data-tooltip
-      href="http://{{ destination_forening.get_homepage_site.domain }}{% url 'aktiviteter.views.show' date.id %}"
-      title="Vis denne turen på {{ destination_forening.name }} sine nettsider."
+      href="http://{{ destination_site.domain }}{% url 'aktiviteter.views.show' date.id %}"
+      title="Vis denne turen på {{ destination_site.forening.name }} sine nettsider."
 
     {% endif %}
   {% endwith %}>
