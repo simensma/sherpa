@@ -1,6 +1,7 @@
 {% load stripcomments %}
+{% load aktivitet_destination_url %}
 
-<a class="aktivitet-item" href="{% url 'aktiviteter.views.show' date.id %}">
+<a class="aktivitet-item" href="{% aktivitet_destination_url date %}">
   {% with date.aktivitet.get_image.url as aktivitet_image_url %}
     {% if aktivitet_image_url %}
       <div class="image" style="background-image: url('{{ aktivitet_image_url }}');"></div>

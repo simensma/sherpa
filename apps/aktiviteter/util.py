@@ -16,6 +16,9 @@ def filter_aktivitet_dates(filter):
     dates = AktivitetDate.get_published().prefetch_related(
         'aktivitet',
         'aktivitet__images',
+        'aktivitet__forening',
+        'aktivitet__forening__sites',
+        'aktivitet__co_foreninger',
     ).filter(aktivitet__private=False)
 
     if 'search' in filter and len(filter['search']) > 2:
