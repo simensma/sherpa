@@ -1,10 +1,13 @@
 {% extends site.template|add:"/layout.html" %}
 
+{% load advertisement %}
+
 {% block title %}{{ version.get_title_content.content|striptags }}{% endblock %}
 
 {% block body %}
 
 {% include 'common/page/display-content.html' %}
 {% include 'common/page/article-byline.html' %}
+{% advertisement %}
 
 {% endblock %}
