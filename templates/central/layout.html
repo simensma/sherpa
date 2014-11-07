@@ -1,4 +1,3 @@
-{% load advertisement %}
 {% load menu_active %}
 {% load debug %}
 
@@ -180,12 +179,6 @@
 </header>
 
 {% block body %}{% endblock %}
-
-{% block advertisement %}
-  {% if version.ads %}
-    {% advertisement %}
-  {% endif %}
-{% endblock %}
 
 </div>
 

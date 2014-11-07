@@ -1,9 +1,15 @@
 {% extends site.template|add:"/layout.html" %}
 
+{% load advertisement %}
+
 {% block title %}{{ version.variant.page.title }}{% endblock %}
 
 {% block body %}
 
 {% include 'common/page/display-content.html' %}
+
+{% if version.ads %}
+  {% advertisement %}
+{% endif %}
 
 {% endblock %}
