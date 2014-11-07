@@ -16,7 +16,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         try:
-            Activity.sync_all()
+            Activity.synchronize()
             date = SynchronizationDate.objects.get()
             date = datetime.now()
             date.save()
