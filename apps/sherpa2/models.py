@@ -1125,3 +1125,15 @@ class ActivityDate(models.Model):
 
     class Meta:
         db_table = u'activity_date'
+
+class Log(models.Model):
+    id = models.IntegerField(db_column='lg_id', primary_key=True)
+    object = models.TextField(db_column='lg_object', blank=True)
+    object_id = models.TextField(db_column='lg_object_id', blank=True)
+    timestamp = models.DateTimeField(db_column='lg_timestamp', null=True, blank=True)
+    user = models.IntegerField(db_column='lg_us_id', null=True, blank=True)
+    action = models.TextField(db_column='lg_action', blank=True)
+    data = models.TextField(db_column='lg_data', blank=True)
+
+    class Meta:
+        db_table = u'log'
