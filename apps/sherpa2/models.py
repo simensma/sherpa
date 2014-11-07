@@ -958,10 +958,25 @@ class Activity(models.Model):
         return u'%s: %s' % (self.pk, self.name)
 
     @staticmethod
-    def sync_all():
-        from aktiviteter.models import Aktivitet
+    def synchronize():
+        from aktiviteter.models import Aktivitet, SynchronizationDate
 
-        for sherpa2_aktivitet in Activity.objects.prefetch_related('dates').order_by('id'):
+        # Use the sherpa2 changelog to figure out what we should synchronize.
+        # Use sets for avoiding duplicates
+        # TODO: This won't detect new/changed participants when participant conversion is implemented, since that
+        # isn't logged in the changelog!
+        last_synchronization = SynchronizationDate.objects.get().date
+        new_and_changed_aktiviteter = set()
+        deleted_aktiviteter = set()
+
+        for log in Log.objects.filter(object='activity', timestamp__gte=last_synchronization):
+            if log.action in ['insert', 'duplicate', 'update']:
+                new_and_changed_aktiviteter.add(log.object_id)
+            elif log.action == 'delete':
+                deleted_aktiviteter.add(log.object_id)
+
+        # Convert new and changed aktiviteter...
+        for sherpa2_aktivitet in Activity.objects.filter(id__in=new_and_changed_aktiviteter).prefetch_related('dates').order_by('id'):
             try:
                 sherpa3_aktivitet = Aktivitet.objects.prefetch_related('dates').get(sherpa2_id=sherpa2_aktivitet.id)
             except Aktivitet.DoesNotExist:
@@ -972,6 +987,9 @@ class Activity(models.Model):
             except ConversionImpossible:
                 # Ignore anything that can't be imported for now.
                 pass
+
+        # Now delete all the deleted ones
+        Aktivitet.objects.filter(sherpa2_id__in=deleted_aktiviteter).delete()
 
     class Meta:
         db_table = u'activity'
@@ -1125,3 +1143,15 @@ class ActivityDate(models.Model):
 
     class Meta:
         db_table = u'activity_date'
+
+class Log(models.Model):
+    id = models.IntegerField(db_column='lg_id', primary_key=True)
+    object = models.TextField(db_column='lg_object', blank=True)
+    object_id = models.TextField(db_column='lg_object_id', blank=True)
+    timestamp = models.DateTimeField(db_column='lg_timestamp', null=True, blank=True)
+    user = models.IntegerField(db_column='lg_us_id', null=True, blank=True)
+    action = models.TextField(db_column='lg_action', blank=True)
+    data = models.TextField(db_column='lg_data', blank=True)
+
+    class Meta:
+        db_table = u'log'

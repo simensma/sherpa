@@ -410,3 +410,7 @@ class ConversionFailure(models.Model):
 
     def get_reason_helptext(self):
         return ConversionFailure.REASON_HELPTEXTS[self.reason]
+
+class SynchronizationDate(models.Model):
+    """Temporary model with exactly one row, denoting the time of the last successful synchronization"""
+    date = models.DateTimeField()
