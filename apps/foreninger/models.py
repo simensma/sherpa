@@ -157,16 +157,24 @@ class Forening(models.Model):
             cache.set('object_id.forening.%s' % self.id, object_id, 60 * 60 * 24 * 7)
         return object_id
 
-    def get_homepage_site(self):
+    def get_homepage_site(self, prefetched=False):
         """A forening can have multiple related sites but only one homepage, this method returns the homepage site,
-        or None if it doesn't have a homepage."""
+        or None if it doesn't have a homepage.
+        If the prefetched parameter is set to True, we will assume that all related sites have been prefetched. To
+        optimize for this, we won't filter the DB query on type but iterate all sites and programmatically filter out
+        the homepage site (if any)."""
         # Use an empty list as sentinel value for no homepage site, since None is already used for cache miss
         NO_HOMEPAGE_SITE = []
         homepage_site = cache.get('forening.homepage_site.%s' % self.id)
         if homepage_site is None:
             try:
-                homepage_site = self.sites.get(type='forening')
-            except Site.DoesNotExist:
+                if not prefetched:
+                    # Default: perform a new DB filter query
+                    homepage_site = self.sites.get(type='forening')
+                else:
+                    # If the data is prefetched, it'll be faster to iterate all() and filter programmatically
+                    homepage_site = [site for site in self.sites.all() if site.type == 'forening'][0]
+            except (Site.DoesNotExist, IndexError):
                 homepage_site = NO_HOMEPAGE_SITE
             cache.set('forening.homepage_site.%s' % self.id, homepage_site, 60 * 60 * 24 * 7)
         if homepage_site == NO_HOMEPAGE_SITE:
