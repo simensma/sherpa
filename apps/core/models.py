@@ -26,6 +26,7 @@ class Site(models.Model):
         ('forening', u'Foreningens hjemmeside'), # Zero or one per forening
         ('hytte', u'Hjemmeside for en betjent hytte'),
         ('kampanje', u'Kampanjeside'),
+        ('mal', u'Mal for nye nettsteder'), # Should only be available to sherpa-admins
     )
     type = models.CharField(max_length=255, choices=TYPE_CHOICES)
     TEMPLATE_CHOICES = (
