@@ -14,20 +14,30 @@ from admin.sites.pages.util import slug_is_unique, create_template
 from page.widgets.util import admin_context
 from page.models import Page, Variant, Version
 from core.models import Site
+from core.util import parse_html_array
 
 def list(request, site):
     active_site = Site.objects.get(id=site)
-    versions = Version.objects.filter(
-        variant__page__isnull=False,
-        variant__page__parent__isnull=True,
-        active=True,
-        variant__page__site=active_site,
-    ).order_by('variant__page__title')
+    pages = Page.objects.filter(
+        site=active_site
+    )
     context = {
         'active_site': active_site,
-        'versions': versions,
+        'nodes': pages,
     }
     return render(request, 'common/admin/sites/pages/list.html', context)
+
+def reorder(request, site):
+    for index, page in parse_html_array(request.POST, 'mptt').items():
+        Page.objects.filter(
+            id=page['item_id']
+        ).update(
+            lft=page['left'],
+            rght=page['right'],
+            parent=page['parent_id'],
+            level=page['depth']
+        )
+    return HttpResponse(json.dumps({'success': True}))
 
 def children(request, site):
     active_site = Site.objects.get(id=site)

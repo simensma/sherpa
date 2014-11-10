@@ -12,6 +12,7 @@ urlpatterns = patterns('admin.sites.pages',
     url(r'^editor/(?P<version>\d+)/$', 'page.edit'),
     url(r'^editor/lagre/(?P<version>\d+)/$', 'content.save'),
     url(ur'^forhåndsvisning/(?P<version>\d+)/$', 'page.preview'),
+    url(r'^sorter/$', 'page.reorder'),
 
     # Content
     url(r'^widget/$', 'content.reload_raw_widget'),

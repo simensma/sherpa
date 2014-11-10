@@ -15,7 +15,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from aktiviteter.models import Aktivitet, AktivitetDate, AktivitetImage, Cabin, ConversionFailure
-from admin.aktiviteter.util import parse_html_array
+from core.util import parse_html_array
 from core.models import Tag, County, Municipality
 from sherpa2.models import Location, Turforslag, Activity as Sherpa2Aktivitet
 from sherpa2.exceptions import ConversionImpossible
