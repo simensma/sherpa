@@ -43,6 +43,10 @@ class Site(models.Model):
     # as its homepage instead of the site domain (the latter applies only for type='forening').
     is_published = models.BooleanField(default=False)
 
+    # The template description is only applicable for the 'mal' type. When creating a template site, sherpa-admins can
+    # add a description to be shown to the user when they are able to choose this template.
+    template_description = models.CharField(max_length=1023, default='')
+
     # Hardcoded site IDs that we may need to know
     DNT_CENTRAL_ID = 1
 
