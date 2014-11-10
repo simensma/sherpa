@@ -159,9 +159,12 @@
                   <label>
                     <input type="radio" name="template" value="{{ site_template.id }}">
                     {{ site_template.get_title }}
-                    <span class="help-block">
-                      Beskrivelse TODO
-                    </span>
+
+                    {% if site_template.template_description %}
+                      <span class="help-block">
+                        {{ site_template.template_description|linebreaksbr }}
+                      </span>
+                    {% endif %}
                   </label>
                 </div>
               {% endfor %}
