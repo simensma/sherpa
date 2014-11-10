@@ -60,9 +60,9 @@
     {% csrf_token %}
 
     {% for message in messages %}
-      {% if message.message == 'domain_updated' %}
+      {% if message.message == 'settings_saved' %}
         <div class="alert alert-success">
-          Domeneadressen har blitt oppdatert.
+          Nettstededsinnstillingene har blitt lagret.
         </div>
       {% elif message.message == 'malformed' %}
         <div class="alert alert-danger">

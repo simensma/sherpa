@@ -17,18 +17,19 @@ def save(request, site):
 
     active_site = Site.objects.get(id=site)
     domain = request.POST['domain'].strip().lower().replace('http://', '').rstrip('/')
+    errors = False
 
     if domain == active_site.domain:
-        # Special case; the domain wasn't changed - so just say that it worked
-        messages.info(request, 'domain_updated')
+        # Special case; the domain wasn't changed - so just pretend that it's updated
+        pass
     else:
         result = Site.verify_domain(domain)
         if not result['valid']:
             messages.error(request, result['error'])
+            errors = True
             if result['error'] == 'site_exists':
                 request.session['message_context'] = {'existing_forening': result['existing_forening']}
         else:
-            messages.info(request, 'domain_updated')
             active_site.domain = result['domain']
             active_site.prefix = result['prefix']
 
@@ -36,4 +37,6 @@ def save(request, site):
     active_site.save()
 
     request.session.modified = True
+    if not errors:
+        messages.info(request, 'settings_saved')
     return redirect('admin.sites.settings.views.index', active_site.id)
