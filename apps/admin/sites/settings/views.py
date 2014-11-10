@@ -16,9 +16,9 @@ def save(request, site):
         return redirect('admin.sites.settings.views.index', site)
 
     active_site = Site.objects.get(id=site)
-    domain = request.POST['domain'].strip().lower()
+    domain = request.POST['domain'].strip().lower().replace('http://', '').rstrip('/')
 
-    if domain.replace('http://', '').rstrip('/') == active_site.domain:
+    if domain == active_site.domain:
         # Special case; the domain wasn't changed - so just say that it worked
         messages.info(request, 'domain_updated')
         return redirect('admin.sites.settings.views.index', active_site.id)
