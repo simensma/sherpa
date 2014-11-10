@@ -18,7 +18,7 @@ class Command(BaseCommand):
         try:
             Activity.synchronize()
             date = SynchronizationDate.objects.get()
-            date = datetime.now()
+            date.date = datetime.now()
             date.save()
         except:
             logger.error(u"Uhåndtert exception ved synkronisering av aktiviteter",
