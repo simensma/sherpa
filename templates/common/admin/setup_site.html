@@ -132,67 +132,48 @@
 
           <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-              <h2>3. Hvordan skal forsiden se ut?</h2>
+              <h2>3. Velg hva slags innhold nettstedet skal ha som utgangspunkt</h2>
             </div>
           </div>
 
           <div class="form-group template">
-            <div class="col-md-offset-2 col-md-10">
-              <input type="hidden" name="template">
-              Velg en forhåndsdefinert mal under. Dette blir et utgangspunkt som du kan endre etterpå.
+            <div class="col-md-offset-2 col-md-5">
 
-              <div class="row">
-                <div class="col-lg-3">
-                  <div class="template-block" data-template="1">
-                    <h3>Tom mal</h3>
-                    <p>
-                      <img src="{{ STATIC_URL }}img/admin/sites/editor/templates/empty.jpg" alt="Ferdigdefinert mal" data-template="1">
-                    </p>
-                    <p>
-                      En helt tom side, slik at du kan strukturere opp innholdet selv.
-                    </p>
-                  </div>
+              {% for site_template in site_templates %}
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="template" value="{{ site_template.id }}">
+                    {{ site_template.get_title }}
+                    <span class="help-block">
+                      Beskrivelse TODO
+                    </span>
+                  </label>
                 </div>
-                <div class="col-lg-3">
-                  <div class="template-block" data-template="2">
-                    <h3>Én kolonne</h3>
-                    <p>
-                      <img src="{{ STATIC_URL }}img/admin/sites/editor/templates/full-width.jpg" alt="Ferdigdefinert mal" data-template="2">
-                    </p>
-                    <p>
-                      Én stor kolonne med en tittel, et par bilder, og litt brødtekst.
-                    </p>
-                  </div>
-                </div>
-                <div class="col-lg-3">
-                  <div class="template-block" data-template="3">
-                    <h3>Sidebar</h3>
-                    <p>
-                      <img src="{{ STATIC_URL }}img/admin/sites/editor/templates/sidebar.jpg" alt="Ferdigdefinert mal" data-template="3">
-                    </p>
-                    <p>
-                      Et stort bilde etterfulgt av to kolonner, en hovedkolonne og en "sidebar" som for eksempel vise faktainformasjon eller små bilder.
-                    </p>
-                  </div>
-                </div>
-                <div class="col-lg-3">
-                  <div class="template-block" data-template="4">
-                    <h3>Tre kolonner</h3>
-                    <p>
-                      <img src="{{ STATIC_URL }}img/admin/sites/editor/templates/3-columns.jpg" alt="Ferdigdefinert mal" data-template="4">
-                    </p>
-                    <p>
-                      En side delt i 3 kolonner, med fullbredde-bilde øverst og nederst.
-                    </p>
-                  </div>
-                </div>
+              {% endfor %}
+
+              <div class="radio">
+                <label>
+                  <input type="radio" name="template" value="">
+                  Sett opp et helt tomt nettsted
+                  <span class="help-block">
+                    Hvis du vil kan du starte med et helt tomt nettsted. Det er enklere å sette opp et nettsted som allerede har litt innhold, så ikke velg denne med mindre du vet hva du gjør.
+                  </span>
+                </label>
               </div>
+
             </div>
           </div>
 
           <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-              <button type="submit" class="btn btn-success btn-lg" data-choose-site-type-warning="Velg hva slags nettsted du vil opprette før du går videre. Du må klikke på en av knappene i punkt 1." data-enter-domain-warning="Velg hvilket domene du ønsker at nettstedet skal ha. Kontakt oss via den røde boksen til høyre på skjermen hvis du lurer på hva dette bør være." data-choose-template-warning="Velg hvordan forsiden skal se ut før du går videre. Klikk på en av malene under punkt 3.">Opprett nytt nettsted!</button>
+              <button
+                class="btn btn-success btn-lg"
+                type="submit"
+                data-choose-site-type-warning="Velg hva slags nettsted du vil opprette før du går videre. Du må klikke på en av knappene i punkt 1."
+                data-enter-domain-warning="Velg hvilket domene du ønsker at nettstedet skal ha. Kontakt oss via den røde boksen til høyre på skjermen hvis du lurer på hva dette bør være.">
+
+                Opprett nytt nettsted!
+              </button>
             </div>
           </div>
 

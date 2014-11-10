@@ -12,10 +12,6 @@ $(function() {
     var domain_type = domain_wrapper.find("input[name='domain-type']");
     var subdomain_tail = domain_wrapper.find("span.subdomain-tail");
 
-    var template_wrapper = wrapper.find("div.form-group.template");
-    var template_input = template_wrapper.find("input[name='template']");
-    var templates = template_wrapper.find("div.template-block");
-
     var submit = wrapper.find("button[type='submit']");
 
     site_type_buttons.change(function() {
@@ -37,12 +33,6 @@ $(function() {
         }
     });
 
-    templates.click(function() {
-        templates.removeClass('active');
-        $(this).addClass('active');
-        template_input.val($(this).attr('data-template'));
-    });
-
     submit.click(function(e) {
         if(site_type_buttons.filter(":checked").length === 0) {
             alert(submit.attr('data-choose-site-type-warning'));
@@ -51,11 +41,6 @@ $(function() {
         }
         if(domain.val().trim() === 'forening' || domain.val().trim() === '') {
             alert(submit.attr('data-enter-domain-warning'));
-            e.preventDefault();
-            return;
-        }
-        if(template_input.val().trim() === '') {
-            alert(submit.attr('data-choose-template-warning'));
             e.preventDefault();
             return;
         }

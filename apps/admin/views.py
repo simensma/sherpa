@@ -13,11 +13,11 @@ import requests
 # This ugly import hack imports the model from views because of namespace collision,
 # should be 'from aktiviteter.models import Aktivitet'
 from aktiviteter.views import Aktivitet
+from core.models import Site
 from focus.models import Actor
+from foreninger.models import Forening
 from page.models import Menu, Page, Variant, Version
 from user.models import User
-from core.models import Site
-from admin.sites.pages.util import create_template
 
 def index(request):
     total_membership_count = cache.get('admin.total_membership_count')
@@ -103,7 +103,15 @@ def setup_site(request):
                 continue
         available_site_types.append(t)
 
-    context = {'available_site_types': available_site_types}
+    site_templates = Site.objects.filter(
+        forening=Forening.DNT_CENTRAL_ID,
+        type='mal',
+    ).order_by('title')
+
+    context = {
+        'available_site_types': available_site_types,
+        'site_templates': site_templates,
+    }
 
     if request.method == 'GET':
         return render(request, 'common/admin/setup_site.html', context)
@@ -195,7 +203,8 @@ def setup_site(request):
             )
             menu.save()
 
-            create_template(request.POST['template'], version)
+            # Template-site TODO
+
             request.session.modified = True
             return redirect('admin.views.site_created', site.id)
 
