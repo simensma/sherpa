@@ -99,23 +99,20 @@
       <label class="col-md-3 control-label">Hva slags nettsted</label>
       <div class="col-md-9">
         <div class="btn-group" data-toggle="buttons">
-          {% for type in site_types %}
-            {# If this forening has a main site other than the current site, don't show the forening-type-button #}
-            {% if active_site.type != 'forening' and type.0 != 'forening' or active_forening.get_homepage_site == None %}
-              <label
-                class="btn btn-default btn-lg {% if active_site.type == type.0 %} active{% endif %}"
-                data-type="{{ type.0 }}">
+          {% for type in available_site_types %}
+            <label
+              class="btn btn-default btn-lg {% if active_site.type == type.0 %} active{% endif %}"
+              data-type="{{ type.0 }}">
 
-                <input
-                  type="radio"
-                  name="type"
-                  value="{{ type.0 }}"
-                  {% if active_site.type == type.0 %}
-                    checked
-                  {% endif %}>
-                {{ type.1 }}
-              </label>
-            {% endif %}
+              <input
+                type="radio"
+                name="type"
+                value="{{ type.0 }}"
+                {% if active_site.type == type.0 %}
+                  checked
+                {% endif %}>
+              {{ type.1 }}
+            </label>
           {% endfor %}
         </div>
       </div>

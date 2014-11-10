@@ -6,9 +6,19 @@ from core.models import Site
 
 def index(request, site):
     active_site = Site.objects.get(id=site)
+
+    available_site_types = []
+    for t in Site.TYPE_CHOICES:
+        # The forening type choice shouldn't be available if the current site has an *other* homepage site
+        if t[0] == 'forening':
+            homepage_site = request.active_forening.get_homepage_site()
+            if homepage_site is not None and homepage_site != active_site:
+                continue
+        available_site_types.append(t)
+
     context = {
         'active_site': active_site,
-        'site_types': Site.TYPE_CHOICES,
+        'available_site_types': available_site_types,
     }
 
     if 'message_context' in request.session:
