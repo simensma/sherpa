@@ -54,6 +54,15 @@
             </div>
           </div>
 
+          {% if user.perms.sherpa_admin %}
+            <div class="form-group jq-hide" data-dnt-form-group="template-description">
+              <label class="col-md-2 control-label" for="template_description">Beskrivelse for malen:</label>
+              <div class="col-md-5">
+                <textarea class="form-control" name="template_description" id="template_description" rows="6"></textarea>
+              </div>
+            </div>
+          {% endif %}
+
         </div><!-- /.section -->
 
         <div class="section">

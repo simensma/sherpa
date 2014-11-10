@@ -6,6 +6,7 @@ $(function() {
     var site_type_buttons = site_type_wrapper.find("input[name='type']");
 
     var title_wrapper = wrapper.find("div.form-group.title");
+    var template_description_wrapper = wrapper.find('[data-dnt-form-group="template-description"]');
 
     var domain_wrapper = wrapper.find("div.form-group.domain");
     var domain = domain_wrapper.find("input[name='domain']");
@@ -16,10 +17,15 @@ $(function() {
 
     site_type_buttons.change(function() {
         var checked = site_type_buttons.filter(":checked");
-        if(checked.val() === 'hytte' || checked.val() === 'kampanje' || checked.val() === 'mal') {
+        if(checked.val() === 'hytte' || checked.val() === 'kampanje') {
             title_wrapper.slideDown('fast');
+            template_description_wrapper.slideUp('fast');
+        } else if(checked.val() === 'mal') {
+            title_wrapper.slideDown('fast');
+            template_description_wrapper.slideDown('fast');
         } else {
             title_wrapper.slideUp('fast');
+            template_description_wrapper.slideUp('fast');
         }
     });
 

@@ -131,6 +131,15 @@
       </div>
     </div>
 
+    {% if user.perms.sherpa_admin %}
+      <div class="form-group{% if active_site.type != 'mal' %} jq-hide{% endif %}" data-dnt-form-group="template-description">
+        <label class="col-md-3 control-label" for="template_description">Beskrivelse for malen:</label>
+        <div class="col-md-5">
+          <textarea class="form-control" name="template_description" id="template_description" rows="6">{{ active_site.template_description }}</textarea>
+        </div>
+      </div>
+    {% endif %}
+
     <div class="form-group">
       <label class="col-md-3 control-label" for="domain">Domenenavn / adresse</label>
       <div class="col-md-4">
