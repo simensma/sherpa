@@ -555,7 +555,7 @@ class Actor(models.Model):
     @staticmethod
     def all_active_members():
         return Actor.get_personal_members().filter(
-            Q(end_date=date(year=2014, month=12, day=31)) |
+            Q(end_date=date(year=date.today().year, month=12, day=31)) |
             Q(end_date__isnull=True),
             # Balance should actually check for 0, but checks 1 because apparently there are some
             # payments where some øre are left (although I personally suspect it to be caused by using
