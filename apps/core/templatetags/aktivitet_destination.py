@@ -16,10 +16,21 @@ def aktivitet_destination(aktivitet_date, request):
         # The current site is one of the arranging foreninger, so we can stay on this site
         return current_site
 
-    arranging_site = aktivitet_date.aktivitet.forening.get_homepage_site(prefetched=True)
-    if arranging_site is not None and arranging_site.is_published:
-        # The arranging forening's site is up and live, so go there
-        return arranging_site
+    # Check if the organizer is a forening or a cabin
+    if aktivitet_date.aktivitet.forening is not None:
+        organizers_site = aktivitet_date.aktivitet.forening.get_homepage_site(prefetched=True)
+        if organizers_site is not None and organizers_site.is_published:
+            # The organizing forening's site is up and live, so go there
+            return organizers_site
 
-    # Their site isn't published, so just stay wherever we are
-    return current_site
+        # Their site isn't published, so just stay where we are
+        return current_site
+
+    elif aktivitet_date.aktivitet.forening_cabin is not None:
+        # TODO: Return the homepage for this cabin, if created and published.
+        # For now, just stay where we are.
+        return current_site
+
+    elif aktivitet_date.aktivitet.forening is None and aktivitet_date.aktivitet.forening_cabin is None:
+        # Shouldn't happen, but throw an explicit exception just in case
+        raise Exception("Shouldn't exist any aktivitet with no organizing forening NOR cabin")
