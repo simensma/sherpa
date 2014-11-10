@@ -92,7 +92,15 @@ def setup_site(request):
     if not request.user.is_admin_in_forening(request.active_forening):
         return render(request, 'common/admin/setup_site_disallowed.html')
 
-    context = {'site_types': Site.TYPE_CHOICES}
+    available_site_types = []
+    for t in Site.TYPE_CHOICES:
+        # The forening type choice shouldn't be available if the current site already has a homepage site
+        if t[0] == 'forening':
+            if request.active_forening.get_homepage_site() is not None:
+                continue
+        available_site_types.append(t)
+
+    context = {'available_site_types': available_site_types}
 
     if request.method == 'GET':
         return render(request, 'common/admin/setup_site.html', context)
