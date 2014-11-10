@@ -31,7 +31,9 @@ def save(request, site):
             messages.info(request, 'domain_updated')
             active_site.domain = result['domain']
             active_site.prefix = result['prefix']
-            active_site.save()
-            request.session.modified = True
 
+    active_site.is_published = 'published' in request.POST
+    active_site.save()
+
+    request.session.modified = True
     return redirect('admin.sites.settings.views.index', active_site.id)

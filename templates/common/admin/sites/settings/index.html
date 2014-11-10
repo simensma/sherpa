@@ -51,22 +51,6 @@
 
       </a>
     </div>
-    <div class="col-lg-2">
-      <a class="navigation-block" href="{% url 'admin.sites.settings.publish.views.index' active_site.id %}">
-
-        <div class="content-wrapper">
-          <div class="row">
-            <div class="col-xs-4">
-              <div class="icon">
-                <i class="fa fa-eye fa-5x"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="navigation-block-title">Publisering</div>
-
-      </a>
-    </div>
   </div>
 
   <form
@@ -108,7 +92,7 @@
     {% endfor %}
 
     <div class="form-group">
-      <label class="col-md-3 control-label">Domenenavn / adresse til nettstedet:</label>
+      <label class="col-md-3 control-label">Domenenavn / adresse til nettstedet</label>
       <div class="col-md-4">
         <input class="form-control input-lg" type="text" name="domain" value="http://{{ active_site.domain }}">
         <p class="help-block">
@@ -116,6 +100,26 @@
         </p>
       </div>
     </div>
+
+    <div class="form-group">
+      <label class="col-md-3 control-label">Publisering</label>
+      <div class="col-md-4">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" name="published"{% if active_site.is_published %} checked{% endif %}>
+            Publiser nettstedet
+          </label>
+        </div>
+        <p class="help-block">
+          {% if not active_site.is_published %}
+            Nettstedet er ikke publisert. Dere bør ikke publisere nettstedet før dere har bygd opp nettsidene og byttet til riktig domene.
+          {% else %}
+            Nettstedet er publisert. Du bør ikke avpublisere nettstedet med mindre noe er alvorlig galt.
+          {% endif %}
+        </p>
+      </div>
+    </div>
+
     <div class="form-group">
       <div class="col-md-offset-3 col-md-9">
         <button class="btn btn-success">
