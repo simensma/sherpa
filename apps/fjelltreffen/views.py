@@ -316,8 +316,9 @@ def save(request):
         annonse.county = None
     else:
         annonse.county = County.objects.get(id=request.POST.get('county', ''))
-    annonse.email = request.POST.get('email', '')
-    annonse.title = request.POST.get('title', '')
+    # TODO: Validate and return form to user with error message
+    annonse.title = request.POST.get('title', '')[:255]
+    annonse.email = request.POST.get('email', '')[:255]
     if 'image' in request.FILES:
         # Delete any existing image
         annonse.delete_image()
