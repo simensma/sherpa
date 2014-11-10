@@ -14,6 +14,9 @@ def index(request, site):
             homepage_site = request.active_forening.get_homepage_site()
             if homepage_site is not None and homepage_site != active_site:
                 continue
+        elif t[0] == 'mal':
+            if not request.user.has_perm('sherpa_admin'):
+                continue
         available_site_types.append(t)
 
     context = {
@@ -37,6 +40,9 @@ def save(request, site):
 
     type = request.POST['type']
     if type not in [t[0] for t in Site.TYPE_CHOICES]:
+        raise PermissionDenied
+
+    if type == 'mal' and not request.user.has_perm('sherpa_admin'):
         raise PermissionDenied
 
     active_site.type = type

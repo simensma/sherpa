@@ -98,6 +98,9 @@ def setup_site(request):
         if t[0] == 'forening':
             if request.active_forening.get_homepage_site() is not None:
                 continue
+        elif t[0] == 'mal':
+            if not request.user.has_perm('sherpa_admin'):
+                continue
         available_site_types.append(t)
 
     context = {'available_site_types': available_site_types}
@@ -107,6 +110,9 @@ def setup_site(request):
 
     elif request.method == 'POST':
         if not request.POST.get('type', '') in [t[0] for t in Site.TYPE_CHOICES]:
+            raise PermissionDenied
+
+        if request.POST['type'] == 'mal' and not request.user.has_perm('sherpa_admin'):
             raise PermissionDenied
 
         if not request.POST['domain-type'] in ['fqdn', 'subdomain']:
