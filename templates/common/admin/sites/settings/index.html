@@ -3,6 +3,10 @@
 
 {% block admin_menu %}{% with 'sites' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
 
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/sites/settings/index.js"></script>
+{% endblock %}
+
 {% block body %}
 
 <div class="row">
@@ -17,7 +21,7 @@
   </div>
 </div><!-- /.row -->
 
-<div class="site-settings">
+<div class="site-settings" data-dnt-container="site-settings">
   <div class="row">
     <div class="col-lg-2">
       <a class="navigation-block" href="{% url 'admin.sites.settings.analytics.views.index' active_site.id %}">
@@ -91,10 +95,43 @@
       {% endif %}
     {% endfor %}
 
+    <div class="form-group" data-dnt-form-group="type">
+      <label class="col-md-3 control-label">Hva slags nettsted</label>
+      <div class="col-md-9">
+        <div class="btn-group" data-toggle="buttons">
+          {% for type in site_types %}
+            {# If this forening has a main site other than the current site, don't show the forening-type-button #}
+            {% if active_site.type != 'forening' and type.0 != 'forening' or active_forening.get_homepage_site == None %}
+              <label
+                class="btn btn-default btn-lg {% if active_site.type == type.0 %} active{% endif %}"
+                data-type="{{ type.0 }}">
+
+                <input
+                  type="radio"
+                  name="type"
+                  value="{{ type.0 }}"
+                  {% if active_site.type == type.0 %}
+                    checked
+                  {% endif %}>
+                {{ type.1 }}
+              </label>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group{% if active_site.type != 'hytte' and active_site.type != 'kampanje' %} jq-hide{% endif %}" data-dnt-form-group="title">
+      <label class="col-md-3 control-label" for="title">Tittel</label>
+      <div class="col-md-5">
+        <input class="form-control input-lg" type="text" name="title" id="title" value="{{ active_site.get_title }}">
+      </div>
+    </div>
+
     <div class="form-group">
-      <label class="col-md-3 control-label">Domenenavn / adresse til nettstedet</label>
+      <label class="col-md-3 control-label" for="domain">Domenenavn / adresse</label>
       <div class="col-md-4">
-        <input class="form-control input-lg" type="text" name="domain" value="http://{{ active_site.domain }}">
+        <input class="form-control input-lg" type="text" name="domain" id="domain" value="http://{{ active_site.domain }}">
         <p class="help-block">
           Hvis du endrer denne adressen vil den gamle adressen <strong>slutte å fungere</strong>.
         </p>
