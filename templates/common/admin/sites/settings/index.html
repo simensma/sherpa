@@ -7,7 +7,7 @@
 
 <div class="row">
   <div class="col-lg-12">
-    <h1>Innstillinger <small>endre oppsettet for {{ active_site.domain }}</small></h1>
+    <h1>Innstillinger <small>endre oppsettet for {{ active_site.get_title }}</small></h1>
     <ol class="breadcrumb">
       <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
       <li><a href="{% url 'admin.sites.views.index' %}">Nettsteder</a></li>
@@ -19,22 +19,6 @@
 
 <div class="site-settings">
   <div class="row">
-    <div class="col-lg-2">
-      <a class="navigation-block" href="{% url 'admin.sites.settings.domain.views.index' active_site.id %}">
-
-        <div class="content-wrapper">
-          <div class="row">
-            <div class="col-xs-4">
-              <div class="icon">
-                <i class="fa fa-link fa-5x"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="navigation-block-title">Domene</div>
-
-      </a>
-    </div>
     <div class="col-lg-2">
       <a class="navigation-block" href="{% url 'admin.sites.settings.analytics.views.index' active_site.id %}">
 
@@ -84,6 +68,63 @@
       </a>
     </div>
   </div>
+
+  <form
+    class="form-horizontal settings"
+    action="{% url 'admin.sites.settings.views.index' active_site.id %}"
+    method="post">
+    {% csrf_token %}
+
+    {% for message in messages %}
+      {% if message.message == 'domain_updated' %}
+        <div class="alert alert-success">
+          Domeneadressen har blitt oppdatert.
+        </div>
+      {% elif message.message == 'malformed' %}
+        <div class="alert alert-danger">
+          Du må fylle inn et gyldig domenenavn. Hør med DNT sentralt dersom du er usikker på hva dette bør være.
+        </div>
+      {% elif message.message == 'more_than_one_subdir' %}
+        <div class="alert alert-danger">
+          Du kan ikke ha to undermapper i domenenavnet. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.
+        </div>
+      {% elif message.message == 'prefix_for_disallowed_domain' %}
+        <div class="alert alert-danger">
+          Kun domener direkte under <strong>{{ main_site.domain }}</strong> kan ha undermapper. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.
+        </div>
+      {% elif message.message == 'site_exists' %}
+        <div class="alert alert-danger">
+          <strong>{{ existing_forening.name }}</strong> har allerede domenenavnet <strong>http://{{ existing_forening.get_homepage_site.domain }}/</strong>. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.
+        </div>
+      {% elif message.message == 'prefix_not_supported_yet' %}
+        <div class="alert alert-danger">
+          Domenet kan ikke være en undermappe under turistforeningen.no (for eksempel: <strong>{{ main_site.domain }}/mitt-turlag</strong>) fordi vi ikke har satt opp teknisk støtte for det ennå.
+        </div>
+      {% elif message.message == 'test_period_requires_test_domain' %}
+        <div class="alert alert-danger">
+          I test-perioden <strong>må</strong> dere ha "<strong>.test.turistforeningen.no</strong>" bak domenet. For eksempel: <strong>http://stf.test.turistforeningen.no</strong>
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    <div class="form-group">
+      <label class="col-md-3 control-label">Domenenavn / adresse til nettstedet:</label>
+      <div class="col-md-4">
+        <input class="form-control input-lg" type="text" name="domain" value="http://{{ active_site.domain }}">
+        <p class="help-block">
+          Hvis du endrer denne adressen vil den gamle adressen <strong>slutte å fungere</strong>.
+        </p>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-md-offset-3 col-md-9">
+        <button class="btn btn-success">
+          Lagre nettstedsinnstillinger
+        </button>
+      </div>
+    </div>
+  </form>
+
 </div>
 
 {% endblock %}

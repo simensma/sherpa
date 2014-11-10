@@ -6,7 +6,6 @@ urlpatterns = patterns('admin.sites.settings.views',
     url(r'^$', 'index'),
     url(r'^analyse/', include('admin.sites.settings.analytics.urls')),
     url(r'^cache/', include('admin.sites.settings.cache.urls')),
-    url(r'^domene/', include('admin.sites.settings.domain.urls')),
     url(r'^publisering/', include('admin.sites.settings.publish.urls')),
 
 )
