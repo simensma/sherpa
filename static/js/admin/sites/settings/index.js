@@ -8,7 +8,7 @@ $(function() {
 
     site_type_buttons.change(function() {
         var checked = site_type_buttons.filter(':checked');
-        if(checked.is('[value="hytte"]') || checked.is('[value="kampanje"]')) {
+        if(checked.val() === 'hytte' || checked.val() === 'kampanje' || checked.val() === 'mal') {
             title_wrapper.slideDown('fast');
         } else {
             title_wrapper.slideUp('fast');

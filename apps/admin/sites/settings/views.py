@@ -47,7 +47,7 @@ def save(request, site):
 
     active_site.type = type
 
-    if type in ['hytte', 'kampanje']:
+    if type in ['hytte', 'kampanje', 'mal']:
         active_site.title = request.POST['title'].strip()
     else:
         active_site.title = ''

@@ -19,7 +19,8 @@ $(function() {
     var submit = wrapper.find("button[type='submit']");
 
     site_type_buttons.change(function() {
-        if(site_type_buttons.filter(":checked").is("[value='hytte']") || site_type_buttons.filter(":checked").is("[value='kampanje']")) {
+        var checked = site_type_buttons.filter(":checked");
+        if(checked.val() === 'hytte' || checked.val() === 'kampanje' || checked.val() === 'mal') {
             title_wrapper.slideDown('fast');
         } else {
             title_wrapper.slideUp('fast');

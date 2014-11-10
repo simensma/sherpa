@@ -152,7 +152,7 @@ def setup_site(request):
                 forening=request.active_forening,
                 title='',
             )
-            if request.POST['type'] in ['hytte', 'kampanje']:
+            if request.POST['type'] in ['hytte', 'kampanje', 'mal']:
                 site.title = request.POST['title'].strip()
             site.save()
 

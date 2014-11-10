@@ -118,7 +118,7 @@
       </div>
     </div>
 
-    <div class="form-group{% if active_site.type != 'hytte' and active_site.type != 'kampanje' %} jq-hide{% endif %}" data-dnt-form-group="title">
+    <div class="form-group{% if active_site.type != 'hytte' and active_site.type != 'kampanje' and active_site.type != 'mal' %} jq-hide{% endif %}" data-dnt-form-group="title">
       <label class="col-md-3 control-label" for="title">Tittel</label>
       <div class="col-md-5">
         <input class="form-control input-lg" type="text" name="title" id="title" value="{{ active_site.get_title }}">

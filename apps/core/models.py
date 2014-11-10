@@ -80,6 +80,8 @@ class Site(models.Model):
             return self.title
         elif self.type == 'kampanje':
             return self.title
+        elif self.type == 'mal':
+            return self.title
         else:
             raise Exception("Unrecognized site type '%s'" % self.type)
 
