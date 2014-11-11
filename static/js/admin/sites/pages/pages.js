@@ -208,4 +208,11 @@ $(function() {
         }
     });
 
+    // Delete page
+    $treeContainer.find('.node-wrapper .actions .delete a').on('click', function (e) {
+        if(confirm('Er du HELT sikker på at du vil slette denne siden og ALLE undersider, for alltid?\n\nHvis du bare vil ta den bort fra forsiden og søkeresultater, men beholde innholdet, bør du heller bare avpublisere den.\n\nHvis du vil slette siden men ta vare på undersidene kan du trykke avbryt og flytte de før du sletter siden.\n\Sletting av siden kan du ikke angre!')) {
+            location.href = $(this).data('delete-url');
+        }
+    });
+
 });

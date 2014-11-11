@@ -97,7 +97,7 @@
                     <div><a href="{% url 'admin.sites.pages.page.edit' active_site.id node.active_version.id %}">Rediger</a></div>
                     <div><a href="/{{ node.slug }}">Vis</a></div>
                     {% if node.parent %}
-                      <div><a href="{% url 'admin.sites.pages.page.delete' active_site.id node.id %}">Slett</a></div>
+                      <div class="delete"><a data-delete-url="{% url 'admin.sites.pages.page.delete' active_site.id node.id %}">Slett</a></div>
                     {% endif %}
                 </div>
               </div>
