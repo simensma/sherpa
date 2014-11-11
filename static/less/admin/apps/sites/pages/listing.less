@@ -131,6 +131,18 @@
           clear: both;
           font-size: 12px;
           visibility: hidden;
+
+          div {
+            display: inline-block;
+          }
+
+          div:after {
+            content: ' | ';
+          }
+
+          div:last-child:after {
+            content: '';
+          }
         }
       }
     }

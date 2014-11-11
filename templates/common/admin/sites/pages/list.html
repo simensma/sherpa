@@ -72,7 +72,7 @@
               data-mptt-rght="{{ node.rght }}"
               data-mptt-level="{{ node.level }}"
               class="mjs-nestedSortable-branch{% if not node.is_leaf_node %} mjs-nestedSortable-expanded has-children {% endif %}">
-              <div class="node-wrapper handle">
+              <div class="node-wrapper{% if node.parent %} handle{% endif %}">
                 <div class="disclose">
                   <div class="expand"><span class="glyphicon glyphicon-plus"></span></div>
                   <div class="collapse"><span class="glyphicon glyphicon-minus"></span></div>
@@ -94,8 +94,11 @@
                   <div class="col date modified_date"><span>{{ node.modified_date|date:"d.m.y" }}</span></div>
                 </div>
                 <div class="actions">
-                  <a href="{% url 'admin.sites.pages.page.edit' active_site.id node.active_version.id %}">Rediger</a> <span>|</span>
-                  <a href="/{{ node.slug }}">Vis</a>
+                    <div><a href="{% url 'admin.sites.pages.page.edit' active_site.id node.active_version.id %}">Rediger</a></div>
+                    <div><a href="/{{ node.slug }}">Vis</a></div>
+                    {% if node.parent %}
+                      <div><a href="{% url 'admin.sites.pages.page.delete' active_site.id node.id %}">Slett</a></div>
+                    {% endif %}
                 </div>
               </div>
               {% if not node.is_leaf_node %}
