@@ -1,0 +1,168 @@
+@pages-tree-border-radius: 3px;
+@pages-tree-margin: 5px;
+@pages-tree-indent: 25px;
+@pages-tree-node-padding: 3px 6px;
+
+.tree {
+
+  div.header {
+    overflow: hidden;
+    font-weight: bold;
+    padding: @pages-tree-node-padding;
+
+    div.disclose {
+      display: block;
+      float: left;
+      width: 25px;
+      position: relative;
+      left: -3px;
+
+      &.expand-all {
+        .expand {
+          display: inline-block;
+        }
+      }
+
+      &.collapse-all {
+        .collapse {
+          display: inline-block;
+        }
+      }
+    }
+  }
+
+  div.col {
+    display: inline-block;
+    width: 120px;
+    white-space: nowrap;
+
+    span {
+      text-overflow: ellipsis;
+    }
+
+    &.date {
+      width: 80px;
+    }
+
+    &.status {
+      width: 90px;
+    }
+
+  }
+
+  div.title {
+    float: left;
+    font-weight: bold;
+  }
+
+  div.meta {
+    float: right;
+  }
+
+  div.disclose {
+    cursor: pointer;
+  }
+
+  ol {
+    list-style-type: none;
+  }
+
+  ol.sortable {
+    padding-left: 0;
+    > li {
+      // Special rules for forside
+      margin-top: 0;
+      > div {
+        margin-left: @pages-tree-indent;
+
+        >.disclose {
+          display: none !important;
+        }
+      }
+    }
+
+    .handle {
+      cursor: move;
+    }
+
+    ol {
+      padding-left: @pages-tree-indent;
+    }
+
+    li {
+      position: relative;
+      margin-top: @pages-tree-margin;
+
+      &.mjs-nestedSortable-collapsed > ol {
+        display: none;
+      }
+
+      &.placeholder {
+        background-color: #d4d4d4;
+        border-radius: @pages-tree-border-radius;
+      }
+
+      &.ui-sortable-helper {
+        .disclose {
+          display: none;
+        }
+      }
+
+      div.node-wrapper {
+        border: 1px solid #d4d4d4;
+        border-radius: @pages-tree-border-radius;
+        padding: @pages-tree-node-padding;
+        background-color: #fff;
+        overflow: hidden;
+
+        &:hover {
+          .actions {
+            visibility: visible;
+          }
+        }
+
+        .disclose {
+          position: absolute;
+          left: -22px;
+        }
+
+        .actions {
+          float: left;
+          clear: both;
+          font-size: 12px;
+          visibility: hidden;
+        }
+      }
+    }
+  }
+
+  .expand, .collapse {
+    display: none;
+  }
+
+  .mjs-nestedSortable-expanded {
+    > div.node-wrapper {
+      .disclose > {
+        > .collapse {
+          display: block;
+        }
+      }
+    }
+  }
+
+  .mjs-nestedSortable-collapsed {
+    > div.node-wrapper {
+      .disclose > {
+        > .expand {
+          display: block;
+        }
+      }
+    }
+  }
+
+  .mjs-nestedSortable-hovering > div.node-wrapper {
+    background-color: #d9edf7 !important;
+    border-color: #bce8f1 !important;
+  }
+
+}

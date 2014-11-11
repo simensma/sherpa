@@ -51,6 +51,11 @@ class Page(MPTTModel):
     def __unicode__(self):
         return u'%s' % self.pk
 
+    def get_active_version(self):
+        return self.variant_set.get().version_set.get(active=True)
+
+    active_version = property(get_active_version)
+
     @staticmethod
     def on(site):
         return Page.objects.filter(site=site)

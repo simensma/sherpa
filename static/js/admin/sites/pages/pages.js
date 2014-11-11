@@ -118,52 +118,102 @@ $(function() {
         $(this).parents("form").submit();
     });
 
-    /* Expanding page-hierarchy */
 
-    $(document).on('click', 'a.expand', function() {
-        var i = $(this).children("i");
-        if(i.hasClass('fa-plus')) {
-            i.removeClass('fa-plus');
-            i.addClass('fa-minus');
-            var url = $(this).attr('data-children-url');
-            var tr = $(this).parents("tr");
-            var level = Number($(this).parents("td").attr('data-level')) + 1;
-            var id = $(this).attr("data-id");
-            var loader = '<tr class="loader"><td colspan="2"><img src="/static/img/common/ajax-loader-small.gif" alt="Laster..."></td></tr>';
-            $(this).parents("tr").after(loader);
-            $.ajaxQueue({
-                url: url,
-                data: {
-                    page_id: id,
-                    level: level
-                }
-            }).done(function(result) {
-                $("table.pages tr.loader").remove();
-                tr.after(result);
-                updateLevels();
-            });
-        } else {
-            i.addClass('fa-plus');
-            i.removeClass('fa-minus');
-            removeChildren($(this).parents('tr'));
-        }
+    /* Sortable tree */
+
+    $treeContainer = $('div.pages.tree');
+
+    $treeContainer.find('.header .disclose .collapse').on('click', function (e) {
+        $(this).parents('.disclose').first().addClass('expand-all').removeClass('collapse-all');
+        $treeSortable.find('li.has-children:not(.disabled)').each(function () {
+            $(this).addClass('mjs-nestedSortable-collapsed').removeClass('mjs-nestedSortable-expanded');
+        });
     });
 
-    function removeChildren(tr) {
-        var children = $("table.pages tr[data-parent='" + tr.attr('data-id') + "']");
-        children.each(function() {
-            removeChildren($(this));
+    $treeContainer.find('.header .disclose .expand').on('click', function (e) {
+        $(this).parents('.disclose').first().addClass('collapse-all').removeClass('expand-all');
+        $treeSortable.find('li.has-children:not(.disabled)').each(function () {
+            $(this).addClass('mjs-nestedSortable-expanded').removeClass('mjs-nestedSortable-collapsed');
         });
-        children.remove();
-    }
+    });
 
-    updateLevels();
-    function updateLevels() {
-        var indent = 24;
-        $("table.pages td[data-level]").each(function() {
-            var css = indent * Number($(this).attr('data-level')) + "px";
-            $(this).css('padding-left', css);
-        });
-    }
+    $treeSortable = $treeContainer.find('ol.sortable');
+
+    $treeSortable.find('li').first().addClass('disabled'); // Should not be able to move root page
+    $treeSortable.find('li div').first().removeClass('handle'); // Should not be able to move root page
+
+    $treeSortable.find('li ol').each(function () {
+        $(this).parents().first().addClass('has-children');
+    });
+
+    $treeSortable.nestedSortable({
+        handle: 'div.handle',
+        items: 'li',
+        toleranceElement: '> div',
+        placeholder: 'placeholder',
+        forcePlaceholderSize: true,
+        disabledClass: 'mjs-nestedSortable-disabled',
+        expandOnHover: 700,
+        isTree: true,
+
+        // handle: 'div',
+        // helper: 'clone',
+        // items: 'li',
+        // opacity: .6,
+        // placeholder: 'placeholder',
+        // tabSize: 25,
+        // tolerance: 'pointer',
+        // toleranceElement: '> div',
+        // maxLevels: 4,
+        // startCollapsed: false,
+
+        relocate: function (e) {
+            var mpttArray = $('ol.sortable').nestedSortable('toArray', {startDepthCount: 0});
+
+            // First item is just... Some kind of wrapper.
+            // Remove it and -- all left & right values.
+            mpttArray.shift();
+            for (var i = 0; i < mpttArray.length; i++) {
+                mpttArray[i]['left']--;
+                mpttArray[i]['right']--;
+            }
+
+            var url = $(this).attr('data-reorder-url');
+            var data = {mptt: mpttArray};
+
+            $.ajax({
+                url: url,
+                data: data,
+                dataType: 'json',
+                method: 'POST',
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error(jqXHR, textStatus, errorThrown);
+                },
+                success: function (data, textStatus, jqXHR) {
+                    console.log(data, textStatus, jqXHR);
+                }
+            });
+
+            $treeContainer.find('li:not(.has-children)').each(function () {
+                if ($(this).find('ol').length) {
+                    $(this).addClass('has-children');
+                } else {
+                    $(this).removeClass('has-children');
+                }
+            });
+
+        }
+
+    });
+
+    $('.node-wrapper .disclose').on('click', function() {
+        var $li = $(this).closest('li');
+        var isExpanded = $li.hasClass('mjs-nestedSortable-expanded');
+        if (isExpanded) {
+            $li.addClass('mjs-nestedSortable-collapsed').removeClass('mjs-nestedSortable-expanded');
+        } else {
+            $li.addClass('mjs-nestedSortable-expanded').removeClass('mjs-nestedSortable-collapsed');
+        }
+    });
 
 });

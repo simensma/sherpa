@@ -1,9 +1,12 @@
 {% extends 'common/admin/layout.html' %}
+{% load mptt_tags %}
 {% block title %}Sider — {{ block.super }}{% endblock %}
 
 {% block admin_menu %}{% with 'sites' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
 
 {% block extra_js %}
+  <script src="{{ STATIC_URL }}lib/jquery-ui-1.11.2-sortable/jquery-ui.min.js"></script>
+  <script src="{{ STATIC_URL }}lib/nestedSortable-2.0alpha/jquery.mjs.nestedSortable.js"></script>
   <script src="{{ STATIC_URL }}js/admin/sites/pages/pages.js"></script>
 {% endblock %}
 
@@ -32,26 +35,78 @@
       {% endif %}
     {% endfor %}
 
-    <p style="text-align: center;">
+    <p>
       <a id="add-page" class="btn btn-success btn-lg new-page" href="javascript:undefined">
         Opprett ny side
       </a>
     </p>
-
-    {% if not versions %}
+    {% if not nodes %}
       <div class="alert alert-info">Det er ikke opprettet noen sider for dette nettstedet.</div>
     {% else %}
-      <table class="table pages">
-        <thead>
-          <tr>
-            <th>Tittel</th>
-            <th>URL til siden</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% include 'common/admin/sites/pages/list_result.html' with versions=versions level=0 %}
-        </tbody>
-      </table>
+      <div class="pages tree">
+        <div class="header">
+          <div class="disclose collapse-all">
+            <div class="expand" data-toggle="tooltip" data-placement="top" title="Vis alle undersider">
+              <span class="glyphicon glyphicon-plus"></span>
+            </div>
+            <div class="collapse" data-toggle="tooltip" data-placement="top" title="Skjul alle undersider">
+              <span class="glyphicon glyphicon-minus"></span>
+            </div>
+          </div>
+          <div class="title">
+            <span>Tittel</span>
+          </div>
+          <div class="meta">
+            <div class="col status"><span>Status</span></div>
+            <div class="col created_by"><span>Opprettet av</span></div>
+            <div class="col date created_date"><span>Opprettet</span></div>
+            <div class="col modified_by"><span>Endret av</span></div>
+            <div class="col date modified_date"><span>Endret</span></div>
+          </div>
+        </div>
+        <ol class="sortable" data-reorder-url="{% url 'admin.sites.pages.page.reorder' active_site.id %}">
+          {% recursetree nodes %}
+            <li
+              id="pageid_{{ node.id }}"
+              data-mptt-lft="{{ node.lft }}"
+              data-mptt-rght="{{ node.rght }}"
+              data-mptt-level="{{ node.level }}"
+              class="mjs-nestedSortable-branch{% if not node.is_leaf_node %} mjs-nestedSortable-expanded has-children {% endif %}">
+              <div class="node-wrapper handle">
+                <div class="disclose">
+                  <div class="expand"><span class="glyphicon glyphicon-plus"></span></div>
+                  <div class="collapse"><span class="glyphicon glyphicon-minus"></span></div>
+                </div>
+                <div class="title">
+                  <a href="{% url 'admin.sites.pages.page.edit' active_site.id node.active_version.id %}">{{ node.title }}</a>
+                </div>
+                <div class="meta">
+                  <div class="col status">
+                    {% if node.published %}
+                      <div class="published"><span class="label label-success">Publisert</span></div>
+                    {% else %}
+                      <div class="draft"><span class="label label-warning">Kladd</span></div>
+                    {% endif %}
+                  </div>
+                  <div class="col created_by"><span>{{ node.created_by.get_full_name }}</span></div>
+                  <div class="col date created_date"><span>{{ node.created_date|date:"d.m.y" }}</span></div>
+                  <div class="col modified_by"><span>{{ node.modified_by.get_full_name }}</span></div>
+                  <div class="col date modified_date"><span>{{ node.modified_date|date:"d.m.y" }}</span></div>
+                </div>
+                <div class="actions">
+                  <a href="{% url 'admin.sites.pages.page.edit' active_site.id node.active_version.id %}">Rediger</a> <span>|</span>
+                  <a href="/{{ node.slug }}">Vis</a>
+                </div>
+              </div>
+              {% if not node.is_leaf_node %}
+                <ol class="children">
+                  {{ children }}
+                </ol>
+              {% endif %}
+            </li>
+          {% endrecursetree %}
+        </ol>
+      </div>
     {% endif %}
   </div>
 </div><!-- /.row -->
