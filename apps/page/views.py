@@ -55,21 +55,20 @@ def page(request, slug):
 def parse_content(request, version):
     context = cache.get('content.version.%s' % version.id)
     if context is None:
-        # If parents, generate page hierarchy for breadcrumb path
+        # Generate page hierarchy for breadcrumb path
         page_hierarchy = []
-        if version.variant.page.parent is not None:
+        page_hierarchy.append({
+            'title': version.variant.page.title,
+            'url': version.variant.page.slug,
+        })
+        parent = version.variant.page.parent
+        while parent is not None:
             page_hierarchy.append({
-                'title': version.variant.page.title,
-                'url': version.variant.page.slug
+                'title': parent.title,
+                'url': parent.slug
                 })
-            parent = version.variant.page.parent
-            while parent is not None:
-                page_hierarchy.append({
-                    'title': parent.title,
-                    'url': parent.slug
-                    })
-                parent = parent.parent
-            page_hierarchy.reverse()
+            parent = parent.parent
+        page_hierarchy.reverse()
 
         # Perform DB lookups for all structure and content in this version
         version.fetch_content()
