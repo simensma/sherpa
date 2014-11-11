@@ -155,17 +155,7 @@ $(function() {
         disabledClass: 'mjs-nestedSortable-disabled',
         expandOnHover: 700,
         isTree: true,
-
-        // handle: 'div',
-        // helper: 'clone',
-        // items: 'li',
-        // opacity: .6,
-        // placeholder: 'placeholder',
-        // tabSize: 25,
-        // tolerance: 'pointer',
-        // toleranceElement: '> div',
-        // maxLevels: 4,
-        // startCollapsed: false,
+        protectRoot: true,
 
         relocate: function (e) {
             var mpttArray = $('ol.sortable').nestedSortable('toArray', {startDepthCount: 0});
