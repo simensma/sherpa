@@ -64,6 +64,7 @@ def new(request, site):
         slug=request.POST['slug'],
         published=False,
         created_by=request.user,
+        parent=Page.objects.get(site=active_site, slug=''),
         site=active_site,
     )
     page.save()
