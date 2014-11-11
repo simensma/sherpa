@@ -129,28 +129,33 @@
     <div class="col-md-10">
       <div class="breadcrumb-container">
         <div class="menu-breadcrumb">
-          <a href="/">Forsiden</a>
-
           {# Too much template logic, but can't see a better way to do this. #}
           {% if page_hierarchy %}
             {% for page in page_hierarchy %}
-              /
+              {% if not forloop.first %}
+                /
+              {% endif %}
+
               {% if forloop.last %}<em>{% endif %}
                 <a href="/{{ page.url }}/">{{ page.title }}</a>
               {% if forloop.last %}</em>{% endif %}
             {% endfor %}
           {% elif version.variant.page %}
             {% if version.variant.page.slug != '' %}
+              <a href="/">Forsiden</a>
               / <em><a href="/{{ version.variant.page.slug }}/">{{ version.variant.page.title }}</a></em>
             {% endif %}
           {% elif version.variant.article %}
+            <a href="/">Forsiden</a>
             / <a href="{% url 'articles.views.index' %}">Nyheter</a>
             / <em><a href="">{{ version.get_title_content.content|striptags }}</a></em>
           {% elif article %}
+            <a href="/">Forsiden</a>
             / <a href="{% url 'articles.views.index' %}">Nyheter</a>
             / <em><a href="">{{ article.title }}</a></em>
           {% else %}
             {# Fall back to the static title #}
+            <a href="/">Forsiden</a>
             / {% block breadcrumb %}<em><a href="">Turistforeningen</a></em>{% endblock %}
           {% endif %}
 
