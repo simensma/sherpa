@@ -107,6 +107,24 @@
             </div>
           </div>
 
+          <div class="form-group jq-hide" data-dnt-form-group="template">
+            <label class="col-md-2 control-label">Innhold</label>
+            <div class="col-md-6">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" name="use-template" checked>
+                  Opprett litt eksempelinnhold automatisk
+                </label>
+              </div>
+              <span class="help-block" data-dnt-container="default-template">
+                Innholdet hjelper deg å se hvordan nettstedet kan se ut og er enkelt å endre på. Vi velger automatisk innhold som passer til nettstedet for deg, eller så kan du <a href="javascript:undefined" data-dnt-trigger="choose-template">velge selv</a>.
+              </span>
+              <div class="jq-hide" data-dnt-container="choose-template">
+                TODO
+              </div>
+            </div>
+          </div>
+
           {% if user.perms.sherpa_admin %}
             <div
               class="form-group{% if active_site.type != 'mal' %} jq-hide{% endif %}"

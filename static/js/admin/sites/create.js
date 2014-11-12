@@ -13,6 +13,12 @@ $(function() {
     var site_type_buttons = site_type_wrapper.find("input[name='type']");
 
     var title_wrapper = wrapper.find("div.form-group.title");
+    var template_wrapper = wrapper.find('[data-dnt-form-group="template"]');
+
+    var default_template = wrapper.find('[data-dnt-container="default-template"]');
+    var choose_template_trigger = wrapper.find('[data-dnt-trigger="choose-template"]');
+    var choose_template = wrapper.find('[data-dnt-container="choose-template"]');
+
     var template_type_wrapper = wrapper.find('[data-dnt-form-group="template-type"]');
     var template_description_wrapper = wrapper.find('[data-dnt-form-group="template-description"]');
 
@@ -31,6 +37,7 @@ $(function() {
     forening_select.select2();
     forening_select.change(hideHomepageSite);
     site_type_buttons.change(chooseFormFields);
+    choose_template_trigger.click(chooseTemplate);
     domain_type.change(changeDomainType);
     submit.click(validateForm);
 
@@ -49,18 +56,26 @@ $(function() {
         }
     }
 
+    function chooseTemplate() {
+        default_template.hide();
+        choose_template.slideDown('fast');
+    }
+
     function chooseFormFields() {
         var checked = site_type_buttons.filter(":checked");
         if(checked.val() === 'hytte' || checked.val() === 'kampanje') {
             title_wrapper.slideDown('fast');
+            template_wrapper.slideDown('fast');
             template_type_wrapper.slideUp('fast');
             template_description_wrapper.slideUp('fast');
         } else if(checked.val() === 'mal') {
             title_wrapper.slideDown('fast');
+            template_wrapper.slideUp('fast');
             template_type_wrapper.slideDown('fast');
             template_description_wrapper.slideDown('fast');
         } else {
             title_wrapper.slideUp('fast');
+            template_wrapper.slideUp('fast');
             template_type_wrapper.slideUp('fast');
             template_description_wrapper.slideUp('fast');
         }
