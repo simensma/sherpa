@@ -194,7 +194,7 @@ def create(request):
             )
             menu.save()
 
-            if 'use-template' in request.POST:
+            if 'use-template' not in request.POST:
                 # User explicitly requested not to clone any template
                 pass
             elif request.POST.get('template', '').strip() == '':
