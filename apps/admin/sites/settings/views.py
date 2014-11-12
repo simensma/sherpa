@@ -22,6 +22,7 @@ def index(request, site):
     context = {
         'active_site': active_site,
         'available_site_types': available_site_types,
+        'template_types': Site.TEMPLATE_TYPE_CHOICES,
     }
 
     if 'message_context' in request.session:
@@ -52,10 +53,15 @@ def save(request, site):
     else:
         active_site.title = ''
 
-    if type == 'mal' and 'template_description' in request.POST:
-        active_site.template_description = request.POST['template_description'].strip()
+    if type == 'mal':
+        active_site.template_description = request.POST.get('template_description', '').strip()
+        template_type = request.POST.get('template_type', '').strip()
+        if template_type not in [t[0] for t in Site.TEMPLATE_TYPE_CHOICES]:
+            raise PermissionDenied
+        active_site.template_type = template_type
     else:
         active_site.template_description = ''
+        active_site.template_type = ''
 
     if domain == active_site.domain:
         # Special case; the domain wasn't changed - so just pretend that it's updated
