@@ -3,6 +3,7 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect
 
 from core.models import Site
+from foreninger.models import Forening
 
 def index(request, site):
     active_site = Site.objects.get(id=site)
@@ -39,13 +40,24 @@ def save(request, site):
     domain = request.POST['domain'].strip().lower().replace('http://', '').rstrip('/')
     errors = False
 
+    site_forening = Forening.objects.get(id=request.POST['site_forening'])
+    if site_forening not in request.user.all_foreninger():
+        raise PermissionDenied
+
     type = request.POST['type']
     if type not in [t[0] for t in Site.TYPE_CHOICES]:
         raise PermissionDenied
 
+    homepage = site_forening.get_homepage_site()
+    if type == 'forening' and homepage is not None and homepage != active_site:
+        # The chosen forening has *another* homepage site
+        messages.error(request, 'homepage_site_exists')
+        return redirect('admin.sites.settings.views.index', site)
+
     if type == 'mal' and not request.user.has_perm('sherpa_admin'):
         raise PermissionDenied
 
+    active_site.forening = site_forening
     active_site.type = type
 
     if type in ['hytte', 'kampanje', 'mal']:

@@ -92,8 +92,37 @@
         <div class="alert alert-danger">
           I test-perioden <strong>må</strong> dere ha "<strong>.test.turistforeningen.no</strong>" bak domenet. For eksempel: <strong>http://stf.test.turistforeningen.no</strong>
         </div>
+      {% elif message.message == 'homepage_site_exists' %}
+        <div class="alert alert-danger">
+          Foreningen du valgte har allerede en annen hjemmeside.
+        </div>
       {% endif %}
     {% endfor %}
+
+    <div class="form-group">
+      <label for="site_forening" class="col-md-3 control-label">Tilknyttet forening</label>
+      <div class="col-md-5">
+        <select class="form-control" name="site_forening" id="site_forening">
+          {% for type in user.all_foreninger_sorted_with_type_data %}
+            {% if type.foreninger|length > 0 %}
+              <optgroup label="{{ type.name }}">
+                {% for forening in type.foreninger %}
+                  <option
+                    value="{{ forening.id }}"
+                    data-dnt-type="{{ type.code }}"
+                    {% if active_site.forening == forening %}
+                      selected
+                    {% endif %}>
+
+                    {{ forening.name }}
+                  </option>
+                {% endfor %}
+              </optgroup>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+    </div>
 
     <div class="form-group" data-dnt-form-group="type">
       <label class="col-md-3 control-label">Hva slags nettsted</label>
