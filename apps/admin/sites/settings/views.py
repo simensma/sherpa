@@ -77,9 +77,11 @@ def save(request, site):
         template_type = request.POST.get('template_type', '').strip()
         if template_type not in [t[0] for t in Site.TEMPLATE_TYPE_CHOICES]:
             raise PermissionDenied
+        active_site.template_main = 'template_main' in request.POST
         active_site.template_type = template_type
         active_site.template_description = request.POST.get('template_description', '').strip()
     else:
+        active_site.template_main = False
         active_site.template_type = ''
         active_site.template_description = ''
 
