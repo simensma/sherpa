@@ -145,8 +145,10 @@
                   which doesn't exist. This is a sherpa-admin error (we should always maintain a set of site templates
                   for each site type a user chooses here). We won't handle it very gracefully, just enough to make
                   sure there are no technical errors.
+                  The missing-template-type input will be used to log which template that didn't exist.
                 {% endcomment %}
                 <input class="jq-hide" type="radio" name="template" value="">
+                <input type="hidden" name="missing-template-type" value="">
               </div>
             </div>
           </div>
