@@ -13,6 +13,7 @@ $(function() {
     var title_wrapper = wrapper.find('[data-dnt-form-group="title"]');
 
     var template_type_wrapper = wrapper.find('[data-dnt-form-group="template-type"]');
+    var template_main_wrapper = wrapper.find('[data-dnt-form-group="template-main"]');
     var template_description_wrapper = wrapper.find('[data-dnt-form-group="template-description"]');
 
     // Show/hide homepage type choice based on the default selected forening
@@ -40,14 +41,17 @@ $(function() {
         if(checked.val() === 'hytte' || checked.val() === 'kampanje') {
             title_wrapper.slideDown('fast');
             template_type_wrapper.slideUp('fast');
+            template_main_wrapper.slideUp('fast');
             template_description_wrapper.slideUp('fast');
         } else if(checked.val() === 'mal') {
             title_wrapper.slideDown('fast');
             template_type_wrapper.slideDown('fast');
+            template_main_wrapper.slideDown('fast');
             template_description_wrapper.slideDown('fast');
         } else {
             title_wrapper.slideUp('fast');
             template_type_wrapper.slideUp('fast');
+            template_main_wrapper.slideUp('fast');
             template_description_wrapper.slideUp('fast');
         }
     }
