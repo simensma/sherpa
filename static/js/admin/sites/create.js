@@ -90,6 +90,19 @@ $(function() {
             // checkbox so we can handle it server-side.
             template_missing_checkbox.prop('checked', true);
             missing_template_type.val(template_type);
+        } else if(chosen_template_input.length > 1) {
+            // Multiple templates of the same type - pick the main one
+            var main_template = chosen_template_input.filter('[data-dnt-template-main]');
+            if(main_template.length === 0) {
+                // Another sherpa-admin user error: There is no main template for this template type;
+                // pick one at random
+                chosen_template_input.first().prop('checked', true);
+            } else if(main_template.length > 1) {
+                // Several main templates, not a valid state. Just pick a random one
+                main_template.first().prop('checked', true);
+            } else {
+                main_template.prop('checked', true);
+            }
         } else {
             chosen_template_input.prop('checked', true);
         }

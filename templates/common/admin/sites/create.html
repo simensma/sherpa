@@ -129,6 +129,9 @@
                   <div class="radio">
                     <label>
                       <input
+                        {% if site_template.template_main %}
+                          data-dnt-template-main
+                        {% endif %}
                         data-dnt-template-type="{{ site_template.template_type }}"
                         type="radio"
                         name="template"
