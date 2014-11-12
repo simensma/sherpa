@@ -144,6 +144,17 @@ def create(request):
 
             site.save()
 
+            # If this is a main template, clear other templates of this type in case any of them were previous main
+            if site.type == 'mal' and site.template_main:
+                Site.objects.filter(
+                    type=site.type,
+                    template_type=site.template_type,
+                ).exclude(
+                    id=site.id,
+                ).update(
+                    template_main=False
+                )
+
             # Invalidate the forening's homepage site cache
             cache.delete('forening.homepage_site.%s' % site_forening.id)
 

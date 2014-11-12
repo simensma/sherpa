@@ -102,6 +102,17 @@ def save(request, site):
     active_site.is_published = 'published' in request.POST
     active_site.save()
 
+    # If this is a main template, clear other templates of this type in case any of them were previous main
+    if active_site.type == 'mal' and active_site.template_main:
+        Site.objects.filter(
+            type=active_site.type,
+            template_type=active_site.template_type,
+        ).exclude(
+            id=active_site.id,
+        ).update(
+            template_main=False
+        )
+
     request.session.modified = True
     if not errors:
         messages.info(request, 'settings_saved')
