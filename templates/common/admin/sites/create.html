@@ -81,7 +81,15 @@
                     <input type="radio" name="type" value="{{ type.0 }}">
                     {{ type.1 }}
 
-                    {% if type.0 == 'mal' %}
+                    {% if type.0 == 'forening' %}
+                      <span
+                        class="has-homepage jq-hide"
+                        data-dnt-container="has-homepage-info">
+
+                        <span data-dnt-container="forening-name"></span>
+                        har allerede en hjemmeside
+                      </span>
+                    {% elif type.0 == 'mal' %}
                       <span class="help-block display-inline">
                         (kun tilgjengelig for Sherpa-administratorer)
                       </span>

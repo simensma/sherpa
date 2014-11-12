@@ -8,6 +8,8 @@ $(function() {
 
     var site_type_wrapper = wrapper.find('[data-dnt-form-group="type"]');
     var site_type_forening = site_type_wrapper.find('input[value="forening"]');
+    var site_type_forening_info = site_type_wrapper.find('[data-dnt-container="has-homepage-info"]');
+    var site_type_forening_info_name = site_type_forening_info.find('[data-dnt-container="forening-name"]');
     var site_type_buttons = site_type_wrapper.find("input[name='type']");
 
     var title_wrapper = wrapper.find("div.form-group.title");
@@ -39,8 +41,11 @@ $(function() {
         if(Turistforeningen.foreninger_with_homepage[forening_id]) {
             site_type_forening.prop('checked', false);
             site_type_forening.prop('disabled', true);
+            site_type_forening_info_name.text(forening_select.find('option:selected').text());
+            site_type_forening_info.show();
         } else {
             site_type_forening.prop('disabled', false);
+            site_type_forening_info.hide();
         }
     }
 
