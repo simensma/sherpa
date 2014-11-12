@@ -43,8 +43,15 @@ class Site(models.Model):
     # as its homepage instead of the site domain (the latter applies only for type='forening').
     is_published = models.BooleanField(default=False)
 
-    # The template description is only applicable for the 'mal' type. When creating a template site, sherpa-admins can
-    # add a description to be shown to the user when they are able to choose this template.
+    # The template_* fields is only applicable for the 'mal' type. When creating a template site, sherpa-admins will
+    # choose type and add a description to be shown to the user when they are able to choose this template.
+    TEMPLATE_TYPE_CHOICES = (
+        ('forening', 'Foreninger'),
+        ('turlag', 'Turlag/turgrupper'),
+        ('hytte', 'Betjent hytte'),
+        ('kampanje', 'Kampanje'),
+    )
+    template_type = models.CharField(max_length=255, default='')
     template_description = models.CharField(max_length=1023, default='')
 
     # Hardcoded site IDs that we may need to know
