@@ -63,7 +63,12 @@ $(function() {
 
     function chooseFormFields() {
         var checked = site_type_buttons.filter(":checked");
-        if(checked.val() === 'hytte' || checked.val() === 'kampanje') {
+        if(checked.val() === 'forening') {
+            title_wrapper.slideUp('fast');
+            template_wrapper.slideDown('fast');
+            template_type_wrapper.slideUp('fast');
+            template_description_wrapper.slideUp('fast');
+        } else if(checked.val() === 'hytte' || checked.val() === 'kampanje') {
             title_wrapper.slideDown('fast');
             template_wrapper.slideDown('fast');
             template_type_wrapper.slideUp('fast');
@@ -73,11 +78,6 @@ $(function() {
             template_wrapper.slideUp('fast');
             template_type_wrapper.slideDown('fast');
             template_description_wrapper.slideDown('fast');
-        } else {
-            title_wrapper.slideUp('fast');
-            template_wrapper.slideUp('fast');
-            template_type_wrapper.slideUp('fast');
-            template_description_wrapper.slideUp('fast');
         }
     }
 
