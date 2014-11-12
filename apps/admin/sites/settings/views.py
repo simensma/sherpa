@@ -1,3 +1,5 @@
+import json
+
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect
@@ -8,14 +10,19 @@ from foreninger.models import Forening
 def index(request, site):
     active_site = Site.objects.get(id=site)
 
+    # We need to know client-side which of the users' available foreninger already has a homepage site, to be able
+    # to hide that option when the chosen forening is changed. We'll do a lookup based on the users already cached
+    # forening-list, but with sites prefetching here, and send the mapping to the client.
+    user_forening_ids = [f.id for f in request.user.all_foreninger()]
+    foreninger_with_sites = Forening.objects.filter(id__in=user_forening_ids).prefetch_related('sites')
+    foreninger_with_other_homepage = json.dumps({
+        f.id: f.get_homepage_site(prefetched=True) is not None and f.get_homepage_site(prefetched=True) != active_site
+        for f in foreninger_with_sites
+    })
+
     available_site_types = []
     for t in Site.TYPE_CHOICES:
-        # The forening type choice shouldn't be available if the current site has an *other* homepage site
-        if t[0] == 'forening':
-            homepage_site = request.active_forening.get_homepage_site()
-            if homepage_site is not None and homepage_site != active_site:
-                continue
-        elif t[0] == 'mal':
+        if t[0] == 'mal':
             if not request.user.has_perm('sherpa_admin'):
                 continue
         available_site_types.append(t)
@@ -23,6 +30,7 @@ def index(request, site):
     context = {
         'active_site': active_site,
         'available_site_types': available_site_types,
+        'foreninger_with_other_homepage': foreninger_with_other_homepage,
         'template_types': Site.TEMPLATE_TYPE_CHOICES,
     }
 

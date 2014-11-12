@@ -41,7 +41,7 @@ $(function() {
     forening_select.select2();
     forening_select.change(hideHomepageSite);
     forening_select.change(setDefaultTemplate);
-    site_type_buttons.change(chooseFormFields);
+    site_type_buttons.change(setFormFields);
     site_type_buttons.change(setDefaultTemplate);
     use_template_input.change(confirmNoTemplate);
     choose_template_trigger.click(chooseTemplateManually);
@@ -109,7 +109,7 @@ $(function() {
         choose_template.slideDown('fast');
     }
 
-    function chooseFormFields() {
+    function setFormFields() {
         var checked = site_type_buttons.filter(":checked");
         if(checked.val() === 'forening') {
             title_wrapper.slideUp('fast');
