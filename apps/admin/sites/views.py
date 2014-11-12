@@ -193,6 +193,13 @@ def create(request):
                     variants = page.variant_set.all()
                     page.id = None
                     page.site = site
+
+                    # Change creation to the user creating the new site and reset modification
+                    page.created_by = request.user
+                    page.created_date = datetime.now()
+                    page.modified_by = None
+                    page.modified_date = None
+
                     page.save()
 
                     for variant in variants:
@@ -229,6 +236,13 @@ def create(request):
                     variants = article.variant_set.all()
                     article.id = None
                     article.site = site
+
+                    # Change creation to the user creating the new site and reset modification
+                    article.created_by = request.user
+                    article.created_date = datetime.now()
+                    article.modified_by = None
+                    article.modified_date = None
+
                     article.save()
 
                     for variant in variants:
