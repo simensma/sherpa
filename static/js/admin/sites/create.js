@@ -18,7 +18,7 @@ $(function() {
     var default_template = wrapper.find('[data-dnt-container="default-template"]');
     var choose_template_trigger = wrapper.find('[data-dnt-trigger="choose-template"]');
     var choose_template = wrapper.find('[data-dnt-container="choose-template"]');
-    var template_missing_checkbox = template_wrapper.find('input[name="template"][value="TEMPLATE_MISSING"]');
+    var template_missing_checkbox = template_wrapper.find('input[name="template"][value=""]');
 
     var template_type_wrapper = wrapper.find('[data-dnt-form-group="template-type"]');
     var template_description_wrapper = wrapper.find('[data-dnt-form-group="template-description"]');
