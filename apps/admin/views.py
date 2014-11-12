@@ -111,6 +111,7 @@ def setup_site(request):
     context = {
         'available_site_types': available_site_types,
         'site_templates': site_templates,
+        'template_types': Site.TEMPLATE_TYPE_CHOICES,
     }
 
     if request.method == 'GET':
@@ -163,9 +164,14 @@ def setup_site(request):
             if request.POST['type'] in ['hytte', 'kampanje', 'mal']:
                 site.title = request.POST['title'].strip()
 
-            if request.POST['type'] == 'mal' and 'template_description' in request.POST:
-                site.template_description = request.POST['template_description'].strip()
+            if request.POST['type'] == 'mal':
+                template_type = request.POST.get('template_type', '').strip()
+                if template_type not in [t[0] for t in Site.TEMPLATE_TYPE_CHOICES]:
+                    raise PermissionDenied
+                site.template_type = template_type
+                site.template_description = request.POST.get('template_description', '').strip()
             else:
+                site.template_type = ''
                 site.template_description = ''
 
             site.save()

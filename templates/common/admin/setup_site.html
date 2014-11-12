@@ -57,6 +57,24 @@
           </div>
 
           {% if user.perms.sherpa_admin %}
+            <div class="form-group{% if active_site.type != 'mal' %} jq-hide{% endif %}" data-dnt-form-group="template-type">
+              <label class="col-md-2 control-label" for="template_type">Mal for hva slags nettsted</label>
+              <div class="col-md-3">
+                <select class="form-control" name="template_type" id="template_type">
+                  {% for template_type in template_types %}
+                    <option
+                      value="{{ template_type.0 }}"
+                      {% if active_site.template_type == template_type.0 %}
+                        selected
+                      {% endif %}>
+
+                      {{ template_type.1 }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
             <div class="form-group jq-hide" data-dnt-form-group="template-description">
               <label class="col-md-2 control-label" for="template_description">Beskrivelse for malen:</label>
               <div class="col-md-5">
