@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 import json
 import logging
 
@@ -7,6 +9,8 @@ from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect
 
+from admin.models import Campaign
+from articles.models import Article
 from core.models import Site
 from foreninger.models import Forening
 from page.models import Menu, Page, Variant, Version
@@ -158,42 +162,6 @@ def create(request):
             # Invalidate the forening's homepage site cache
             cache.delete('forening.homepage_site.%s' % site_forening.id)
 
-            page = Page(
-                title='Forside',
-                slug='',
-                published=False,
-                created_by=request.user,
-                site=site,
-            )
-            page.save()
-
-            variant = Variant(
-                page=page,
-                article=None,
-                name='Standard',
-                segment=None,
-                priority=1,
-                owner=request.user,
-            )
-            variant.save()
-
-            version = Version(
-                variant=variant,
-                version=1,
-                owner=request.user,
-                active=True,
-                ads=True,
-            )
-            version.save()
-
-            menu = Menu(
-                name='Forside',
-                url='http://%s/' % site.domain,
-                order=1,
-                site=site,
-            )
-            menu.save()
-
             if 'use-template' not in request.POST:
                 # User explicitly requested not to clone any template
                 pass
@@ -207,8 +175,102 @@ def create(request):
                     }
                 )
             else:
-                # Template-site TODO
-                pass
+                # All right, let's clone the entire template site
+                # Note that for most objects, we'll just set the primary key to None, change the site field to the
+                # new site, and save it, which will insert a new object.
+                # For related fields, we'll need to save the related set in memory before saving the new object, so
+                # that we can iterate it, clone them and re-relate them to the new object
+                template_site = Site.objects.get(id=request.POST['template'], type='mal')
+
+                # Menus
+                for menu in Menu.objects.filter(site=template_site):
+                    menu.id = None
+                    menu.site = site
+                    menu.save()
+
+                # Pages
+                for page in Page.objects.filter(site=template_site):
+                    variants = page.variant_set.all()
+                    page.id = None
+                    page.site = site
+                    page.save()
+
+                    for variant in variants:
+                        versions = variant.version_set.all()
+                        variant.id = None
+                        variant.page = page
+                        variant.save()
+
+                        for version in versions:
+                            rows = version.rows.all()
+                            version.id = None
+                            version.variant = variant
+                            version.save()
+
+                            for row in rows:
+                                columns = row.columns.all()
+                                row.id = None
+                                row.version = version
+                                row.save()
+
+                                for column in columns:
+                                    contents = column.contents.all()
+                                    column.id = None
+                                    column.row = row
+                                    column.save()
+
+                                    for content in contents:
+                                        content.id = None
+                                        content.column = column
+                                        content.save()
+
+                # Articles
+                for article in Article.objects.filter(site=template_site):
+                    variants = article.variant_set.all()
+                    article.id = None
+                    article.site = site
+                    article.save()
+
+                    for variant in variants:
+                        versions = variant.version_set.all()
+                        variant.id = None
+                        variant.article = article
+                        variant.save()
+
+                        for version in versions:
+                            rows = version.rows.all()
+                            version.id = None
+                            version.variant = variant
+                            version.save()
+
+                            for row in rows:
+                                columns = row.columns.all()
+                                row.id = None
+                                row.version = version
+                                row.save()
+
+                                for column in columns:
+                                    contents = column.contents.all()
+                                    column.id = None
+                                    column.row = row
+                                    column.save()
+
+                                    for content in contents:
+                                        content.id = None
+                                        content.column = column
+                                        content.save()
+
+            # Campaigns
+            for campaign in Campaign.objects.filter(site=template_site):
+                campaign_texts = campaign.text.all()
+                campaign.id = None
+                campaign.site = site
+                campaign.save()
+
+                for campaign_text in campaign_texts:
+                    campaign_text.id = None
+                    campaign_text.campaign = campaign
+                    campaign_text.save()
 
             request.session.modified = True
             return redirect('admin.sites.views.created', site.id)
