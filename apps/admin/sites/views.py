@@ -181,7 +181,10 @@ def create(request):
             )
             menu.save()
 
-            if request.POST.get('template', '').strip() == '':
+            if 'use-template' in request.POST:
+                # User explicitly requested not to clone any template
+                pass
+            elif request.POST.get('template', '').strip() == '':
                 # Sherpa-admin error; a site-template for the chosen site type doesn't exist!
                 # This needs to be fixed.
                 logger.error(u"Sherpa-bruker opprettet en site med en mal som ikke finnes",
