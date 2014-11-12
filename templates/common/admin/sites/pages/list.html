@@ -72,7 +72,7 @@
               data-mptt-rght="{{ node.rght }}"
               data-mptt-level="{{ node.level }}"
               class="mjs-nestedSortable-branch{% if not node.is_leaf_node %} mjs-nestedSortable-expanded has-children {% endif %}">
-              <div class="node-wrapper{% if node.parent %} handle{% endif %}">
+              <div class="node-wrapper {% if node.parent != None %} handle{% endif %}">
                 <div class="disclose">
                   <div class="expand"><span class="glyphicon glyphicon-plus"></span></div>
                   <div class="collapse"><span class="glyphicon glyphicon-minus"></span></div>

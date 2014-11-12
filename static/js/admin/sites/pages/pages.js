@@ -139,11 +139,6 @@ $(function() {
 
     $treeSortable = $treeContainer.find('ol.sortable');
 
-    // Find root page and disable some interactions like sorting and deleting
-    $treeSortableRootPage = $treeSortable.find('li').first();
-    $treeSortableRootPage.addClass('disabled');
-    $treeSortableRootPage.find('div.handle').removeClass('handle');
-
     $treeSortable.find('li ol').each(function () {
         $(this).parents().first().addClass('has-children');
     });
