@@ -162,8 +162,12 @@ def setup_site(request):
             )
             if request.POST['type'] in ['hytte', 'kampanje', 'mal']:
                 site.title = request.POST['title'].strip()
+
             if request.POST['type'] == 'mal' and 'template_description' in request.POST:
                 site.template_description = request.POST['template_description'].strip()
+            else:
+                site.template_description = ''
+
             site.save()
 
             # Invalidate the forening's homepage site cache

@@ -54,6 +54,8 @@ def save(request, site):
 
     if type == 'mal' and 'template_description' in request.POST:
         active_site.template_description = request.POST['template_description'].strip()
+    else:
+        active_site.template_description = ''
 
     if domain == active_site.domain:
         # Special case; the domain wasn't changed - so just pretend that it's updated
