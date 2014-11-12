@@ -74,7 +74,12 @@
             </li>
           </ul>
         </td>
-        <td>{{ site.get_type }}</td>
+        <td>
+          {{ site.get_type }}
+          {% if site.type == 'mal' %}
+            ({{ site.get_template_type }})
+          {% endif %}
+        </td>
         <td>{{ site.domain }}</td>
         <td>
           {% if site.is_published %}
