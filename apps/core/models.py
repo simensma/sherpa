@@ -67,7 +67,13 @@ class Site(models.Model):
         return u'%s: %s' % (self.pk, self.domain)
 
     def get_type(self):
-        return [t for t in Site.TYPE_CHOICES if t[0] == self.type][0][1]
+        type_description = [t for t in Site.TYPE_CHOICES if t[0] == self.type][0][1]
+        if self.type != 'mal':
+            return type_description
+        else:
+            # Include what template type this is a template for
+            template_type_description = [t for t in Site.TEMPLATE_TYPE_CHOICES if t[0] == self.template_type][0][1]
+            return "%s (%s)" % (type_description, template_type_description)
 
     def get_type_short(self):
         """Return an even shorter friendly name than the TYPE_CHOICES tuple description"""
