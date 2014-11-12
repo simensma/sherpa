@@ -18,6 +18,7 @@ $(function() {
     var default_template = wrapper.find('[data-dnt-container="default-template"]');
     var choose_template_trigger = wrapper.find('[data-dnt-trigger="choose-template"]');
     var choose_template = wrapper.find('[data-dnt-container="choose-template"]');
+    var template_missing_checkbox = template_wrapper.find('input[name="template"][value="TEMPLATE_MISSING"]');
 
     var template_type_wrapper = wrapper.find('[data-dnt-form-group="template-type"]');
     var template_description_wrapper = wrapper.find('[data-dnt-form-group="template-description"]');
@@ -36,8 +37,10 @@ $(function() {
 
     forening_select.select2();
     forening_select.change(hideHomepageSite);
+    forening_select.change(setDefaultTemplate);
     site_type_buttons.change(chooseFormFields);
-    choose_template_trigger.click(chooseTemplate);
+    site_type_buttons.change(setDefaultTemplate);
+    choose_template_trigger.click(chooseTemplateManually);
     domain_type.change(changeDomainType);
     submit.click(validateForm);
 
@@ -56,7 +59,38 @@ $(function() {
         }
     }
 
-    function chooseTemplate() {
+    function setDefaultTemplate() {
+        var site_type = site_type_buttons.filter(':checked').val();
+        var forening_type = forening_select.find('option:selected').attr('data-dnt-type');
+        var template_type;
+
+        // Figure out what template type we should default to
+        if(site_type === 'forening') {
+            if(forening_type === 'sentral' || forening_type === 'forening') {
+                template_type = 'forening';
+            } else {
+                template_type = 'turlag';
+            }
+        } else if(site_type === 'hytte') {
+            template_type = 'hytte';
+        } else if(site_type === 'kampanje') {
+            template_type = 'kampanje';
+        } else if(site_type === 'mal') {
+            // The template type will not be used when creating a template site, so just return
+            return;
+        }
+
+        var chosen_template_input = template_wrapper.find('input[name="template"][data-dnt-template-type="' + template_type + '"]');
+        if(chosen_template_input.length === 0) {
+            // What!? The template doesn't exist. This is a sherpa-admin user error. Check the template-missing
+            // checkbox so we can handle it server-side.
+            template_missing_checkbox.prop('checked', true);
+        } else {
+            chosen_template_input.prop('checked', true);
+        }
+    }
+
+    function chooseTemplateManually() {
         default_template.hide();
         choose_template.slideDown('fast');
     }

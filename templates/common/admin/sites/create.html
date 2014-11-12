@@ -49,6 +49,7 @@
                       {% for forening in type.foreninger %}
                         <option
                           value="{{ forening.id }}"
+                          data-dnt-type="{{ type.code }}"
                           {% if active_forening == forening %}
                             selected
                           {% endif %}>
@@ -120,7 +121,32 @@
                 Innholdet hjelper deg å se hvordan nettstedet kan se ut og er enkelt å endre på. Vi velger automatisk innhold som passer til nettstedet for deg, eller så kan du <a href="javascript:undefined" data-dnt-trigger="choose-template">velge selv</a>.
               </span>
               <div class="jq-hide" data-dnt-container="choose-template">
-                TODO
+                {% for site_template in site_templates %}
+                  <div class="radio">
+                    <label>
+                      <input
+                        data-dnt-template-type="{{ site_template.template_type }}"
+                        type="radio"
+                        name="template"
+                        value="{{ site_template.id }}">
+
+                      {{ site_template.get_title }}
+
+                      {% if site_template.template_description %}
+                        <span class="help-block">
+                          {{ site_template.template_description|linebreaksbr }}
+                        </span>
+                      {% endif %}
+                    </label>
+                  </div>
+                {% endfor %}
+                {% comment %}
+                  The following checkbox will be checked if we're automatically trying to select an expected template
+                  which doesn't exist. This is a sherpa-admin error (we should always maintain a set of site templates
+                  for each site type a user chooses here). We won't handle it very gracefully, just enough to make
+                  sure there are no technical errors.
+                {% endcomment %}
+                <input class="jq-hide" type="radio" name="template" value="TEMPLATE_MISSING">
               </div>
             </div>
           </div>
