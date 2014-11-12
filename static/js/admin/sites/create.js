@@ -16,6 +16,7 @@ $(function() {
     var template_wrapper = wrapper.find('[data-dnt-form-group="template"]');
 
     var default_template = wrapper.find('[data-dnt-container="default-template"]');
+    var use_template_input = wrapper.find('input[name="use-template"]');
     var choose_template_trigger = wrapper.find('[data-dnt-trigger="choose-template"]');
     var choose_template = wrapper.find('[data-dnt-container="choose-template"]');
     var template_missing_checkbox = template_wrapper.find('input[name="template"][value=""]');
@@ -41,6 +42,7 @@ $(function() {
     forening_select.change(setDefaultTemplate);
     site_type_buttons.change(chooseFormFields);
     site_type_buttons.change(setDefaultTemplate);
+    use_template_input.change(confirmNoTemplate);
     choose_template_trigger.click(chooseTemplateManually);
     domain_type.change(changeDomainType);
     submit.click(validateForm);
@@ -89,6 +91,15 @@ $(function() {
             missing_template_type.val(template_type);
         } else {
             chosen_template_input.prop('checked', true);
+        }
+    }
+
+    function confirmNoTemplate(e) {
+        if(!use_template_input.prop('checked')) {
+            var warning_message = use_template_input.attr('data-dnt-uncheck-warning').replace(/\\n/g, '\n');
+            if(!confirm(warning_message)) {
+                use_template_input.prop('checked', true);
+            }
         }
     }
 
