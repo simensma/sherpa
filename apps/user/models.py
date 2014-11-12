@@ -550,6 +550,9 @@ class User(AbstractBaseUser):
     def all_foreninger_sorted(self):
         return Forening.sort(self.all_foreninger())
 
+    def all_foreninger_sorted_with_type_data(self):
+        return Forening.sort_with_type_data(self.all_foreninger())
+
     def children_foreninger(self):
         """
         Returns this users' foreninger, with all their children, regardless of role.
