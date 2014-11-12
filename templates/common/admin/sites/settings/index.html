@@ -114,13 +114,15 @@
               {{ type.1 }}
             </label>
 
-            {% if type.0 == 'mal' %}
-              <span class="help-block">
-                <em>{{ type.1 }}</em> er kun tilgjengelig for Sherpa-administratorer.
-              </span>
-            {% endif %}
           {% endfor %}
         </div>
+        {% for type in available_site_types %}
+          {% if type.0 == 'mal' %}
+            <span class="help-block">
+              <em>{{ type.1 }}</em> er kun tilgjengelig for Sherpa-administratorer.
+            </span>
+          {% endif %}
+        {% endfor %}
       </div>
     </div>
 
