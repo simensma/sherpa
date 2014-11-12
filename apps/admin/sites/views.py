@@ -77,13 +77,17 @@ def create(request):
         if not request.POST['domain-type'] in ['fqdn', 'subdomain']:
             raise PermissionDenied
 
+        site_forening = Forening.objects.get(id=request.POST['site_forening'])
+        if site_forening not in request.user.all_foreninger():
+            raise PermissionDenied
+
         domain = request.POST['domain'].strip().lower()
         subdomain = domain
         if request.POST['domain-type'] == 'subdomain':
             domain = '%s.test.turistforeningen.no' % domain
         domain = domain.replace('http://', '').rstrip('/')
 
-        if request.POST['type'] == 'forening' and request.active_forening.get_homepage_site() is not None:
+        if request.POST['type'] == 'forening' and site_forening.get_homepage_site() is not None:
             messages.error(request, 'main_site_exists')
             if request.POST['domain-type'] == 'fqdn':
                 context['domain'] = domain
@@ -108,7 +112,7 @@ def create(request):
                 prefix=result['prefix'],
                 type=request.POST['type'],
                 template='local',
-                forening=request.active_forening,
+                forening=site_forening,
                 title='',
             )
             if request.POST['type'] in ['hytte', 'kampanje', 'mal']:
@@ -127,7 +131,7 @@ def create(request):
             site.save()
 
             # Invalidate the forening's homepage site cache
-            cache.delete('forening.homepage_site.%s' % request.active_forening.id)
+            cache.delete('forening.homepage_site.%s' % site_forening.id)
 
             page = Page(
                 title='Forside',

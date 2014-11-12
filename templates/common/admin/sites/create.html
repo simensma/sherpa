@@ -29,7 +29,40 @@
 
           <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-              <h2>1. Hva slags nettsted vil du opprette?</h2>
+              <h2>1. Hvilken forening skal nettstedet tilhøre?</h2>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-md-offset-2 col-md-3">
+              <select class="form-control" name="site_forening" id="site_forening">
+                {% for type in user.all_foreninger_sorted_with_type_data %}
+                  {% if type.foreninger|length > 0 %}
+                    <optgroup label="{{ type.name }}">
+                      {% for forening in type.foreninger %}
+                        <option
+                          value="{{ forening.id }}"
+                          {% if active_forening == forening %}
+                            selected
+                          {% endif %}>
+
+                          {{ forening.name }}
+                        </option>
+                      {% endfor %}
+                    </optgroup>
+                  {% endif %}
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+        </div><!-- /.section -->
+
+        <div class="section">
+
+          <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+              <h2>2. Hva slags nettsted vil du opprette?</h2>
             </div>
           </div>
 
@@ -100,7 +133,7 @@
 
           <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-              <h2>2. Velg et <strong>midlertidig</strong> domene for nettstedet</h2>
+              <h2>3. Velg et <strong>midlertidig</strong> domene for nettstedet</h2>
 
               {% for message in messages %}
                 {% if message.message == 'malformed' %}
@@ -178,7 +211,7 @@
 
           <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-              <h2>3. Velg hva slags innhold nettstedet skal ha som utgangspunkt</h2>
+              <h2>4. Velg hva slags innhold nettstedet skal ha som utgangspunkt</h2>
             </div>
           </div>
 

@@ -9,6 +9,8 @@ $(function() {
     var template_type_wrapper = wrapper.find('[data-dnt-form-group="template-type"]');
     var template_description_wrapper = wrapper.find('[data-dnt-form-group="template-description"]');
 
+    var forening_select = wrapper.find('select[name="site_forening"]');
+
     var domain_wrapper = wrapper.find("div.form-group.domain");
     var domain = domain_wrapper.find("input[name='domain']");
     var domain_type = domain_wrapper.find("input[name='domain-type']");
@@ -32,6 +34,8 @@ $(function() {
             template_description_wrapper.slideUp('fast');
         }
     });
+
+    forening_select.select2();
 
     domain_type.change(function() {
         if(domain_type.filter(":checked").is("[value='subdomain']")) {
