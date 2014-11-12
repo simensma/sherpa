@@ -73,22 +73,24 @@
             </div>
           </div>
 
-          <div class="form-group" data-dnt-form-group="type">
+          <div class="form-group type" data-dnt-form-group="type">
             <div class="col-md-offset-2 col-md-10">
-              <div class="btn-group" data-toggle="buttons">
-                {% for type in available_site_types %}
-                  <label class="btn btn-default btn-lg" data-type="{{ type.0 }}">
-                    <input type="radio" name="type" value="{{ type.0 }}"> {{ type.1 }}
-                  </label>
-
-                {% endfor %}
-              </div>
               {% for type in available_site_types %}
-                {% if type.0 == 'mal' %}
-                  <p class="help-block">
-                    <em>{{ type.1 }}</em> er kun tilgjengelig for Sherpa-administratorer.
-                  </p>
-                {% endif %}
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="type" value="{{ type.0 }}">
+                    {{ type.1 }}
+
+                    {% if type.0 == 'mal' %}
+                      <span class="help-block display-inline">
+                        (kun tilgjengelig for Sherpa-administratorer)
+                      </span>
+                    {% endif %}
+                  </label>
+                </div>
+              {% endfor %}
+
+              {% for type in available_site_types %}
               {% endfor %}
             </div>
           </div>
