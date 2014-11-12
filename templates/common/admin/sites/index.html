@@ -78,6 +78,9 @@
           {{ site.get_type }}
           {% if site.type == 'mal' %}
             ({{ site.get_template_type }})
+            {% if site.template_main %}
+              <strong>Hovedmal</strong>
+            {% endif %}
           {% endif %}
         </td>
         <td>{{ site.domain }}</td>
