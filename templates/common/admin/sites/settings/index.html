@@ -136,7 +136,7 @@
     {% if user.perms.sherpa_admin %}
       <div class="form-group{% if active_site.type != 'mal' %} jq-hide{% endif %}" data-dnt-form-group="template-type">
         <label class="col-md-3 control-label" for="template_type">Mal for hva slags nettsted</label>
-        <div class="col-md-5">
+        <div class="col-md-3">
           <select class="form-control" name="template_type" id="template_type">
             {% for template_type in template_types %}
               <option
