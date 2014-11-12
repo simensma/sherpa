@@ -1,5 +1,7 @@
 $(function() {
 
+    /* DOM lookups */
+
     var wrapper = $("div.setup-site");
 
     var forening_select = wrapper.find('select[name="site_forening"]');
@@ -22,8 +24,15 @@ $(function() {
     // Show/hide homepage type choice based on the default selected forening
     hideHomepageSite();
 
+    /* Bind events */
+
     forening_select.select2();
     forening_select.change(hideHomepageSite);
+    site_type_buttons.change(chooseFormFields);
+    domain_type.change(changeDomainType);
+    submit.click(validateForm);
+
+    /* Event implementations */
 
     function hideHomepageSite() {
         var forening_id = forening_select.val();
@@ -34,7 +43,7 @@ $(function() {
         }
     }
 
-    site_type_buttons.change(function() {
+    function chooseFormFields() {
         var checked = site_type_buttons.filter(":checked");
         if(checked.val() === 'hytte' || checked.val() === 'kampanje') {
             title_wrapper.slideDown('fast');
@@ -49,9 +58,9 @@ $(function() {
             template_type_wrapper.slideUp('fast');
             template_description_wrapper.slideUp('fast');
         }
-    });
+    }
 
-    domain_type.change(function() {
+    function changeDomainType() {
         if(domain_type.filter(":checked").is("[value='subdomain']")) {
             domain.removeClass('fqdn');
             subdomain_tail.show();
@@ -59,9 +68,9 @@ $(function() {
             domain.addClass('fqdn');
             subdomain_tail.hide();
         }
-    });
+    }
 
-    submit.click(function(e) {
+    function validateForm(e) {
         if(site_type_buttons.filter(":checked").length === 0) {
             alert(submit.attr('data-choose-site-type-warning'));
             e.preventDefault();
@@ -72,6 +81,6 @@ $(function() {
             e.preventDefault();
             return;
         }
-    });
+    }
 
 });
