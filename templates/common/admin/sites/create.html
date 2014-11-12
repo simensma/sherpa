@@ -179,6 +179,23 @@
               </div>
             </div>
 
+            <div
+              class="form-group{% if active_site.type != 'mal' %} jq-hide{% endif %}"
+              data-dnt-form-group="template-main">
+
+              <div class="col-md-offset-2 col-md-5">
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" name="template_main"{% if active_site.template_main %} checked{% endif %}>
+                    Dette er hovedmalen for denne type nettsted
+                    <span class="help-block">
+                      Hvis det skal være flere maler for samme type nettsted må du velge hvilken som skal være hovedmal. Det er hovedmalen som blir automatisk valgt når brukere oppretter nye nettsteder.
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
             <div class="form-group jq-hide" data-dnt-form-group="template-description">
               <label class="col-md-2 control-label" for="template_description">Beskrivelse for malen</label>
               <div class="col-md-5">

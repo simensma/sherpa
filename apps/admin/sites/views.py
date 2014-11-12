@@ -134,9 +134,11 @@ def create(request):
                 template_type = request.POST.get('template_type', '').strip()
                 if template_type not in [t[0] for t in Site.TEMPLATE_TYPE_CHOICES]:
                     raise PermissionDenied
+                site.template_main = 'template_main' in request.POST
                 site.template_type = template_type
                 site.template_description = request.POST.get('template_description', '').strip()
             else:
+                site.template_main = False
                 site.template_type = ''
                 site.template_description = ''
 

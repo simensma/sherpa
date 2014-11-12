@@ -23,6 +23,7 @@ $(function() {
     var missing_template_type = template_wrapper.find('input[name="missing-template-type"]');
 
     var template_type_wrapper = wrapper.find('[data-dnt-form-group="template-type"]');
+    var template_main_wrapper = wrapper.find('[data-dnt-form-group="template-main"]');
     var template_description_wrapper = wrapper.find('[data-dnt-form-group="template-description"]');
 
     var domain_wrapper = wrapper.find("div.form-group.domain");
@@ -114,16 +115,19 @@ $(function() {
             title_wrapper.slideUp('fast');
             template_wrapper.slideDown('fast');
             template_type_wrapper.slideUp('fast');
+            template_main_wrapper.slideUp('fast');
             template_description_wrapper.slideUp('fast');
         } else if(checked.val() === 'hytte' || checked.val() === 'kampanje') {
             title_wrapper.slideDown('fast');
             template_wrapper.slideDown('fast');
             template_type_wrapper.slideUp('fast');
+            template_main_wrapper.slideUp('fast');
             template_description_wrapper.slideUp('fast');
         } else if(checked.val() === 'mal') {
             title_wrapper.slideDown('fast');
             template_wrapper.slideUp('fast');
             template_type_wrapper.slideDown('fast');
+            template_main_wrapper.slideDown('fast');
             template_description_wrapper.slideDown('fast');
         }
     }
