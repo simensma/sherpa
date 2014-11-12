@@ -1,4 +1,5 @@
 import json
+import logging
 
 from django.conf import settings
 from django.contrib import messages
@@ -9,6 +10,8 @@ from django.shortcuts import render, redirect
 from core.models import Site
 from foreninger.models import Forening
 from page.models import Menu, Page, Variant, Version
+
+logger = logging.getLogger('sherpa')
 
 def index(request):
     # Generate a list of children-foreninger with site to display
@@ -178,7 +181,18 @@ def create(request):
             )
             menu.save()
 
-            # Template-site TODO
+            if request.POST.get('template', '').strip() == '':
+                # Sherpa-admin error; a site-template for the chosen site type doesn't exist!
+                # This needs to be fixed.
+                logger.error(u"Sherpa-bruker opprettet en site med en mal som ikke finnes",
+                    extra={
+                        'request': request,
+                        'missing_template_type': request.POST.get('missing-template-type', '<unknown>'),
+                    }
+                )
+            else:
+                # Template-site TODO
+                pass
 
             request.session.modified = True
             return redirect('admin.sites.views.created', site.id)
