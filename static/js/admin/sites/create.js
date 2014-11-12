@@ -100,7 +100,14 @@ $(function() {
             var warning_message = use_template_input.attr('data-dnt-uncheck-warning').replace(/\\n/g, '\n');
             if(!confirm(warning_message)) {
                 use_template_input.prop('checked', true);
+            } else {
+                // Not using any template; disable template inputs
+                template_wrapper.find('input[name="template"]').prop('disabled', true);
             }
+        } else {
+            // Use a template after all; re-enable template inputs and set the default
+            template_wrapper.find('input[name="template"]').prop('disabled', false);
+            setDefaultTemplate();
         }
     }
 
