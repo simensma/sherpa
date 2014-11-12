@@ -56,11 +56,7 @@ def create(request):
 
     available_site_types = []
     for t in Site.TYPE_CHOICES:
-        # The forening type choice shouldn't be available if the current site already has a homepage site
-        if t[0] == 'forening':
-            if request.active_forening.get_homepage_site() is not None:
-                continue
-        elif t[0] == 'mal':
+        if t[0] == 'mal':
             if not request.user.has_perm('sherpa_admin'):
                 continue
         available_site_types.append(t)
