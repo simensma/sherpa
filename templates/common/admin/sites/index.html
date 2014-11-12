@@ -26,7 +26,9 @@
 
   {% if user|role_for:active_forening == 'admin' %}
     <p class="pull-right">
-      <a href="{% url 'admin.sites.views.create' %}" class="btn btn-primary">Opprett et nytt nettsted tilknyttet {{ active_forening.name }}</a>
+      <a href="{% url 'admin.sites.views.create' %}" class="btn btn-primary">
+        Opprett et nytt nettsted
+      </a>
     </p>
   {% endif %}
 
