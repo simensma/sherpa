@@ -269,47 +269,6 @@
             </div>
           </div>
 
-        </div><!-- /.section -->
-
-        <div class="section">
-
-          <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-              <h2>4. Velg hva slags innhold nettstedet skal ha som utgangspunkt</h2>
-            </div>
-          </div>
-
-          <div class="form-group template">
-            <div class="col-md-offset-2 col-md-5">
-
-              {% for site_template in site_templates %}
-                <div class="radio">
-                  <label>
-                    <input type="radio" name="template" value="{{ site_template.id }}">
-                    {{ site_template.get_title }}
-
-                    {% if site_template.template_description %}
-                      <span class="help-block">
-                        {{ site_template.template_description|linebreaksbr }}
-                      </span>
-                    {% endif %}
-                  </label>
-                </div>
-              {% endfor %}
-
-              <div class="radio">
-                <label>
-                  <input type="radio" name="template" value="">
-                  Sett opp et helt tomt nettsted
-                  <span class="help-block">
-                    Hvis du vil kan du starte med et helt tomt nettsted. Det er enklere å sette opp et nettsted som allerede har litt innhold, så ikke velg denne med mindre du vet hva du gjør.
-                  </span>
-                </label>
-              </div>
-
-            </div>
-          </div>
-
           <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
               <button
