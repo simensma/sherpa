@@ -1,3 +1,5 @@
+import json
+
 from django.conf import settings
 from django.contrib import messages
 from django.core.cache import cache
@@ -42,6 +44,16 @@ def create(request):
     if not request.user.is_admin_in_forening(request.active_forening):
         return render(request, 'common/admin/sites/create_disallowed.html')
 
+    # We need to know client-side which of the users' available foreninger already has a homepage site, to be able
+    # to hide that option when the chosen forening is changed. We'll do a lookup based on the users already cached
+    # forening-list, but with sites prefetching here, and send the mapping to the client.
+    user_forening_ids = [f.id for f in request.user.all_foreninger()]
+    foreninger_with_sites = Forening.objects.filter(id__in=user_forening_ids).prefetch_related('sites')
+    foreninger_with_homepage = json.dumps({
+        f.id: f.get_homepage_site(prefetched=True) is not None
+        for f in foreninger_with_sites
+    })
+
     available_site_types = []
     for t in Site.TYPE_CHOICES:
         # The forening type choice shouldn't be available if the current site already has a homepage site
@@ -60,6 +72,7 @@ def create(request):
 
     context = {
         'available_site_types': available_site_types,
+        'foreninger_with_homepage': foreninger_with_homepage,
         'site_templates': site_templates,
         'template_types': Site.TEMPLATE_TYPE_CHOICES,
     }
