@@ -1,6 +1,6 @@
 {% extends 'common/admin/layout.html' %}
 
-{% block admin_menu %}{% with 'sites.setup_site' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
+{% block admin_menu %}{% with 'sites.sites.create' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
 
 {% block body %}
 
@@ -10,8 +10,8 @@
     <h1>Gratulerer! <small>nettstedet {{ created_site.get_title }} har blitt opprettet</small></h1>
     <ol class="breadcrumb">
       <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
-      <li><a href="{% url 'admin.views.setup_site' %}">Sett opp nytt nettsted</a></li>
-      <li><a href="{% url 'admin.views.site_created' created_site.id %}">{{ created_site.get_title }}</a></li>
+      <li><a href="{% url 'admin.sites.views.create' %}">Sett opp nytt nettsted</a></li>
+      <li><a href="{% url 'admin.sites.views.created' created_site.id %}">{{ created_site.get_title }}</a></li>
     </ol>
 
     <p>

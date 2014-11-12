@@ -26,7 +26,7 @@
 
   {% if user|role_for:active_forening == 'admin' %}
     <p class="pull-right">
-      <a href="{% url 'admin.views.setup_site' %}" class="btn btn-primary">Opprett et nytt nettsted tilknyttet {{ active_forening.name }}</a>
+      <a href="{% url 'admin.sites.views.create' %}" class="btn btn-primary">Opprett et nytt nettsted tilknyttet {{ active_forening.name }}</a>
     </p>
   {% endif %}
 
@@ -90,7 +90,7 @@
         <td colspan="3">
           <em>{{ active_forening.name }} har ingen nettsteder.
           {% if user|role_for:active_forening == 'admin' %}
-            <a href="{% url 'admin.views.setup_site' %}">Opprett en hjemmeside for {{ active_forening.name }}</a></em>
+            <a href="{% url 'admin.sites.views.create' %}">Opprett en hjemmeside for {{ active_forening.name }}</a></em>
           {% endif %}
         </td>
       </tr>

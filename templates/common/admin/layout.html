@@ -74,12 +74,12 @@
 
               {% if active_forening.sites.count == 0 %}
 
-                {# This forening has no sites - link to setup_site #}
+                {# This forening has no sites - let the user create one #}
                 <li
-                  {% if active_entry == 'sites' or active_entry == 'sites.setup_site'%}
+                  {% if active_entry == 'sites' or active_entry == 'sites.sites.create'%}
                     class="active"
                   {% endif %}>
-                  <a href="{% url 'admin.views.setup_site' %}">
+                  <a href="{% url 'admin.sites.views.create' %}">
                     <i class="fa fa-file"></i> Hjemmeside
                   </a>
                 </li>

@@ -4,6 +4,9 @@ from django.conf.urls.defaults import patterns, include, url
 urlpatterns = patterns('admin.sites.views',
 
     url(r'^$', 'index'),
+    url(r'^sett-opp/$', 'create'),
+    url(r'^sett-opp/videre/(?P<site>\d+)/$', 'created'),
+
     url(r'^(?P<site>\d+)/$', 'show'),
     url(r'^(?P<site>\d+)/sider/', include('admin.sites.pages.urls')),
     url(r'^(?P<site>\d+)/nyheter/', include('admin.sites.articles.urls')),
