@@ -77,10 +77,8 @@
         <td>
           {{ site.get_type }}
           {% if site.type == 'mal' %}
-            ({{ site.get_template_type }})
-            {% if site.template_main %}
-              <strong>Hovedmal</strong>
-            {% endif %}
+            {# Ugly long line to avoid space after parentheses #}
+            ({% if site.template_main %}<strong>Hovedmal:</strong> {% endif %}{{ site.get_template_type }})
           {% endif %}
         </td>
         <td>{{ site.domain }}</td>
