@@ -100,16 +100,11 @@ def create(request):
         if not form.is_valid():
             return render(request, 'common/admin/sites/create.html', context)
 
-        if not request.POST.get('type', '') in [t[0] for t in Site.TYPE_CHOICES]:
-            raise PermissionDenied
-
-        if request.POST['type'] == 'mal' and not request.user.has_perm('sherpa_admin'):
-            raise PermissionDenied
-
         if not request.POST['domain-type'] in ['fqdn', 'subdomain']:
             raise PermissionDenied
 
         site_forening = form.cleaned_data['forening']
+        type = form.cleaned_data['type']
 
         domain = request.POST['domain'].strip().lower()
         subdomain = domain

@@ -1,4 +1,4 @@
-<div class="form-group type" data-dnt-form-group="type">
+<div class="form-group type{% if form.type.errors %} has-error{% endif %}" data-dnt-form-group="type">
 
   {% if include_labels %}
     <label class="col-md-2 control-label">Hva slags nettsted</label>
@@ -35,6 +35,17 @@
         </label>
       </div>
     {% endfor %}
+
+    {% if form.type.errors %}
+      <span class="help-block has-error">
+        {% for error in form.type.errors %}
+          {{ error }}
+          {% if not forloop.last %}
+            <br>
+          {% endif %}
+        {% endfor %}
+      </span>
+    {% endif %}
   </div>
 </div>
 
