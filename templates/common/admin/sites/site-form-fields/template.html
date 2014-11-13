@@ -1,6 +1,13 @@
 {% if user.perms.sherpa_admin %}
   <div
-    class="form-group{% if not edited_site or edited_site.type != 'mal' %} jq-hide{% endif %}"
+    class="
+      form-group
+      {% if not edited_site or edited_site.type != 'mal' %}
+        jq-hide
+      {% endif %}
+      {% if form.template_type.errors %}
+        has-error
+      {% endif %}"
     data-dnt-form-group="template-type">
 
     <label class="col-md-2 control-label" for="template_type">Mal for hva slags nettsted</label>
@@ -17,6 +24,17 @@
           </option>
         {% endfor %}
       </select>
+
+      {% if form.template_type.errors %}
+        <span class="help-block has-error">
+          {% for error in form.template_type.errors %}
+            {{ error }}
+            {% if not forloop.last %}
+              <br>
+            {% endif %}
+          {% endfor %}
+        </span>
+      {% endif %}
     </div>
   </div>
 

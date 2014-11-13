@@ -106,6 +106,9 @@ def create(request):
         site_forening = form.cleaned_data['forening']
         type = form.cleaned_data['type']
         title = form.cleaned_data['title']
+        template_main = form.cleaned_data['template_main']
+        template_type = form.cleaned_data['template_type']
+        template_description = form.cleaned_data['template_description']
 
         domain = request.POST['domain'].strip().lower()
         subdomain = domain
@@ -132,19 +135,10 @@ def create(request):
                 template='local',
                 forening=site_forening,
                 title=title,
+                template_main=template_main,
+                template_type=template_type,
+                template_description=template_description,
             )
-
-            if type == 'mal':
-                template_type = request.POST.get('template_type', '').strip()
-                if template_type not in [t[0] for t in Site.TEMPLATE_TYPE_CHOICES]:
-                    raise PermissionDenied
-                site.template_main = 'template_main' in request.POST
-                site.template_type = template_type
-                site.template_description = request.POST.get('template_description', '').strip()
-            else:
-                site.template_main = False
-                site.template_type = ''
-                site.template_description = ''
 
             site.save()
 
