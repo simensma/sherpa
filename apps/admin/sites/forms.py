@@ -61,7 +61,7 @@ class SiteForm(forms.Form):
 
         if type is not None:
             if type in ['hytte', 'kampanje', 'mal']:
-                cleaned_data['title'] = title.strip()
+                cleaned_data['title'] = title
             else:
                 cleaned_data['title'] = ''
 
