@@ -106,7 +106,7 @@
     {% endfor %}
 
     <div class="form-group{% if form.forening.errors %} has-error{% endif %}">
-      <label for="site_forening" class="col-md-3 control-label">Tilknyttet forening</label>
+      <label class="col-md-2 control-label" for="site_forening">Tilknyttet forening</label>
       <div class="col-md-5">
         <select class="form-control" name="site_forening" id="site_forening">
           {% for type in user.all_foreninger_sorted_with_type_data %}
@@ -141,8 +141,8 @@
     </div>
 
     <div class="form-group type" data-dnt-form-group="type">
-      <label class="col-md-3 control-label">Hva slags nettsted</label>
-      <div class="col-md-9">
+      <label class="col-md-2 control-label">Hva slags nettsted</label>
+      <div class="col-md-10">
         {% for type in available_site_types %}
           <div class="radio">
             <label>
@@ -175,7 +175,7 @@
     </div>
 
     <div class="form-group{% if active_site.type != 'hytte' and active_site.type != 'kampanje' and active_site.type != 'mal' %} jq-hide{% endif %}" data-dnt-form-group="title">
-      <label class="col-md-3 control-label" for="title">Tittel</label>
+      <label class="col-md-2 control-label" for="title">Tittel</label>
       <div class="col-md-5">
         <input class="form-control input-lg" type="text" name="title" id="title" value="{{ active_site.get_title }}">
       </div>
@@ -183,7 +183,7 @@
 
     {% if user.perms.sherpa_admin %}
       <div class="form-group{% if active_site.type != 'mal' %} jq-hide{% endif %}" data-dnt-form-group="template-type">
-        <label class="col-md-3 control-label" for="template_type">Mal for hva slags nettsted</label>
+        <label class="col-md-2 control-label" for="template_type">Mal for hva slags nettsted</label>
         <div class="col-md-3">
           <select class="form-control" name="template_type" id="template_type">
             {% for template_type in template_types %}
@@ -204,7 +204,7 @@
         class="form-group{% if active_site.type != 'mal' %} jq-hide{% endif %}"
         data-dnt-form-group="template-main">
 
-        <div class="col-md-offset-3 col-md-5">
+        <div class="col-md-offset-2 col-md-5">
           <div class="checkbox">
             <label>
               <input type="checkbox" name="template_main"{% if active_site.template_main %} checked{% endif %}>
@@ -218,7 +218,7 @@
       </div>
 
       <div class="form-group{% if active_site.type != 'mal' %} jq-hide{% endif %}" data-dnt-form-group="template-description">
-        <label class="col-md-3 control-label" for="template_description">Beskrivelse for malen</label>
+        <label class="col-md-2 control-label" for="template_description">Beskrivelse for malen</label>
         <div class="col-md-5">
           <textarea class="form-control" name="template_description" id="template_description" rows="6">{{ active_site.template_description }}</textarea>
         </div>
@@ -226,7 +226,7 @@
     {% endif %}
 
     <div class="form-group">
-      <label class="col-md-3 control-label" for="domain">Domenenavn / adresse</label>
+      <label class="col-md-2 control-label" for="domain">Domenenavn / adresse</label>
       <div class="col-md-4">
         <input class="form-control input-lg" type="text" name="domain" id="domain" value="http://{{ active_site.domain }}">
         <p class="help-block">
@@ -236,7 +236,7 @@
     </div>
 
     <div class="form-group">
-      <label class="col-md-3 control-label">Publisering</label>
+      <label class="col-md-2 control-label">Publisering</label>
       <div class="col-md-4">
         <div class="checkbox">
           <label>
@@ -255,7 +255,7 @@
     </div>
 
     <div class="form-group">
-      <div class="col-md-offset-3 col-md-9">
+      <div class="col-md-offset-2 col-md-10">
         <button class="btn btn-success">
           Lagre nettstedsinnstillinger
         </button>
