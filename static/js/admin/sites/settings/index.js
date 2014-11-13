@@ -2,7 +2,7 @@ $(function() {
 
     var wrapper = $('[data-dnt-container="site-settings"]');
 
-    var forening_select = wrapper.find('select[name="site_forening"]');
+    var forening_select = wrapper.find('select[name="forening"]');
 
     var site_type_wrapper = wrapper.find('[data-dnt-form-group="type"]');
     var site_type_buttons = site_type_wrapper.find('input[name="type"]');

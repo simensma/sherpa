@@ -105,40 +105,7 @@
       {% endif %}
     {% endfor %}
 
-    <div class="form-group{% if form.forening.errors %} has-error{% endif %}">
-      <label class="col-md-2 control-label" for="site_forening">Tilknyttet forening</label>
-      <div class="col-md-5">
-        <select class="form-control" name="site_forening" id="site_forening">
-          {% for type in user.all_foreninger_sorted_with_type_data %}
-            {% if type.foreninger|length > 0 %}
-              <optgroup label="{{ type.name }}">
-                {% for forening in type.foreninger %}
-                  <option
-                    value="{{ forening.id }}"
-                    data-dnt-type="{{ type.code }}"
-                    {% if active_site.forening == forening %}
-                      selected
-                    {% endif %}>
-
-                    {{ forening.name }}
-                  </option>
-                {% endfor %}
-              </optgroup>
-            {% endif %}
-          {% endfor %}
-        </select>
-        {% if form.forening.errors %}
-          <span class="help-block has-error">
-            {% for error in form.forening.errors %}
-              {{ error }}
-              {% if not forloop.last %}
-                <br>
-              {% endif %}
-            {% endfor %}
-          </span>
-        {% endif %}
-      </div>
-    </div>
+    {% include 'common/admin/sites/site-form-fields/forening.html' with include_labels=True %}
 
     <div class="form-group type" data-dnt-form-group="type">
       <label class="col-md-2 control-label">Hva slags nettsted</label>

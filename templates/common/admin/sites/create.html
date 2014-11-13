@@ -40,42 +40,7 @@
             </div>
           </div>
 
-          <div class="form-group{% if form.forening.errors %} has-error{% endif %}">
-            <div class="col-md-offset-2 col-md-3">
-              <select class="form-control" name="forening" id="forening">
-                {% for type in user.all_foreninger_sorted_with_type_data %}
-                  {% if type.foreninger|length > 0 %}
-                    <optgroup label="{{ type.name }}">
-                      {% for forening in type.foreninger %}
-                        <option
-                          value="{{ forening.id }}"
-                          data-dnt-type="{{ type.code }}"
-                          {% if form.forening.value == forening.id|stringformat:"s" %}
-                            selected
-                          {% elif not form.forening.value and active_forening == forening %}
-                            {# No form submitted; default to the active forening #}
-                            selected
-                          {% endif %}>
-
-                          {{ forening.name }}
-                        </option>
-                      {% endfor %}
-                    </optgroup>
-                  {% endif %}
-                {% endfor %}
-              </select>
-              {% if form.forening.errors %}
-                <span class="help-block has-error">
-                  {% for error in form.forening.errors %}
-                    {{ error }}
-                    {% if not forloop.last %}
-                      <br>
-                    {% endif %}
-                  {% endfor %}
-                </span>
-              {% endif %}
-            </div>
-          </div>
+          {% include 'common/admin/sites/site-form-fields/forening.html' with include_labels=False %}
 
         </div><!-- /.section -->
 
