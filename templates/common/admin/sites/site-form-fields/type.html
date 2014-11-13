@@ -1,0 +1,40 @@
+<div class="form-group type" data-dnt-form-group="type">
+
+  {% if include_labels %}
+    <label class="col-md-2 control-label">Hva slags nettsted</label>
+    <div class="col-md-10">
+  {% else %}
+    <div class="col-md-offset-2 col-md-10">
+  {% endif %}
+
+    {% for type in available_site_types %}
+      <div class="radio">
+        <label>
+          <input
+            type="radio"
+            name="type"
+            value="{{ type.0 }}"
+            {% if edited_site.type == type.0 %}
+              checked
+            {% endif %}>
+          {{ type.1 }}
+
+          {% if type.0 == 'forening' %}
+            <span
+              class="has-homepage jq-hide"
+              data-dnt-container="has-homepage-info">
+
+              <span data-dnt-container="forening-name"></span>
+              har allerede en hjemmeside
+            </span>
+          {% elif type.0 == 'mal' %}
+            <span class="help-block display-inline">
+              (kun tilgjengelig for Sherpa-administratorer)
+            </span>
+          {% endif %}
+        </label>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+

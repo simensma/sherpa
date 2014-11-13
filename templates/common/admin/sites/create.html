@@ -52,32 +52,7 @@
             </div>
           </div>
 
-          <div class="form-group type" data-dnt-form-group="type">
-            <div class="col-md-offset-2 col-md-10">
-              {% for type in available_site_types %}
-                <div class="radio">
-                  <label>
-                    <input type="radio" name="type" value="{{ type.0 }}">
-                    {{ type.1 }}
-
-                    {% if type.0 == 'forening' %}
-                      <span
-                        class="has-homepage jq-hide"
-                        data-dnt-container="has-homepage-info">
-
-                        <span data-dnt-container="forening-name"></span>
-                        har allerede en hjemmeside
-                      </span>
-                    {% elif type.0 == 'mal' %}
-                      <span class="help-block display-inline">
-                        (kun tilgjengelig for Sherpa-administratorer)
-                      </span>
-                    {% endif %}
-                  </label>
-                </div>
-              {% endfor %}
-            </div>
-          </div>
+          {% include 'common/admin/sites/site-form-fields/type.html' with include_labels=False %}
 
           <div class="form-group title jq-hide">
             <label class="col-md-2 control-label" for="title">Tittel for nettstedet</label>
