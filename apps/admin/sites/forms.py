@@ -6,6 +6,7 @@ from foreninger.models import Forening
 
 class SiteForm(forms.Form):
 
+    edited_site = forms.IntegerField(required=False)
     forening = forms.IntegerField(required=True)
     type = forms.ChoiceField(
         required=True,
@@ -17,6 +18,11 @@ class SiteForm(forms.Form):
     def __init__(self, user, *args, **kwargs):
         super(SiteForm, self).__init__(*args, **kwargs)
         self._user = user
+
+    def clean_edited_site(self):
+        edited_site = self.cleaned_data.get('edited_site')
+        if edited_site is not None:
+            return Site.objects.get(id=edited_site)
 
     def clean_forening(self):
         forening = Forening.objects.get(id=self.cleaned_data['forening'])

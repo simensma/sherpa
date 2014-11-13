@@ -68,6 +68,7 @@
     action="{% url 'admin.sites.settings.views.save' active_site.id %}"
     method="post">
     {% csrf_token %}
+    <input type="hidden" name="edited_site" value="{{ active_site.id }}">
 
     {% for message in messages %}
       {% if message.message == 'settings_saved' %}
