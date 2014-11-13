@@ -112,14 +112,6 @@ def create(request):
             domain = '%s.test.turistforeningen.no' % domain
         domain = domain.replace('http://', '').rstrip('/')
 
-        if request.POST['type'] == 'forening' and site_forening.get_homepage_site() is not None:
-            messages.error(request, 'main_site_exists')
-            if request.POST['domain-type'] == 'fqdn':
-                context['domain'] = domain
-            else:
-                context['domain'] = subdomain
-            return render(request, 'common/admin/sites/create.html', context)
-
         result = Site.verify_domain(domain)
         if not result['valid']:
             messages.error(request, result['error'])

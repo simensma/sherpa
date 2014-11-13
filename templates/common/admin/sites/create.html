@@ -142,10 +142,6 @@
                   <div class="alert alert-danger">
                     I test-perioden <strong>må</strong> dere ha "<strong>.test.turistforeningen.no</strong>" bak domenet. For eksempel: <strong>http://stf.test.turistforeningen.no</strong>.
                   </div>
-                {% elif message.message == 'main_site_exists' %}
-                  <div class="alert alert-danger">
-                    {{ active_forening }} har allerede en hjemmeside, du kan ikke sette opp en ny.
-                  </div>
                 {% endif %}
               {% endfor %}
             </div>

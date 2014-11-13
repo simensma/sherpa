@@ -36,3 +36,21 @@ class SiteForm(forms.Form):
         if type == 'mal' and not self._user.has_perm('sherpa_admin'):
             raise forms.ValidationError("Du har ikke tilgang til denne nettstedstypen", code='unauthorized')
         return type
+
+    def clean(self):
+        cleaned_data = super(SiteForm, self).clean()
+        edited_site = cleaned_data.get("edited_site")
+        forening = cleaned_data.get("forening")
+        type = cleaned_data.get("type")
+
+        if forening is not None and type is not None:
+            homepage = forening.get_homepage_site()
+            if type == 'forening' and homepage is not None:
+                if edited_site is None or edited_site != homepage:
+                    # This forening already has *another* homepage. Shouldn't happen if the client-side logic works
+                    # as it is supposed to.
+                    self._errors['forening'] = self.error_class([
+                        "%s har allerede en hjemmeside, du kan ikke sette opp en ny." % forening.name,
+                    ])
+
+        return cleaned_data
