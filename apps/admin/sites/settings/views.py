@@ -61,17 +61,14 @@ def save(request, site):
 
     site_forening = form.cleaned_data['forening']
     type = form.cleaned_data['type']
+    title = form.cleaned_data['title']
 
     domain = request.POST['domain'].strip().lower().replace('http://', '').rstrip('/')
     errors = False
 
     active_site.forening = site_forening
     active_site.type = type
-
-    if type in ['hytte', 'kampanje', 'mal']:
-        active_site.title = request.POST['title'].strip()
-    else:
-        active_site.title = ''
+    active_site.title = title
 
     if type == 'mal':
         template_type = request.POST.get('template_type', '').strip()

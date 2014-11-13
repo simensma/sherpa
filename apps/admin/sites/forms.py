@@ -15,6 +15,7 @@ class SiteForm(forms.Form):
             'required': "Du må velge hva slags nettsted dette er",
         }
     )
+    title = forms.CharField(required=False)
 
     def __init__(self, user, *args, **kwargs):
         super(SiteForm, self).__init__(*args, **kwargs)
@@ -38,11 +39,15 @@ class SiteForm(forms.Form):
             raise forms.ValidationError("Du har ikke tilgang til denne nettstedstypen", code='unauthorized')
         return type
 
+    def clean_title(self):
+        return self.cleaned_data['title'].strip()
+
     def clean(self):
         cleaned_data = super(SiteForm, self).clean()
         edited_site = cleaned_data.get("edited_site")
         forening = cleaned_data.get("forening")
         type = cleaned_data.get("type")
+        title = cleaned_data.get("title")
 
         if forening is not None and type is not None:
             homepage = forening.get_homepage_site()
@@ -53,5 +58,11 @@ class SiteForm(forms.Form):
                     self._errors['forening'] = self.error_class([
                         "%s har allerede en hjemmeside, du kan ikke sette opp en ny." % forening.name,
                     ])
+
+        if type is not None:
+            if type in ['hytte', 'kampanje', 'mal']:
+                cleaned_data['title'] = title.strip()
+            else:
+                cleaned_data['title'] = ''
 
         return cleaned_data

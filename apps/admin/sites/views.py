@@ -105,6 +105,7 @@ def create(request):
 
         site_forening = form.cleaned_data['forening']
         type = form.cleaned_data['type']
+        title = form.cleaned_data['title']
 
         domain = request.POST['domain'].strip().lower()
         subdomain = domain
@@ -130,10 +131,8 @@ def create(request):
                 type=request.POST['type'],
                 template='local',
                 forening=site_forening,
-                title='',
+                title=title,
             )
-            if request.POST['type'] in ['hytte', 'kampanje', 'mal']:
-                site.title = request.POST['title'].strip()
 
             if request.POST['type'] == 'mal':
                 template_type = request.POST.get('template_type', '').strip()
