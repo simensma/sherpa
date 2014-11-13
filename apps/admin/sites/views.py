@@ -283,17 +283,17 @@ def create(request):
                                         content.column = column
                                         content.save()
 
-            # Campaigns
-            for campaign in Campaign.objects.filter(site=template_site):
-                campaign_texts = campaign.text.all()
-                campaign.id = None
-                campaign.site = site
-                campaign.save()
+                # Campaigns
+                for campaign in Campaign.objects.filter(site=template_site):
+                    campaign_texts = campaign.text.all()
+                    campaign.id = None
+                    campaign.site = site
+                    campaign.save()
 
-                for campaign_text in campaign_texts:
-                    campaign_text.id = None
-                    campaign_text.campaign = campaign
-                    campaign_text.save()
+                    for campaign_text in campaign_texts:
+                        campaign_text.id = None
+                        campaign_text.campaign = campaign
+                        campaign_text.save()
 
             request.session.modified = True
             return redirect('admin.sites.views.created', site.id)
