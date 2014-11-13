@@ -31,8 +31,16 @@ def index(request):
             if forening == user_forening and user_forening.role == 'admin':
                 children_foreninger_with_site.append(forening)
 
+    # Verify that all template-sites exists
+    missing_templates = []
+    if request.user.has_perm('sherpa_admin'):
+        for type in Site.TEMPLATE_TYPE_CHOICES:
+            if not Site.objects.filter(type='mal', template_main=True, template_type=type[0]).exists():
+                missing_templates.append(type)
+
     context = {
         'children_foreninger_with_site': children_foreninger_with_site,
+        'missing_templates': missing_templates,
     }
     return render(request, 'common/admin/sites/index.html', context)
 

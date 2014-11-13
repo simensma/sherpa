@@ -32,6 +32,23 @@
     </p>
   {% endif %}
 
+  {% if user.perms.sherpa_admin and missing_templates|length > 0 %}
+    <div class="alert alert-danger">
+      <p>
+        <strong>Følgende nettstedstyper mangler en hovedmal:</strong>
+      </p>
+      <ul>
+        {% for missing_template in missing_templates %}
+          <li>{{ missing_template.1 }}</li>
+        {% endfor %}
+      </ul>
+      <p>
+        Dette må fikses! Hvis noen forsøker å opprette et nettsted med innhold basert på en av disse malene, vil de ikke få noe innhold likevel.<br>
+        Du ser denne beskjeden fordi du er Sherpa-administrator.
+      </p>
+    </div>
+  {% endif %}
+
   <table class="table table-striped sites">
     <thead>
       <tr>
