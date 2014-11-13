@@ -9,6 +9,7 @@ from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect
 
+from .forms import SiteForm
 from admin.models import Campaign
 from articles.models import Article
 from core.models import Site
@@ -89,9 +90,16 @@ def create(request):
     }
 
     if request.method == 'GET':
+        context['form'] = SiteForm(request.user, auto_id='%s')
         return render(request, 'common/admin/sites/create.html', context)
 
     elif request.method == 'POST':
+        form = SiteForm(request.user, request.POST, auto_id='%s')
+        context['form'] = form
+
+        if not form.is_valid():
+            return render(request, 'common/admin/sites/create.html', context)
+
         if not request.POST.get('type', '') in [t[0] for t in Site.TYPE_CHOICES]:
             raise PermissionDenied
 
@@ -101,9 +109,7 @@ def create(request):
         if not request.POST['domain-type'] in ['fqdn', 'subdomain']:
             raise PermissionDenied
 
-        site_forening = Forening.objects.get(id=request.POST['site_forening'])
-        if site_forening not in request.user.all_foreninger():
-            raise PermissionDenied
+        site_forening = form.cleaned_data['forening']
 
         domain = request.POST['domain'].strip().lower()
         subdomain = domain

@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect
 
+from admin.sites.forms import SiteForm
 from core.models import Site
 from foreninger.models import Forening
 
@@ -27,7 +28,10 @@ def index(request, site):
                 continue
         available_site_types.append(t)
 
+    form = SiteForm(request.user, auto_id='%s')
+
     context = {
+        'form': form,
         'active_site': active_site,
         'available_site_types': available_site_types,
         'foreninger_with_other_homepage': foreninger_with_other_homepage,
@@ -45,12 +49,15 @@ def save(request, site):
         return redirect('admin.sites.settings.views.index', site)
 
     active_site = Site.objects.get(id=site)
+    form = SiteForm(request.user, request.POST, auto_id='%s')
+
+    if not form.is_valid():
+        return redirect('admin.sites.settings.views.index', site)
+
+    site_forening = form.cleaned_data['forening']
+
     domain = request.POST['domain'].strip().lower().replace('http://', '').rstrip('/')
     errors = False
-
-    site_forening = Forening.objects.get(id=request.POST['site_forening'])
-    if site_forening not in request.user.all_foreninger():
-        raise PermissionDenied
 
     type = request.POST['type']
     if type not in [t[0] for t in Site.TYPE_CHOICES]:

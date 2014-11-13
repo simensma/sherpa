@@ -4,7 +4,7 @@ $(function() {
 
     var wrapper = $("div.setup-site");
 
-    var forening_select = wrapper.find('select[name="site_forening"]');
+    var forening_select = wrapper.find('select[name="forening"]');
 
     var site_type_wrapper = wrapper.find('[data-dnt-form-group="type"]');
     var site_type_forening = site_type_wrapper.find('input[value="forening"]');
