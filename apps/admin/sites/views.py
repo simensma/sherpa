@@ -128,13 +128,13 @@ def create(request):
             site = Site(
                 domain=result['domain'],
                 prefix=result['prefix'],
-                type=request.POST['type'],
+                type=type,
                 template='local',
                 forening=site_forening,
                 title=title,
             )
 
-            if request.POST['type'] == 'mal':
+            if type == 'mal':
                 template_type = request.POST.get('template_type', '').strip()
                 if template_type not in [t[0] for t in Site.TEMPLATE_TYPE_CHOICES]:
                     raise PermissionDenied
