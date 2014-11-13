@@ -12,7 +12,7 @@ $(function() {
     var site_type_forening_info_name = site_type_forening_info.find('[data-dnt-container="forening-name"]');
     var site_type_buttons = site_type_wrapper.find("input[name='type']");
 
-    var title_wrapper = wrapper.find("div.form-group.title");
+    var title_wrapper = wrapper.find('[data-dnt-form-group="title"]');
     var template_wrapper = wrapper.find('[data-dnt-form-group="template"]');
 
     var default_template = wrapper.find('[data-dnt-container="default-template"]');

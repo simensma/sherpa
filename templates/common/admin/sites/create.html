@@ -53,13 +53,7 @@
           </div>
 
           {% include 'common/admin/sites/site-form-fields/type.html' with include_labels=False %}
-
-          <div class="form-group title jq-hide">
-            <label class="col-md-2 control-label" for="title">Tittel for nettstedet</label>
-            <div class="col-md-10">
-              <input type="text" class="form-control" name="title" id="title">
-            </div>
-          </div>
+          {% include 'common/admin/sites/site-form-fields/title.html' with label="Tittel for nettstedet" %}
 
           <div class="form-group jq-hide" data-dnt-form-group="template">
             <label class="col-md-2 control-label">Innhold</label>

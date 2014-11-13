@@ -107,13 +107,7 @@
 
     {% include 'common/admin/sites/site-form-fields/forening.html' with include_labels=True edited_site=active_site %}
     {% include 'common/admin/sites/site-form-fields/type.html' with include_labels=True edited_site=active_site %}
-
-    <div class="form-group{% if active_site.type != 'hytte' and active_site.type != 'kampanje' and active_site.type != 'mal' %} jq-hide{% endif %}" data-dnt-form-group="title">
-      <label class="col-md-2 control-label" for="title">Tittel</label>
-      <div class="col-md-5">
-        <input class="form-control input-lg" type="text" name="title" id="title" value="{{ active_site.get_title }}">
-      </div>
-    </div>
+    {% include 'common/admin/sites/site-form-fields/title.html' with label="Tittel" edited_site=active_site %}
 
     {% if user.perms.sherpa_admin %}
       <div class="form-group{% if active_site.type != 'mal' %} jq-hide{% endif %}" data-dnt-form-group="template-type">
