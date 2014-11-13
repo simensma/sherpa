@@ -105,7 +105,7 @@
       {% endif %}
     {% endfor %}
 
-    {% include 'common/admin/sites/site-form-fields/forening.html' with include_labels=True %}
+    {% include 'common/admin/sites/site-form-fields/forening.html' with include_labels=True edited_site=active_site %}
 
     <div class="form-group type" data-dnt-form-group="type">
       <label class="col-md-2 control-label">Hva slags nettsted</label>

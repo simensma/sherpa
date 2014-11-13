@@ -1,3 +1,5 @@
+{% load int %}
+
 <div class="form-group{% if form.forening.errors %} has-error{% endif %}">
 
   {% if include_labels %}
@@ -15,11 +17,27 @@
               <option
                 value="{{ forening.id }}"
                 data-dnt-type="{{ type.code }}"
-                {% if form.forening.value == forening.id|stringformat:"s" %}
-                  selected
-                {% elif not form.forening.value and active_forening == forening %}
-                  {# No form submitted; default to the active forening #}
-                  selected
+
+                {% if form.forening.value %}
+
+                  {# Posted form has highest precedence #}
+                  {% if form.forening.value|int == forening.id %}
+                    selected
+                  {% endif %}
+
+                {% elif edited_site %}
+
+                  {# Currently editing existing site #}
+                  {% if edited_site.forening == forening %}
+                    selected
+                  {% endif %}
+
+                {% else %}
+
+                  {# Default to the active forening #}
+                  {% if active_forening == forening %}
+                    selected
+                  {% endif %}
                 {% endif %}>
 
                 {{ forening.name }}
