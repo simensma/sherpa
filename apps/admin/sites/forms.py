@@ -13,7 +13,8 @@ class SiteForm(forms.Form):
         choices=Site.TYPE_CHOICES,
         error_messages={
             'required': "Du må velge hva slags nettsted dette er",
-        })
+        }
+    )
 
     def __init__(self, user, *args, **kwargs):
         super(SiteForm, self).__init__(*args, **kwargs)
