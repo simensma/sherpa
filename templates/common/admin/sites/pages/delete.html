@@ -1,0 +1,24 @@
+<div class="modal container jq-hide delete-page">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <h3>Slette side</h3>
+  </div>
+  <div class="modal-body">
+    <p>Er du sikker på at du vil slette siden <span data-dnt-placeholder="page-title"></span>?</p>
+    <p>Hvis du bare vil ta den bort fra forsiden og søkeresultater, men beholde innholdet, bør du heller bare avpublisere den.</p>
+    <p class="if-children">Du kan velge om du bare vil slette denne siden, eller om du også vil slette alle undersidene den har samtidig.</span></p>
+    <p><strong>Obs! Sletting av sider kan ikke angres.</strong></p>
+  </div>
+  <div class="modal-footer">
+    <div class="pull-right if-children">
+      <a href="javascript:undefined" class="btn btn-danger" data-dnt-action="delete-page-keep-children">Slett side og behold undersider</a>
+      <a href="javascript:undefined" class="btn btn-danger" data-dnt-action="delete-page-and-children">Slett side og undersider</a>
+    </div>
+    <div class="pull-right if-not-children">
+      <a href="javascript:undefined" class="btn btn-danger" data-dnt-action="delete-page-and-children">Slett side</a>
+    </div>
+    <div class="pull-left">
+      <a href="javascript:undefined" class="btn btn-default" data-dismiss="modal">Avbryt</a>
+    </div>
+  </div>
+</div>

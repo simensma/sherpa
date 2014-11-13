@@ -8,6 +8,7 @@
   <script src="{{ STATIC_URL }}lib/jquery-ui-1.11.2-sortable/jquery-ui.min.js"></script>
   <script src="{{ STATIC_URL }}lib/nestedSortable-2.0alpha/jquery.mjs.nestedSortable.js"></script>
   <script src="{{ STATIC_URL }}js/admin/sites/pages/pages.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/sites/pages/delete.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -68,9 +69,6 @@
           {% recursetree nodes %}
             <li
               id="pageid_{{ node.id }}"
-              data-mptt-lft="{{ node.lft }}"
-              data-mptt-rght="{{ node.rght }}"
-              data-mptt-level="{{ node.level }}"
               class="mjs-nestedSortable-branch{% if not node.is_leaf_node %} mjs-nestedSortable-expanded has-children {% endif %}">
               <div class="node-wrapper {% if node.parent != None %} handle{% endif %}">
                 <div class="disclose">
@@ -78,7 +76,7 @@
                   <div class="collapse"><span class="glyphicon glyphicon-minus"></span></div>
                 </div>
                 <div class="title">
-                  <a href="{% url 'admin.sites.pages.page.edit' active_site.id node.active_version.id %}">{{ node.title }}</a>
+                  <a href="{% url 'admin.sites.pages.page.edit' active_site.id node.active_version.id %}"><span>{{ node.title }}</span></a>
                 </div>
                 <div class="meta">
                   <div class="col status">
@@ -97,7 +95,7 @@
                     <div><a href="{% url 'admin.sites.pages.page.edit' active_site.id node.active_version.id %}">Rediger</a></div>
                     <div><a href="/{{ node.slug }}">Vis</a></div>
                     {% if node.parent %}
-                      <div class="delete"><a data-delete-url="{% url 'admin.sites.pages.page.delete' active_site.id node.id %}">Slett</a></div>
+                      <div class="delete"><a data-dnt-delete-url="{% url 'admin.sites.pages.page.delete' active_site.id node.id %}">Slett</a></div>
                     {% endif %}
                 </div>
               </div>
@@ -169,5 +167,7 @@
     <a href="javascript:undefined" class="btn btn-default" data-dismiss="modal">Lukk vindu</a>
   </div>
 </div>
+
+{% include 'common/admin/sites/pages/delete.html' %}
 
 {% endblock %}

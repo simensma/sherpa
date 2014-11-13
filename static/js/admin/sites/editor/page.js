@@ -10,12 +10,23 @@ $(function() {
         forceParse: false
     });
 
-    /* Delete page */
-    header.find("button.delete-page").click(function(e) {
-        if(!confirm("Er du HELT sikker på at du vil slette denne siden, for alltid?\n\nHvis du bare vil ta den bort fra forsiden og søkeresultater, men beholde innholdet, bør du heller bare avpublisere den.\n\nDette kan du ikke angre!")) {
-            e.preventDefault();
-        }
+
+    /* Delete page from editor */
+
+    $(document).on('click', '.editor-header .actions .delete-page', function (e) {
+
+        var modalOptions = {};
+
+        var $editorHeader = $(this).parents('.editor-header').first();
+
+        modalOptions.hasChildren = true;
+        modalOptions.deleteUrl = $(this).data('dnt-delete-url');
+        modalOptions.title = $editorHeader.find('input[name="title"]').first().val();
+
+        Turistforeningen.setupDeletePageModal(modalOptions);
+
     });
+
 
     /* Change parent */
     header.find("select[name='parent']").chosen({
