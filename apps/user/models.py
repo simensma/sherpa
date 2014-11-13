@@ -1,6 +1,6 @@
 # encoding: utf-8
 from itertools import groupby
-from datetime import date
+from datetime import datetime, date
 import json
 
 from django.db import models
