@@ -82,7 +82,8 @@
                   <label for="title" class="col-sm-4 control-label">Ligger under</label>
                   <div class="col-sm-8">
                     <select name="parent">
-                      <option value="{{ root_page.id }}"></option>
+                      <option value="{{ root_page.id }}">Ingen foreldreside</option>
+                      <option disabled>---</option>
                       {% recursetree pages %}
                         {% if node.id != version.variant.page.id %}
                           {% if node.id != root_page.id %}
