@@ -254,6 +254,8 @@
     // Remove popovers when clicking on anything else than their trigger button
     $(document.body).on('click', function(e) {
         if(!$(e.target).is('.add-content')) {
+            var editor = $("div.cms-editor");
+            var article = editor.find("article");
             article.find('.add-content').popover('hide');
         }
     });
