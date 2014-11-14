@@ -83,18 +83,19 @@
                   <div class="col-sm-8">
                     <select name="parent">
                       <option value="{{ root_page.id }}"></option>
-                      {% for node in pages %}
+                      {% recursetree pages %}
                         {% if node.id != version.variant.page.id %}
-                          {% if node.is_child_node %}
-                            <option
-                              value="{{ node.id }}"
-                              {% if version.variant.page.parent.id == node.id %} selected class="default"{% endif %}>
-                              {% with node.level|add:"-2" as count %}{% repeat count %}- {% endrepeat %}{% endwith %}
-                              {{ node.title }}
-                            </option>
+                          <option
+                            value="{{ node.id }}"
+                            {% if version.variant.page.parent.id == node.id %} selected class="default"{% endif %}>
+                            {% with node.level|add:"-2" as count %}{% repeat count %}- {% endrepeat %}{% endwith %}
+                            {{ node.title }}
+                          </option>
+                          {% if not node.is_leaf_node %}
+                            {{ children }}
                           {% endif %}
                         {% endif %}
-                      {% endfor %}
+                      {% endrecursetree %}
                     </select>
                   </div>
                 </div>
