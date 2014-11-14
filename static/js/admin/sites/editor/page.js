@@ -27,12 +27,6 @@ $(function() {
 
     });
 
-
-    /* Change parent */
-    header.find("select[name='parent']").chosen({
-        'allow_single_deselect': true
-    });
-
     // Init Tooltip
     header.find('.preview').tooltip();
 

@@ -4,6 +4,8 @@
 {% block title %}{{ version.variant.page.title }} — {{ block.super }}{% endblock %}
 
 {% load taglist %}
+{% load repeat %}
+{% load mptt_tags %}
 
 {% block extra_js %}
   {# 3rd party libs #}
@@ -79,10 +81,17 @@
                 <div class="form-group parent">
                   <label for="title" class="col-sm-4 control-label">Ligger under</label>
                   <div class="col-sm-8">
-                    <select name="parent" class="chosen" data-placeholder="Ingen foreldreside">
-                      <option value=""></option>
-                      {% for page in pages %}
-                        <option value="{{ page.id }}"{% if version.variant.page.parent.id == page.id %} selected class="default"{% endif %}>{{ page.title }}</option>
+                    <select name="parent">
+                      <option value="{{ root_page.id }}"></option>
+                      {% for node in pages %}
+                        {% if node.is_child_node %}
+                          <option
+                            value="{{ node.id }}"
+                            {% if version.variant.page.parent.id == node.id %} selected class="default"{% endif %}>
+                            {% with node.level|add:"-2" as count %}{% repeat count %}- {% endrepeat %}{% endwith %}
+                            {{ node.title }}
+                          </option>
+                        {% endif %}
                       {% endfor %}
                     </select>
                   </div>
