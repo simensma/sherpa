@@ -9,11 +9,6 @@ $(function() {
 
     rangy.init();
 
-    // Make toolbar draggable, but not if input-elements are clicked
-    toolbar.draggable();
-    toolbar.find("input,select,button,a").mousedown(function(e) {
-        e.stopPropagation();
-    });
 
     /**
      * Toolbar buttons
