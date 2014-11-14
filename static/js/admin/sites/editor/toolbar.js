@@ -1,5 +1,9 @@
 $(function() {
 
+    var toolbars_container = $('.sticky [data-dnt-container="toolbars"]');
+    var text_formatter = $('.toolbar.toolbar-text-formatter.text-formatter').first();
+
+
     // All elements from the spec[1] plus header elements (h1-h6)
     // [1] http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#the-removeformat-command
     var FORMATTER_ELEMENTS = "abbr,acronym,b,bdi,bdo,big,blink,cite,code,dfn,em,font,h1,h2,h3,h4,h5,h6,i,ins,kbd,mark,nobr,q,s,samp,small,span,strike,strong,sub,sup,tt,u,var";
@@ -25,6 +29,7 @@ $(function() {
     }).mouseup(function() {
         $(this).css('background-image', 'url(' + $(this).attr('data-image') + '-hover.png)');
     });
+
 
     // Button-group formatting
     $(document).mouseup(function(e) {
@@ -286,6 +291,48 @@ $(function() {
             $(nodes[0]).replaceWith(text);
         }
         selection.removeAllRanges();
+    });
+
+
+    /* Showing and hiding text formatter */
+
+    text_formatter.appendTo(toolbars_container);
+
+    function hideTextFormatter() {
+        text_formatter.addClass('jq-hide').css('z-index', -1);
+    }
+
+    function showTextFormatter() {
+        var text_formatter_height = text_formatter.outerHeight();
+        text_formatter.css('margin-top', -text_formatter_height);
+        text_formatter.removeClass('jq-hide');
+        text_formatter.animate(
+            {
+                'margin-top': 0
+            },
+            {
+                duration: 250,
+                complete: function() {
+                    $(this).css('z-index', 0);
+                }
+            }
+        );
+    }
+
+    // Button-group formatting
+    $(document).mouseup(function(e) {
+        var $clicked_element = $(e.target);
+        var clicked_inside_editable_element = !!($clicked_element.hasClass('editable').length || $clicked_element.parents('.editable').length);
+        var clicked_inside_text_formatter = !!($clicked_element.parents('.text-formatter').length);
+
+        if (clicked_inside_editable_element || clicked_inside_text_formatter) {
+            if (text_formatter.is(':hidden')) {
+                showTextFormatter();
+            }
+
+        } else {
+            hideTextFormatter();
+        }
     });
 
 });
