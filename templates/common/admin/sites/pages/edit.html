@@ -171,7 +171,16 @@
                       title="OBS! Når du forhåndsviser siden lagres den først, slik at alle endringer du har gjort blir lagret og evt. publisert dersom siden er publisert.">
                       <i class="glyphicon glyphicon-search"></i> Forhåndsvisning
                     </button>
-                    <button class="btn btn-danger delete-page" data-dnt-delete-url="{% url 'admin.sites.pages.page.delete' active_site.id version.variant.page.id %}">
+                    <button
+                      data-dnt-delete-url="{% url 'admin.sites.pages.page.delete' active_site.id version.variant.page.id %}"
+                      {% if version.variant.page.id == root_page.id %}
+                        class="btn btn-danger delete-page disabled"
+                        data-toggle="tooltip"
+                        data-placement="bottom"
+                        title="Du kan ikke slette denne siden, fordi nettsiden må ha en forside."
+                      {% else %}
+                        class="btn btn-danger delete-page"
+                      {% endif %}>
                       <i class="glyphicon glyphicon-warning-sign"></i> Slett
                     </button>
                   </div>

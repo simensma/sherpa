@@ -13,7 +13,7 @@ $(function() {
 
     /* Delete page from editor */
 
-    $(document).on('click', '.editor-header .actions .delete-page', function (e) {
+    $(document).on('click', '.editor-header .actions .delete-page:not(.disabled)', function (e) {
 
         var modalOptions = {};
 
@@ -33,5 +33,6 @@ $(function() {
 
     // Init Tooltip
     header.find('.preview').tooltip();
+    header.find('.delete-page.disabled').css('pointer-events', 'initial').tooltip();
 
 });
