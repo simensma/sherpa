@@ -84,13 +84,15 @@
                     <select name="parent">
                       <option value="{{ root_page.id }}"></option>
                       {% for node in pages %}
-                        {% if node.is_child_node %}
-                          <option
-                            value="{{ node.id }}"
-                            {% if version.variant.page.parent.id == node.id %} selected class="default"{% endif %}>
-                            {% with node.level|add:"-2" as count %}{% repeat count %}- {% endrepeat %}{% endwith %}
-                            {{ node.title }}
-                          </option>
+                        {% if node.id != version.variant.page.id %}
+                          {% if node.is_child_node %}
+                            <option
+                              value="{{ node.id }}"
+                              {% if version.variant.page.parent.id == node.id %} selected class="default"{% endif %}>
+                              {% with node.level|add:"-2" as count %}{% repeat count %}- {% endrepeat %}{% endwith %}
+                              {{ node.title }}
+                            </option>
+                          {% endif %}
                         {% endif %}
                       {% endfor %}
                     </select>

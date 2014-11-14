@@ -18,9 +18,7 @@ from core.util import parse_html_array
 
 def list(request, site):
     active_site = Site.objects.get(id=site)
-    pages = Page.objects.filter(
-        site=active_site
-    )
+    pages = Page.objects.filter(site=active_site)
     context = {
         'active_site': active_site,
         'nodes': pages,
