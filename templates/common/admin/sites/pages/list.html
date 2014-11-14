@@ -1,4 +1,5 @@
 {% extends 'common/admin/layout.html' %}
+{% load taglist %}
 {% load mptt_tags %}
 {% block title %}Sider — {{ block.super }}{% endblock %}
 
@@ -58,6 +59,7 @@
             <span>Tittel</span>
           </div>
           <div class="meta">
+            <div class="col tags"><span>Nøkkelord</span></div>
             <div class="col status"><span>Status</span></div>
             <div class="col created_by"><span>Opprettet av</span></div>
             <div class="col date created_date"><span>Opprettet</span></div>
@@ -79,6 +81,14 @@
                   <a href="{% url 'admin.sites.pages.page.edit' active_site.id node.active_version.id %}"><span>{{ node.title }}</span></a>
                 </div>
                 <div class="meta">
+                  <div class="col tags">
+                    <span
+                      class="glyphicon glyphicon-tags"
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title="{% for tag in node.active_version.tags.all %}{{ tag.name }}{% if not forloop.last %}, {% endif %}{% empty %}Ingen nøkkelord{% endfor %}">
+                    </span>
+                  </div>
                   <div class="col status">
                     {% if node.published %}
                       <div class="published"><span class="label label-success">Publisert</span></div>
