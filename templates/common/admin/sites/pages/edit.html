@@ -85,12 +85,14 @@
                       <option value="{{ root_page.id }}"></option>
                       {% recursetree pages %}
                         {% if node.id != version.variant.page.id %}
-                          <option
-                            value="{{ node.id }}"
-                            {% if version.variant.page.parent.id == node.id %} selected class="default"{% endif %}>
-                            {% with node.level|add:"-2" as count %}{% repeat count %}- {% endrepeat %}{% endwith %}
-                            {{ node.title }}
-                          </option>
+                          {% if node.id != root_page.id %}
+                            <option
+                              value="{{ node.id }}"
+                              {% if version.variant.page.parent.id == node.id %} selected class="default"{% endif %}>
+                              {% with node.level|add:"-2" as count %}{% repeat count %}- {% endrepeat %}{% endwith %}
+                              {{ node.title }}
+                            </option>
+                          {% endif %}
                           {% if not node.is_leaf_node %}
                             {{ children }}
                           {% endif %}
