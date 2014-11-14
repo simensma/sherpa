@@ -70,6 +70,24 @@ div.editor-header {
               width: 100%;
               background-color: @editor-form-background-color;
               border-bottom: 1px solid @editor-form-border-color;
+
+              &.toolbar-text-formatter {
+                .group:first-child {
+                  margin-top: 5px;
+                }
+
+                a.button {
+                  display: block;
+                  float: left;
+                  cursor: pointer;
+                  width: 27px;
+                  height: 27px;
+                }
+
+                a.button:hover {
+                  text-decoration: none;
+                }
+              }
             }
           }
 
@@ -109,23 +127,8 @@ div.editor-header {
     font-weight: normal;
   }
 
-  div.cms-editor-toolbar {
-
-    a.button {
-      display: block;
-      float: left;
-      cursor: pointer;
-      width: 27px;
-      height: 27px;
-    }
-
-    a.button:hover {
-      text-decoration: none;
-    }
-
-    input[name='url'] {
-      width: 350px;
-    }
+  input[name='url'] {
+    width: 350px;
   }
 
 }
