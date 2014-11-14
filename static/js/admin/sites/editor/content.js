@@ -221,7 +221,7 @@ $(function() {
 
         // Set up crop control elements
         var crop_control = insertion_templates.find("div.toolbar-crop-control").clone().addClass('jq-hide');
-        toolbars_container.html(crop_control);
+        toolbars_container.append(crop_control);
 
         var crop_control_height = crop_control.outerHeight();
         crop_control.css('margin-top', -crop_control_height);
