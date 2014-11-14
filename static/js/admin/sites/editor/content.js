@@ -7,6 +7,8 @@ $(function() {
     var insertion_templates = editor.find('[data-dnt-container="insertion-templates"]');
     var editor_header =$('.editor-header');
     var toolbars_container = $('.sticky [data-dnt-container="toolbars"]');
+    var text_formatter = $('.toolbar.toolbar-text-formatter.text-formatter').first();
+
 
     disableIframes(article.find('[data-dnt-container="content-widget"]'));
 
@@ -378,6 +380,12 @@ $(function() {
         );
         content.find('img').addClass('cropped');
     }
+
+
+    // Text formatter toolbar
+    text_formatter.appendTo(toolbars_container);
+
+
 
     // Global disable-iframes function
     window.disableIframes = disableIframes;

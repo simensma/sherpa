@@ -15,9 +15,6 @@ $(function() {
         e.stopPropagation();
     });
 
-    // Draggable will set position relative, so make sure it is fixed before the user drags it
-    toolbar.css('position', 'fixed');
-
     /**
      * Toolbar buttons
      */

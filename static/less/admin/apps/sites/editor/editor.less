@@ -109,6 +109,25 @@ div.editor-header {
     font-weight: normal;
   }
 
+  div.cms-editor-toolbar {
+
+    a.button {
+      display: block;
+      float: left;
+      cursor: pointer;
+      width: 27px;
+      height: 27px;
+    }
+
+    a.button:hover {
+      text-decoration: none;
+    }
+
+    input[name='url'] {
+      width: 350px;
+    }
+  }
+
 }
 
 /* Article header editing */
@@ -347,32 +366,6 @@ div.cms-editor {
 
   }
 
-  div.cms-editor-toolbar {
-    position: fixed;
-    top: 400px;
-    right: 50px;
-    width: 500px;
-    z-index: 1000;
-    padding: 9px;
-    background-color: rgb(245, 245, 245) !important;
-    border: 1px solid rgb(221, 221, 221);
-
-    a.button {
-      display: block;
-      float: left;
-      cursor: pointer;
-      width: 27px;
-      height: 27px;
-    }
-
-    a.button:hover {
-      text-decoration: none;
-    }
-
-    input[name='url'] {
-      width: 350px;
-    }
-  }
 }
 
 /* Change image-dialog */
