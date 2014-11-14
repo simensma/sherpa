@@ -175,9 +175,6 @@ $(function() {
                 method: 'POST',
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.error(jqXHR, textStatus, errorThrown);
-                },
-                success: function (data, textStatus, jqXHR) {
-                    console.log(data, textStatus, jqXHR);
                 }
             });
 
