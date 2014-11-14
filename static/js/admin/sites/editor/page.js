@@ -27,6 +27,10 @@ $(function() {
 
     });
 
+    /* Change parent */
+    header.find("select[name='parent']").select2();
+
+
     // Init Tooltip
     header.find('.preview').tooltip();
 
