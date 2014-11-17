@@ -322,7 +322,7 @@ $(function() {
     // Button-group formatting
     $(document).mouseup(function(e) {
         var $clicked_element = $(e.target);
-        var clicked_inside_editable_element = !!($clicked_element.hasClass('editable').length || $clicked_element.parents('.editable').length);
+        var clicked_inside_editable_element = ($clicked_element.hasClass('editable') || !!$clicked_element.parents('.editable').length);
         var clicked_inside_text_formatter = !!($clicked_element.parents('.text-formatter').length);
 
         if (clicked_inside_editable_element || clicked_inside_text_formatter) {
