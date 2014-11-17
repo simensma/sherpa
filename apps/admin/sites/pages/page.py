@@ -115,12 +115,14 @@ def edit(request, site, version):
     root_page = Page.on(active_site).get(level=1)
     pages = Page.objects.filter(site=active_site)
     version = Version.objects.get(id=version)
+    is_editing_root_page = root_page.id == version.variant.page.id
     context = {
         'active_site': active_site,
         'version': version,
         'widget_data': admin_context(active_site),
         'pages': pages,
         'root_page': root_page,
+        'is_editing_root_page': is_editing_root_page,
         'image_search_length': settings.IMAGE_SEARCH_LENGTH
     }
     context.update(url_picker_context(active_site))

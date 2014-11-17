@@ -73,15 +73,32 @@
 
                 <div class="form-group title">
                   <label for="title" class="col-sm-4 control-label">Tittel</label>
-                  <div class="col-sm-8">
-                    <input class="form-control" name="title" type="text" value="{{ version.variant.page.title }}">
+                  <div
+                    class="col-sm-8"
+                    {% if is_editing_root_page %}
+                      data-toggle="tooltip"
+                      data-placement="bottom"
+                      title="Du kan ikke endre tittel på forsiden"
+                    {% endif %}>
+                    <input
+                      name="title"
+                      type="text"
+                      value="{{ version.variant.page.title }}"
+                      class="form-control"
+                      {% if is_editing_root_page %} disabled{% endif %}>
                   </div>
                 </div>
 
                 <div class="form-group parent">
                   <label for="title" class="col-sm-4 control-label">Ligger under</label>
-                  <div class="col-sm-8">
-                    <select name="parent">
+                  <div
+                    class="col-sm-8"
+                    {% if is_editing_root_page %}
+                      data-toggle="tooltip"
+                      data-placement="bottom"
+                      title="Du kan ikke legge forsiden under en annen side"
+                    {% endif %}>
+                    <select name="parent"{% if is_editing_root_page %} disabled{% endif %}>
                       <option value="{{ root_page.id }}">Ingen foreldreside</option>
                       <option disabled>---</option>
                       {% recursetree pages %}
@@ -174,7 +191,7 @@
                     </button>
                     <button
                       data-dnt-delete-url="{% url 'admin.sites.pages.page.delete' active_site.id version.variant.page.id %}"
-                      {% if version.variant.page.id == root_page.id %}
+                      {% if is_editing_root_page %}
                         class="btn btn-danger delete-page disabled"
                         data-toggle="tooltip"
                         data-placement="bottom"
