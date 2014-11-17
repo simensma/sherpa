@@ -216,4 +216,7 @@ $(function() {
 
     });
 
+    /* Init tags tooltip */
+    $treeContainer.find('.meta .tags').tooltip();
+
 });

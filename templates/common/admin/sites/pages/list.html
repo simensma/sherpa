@@ -81,13 +81,12 @@
                   <a href="{% url 'admin.sites.pages.page.edit' active_site.id node.active_version.id %}"><span>{{ node.title }}</span></a>
                 </div>
                 <div class="meta">
-                  <div class="col tags">
-                    <span
-                      class="glyphicon glyphicon-tags"
-                      data-toggle="tooltip"
-                      data-placement="top"
-                      title="{% for tag in node.active_version.tags.all %}{{ tag.name }}{% if not forloop.last %}, {% endif %}{% empty %}Ingen nøkkelord{% endfor %}">
-                    </span>
+                  <div
+                    class="col tags"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="{% for tag in node.active_version.tags.all %}{{ tag.name }}{% if not forloop.last %}, {% endif %}{% empty %}Ingen nøkkelord{% endfor %}">
+                    <span>{% for tag in node.active_version.tags.all %}{{ tag.name }}{% if not forloop.last %}, {% endif %}{% empty %}<span class="empty">Ingen nøkkelord</span>{% endfor %}</span>
                   </div>
                   <div class="col status">
                     {% if node.published %}
