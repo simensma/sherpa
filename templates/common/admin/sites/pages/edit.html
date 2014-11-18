@@ -107,7 +107,7 @@
                             <option
                               value="{{ node.id }}"
                               {% if version.variant.page.parent.id == node.id %} selected class="default"{% endif %}>
-                              {% with node.level|add:"-2" as count %}{% repeat count %}- {% endrepeat %}{% endwith %}
+                              {% with node.level|add:"-1" as count %}{% repeat count %}- {% endrepeat %}{% endwith %}
                               {{ node.title }}
                             </option>
                           {% endif %}
