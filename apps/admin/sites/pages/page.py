@@ -112,7 +112,7 @@ def delete(request, site, page_id):
 
 def edit(request, site, version):
     active_site = Site.objects.get(id=site)
-    root_page = Page.on(active_site).get(level=1)
+    root_page = Page.on(active_site).get(level=0)
     pages = Page.objects.filter(site=active_site)
     version = Version.objects.get(id=version)
     is_editing_root_page = root_page.id == version.variant.page.id
