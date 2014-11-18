@@ -139,9 +139,6 @@ $(function() {
 
     $treeSortable = $treeContainer.find('ol.sortable');
 
-    $treeSortable.find('li').first().addClass('disabled'); // Should not be able to move root page
-    $treeSortable.find('li div').first().removeClass('handle'); // Should not be able to move root page
-
     $treeSortable.find('li ol').each(function () {
         $(this).parents().first().addClass('has-children');
     });
@@ -155,17 +152,7 @@ $(function() {
         disabledClass: 'mjs-nestedSortable-disabled',
         expandOnHover: 700,
         isTree: true,
-
-        // handle: 'div',
-        // helper: 'clone',
-        // items: 'li',
-        // opacity: .6,
-        // placeholder: 'placeholder',
-        // tabSize: 25,
-        // tolerance: 'pointer',
-        // toleranceElement: '> div',
-        // maxLevels: 4,
-        // startCollapsed: false,
+        protectRoot: true,
 
         relocate: function (e) {
             var mpttArray = $('ol.sortable').nestedSortable('toArray', {startDepthCount: 0});
@@ -188,9 +175,6 @@ $(function() {
                 method: 'POST',
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.error(jqXHR, textStatus, errorThrown);
-                },
-                success: function (data, textStatus, jqXHR) {
-                    console.log(data, textStatus, jqXHR);
                 }
             });
 
@@ -215,5 +199,24 @@ $(function() {
             $li.addClass('mjs-nestedSortable-expanded').removeClass('mjs-nestedSortable-collapsed');
         }
     });
+
+
+    /* Delete page from list view */
+
+    $(document).on('click', '.node-wrapper .actions .delete a', function (e) {
+
+        var modalOptions = {};
+
+        var $li = $(this).parents('li').first();
+        modalOptions.hasChildren = !!$li.find('ol').length;
+        modalOptions.deleteUrl = $(this).data('dnt-delete-url');
+        modalOptions.title = $li.find('.title span').first().text();
+
+        Turistforeningen.setupDeletePageModal(modalOptions);
+
+    });
+
+    /* Init tags tooltip */
+    $treeContainer.find('.meta .tags').tooltip();
 
 });

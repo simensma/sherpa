@@ -4,6 +4,8 @@
 {% block title %}{{ version.variant.page.title }} — {{ block.super }}{% endblock %}
 
 {% load taglist %}
+{% load repeat %}
+{% load mptt_tags %}
 
 {% block extra_js %}
   {# 3rd party libs #}
@@ -21,6 +23,7 @@
   <script src="{{ STATIC_URL }}js/admin/sites/editor/image-cropper.js"></script>
   <script src="{{ STATIC_URL }}js/admin/images/util/image-archive-picker.js"></script>
   <script src="{{ STATIC_URL }}js/admin/images/util/image-upload-dialog.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/sites/pages/delete.js"></script>
 
   {# Editor specific scripts #}
   <script src="{{ STATIC_URL }}js/admin/sites/editor/main.js"></script>
@@ -70,19 +73,49 @@
 
                 <div class="form-group title">
                   <label for="title" class="col-sm-4 control-label">Tittel</label>
-                  <div class="col-sm-8">
-                    <input class="form-control" name="title" type="text" value="{{ version.variant.page.title }}">
+                  <div
+                    class="col-sm-8"
+                    {% if is_editing_root_page %}
+                      data-toggle="tooltip"
+                      data-placement="bottom"
+                      title="Du kan ikke endre tittel på forsiden"
+                    {% endif %}>
+                    <input
+                      name="title"
+                      type="text"
+                      value="{{ version.variant.page.title }}"
+                      class="form-control"
+                      {% if is_editing_root_page %} disabled{% endif %}>
                   </div>
                 </div>
 
                 <div class="form-group parent">
                   <label for="title" class="col-sm-4 control-label">Ligger under</label>
-                  <div class="col-sm-8">
-                    <select name="parent" class="chosen" data-placeholder="Ingen foreldreside">
-                      <option value=""></option>
-                      {% for page in pages %}
-                        <option value="{{ page.id }}"{% if version.variant.page.parent.id == page.id %} selected class="default"{% endif %}>{{ page.title }}</option>
-                      {% endfor %}
+                  <div
+                    class="col-sm-8"
+                    {% if is_editing_root_page %}
+                      data-toggle="tooltip"
+                      data-placement="bottom"
+                      title="Du kan ikke legge forsiden under en annen side"
+                    {% endif %}>
+                    <select name="parent"{% if is_editing_root_page %} disabled{% endif %}>
+                      <option value="{{ root_page.id }}">Ingen foreldreside</option>
+                      <option disabled>---</option>
+                      {% recursetree pages %}
+                        {% if node.id != version.variant.page.id %}
+                          {% if node.id != root_page.id %}
+                            <option
+                              value="{{ node.id }}"
+                              {% if version.variant.page.parent.id == node.id %} selected class="default"{% endif %}>
+                              {% with node.level|add:"-2" as count %}{% repeat count %}- {% endrepeat %}{% endwith %}
+                              {{ node.title }}
+                            </option>
+                          {% endif %}
+                          {% if not node.is_leaf_node %}
+                            {{ children }}
+                          {% endif %}
+                        {% endif %}
+                      {% endrecursetree %}
                     </select>
                   </div>
                 </div>
@@ -156,7 +189,16 @@
                       title="OBS! Når du forhåndsviser siden lagres den først, slik at alle endringer du har gjort blir lagret og evt. publisert dersom siden er publisert.">
                       <i class="glyphicon glyphicon-search"></i> Forhåndsvisning
                     </button>
-                    <button class="btn btn-danger delete-page" href="{% url 'admin.sites.pages.page.delete' active_site.id version.variant.page.id %}">
+                    <button
+                      data-dnt-delete-url="{% url 'admin.sites.pages.page.delete' active_site.id version.variant.page.id %}"
+                      {% if is_editing_root_page %}
+                        class="btn btn-danger delete-page disabled"
+                        data-toggle="tooltip"
+                        data-placement="bottom"
+                        title="Du kan ikke slette denne siden, fordi nettsiden må ha en forside."
+                      {% else %}
+                        class="btn btn-danger delete-page"
+                      {% endif %}>
                       <i class="glyphicon glyphicon-warning-sign"></i> Slett
                     </button>
                   </div>
@@ -186,5 +228,7 @@
 <div class="cms-editor">
   {% include 'common/admin/sites/editor/editor.html' %}
 </div><!-- /.cms-editor -->
+
+{% include 'common/admin/sites/pages/delete.html' %}
 
 {% endblock %}

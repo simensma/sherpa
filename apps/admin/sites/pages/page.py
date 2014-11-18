@@ -18,9 +18,7 @@ from core.util import parse_html_array
 
 def list(request, site):
     active_site = Site.objects.get(id=site)
-    pages = Page.objects.filter(
-        site=active_site
-    )
+    pages = Page.objects.filter(site=active_site)
     context = {
         'active_site': active_site,
         'nodes': pages,
@@ -97,20 +95,34 @@ def check_slug(request, site):
     page_valid = not Page.on(active_site).filter(slug=request.POST['slug']).exists()
     return HttpResponse(json.dumps({'valid': urls_valid and page_valid}))
 
-def delete(request, site, page):
+def delete(request, site, page_id):
+    delete_children = request.GET.get('delete_children', False)
     active_site = Site.objects.get(id=site)
-    Page.on(active_site).get(id=page).delete()
+
+    if not delete_children:
+        page = Page.on(active_site).get(id=page_id)
+        new_parent = page.parent
+        page.reparent_children(new_parent)
+
+    # Yes, have to get the page again, or things will get messy
+    page = Page.on(active_site).get(id=page_id)
+    page.delete()
+
     return redirect('admin.sites.pages.page.list', active_site.id)
 
 def edit(request, site, version):
     active_site = Site.objects.get(id=site)
-    pages = Page.on(active_site).all().order_by('title')
+    root_page = Page.on(active_site).get(level=1)
+    pages = Page.objects.filter(site=active_site)
     version = Version.objects.get(id=version)
+    is_editing_root_page = root_page.id == version.variant.page.id
     context = {
         'active_site': active_site,
         'version': version,
         'widget_data': admin_context(active_site),
         'pages': pages,
+        'root_page': root_page,
+        'is_editing_root_page': is_editing_root_page,
         'image_search_length': settings.IMAGE_SEARCH_LENGTH
     }
     context.update(url_picker_context(active_site))

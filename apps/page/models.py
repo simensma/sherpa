@@ -60,6 +60,14 @@ class Page(MPTTModel):
     def on(site):
         return Page.objects.filter(site=site)
 
+    def reparent_children(self, parent):
+        for child in self.get_children():
+            # Yes, have to get parent & child again and again, or things will get messy
+            parent = Page.objects.get(id=parent.id)
+            current_child = Page.objects.get(id=child.id)
+            current_child.move_to(parent, 'last-child')
+            current_child.save()
+
 @receiver(post_delete, sender=Page, dispatch_uid="page.models")
 def delete_page(sender, **kwargs):
     Variant.objects.filter(page=kwargs['instance']).delete()

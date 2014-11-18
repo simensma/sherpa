@@ -1,0 +1,20 @@
+.modal.delete-page {
+  width: 640px;
+  margin-left: -320px;
+
+  .if-children, .if-not-children {
+    display: none;
+  }
+
+  &.has-children {
+    .if-children {
+      display: block;
+    }
+  }
+
+  &.no-children {
+    .if-not-children {
+      display: block;
+    }
+  }
+}

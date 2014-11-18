@@ -31,14 +31,19 @@
     }
   }
 
+  span.empty {
+    font-style: italic;
+    color: #999;
+  }
+
   div.col {
     display: inline-block;
     width: 120px;
     white-space: nowrap;
-
-    span {
-      text-overflow: ellipsis;
-    }
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top;
+    padding-right: 10px;
 
     &.date {
       width: 80px;
@@ -131,6 +136,22 @@
           clear: both;
           font-size: 12px;
           visibility: hidden;
+
+          a {
+            cursor: pointer;
+          }
+
+          div {
+            display: inline-block;
+          }
+
+          div:after {
+            content: ' | ';
+          }
+
+          div:last-child:after {
+            content: '';
+          }
         }
       }
     }
