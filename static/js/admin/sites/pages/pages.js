@@ -158,9 +158,10 @@ $(function() {
             var mpttArray = $('ol.sortable').nestedSortable('toArray', {startDepthCount: 0});
 
             // First item is just... Some kind of wrapper.
-            // Remove it and -- all left & right values.
+            // Remove it and -- all left, right & depth values.
             mpttArray.shift();
             for (var i = 0; i < mpttArray.length; i++) {
+                mpttArray[i]['depth']--;
                 mpttArray[i]['left']--;
                 mpttArray[i]['right']--;
             }
