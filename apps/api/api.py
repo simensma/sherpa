@@ -255,3 +255,6 @@ def forening(request, version, format):
             code=error_codes.UNSUPPORTED_HTTP_VERB,
             http_code=400
         )
+
+def memberid(request, version, format):
+    raise NotImplementedError
