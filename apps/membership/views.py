@@ -2,7 +2,6 @@
 import json
 import logging
 import sys
-import re
 
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -14,11 +13,11 @@ from django.conf import settings
 from sherpa.decorators import user_requires_login
 from foreninger.models import Forening
 from focus.models import FocusZipcode, Price, Actor
-from focus.util import ACTOR_ENDCODE_DUBLETT, DNT_CENTRAL_ID as DNT_CENTRAL_ID_FOCUS
+from focus.util import DNT_CENTRAL_ID as DNT_CENTRAL_ID_FOCUS
 from core.models import Zipcode
 from enrollment.models import State
 from membership.models import SMSServiceRequest
-from membership.util import send_sms_receipt, memberid_sms_count
+from membership.util import lookup_user_by_phone, send_sms_receipt, memberid_sms_count
 from user.models import User
 
 logger = logging.getLogger('sherpa')
@@ -114,14 +113,7 @@ def memberid_sms(request):
         sms_request.save()
         return HttpResponse(json.dumps({'status': 'too_high_frequency'}))
 
-    number = re.sub('\s', '', request.POST['phone_mobile'])
-    if number == '':
-        sms_request.save()
-        return HttpResponse(json.dumps({'status': 'no_match'}))
-    # Note that we're excluding Actors with end_code 'dublett' manually here
-    # Note also that we're not filtering on Actor.get_personal_members()
-    actors = Actor.objects.raw(
-        "select * from Actor where REPLACE(MobPh, ' ', '') = %s AND EndCd != %s;", [number, ACTOR_ENDCODE_DUBLETT])
+    actors = lookup_user_by_phone(request.POST['phone_mobile'])
     actors = list(actors) # Make sure the query has been performed
     if len(actors) == 0:
         sms_request.save()

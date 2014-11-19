@@ -13,6 +13,9 @@ from django.conf import settings
 
 import requests
 
+from focus.models import Actor
+from focus.util import ACTOR_ENDCODE_DUBLETT
+
 logger = logging.getLogger('sherpa')
 
 # Simple security - if the same person (IP) sends > 10 requests within 30 minutes,
@@ -26,6 +29,20 @@ def memberid_sms_count(ip_address):
         lookups += 1
     cache.set('memberid_sms_requests.%s' % ip_address, lookups, 60 * 30)
     return lookups
+
+def lookup_user_by_phone(phone_number):
+    """Attempt to match the given phone number in an arbitrary format to one or more members"""
+    phone_number = re.sub('\s', '', phone_number)
+    if phone_number == '':
+        return []
+
+    # Note that we're excluding Actors with end_code 'dublett' manually here
+    # Note also that we're not filtering on Actor.get_personal_members()
+    actors = Actor.objects.raw(
+        "select * from Actor where REPLACE(MobPh, ' ', '') = %s AND EndCd != %s;",
+        [phone_number, ACTOR_ENDCODE_DUBLETT]
+    )
+    return actors
 
 def send_sms_receipt(request, user):
     number = re.sub('\s', '', user.get_phone_mobile())
