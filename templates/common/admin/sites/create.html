@@ -145,7 +145,7 @@
               {% if form.domain.errors %}
                 <div class="alert alert-danger">
                   {% for error in form.domain.errors %}
-                    {{ error }}
+                    {{ error|safe }}
                     {% if not forloop.last %}
                       <br>
                     {% endif %}
