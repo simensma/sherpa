@@ -116,42 +116,42 @@ class CreateSiteForm(SiteForm):
         if not result['valid']:
             if result['error'] == 'malformed':
                 raise forms.ValidationError(
-                    "Du må fylle inn et gyldig domenenavn. Hør med DNT sentralt dersom du er usikker på hva dette bør være.",
+                    u"Du må fylle inn et gyldig domenenavn. Hør med DNT sentralt dersom du er usikker på hva dette bør være.",
                     code=result['error'],
                 )
             elif result['error'] == 'more_than_one_subdir':
                 raise forms.ValidationError(
-                    "Du kan ikke ha to undermapper i domenenavnet. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.",
+                    u"Du kan ikke ha to undermapper i domenenavnet. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.",
                     code=result['error'],
                 )
             elif result['error'] == 'prefix_for_disallowed_domain':
                 main_site = Site.objects.get(id=Site.DNT_CENTRAL_ID)
                 raise forms.ValidationError(
-                    "Kun domener direkte under <strong>%s</strong> kan ha undermapper. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er." % main_site.domain,
+                    u"Kun domener direkte under <strong>%s</strong> kan ha undermapper. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er." % main_site.domain,
                     code=result['error'],
                 )
             elif result['error'] == 'site_exists':
                 raise forms.ValidationError(
-                    "<strong>%s</strong> har allerede domenenavnet <strong>http://{{ existing_domain }}/</strong>. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er." % result['existing_forening'].name,
+                    u"<strong>%s</strong> har allerede domenenavnet <strong>http://{{ existing_domain }}/</strong>. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er." % result['existing_forening'].name,
                     code=result['error'],
                 )
             elif result['error'] == 'prefix_not_supported_yet':
                 main_site = Site.objects.get(id=Site.DNT_CENTRAL_ID)
                 raise forms.ValidationError(
-                    "Domenet kan ikke være en undermappe under turistforeningen.no (for eksempel: <strong>%s/mitt-turlag</strong>) fordi vi ikke har satt opp teknisk støtte for det ennå." % main_site.domain,
+                    u"Domenet kan ikke være en undermappe under turistforeningen.no (for eksempel: <strong>%s/mitt-turlag</strong>) fordi vi ikke har satt opp teknisk støtte for det ennå." % main_site.domain,
                     code=result['error'],
                 )
             elif result['error'] == 'test_period_requires_test_domain':
                 # Shouldn't happen since we're explicitly appending the test-domain, but handle it nevertheless
                 raise forms.ValidationError(
-                    "I test-perioden <strong>må</strong> dere ha \"<strong>.test.turistforeningen.no</strong>\" bak domenet. For eksempel: <strong>http://stf.test.turistforeningen.no</strong>.",
+                    u"I test-perioden <strong>må</strong> dere ha \"<strong>.test.turistforeningen.no</strong>\" bak domenet. For eksempel: <strong>http://stf.test.turistforeningen.no</strong>.",
                     code=result['error'],
                 )
             else:
                 # Unknown verify_domain error code :(
                 logger.error(u"Ukjent domenevaliderings-feilkode '%s'" % result['error'])
                 raise forms.ValidationError(
-                    "Domeneadressen er ikke gyldig, dobbeltsjekk at du har skrevet riktig",
+                    u"Domeneadressen er ikke gyldig, dobbeltsjekk at du har skrevet riktig",
                     code=result['error'],
                 )
         else:
