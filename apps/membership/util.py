@@ -48,6 +48,9 @@ def lookup_users_by_phone(phone_number):
     return [User.get_or_create_inactive(memberid=actor.memberid) for actor in actors]
 
 def send_sms_receipt(request, user):
+    """Send an SMS receipt for membership to the given user. Note that if the user has children, their status will
+    also be included. However, if this is a household member, we'll send the receipt to the member without further
+    information about the related and/or parent members."""
     number = user.get_phone_mobile(strip_whitespace=True)
     try:
         context = RequestContext(request, {
