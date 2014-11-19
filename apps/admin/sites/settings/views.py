@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect
 
+from admin.sites.forms import SiteForm
 from core.models import Site
 from foreninger.models import Forening
 
@@ -27,7 +28,14 @@ def index(request, site):
                 continue
         available_site_types.append(t)
 
+    if 'form_data' in request.session:
+        form = request.session['form_data']
+        del request.session['form_data']
+    else:
+        form = SiteForm(request.user, auto_id='%s')
+
     context = {
+        'form': form,
         'active_site': active_site,
         'available_site_types': available_site_types,
         'foreninger_with_other_homepage': foreninger_with_other_homepage,
@@ -45,45 +53,28 @@ def save(request, site):
         return redirect('admin.sites.settings.views.index', site)
 
     active_site = Site.objects.get(id=site)
+    form = SiteForm(request.user, request.POST, auto_id='%s')
+
+    if not form.is_valid():
+        request.session['form_data'] = form
+        return redirect('admin.sites.settings.views.index', site)
+
+    site_forening = form.cleaned_data['forening']
+    type = form.cleaned_data['type']
+    title = form.cleaned_data['title']
+    template_main = form.cleaned_data['template_main']
+    template_type = form.cleaned_data['template_type']
+    template_description = form.cleaned_data['template_description']
+
     domain = request.POST['domain'].strip().lower().replace('http://', '').rstrip('/')
     errors = False
 
-    site_forening = Forening.objects.get(id=request.POST['site_forening'])
-    if site_forening not in request.user.all_foreninger():
-        raise PermissionDenied
-
-    type = request.POST['type']
-    if type not in [t[0] for t in Site.TYPE_CHOICES]:
-        raise PermissionDenied
-
-    homepage = site_forening.get_homepage_site()
-    if type == 'forening' and homepage is not None and homepage != active_site:
-        # The chosen forening has *another* homepage site
-        messages.error(request, 'homepage_site_exists')
-        return redirect('admin.sites.settings.views.index', site)
-
-    if type == 'mal' and not request.user.has_perm('sherpa_admin'):
-        raise PermissionDenied
-
     active_site.forening = site_forening
     active_site.type = type
-
-    if type in ['hytte', 'kampanje', 'mal']:
-        active_site.title = request.POST['title'].strip()
-    else:
-        active_site.title = ''
-
-    if type == 'mal':
-        template_type = request.POST.get('template_type', '').strip()
-        if template_type not in [t[0] for t in Site.TEMPLATE_TYPE_CHOICES]:
-            raise PermissionDenied
-        active_site.template_main = 'template_main' in request.POST
-        active_site.template_type = template_type
-        active_site.template_description = request.POST.get('template_description', '').strip()
-    else:
-        active_site.template_main = False
-        active_site.template_type = ''
-        active_site.template_description = ''
+    active_site.title = title
+    active_site.template_main = template_main
+    active_site.template_type = template_type
+    active_site.template_description = template_description
 
     if domain == active_site.domain:
         # Special case; the domain wasn't changed - so just pretend that it's updated

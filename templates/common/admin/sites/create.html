@@ -40,29 +40,7 @@
             </div>
           </div>
 
-          <div class="form-group">
-            <div class="col-md-offset-2 col-md-3">
-              <select class="form-control" name="site_forening" id="site_forening">
-                {% for type in user.all_foreninger_sorted_with_type_data %}
-                  {% if type.foreninger|length > 0 %}
-                    <optgroup label="{{ type.name }}">
-                      {% for forening in type.foreninger %}
-                        <option
-                          value="{{ forening.id }}"
-                          data-dnt-type="{{ type.code }}"
-                          {% if active_forening == forening %}
-                            selected
-                          {% endif %}>
-
-                          {{ forening.name }}
-                        </option>
-                      {% endfor %}
-                    </optgroup>
-                  {% endif %}
-                {% endfor %}
-              </select>
-            </div>
-          </div>
+          {% include 'common/admin/sites/site-form-fields/forening.html' with include_labels=False %}
 
         </div><!-- /.section -->
 
@@ -74,39 +52,8 @@
             </div>
           </div>
 
-          <div class="form-group type" data-dnt-form-group="type">
-            <div class="col-md-offset-2 col-md-10">
-              {% for type in available_site_types %}
-                <div class="radio">
-                  <label>
-                    <input type="radio" name="type" value="{{ type.0 }}">
-                    {{ type.1 }}
-
-                    {% if type.0 == 'forening' %}
-                      <span
-                        class="has-homepage jq-hide"
-                        data-dnt-container="has-homepage-info">
-
-                        <span data-dnt-container="forening-name"></span>
-                        har allerede en hjemmeside
-                      </span>
-                    {% elif type.0 == 'mal' %}
-                      <span class="help-block display-inline">
-                        (kun tilgjengelig for Sherpa-administratorer)
-                      </span>
-                    {% endif %}
-                  </label>
-                </div>
-              {% endfor %}
-            </div>
-          </div>
-
-          <div class="form-group title jq-hide">
-            <label class="col-md-2 control-label" for="title">Tittel for nettstedet</label>
-            <div class="col-md-10">
-              <input type="text" class="form-control" name="title" id="title">
-            </div>
-          </div>
+          {% include 'common/admin/sites/site-form-fields/type.html' with include_labels=False %}
+          {% include 'common/admin/sites/site-form-fields/title.html' with label="Tittel for nettstedet" %}
 
           <div class="form-group jq-hide" data-dnt-form-group="template">
             <label class="col-md-2 control-label">Innhold</label>
@@ -160,56 +107,7 @@
             </div>
           </div>
 
-          {% if user.perms.sherpa_admin %}
-            <div
-              class="form-group{% if active_site.type != 'mal' %} jq-hide{% endif %}"
-              data-dnt-form-group="template-type">
-
-              <label class="col-md-2 control-label" for="template_type">Mal for hva slags nettsted</label>
-              <div class="col-md-3">
-                <select class="form-control" name="template_type" id="template_type">
-                  {% for template_type in template_types %}
-                    <option
-                      value="{{ template_type.0 }}"
-                      {% if active_site.template_type == template_type.0 %}
-                        selected
-                      {% endif %}>
-
-                      {{ template_type.1 }}
-                    </option>
-                  {% endfor %}
-                </select>
-              </div>
-            </div>
-
-            <div
-              class="form-group{% if active_site.type != 'mal' %} jq-hide{% endif %}"
-              data-dnt-form-group="template-main">
-
-              <div class="col-md-offset-2 col-md-5">
-                <div class="checkbox">
-                  <label>
-                    <input type="checkbox" name="template_main"{% if active_site.template_main %} checked{% endif %}>
-                    Dette er hovedmalen for denne type nettsted
-                    <span class="help-block">
-                      Hvis det skal være flere maler for samme type nettsted må du velge hvilken som skal være hovedmal. Det er hovedmalen som blir automatisk valgt når brukere oppretter nye nettsteder.
-                    </span>
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-group jq-hide" data-dnt-form-group="template-description">
-              <label class="col-md-2 control-label" for="template_description">Beskrivelse for malen</label>
-              <div class="col-md-5">
-                <textarea
-                  class="form-control"
-                  name="template_description"
-                  id="template_description"
-                  rows="6"></textarea>
-              </div>
-            </div>
-          {% endif %}
+          {% include 'common/admin/sites/site-form-fields/template.html' %}
 
         </div><!-- /.section -->
 
@@ -218,42 +116,10 @@
           <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
               <h2>3. Velg et <strong>midlertidig</strong> domene for nettstedet</h2>
-
-              {% for message in messages %}
-                {% if message.message == 'malformed' %}
-                  <div class="alert alert-danger">
-                    Du må fylle inn et gyldig domenenavn. Hør med DNT sentralt dersom du er usikker på hva dette bør være.
-                  </div>
-                {% elif message.message == 'more_than_one_subdir' %}
-                  <div class="alert alert-danger">
-                    Du kan ikke ha to undermapper i domenenavnet. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.
-                  </div>
-                {% elif message.message == 'prefix_for_disallowed_domain' %}
-                  <div class="alert alert-danger">
-                    Kun domener direkte under <strong>{{ main_site.domain }}</strong> kan ha undermapper. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.
-                  </div>
-                {% elif message.message == 'site_exists' %}
-                  <div class="alert alert-danger">
-                    <strong>{{ existing_forening.name }}</strong> har allerede domenenavnet <strong>http://{{ existing_domain }}/</strong>. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.
-                  </div>
-                {% elif message.message == 'prefix_not_supported_yet' %}
-                  <div class="alert alert-danger">
-                    Domenet kan ikke være en undermappe under turistforeningen.no (for eksempel: <strong>{{ main_site.domain }}/mitt-turlag</strong>) fordi vi ikke har satt opp teknisk støtte for det ennå.
-                  </div>
-                {% elif message.message == 'test_period_requires_test_domain' %}
-                  <div class="alert alert-danger">
-                    I test-perioden <strong>må</strong> dere ha "<strong>.test.turistforeningen.no</strong>" bak domenet. For eksempel: <strong>http://stf.test.turistforeningen.no</strong>.
-                  </div>
-                {% elif message.message == 'main_site_exists' %}
-                  <div class="alert alert-danger">
-                    {{ active_forening }} har allerede en hjemmeside, du kan ikke sette opp en ny.
-                  </div>
-                {% endif %}
-              {% endfor %}
             </div>
           </div>
 
-          <div class="form-group domain">
+          <div class="form-group domain{% if form.domain.errors %} has-error{% endif %}">
             <div class="col-md-offset-2 col-md-10">
 
               {# Force subdomains for now. When we're ready, we can let the user choose between subdomain or a FQDN #}
@@ -282,9 +148,26 @@
               </div>
               -->
 
-              <p class="domain-input">
-                http:// <input type="text" class="form-control" name="domain" value="{{ domain }}" placeholder="forening"> <span class="subdomain-tail">.test.turistforeningen.no</span>
-              </p>
+              {% if form.domain.errors %}
+                <div class="alert alert-danger">
+                  {% for error in form.domain.errors %}
+                    {{ error }}
+                    {% if not forloop.last %}
+                      <br>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              {% endif %}
+
+              <div class="input-group domain-input">
+                <span class="input-group-addon">
+                  http://
+                </span>
+                <input type="text" class="form-control" name="domain" value="{{ form.domain.value|default:"" }}" placeholder="forening">
+                <span class="input-group-addon subdomain-tail">
+                  .test.turistforeningen.no
+                </span>
+              </div>
 
             </div>
           </div>
@@ -294,7 +177,6 @@
               <button
                 class="btn btn-success btn-lg"
                 type="submit"
-                data-choose-site-type-warning="Velg hva slags nettsted du vil opprette før du går videre. Du må klikke på en av knappene i punkt 1."
                 data-enter-domain-warning="Velg hvilket domene du ønsker at nettstedet skal ha. Kontakt oss via den røde boksen til høyre på skjermen hvis du lurer på hva dette bør være.">
 
                 Opprett nytt nettsted!

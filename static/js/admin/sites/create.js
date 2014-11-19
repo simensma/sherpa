@@ -4,7 +4,7 @@ $(function() {
 
     var wrapper = $("div.setup-site");
 
-    var forening_select = wrapper.find('select[name="site_forening"]');
+    var forening_select = wrapper.find('select[name="forening"]');
 
     var site_type_wrapper = wrapper.find('[data-dnt-form-group="type"]');
     var site_type_forening = site_type_wrapper.find('input[value="forening"]');
@@ -12,7 +12,7 @@ $(function() {
     var site_type_forening_info_name = site_type_forening_info.find('[data-dnt-container="forening-name"]');
     var site_type_buttons = site_type_wrapper.find("input[name='type']");
 
-    var title_wrapper = wrapper.find("div.form-group.title");
+    var title_wrapper = wrapper.find('[data-dnt-form-group="title"]');
     var template_wrapper = wrapper.find('[data-dnt-form-group="template"]');
 
     var default_template = wrapper.find('[data-dnt-container="default-template"]');
@@ -28,8 +28,8 @@ $(function() {
 
     var domain_wrapper = wrapper.find("div.form-group.domain");
     var domain = domain_wrapper.find("input[name='domain']");
-    var domain_type = domain_wrapper.find("input[name='domain-type']");
-    var subdomain_tail = domain_wrapper.find("span.subdomain-tail");
+    // var domain_type = domain_wrapper.find("input[name='domain-type']");
+    // var subdomain_tail = domain_wrapper.find("span.subdomain-tail");
 
     var submit = wrapper.find("button[type='submit']");
 
@@ -45,7 +45,7 @@ $(function() {
     site_type_buttons.change(setDefaultTemplate);
     use_template_input.change(confirmNoTemplate);
     choose_template_trigger.click(chooseTemplateManually);
-    domain_type.change(changeDomainType);
+    // domain_type.change(changeDomainType);
     submit.click(validateForm);
 
     /* Event implementations */
@@ -152,22 +152,17 @@ $(function() {
         }
     }
 
-    function changeDomainType() {
-        if(domain_type.filter(":checked").is("[value='subdomain']")) {
-            domain.removeClass('fqdn');
-            subdomain_tail.show();
-        } else {
-            domain.addClass('fqdn');
-            subdomain_tail.hide();
-        }
-    }
+    // function changeDomainType() {
+    //     if(domain_type.filter(":checked").is("[value='subdomain']")) {
+    //         domain.removeClass('fqdn');
+    //         subdomain_tail.show();
+    //     } else {
+    //         domain.addClass('fqdn');
+    //         subdomain_tail.hide();
+    //     }
+    // }
 
     function validateForm(e) {
-        if(site_type_buttons.filter(":checked").length === 0) {
-            alert(submit.attr('data-choose-site-type-warning'));
-            e.preventDefault();
-            return;
-        }
         if(domain.val().trim() === 'forening' || domain.val().trim() === '') {
             alert(submit.attr('data-enter-domain-warning'));
             e.preventDefault();

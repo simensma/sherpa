@@ -9,6 +9,7 @@ from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect
 
+from .forms import CreateSiteForm
 from admin.models import Campaign
 from articles.models import Article
 from core.models import Site
@@ -89,198 +90,166 @@ def create(request):
     }
 
     if request.method == 'GET':
+        context['form'] = CreateSiteForm(request.user, auto_id='%s')
         return render(request, 'common/admin/sites/create.html', context)
 
     elif request.method == 'POST':
-        if not request.POST.get('type', '') in [t[0] for t in Site.TYPE_CHOICES]:
-            raise PermissionDenied
+        form = CreateSiteForm(request.user, request.POST, auto_id='%s')
+        context['form'] = form
 
-        if request.POST['type'] == 'mal' and not request.user.has_perm('sherpa_admin'):
-            raise PermissionDenied
+        if not form.is_valid():
+            return render(request, 'common/admin/sites/create.html', context)
 
         if not request.POST['domain-type'] in ['fqdn', 'subdomain']:
             raise PermissionDenied
 
-        site_forening = Forening.objects.get(id=request.POST['site_forening'])
-        if site_forening not in request.user.all_foreninger():
-            raise PermissionDenied
+        site_forening = form.cleaned_data['forening']
+        type = form.cleaned_data['type']
+        title = form.cleaned_data['title']
+        template_main = form.cleaned_data['template_main']
+        template_type = form.cleaned_data['template_type']
+        template_description = form.cleaned_data['template_description']
+        domain, prefix = form.cleaned_data['domain']
 
-        domain = request.POST['domain'].strip().lower()
-        subdomain = domain
-        if request.POST['domain-type'] == 'subdomain':
-            domain = '%s.test.turistforeningen.no' % domain
-        domain = domain.replace('http://', '').rstrip('/')
+        site = Site(
+            domain=domain,
+            prefix=prefix,
+            type=type,
+            template='local',
+            forening=site_forening,
+            title=title,
+            template_main=template_main,
+            template_type=template_type,
+            template_description=template_description,
+        )
 
-        if request.POST['type'] == 'forening' and site_forening.get_homepage_site() is not None:
-            messages.error(request, 'main_site_exists')
-            if request.POST['domain-type'] == 'fqdn':
-                context['domain'] = domain
-            else:
-                context['domain'] = subdomain
-            return render(request, 'common/admin/sites/create.html', context)
+        site.save()
 
-        result = Site.verify_domain(domain)
-        if not result['valid']:
-            messages.error(request, result['error'])
-            if request.POST['domain-type'] == 'fqdn':
-                context['domain'] = domain
-            else:
-                context['domain'] = subdomain
-            if result['error'] == 'site_exists':
-                context['existing_forening'] = result['existing_forening']
-                context['existing_domain'] = domain
-            return render(request, 'common/admin/sites/create.html', context)
-        else:
-            site = Site(
-                domain=result['domain'],
-                prefix=result['prefix'],
-                type=request.POST['type'],
-                template='local',
-                forening=site_forening,
-                title='',
+        # If this is a main template, clear other templates of this type in case any of them were previous main
+        if site.type == 'mal' and site.template_main:
+            Site.objects.filter(
+                type=site.type,
+                template_type=site.template_type,
+            ).exclude(
+                id=site.id,
+            ).update(
+                template_main=False
             )
-            if request.POST['type'] in ['hytte', 'kampanje', 'mal']:
-                site.title = request.POST['title'].strip()
 
-            if request.POST['type'] == 'mal':
-                template_type = request.POST.get('template_type', '').strip()
-                if template_type not in [t[0] for t in Site.TEMPLATE_TYPE_CHOICES]:
-                    raise PermissionDenied
-                site.template_main = 'template_main' in request.POST
-                site.template_type = template_type
-                site.template_description = request.POST.get('template_description', '').strip()
-            else:
-                site.template_main = False
-                site.template_type = ''
-                site.template_description = ''
+        # Invalidate the forening's homepage site cache
+        cache.delete('forening.homepage_site.%s' % site_forening.id)
 
-            site.save()
+        if 'use-template' not in request.POST:
+            # User explicitly requested not to clone any template
+            pass
+        elif request.POST.get('template', '').strip() == '':
+            # Sherpa-admin error; a site-template for the chosen site type doesn't exist!
+            # This needs to be fixed.
+            logger.error(u"Sherpa-bruker opprettet en site med en mal som ikke finnes",
+                extra={
+                    'request': request,
+                    'missing_template_type': request.POST.get('missing-template-type', '<unknown>'),
+                }
+            )
+        else:
+            # All right, let's clone the entire template site
+            # Note that for most objects, we'll just set the primary key to None, change the site field to the
+            # new site, and save it, which will insert a new object.
+            # For related fields, we'll need to save the related set in memory before saving the new object, so
+            # that we can iterate it, clone them and re-relate them to the new object
+            template_site = Site.objects.get(id=request.POST['template'], type='mal')
 
-            # If this is a main template, clear other templates of this type in case any of them were previous main
-            if site.type == 'mal' and site.template_main:
-                Site.objects.filter(
-                    type=site.type,
-                    template_type=site.template_type,
-                ).exclude(
-                    id=site.id,
-                ).update(
-                    template_main=False
-                )
+            # Menus
+            for menu in Menu.objects.filter(site=template_site):
+                menu.id = None
+                menu.site = site
+                menu.save()
 
-            # Invalidate the forening's homepage site cache
-            cache.delete('forening.homepage_site.%s' % site_forening.id)
+            # Pages
+            for page in Page.objects.filter(site=template_site):
+                variants = page.variant_set.all()
+                page.id = None
+                page.site = site
 
-            if 'use-template' not in request.POST:
-                # User explicitly requested not to clone any template
-                pass
-            elif request.POST.get('template', '').strip() == '':
-                # Sherpa-admin error; a site-template for the chosen site type doesn't exist!
-                # This needs to be fixed.
-                logger.error(u"Sherpa-bruker opprettet en site med en mal som ikke finnes",
-                    extra={
-                        'request': request,
-                        'missing_template_type': request.POST.get('missing-template-type', '<unknown>'),
-                    }
-                )
-            else:
-                # All right, let's clone the entire template site
-                # Note that for most objects, we'll just set the primary key to None, change the site field to the
-                # new site, and save it, which will insert a new object.
-                # For related fields, we'll need to save the related set in memory before saving the new object, so
-                # that we can iterate it, clone them and re-relate them to the new object
-                template_site = Site.objects.get(id=request.POST['template'], type='mal')
+                # Change creation to the user creating the new site and reset modification
+                page.created_by = request.user
+                page.created_date = datetime.now()
+                page.modified_by = None
+                page.modified_date = None
 
-                # Menus
-                for menu in Menu.objects.filter(site=template_site):
-                    menu.id = None
-                    menu.site = site
-                    menu.save()
+                page.save()
 
-                # Pages
-                for page in Page.objects.filter(site=template_site):
-                    variants = page.variant_set.all()
-                    page.id = None
-                    page.site = site
+                for variant in variants:
+                    versions = variant.version_set.all()
+                    variant.id = None
+                    variant.page = page
+                    variant.save()
 
-                    # Change creation to the user creating the new site and reset modification
-                    page.created_by = request.user
-                    page.created_date = datetime.now()
-                    page.modified_by = None
-                    page.modified_date = None
+                    for version in versions:
+                        rows = version.rows.all()
+                        version.id = None
+                        version.variant = variant
+                        version.save()
 
-                    page.save()
+                        for row in rows:
+                            columns = row.columns.all()
+                            row.id = None
+                            row.version = version
+                            row.save()
 
-                    for variant in variants:
-                        versions = variant.version_set.all()
-                        variant.id = None
-                        variant.page = page
-                        variant.save()
+                            for column in columns:
+                                contents = column.contents.all()
+                                column.id = None
+                                column.row = row
+                                column.save()
 
-                        for version in versions:
-                            rows = version.rows.all()
-                            version.id = None
-                            version.variant = variant
-                            version.save()
+                                for content in contents:
+                                    content.id = None
+                                    content.column = column
+                                    content.save()
 
-                            for row in rows:
-                                columns = row.columns.all()
-                                row.id = None
-                                row.version = version
-                                row.save()
+            # Articles
+            for article in Article.objects.filter(site=template_site):
+                variants = article.variant_set.all()
+                article.id = None
+                article.site = site
 
-                                for column in columns:
-                                    contents = column.contents.all()
-                                    column.id = None
-                                    column.row = row
-                                    column.save()
+                # Change creation to the user creating the new site and reset modification
+                article.created_by = request.user
+                article.created_date = datetime.now()
+                article.modified_by = None
+                article.modified_date = None
 
-                                    for content in contents:
-                                        content.id = None
-                                        content.column = column
-                                        content.save()
+                article.save()
 
-                # Articles
-                for article in Article.objects.filter(site=template_site):
-                    variants = article.variant_set.all()
-                    article.id = None
-                    article.site = site
+                for variant in variants:
+                    versions = variant.version_set.all()
+                    variant.id = None
+                    variant.article = article
+                    variant.save()
 
-                    # Change creation to the user creating the new site and reset modification
-                    article.created_by = request.user
-                    article.created_date = datetime.now()
-                    article.modified_by = None
-                    article.modified_date = None
+                    for version in versions:
+                        rows = version.rows.all()
+                        version.id = None
+                        version.variant = variant
+                        version.save()
 
-                    article.save()
+                        for row in rows:
+                            columns = row.columns.all()
+                            row.id = None
+                            row.version = version
+                            row.save()
 
-                    for variant in variants:
-                        versions = variant.version_set.all()
-                        variant.id = None
-                        variant.article = article
-                        variant.save()
+                            for column in columns:
+                                contents = column.contents.all()
+                                column.id = None
+                                column.row = row
+                                column.save()
 
-                        for version in versions:
-                            rows = version.rows.all()
-                            version.id = None
-                            version.variant = variant
-                            version.save()
-
-                            for row in rows:
-                                columns = row.columns.all()
-                                row.id = None
-                                row.version = version
-                                row.save()
-
-                                for column in columns:
-                                    contents = column.contents.all()
-                                    column.id = None
-                                    column.row = row
-                                    column.save()
-
-                                    for content in contents:
-                                        content.id = None
-                                        content.column = column
-                                        content.save()
+                                for content in contents:
+                                    content.id = None
+                                    content.column = column
+                                    content.save()
 
             # Campaigns
             for campaign in Campaign.objects.filter(site=template_site):
@@ -294,8 +263,8 @@ def create(request):
                     campaign_text.campaign = campaign
                     campaign_text.save()
 
-            request.session.modified = True
-            return redirect('admin.sites.views.created', site.id)
+        request.session.modified = True
+        return redirect('admin.sites.views.created', site.id)
 
 def created(request, site):
     if not request.user.is_admin_in_forening(request.active_forening):

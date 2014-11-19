@@ -68,6 +68,7 @@
     action="{% url 'admin.sites.settings.views.save' active_site.id %}"
     method="post">
     {% csrf_token %}
+    <input type="hidden" name="edited_site" value="{{ active_site.id }}">
 
     {% for message in messages %}
       {% if message.message == 'settings_saved' %}
@@ -98,125 +99,16 @@
         <div class="alert alert-danger">
           I test-perioden <strong>må</strong> dere ha "<strong>.test.turistforeningen.no</strong>" bak domenet. For eksempel: <strong>http://stf.test.turistforeningen.no</strong>
         </div>
-      {% elif message.message == 'homepage_site_exists' %}
-        <div class="alert alert-danger">
-          Foreningen du valgte har allerede en annen hjemmeside.
-        </div>
       {% endif %}
     {% endfor %}
 
-    <div class="form-group">
-      <label for="site_forening" class="col-md-3 control-label">Tilknyttet forening</label>
-      <div class="col-md-5">
-        <select class="form-control" name="site_forening" id="site_forening">
-          {% for type in user.all_foreninger_sorted_with_type_data %}
-            {% if type.foreninger|length > 0 %}
-              <optgroup label="{{ type.name }}">
-                {% for forening in type.foreninger %}
-                  <option
-                    value="{{ forening.id }}"
-                    data-dnt-type="{{ type.code }}"
-                    {% if active_site.forening == forening %}
-                      selected
-                    {% endif %}>
-
-                    {{ forening.name }}
-                  </option>
-                {% endfor %}
-              </optgroup>
-            {% endif %}
-          {% endfor %}
-        </select>
-      </div>
-    </div>
-
-    <div class="form-group type" data-dnt-form-group="type">
-      <label class="col-md-3 control-label">Hva slags nettsted</label>
-      <div class="col-md-9">
-        {% for type in available_site_types %}
-          <div class="radio">
-            <label>
-              <input
-                type="radio"
-                name="type"
-                value="{{ type.0 }}"
-                {% if active_site.type == type.0 %}
-                  checked
-                {% endif %}>
-              {{ type.1 }}
-
-              {% if type.0 == 'forening' %}
-                <span
-                  class="has-homepage jq-hide"
-                  data-dnt-container="has-homepage-info">
-
-                  <span data-dnt-container="forening-name"></span>
-                  har allerede en hjemmeside
-                </span>
-              {% elif type.0 == 'mal' %}
-                <span class="help-block">
-                  <em>{{ type.1 }}</em> er kun tilgjengelig for Sherpa-administratorer.
-                </span>
-              {% endif %}
-            </label>
-          </div>
-        {% endfor %}
-      </div>
-    </div>
-
-    <div class="form-group{% if active_site.type != 'hytte' and active_site.type != 'kampanje' and active_site.type != 'mal' %} jq-hide{% endif %}" data-dnt-form-group="title">
-      <label class="col-md-3 control-label" for="title">Tittel</label>
-      <div class="col-md-5">
-        <input class="form-control input-lg" type="text" name="title" id="title" value="{{ active_site.get_title }}">
-      </div>
-    </div>
-
-    {% if user.perms.sherpa_admin %}
-      <div class="form-group{% if active_site.type != 'mal' %} jq-hide{% endif %}" data-dnt-form-group="template-type">
-        <label class="col-md-3 control-label" for="template_type">Mal for hva slags nettsted</label>
-        <div class="col-md-3">
-          <select class="form-control" name="template_type" id="template_type">
-            {% for template_type in template_types %}
-              <option
-                value="{{ template_type.0 }}"
-                {% if active_site.template_type == template_type.0 %}
-                  selected
-                {% endif %}>
-
-                {{ template_type.1 }}
-              </option>
-            {% endfor %}
-          </select>
-        </div>
-      </div>
-
-      <div
-        class="form-group{% if active_site.type != 'mal' %} jq-hide{% endif %}"
-        data-dnt-form-group="template-main">
-
-        <div class="col-md-offset-3 col-md-5">
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" name="template_main"{% if active_site.template_main %} checked{% endif %}>
-              Dette er hovedmalen for denne type nettsted
-              <span class="help-block">
-                Hvis det skal være flere maler for samme type nettsted må du velge hvilken som skal være hovedmal. Det er hovedmalen som blir automatisk valgt når brukere oppretter nye nettsteder.
-              </span>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-group{% if active_site.type != 'mal' %} jq-hide{% endif %}" data-dnt-form-group="template-description">
-        <label class="col-md-3 control-label" for="template_description">Beskrivelse for malen</label>
-        <div class="col-md-5">
-          <textarea class="form-control" name="template_description" id="template_description" rows="6">{{ active_site.template_description }}</textarea>
-        </div>
-      </div>
-    {% endif %}
+    {% include 'common/admin/sites/site-form-fields/forening.html' with include_labels=True edited_site=active_site %}
+    {% include 'common/admin/sites/site-form-fields/type.html' with include_labels=True edited_site=active_site %}
+    {% include 'common/admin/sites/site-form-fields/title.html' with label="Tittel" edited_site=active_site %}
+    {% include 'common/admin/sites/site-form-fields/template.html' with edited_site=active_site %}
 
     <div class="form-group">
-      <label class="col-md-3 control-label" for="domain">Domenenavn / adresse</label>
+      <label class="col-md-2 control-label" for="domain">Domenenavn / adresse</label>
       <div class="col-md-4">
         <input class="form-control input-lg" type="text" name="domain" id="domain" value="http://{{ active_site.domain }}">
         <p class="help-block">
@@ -226,7 +118,7 @@
     </div>
 
     <div class="form-group">
-      <label class="col-md-3 control-label">Publisering</label>
+      <label class="col-md-2 control-label">Publisering</label>
       <div class="col-md-4">
         <div class="checkbox">
           <label>
@@ -245,7 +137,7 @@
     </div>
 
     <div class="form-group">
-      <div class="col-md-offset-3 col-md-9">
+      <div class="col-md-offset-2 col-md-10">
         <button class="btn btn-success">
           Lagre nettstedsinnstillinger
         </button>
