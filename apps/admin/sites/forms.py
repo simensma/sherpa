@@ -149,9 +149,7 @@ class CreateSiteForm(SiteForm):
                 )
             else:
                 # Unknown verify_domain error code :(
-                logger.error(u"Ukjent domenevaliderings-feilkode '%s'" % result['error'],
-                    extra={'request': request}
-                )
+                logger.error(u"Ukjent domenevaliderings-feilkode '%s'" % result['error'])
                 raise forms.ValidationError(
                     "Domeneadressen er ikke gyldig, dobbeltsjekk at du har skrevet riktig",
                     code=result['error'],
