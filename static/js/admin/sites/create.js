@@ -36,6 +36,10 @@ $(function() {
     // Show/hide homepage type choice based on the default selected forening
     hideHomepageSite();
 
+    // Trigger visible form fields to reset the state in case we're displaying a submitted form
+    setFormFields();
+    setDefaultTemplate();
+
     /* Bind events */
 
     forening_select.select2();
