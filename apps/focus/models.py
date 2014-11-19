@@ -538,6 +538,17 @@ class Actor(models.Model):
         from focus.abstractions import ActorAddressClean
         return ActorAddressClean(self.address)
 
+    def clear_cache(self):
+        """This method should keep track of all cache keys related to an actor, and delete them.
+        So whenever you add a new actor-related key to the cache, remember to delete it here!
+        Someone is sure to forget to do that sometime, so please "synchronize" manually sometime."""
+        cache.delete('actor.%s' % self.memberid)
+        cache.delete('actor.services.%s' % self.memberid)
+        cache.delete('actor.children.%s' % self.memberid)
+        cache.delete('actor.balance.%s' % self.memberid)
+        for child in self.get_children():
+            child.clear_cache()
+
     @staticmethod
     def get_personal_members():
         """Returns Actor objects defined as personal members (has a service with one of the membership type codes).
@@ -568,19 +579,10 @@ class Actor(models.Model):
     class Meta:
         db_table = u'Actor'
 
-# This receiver should keep track of all cache keys related to an actor, and delete them.
-# So whenever you add a new actor-related key to the cache, remember to delete it here!
-# Someone is sure to forget to do that sometime, so please "synchronize" manually sometime.
 @receiver(post_save, sender=Actor, dispatch_uid="focus.models")
-def delete_actor_cache(sender, **kwargs):
-    cache.delete('actor.%s' % kwargs['instance'].memberid)
-    cache.delete('actor.services.%s' % kwargs['instance'].memberid)
-    cache.delete('actor.children.%s' % kwargs['instance'].memberid)
-    cache.delete('actor.balance.%s' % kwargs['instance'].memberid)
-    for child in kwargs['instance'].get_children():
-        cache.delete('actor.%s' % child.memberid)
-        cache.delete('actor.services.%s' % child.memberid)
-        cache.delete('actor.balance.%s' % child.memberid)
+def clear_actor_cache(sender, **kwargs):
+    """Clear the actor cache whenever updated"""
+    kwargs['instance'].clear_cache()
 
 class ActorService(models.Model):
     id = models.AutoField(primary_key=True, db_column=u'SeqNo')

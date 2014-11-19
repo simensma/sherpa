@@ -2,6 +2,7 @@
 from itertools import groupby
 from datetime import date
 import json
+import re
 
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
@@ -287,8 +288,11 @@ class User(AbstractBaseUser):
     def get_phone_home(self):
         return self.get_actor().get_phone_home()
 
-    def get_phone_mobile(self):
-        return self.get_actor().get_phone_mobile()
+    def get_phone_mobile(self, strip_whitespace=False):
+        phone_mobile = self.get_actor().get_phone_mobile()
+        if strip_whitespace:
+            phone_mobile = re.sub('\s', '', phone_mobile)
+        return phone_mobile
 
     def has_paid(self):
         """

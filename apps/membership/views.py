@@ -2,7 +2,6 @@
 import json
 import logging
 import sys
-import re
 
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -13,13 +12,12 @@ from django.conf import settings
 
 from sherpa.decorators import user_requires_login
 from foreninger.models import Forening
-from focus.models import FocusZipcode, Price, Actor
-from focus.util import ACTOR_ENDCODE_DUBLETT, DNT_CENTRAL_ID as DNT_CENTRAL_ID_FOCUS
+from focus.models import FocusZipcode, Price
+from focus.util import DNT_CENTRAL_ID as DNT_CENTRAL_ID_FOCUS
 from core.models import Zipcode
 from enrollment.models import State
 from membership.models import SMSServiceRequest
-from membership.util import send_sms_receipt, memberid_sms_count
-from user.models import User
+from membership.util import lookup_users_by_phone, send_sms_receipt, memberid_sms_count
 
 logger = logging.getLogger('sherpa')
 
@@ -91,11 +89,11 @@ def service(request):
     return render(request, 'central/membership/service.html')
 
 def memberid_sms(request):
-    # This is a membership service that lets you get your memberid by providing your phone number.
-    # Note that a lot of phone number entries in Focus are bogus (email, date of birth, or
-    # poorly formatted) and some are also foreign, which we allow for now.
-    # We are currently relying on the SMS service to fail if a bogus number
-    # happens to fall through.
+    """This is a membership service that lets you get your memberid by providing your phone number.
+    Note that a lot of phone number entries in Focus are bogus (email, date of birth, or
+    poorly formatted) and some are also foreign, which we allow for now.
+    We are currently relying on the SMS service to fail if a bogus number
+    happens to fall through."""
 
     # Robots etc, just redirect them
     if not 'phone_mobile' in request.POST:
@@ -114,43 +112,33 @@ def memberid_sms(request):
         sms_request.save()
         return HttpResponse(json.dumps({'status': 'too_high_frequency'}))
 
-    number = re.sub('\s', '', request.POST['phone_mobile'])
-    if number == '':
+    users = lookup_users_by_phone(request.POST['phone_mobile'])
+    if len(users) == 0:
         sms_request.save()
         return HttpResponse(json.dumps({'status': 'no_match'}))
-    # Note that we're excluding Actors with end_code 'dublett' manually here
-    # Note also that we're not filtering on Actor.get_personal_members()
-    actors = Actor.objects.raw(
-        "select * from Actor where REPLACE(MobPh, ' ', '') = %s AND EndCd != %s;", [number, ACTOR_ENDCODE_DUBLETT])
-    actors = list(actors) # Make sure the query has been performed
-    if len(actors) == 0:
-        sms_request.save()
-        return HttpResponse(json.dumps({'status': 'no_match'}))
-    elif len(actors) == 1:
-        actor = actors[0]
-    elif len(actors) > 1:
-        # Usually, this will be because children have the same number as their parents.
+    elif len(users) == 1:
+        user = users[0]
+    elif len(users) > 1:
+        # Usually, this will be because household members have the same number as their parents.
         # Check if any of these are related, and in that case, use the parent.
-        actor = None
-        for actor_to_check in actors:
-            if actor_to_check.get_parent_memberid() is not None:
-                parent = Actor.objects.get(memberid=actor_to_check.get_parent_memberid())
-                if parent in actors:
-                    # Ah, this parent is in the result set - probably the one we want, use it
-                    actor = parent
-                    break
-        if actor is None:
+        user = None
+        for user_to_check in users:
+            if user_to_check.is_household_member() and user_to_check.get_parent() in users:
+                # Ah, this parent is in the result set - probably the one we want, use it
+                user = user_to_check.get_parent()
+                break
+        if user is None:
             # Multiple hits, and they are not related. What do? Pick a random hit for now.
-            actor = actors[0]
+            user = users[0]
     else:
         raise Exception("A negative number of actors resulted from raw query. This is very strange, please investigate immediately.")
-    user = User.get_or_create_inactive(memberid=actor.memberid)
+
     sms_request.memberid = user.memberid
     sms_request.save()
 
     # Delete the actor cache in case the number was recently updated; the cache may differ from our raw lookup above
-    cache.delete('actor.%s' % actor.memberid)
-    return send_sms_receipt(request, user)
+    user.get_actor().clear_cache()
+    return HttpResponse(json.dumps(send_sms_receipt(request, user)))
 
 @user_requires_login()
 def memberid_sms_userpage(request):
@@ -176,4 +164,4 @@ def memberid_sms_userpage(request):
             'status': 'missing_number'
         }))
     sms_request.save()
-    return send_sms_receipt(request, user)
+    return HttpResponse(json.dumps(send_sms_receipt(request, user)))

@@ -13,6 +13,10 @@ from django.conf import settings
 
 import requests
 
+from focus.models import Actor
+from focus.util import ACTOR_ENDCODE_DUBLETT
+from user.models import User
+
 logger = logging.getLogger('sherpa')
 
 # Simple security - if the same person (IP) sends > 10 requests within 30 minutes,
@@ -27,8 +31,27 @@ def memberid_sms_count(ip_address):
     cache.set('memberid_sms_requests.%s' % ip_address, lookups, 60 * 30)
     return lookups
 
+def lookup_users_by_phone(phone_number):
+    """Attempt to match the given phone number in an arbitrary format to one or more members"""
+    phone_number = re.sub('\s', '', phone_number)
+    if phone_number == '':
+        return []
+
+    # Note that we're excluding Actors with end_code 'dublett' manually here
+    # Note also that we're not filtering on Actor.get_personal_members()
+    actors = Actor.objects.raw(
+        "select * from Actor where REPLACE(MobPh, ' ', '') = %s AND EndCd != %s;",
+        [phone_number, ACTOR_ENDCODE_DUBLETT]
+    )
+
+    # Convert the matching actors to users
+    return [User.get_or_create_inactive(memberid=actor.memberid) for actor in actors]
+
 def send_sms_receipt(request, user):
-    number = re.sub('\s', '', user.get_phone_mobile())
+    """Send an SMS receipt for membership to the given user. Note that if the user has children, their status will
+    also be included. However, if this is a household member, we'll send the receipt to the member without further
+    information about the related and/or parent members."""
+    number = user.get_phone_mobile(strip_whitespace=True)
     try:
         context = RequestContext(request, {
             'mob_user': user,
@@ -45,10 +68,8 @@ def send_sms_receipt(request, user):
                     'sms_request_object': r
                 }
             )
-            return HttpResponse(json.dumps({
-                'status': 'service_fail'
-            }))
-        return HttpResponse(json.dumps({'status': 'ok'}))
+            return {'status': 'service_fail'}
+        return {'status': 'ok'}
     except requests.ConnectionError:
         logger.error(u"Kunne ikke sende medlemsnummer på SMS: requests.ConnectionError",
             exc_info=sys.exc_info(),
@@ -57,7 +78,4 @@ def send_sms_receipt(request, user):
                 'number': number
             }
         )
-        return HttpResponse(json.dumps({
-            'status': 'connection_error'
-        }))
-
+        return {'status': 'connection_error'}
