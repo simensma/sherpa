@@ -138,7 +138,7 @@ def memberid_sms(request):
 
     # Delete the actor cache in case the number was recently updated; the cache may differ from our raw lookup above
     user.get_actor().clear_cache()
-    return send_sms_receipt(request, user)
+    return HttpResponse(json.dumps(send_sms_receipt(request, user)))
 
 @user_requires_login()
 def memberid_sms_userpage(request):
@@ -164,4 +164,4 @@ def memberid_sms_userpage(request):
             'status': 'missing_number'
         }))
     sms_request.save()
-    return send_sms_receipt(request, user)
+    return HttpResponse(json.dumps(send_sms_receipt(request, user)))

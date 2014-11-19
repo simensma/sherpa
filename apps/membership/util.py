@@ -68,10 +68,8 @@ def send_sms_receipt(request, user):
                     'sms_request_object': r
                 }
             )
-            return HttpResponse(json.dumps({
-                'status': 'service_fail'
-            }))
-        return HttpResponse(json.dumps({'status': 'ok'}))
+            return {'status': 'service_fail'}
+        return {'status': 'ok'}
     except requests.ConnectionError:
         logger.error(u"Kunne ikke sende medlemsnummer på SMS: requests.ConnectionError",
             exc_info=sys.exc_info(),
@@ -80,7 +78,4 @@ def send_sms_receipt(request, user):
                 'number': number
             }
         )
-        return HttpResponse(json.dumps({
-            'status': 'connection_error'
-        }))
-
+        return {'status': 'connection_error'}
