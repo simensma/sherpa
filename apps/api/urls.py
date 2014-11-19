@@ -10,8 +10,8 @@ urlpatterns = patterns('',
         'versions': [
             {'version': 'v0', 'resource': 'members'},
             {'version': 'v1', 'resource': 'members'}
-        ]}
-    ),
+        ]
+    }),
     url(r'^medlemskap/$', 'api.views.header_versioning', kwargs={
         'versions': [
             {'version': 'v1', 'resource': 'membership'}
@@ -27,13 +27,13 @@ urlpatterns = patterns('',
     url(r'^forening/$', 'api.views.header_versioning', kwargs={
         'versions': [
             {'version': 'v1', 'resource': 'forening'}
-        ]}
-    ),
+        ]
+    }),
     url(r'^medlemsnummer/$', 'api.views.header_versioning', kwargs={
         'versions': [
             {'version': 'v1', 'resource': 'memberid'}
-        ]}
-    ),
+        ]
+    }),
 
     # URL versioning
 
