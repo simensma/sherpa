@@ -1,6 +1,6 @@
 # encoding: utf-8
 from itertools import groupby
-from datetime import date
+from datetime import datetime, date
 import json
 import re
 
@@ -514,7 +514,7 @@ class User(AbstractBaseUser):
         if foreninger is None:
             if self.has_perm('sherpa_admin'):
                 # Sherpa admins have access to all foreninger
-                foreninger = Forening.objects.all()
+                foreninger = Forening.objects.prefetch_related('sites')
                 for forening in foreninger:
                     forening.role = 'admin'
             else:
@@ -553,6 +553,9 @@ class User(AbstractBaseUser):
 
     def all_foreninger_sorted(self):
         return Forening.sort(self.all_foreninger())
+
+    def all_foreninger_sorted_with_type_data(self):
+        return Forening.sort_with_type_data(self.all_foreninger())
 
     def children_foreninger(self):
         """

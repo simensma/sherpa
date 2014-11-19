@@ -1,0 +1,64 @@
+{% load int %}
+
+<div class="form-group{% if form.forening.errors %} has-error{% endif %}">
+
+  {% if include_labels %}
+    <label class="col-md-2 control-label" for="site_forening">Tilknyttet forening</label>
+    <div class="col-md-3">
+  {% else %}
+    <div class="col-md-offset-2 col-md-3">
+  {% endif %}
+
+    <select class="form-control" name="forening" id="forening">
+      {% for type in user.all_foreninger_sorted_with_type_data %}
+        {% if type.foreninger|length > 0 %}
+          <optgroup label="{{ type.name }}">
+            {% for forening in type.foreninger %}
+              <option
+                value="{{ forening.id }}"
+                data-dnt-type="{{ type.code }}"
+                {% if forening.get_homepage_site_prefetched %}
+                  data-dnt-homepage="{{ forening.get_homepage_site.id }}"
+                {% endif %}
+
+                {% if form.forening.value %}
+
+                  {# Posted form has highest precedence #}
+                  {% if form.forening.value|int == forening.id %}
+                    selected
+                  {% endif %}
+
+                {% elif edited_site %}
+
+                  {# Currently editing existing site #}
+                  {% if edited_site.forening == forening %}
+                    selected
+                  {% endif %}
+
+                {% else %}
+
+                  {# Default to the active forening #}
+                  {% if active_forening == forening %}
+                    selected
+                  {% endif %}
+                {% endif %}>
+
+                {{ forening.name }}
+              </option>
+            {% endfor %}
+          </optgroup>
+        {% endif %}
+      {% endfor %}
+    </select>
+    {% if form.forening.errors %}
+      <span class="help-block has-error">
+        {% for error in form.forening.errors %}
+          {{ error }}
+          {% if not forloop.last %}
+            <br>
+          {% endif %}
+        {% endfor %}
+      </span>
+    {% endif %}
+  </div>
+</div>

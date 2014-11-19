@@ -204,7 +204,7 @@ class CheckSherpaPermissions(object):
 
             except Site.DoesNotExist:
                 # The specified site doesn't exist
-                return redirect('admin.views.setup_site')
+                return redirect('admin.sites.views.create')
 
 class DeactivatedEnrollment():
     def process_request(self, request):

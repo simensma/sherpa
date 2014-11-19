@@ -26,8 +26,27 @@
 
   {% if user|role_for:active_forening == 'admin' %}
     <p class="pull-right">
-      <a href="{% url 'admin.views.setup_site' %}" class="btn btn-primary">Opprett et nytt nettsted tilknyttet {{ active_forening.name }}</a>
+      <a href="{% url 'admin.sites.views.create' %}" class="btn btn-primary">
+        Opprett et nytt nettsted
+      </a>
     </p>
+  {% endif %}
+
+  {% if user.perms.sherpa_admin and missing_templates|length > 0 %}
+    <div class="alert alert-danger">
+      <p>
+        <strong>Følgende nettstedstyper mangler en hovedmal:</strong>
+      </p>
+      <ul>
+        {% for missing_template in missing_templates %}
+          <li>{{ missing_template.1 }}</li>
+        {% endfor %}
+      </ul>
+      <p>
+        Dette må fikses! Hvis noen forsøker å opprette et nettsted med innhold basert på en av disse malene, vil de ikke få noe innhold likevel.<br>
+        Du ser denne beskjeden fordi du er Sherpa-administrator.
+      </p>
+    </div>
   {% endif %}
 
   <table class="table table-striped sites">
@@ -72,7 +91,13 @@
             </li>
           </ul>
         </td>
-        <td>{{ site.get_type }}</td>
+        <td>
+          {{ site.get_type }}
+          {% if site.type == 'mal' %}
+            {# Ugly long line to avoid space after parentheses #}
+            ({% if site.template_main %}<strong>Hovedmal:</strong> {% endif %}{{ site.get_template_type }})
+          {% endif %}
+        </td>
         <td>{{ site.domain }}</td>
         <td>
           {% if site.is_published %}
@@ -90,7 +115,7 @@
         <td colspan="3">
           <em>{{ active_forening.name }} har ingen nettsteder.
           {% if user|role_for:active_forening == 'admin' %}
-            <a href="{% url 'admin.views.setup_site' %}">Opprett en hjemmeside for {{ active_forening.name }}</a></em>
+            <a href="{% url 'admin.sites.views.create' %}">Opprett en hjemmeside for {{ active_forening.name }}</a></em>
           {% endif %}
         </td>
       </tr>

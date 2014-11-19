@@ -182,6 +182,10 @@ class Forening(models.Model):
         else:
             return homepage_site
 
+    def get_homepage_site_prefetched(self):
+        """Convenience method for templates"""
+        return self.get_homepage_site(prefetched=True)
+
     def get_sites_sorted(self):
         return Site.sort(self.sites.all())
 

@@ -1,0 +1,8 @@
+<div class="form-group{% if edited_site.type != 'hytte' and edited_site.type != 'kampanje' and edited_site.type != 'mal' %} jq-hide{% endif %}" data-dnt-form-group="title">
+  <label class="col-md-2 control-label" for="title">
+    {{ label }}
+  </label>
+  <div class="col-md-5">
+    <input class="form-control input-lg" type="text" name="title" id="title" value="{{ edited_site.get_title }}">
+  </div>
+</div>

@@ -1,7 +1,7 @@
 from django.contrib import messages
-from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect
 
+from admin.sites.forms import SiteForm
 from core.models import Site
 
 def index(request, site):
@@ -9,16 +9,22 @@ def index(request, site):
 
     available_site_types = []
     for t in Site.TYPE_CHOICES:
-        # The forening type choice shouldn't be available if the current site has an *other* homepage site
-        if t[0] == 'forening':
-            homepage_site = request.active_forening.get_homepage_site()
-            if homepage_site is not None and homepage_site != active_site:
+        if t[0] == 'mal':
+            if not request.user.has_perm('sherpa_admin'):
                 continue
         available_site_types.append(t)
 
+    if 'form_data' in request.session:
+        form = request.session['form_data']
+        del request.session['form_data']
+    else:
+        form = SiteForm(request.user, auto_id='%s')
+
     context = {
+        'form': form,
         'active_site': active_site,
         'available_site_types': available_site_types,
+        'template_types': Site.TEMPLATE_TYPE_CHOICES,
     }
 
     if 'message_context' in request.session:
@@ -32,19 +38,28 @@ def save(request, site):
         return redirect('admin.sites.settings.views.index', site)
 
     active_site = Site.objects.get(id=site)
+    form = SiteForm(request.user, request.POST, auto_id='%s')
+
+    if not form.is_valid():
+        request.session['form_data'] = form
+        return redirect('admin.sites.settings.views.index', site)
+
+    site_forening = form.cleaned_data['forening']
+    type = form.cleaned_data['type']
+    title = form.cleaned_data['title']
+    template_main = form.cleaned_data['template_main']
+    template_type = form.cleaned_data['template_type']
+    template_description = form.cleaned_data['template_description']
+
     domain = request.POST['domain'].strip().lower().replace('http://', '').rstrip('/')
     errors = False
 
-    type = request.POST['type']
-    if type not in [t[0] for t in Site.TYPE_CHOICES]:
-        raise PermissionDenied
-
+    active_site.forening = site_forening
     active_site.type = type
-
-    if type in ['hytte', 'kampanje']:
-        active_site.title = request.POST['title'].strip()
-    else:
-        active_site.title = ''
+    active_site.title = title
+    active_site.template_main = template_main
+    active_site.template_type = template_type
+    active_site.template_description = template_description
 
     if domain == active_site.domain:
         # Special case; the domain wasn't changed - so just pretend that it's updated
@@ -62,6 +77,17 @@ def save(request, site):
 
     active_site.is_published = 'published' in request.POST
     active_site.save()
+
+    # If this is a main template, clear other templates of this type in case any of them were previous main
+    if active_site.type == 'mal' and active_site.template_main:
+        Site.objects.filter(
+            type=active_site.type,
+            template_type=active_site.template_type,
+        ).exclude(
+            id=active_site.id,
+        ).update(
+            template_main=False
+        )
 
     request.session.modified = True
     if not errors:

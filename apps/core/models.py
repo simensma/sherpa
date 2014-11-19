@@ -26,6 +26,7 @@ class Site(models.Model):
         ('forening', u'Foreningens hjemmeside'), # Zero or one per forening
         ('hytte', u'Hjemmeside for en betjent hytte'),
         ('kampanje', u'Kampanjeside'),
+        ('mal', u'Mal for nye nettsteder'), # Should only be available to sherpa-admins
     )
     type = models.CharField(max_length=255, choices=TYPE_CHOICES)
     TEMPLATE_CHOICES = (
@@ -41,6 +42,20 @@ class Site(models.Model):
     # change accordingly; a warning label will be shown on all pages and foreninger will refer to the old sherpa2 URL
     # as its homepage instead of the site domain (the latter applies only for type='forening').
     is_published = models.BooleanField(default=False)
+
+    # The template_* fields are only applicable for the 'mal' type. When creating a template site, sherpa-admins will
+    # choose type and add a description to be shown to the user when they are able to choose this template.
+    # if there are multiple templates for a single template_type, template_main should be True for the one we should
+    # default to.
+    TEMPLATE_TYPE_CHOICES = (
+        ('forening', 'Foreninger'),
+        ('turlag', 'Turlag/turgrupper'),
+        ('hytte', 'Betjent hytte'),
+        ('kampanje', 'Kampanje'),
+    )
+    template_main = models.BooleanField(default=False)
+    template_type = models.CharField(max_length=255, default='')
+    template_description = models.CharField(max_length=1023, default='')
 
     # Hardcoded site IDs that we may need to know
     DNT_CENTRAL_ID = 1
@@ -68,6 +83,11 @@ class Site(models.Model):
         else:
             raise Exception("Unrecognized site type '%s'" % self.type)
 
+    def get_template_type(self):
+        if self.type != 'mal':
+            raise Exception("Doesn't make sense to call this method for site of type '%s'" % self.type)
+        return [t for t in Site.TEMPLATE_TYPE_CHOICES if t[0] == self.template_type][0][1]
+
     def get_title(self):
         """Return the site title based on what type the site is"""
         if self.type == 'forening':
@@ -78,6 +98,8 @@ class Site(models.Model):
             # input title for hytte-site when creating new sites.
             return self.title
         elif self.type == 'kampanje':
+            return self.title
+        elif self.type == 'mal':
             return self.title
         else:
             raise Exception("Unrecognized site type '%s'" % self.type)

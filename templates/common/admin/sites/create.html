@@ -1,0 +1,189 @@
+{% extends 'common/admin/layout.html' %}
+
+{% block admin_menu %}{% with 'sites.sites.create' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
+
+{% block extra_js %}
+  <script src="{{ STATIC_URL }}js/admin/sites/create.js"></script>
+{% endblock %}
+
+{% block body %}
+
+<div class="setup-site">
+  <div class="row">
+    <div class="col-lg-12">
+
+      <h1>Sett opp nytt nettsted <small>foreningens hjemmeside, en hyttes hjemmeside eller en kampanjeside</small></h1>
+      <ol class="breadcrumb">
+        <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
+        <li><a href="{% url 'admin.sites.views.index' %}">Nettsteder</a></li>
+        <li><a href="{% url 'admin.sites.views.create' %}">Sett opp nytt nettsted</a></li>
+      </ol>
+
+      <form
+        class="form-dnt-default form-horizontal"
+        data-aktivitet-id="{{ aktivitet.id }}"
+        action="{% url 'admin.sites.views.create' %}"
+        method="post">
+        {% csrf_token %}
+
+        <div class="section">
+
+          <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+              <h2>1. Hvilken forening skal nettstedet tilhøre?</h2>
+            </div>
+          </div>
+
+          {% include 'common/admin/sites/site-form-fields/forening.html' with include_labels=False %}
+
+        </div><!-- /.section -->
+
+        <div class="section">
+
+          <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+              <h2>2. Hva slags nettsted vil du opprette?</h2>
+            </div>
+          </div>
+
+          {% include 'common/admin/sites/site-form-fields/type.html' with include_labels=False %}
+          {% include 'common/admin/sites/site-form-fields/title.html' with label="Tittel for nettstedet" %}
+
+          <div class="form-group jq-hide" data-dnt-form-group="template">
+            <label class="col-md-2 control-label">Innhold</label>
+            <div class="col-md-6">
+              <div class="checkbox">
+                <label>
+                  <input
+                    type="checkbox"
+                    name="use-template"
+                    data-dnt-uncheck-warning="Er du sikker?\n\nVi anbefaler at du oppretter siden med eksempelinnholdet. Da er det mye lettere å se hvordan nettstedet kan bygges opp, og du slipper å måtte starte med blanke ark.\n\nHvis du er helt sikker på at du ikke vil starte med eksempelinnhold, velg OK eller Ja."
+                    checked>
+                  Opprett litt eksempelinnhold automatisk
+                </label>
+              </div>
+              <span class="help-block" data-dnt-container="default-template">
+                Innholdet hjelper deg å se hvordan nettstedet kan se ut og er enkelt å endre på. Vi velger automatisk innhold som passer til nettstedet for deg, eller så kan du <a href="javascript:undefined" data-dnt-trigger="choose-template">velge selv</a>.
+              </span>
+              <div class="jq-hide" data-dnt-container="choose-template">
+                {% for site_template in site_templates %}
+                  <div class="radio">
+                    <label>
+                      <input
+                        {% if site_template.template_main %}
+                          data-dnt-template-main
+                        {% endif %}
+                        data-dnt-template-type="{{ site_template.template_type }}"
+                        type="radio"
+                        name="template"
+                        value="{{ site_template.id }}">
+
+                      {{ site_template.get_title }}
+
+                      {% if site_template.template_description %}
+                        <span class="help-block">
+                          {{ site_template.template_description|linebreaksbr }}
+                        </span>
+                      {% endif %}
+                    </label>
+                  </div>
+                {% endfor %}
+                {% comment %}
+                  The following checkbox will be checked if we're automatically trying to select an expected template
+                  which doesn't exist. This is a sherpa-admin error (we should always maintain a set of site templates
+                  for each site type a user chooses here). We won't handle it very gracefully, just enough to make
+                  sure there are no technical errors.
+                  The missing-template-type input will be used to log which template that didn't exist.
+                {% endcomment %}
+                <input class="jq-hide" type="radio" name="template" value="">
+                <input type="hidden" name="missing-template-type" value="">
+              </div>
+            </div>
+          </div>
+
+          {% include 'common/admin/sites/site-form-fields/template.html' %}
+
+        </div><!-- /.section -->
+
+        <div class="section">
+
+          <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+              <h2>3. Velg et <strong>midlertidig</strong> domene for nettstedet</h2>
+            </div>
+          </div>
+
+          <div class="form-group domain{% if form.domain.errors %} has-error{% endif %}">
+            <div class="col-md-offset-2 col-md-10">
+
+              {# Force subdomains for now. When we're ready, we can let the user choose between subdomain or a FQDN #}
+              <input type="hidden" name="domain-type" value="subdomain">
+
+              <p>
+                Dette er et midlertidig domene for nettstedet, som kun skal benyttes i en testperiode mens du jobber med å sette det opp.
+              </p>
+
+              <p>
+                Når dere er klare for å publisere nettstedet, tar dere kontakt med DNT Sentralt for å ta i bruk det faktiske domenet.
+              </p>
+
+              <!--
+              <div class="radio">
+                <label>
+                  <input type="radio" name="domain-type" value="subdomain" checked>
+                  Domene under turistforeningen.no (vil fungere automatisk). Eksempel: <strong>http://stavanger.test.turistforeningen.no</strong>
+                </label>
+              </div>
+              <div class="radio">
+                <label>
+                  <input type="radio" name="domain-type" value="fqdn">
+                  Et eget domene (må settes opp selv). Eksempel: <strong>http://www.stavanger-turistforening.no</strong>
+                </label>
+              </div>
+              -->
+
+              {% if form.domain.errors %}
+                <div class="alert alert-danger">
+                  {% for error in form.domain.errors %}
+                    {{ error }}
+                    {% if not forloop.last %}
+                      <br>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              {% endif %}
+
+              <div class="input-group domain-input">
+                <span class="input-group-addon">
+                  http://
+                </span>
+                <input type="text" class="form-control" name="domain" value="{{ form.domain.value|default:"" }}" placeholder="forening">
+                <span class="input-group-addon subdomain-tail">
+                  .test.turistforeningen.no
+                </span>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+              <button
+                class="btn btn-success btn-lg"
+                type="submit"
+                data-enter-domain-warning="Velg hvilket domene du ønsker at nettstedet skal ha. Kontakt oss via den røde boksen til høyre på skjermen hvis du lurer på hva dette bør være.">
+
+                Opprett nytt nettsted!
+              </button>
+            </div>
+          </div>
+
+        </div><!-- /.section -->
+
+      </form>
+
+    </div>
+  </div><!-- /.row -->
+</div><!-- /.setup-site -->
+
+{% endblock %}

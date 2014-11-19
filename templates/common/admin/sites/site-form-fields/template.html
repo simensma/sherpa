@@ -1,0 +1,71 @@
+{% if user.perms.sherpa_admin %}
+  <div
+    class="
+      form-group
+      {% if not edited_site or edited_site.type != 'mal' %}
+        jq-hide
+      {% endif %}
+      {% if form.template_type.errors %}
+        has-error
+      {% endif %}"
+    data-dnt-form-group="template-type">
+
+    <label class="col-md-2 control-label" for="template_type">Mal for hva slags nettsted</label>
+    <div class="col-md-3">
+      <select class="form-control" name="template_type" id="template_type">
+        {% for template_type in template_types %}
+          <option
+            value="{{ template_type.0 }}"
+            {% if edited_site.template_type == template_type.0 %}
+              selected
+            {% endif %}>
+
+            {{ template_type.1 }}
+          </option>
+        {% endfor %}
+      </select>
+
+      {% if form.template_type.errors %}
+        <span class="help-block has-error">
+          {% for error in form.template_type.errors %}
+            {{ error }}
+            {% if not forloop.last %}
+              <br>
+            {% endif %}
+          {% endfor %}
+        </span>
+      {% endif %}
+    </div>
+  </div>
+
+  <div
+    class="form-group{% if not edited_site or edited_site.type != 'mal' %} jq-hide{% endif %}"
+    data-dnt-form-group="template-main">
+
+    <div class="col-md-offset-2 col-md-5">
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" name="template_main"{% if not edited_site or edited_site.template_main %} checked{% endif %}>
+          Dette er hovedmalen for denne type nettsted
+          <span class="help-block">
+            Hvis det skal være flere maler for samme type nettsted må du velge hvilken som skal være hovedmal. Det er hovedmalen som blir automatisk valgt når brukere oppretter nye nettsteder.
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="form-group{% if not edited_site or edited_site.type != 'mal' %} jq-hide{% endif %}"
+    data-dnt-form-group="template-description">
+
+    <label class="col-md-2 control-label" for="template_description">Beskrivelse for malen</label>
+    <div class="col-md-5">
+      <textarea
+        class="form-control"
+        name="template_description"
+        id="template_description"
+        rows="6">{{ edited_site.template_description }}</textarea>
+    </div>
+  </div>
+{% endif %}

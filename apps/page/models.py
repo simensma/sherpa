@@ -232,7 +232,7 @@ def delete_row(sender, **kwargs):
     Column.objects.filter(row=kwargs['instance']).delete()
 
 class Column(models.Model):
-    row = models.ForeignKey('page.Row')
+    row = models.ForeignKey('page.Row', related_name='columns')
     span = models.IntegerField()
     offset = models.IntegerField()
     order = models.IntegerField()
@@ -251,7 +251,7 @@ def delete_column(sender, **kwargs):
     Content.objects.filter(column=kwargs['instance']).delete()
 
 class Content(models.Model):
-    column = models.ForeignKey('page.Column')
+    column = models.ForeignKey('page.Column', related_name='contents')
     content = models.TextField()
     type = models.CharField(max_length=255, choices=(('widget', 'Widget'), ('html', 'HTML'), ('image', 'Image'), ('title', 'Title')))
     # Note: 'order' should be unique, but it's not enforced because
