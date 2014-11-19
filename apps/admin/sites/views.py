@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 from datetime import datetime
 import logging
+import json
 
 from django.conf import settings
 from django.core.cache import cache
@@ -194,6 +195,19 @@ def create(request):
                                 for content in contents:
                                     content.id = None
                                     content.column = column
+
+                                    # For aktiviteteslisting-widgets, force arranger-filter to the new site's related
+                                    # forening
+                                    if content.type == 'widget':
+                                        parsed_content = json.loads(content.content)
+                                        if parsed_content['widget'] == 'aktivitet_listing':
+                                            # Note that the list of ids contains strings, because we forgot to convert
+                                            # it to int in the widget-editor save logic, but that's not a problem since
+                                            # the filter lookup will implicitly convert it. So force it to str to be
+                                            # consistent
+                                            parsed_content['foreninger'] = [str(site.forening.id)]
+                                            content.content = json.dumps(parsed_content)
+
                                     content.save()
 
             # Articles
@@ -237,6 +251,19 @@ def create(request):
                                 for content in contents:
                                     content.id = None
                                     content.column = column
+
+                                    # For aktiviteteslisting-widgets, force arranger-filter to the new site's related
+                                    # forening
+                                    if content.type == 'widget':
+                                        parsed_content = json.loads(content.content)
+                                        if parsed_content['widget'] == 'aktivitet_listing':
+                                            # Note that the list of ids contains strings, because we forgot to convert
+                                            # it to int in the widget-editor save logic, but that's not a problem since
+                                            # the filter lookup will implicitly convert it. So force it to str to be
+                                            # consistent
+                                            parsed_content['foreninger'] = [str(site.forening.id)]
+                                            content.content = json.dumps(parsed_content)
+
                                     content.save()
 
             # Campaigns
