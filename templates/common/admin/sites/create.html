@@ -176,9 +176,15 @@
               </div>
               -->
 
-              <p class="domain-input">
-                http:// <input type="text" class="form-control" name="domain" value="{{ domain }}" placeholder="forening"> <span class="subdomain-tail">.test.turistforeningen.no</span>
-              </p>
+              <div class="input-group domain-input">
+                <span class="input-group-addon">
+                  http://
+                </span>
+                <input type="text" class="form-control" name="domain" value="{{ domain }}" placeholder="forening">
+                <span class="input-group-addon subdomain-tail">
+                  .test.turistforeningen.no
+                </span>
+              </div>
 
             </div>
           </div>
