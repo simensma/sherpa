@@ -3,6 +3,6 @@
     {{ label }}
   </label>
   <div class="col-md-5">
-    <input class="form-control input-lg" type="text" name="title" id="title" value="{{ edited_site.get_title }}">
+    <input class="form-control input-lg" type="text" name="title" id="title" value="{% firstof form.title.value edited_site.get_title %}">
   </div>
 </div>
