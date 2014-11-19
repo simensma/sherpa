@@ -56,6 +56,12 @@ class Page(MPTTModel):
 
     active_version = property(get_active_version)
 
+    def get_url(self):
+        if self.slug == '':
+            return '/'
+        else:
+            return '/%s/' % self.slug
+
     @staticmethod
     def on(site):
         return Page.objects.filter(site=site)
