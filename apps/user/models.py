@@ -510,7 +510,7 @@ class User(AbstractBaseUser):
         if foreninger is None:
             if self.has_perm('sherpa_admin'):
                 # Sherpa admins have access to all foreninger
-                foreninger = Forening.objects.all()
+                foreninger = Forening.objects.prefetch_related('sites')
                 for forening in foreninger:
                     forening.role = 'admin'
             else:
