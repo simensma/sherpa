@@ -9,6 +9,37 @@
   line-height: 1.42857143;
 }
 
+body {
+  padding-top: 50px;
+}
+
+div.navbar-sherpa {
+  max-height: 50px;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 100;
+
+  .navbar-brand {
+    background-image: url('/static/img/admin/topbar_dnt_logo_2x.png');
+    background-repeat: no-repeat;
+    min-height: 50px;
+    padding: 15px 15px 15px 60px;
+    background-size: 50px;
+    line-height: 18px;
+
+  }
+
+  @media (min-width: 768px) {
+    > .container .navbar-brand,
+    > .container-fluid .navbar-brand {
+      margin-left: 0;
+    }
+    > .container .navbar-right,
+    > .container-fluid .navbar-right {
+      margin-right: 0;
+    }
+  }
+}
+
 div.editor-header {
   @editor-form-background-color: #f8f8f8;
   @editor-form-border-color: #e7e7e7;
@@ -21,6 +52,15 @@ div.editor-header {
 
   label {
     cursor: pointer;
+  }
+
+  div, span, a, label, button, input, select, li, p, strong {
+    font-family: "Open Sans", sans-serif !important;
+    font-size: 14px !important;
+  }
+
+  div.tooltip-inner {
+    font-size: 12px !important;
   }
 
   .fields {
@@ -48,7 +88,7 @@ div.editor-header {
 
     &.affix {
       position: fixed;
-      top: 0;
+      top: 50px; // Sherpa navbar height
       left: 0;
       width: 100%;
     }
@@ -112,9 +152,12 @@ div.editor-header {
               }
 
               .close {
-                top: 2px;
+                top: 0;
                 right: 0;
-                font-size: 21px !important;
+
+                span {
+                  font-size: 21px !important;
+                }
               }
             }
 
