@@ -113,35 +113,32 @@ def memberid_sms(request):
         sms_request.save()
         return HttpResponse(json.dumps({'status': 'too_high_frequency'}))
 
-    actors = lookup_user_by_phone(request.POST['phone_mobile'])
-    actors = list(actors) # Make sure the query has been performed
-    if len(actors) == 0:
+    users = lookup_user_by_phone(request.POST['phone_mobile'])
+    if len(users) == 0:
         sms_request.save()
         return HttpResponse(json.dumps({'status': 'no_match'}))
-    elif len(actors) == 1:
-        actor = actors[0]
-    elif len(actors) > 1:
-        # Usually, this will be because children have the same number as their parents.
+    elif len(users) == 1:
+        user = users[0]
+    elif len(users) > 1:
+        # Usually, this will be because household members have the same number as their parents.
         # Check if any of these are related, and in that case, use the parent.
-        actor = None
-        for actor_to_check in actors:
-            if actor_to_check.get_parent_memberid() is not None:
-                parent = Actor.objects.get(memberid=actor_to_check.get_parent_memberid())
-                if parent in actors:
-                    # Ah, this parent is in the result set - probably the one we want, use it
-                    actor = parent
-                    break
-        if actor is None:
+        user = None
+        for user_to_check in users:
+            if user_to_check.is_household_member() and user_to_check.get_parent() in users:
+                # Ah, this parent is in the result set - probably the one we want, use it
+                user = user_to_check.get_parent()
+                break
+        if user is None:
             # Multiple hits, and they are not related. What do? Pick a random hit for now.
-            actor = actors[0]
+            user = users[0]
     else:
         raise Exception("A negative number of actors resulted from raw query. This is very strange, please investigate immediately.")
-    user = User.get_or_create_inactive(memberid=actor.memberid)
+
     sms_request.memberid = user.memberid
     sms_request.save()
 
     # Delete the actor cache in case the number was recently updated; the cache may differ from our raw lookup above
-    cache.delete('actor.%s' % actor.memberid)
+    user.get_actor().clear_cache()
     return send_sms_receipt(request, user)
 
 @user_requires_login()

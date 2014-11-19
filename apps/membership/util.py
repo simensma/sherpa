@@ -15,6 +15,7 @@ import requests
 
 from focus.models import Actor
 from focus.util import ACTOR_ENDCODE_DUBLETT
+from user.models import User
 
 logger = logging.getLogger('sherpa')
 
@@ -42,7 +43,9 @@ def lookup_user_by_phone(phone_number):
         "select * from Actor where REPLACE(MobPh, ' ', '') = %s AND EndCd != %s;",
         [phone_number, ACTOR_ENDCODE_DUBLETT]
     )
-    return actors
+
+    # Convert the matching actors to users
+    return [User.get_or_create_inactive(memberid=actor.memberid) for actor in actors]
 
 def send_sms_receipt(request, user):
     number = re.sub('\s', '', user.get_phone_mobile())
