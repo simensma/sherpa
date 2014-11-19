@@ -1,12 +1,8 @@
-import json
-
 from django.contrib import messages
-from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect
 
 from admin.sites.forms import SiteForm
 from core.models import Site
-from foreninger.models import Forening
 
 def index(request, site):
     active_site = Site.objects.get(id=site)

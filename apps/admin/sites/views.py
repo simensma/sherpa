@@ -1,10 +1,9 @@
 from __future__ import absolute_import
 
-import json
+from datetime import datetime
 import logging
 
 from django.conf import settings
-from django.contrib import messages
 from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect
@@ -14,7 +13,7 @@ from admin.models import Campaign
 from articles.models import Article
 from core.models import Site
 from foreninger.models import Forening
-from page.models import Menu, Page, Variant, Version
+from page.models import Menu, Page, Version
 
 logger = logging.getLogger('sherpa')
 
