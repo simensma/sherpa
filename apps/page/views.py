@@ -59,14 +59,14 @@ def parse_content(request, version):
         page_hierarchy = []
         page_hierarchy.append({
             'title': version.variant.page.title,
-            'url': version.variant.page.slug,
+            'url': version.variant.page.get_url(),
         })
         parent = version.variant.page.parent
         while parent is not None:
             page_hierarchy.append({
                 'title': parent.title,
-                'url': parent.slug
-                })
+                'url': parent.get_url(),
+            })
             parent = parent.parent
         page_hierarchy.reverse()
 
