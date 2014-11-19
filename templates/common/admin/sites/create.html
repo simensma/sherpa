@@ -116,38 +116,10 @@
           <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
               <h2>3. Velg et <strong>midlertidig</strong> domene for nettstedet</h2>
-
-              {% for message in messages %}
-                {% if message.message == 'malformed' %}
-                  <div class="alert alert-danger">
-                    Du må fylle inn et gyldig domenenavn. Hør med DNT sentralt dersom du er usikker på hva dette bør være.
-                  </div>
-                {% elif message.message == 'more_than_one_subdir' %}
-                  <div class="alert alert-danger">
-                    Du kan ikke ha to undermapper i domenenavnet. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.
-                  </div>
-                {% elif message.message == 'prefix_for_disallowed_domain' %}
-                  <div class="alert alert-danger">
-                    Kun domener direkte under <strong>{{ main_site.domain }}</strong> kan ha undermapper. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.
-                  </div>
-                {% elif message.message == 'site_exists' %}
-                  <div class="alert alert-danger">
-                    <strong>{{ existing_forening.name }}</strong> har allerede domenenavnet <strong>http://{{ existing_domain }}/</strong>. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er.
-                  </div>
-                {% elif message.message == 'prefix_not_supported_yet' %}
-                  <div class="alert alert-danger">
-                    Domenet kan ikke være en undermappe under turistforeningen.no (for eksempel: <strong>{{ main_site.domain }}/mitt-turlag</strong>) fordi vi ikke har satt opp teknisk støtte for det ennå.
-                  </div>
-                {% elif message.message == 'test_period_requires_test_domain' %}
-                  <div class="alert alert-danger">
-                    I test-perioden <strong>må</strong> dere ha "<strong>.test.turistforeningen.no</strong>" bak domenet. For eksempel: <strong>http://stf.test.turistforeningen.no</strong>.
-                  </div>
-                {% endif %}
-              {% endfor %}
             </div>
           </div>
 
-          <div class="form-group domain">
+          <div class="form-group domain{% if form.domain.errors %} has-error{% endif %}">
             <div class="col-md-offset-2 col-md-10">
 
               {# Force subdomains for now. When we're ready, we can let the user choose between subdomain or a FQDN #}
@@ -176,11 +148,22 @@
               </div>
               -->
 
+              {% if form.domain.errors %}
+                <div class="alert alert-danger">
+                  {% for error in form.domain.errors %}
+                    {{ error }}
+                    {% if not forloop.last %}
+                      <br>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              {% endif %}
+
               <div class="input-group domain-input">
                 <span class="input-group-addon">
                   http://
                 </span>
-                <input type="text" class="form-control" name="domain" value="{{ domain }}" placeholder="forening">
+                <input type="text" class="form-control" name="domain" value="{{ form.domain.value|default:"" }}" placeholder="forening">
                 <span class="input-group-addon subdomain-tail">
                   .test.turistforeningen.no
                 </span>
