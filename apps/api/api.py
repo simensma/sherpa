@@ -306,7 +306,8 @@ def memberid(request, version, format):
         result = {'status': 'ok'}
         if result['status'] == 'ok':
             return HttpResponse(json.dumps({
-                'status': 'success',
+                'status': 'ok',
+                'message': 'An SMS was successfully sent to the member with the given phone number.',
             }))
         elif result['status'] in ['connection_error', 'service_fail']:
             raise BadRequest(
