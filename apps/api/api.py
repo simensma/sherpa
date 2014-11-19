@@ -267,14 +267,14 @@ def memberid(request, version, format):
 
     require_focus(request)
 
-    if 'phone_number' not in request.GET:
+    if 'mobilnummer' not in request.GET:
         raise BadRequest(
-            u"Missing required 'phone_number' parameter",
+            u"Missing required 'mobilnummer' parameter",
             code=error_codes.MISSING_REQUIRED_PARAMETER,
             http_code=400
         )
 
-    phone_number = request.GET['phone_number'].strip()
+    phone_number = request.GET['mobilnummer'].strip()
     users = lookup_users_by_phone(phone_number)
 
     if len(users) == 0:
