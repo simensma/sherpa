@@ -14,8 +14,16 @@
             type="radio"
             name="type"
             value="{{ type.0 }}"
-            {% if edited_site.type == type.0 %}
-              checked
+            {% if form.type.value %}
+              {# Posted form has highest precedence #}
+              {% if form.type.value == type.0 %}
+                checked
+              {% endif %}
+            {% elif edited_site %}
+              {# Currently editing existing site #}
+              {% if edited_site.type == type.0 %}
+                checked
+              {% endif %}
             {% endif %}>
           {{ type.1 }}
 
