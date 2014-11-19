@@ -28,8 +28,8 @@ $(function() {
 
     var domain_wrapper = wrapper.find("div.form-group.domain");
     var domain = domain_wrapper.find("input[name='domain']");
-    var domain_type = domain_wrapper.find("input[name='domain-type']");
-    var subdomain_tail = domain_wrapper.find("span.subdomain-tail");
+    // var domain_type = domain_wrapper.find("input[name='domain-type']");
+    // var subdomain_tail = domain_wrapper.find("span.subdomain-tail");
 
     var submit = wrapper.find("button[type='submit']");
 
@@ -45,7 +45,7 @@ $(function() {
     site_type_buttons.change(setDefaultTemplate);
     use_template_input.change(confirmNoTemplate);
     choose_template_trigger.click(chooseTemplateManually);
-    domain_type.change(changeDomainType);
+    // domain_type.change(changeDomainType);
     submit.click(validateForm);
 
     /* Event implementations */
@@ -152,15 +152,15 @@ $(function() {
         }
     }
 
-    function changeDomainType() {
-        if(domain_type.filter(":checked").is("[value='subdomain']")) {
-            domain.removeClass('fqdn');
-            subdomain_tail.show();
-        } else {
-            domain.addClass('fqdn');
-            subdomain_tail.hide();
-        }
-    }
+    // function changeDomainType() {
+    //     if(domain_type.filter(":checked").is("[value='subdomain']")) {
+    //         domain.removeClass('fqdn');
+    //         subdomain_tail.show();
+    //     } else {
+    //         domain.addClass('fqdn');
+    //         subdomain_tail.hide();
+    //     }
+    // }
 
     function validateForm(e) {
         if(domain.val().trim() === 'forening' || domain.val().trim() === '') {
