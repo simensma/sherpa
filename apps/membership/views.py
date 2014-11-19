@@ -91,11 +91,11 @@ def service(request):
     return render(request, 'central/membership/service.html')
 
 def memberid_sms(request):
-    # This is a membership service that lets you get your memberid by providing your phone number.
-    # Note that a lot of phone number entries in Focus are bogus (email, date of birth, or
-    # poorly formatted) and some are also foreign, which we allow for now.
-    # We are currently relying on the SMS service to fail if a bogus number
-    # happens to fall through.
+    """This is a membership service that lets you get your memberid by providing your phone number.
+    Note that a lot of phone number entries in Focus are bogus (email, date of birth, or
+    poorly formatted) and some are also foreign, which we allow for now.
+    We are currently relying on the SMS service to fail if a bogus number
+    happens to fall through."""
 
     # Robots etc, just redirect them
     if not 'phone_mobile' in request.POST:
