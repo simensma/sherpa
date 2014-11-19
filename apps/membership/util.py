@@ -31,7 +31,7 @@ def memberid_sms_count(ip_address):
     cache.set('memberid_sms_requests.%s' % ip_address, lookups, 60 * 30)
     return lookups
 
-def lookup_user_by_phone(phone_number):
+def lookup_users_by_phone(phone_number):
     """Attempt to match the given phone number in an arbitrary format to one or more members"""
     phone_number = re.sub('\s', '', phone_number)
     if phone_number == '':

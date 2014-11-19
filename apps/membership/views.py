@@ -17,7 +17,7 @@ from focus.util import DNT_CENTRAL_ID as DNT_CENTRAL_ID_FOCUS
 from core.models import Zipcode
 from enrollment.models import State
 from membership.models import SMSServiceRequest
-from membership.util import lookup_user_by_phone, send_sms_receipt, memberid_sms_count
+from membership.util import lookup_users_by_phone, send_sms_receipt, memberid_sms_count
 from user.models import User
 
 logger = logging.getLogger('sherpa')
@@ -113,7 +113,7 @@ def memberid_sms(request):
         sms_request.save()
         return HttpResponse(json.dumps({'status': 'too_high_frequency'}))
 
-    users = lookup_user_by_phone(request.POST['phone_mobile'])
+    users = lookup_users_by_phone(request.POST['phone_mobile'])
     if len(users) == 0:
         sms_request.save()
         return HttpResponse(json.dumps({'status': 'no_match'}))
