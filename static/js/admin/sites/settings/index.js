@@ -2,6 +2,7 @@ $(function() {
 
     var wrapper = $('[data-dnt-container="site-settings"]');
 
+    var edited_site = wrapper.find('input[name="edited_site"]');
     var forening_select = wrapper.find('select[name="forening"]');
 
     var site_type_wrapper = wrapper.find('[data-dnt-form-group="type"]');
@@ -24,8 +25,13 @@ $(function() {
     site_type_buttons.change(setFormFields);
 
     function hideHomepageSite() {
-        var forening_id = forening_select.val();
-        if(Turistforeningen.foreninger_with_other_homepage[forening_id]) {
+        var current_site = edited_site.val();
+        var homepage_id = forening_select.find('option:selected').attr('data-dnt-homepage');
+        var has_homepage = homepage_id !== undefined;
+
+        // Note if we're currently editing this forening's homepage, we should, of course, not disable the homepage
+        // option
+        if(has_homepage && homepage_id !== current_site) {
             site_type_forening.prop('checked', false);
             site_type_forening.prop('disabled', true);
             site_type_forening_info_name.text(forening_select.find('option:selected').text());

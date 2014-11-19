@@ -2,12 +2,6 @@
 
 {% block admin_menu %}{% with 'sites.sites.create' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
 
-{% block js_globals %}
-  <script>
-    Turistforeningen.foreninger_with_homepage = JSON.parse("{{ foreninger_with_homepage|escapejs }}");
-  </script>
-{% endblock %}
-
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/sites/create.js"></script>
 {% endblock %}

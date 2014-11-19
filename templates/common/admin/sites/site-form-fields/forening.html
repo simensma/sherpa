@@ -17,6 +17,9 @@
               <option
                 value="{{ forening.id }}"
                 data-dnt-type="{{ type.code }}"
+                {% if forening.get_homepage_site_prefetched %}
+                  data-dnt-homepage="{{ forening.get_homepage_site.id }}"
+                {% endif %}
 
                 {% if form.forening.value %}
 

@@ -51,8 +51,8 @@ $(function() {
     /* Event implementations */
 
     function hideHomepageSite() {
-        var forening_id = forening_select.val();
-        if(Turistforeningen.foreninger_with_homepage[forening_id]) {
+        var has_homepage = forening_select.find('option:selected').attr('data-dnt-homepage') !== undefined;
+        if(has_homepage) {
             site_type_forening.prop('checked', false);
             site_type_forening.prop('disabled', true);
             site_type_forening_info_name.text(forening_select.find('option:selected').text());

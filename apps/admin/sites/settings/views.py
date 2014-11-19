@@ -11,16 +11,6 @@ from foreninger.models import Forening
 def index(request, site):
     active_site = Site.objects.get(id=site)
 
-    # We need to know client-side which of the users' available foreninger already has a homepage site, to be able
-    # to hide that option when the chosen forening is changed. We'll do a lookup based on the users already cached
-    # forening-list, but with sites prefetching here, and send the mapping to the client.
-    user_forening_ids = [f.id for f in request.user.all_foreninger()]
-    foreninger_with_sites = Forening.objects.filter(id__in=user_forening_ids).prefetch_related('sites')
-    foreninger_with_other_homepage = json.dumps({
-        f.id: f.get_homepage_site(prefetched=True) is not None and f.get_homepage_site(prefetched=True) != active_site
-        for f in foreninger_with_sites
-    })
-
     available_site_types = []
     for t in Site.TYPE_CHOICES:
         if t[0] == 'mal':
@@ -38,7 +28,6 @@ def index(request, site):
         'form': form,
         'active_site': active_site,
         'available_site_types': available_site_types,
-        'foreninger_with_other_homepage': foreninger_with_other_homepage,
         'template_types': Site.TEMPLATE_TYPE_CHOICES,
     }
 
