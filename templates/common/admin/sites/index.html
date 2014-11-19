@@ -100,7 +100,9 @@
         </td>
         <td>{{ site.domain }}</td>
         <td>
-          {% if site.is_published %}
+          {% if site.type == 'mal' %}
+            <span class="label label-primary">Mal</span>
+          {% elif site.is_published %}
             <span class="label label-success">Publisert</span>
           {% else %}
             <span class="label label-warning">Oppbygning</span>
