@@ -132,7 +132,7 @@ class CreateSiteForm(SiteForm):
                 )
             elif result['error'] == 'site_exists':
                 raise forms.ValidationError(
-                    u"<strong>%s</strong> har allerede domenenavnet <strong>http://{{ existing_domain }}/</strong>. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres er." % result['existing_forening'].name,
+                    u"<strong>%s</strong> har allerede denne adressen. Hør med DNT sentralt dersom du er usikker på hva domenenavnet deres bør være." % result['existing_forening'].name,
                     code=result['error'],
                 )
             elif result['error'] == 'prefix_not_supported_yet':
