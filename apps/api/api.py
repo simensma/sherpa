@@ -7,14 +7,14 @@ import sys
 from django.http import HttpResponse
 from django.core.cache import cache
 
+from . import error_codes
+from .exceptions import BadRequest
 from core.models import Zipcode
-from user.models import User
-from foreninger.models import Forening
 from focus.models import Enrollment, FocusZipcode, Price
 from focus.util import get_membership_type_by_codename
-from exceptions import BadRequest
+from foreninger.models import Forening
+from user.models import User
 from util import get_member_data, get_forening_data, require_focus
-import error_codes
 
 logger = logging.getLogger('sherpa')
 
