@@ -24,34 +24,6 @@
 
 <div class="row">
 
-  {% if active_forening.get_homepage_site %}
-    <div class="col-lg-3">
-      <div class="dashboard-panel green">
-        <div class="content">
-          <div class="row">
-            <div class="col-xs-12 text-right">
-              <span class="pull-left">
-                <i class="fa fa-file fa-5x"></i>
-              </span>
-              <p class="announcement-heading">{{ dashboard_stats.pages }}</p>
-              <p class="announcement-text">publiserte websider</p>
-            </div>
-          </div>
-        </div>
-        <a href="{% url 'admin.sites.pages.page.list' active_forening.get_homepage_site.id %}" class="action">
-          <div class="row">
-            <div class="col-xs-6">
-              Publisér flere sider
-            </div>
-            <div class="col-xs-6 text-right">
-              <i class="fa fa-arrow-circle-right"></i>
-            </div>
-          </div>
-        </a>
-      </div>
-    </div>
-  {% endif %}
-
   <div class="col-lg-3">
     <div class="dashboard-panel yellow">
       <div class="content">

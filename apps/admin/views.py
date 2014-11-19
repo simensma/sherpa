@@ -28,13 +28,6 @@ def index(request):
         cache.set('admin.local_membership_count.%s' % request.active_forening.id, local_membership_count, 60 * 60 * 12)
 
     turledere = User.get_users().filter(turledere__isnull=False).distinct().count()
-    if request.active_forening.get_homepage_site() is not None:
-        pages = Page.on(request.active_forening.get_homepage_site()).filter(
-            pub_date__lte=datetime.now(),
-            published=True
-        ).count()
-    else:
-        pages = None
     aktiviteter = Aktivitet.objects.filter(
         Q(forening=request.active_forening) |
         Q(co_foreninger=request.active_forening),
@@ -48,7 +41,6 @@ def index(request):
             'local': "{:,}".format(local_membership_count),
         },
         'turledere': turledere,
-        'pages': pages,
         'aktiviteter': aktiviteter,
     }
 
