@@ -48,7 +48,7 @@ def lookup_users_by_phone(phone_number):
     return [User.get_or_create_inactive(memberid=actor.memberid) for actor in actors]
 
 def send_sms_receipt(request, user):
-    number = re.sub('\s', '', user.get_phone_mobile())
+    number = user.get_phone_mobile(strip_whitespace=True)
     try:
         context = RequestContext(request, {
             'mob_user': user,
