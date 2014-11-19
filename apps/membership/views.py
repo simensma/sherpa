@@ -12,13 +12,12 @@ from django.conf import settings
 
 from sherpa.decorators import user_requires_login
 from foreninger.models import Forening
-from focus.models import FocusZipcode, Price, Actor
+from focus.models import FocusZipcode, Price
 from focus.util import DNT_CENTRAL_ID as DNT_CENTRAL_ID_FOCUS
 from core.models import Zipcode
 from enrollment.models import State
 from membership.models import SMSServiceRequest
 from membership.util import lookup_users_by_phone, send_sms_receipt, memberid_sms_count
-from user.models import User
 
 logger = logging.getLogger('sherpa')
 
