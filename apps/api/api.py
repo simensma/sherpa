@@ -13,6 +13,7 @@ from core.models import Zipcode
 from focus.models import Enrollment, FocusZipcode, Price
 from focus.util import get_membership_type_by_codename
 from foreninger.models import Forening
+from membership.util import lookup_users_by_phone, send_sms_receipt
 from user.models import User
 from util import get_member_data, get_forening_data, require_focus
 
@@ -257,4 +258,66 @@ def forening(request, version, format):
         )
 
 def memberid(request, version, format):
-    raise NotImplementedError
+    if request.method != 'GET':
+        raise BadRequest(
+            u"Unsupported HTTP verb '%s'" % request.method,
+            code=error_codes.UNSUPPORTED_HTTP_VERB,
+            http_code=400
+        )
+
+    require_focus(request)
+
+    if 'phone_number' not in request.GET:
+        raise BadRequest(
+            u"Missing required 'phone_number' parameter",
+            code=error_codes.MISSING_REQUIRED_PARAMETER,
+            http_code=400
+        )
+
+    phone_number = request.GET['phone_number'].strip()
+    users = lookup_users_by_phone(phone_number)
+
+    if len(users) == 0:
+        raise BadRequest(
+            u"A member with phone number '%s' wasn't found." % phone_number,
+            code=error_codes.RESOURCE_NOT_FOUND,
+            http_code=404
+        )
+    elif len(users) == 1:
+        user = users[0]
+    elif len(users) > 1:
+        # Usually, this will be because household members have the same number as their parents.
+        # Check if any of these are related, and in that case, use the parent.
+        user = None
+        for user_to_check in users:
+            if user_to_check.is_household_member() and user_to_check.get_parent() in users:
+                # Ah, this parent is in the result set - probably the one we want, use it
+                user = user_to_check.get_parent()
+                break
+        if user is None:
+            # Multiple hits, and they are not related. What do? Pick a random hit for now.
+            user = users[0]
+
+    # Delete the actor cache in case the number was recently updated; the cache may differ from our raw lookup above
+    user.get_actor().clear_cache()
+    result = send_sms_receipt(request, user)
+    if result['status'] == 'ok':
+        return HttpResponse(json.dumps({
+            'status': 'success',
+        }))
+    elif result['status'] in ['connection_error', 'service_fail']:
+        raise BadRequest(
+            "There is a problem with our SMS gateway and we were unable to send the SMS.",
+            code=error_codes.SMS_GATEWAY_ERROR,
+            http_code=500
+        )
+    else:
+        # Might happen if we add a new status code to the send_sms_receipt function and forget to account for it here
+        logger.error(u"Unknown SMS return status code '%s'" % result['status'],
+            extra={'request': request}
+        )
+        raise BadRequest(
+            "An internal error occurred while trying to send the SMS. This error has been logged and we'll get it fixed asap.",
+            code=error_codes.INTERNAL_ERROR,
+            http_code=500
+        )
