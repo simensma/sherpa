@@ -31,7 +31,7 @@ $(function() {
 
         if (lastSaveCount % 60 === 0) {
             lastSavedMinutesAgo = lastSaveCount / 60;
-            last_saved_msg_container.html('Sist lagret for ' + lastSavedMinutesAgo + ' min. siden');
+            last_saved_msg_container.css('color', '').html('Sist lagret for ' + lastSavedMinutesAgo + ' min. siden');
         }
 
         if (lastSaveCount == NO_SAVE_WARNING_TIMEOUT) {
@@ -249,7 +249,7 @@ $(function() {
             result = JSON.parse(result);
 
             lastSaveCount = 0;
-            last_saved_msg_container.html('');
+            last_saved_msg_container.css('color', '#666').html('Nettopp lagret');
 
             statusIcon = '<i class="glyphicon glyphicon-heart"></i>';
             save_button.prop('disabled', false);
