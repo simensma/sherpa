@@ -200,7 +200,9 @@ $(function() {
 
             }, CONTENT_CONTROLS_HIDE_TIMEOUT);
 
-            $(this).data('controls-timer', timer);
+            var id = $(this).attr('data-attached-to-id');
+            $content = $('div.content[data-id="' + id + '"]')
+            $content.data('controls-timer', timer);
         }
 
     });
