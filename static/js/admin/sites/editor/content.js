@@ -93,6 +93,11 @@ $(function() {
         });
     });
 
+    $(document).on('click', article.selector + ' div.content-control.edit-content', function() {
+        $content = $(this).nextAll('.content').first();
+        $content.trigger('click');
+    });
+
     // Edit an existing widget
     $(document).on('click', article.selector + ' [data-dnt-container="content-widget"]', function() {
         var widget_element = $(this);
@@ -131,9 +136,12 @@ $(function() {
             // Ignore if they're already there (happens when mouse goes from content directly to control and back)
             return $(this);
         }
-        if($(this).is(".image")) {
+        if ($(this).hasClass('image')) {
             // Insert the cropper only for images
             insertion_templates.find("div.crop-content").clone().attr('data-attached-to-id', id).insertBefore($(this)).tooltip();
+        }
+        if ($(this).hasClass('image') || $(this).hasClass('widget')) {
+          insertion_templates.find("div.edit-content").clone().attr('data-attached-to-id', id).insertBefore($(this)).tooltip();
         }
         insertion_templates.find("div.remove-content").clone().attr('data-attached-to-id', id).insertBefore($(this)).tooltip();
         insertion_templates.find("div.move-content").clone().attr('data-attached-to-id', id).insertBefore($(this)).tooltip();
