@@ -7,7 +7,7 @@ $(function() {
     var insertion_templates = editor.find('[data-dnt-container="insertion-templates"]');
     var editor_header =$('.editor-header');
     var toolbars_container = $('.sticky [data-dnt-container="toolbars"]');
-
+    var CONTENT_CONTROLS_HIDE_TIMEOUT = 200;
 
     disableIframes(article.find('[data-dnt-container="content-widget"]'));
 
@@ -115,25 +115,41 @@ $(function() {
 
     // Show content control icons upon hovering content
     $(document).on('mouseenter', 'article div.content', function() {
+        var id = $(this).data('id'),
+            timer = $(this).data('controls-timer');
+
+        if (!!timer) {
+            clearTimeout(timer);
+            $(this).removeData('controls-timer');
+        }
+
         if(EditorMoveContent.isMoving()) {
             // Ignore this while moving
             return $(this);
         }
-        if($(this).prevAll("div.content-control").length >= 1) {
+        if($(this).prevAll('div.content-control[data-attached-to-id="' + id + '"]').length >= 1) {
             // Ignore if they're already there (happens when mouse goes from content directly to control and back)
             return $(this);
         }
         if($(this).is(".image")) {
             // Insert the cropper only for images
-            insertion_templates.find("div.crop-content").clone().insertBefore($(this)).tooltip();
+            insertion_templates.find("div.crop-content").clone().attr('data-attached-to-id', id).insertBefore($(this)).tooltip();
         }
-        insertion_templates.find("div.remove-content").clone().insertBefore($(this)).tooltip();
-        insertion_templates.find("div.move-content").clone().insertBefore($(this)).tooltip();
+        insertion_templates.find("div.remove-content").clone().attr('data-attached-to-id', id).insertBefore($(this)).tooltip();
+        insertion_templates.find("div.move-content").clone().attr('data-attached-to-id', id).insertBefore($(this)).tooltip();
     });
 
     // Add CSS class hover to the content belonging to content control on mouseover
     $(document).on('mouseover', 'div.content-control', function (e) {
-        var $content = $(this).nextAll('div.content').first();
+        var id = $(this).attr('data-attached-to-id'),
+            $content = $(this).nextAll('div.content[data-id="' + id + '"]').first(),
+            controls_timer = $content.data('controls-timer');
+
+        if (!!controls_timer) {
+            clearTimeout(controls_timer);
+            $content.removeData('controls-timer');
+        }
+
         $content.addClass('hover');
     });
 
@@ -144,7 +160,8 @@ $(function() {
     });
 
     // Remove the content control icons upon mouse leave
-    $(document).on('mouseleave', 'article div.content', function(e) {
+    $(document).on('mouseleave', 'article div.content', function (e) {
+
         if(EditorMoveContent.isMoving()) {
             // Ignore this while moving
             return $(this);
@@ -153,18 +170,39 @@ $(function() {
         if(contains($(this), e.pageX, e.pageY)) {
             // Mouse is still inside the content, presumably hovering content-controls; don't remove them
         } else {
-            $(this).siblings("div.content-control").remove();
+
+            var $me = $(this); // Making `this` available for timeout as closure var
+            var timer = setTimeout(function () {
+                var id = $me.data('id');
+                $me.siblings('div.content-control[data-attached-to-id="' + id + '"]').remove();
+                $me.removeData('controls-timer');
+
+            }, CONTENT_CONTROLS_HIDE_TIMEOUT);
+
+            $(this).data('controls-timer', timer);
         }
+
     });
 
     // Also remove them when mouse leaves the icons themselves
     $(document).on('mouseleave', 'article div.content-control', function(e) {
+
         if(contains($(this).nextAll("div.content").first(), e.pageX, e.pageY)) {
             // Mouse is still inside the content, presumably hovering content-controls; don't remove them
         } else {
-            $(this).siblings("div.content-control").remove();
-            $(this).remove();
+
+            var $me = $(this); // Making `this` available for timeout as closure var
+            var timer = setTimeout(function () {
+                var id = $me.attr('data-attached-to-id');
+                $me.siblings('div.content-control[data-attached-to-id="' + id + '"]').remove();
+                $me.remove();
+                $me.removeData('controls-timer');
+
+            }, CONTENT_CONTROLS_HIDE_TIMEOUT);
+
+            $(this).data('controls-timer', timer);
         }
+
     });
 
     // Confirm and remove content when 'remove-content' icon clicked
@@ -397,11 +435,14 @@ $(function() {
 
     // Returns true if the given element position contains the given mouse coordinates
     function contains(element, mouseX, mouseY) {
-        var objX = element.offset().left;
-        var objY = element.offset().top;
+        var offset = element.offset();
+        var objX = offset.left;
+        var objY = offset.top;
         var objW = element.width();
         var objH = element.height();
         return mouseX >= objX && mouseX <= objX + objW && mouseY >= objY && mouseY <= objY + objH;
+
+
     }
 
 });
