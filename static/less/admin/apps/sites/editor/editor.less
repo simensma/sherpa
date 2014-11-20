@@ -410,45 +410,28 @@ div.cms-editor {
       position: absolute;
       z-index: 30; // Float above the content you're positioned over
       width: @cc-total-width;
-      margin-top: -47px;
       height: 23px + (@cc-padding-vertical * 2);
+      margin-top: -47px;
       padding: @cc-padding-vertical @cc-padding-horizontal;
-      border: @cc-border-width solid rgb(52, 224, 194);
-      background-color: rgb(255, 255, 255);
-      background-position: center center;
-      background-repeat: no-repeat;
-    }
 
-    div.content-control:hover {
-      cursor: pointer;
-      background-color: rgb(52, 224, 194);
+      &:hover {
+        cursor: pointer;
+      }
     }
 
     div.remove-content {
       right: @bootstrap-gutter-width / 2;
-      background-image: url('/static/img/admin/sites/editor/content/remove-content-inactive.png');
-    }
-
-    div.remove-content:hover {
-      background-image: url('/static/img/admin/sites/editor/content/remove-content-active.png');
     }
 
     div.move-content {
       right: @cc-total-width + (@bootstrap-gutter-width / 2);
-      background-image: url('/static/img/admin/sites/editor/content/move-content-inactive.png');
     }
 
     div.move-content:hover {
-      background-image: url('/static/img/admin/sites/editor/content/move-content-active.png');
     }
 
     div.crop-content {
       right: (@cc-total-width * 2) + (@bootstrap-gutter-width / 2);
-      background-image: url('/static/img/admin/sites/editor/content/crop-content-inactive.png');
-    }
-
-    div.crop-content:hover {
-      background-image: url('/static/img/admin/sites/editor/content/crop-content-active.png');
     }
 
   }
