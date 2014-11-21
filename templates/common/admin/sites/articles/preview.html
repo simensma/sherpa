@@ -3,7 +3,7 @@
 
 {% load advertisement %}
 
-{% block title %}{{ version.get_title_content.content|striptags }}{% endblock %}
+{% block title %}{{ version.get_title_content.content|striptags|safe }}{% endblock %}
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/sites/editor/sticky.js"></script>

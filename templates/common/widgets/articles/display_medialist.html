@@ -12,7 +12,7 @@
       </h2>
       {% if widget.display_images and not version.get_thumbnail.hide %}
         <a class="pull-left" href="{% url 'articles.views.show' version.variant.article.id version.get_title_content.content|striptags|slugify %}">
-          <img class="media-object" src="{{ version.get_thumbnail.url }}" alt="{{ version.get_title_content.content|striptags }}">
+          <img class="media-object" src="{{ version.get_thumbnail.url }}" alt="{{ version.get_title_content.content|striptags|safe }}">
         </a>
       {% endif %}
       <div class="media-body">

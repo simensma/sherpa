@@ -77,7 +77,7 @@
           {% endif %}
         {% elif version.variant.article %}
           / <a href="{% url 'articles.views.index' %}">Nyheter</a>
-          / <em><a href="">{{ version.get_title_content.content|striptags }}</a></em>
+          / <em><a href="">{{ version.get_title_content.content|striptags|safe }}</a></em>
         {% elif article %}
           / <a href="{% url 'articles.views.index' %}">Nyheter</a>
           / <em><a href="">{{ article.title }}</a></em>
