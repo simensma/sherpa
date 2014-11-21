@@ -302,8 +302,7 @@ def memberid(request, version, format):
 
         # Delete the actor cache in case the number was recently updated; the cache may differ from our raw lookup above
         user.get_actor().clear_cache()
-        # result = send_sms_receipt(request, user)
-        result = {'status': 'ok'}
+        result = send_sms_receipt(request, user)
         if result['status'] == 'ok':
             return HttpResponse(json.dumps({
                 'status': 'ok',
