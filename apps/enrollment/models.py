@@ -1,5 +1,5 @@
 # encoding: utf-8
-from datetime import date
+from datetime import datetime, date
 import random
 
 from django.db import models, transaction, connections
@@ -364,6 +364,12 @@ class User(models.Model):
             zipcode = '0000'
             area = ''
 
+        partneroffers_optin = self.enrollment.partneroffers_optin
+        if partneroffers_optin:
+            partneroffers_optin_date = datetime.now()
+        else:
+            partneroffers_optin_date = None
+
         # Fetch and increment memberid with stored procedure
         with transaction.commit_manually():
             cursor = connections['focus'].cursor()
@@ -392,7 +398,9 @@ class User(models.Model):
             zipcode=zipcode,
             area=area,
             language='nb_no',
-            totalprice=total_price
+            totalprice=total_price,
+            partneroffers_optin=partneroffers_optin,
+            partneroffers_optin_date=partneroffers_optin_date,
         )
         focus_user.save()
 
