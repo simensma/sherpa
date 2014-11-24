@@ -54,6 +54,9 @@ class Enrollment(models.Model):
     submitted_date = models.DateTimeField(db_column=u'SubmittedDt', null=True, default=None)
     updated_card = models.BooleanField(db_column=u'UpdatedCard', default=False)
 
+    partneroffers_optin = models.BooleanField(db_column=u'Gjensidige')
+    partneroffers_optin_date = models.DateTimeField(db_column=u'GjensidigeDate')
+
     def __unicode__(self):
         return u'%s (memberid: %s)' % (self.pk, self.memberid)
 
