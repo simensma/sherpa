@@ -115,6 +115,10 @@ def registration(request, user):
                 messages.error(request, 'user_invalid')
                 errors = True
 
+        # Save partneroffers optin
+        enrollment.partneroffers_optin = 'partneroffers_optin' in request.POST
+        enrollment.save()
+
         if not errors and request.POST['button'] == 'continue':
             return redirect("enrollment.views.household")
 

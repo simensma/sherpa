@@ -95,7 +95,7 @@
             </div>
             <div class="checkbox">
               <label>
-                <input type="checkbox" class="partneroffers"{% if enrollment.accepts_partneroffers %} checked{% endif %}>
+                <input type="checkbox" name="partneroffers_optin"{% if enrollment.partneroffers_optin %} checked{% endif %}>
 
                 {% blocktrans count users=enrollment.users.count %}
                   For å kunne benytte meg av enkelte av DNTs medlemsfordeler (som f.eks. rabatt på forsikring fra Gjensidige), samtykker jeg i at min kontaktinformasjon og fødselsdato deles med DNTs samarbeidspartnere, og at jeg kan kontaktes
