@@ -35,6 +35,7 @@ def get_request_data(request):
         logger.warning(u"DNT Connect: ValueError ved dekryptering",
             exc_info=sys.exc_info(),
             extra={
+                'request': request,
                 'request_data': request_data,
             }
         )
