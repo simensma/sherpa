@@ -63,7 +63,7 @@ $(function() {
     }
 
     function validateGender() {
-        if(form.find("input[name='gender']:checked").length == 0) {
+        if(form.find("input[name='gender']:checked").length === 0) {
             form.find('[data-dnt-form-group="gender"]').addClass('has-error');
         } else {
             form.find('[data-dnt-form-group="gender"]').addClass('has-success');
