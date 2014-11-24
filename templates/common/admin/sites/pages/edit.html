@@ -6,6 +6,7 @@
 {% load taglist %}
 {% load repeat %}
 {% load mptt_tags %}
+{% load truncate_url %}
 
 {% block extra_js %}
   {# 3rd party libs #}
@@ -143,6 +144,28 @@
 
               </div>
               <div class="col-sm-6">
+                <div class="form-group slug">
+                  <label for="slug" class="col-sm-4 control-label">Nettadresse</label>
+                  <div
+                    class="col-sm-8"
+                    {% if is_editing_root_page %}
+                      data-toggle="tooltip"
+                      data-placement="bottom"
+                      title="Du kan ikke endre nettadressen til forsiden"
+                    {% endif %}>
+                    <div class="input-group">
+                      <div class="input-group-addon">
+                        {{ active_site.domain|truncate_url:-12 }}/
+                      </div>
+                      <input
+                        name="slug"
+                        type="text"
+                        value="{{ version.variant.page.slug }}"
+                        class="form-control"
+                        {% if is_editing_root_page %} disabled{% endif %}>
+                    </div>
+                  </div>
+                </div>
                 <div class="form-group publish">
                   <label for="publish" class="col-sm-4 control-label">
                     <input type="checkbox" name="publish"{% if version.variant.page.published %} checked="checked"{% endif %}>
