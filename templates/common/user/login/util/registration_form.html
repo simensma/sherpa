@@ -120,7 +120,7 @@
 
 <div class="jq-hide alert alert-error memberid-lookups-exceeded">
   <strong>{% trans "Du kan ikke gjøre flere oppslag på medlemsnummer!" %}</strong><br>
-  {% blocktrans %}Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte{% endblocktrans %} <a href="{% url 'membership.views.service' %}">{% trans "medlemsservice" %}</a>. {% trans "Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen." %}
+  {% blocktrans %}Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte{% endblocktrans %} <a href="{% url 'membership.views.service' %}">{% trans "medlemsservice" %}</a>. {% trans "Vi kan ikke la deg gjøre flere oppslag nå, men du kan prøve igjen i morgen." %}
 </div>
 
 {% for message in messages %}
@@ -133,7 +133,7 @@
   {% elif message.message == 'memberid_lookups_exceeded' %}
     <div class="alert alert-error">
       <strong>{% trans "Du kan ikke gjøre flere oppslag på medlemsnummer!" %}</strong><br>
-      {% blocktrans %}Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte{% endblocktrans %} <a href="{% url 'membership.views.service' %}">{% trans "medlemsservice" %}</a>. {% trans "Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen." %}
+      {% blocktrans %}Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte{% endblocktrans %} <a href="{% url 'membership.views.service' %}">{% trans "medlemsservice" %}</a>. {% trans "Vi kan ikke la deg gjøre flere oppslag nå, men du kan prøve igjen i morgen." %}
     </div>
   {% elif message.message == 'too_short_password' %}
     <div class="alert alert-error">

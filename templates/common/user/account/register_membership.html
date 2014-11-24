@@ -117,7 +117,7 @@
 
       <div class="alert alert-error memberid-lookups-exceeded jq-hide">
         <strong>Du kan ikke gjøre flere oppslag på medlemsnummer!</strong><br>
-        Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url 'membership.views.service' %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
+        Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url 'membership.views.service' %}">medlemsservice</a>. Vi kan ikke la deg gjøre flere oppslag nå, men du kan prøve igjen i morgen.
       </div>
 
       <div class="alert alert-error user-exists jq-hide">
@@ -139,7 +139,7 @@
         {% elif message.message == 'memberid_lookups_exceeded' %}
           <div class="alert alert-error">
             <strong>Du kan ikke gjøre flere oppslag på medlemsnummer!</strong><br>
-            Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Prøver du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url 'membership.views.service' %}">medlemsservice</a>. Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen.
+            Du har alt gjort {{ memberid_lookups_limit }} oppslag på medlemsnummer! Hvis du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du kontakte <a href="{% url 'membership.views.service' %}">medlemsservice</a>. Vi kan ikke la deg gjøre flere oppslag nå, men du kan prøve igjen i morgen.
           </div>
         {% elif message.message == 'user_exists' %}
           <div class="alert alert-error">

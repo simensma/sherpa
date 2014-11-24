@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-04 13:02+0100\n"
+"POT-Creation-Date: 2014-11-24 11:37+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1996,17 +1996,17 @@ msgstr "No more member ID lookups allowed!"
 #: templates/common/user/login/util/registration_form.html:136
 #, python-format
 msgid ""
-"Du har alt gjort %(memberid_lookups_limit)s oppslag på medlemsnummer! Prøver "
-"du å gjette hva noen andre sitt postnummer er? Hvis du ikke er sikker på hva "
-"ditt medlemsnummer eller postnummer er, må du kontakte"
+"Du har alt gjort %(memberid_lookups_limit)s oppslag på medlemsnummer! Hvis "
+"du ikke er sikker på hva ditt medlemsnummer eller postnummer er, må du "
+"kontakte"
 msgstr ""
-"You already looked up %(memberid_lookups_limit)s memberIDs! Are you trying "
-"to guess someones Postcode? If you're unsure about your registered member ID "
-"or Postcode, please contact"
+"You already looked up %(memberid_lookups_limit)s memberIDs! If you're unsure "
+"about your registered member ID or Postcode, please contact"
 
 #: templates/common/user/login/util/registration_form.html:123
 #: templates/common/user/login/util/registration_form.html:136
-msgid "Du får ikke gjøre flere oppslag nå, men du kan prøve igjen i morgen."
+msgid ""
+"Vi kan ikke la deg gjøre flere oppslag nå, men du kan prøve igjen i morgen."
 msgstr ""
 "We can't allow any more lookups right now, but you can try again tomorrow."
 
