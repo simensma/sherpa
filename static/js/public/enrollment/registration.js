@@ -77,7 +77,7 @@ $(function() {
         var is_continuing = form.find('input[name="button"]').val() === 'continue';
         if(is_continuing && !registration.find("input.conditions").prop('checked')) {
             e.preventDefault();
-            alert($(this).attr("data-conditions-message"));
+            alert(continue_button.attr("data-conditions-message"));
             return;
         }
     });
