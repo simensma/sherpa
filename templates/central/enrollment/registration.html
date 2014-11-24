@@ -35,6 +35,9 @@
       <input type="hidden" name="user" value="{{ current_user.id }}">
     {% endif %}
 
+    {# Default behavior is to save, can be overridden by clicking the continue button #}
+    <input type="hidden" name="button" value="save">
+
     {% if dntconnect %}
       <div class="alert alert-info">
         <strong>{% trans "Innmelding i Den Norske Turistforening" %}</strong><br>
@@ -104,9 +107,19 @@
             </div>
 
             <p class="continue">
-              <a href="{% url 'enrollment.views.household' %}" class="btn btn-danger btn-lg step2{% if current_user %} post{% endif %}" data-conditions-message="{% trans "Du kan ikke gå videre med mindre du har lest og godtatt betingelsene." %}">
-                {% trans "Gå videre" %} <i class="glyphicon glyphicon-arrow-right"></i>
-              </a>
+              <button
+                class="btn btn-danger btn-lg{% if current_user %} post{% endif %}"
+                data-dnt-button="continue"
+                data-conditions-message="{% trans "Du kan ikke gå videre med mindre du har lest og godtatt betingelsene." %}"
+                {% comment %}
+                  Note the explicit button type which ensures this is not the default submit button if the user
+                  presses enter with an input field focused
+                {% endcomment %}
+                type="button">
+
+                {% trans "Gå videre" %}
+                <i class="glyphicon glyphicon-arrow-right"></i>
+              </button>
             </p>
 
           </div>
@@ -169,7 +182,15 @@
             </div>
           </div>
 
-          <button type="submit" class="btn btn-default btn-lg"><i class="glyphicon glyphicon-user"></i> {% if current_user %}{% trans "Lagre endringer" %}{% else %}{% trans "Legg til medlem" %}{% endif %}</button><br>
+          <button class="btn btn-default btn-lg" type="submit">
+            <i class="glyphicon glyphicon-user"></i>
+            {% if current_user %}
+              {% trans "Lagre endringer" %}
+            {% else %}
+              {% trans "Legg til medlem" %}
+            {% endif %}
+          </button>
+          <br>
         </div>
       </div>
 
