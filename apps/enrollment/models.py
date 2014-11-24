@@ -183,6 +183,8 @@ class User(models.Model):
         return u'%s' % self.pk
 
     def get_age(self):
+        """Returns the age this user will be within the end of the membership year. Hence, it will always be the same
+        for the same person within one membership-year."""
         if self.dob is None:
             raise BirthDateNotDefined("User %s does not have a birth date defined" % self)
 
