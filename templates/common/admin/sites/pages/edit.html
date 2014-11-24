@@ -108,25 +108,31 @@
                       data-placement="bottom"
                       title="Du kan ikke legge forsiden under en annen side"
                     {% endif %}>
-                    <select name="parent"{% if is_editing_root_page %} disabled{% endif %}>
-                      <option value="{{ root_page.id }}">Ingen foreldreside</option>
-                      <option disabled>---</option>
-                      {% recursetree pages %}
-                        {% if node.id != version.variant.page.id %}
-                          {% if node.id != root_page.id %}
-                            <option
-                              value="{{ node.id }}"
-                              {% if version.variant.page.parent.id == node.id %} selected class="default"{% endif %}>
-                              {% with node.level|add:"-1" as count %}{% repeat count %}- {% endrepeat %}{% endwith %}
-                              {{ node.title }}
-                            </option>
+                    {% if is_editing_root_page %}
+                      <select name="parent" disabled>
+                        <option value="">Ingen foreldreside</option>
+                      </select>
+                    {% else %}
+                      <select name="parent">
+                        <option value="{{ root_page.id }}">Ingen foreldreside</option>
+                        <option disabled>---</option>
+                        {% recursetree pages %}
+                          {% if node.id != version.variant.page.id %}
+                            {% if node.id != root_page.id %}
+                              <option
+                                value="{{ node.id }}"
+                                {% if version.variant.page.parent.id == node.id %} selected class="default"{% endif %}>
+                                {% with node.level|add:"-1" as count %}{% repeat count %}- {% endrepeat %}{% endwith %}
+                                {{ node.title }}
+                              </option>
+                            {% endif %}
+                            {% if not node.is_leaf_node %}
+                              {{ children }}
+                            {% endif %}
                           {% endif %}
-                          {% if not node.is_leaf_node %}
-                            {{ children }}
-                          {% endif %}
-                        {% endif %}
-                      {% endrecursetree %}
+                        {% endrecursetree %}
                     </select>
+                    {% endif %}
                   </div>
                 </div>
 
