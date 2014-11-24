@@ -79,11 +79,25 @@
               <input type="checkbox" class="conditions"{% if enrollment.accepts_conditions %} checked{% endif %}> {% if enrollment.users.count > 1 %}{% trans "Vi" %}{% else %}{% trans "Jeg" %}{% endif %} {% trans "har lest og godtar" %} <a href="javascript:undefined" data-toggle="modal" data-target=".modal">{% trans "betingelsene" %}</a>
             </label>
           </div>
-          <p>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" class="partneroffers"{% if enrollment.accepts_partneroffers %} checked{% endif %}>
+
+              {% blocktrans count users=enrollment.users.count %}
+                For å kunne benytte meg av enkelte av DNTs medlemsfordeler (som f.eks. rabatt på forsikring fra Gjensidige), samtykker jeg i at min kontaktinformasjon og fødselsdato deles med DNTs samarbeidspartnere, og at jeg kan kontaktes
+              {% plural %}
+                For å kunne benytte oss av enkelte av DNTs medlemsfordeler (som f.eks. rabatt på forsikring fra Gjensidige), samtykker vi i at vår kontaktinformasjon og fødselsdato deles med DNTs samarbeidspartnere, og at vi kan kontaktes
+              {% endblocktrans %}
+
+            </label>
+          </div>
+
+          <p class="continue">
             <a href="{% url 'enrollment.views.household' %}" class="btn btn-danger btn-lg step2{% if current_user %} post{% endif %}" data-conditions-message="{% trans "Du kan ikke gå videre med mindre du har lest og godtatt betingelsene." %}">
               {% trans "Gå videre" %} <i class="glyphicon glyphicon-arrow-right"></i>
             </a>
           </p>
+
         </div>
         <h2>{% trans "Meld inn flere i familien/husstanden:" %}</h2>
         <p>{% trans "Du kan kun melde inn flere samtidig hvis alle bor på samme adresse." %}</p>
