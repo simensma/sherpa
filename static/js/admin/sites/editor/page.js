@@ -35,5 +35,6 @@ $(function() {
     header.find('.delete-page.disabled').css('pointer-events', 'all').tooltip();
     header.find('.form-group.parent select[disabled]').parents('[data-toggle="tooltip"]').first().tooltip();
     header.find('.form-group.title input[disabled]').parents('[data-toggle="tooltip"]').first().tooltip();
+    header.find('.form-group.slug input[disabled]').parents('[data-toggle="tooltip"]').first().tooltip();
 
 });
