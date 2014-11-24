@@ -55,6 +55,8 @@ class Enrollment(models.Model):
     date_initiated = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
 
+    PARTNEROFFERS_OPTIN_MIN_AGE = 18
+
     def __unicode__(self):
         return u'%s' % self.pk
 
@@ -364,7 +366,11 @@ class User(models.Model):
             zipcode = '0000'
             area = ''
 
-        partneroffers_optin = self.enrollment.partneroffers_optin
+        if self.get_age() >= Enrollment.PARTNEROFFERS_OPTIN_MIN_AGE:
+            partneroffers_optin = self.enrollment.partneroffers_optin
+        else:
+            partneroffers_optin = False
+
         if partneroffers_optin:
             partneroffers_optin_date = datetime.now()
         else:
