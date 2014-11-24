@@ -30,6 +30,7 @@ class Enrollment(models.Model):
     )
     state = models.CharField(max_length=255)
     accepts_conditions = models.BooleanField()
+    partneroffers_optin = models.BooleanField()
     existing_memberid = models.CharField(max_length=51)
     wants_yearbook = models.BooleanField()
     attempted_yearbook = models.BooleanField()
