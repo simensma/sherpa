@@ -297,13 +297,16 @@ class AktivitetDate(models.Model):
         diff = self.end_date-self.start_date
         days = diff.days
 
-        if diff.seconds == 0:
+        if diff.total_seconds() == 0:
             return u'1 dag'
         elif days == 0:
             hours = diff.seconds / 3600
             return u'%s timer' % (hours)
         else:
-            return u'%s dager' % (days)
+            # Huh? What?! Did you just add an extra day? Yes, I did. We need to round up the number
+            # of days to avoid confusion. A trip from a friday to a sunday is not 3 full days but,
+            # but it is though of as a 3 day hike.
+            return u'%s dager' % (days + 1)
 
     def get_turledere_ordered(self):
         return sorted(self.turledere.all(), key=lambda p: p.get_first_name())
