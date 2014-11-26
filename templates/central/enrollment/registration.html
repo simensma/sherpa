@@ -24,143 +24,181 @@
 
 <div class="enrollment-registration">
 
-  {% if dntconnect %}
-    <div class="alert alert-info">
-      <strong>{% trans "Innmelding i Den Norske Turistforening" %}</strong><br>
-      {% trans "Du er i ferd med å melde deg inn i DNT i forbindelse med at du skal melde deg på en tur eller aktivitet. Når innmeldingen er fullført vil du bli videresendt til påmelding for turen." %}
-    </div>
-  {% endif %}
+  <form
+    class="registration"
+    data-dnt-container="registration-form"
+    action="{% url 'enrollment.views.registration' %}"
+    method="post">
 
-  <div class="row">
-    <div class="col-md-8">
+    {% csrf_token %}
+    {% if current_user %}
+      <input type="hidden" name="user" value="{{ current_user.id }}">
+    {% endif %}
 
-      {% include 'central/enrollment/progress.html' with step=1 %}
+    {# Default behavior is to save, can be overridden by clicking the continue button #}
+    <input type="hidden" name="button" value="save">
 
-      {% for message in messages %}
-        {% if message.message == 'contact_missing' %}
-          <div class="alert alert-error">
-            <a class="close">x</a><strong><i class="glyphicon glyphicon-warning-sign"></i> {% trans "Kontaktinformasjon mangler." %}</strong><br>
-            {% trans "Minst ett medlem av husstanden må ha gyldig kontaktinformasjon (både telefon og e-post)." %}
-          </div>
-        {% elif message.message == 'user_invalid' %}
-          {# Note that this message also emits a value to the js_globals block #}
-          <div class="alert alert-error">
-            <a class="close">x</a><strong>{% trans "Vi klarte ikke å lagre opplysningene." %}</strong><br>
-            {% trans "Er alt riktig fylt ut? Vennligst sjekk felter som er markert røde og prøv på nytt." %}
-          </div>
-        {% endif %}
-      {% endfor %}
+    {% if dntconnect %}
+      <div class="alert alert-info">
+        <strong>{% trans "Innmelding i Den Norske Turistforening" %}</strong><br>
+        {% trans "Du er i ferd med å melde deg inn i DNT i forbindelse med at du skal melde deg på en tur eller aktivitet. Når innmeldingen er fullført vil du bli videresendt til påmelding for turen." %}
+      </div>
+    {% endif %}
 
-      {% if enrollment.users.count > 0 %}
-        <div class="well members">
-          <h2>{% trans "Du har registrert:" %}</h2>
-          <table class="table table-bordered memberlist">
-          {% for user in enrollment.get_users_by_name %}
-            <tr>
-              <td>
-                <a href="{% url 'enrollment.views.registration' user.id %}" title="Rediger {{ user.name }}">
-                  {% if user.name %}
-                    {{ user.name }}
-                  {% else %}
-                    {% trans "(Anonym)" %}
-                  {% endif %}
-                </a>
-                <span class="remove pull-right">
-                  <a href="{% url 'enrollment.views.remove' user.id %}">
-                    <i class="glyphicon glyphicon-remove" title="Ta bort {{ user.name }}"></i>
+    <div class="row">
+      <div class="col-md-8">
+
+        {% include 'central/enrollment/progress.html' with step=1 %}
+
+        {% for message in messages %}
+          {% if message.message == 'contact_missing' %}
+            <div class="alert alert-error">
+              <a class="close">x</a><strong><i class="glyphicon glyphicon-warning-sign"></i> {% trans "Kontaktinformasjon mangler." %}</strong><br>
+              {% trans "Minst ett medlem av husstanden må ha gyldig kontaktinformasjon (både telefon og e-post)." %}
+            </div>
+          {% elif message.message == 'user_invalid' %}
+            {# Note that this message also emits a value to the js_globals block #}
+            <div class="alert alert-error">
+              <a class="close">x</a><strong>{% trans "Vi klarte ikke å lagre opplysningene." %}</strong><br>
+              {% trans "Er alt riktig fylt ut? Vennligst sjekk felter som er markert røde og prøv på nytt." %}
+            </div>
+          {% endif %}
+        {% endfor %}
+
+        {% if enrollment.users.count > 0 %}
+          <div class="well members">
+            <h2>{% trans "Du har registrert:" %}</h2>
+            <table class="table table-bordered memberlist">
+            {% for user in enrollment.get_users_by_name %}
+              <tr>
+                <td>
+                  <a href="{% url 'enrollment.views.registration' user.id %}" title="Rediger {{ user.name }}">
+                    {% if user.name %}
+                      {{ user.name }}
+                    {% else %}
+                      {% trans "(Anonym)" %}
+                    {% endif %}
                   </a>
-                </span>
-              </td>
-            </tr>
-          {% endfor %}
-          </table>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" class="conditions"{% if enrollment.accepts_conditions %} checked{% endif %}> {% if enrollment.users.count > 1 %}{% trans "Vi" %}{% else %}{% trans "Jeg" %}{% endif %} {% trans "har lest og godtar" %} <a href="javascript:undefined" data-toggle="modal" data-target=".modal">{% trans "betingelsene" %}</a>
-            </label>
+                  <span class="remove pull-right">
+                    <a href="{% url 'enrollment.views.remove' user.id %}">
+                      <i class="glyphicon glyphicon-remove" title="Ta bort {{ user.name }}"></i>
+                    </a>
+                  </span>
+                </td>
+              </tr>
+            {% endfor %}
+            </table>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" class="conditions"{% if enrollment.accepts_conditions %} checked{% endif %}> {% if enrollment.users.count > 1 %}{% trans "Vi" %}{% else %}{% trans "Jeg" %}{% endif %} {% trans "har lest og godtar" %} <a href="javascript:undefined" data-toggle="modal" data-target=".modal">{% trans "betingelsene" %}</a>
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" name="partneroffers_optin"{% if enrollment.partneroffers_optin %} checked{% endif %}>
+
+                {% blocktrans count users=enrollment.users.count %}
+                  For å kunne benytte meg av enkelte av DNTs medlemsfordeler (som f.eks. rabatt på forsikring fra Gjensidige), samtykker jeg i at min kontaktinformasjon og fødselsdato deles med DNTs samarbeidspartnere, og at jeg kan kontaktes
+                {% plural %}
+                  For å kunne benytte oss av enkelte av DNTs medlemsfordeler (som f.eks. rabatt på forsikring fra Gjensidige), samtykker vi i at vår kontaktinformasjon og fødselsdato deles med DNTs samarbeidspartnere, og at vi kan kontaktes
+                {% endblocktrans %}
+
+              </label>
+            </div>
+
+            <p class="continue">
+              <button
+                class="btn btn-danger btn-lg{% if current_user %} post{% endif %}"
+                data-dnt-button="continue"
+                data-conditions-message="{% trans "Du kan ikke gå videre med mindre du har lest og godtatt betingelsene." %}"
+                {% comment %}
+                  Note the explicit button type which ensures this is not the default submit button if the user
+                  presses enter with an input field focused
+                {% endcomment %}
+                type="button">
+
+                {% trans "Gå videre" %}
+                <i class="glyphicon glyphicon-arrow-right"></i>
+              </button>
+            </p>
+
           </div>
-          <p>
-            <a href="{% url 'enrollment.views.household' %}" class="btn btn-danger btn-lg step2{% if current_user %} post{% endif %}" data-conditions-message="{% trans "Du kan ikke gå videre med mindre du har lest og godtatt betingelsene." %}">
-              {% trans "Gå videre" %} <i class="glyphicon glyphicon-arrow-right"></i>
-            </a>
-          </p>
-        </div>
-        <h2>{% trans "Meld inn flere i familien/husstanden:" %}</h2>
-        <p>{% trans "Du kan kun melde inn flere samtidig hvis alle bor på samme adresse." %}</p>
-        <br>
-      {% endif %}
-
-      <form
-        class="form-border registration"
-        data-dnt-container="registration-form"
-        action="{% url 'enrollment.views.registration' %}"
-        method="post">
-
-        {% csrf_token %}
-        {% if current_user %}
-          <input type="hidden" name="user" value="{{ current_user.id }}">
+          <h2>{% trans "Meld inn flere i familien/husstanden:" %}</h2>
+          <p>{% trans "Du kan kun melde inn flere samtidig hvis alle bor på samme adresse." %}</p>
+          <br>
         {% endif %}
 
-        <div class="row">
-          <div class="form-group col-sm-6" data-dnt-form-group="name">
-            <label>{% trans "Fullt navn" %} <span class="asterisk red">*</span></label>
-            <input type="text" class="form-control" name="name" value="{{ current_user.name }}">
-          </div>
-        </div>
-
-        <div class="form-group" data-dnt-form-group="dob">
-          <label>{% trans "Fødselsdato (dd.mm.åååå)" %} <span class="asterisk red">*</span></label>
+        <div class="form-border">
 
           <div class="row">
-            <div class="col-sm-4">
-              <div class="input-group date">
-                <input type="text" class="form-control dob" name="dob" value="{{ current_user.dob|date:"d.m.Y" }}">
-                <span class="input-group-addon">
-                  <i class="glyphicon glyphicon-calendar"></i>
-                </span>
+            <div class="form-group col-sm-6" data-dnt-form-group="name">
+              <label>{% trans "Fullt navn" %} <span class="asterisk red">*</span></label>
+              <input type="text" class="form-control" name="name" value="{{ current_user.name }}">
+            </div>
+          </div>
+
+          <div class="form-group" data-dnt-form-group="dob">
+            <label>{% trans "Fødselsdato (dd.mm.åååå)" %} <span class="asterisk red">*</span></label>
+
+            <div class="row">
+              <div class="col-sm-4">
+                <div class="input-group date">
+                  <input type="text" class="form-control dob" name="dob" value="{{ current_user.dob|date:"d.m.Y" }}">
+                  <span class="input-group-addon">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                  </span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="form-group" data-dnt-form-group="gender">
-          <label> {% trans "Kjønn" %} <span class="asterisk red">*</span></label>
-          <div>
-            <div class="radio gender">
-              <label>
-                <input type="radio" name="gender" value="f"{% if current_user.gender == 'f' %} checked{% endif %}> {% trans "Kvinne" %}
-              </label>
+          <div class="form-group" data-dnt-form-group="gender">
+            <label> {% trans "Kjønn" %} <span class="asterisk red">*</span></label>
+            <div>
+              <div class="radio gender">
+                <label>
+                  <input type="radio" name="gender" value="f"{% if current_user.gender == 'f' %} checked{% endif %}> {% trans "Kvinne" %}
+                </label>
+              </div>
+              <div class="radio gender">
+                <label>
+                  <input type="radio" name="gender" value="m"{% if current_user.gender == 'm' %} checked{% endif %}> {% trans "Mann" %}
+                </label>
+              </div>
             </div>
-            <div class="radio gender">
-              <label>
-                <input type="radio" name="gender" value="m"{% if current_user.gender == 'm' %} checked{% endif %}> {% trans "Mann" %}
-              </label>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-sm-4" data-dnt-form-group="phone">
+              <label> {% trans "Mobiltelefon" %} {% if enrollment.users.count == 0 %}<span class="asterisk red">*</span>{% endif %}</label>
+              <input type="text" class="form-control" name="phone" value="{{ current_user.phone }}">
             </div>
           </div>
-        </div>
 
-        <div class="row">
-          <div class="form-group col-sm-4" data-dnt-form-group="phone">
-            <label> {% trans "Mobiltelefon" %} {% if enrollment.users.count == 0 %}<span class="asterisk red">*</span>{% endif %}</label>
-            <input type="text" class="form-control" name="phone" value="{{ current_user.phone }}">
+          <div class="row">
+            <div class="form-group col-sm-7" data-dnt-form-group="email">
+              <label> {% trans "E-post" %} {% if enrollment.users.count == 0 %}<span class="asterisk red">*</span>{% endif %}</label>
+              <input type="text" class="form-control" name="email" value="{{ current_user.email }}">
+            </div>
           </div>
+
+          <button class="btn btn-default btn-lg" type="submit">
+            <i class="glyphicon glyphicon-user"></i>
+            {% if current_user %}
+              {% trans "Lagre endringer" %}
+            {% else %}
+              {% trans "Legg til medlem" %}
+            {% endif %}
+          </button>
+          <br>
         </div>
+      </div>
 
-        <div class="row">
-          <div class="form-group col-sm-7" data-dnt-form-group="email">
-            <label> {% trans "E-post" %} {% if enrollment.users.count == 0 %}<span class="asterisk red">*</span>{% endif %}</label>
-            <input type="text" class="form-control" name="email" value="{{ current_user.email }}">
-          </div>
-        </div>
-
-        <button type="submit" class="btn btn-default btn-lg"><i class="glyphicon glyphicon-user"></i> {% if current_user %}{% trans "Lagre endringer" %}{% else %}{% trans "Legg til medlem" %}{% endif %}</button><br>
-      </form>
+      <div class="col-md-4">
+        {% include 'central/membership/infobox.html' %}
+      </div>
     </div>
-
-    <div class="col-md-4">
-      {% include 'central/membership/infobox.html' %}
-    </div>
-  </div>
+  </form>
 
   {# Conditions modal #}
   <div class="modal conditions jq-hide">

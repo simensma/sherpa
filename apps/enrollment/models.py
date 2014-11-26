@@ -1,5 +1,5 @@
 # encoding: utf-8
-from datetime import date
+from datetime import datetime, date
 import random
 
 from django.db import models, transaction, connections
@@ -30,6 +30,7 @@ class Enrollment(models.Model):
     )
     state = models.CharField(max_length=255)
     accepts_conditions = models.BooleanField()
+    partneroffers_optin = models.BooleanField()
     existing_memberid = models.CharField(max_length=51)
     wants_yearbook = models.BooleanField()
     attempted_yearbook = models.BooleanField()
@@ -53,6 +54,8 @@ class Enrollment(models.Model):
 
     date_initiated = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
+
+    PARTNEROFFERS_OPTIN_MIN_AGE = 18
 
     def __unicode__(self):
         return u'%s' % self.pk
@@ -183,6 +186,8 @@ class User(models.Model):
         return u'%s' % self.pk
 
     def get_age(self):
+        """Returns the age this user will be within the end of the membership year. Hence, it will always be the same
+        for the same person within one membership-year."""
         if self.dob is None:
             raise BirthDateNotDefined("User %s does not have a birth date defined" % self)
 
@@ -361,6 +366,16 @@ class User(models.Model):
             zipcode = '0000'
             area = ''
 
+        if self.get_age() >= Enrollment.PARTNEROFFERS_OPTIN_MIN_AGE:
+            partneroffers_optin = self.enrollment.partneroffers_optin
+        else:
+            partneroffers_optin = False
+
+        if partneroffers_optin:
+            partneroffers_optin_date = datetime.now()
+        else:
+            partneroffers_optin_date = None
+
         # Fetch and increment memberid with stored procedure
         with transaction.commit_manually():
             cursor = connections['focus'].cursor()
@@ -389,7 +404,9 @@ class User(models.Model):
             zipcode=zipcode,
             area=area,
             language='nb_no',
-            totalprice=total_price
+            totalprice=total_price,
+            partneroffers_optin=partneroffers_optin,
+            partneroffers_optin_date=partneroffers_optin_date,
         )
         focus_user.save()
 

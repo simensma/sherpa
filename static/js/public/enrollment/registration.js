@@ -3,6 +3,8 @@ $(function() {
     var registration = $("div.enrollment-registration");
     var form = registration.find('[data-dnt-container="registration-form"]');
 
+    var continue_button = form.find('[data-dnt-button="continue"]');
+
     // startDate is based on the earliest possible mssql smalldatetime value
     var now = new Date();
     var startDate = new Date(1900, 0, 1, 0, 0, 0, 0);
@@ -63,24 +65,27 @@ $(function() {
     }
 
     function validateGender() {
-        if(form.find("input[name='gender']:checked").length == 0) {
+        if(form.find("input[name='gender']:checked").length === 0) {
             form.find('[data-dnt-form-group="gender"]').addClass('has-error');
         } else {
             form.find('[data-dnt-form-group="gender"]').addClass('has-success');
         }
     }
 
-    registration.find("a.step2").click(function(e) {
+    form.submit(function(e) {
         // Check that conditions checkbox is checked
-        if(!registration.find("input.conditions").prop('checked')) {
+        var is_continuing = form.find('input[name="button"]').val() === 'continue';
+        if(is_continuing && !registration.find("input.conditions").prop('checked')) {
             e.preventDefault();
-            alert($(this).attr("data-conditions-message"));
+            alert(continue_button.attr("data-conditions-message"));
             return;
         }
-        if($(this).hasClass('post') || form.find("input[name='name']").val().length > 0) {
-            e.preventDefault();
-            form.prepend('<input type="hidden" name="forward" value="1">').submit();
-        }
+    });
+
+    // Post which button the user clicked on
+    continue_button.click(function() {
+        form.find('input[name="button"]').val($(this).attr('data-dnt-button'));
+        form.submit();
     });
 
     if(Turistforeningen.trigger_form_validations) {

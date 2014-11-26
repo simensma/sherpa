@@ -72,41 +72,55 @@ def registration(request, user):
     errors = False
     if request.method == 'POST':
 
-        # This is a POST, if editing an existing user it will be set via the form
-        if 'user' in request.POST:
-            try:
-                user = enrollment.users.all().get(id=request.POST['user'])
-            except EnrollmentUser.DoesNotExist:
-                # They're trying to save a non-existing user - maybe they deleted it in
-                # another tab or something - just create a new one
+        # We want to check provided user details if:
+        # - The user has explicitly clicked the save button
+        # - They're not editing a user, but added a new member and clicked continue
+        # - They're editing an existing user and clicked continue
+        just_save = request.POST['button'] == 'save'
+        continue_ = request.POST['button'] == 'continue'
+        editing_user = 'user' in request.POST
+        name_defined = len(request.POST['name'].strip()) > 0
+        save_and_continue = continue_ and (name_defined or editing_user)
+
+        if just_save or save_and_continue:
+            if editing_user:
+                try:
+                    user = enrollment.users.all().get(id=request.POST['user'])
+                except EnrollmentUser.DoesNotExist:
+                    # They're trying to save a non-existing user - maybe they deleted it in
+                    # another tab or something - just create a new one
+                    user = EnrollmentUser(enrollment=enrollment)
+            else:
                 user = EnrollmentUser(enrollment=enrollment)
-        else:
-            user = EnrollmentUser(enrollment=enrollment)
 
-        try:
-            dob = datetime.strptime(request.POST['dob'], "%d.%m.%Y").date()
-        except ValueError:
-            dob = None
+            try:
+                dob = datetime.strptime(request.POST['dob'], "%d.%m.%Y").date()
+            except ValueError:
+                dob = None
 
-        # Titleize and strip whitespace before/after dash
-        user.name = re.sub('\s*-\s*', '-', polite_title(request.POST['name'].strip()))
-        user.phone = request.POST['phone'].strip()
-        user.email = request.POST['email'].lower().strip()
-        user.gender = request.POST.get('gender', '')
-        user.key = request.POST.get('key') == 'on'
-        user.dob = dob
-        user.save()
+            # Titleize and strip whitespace before/after dash
+            user.name = re.sub('\s*-\s*', '-', polite_title(request.POST['name'].strip()))
+            user.phone = request.POST['phone'].strip()
+            user.email = request.POST['email'].lower().strip()
+            user.gender = request.POST.get('gender', '')
+            user.key = request.POST.get('key') == 'on'
+            user.dob = dob
+            user.save()
 
-        if user.is_valid():
-            enrollment.users.add(user)
-            # The user was saved successfully, so clear the form for the next user
-            user = None
-        else:
-            messages.error(request, 'user_invalid')
-            errors = True
+            if user.is_valid():
+                enrollment.users.add(user)
+                # The user was saved successfully, so clear the form for the next user
+                user = None
+            else:
+                messages.error(request, 'user_invalid')
+                errors = True
 
-    if not errors and 'forward' in request.POST:
-        return redirect("enrollment.views.household")
+        # Save partneroffers optin
+        enrollment.partneroffers_optin = 'partneroffers_optin' in request.POST
+        enrollment.save()
+
+        if not errors and request.POST['button'] == 'continue':
+            return redirect("enrollment.views.household")
 
     context = {
         'enrollment': enrollment,
