@@ -20,7 +20,7 @@ pycparser==2.10
 pycrypto==2.6
 pylibmc==1.2.3
 pyodbc==3.0.7
-raven==3.4.1
+raven==5.1.1
 requests==2.4.3
 six==1.8.0
 wsgiref==0.1.2
