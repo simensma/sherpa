@@ -6,7 +6,6 @@ $(function() {
     var results = listing.find("div.results");
     var results_map = results.find(".results-view-map");
     var results_content = results.find("div.content");
-    var results_loading = results.find("div.loading");
     var results_fail = results.find("div.fail");
     var toggle_results_view_type = listing.find('div.toggle-results-view-type .btn-group');
     var toggle_filters_and_results = listing.find('.toggle-filters-results');
@@ -153,8 +152,17 @@ $(function() {
 
     function refreshContent(page) {
         results_content.find("div.pagination li").addClass('disabled');
-        results_loading.show();
+        results_content.find('a.aktivitet-item').addClass('disabled');
+        results_content.find('a.aktivitet-item').click(function(e) { e.preventDefault(); });
+
         results_fail.hide();
+
+        // Scroll to the top of the results which makes sense
+        // Maybe dissable this when the filter menue is open on mobile
+        $('html, body').animate({
+            scrollTop: $('.aktivitet-listing').offset().top
+        }, 2000);
+
         var filter = collectFilter();
         filter.page = page;
         $.ajaxQueue({
@@ -182,7 +190,7 @@ $(function() {
             results_fail.show();
             map_update([]);
         }).always(function(result) {
-            results_loading.hide();
+            // we are done
         });
     }
 
