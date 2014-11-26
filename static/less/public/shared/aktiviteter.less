@@ -14,6 +14,16 @@
   color: @default-text-color;
   text-decoration: none;
 
+  // The disabled class is added when loading new items from search
+  &.disabled {
+    opacity: 0.5;
+    cursor: wait;
+
+    &:hover h2 {
+      text-decoration: none;
+    }
+  }
+
   // Except for the header, which should look and behave like an anchor
   h2 {
     .header3();

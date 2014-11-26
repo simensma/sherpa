@@ -153,8 +153,12 @@ $(function() {
 
     function refreshContent(page) {
         results_content.find("div.pagination li").addClass('disabled');
+        results_content.find('a.aktivitet-item').addClass('disabled');
+        results_content.find('a.aktivitet-item').click(function(e) { e.preventDefault(); });
         results_loading.show();
+
         results_fail.hide();
+
         var filter = collectFilter();
         filter.page = page;
         $.ajaxQueue({
