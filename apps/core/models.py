@@ -106,7 +106,6 @@ class Site(models.Model):
 
     def get_page_count(self):
         return Page.on(self).filter(
-            pub_date__lte=datetime.now(),
             published=True,
         ).count()
 
@@ -136,7 +135,6 @@ class Site(models.Model):
         return Page.on(self).filter(
             slug='',
             published=True,
-            pub_date__lte=date.today(),
         ).exists()
 
     @staticmethod

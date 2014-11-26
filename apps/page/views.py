@@ -24,7 +24,7 @@ SEARCH_CHAR_LIMIT = 3
 
 def page(request, slug):
     try:
-        page = Page.on(request.site).get(slug=slug, published=True, pub_date__lt=datetime.now())
+        page = Page.on(request.site).get(slug=slug, published=True)
     except Page.DoesNotExist:
         # This is (as of this writing) the only point of entry to the 404 template.
         raise Http404
@@ -101,7 +101,7 @@ def search(request):
         # Default segment, active version, published page
         variant__segment=None,
         variant__version__active=True,
-        published=True, pub_date__lt=datetime.now()).distinct()
+        published=True).distinct()
 
     article_versions = Version.objects.filter(
         # Match content
