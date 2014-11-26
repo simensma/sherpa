@@ -147,10 +147,10 @@ $(function() {
     });
 
     $(document).on('click', results_content.selector + ' ul.pagination li:not(.disabled):not(.active) a.page', function() {
-        refreshContent($(this).attr('data-page'));
+        refreshContent($(this).attr('data-page'), true);
     });
 
-    function refreshContent(page) {
+    function refreshContent(page, scrollToTop) {
         results_content.find("div.pagination li").addClass('disabled');
         results_content.find('a.aktivitet-item').addClass('disabled');
         results_content.find('a.aktivitet-item').click(function(e) { e.preventDefault(); });
@@ -158,10 +158,11 @@ $(function() {
         results_fail.hide();
 
         // Scroll to the top of the results which makes sense
-        // Maybe dissable this when the filter menue is open on mobile
-        $('html, body').animate({
-            scrollTop: $('.aktivitet-listing').offset().top
-        }, 2000);
+        if (scrollToTop) {
+            $('html, body').animate({
+                scrollTop: $('.aktivitet-listing').offset().top
+            }, 2000);
+        }
 
         var filter = collectFilter();
         filter.page = page;
