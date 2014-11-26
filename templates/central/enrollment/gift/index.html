@@ -15,9 +15,17 @@
 
 <div class="row">
   <div class="col-md-9">
-    <p>
-      Tom for gaveidéer? Et medlemskap i DNT varer lenge og kan brukes så mye man vil. I tillegg til flotte naturopplevelser gir medlemskapet rabatt på overnatting på DNTs hytter, mulighet for å være med på turer, kurs og andre aktiviteter, samt en rekke andre fordeler. Velg mellom:
-    </p>
+
+    <div class="row">
+      <div class="col-md-6">
+        <p>
+          Tom for gaveidéer? Et medlemskap i DNT varer lenge og kan brukes så mye man vil. I tillegg til flotte naturopplevelser gir medlemskapet rabatt på overnatting på DNTs hytter, mulighet for å være med på turer, kurs og andre aktiviteter, samt en rekke andre fordeler. Velg mellom:
+        </p>
+      </div>
+      <div class="col-md-6">
+        <img src="{{ STATIC_URL }}img/public/enrollment/gift/gavekort.jpg" alt="Gavekort">
+      </div>
+    </div>
 
     <form class="gift-entry" method="post" action="{% url 'enrollment.gift.views.form' %}">
       {% csrf_token %}
