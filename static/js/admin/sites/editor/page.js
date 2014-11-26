@@ -37,4 +37,21 @@ $(function() {
     header.find('.form-group.title input[disabled]').parents('[data-toggle="tooltip"]').first().tooltip();
     header.find('.form-group.slug input[disabled]').parents('[data-toggle="tooltip"]').first().tooltip();
 
+    /* Toggle published state info */
+    header.find('input[name="publish"]').on('change', function (e) {
+        var $publish_toggle_form_group = header.find('.form-group.publish');
+        var $alert_is_published = $publish_toggle_form_group.find('.alert-success');
+        var $alert_is_unpublished = $publish_toggle_form_group.find('.alert-warning');
+
+        if (this.checked) {
+            $alert_is_published.removeClass('jq-hide');
+            $alert_is_unpublished.addClass('jq-hide');
+
+        } else {
+            $alert_is_published.addClass('jq-hide');
+            $alert_is_unpublished.removeClass('jq-hide');
+        }
+    });
+
+
 });

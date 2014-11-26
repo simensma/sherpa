@@ -173,20 +173,17 @@
                   </div>
                 </div>
                 <div class="form-group publish">
-                  <label for="publish" class="col-sm-4 control-label">
+                  <label class="col-sm-4">
                     <input type="checkbox" name="publish"{% if version.variant.page.published %} checked="checked"{% endif %}>
-                    &nbsp; Publiseres
+                    &nbsp; Publisert
                   </label>
-                  <div class="col-sm-5">
-                    <div class="input-group date">
-                      <input class="form-control" type="text" name="date" value="{{ version.variant.page.pub_date|date:"d.m.Y" }}" placeholder="dd.mm.åååå">
-                      <span class="input-group-addon">
-                        <i class="glyphicon glyphicon-calendar"></i>
-                      </span>
+                  <div class="col-sm-8">
+                    <div class="alert alert-warning alert-sm{% if version.variant.page.published %} jq-hide{% endif %}">
+                      <strong>Ikke publisert:</strong> Siden må merkes som publisert før den blir synlig på nettet.
                     </div>
-                  </div>
-                  <div class="col-sm-3">
-                    <input class="form-control " type="text" name="time" value="{{ version.variant.page.pub_date|date:"H:i" }}" placeholder="tt:mm">
+                    <div class="alert alert-success alert-sm{% if not version.variant.page.published %} jq-hide{% endif %}">
+                      <strong>Publisert:</strong> Siden må avmerkes som publisert dersom den skal skjules for besøkende.
+                    </div>
                   </div>
                 </div>
 
@@ -227,6 +224,7 @@
                       data-placement="bottom"
                       title="OBS! Når du forhåndsviser siden lagres den først, slik at alle endringer du har gjort blir lagret og evt. publisert dersom siden er publisert.">
                       <i class="glyphicon glyphicon-search"></i> Forhåndsvis
+                    </button>
                     </button>
                     <button
                       data-dnt-delete-url="{% url 'admin.sites.pages.page.delete' active_site.id version.variant.page.id %}"
