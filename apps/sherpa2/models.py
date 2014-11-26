@@ -1013,7 +1013,8 @@ class ActivityDate(models.Model):
     ONLINE_NO_SIGNUP = 3
     ONLINE_SIGNUP_REBUS = 2
     ONLINE_SIGNUP_MONTIS = 10
-    ONLINE_SIGNUP_PAYMENT = 6
+    ONLINE_SIGNUP_PAYMENT = 4
+    ONLINE_SIGNUP_PAYMENT_ALT = 6 # Not sure why there are 2 separate values for online payment
     ONLINE_SIGNUP = 9
     ONLINE_DISABLED = 0
     ONLINE_DISABLED_SIGNUP_PAYMENT = -1
@@ -1105,6 +1106,7 @@ class ActivityDate(models.Model):
         return self.online in [
             ActivityDate.ONLINE_SIGNUP,
             ActivityDate.ONLINE_SIGNUP_PAYMENT,
+            ActivityDate.ONLINE_SIGNUP_PAYMENT_ALT,
             ActivityDate.ONLINE_SIGNUP_REBUS,
             ActivityDate.ONLINE_SIGNUP_MONTIS,
         ]
