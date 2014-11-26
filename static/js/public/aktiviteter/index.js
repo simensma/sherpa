@@ -157,6 +157,12 @@ $(function() {
 
         results_fail.hide();
 
+        // Scroll to the top of the results which makes sense
+        // Maybe dissable this when the filter menue is open on mobile
+        $('html, body').animate({
+            scrollTop: $('.aktivitet-listing').offset().top
+        }, 2000);
+
         var filter = collectFilter();
         filter.page = page;
         $.ajaxQueue({
