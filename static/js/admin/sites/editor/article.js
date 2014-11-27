@@ -5,6 +5,7 @@ $(function() {
     var header = $("div.editor-header");
     var editor = $("div.cms-editor");
     var article = editor.find("article");
+    var delete_button = header.find('.delete-article');
 
     header.find("select[name='authors']").chosen();
 
@@ -57,6 +58,11 @@ $(function() {
                 image.attr('src', src);
             },
         });
+    });
+
+    delete_button.on('click', function (e) {
+        var delete_url = $(this).attr('data-dnt-redirect-url');
+        location.href = delete_url;
     });
 
     // Init Tooltip

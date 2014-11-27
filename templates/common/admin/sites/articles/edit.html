@@ -173,7 +173,7 @@
                       </button>
                       <button
                         class="btn btn-danger delete-article"
-                        href="{% url 'admin.sites.articles.views.confirm_delete' active_site.id version.variant.article.id %}">
+                        data-dnt-redirect-url="{% url 'admin.sites.articles.views.confirm_delete' active_site.id version.variant.article.id %}">
                         <i class="glyphicon glyphicon-warning-sign"></i> Slett
                       </button>
                     </div>
