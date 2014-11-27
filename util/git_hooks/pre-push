@@ -1,0 +1,70 @@
+#!/bin/bash
+
+# An example hook script to verify what is about to be pushed.  Called by "git
+# push" after it has checked the remote status, but before anything has been
+# pushed.  If this script exits with a non-zero status nothing will be pushed.
+#
+# This hook is called with the following parameters:
+#
+# $1 -- Name of the remote to which the push is being done
+# $2 -- URL to which the push is being done
+#
+# If pushing without using a named remote those arguments will be equal.
+#
+# Information about the commits which are being pushed is supplied as lines to
+# the standard input in the form:
+#
+#   <local ref> <local sha1> <remote ref> <remote sha1>
+#
+
+remote="$1"
+remote_url="$2"
+branch=`git rev-parse --abbrev-ref HEAD`
+
+# Do not make a new tag unless this is the master branch.
+if [ $branch != "master" ]
+then
+  exit 0
+fi
+
+# Find the last tagged version in git.
+tag_orig=`git tag --list | grep v | tail -1`
+tag_curr=`git tag --list | grep v | tail -1 | tr "." "\n"` #lacyProgrammer
+
+# Do not make an ew tag if the HEAD rev already has a tag.
+tag_rev=`git rev-parse $tag_orig`
+head_rev=`git rev-parse HEAD`
+
+if [ $tag_rev = $head_rev ]
+then
+  exit 0
+fi
+
+# Increment tag patch version.
+tag_new=""
+i=0
+for part in $tag_curr
+do
+  if [ $i -eq 2 ]
+  then
+    ((part++))
+    tag_new+="$part"
+
+    # We follow semantic versioning, it is higly unlikely that we should ever
+    # reach path 50 on the same minor version during active development!
+    if [ $part -gt 50 ]
+    then
+      echo "50 patch versions in a row! Go read http://semver.org!"
+    fi
+  else
+    tag_new+="$part."
+  fi
+
+  ((i++))
+done
+
+# Add the new tag to git.
+$(git tag -a $tag_new -m $tag_new -s)
+
+exit 0
+
