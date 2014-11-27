@@ -107,6 +107,13 @@ class Annonse(models.Model):
         gender = filter.get('gender', default_gender)
         text = filter.get('text', default_text)
 
+        # A strange and very rare client-side bug had the client send 'null' values for min/maxage, if it should occur
+        # again just use the defaults
+        if minage is None:
+            minage = default_min_age
+        if maxage is None:
+            maxage = default_max_age
+
         # To protect the privacy of people with hidden age, min age and max age is rounded down and up to the closest 5
         # this is to prevent "age probing" by editing the html to for instance 26-27 to determine the age of a person with hidden age
         minage = min((abs(int(minage) - i), i) for i in settings.FJELLTREFFEN_AGE_LIMITS)[1]
