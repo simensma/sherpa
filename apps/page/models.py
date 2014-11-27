@@ -40,7 +40,6 @@ class Page(MPTTModel):
     title = models.CharField(max_length=255)
     slug = models.CharField(max_length=255)
     published = models.BooleanField()
-    pub_date = models.DateTimeField(null=True)
     created_by = models.ForeignKey('user.User', related_name='pages_created')
     created_date = models.DateTimeField(auto_now_add=True)
     modified_by = models.ForeignKey('user.User', related_name='pages_modified', null=True)

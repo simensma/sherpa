@@ -86,29 +86,7 @@ def save(request, site, version):
             version.ads = json.loads(request.POST['ads'])
 
             ### Published state ###
-
-            try:
-                page.published = json.loads(request.POST['status'])
-                datetime_string = '%s %s' % (request.POST['publish_date'], request.POST['publish_time'])
-                page.pub_date = datetime.strptime(datetime_string, '%d.%m.%Y %H:%M')
-            except ValueError:
-                if page.published:
-                    # We're trying to publish, and an error occured.
-                    if request.POST['publish_date'] == '' and request.POST['publish_time'] == '':
-                        # Well, since we didn't specify the date, set it to now - and update it clientside
-                        now = datetime.now()
-                        response['publish_error'] = 'auto_now'
-                        response['publish_date'] = now.strftime('%d.%m.%Y')
-                        response['publish_time'] = now.strftime('%H:%M')
-                        page.pub_date = now
-                    else:
-                        # Parse error - inform, and don't publish
-                        response['publish_error'] = 'unparseable_datetime'
-                        page.published = False
-                else:
-                    # An error occured, but we're not publishing so just nullify
-                    response['publish_error'] = 'error_nullify'
-                    page.pub_date = None
+            page.published = json.loads(request.POST['status'])
 
             # Record the modification
             page.modified_by = request.user
