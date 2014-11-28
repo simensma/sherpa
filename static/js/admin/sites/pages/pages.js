@@ -123,16 +123,18 @@ $(function() {
 
     $treeContainer = $('div.pages.tree');
 
+    // Collapse all
     $treeContainer.find('.header .disclose .collapse').on('click', function (e) {
         $(this).parents('.disclose').first().addClass('expand-all').removeClass('collapse-all');
-        $treeSortable.find('li.has-children:not(.disabled)').each(function () {
+        $treeSortable.find('li ol li.has-children').each(function () {
             $(this).addClass('mjs-nestedSortable-collapsed').removeClass('mjs-nestedSortable-expanded');
         });
     });
 
+    // Expand all
     $treeContainer.find('.header .disclose .expand').on('click', function (e) {
         $(this).parents('.disclose').first().addClass('collapse-all').removeClass('expand-all');
-        $treeSortable.find('li.has-children:not(.disabled)').each(function () {
+        $treeSortable.find('li ol li.has-children').each(function () {
             $(this).addClass('mjs-nestedSortable-expanded').removeClass('mjs-nestedSortable-collapsed');
         });
     });
