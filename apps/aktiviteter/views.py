@@ -63,10 +63,10 @@ def show(request, aktivitet_date):
     }
     return render(request, 'common/aktiviteter/show/show.html', context)
 
-def popup(request, aktivitet_id):
+def popup(request):
     try:
-        aktivitet = Aktivitet.get_published().get(id=aktivitet_id)
-    except Aktivitet.DoesNotExist:
+        aktivitet = Aktivitet.get_published().get(id=request.GET['aktivitet_id'])
+    except (Aktivitet.DoesNotExist, KeyError, ValueError):
         raise Http404
 
     context = { 'aktivitet': aktivitet }
