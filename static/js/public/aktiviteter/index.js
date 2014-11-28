@@ -12,6 +12,8 @@ $(function() {
     var column_filters = listing.find('.column-filters');
     var column_results = listing.find('.column-results');
 
+    var popup_url = results_map.data('dntPopupUrl');
+
     var now = new Date();
     var today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
     filters.find('[data-dnt-container="start-date"],[data-dnt-container="end-date"]').datepicker({
@@ -61,13 +63,9 @@ $(function() {
                     }
 
                     new L.Marker(new L.LatLng(p[i].lat, p[i].lng), {
+                        id: p[i].id,
                         title: p[i].title
-                    }).bindPopup(
-                        [
-                            '<h3>' + p[i].title + '</h3>',
-                            '<p>' + p[i].desc + '</p>'
-                        ].join('')
-                    ).addTo(markers);
+                    }).on('click', map_marker_popup).addTo(markers);
                 }
 
                 map.fitBounds(markers.getBounds(), {maxZoom: 10});
@@ -78,6 +76,19 @@ $(function() {
         }
     }
 
+    map_marker_popup = function(e) {
+        var marker = this;
+
+        marker.off('click', map_marker_popup);
+        var data = { aktivitet_id: marker.options.id };
+
+        $.get(popup_url, data, function(data) {
+            var popup = L.popup({maxWidth: 600}).setContent(data)
+            debugger;
+            marker.bindPopup(popup).openPopup();
+            new ElementQueries().update();
+        });
+    }
 
     toggle_results_view_type.find('button').bind('click', function (e) {
         if(!$(this).hasClass('active')) {
