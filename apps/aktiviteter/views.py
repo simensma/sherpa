@@ -63,6 +63,16 @@ def show(request, aktivitet_date):
     }
     return render(request, 'common/aktiviteter/show/show.html', context)
 
+def popup(request, aktivitet_id):
+    try:
+        aktivitet = Aktivitet.get_published().get(id=aktivitet_id)
+    except Aktivitet.DoesNotExist:
+        raise Http404
+
+    context = { 'aktivitet': aktivitet }
+
+    return render(request, 'common/aktiviteter/show/popup.html', context)
+
 def signup(request, aktivitet_date):
     try:
         aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
