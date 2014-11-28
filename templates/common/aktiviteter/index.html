@@ -176,7 +176,10 @@
               Feilen har blitt logget i vårt system, og vi vil rette den så snart som mulig. I mellomtiden kan du forsøke å <a href="javascript:document.location.reload(true);">oppdatere siden</a>.
             </div>
           </div>
-          <div class="results-view results-view-map jq-hide">
+          <div
+            class="results-view results-view-map jq-hide"
+            data-dnt-popup-url="{% url 'aktiviteter.views.popup' %}">
+
             <div id="map" class="leaflet-map"></div>
           </div>
         </div>
