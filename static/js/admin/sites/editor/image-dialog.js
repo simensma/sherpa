@@ -9,18 +9,35 @@
         image_dialog = $("div.cms-editor div.change-image");
 
         image_dialog.find("button.choose-image").click(function() {
-            ImageArchivePicker.pick(insertImageDetails);
+            ImageArchivePicker.pick(ImageDialog.insertImageDetails);
         });
 
         image_dialog.find("button.upload-image").click(function() {
-            ImageUploadDialog.open(insertImageDetails);
+            ImageUploadDialog.open(ImageDialog.insertImageDetails);
         });
 
-        function insertImageDetails(url, description, photographer) {
-            image_dialog.find("input[name='src']").val(url);
-            image_dialog.find("input[name='description']").val(description);
-            image_dialog.find("input[name='photographer']").val(photographer);
-        }
+        image_dialog.find("button.custom-url").click(function() {
+
+            // $(this).addClass('active');
+
+            ImageDialog.resetDialog();
+            ImageDialog.showUrlField();
+
+            image_dialog.find('input[name="src"]').on('input', function (e) {
+                var valid_image_url_regex = /\.(jpe?g|gif|png)$/i;
+                var url = $(e.target).val();
+
+                if (valid_image_url_regex.test(url)) {
+                    image_dialog.find('.thumbnail img').attr('src', url);
+                    // jQuery( document ).on( 'error', 'img', function( e ){
+                    //     $( this ).addClass( 'missing-image' ).attr( 'src', 'url/to/missing.png' );
+                    // });
+                    // <img onerror="this.style.display='none'" src="">
+                    ImageDialog.showInfoFields();
+                }
+
+            });
+        });
 
         image_dialog.find("button.insert-image").click(function() {
             var src = image_dialog.find("input[name='src']").val().trim();
@@ -47,14 +64,60 @@
         });
     });
 
+    ImageDialog.resetDialog = function () {
+        // image_dialog.find('.image-choices button').removeClass('active');
+        image_dialog.find('.image-url').addClass('jq-hide');
+        image_dialog.find('.image-info').addClass('jq-hide');
+        image_dialog.find('input[name="src"]').val('');
+        image_dialog.find('input[name="anchor"]').val('');
+        image_dialog.find('input[name="description"]').val('');
+        image_dialog.find('input[name="photographer"]').val('');
+    };
+
+    ImageDialog.showInfoFields = function () {
+        image_dialog.find('.image-info').removeClass('jq-hide');
+    };
+
+    ImageDialog.showUrlField = function () {
+        image_dialog.find('.row.image-url').removeClass('jq-hide');
+    };
+
+    ImageDialog.insertImageDetails = function (url, description, photographer) {
+        ImageDialog.resetDialog();
+        ImageDialog.showInfoFields();
+
+        image_dialog.find('.thumbnail img').attr('src', url);
+        image_dialog.find("input[name='src']").val(url);
+        image_dialog.find("input[name='description']").val(description);
+        image_dialog.find("input[name='photographer']").val(photographer);
+    };
+
     ImageDialog.open = function(opts) {
+
+        this.resetDialog();
+
         image_picked_callback = opts.save;
         image_removed_callback = opts.remove;
 
-        image_dialog.find("input[name='src']").val(opts.src);
-        image_dialog.find("input[name='anchor']").val(opts.anchor);
-        image_dialog.find("input[name='description']").val(opts.description);
-        image_dialog.find("input[name='photographer']").val(opts.photographer);
+        var is_new = !!opts.src.match(/placeholder\.png/);
+        var is_external = !opts.src.match(/cdn\.turistforeningen|cdn\.dnt/);
+
+        if (is_new) {
+
+        } else {
+
+            if (is_external) {
+                // image_dialog.find('.image-choices .btn.custom-url').addClass('active');
+                this.showUrlField();
+            } else {
+                // image_dialog.find('.image-choices .btn.choose-image').addClass('active');
+            }
+
+            image_dialog.find("input[name='anchor']").val(opts.anchor);
+
+            this.insertImageDetails(opts.src, opts.description, opts.photographer);
+        }
+
         image_dialog.modal();
     };
 
