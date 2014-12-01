@@ -5,6 +5,7 @@ from hashlib import sha1
 import json
 import logging
 import sys
+import math
 
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -70,6 +71,7 @@ def list_albums(request, album):
         'current_navigation': 'albums',
         'image_search_length': settings.IMAGE_SEARCH_LENGTH,
         'fotokonkurranse_album': fotokonkurranse_album,
+        'album_download_part_count': Album.DOWNLOAD_PART_COUNT,
     }
     return render(request, 'common/admin/images/list_albums.html', context)
 
@@ -162,6 +164,25 @@ def download_album(request, album):
         images=Image.objects.filter(album=album),
         image_set_name=album.name,
     )
+
+def download_album_part(request, album):
+    album = Album.objects.get(id=album)
+
+    if 'part' not in request.GET:
+        context = {
+            'album': album,
+            'parts': range(int(math.ceil(album.images.count() / float(Album.DOWNLOAD_PART_COUNT))))
+        }
+        return render(request, 'common/admin/images/download_album_part.html', context)
+    else:
+        part = int(request.GET['part'])
+        start = part * Album.DOWNLOAD_PART_COUNT
+        end = start + Album.DOWNLOAD_PART_COUNT
+        return download_images(
+            request,
+            images=Image.objects.filter(album=album).order_by('id')[start:end],
+            image_set_name=album.name,
+        )
 
 def update_images(request):
     if request.method == 'GET':

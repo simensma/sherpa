@@ -11,6 +11,7 @@ urlpatterns = patterns('admin.images.views',
     url(r'^album/fotokonkurranse/$', 'set_fotokonkurranse_album', {'new_album': None}),
     url(r'^album/fotokonkurranse/(?P<new_album>\d+)/$', 'set_fotokonkurranse_album'),
     url(r'^album/last-ned/(?P<album>\d+)/$', 'download_album'),
+    url(r'^album/last-ned/flere/(?P<album>\d+)/$', 'download_album_part'),
 
     url(r'^bruker/(?P<user>\d+)/$', 'user_images'),
 
