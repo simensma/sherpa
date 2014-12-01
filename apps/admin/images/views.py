@@ -5,8 +5,7 @@ from hashlib import sha1
 import json
 import logging
 import sys
-import zipfile
-import tempfile
+import math
 
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -14,14 +13,14 @@ from django.conf import settings
 
 import PIL.Image
 import boto
-import pyexiv2
 
 from core.models import Tag
 from admin.models import Image, Album, Fotokonkurranse
 from user.models import User
 from core import xmp
 from core.util import s3_bucket
-from admin.images.util import parse_objects, list_parents, list_parents_values, full_archive_search, get_exif_tags, create_thumb
+from admin.images.util import parse_objects, list_parents, list_parents_values, full_archive_search, get_exif_tags, \
+    create_thumb, download_images
 
 logger = logging.getLogger('sherpa')
 
@@ -72,6 +71,7 @@ def list_albums(request, album):
         'current_navigation': 'albums',
         'image_search_length': settings.IMAGE_SEARCH_LENGTH,
         'fotokonkurranse_album': fotokonkurranse_album,
+        'album_download_part_count': Album.DOWNLOAD_PART_COUNT,
     }
     return render(request, 'common/admin/images/list_albums.html', context)
 
@@ -159,81 +159,32 @@ def update_album(request):
 
 def download_album(request, album):
     album = Album.objects.get(id=album)
+    return download_images(
+        request,
+        images=Image.objects.filter(album=album),
+        image_set_name=album.name,
+    )
 
-    conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
-    bucket = conn.get_bucket(s3_bucket())
+def download_album_part(request, album):
+    album = Album.objects.get(id=album)
 
-    def set_exif_tag(metadata, key, value):
-        if key in metadata:
-            metadata[key].value = value
-        else:
-            metadata[key] = pyexiv2.ExifTag(key, value)
-
-    def download_image_with_retry(image, bucket, tmp_file, tmp_file_index, zip_archive, file_count, tries=5):
-        """
-        Tries to download an image from S3, and if an SSLError occurs, resets the boto connection and retries the
-        download. This was implemented because we experienced this error occasionally for large album downloads.
-        The idea was originally to use funcy[1] with the @retry decorator, but we discovered that we need to change
-        state on error (i.e. reset the boto connection), which AFAIK couldn't be done with funcy; hence this custom
-        implementation.
-        [1] See https://github.com/Suor/funcy and
-            http://hackflow.com/blog/2014/06/22/why-every-language-needs-its-underscore/
-        """
-        try:
-            image_key = bucket.get_key("%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, image.key, image.extension))
-            image_data = image_key.get_contents_as_string()
-
-            # Write relevant exif data
-            metadata = pyexiv2.ImageMetadata.from_buffer(image_data)
-            metadata.read()
-            set_exif_tag(metadata, 'Exif.Image.ImageDescription', image.description)
-            set_exif_tag(metadata, 'Exif.Image.Artist', image.photographer)
-            set_exif_tag(metadata, 'Exif.Image.Copyright', image.licence)
-            metadata.write()
-
-            # And add the modified image to the zip archive
-            if image.photographer == '':
-                image_filename = '%s-%s.%s' % (album.name, file_count, image.extension)
-            else:
-                image_filename = '%s-%s-%s.%s' % (album.name, file_count, image.photographer, image.extension)
-            zip_archive.writestr(image_filename.encode('ascii', 'ignore'), metadata.buffer)
-
-            # Rewind the memory file back, read the written data, and yield it to our response,
-            # while we'll go fetch the next file from S3
-            next_index = tmp_file.tell()
-            tmp_file.seek(tmp_file_index)
-            return next_index, tmp_file.read()
-        except Exception:
-            logger.warning(u"Feil ved albumnedlasting (prøver igjen automatisk)",
-                exc_info=sys.exc_info(),
-                extra={'request': request}
-            )
-
-            if tries <= 0:
-                raise
-
-            # Reset the conncetion and try again
-            conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
-            bucket = conn.get_bucket(s3_bucket())
-            return download_image_with_retry(image, bucket, tmp_file, tmp_file_index, zip_archive, file_count, tries=tries-1)
-
-    def build_zipfile():
-        with tempfile.TemporaryFile() as tmp_file:
-            zip_archive = zipfile.ZipFile(tmp_file, 'w', zipfile.ZIP_DEFLATED, allowZip64=True)
-            tmp_file_index = 0 # Used to keep track of the amount of written data each iteration
-
-            for file_count, image in enumerate(Image.objects.filter(album=album), start=1):
-                tmp_file_index, data = download_image_with_retry(image, bucket, tmp_file, tmp_file_index, zip_archive, file_count)
-                yield data
-
-            # Now close the archive and yield the final piece of data written
-            zip_archive.close()
-            tmp_file.seek(tmp_file_index)
-            yield tmp_file.read()
-
-    response = HttpResponse(build_zipfile(), content_type='application/x-zip-compressed')
-    response['Content-Disposition'] = 'attachment; filename="%s.zip"' % album.name.encode('utf-8')
-    return response
+    if 'part' not in request.GET:
+        context = {
+            'album': album,
+            'parts': range(int(math.ceil(album.images.count() / float(Album.DOWNLOAD_PART_COUNT))))
+        }
+        return render(request, 'common/admin/images/download_album_part.html', context)
+    else:
+        part = int(request.GET['part'])
+        start = part * Album.DOWNLOAD_PART_COUNT
+        end = start + Album.DOWNLOAD_PART_COUNT
+        return download_images(
+            request,
+            images=Image.objects.filter(album=album).order_by('id')[start:end],
+            image_set_name=album.name,
+            index_start=(start + 1),
+            filename_postfix='-%s' % (part + 1)
+        )
 
 def update_images(request):
     if request.method == 'GET':

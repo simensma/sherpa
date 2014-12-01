@@ -1,0 +1,29 @@
+{% extends 'common/admin/images/layout.html' %}
+
+{% block imagebody %}
+
+  <h1>Last ned album: {{ album.name }}</h1>
+
+  <p>
+    Dette albumet inneholder {{ album.images.count }} bilder, som er for mange til at du kan laste ned alle på én gang.
+  </p>
+
+  <p>
+    {% for part in parts %}
+      <a
+        class="btn btn-success btn-lg"
+        href="{% url 'admin.images.views.download_album_part' album.id %}?part={{ part }}">
+
+        <i class="glyphicon glyphicon-download-alt"></i>
+        Last ned del {{ forloop.counter }}
+      </a>
+    {% endfor %}
+  </p>
+
+  <p>
+    <a class="btn btn-default" href="{% url 'admin.images.views.list_albums' album.id %}">
+      Tilbake til albumet
+    </a>
+  </p>
+
+{% endblock %}

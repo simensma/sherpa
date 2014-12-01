@@ -17,7 +17,7 @@ class Image(models.Model):
     extension = models.CharField(max_length=4)
     hash = models.CharField(max_length=40)
     description = models.TextField()
-    album = models.ForeignKey('admin.Album', null=True)
+    album = models.ForeignKey('admin.Album', null=True, related_name='images')
     photographer = models.CharField(max_length=255)
     credits = models.CharField(max_length=255)
     licence = models.CharField(max_length=1023)
@@ -75,6 +75,9 @@ def delete_image_post(sender, **kwargs):
 class Album(models.Model):
     # Static Album ID reference for images from imported aktiviteter
     IMPORTED_AKTIVITETER_ALBUM_ID = 66
+
+    # The number of images to split album downloads into
+    DOWNLOAD_PART_COUNT = 500
 
     name = models.CharField(max_length=200)
     parent = models.ForeignKey('admin.Album', null=True)
