@@ -20,4 +20,10 @@
     {% endfor %}
   </p>
 
+  <p>
+    <a class="btn btn-default" href="{% url 'admin.images.views.list_albums' album.id %}">
+      Tilbake til albumet
+    </a>
+  </p>
+
 {% endblock %}
