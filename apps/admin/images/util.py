@@ -277,7 +277,7 @@ def standardize_extension(extension):
     else:
         return extension
 
-def download_images(request, images, image_set_name):
+def download_images(request, images, image_set_name, index_start=1):
     conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
     bucket = conn.get_bucket(s3_bucket())
 
@@ -340,7 +340,7 @@ def download_images(request, images, image_set_name):
             zip_archive = zipfile.ZipFile(tmp_file, 'w', zipfile.ZIP_DEFLATED, allowZip64=True)
             tmp_file_index = 0 # Used to keep track of the amount of written data each iteration
 
-            for file_count, image in enumerate(images, start=1):
+            for file_count, image in enumerate(images, start=index_start):
                 tmp_file_index, data = download_image_with_retry(image, bucket, tmp_file, tmp_file_index, zip_archive, file_count)
                 yield data
 
