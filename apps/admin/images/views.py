@@ -183,6 +183,7 @@ def download_album_part(request, album):
             images=Image.objects.filter(album=album).order_by('id')[start:end],
             image_set_name=album.name,
             index_start=(start + 1),
+            filename_postfix='-%s' % (part + 1)
         )
 
 def update_images(request):

@@ -277,7 +277,7 @@ def standardize_extension(extension):
     else:
         return extension
 
-def download_images(request, images, image_set_name, index_start=1):
+def download_images(request, images, image_set_name, index_start=1, filename_postfix=''):
     conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
     bucket = conn.get_bucket(s3_bucket())
 
@@ -350,5 +350,8 @@ def download_images(request, images, image_set_name, index_start=1):
             yield tmp_file.read()
 
     response = HttpResponse(build_zipfile(), content_type='application/x-zip-compressed')
-    response['Content-Disposition'] = 'attachment; filename="%s.zip"' % image_set_name.encode('utf-8')
+    response['Content-Disposition'] = 'attachment; filename="%s%s.zip"' % (
+        image_set_name.encode('utf-8'),
+        filename_postfix,
+    )
     return response
