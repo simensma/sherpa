@@ -77,7 +77,7 @@ class Album(models.Model):
     IMPORTED_AKTIVITETER_ALBUM_ID = 66
 
     # The number of images to split album downloads into
-    DOWNLOAD_PART_COUNT = 300
+    DOWNLOAD_PART_COUNT = 150
 
     name = models.CharField(max_length=200)
     parent = models.ForeignKey('admin.Album', null=True)
