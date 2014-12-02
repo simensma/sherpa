@@ -61,6 +61,9 @@ def show(request, other_user):
     return render(request, 'common/admin/users/show/index.html', context)
 
 def search(request):
+    if not request.is_ajax() or request.method != 'POST':
+        return redirect('admin.users.views.index')
+
     if len(request.POST['q']) < settings.ADMIN_USER_SEARCH_CHAR_LENGTH:
         raise PermissionDenied
 
