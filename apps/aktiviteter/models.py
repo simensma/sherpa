@@ -233,6 +233,7 @@ class AktivitetDate(models.Model):
     signup_start = models.DateField(null=True)
     signup_deadline = models.DateField(null=True)
     # Rename to cancel_deadline
+    cancel_deadline = models.DateField(null=True)
     signup_cancel_deadline = models.DateField(null=True)
 
     should_have_turleder = models.BooleanField(default=False)
