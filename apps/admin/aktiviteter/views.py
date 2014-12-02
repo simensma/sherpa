@@ -317,7 +317,7 @@ def edit(request, aktivitet):
                     model.signup_enabled = False
                     model.signup_start = None
                     model.signup_deadline = None
-                    model.signup_cancel_deadline = None
+                    model.cancel_deadline = None
 
                 elif date['signup_method'] == 'minside' or date['signup_method'] == 'simple':
                     model.signup_enabled = True
@@ -327,26 +327,26 @@ def edit(request, aktivitet):
                     else:
                         model.signup_max_allowed = None
 
-                    if 'signup_start' in date and date['signup_start'] != '':
+                    if date.get('no_signup_start') == '1':
+                        model.signup_start = None
+                    else:
                         model.signup_start = datetime.strptime(
                             date['signup_start'],
-                            "%d.%m.%Y"
+                            "%d.%m.%Y",
                         ).date()
-                    else:
-                        model.signup_start = datetime.now()
 
                     if 'no_signup_deadline' in date and date['no_signup_deadline'] == '1':
                         model.signup_deadline = None
                     elif 'signup_deadline' in date and date['signup_deadline'] != '':
                         model.signup_deadline = datetime.strptime(
                             date['signup_deadline'],
-                            "%d.%m.%Y"
+                            "%d.%m.%Y",
                         ).date()
 
                     if 'no_cancel_deadline' in date and date['no_cancel_deadline'] == '1':
-                        model.signup_cancel_deadline = None
+                        model.cancel_deadline = None
                     elif 'cancel_deadline' in date and date['cancel_deadline'] != '':
-                        model.signup_cancel_deadline = datetime.strptime(
+                        model.cancel_deadline = datetime.strptime(
                             date['cancel_deadline'], "%d.%m.%Y"
                         ).date()
 

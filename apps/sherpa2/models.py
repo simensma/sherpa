@@ -1066,13 +1066,13 @@ class ActivityDate(models.Model):
             date.signup_max_allowed = self.convert_signup_max_allowed()
             date.signup_start = self.convert_signup_start()
             date.signup_deadline = self.convert_signup_deadline()
-            date.signup_cancel_deadline = self.convert_signup_cancel_deadline()
+            date.cancel_deadline = self.convert_cancel_deadline()
         else:
             date.signup_enabled = False
             date.signup_max_allowed = None
             date.signup_start = None
             date.signup_deadline = None
-            date.signup_cancel_deadline = None
+            date.cancel_deadline = None
         date.signup_simple_allowed = False
 
         date.save()
@@ -1127,7 +1127,7 @@ class ActivityDate(models.Model):
         except ValueError:
             return None
 
-    def convert_signup_cancel_deadline(self):
+    def convert_cancel_deadline(self):
         try:
             if self.date_cancel is None or self.date_cancel.strip() == '':
                 return None

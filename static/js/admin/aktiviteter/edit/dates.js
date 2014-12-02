@@ -62,6 +62,12 @@ $(function() {
         scope.find('[data-dnt-input="signup-max-allowed"]').prop('disabled', !$(this).is(':checked'));
     });
 
+    scope.find('[data-dnt-toggle="date-signup-start"]').on('change', function() {
+        var parent = $(this).parents('div.panel-body');
+        var toggle = $(this).is(':checked');
+        parent.find('[data-dnt-container="date-signup-start"]').toggleClass('jq-hide', toggle);
+    });
+
     scope.find('[data-dnt-toggle="date-signup-deadline"]').on('change', function() {
         var parent = $(this).parents('div.panel-body');
         var toggle = $(this).is(':checked');

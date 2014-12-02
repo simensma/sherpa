@@ -30,7 +30,7 @@
             <hr>
             <p class="signup-cancel">
               Ønsker du å melde deg av denne turen? <a href="{% url 'aktiviteter.views.signup_cancel' aktivitet_date.id %}">Meld deg av her</a>.<br>
-              Avmeldingsfristen er {{ aktivitet_date.signup_cancel_deadline|date:"j. F Y" }}
+              Avmeldingsfristen er {{ aktivitet_date.cancel_deadline|date:"j. F Y" }}
             </p>
           {% endif %}
         </div>

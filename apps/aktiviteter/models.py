@@ -229,11 +229,11 @@ class AktivitetDate(models.Model):
     signup_simple_allowed = models.BooleanField()
     signup_max_allowed = models.PositiveIntegerField(default=0, null=True)
 
-    # Signup start/deadline/cancel should only be null when signup_enabled is False
+    # If signup_enabled is False, these values are not applicable and should always be null
+    # If signup_enabled is True, null means that there are no deadlines, signup & cancel should always be available
     signup_start = models.DateField(null=True)
     signup_deadline = models.DateField(null=True)
-    # Rename to cancel_deadline
-    signup_cancel_deadline = models.DateField(null=True)
+    cancel_deadline = models.DateField(null=True)
 
     should_have_turleder = models.BooleanField(default=False)
     turledere = models.ManyToManyField('user.User', related_name='turleder_aktivitet_dates')
@@ -254,6 +254,10 @@ class AktivitetDate(models.Model):
     def __unicode__(self):
         return u'%s (%s, aktivitet: <%s>)' % (self.pk, self.start_date, self.aktivitet)
 
+    #
+    # Signup methods
+    #
+
     def signup_method(self):
         if not self.signup_enabled:
             return 'none'
@@ -263,21 +267,57 @@ class AktivitetDate(models.Model):
             else:
                 return 'minside'
 
+    def signup_starts_immediately(self):
+        return self.signup_enabled and self.signup_start is None
+
+    def signup_available_to_departure(self):
+        return self.signup_enabled and self.signup_deadline is None
+
+    def cancel_deadline_always_available(self):
+        return self.signup_enabled and self.cancel_deadline is None
+
     def accepts_signups(self):
+        if not self.signup_enabled:
+            return False
+
         today = date.today()
-        return self.signup_enabled and self.signup_start <= today and self.signup_deadline >= today
+
+        if not self.signup_starts_immediately() and self.signup_start > today:
+            # Signup not open yet
+            return False
+
+        if not self.signup_available_to_departure() and self.signup_deadline < today:
+            # Signup deadline has passed
+            return False
+
+        if today > self.start_date.date():
+            # Departure was yesterday, signup is now closed regardless of the deadlines
+            # Note that we're not accounting for the start hour for now. If we want to, we'll have to handle
+            # imported aktiviteter as they're all set to 00:00 and signup shouldn't close until the day has passed for
+            # them.
+            return False
+
+        # All guards passed
+        return True
 
     def will_accept_signups(self):
-        today = date.today()
-        return self.signup_enabled and self.signup_start >= today
+        """Returns True if this date does NOT currently accept signups, but will in the future"""
+        if not self.signup_enabled:
+            return False
+
+        return self.signup_start >= date.today()
 
     def signup_deadline_passed(self):
-        today = date.today()
-        return self.signup_enabled and self.signup_deadline < today
+        if not self.signup_enabled:
+            return False
+
+        return not self.signup_available_to_departure() and self.signup_deadline < date.today()
 
     def accepts_signup_cancels(self):
-        today = date.today()
-        return self.signup_enabled and self.signup_cancel_deadline >= today
+        if not self.signup_enabled:
+            return False
+
+        return self.cancel_deadline_always_available() or self.cancel_deadline >= date.today()
 
     def external_signup_url(self):
         # @TODO check if this is a Montis signup
@@ -290,38 +330,6 @@ class AktivitetDate(models.Model):
             self.aktivitet.sherpa2_id,
             self.start_date.strftime('%Y-%m-%d'),
         )
-
-    def other_dates(self):
-        return self.aktivitet.dates.exclude(id=self.id)
-
-    def get_other_dates_ordered(self):
-        return self.other_dates().order_by('-start_date')
-
-    def get_duration_days(self):
-        diff = self.end_date-self.start_date
-        return diff.days
-
-    def get_duration_hours(self):
-        diff = self.end_date-self.start_date
-        return diff.seconds / 3600
-
-    def get_duration(self):
-        diff = self.end_date-self.start_date
-        days = diff.days
-
-        if diff.total_seconds() == 0:
-            return u'1 dag'
-        elif days == 0:
-            hours = diff.seconds / 3600
-            return u'%s timer' % (hours)
-        else:
-            # Huh? What?! Did you just add an extra day? Yes, I did. We need to round up the number
-            # of days to avoid confusion. A trip from a friday to a sunday is not 3 full days but,
-            # but it is though of as a 3 day hike.
-            return u'%s dager' % (days + 1)
-
-    def get_turledere_ordered(self):
-        return sorted(self.turledere.all(), key=lambda p: p.get_first_name())
 
     def total_signup_count(self):
         return self.participants.count() + self.simple_participants.count()
@@ -340,6 +348,42 @@ class AktivitetDate(models.Model):
         if self.signup_max_allowed is None:
             return 0
         return self.total_signup_count() - self.signup_max_allowed
+
+    #
+    # End signup-methods
+    #
+
+    def other_dates(self):
+        return self.aktivitet.dates.exclude(id=self.id)
+
+    def get_other_dates_ordered(self):
+        return self.other_dates().order_by('-start_date')
+
+    def get_duration_days(self):
+        diff = self.end_date - self.start_date
+        return diff.days
+
+    def get_duration_hours(self):
+        diff = self.end_date - self.start_date
+        return diff.seconds / 3600
+
+    def get_duration(self):
+        diff = self.end_date - self.start_date
+        days = diff.days
+
+        if diff.total_seconds() == 0:
+            return u'1 dag'
+        elif days == 0:
+            hours = diff.seconds / 3600
+            return u'%s timer' % (hours)
+        else:
+            # Huh? What?! Did you just add an extra day? Yes, I did. We need to round up the number
+            # of days to avoid confusion. A trip from a friday to a sunday is not 3 full days but,
+            # but it is though of as a 3 day hike.
+            return u'%s dager' % (days + 1)
+
+    def get_turledere_ordered(self):
+        return sorted(self.turledere.all(), key=lambda p: p.get_first_name())
 
     @staticmethod
     def get_published():
