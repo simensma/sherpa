@@ -17,12 +17,6 @@
   <script src="{{ STATIC_URL }}js/public/aktiviteter/index.js"></script>
 {% endblock %}
 
-{% block js_globals %}
-  <script>
-    Turistforeningen.aktivitet_points = JSON.parse("{{ aktivitet_dates_positions|escapejs }}");
-  </script>
-{% endblock %}
-
 {% block body %}
 
 {{ block.super }}
@@ -157,14 +151,6 @@
     <div class="column-results col-sm-8">
       <div class="wrapper">
 
-        <div class="toggle-results-view-type">
-          <div class="inline-label"><span>Vis resultat i</span></div>
-          <div class="btn-group">
-            <button type="button" class="btn btn-default active list">Liste</button>
-            <button type="button" class="btn btn-default map">Kart</button>
-          </div>
-        </div>
-
         <div class="results" data-filter-url="{% url 'aktiviteter.views.filter' %}">
           <div class="results-view results-view-list">
             <div class="content" data-current-page="{{ aktivitet_dates.number }}">
@@ -175,9 +161,6 @@
               <strong>Beklager, det oppstod en teknisk feil!</strong><br>
               Feilen har blitt logget i vårt system, og vi vil rette den så snart som mulig. I mellomtiden kan du forsøke å <a href="javascript:document.location.reload(true);">oppdatere siden</a>.
             </div>
-          </div>
-          <div class="results-view results-view-map jq-hide">
-            <div id="map" class="leaflet-map"></div>
           </div>
         </div>
       </div>

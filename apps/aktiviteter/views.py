@@ -10,18 +10,16 @@ from django.contrib import messages
 from sherpa.decorators import user_requires_login
 from sherpa2.models import Location
 from aktiviteter.models import Aktivitet, AktivitetDate, SimpleParticipant, Cabin
-from aktiviteter.util import filter_aktivitet_dates, paginate_aktivitet_dates, mapify_aktivitet_dates
+from aktiviteter.util import filter_aktivitet_dates, paginate_aktivitet_dates
 from core import validator
 from foreninger.models import Forening
 
 def index(request):
     aktivitet_dates = filter_aktivitet_dates({})
     aktivitet_dates_pagenav = paginate_aktivitet_dates({'page': 1}, aktivitet_dates)
-    aktivitet_dates_positions = mapify_aktivitet_dates({}, aktivitet_dates)
 
     context = {
         'aktivitet_dates': aktivitet_dates_pagenav,
-        'aktivitet_dates_positions': json.dumps(aktivitet_dates_positions),
         'difficulties': Aktivitet.DIFFICULTY_CHOICES,
         'categories': Aktivitet.CATEGORY_CHOICES,
         'audiences': Aktivitet.AUDIENCE_CHOICES,
@@ -39,7 +37,6 @@ def filter(request):
 
     aktivitet_dates = filter_aktivitet_dates(filter)
     aktivitet_dates_pagenav = paginate_aktivitet_dates(filter, aktivitet_dates)
-    aktivitet_dates_positions = mapify_aktivitet_dates(filter, aktivitet_dates)
 
     context = RequestContext(request, {
         'aktivitet_dates': aktivitet_dates_pagenav
@@ -47,7 +44,6 @@ def filter(request):
     return HttpResponse(json.dumps({
         'html': render_to_string('common/aktiviteter/listing.html', context),
         'page': aktivitet_dates_pagenav.number,
-        'positions': aktivitet_dates_positions,
     }))
 
 def show(request, aktivitet_date):
