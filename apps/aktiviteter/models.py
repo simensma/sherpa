@@ -279,6 +279,18 @@ class AktivitetDate(models.Model):
         today = date.today()
         return self.signup_enabled and self.signup_cancel_deadline >= today
 
+    def external_signup_url(self):
+        # @TODO check if this is a Montis signup
+
+        if not self.aktivitet.is_imported():
+            return None
+
+        return u'%s/booking.php?ac_id=%s&ac_date_from=%s' % (
+            self.aktivitet.forening.get_main_foreninger()[0].get_old_url(),
+            self.aktivitet.sherpa2_id,
+            self.start_date.strftime('%Y-%m-%d'),
+        )
+
     def other_dates(self):
         return self.aktivitet.dates.exclude(id=self.id)
 
