@@ -29,13 +29,13 @@
 
       <div class="availability">
         {% if date.aktivitet.is_full %}
-        <div class="is-full">
-          <span>Fullt!</span>
-        </div>
+          <div class="is-full">
+            <span>Fullt!</span>
+          </div>
         {% elif date.aktivitet.has_few_spots_left %}
-        <div class="few-left">
-          <span>{{ date.aktivitet.get_spots_left }} plasser igjen!</span>
-        </div>
+          <div class="few-left">
+            <span>{{ date.aktivitet.get_spots_left }} plasser igjen!</span>
+          </div>
         {% endif %}
       </div>
 
