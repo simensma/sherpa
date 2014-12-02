@@ -7,7 +7,6 @@
   display: block;
   position: relative;
   margin-bottom: 20px;
-  overflow: hidden;
   background-color: #fff;
 
   // This is an anchor element, but default to displaying text as normal...
@@ -45,8 +44,9 @@
       left: 0;
       padding: 7px 9px;
       z-index: 150;
-      color: #fff;
+      font-family: "DTL Nobel" !important;
       background-color: rgba(0, 0, 0, 0.6);
+      color: #fff;
     }
 
     .image-wrapper {
@@ -69,8 +69,10 @@
 
   }
 
-  &:not(.has-image) {
+  &.no-image {
     .category {
+      font-weight: bold;
+
       &:after {
         content: ' |';
         color: #e5e5e5;
@@ -79,6 +81,45 @@
       }
     }
 
+  }
+
+  .availability {
+    > div {
+      display: inline-block;
+      position: relative;
+      float: right;
+      margin-right: -20px;
+      margin-top: -5px;
+      padding: 7px 9px;
+      font-size: 14px;
+      font-family: "DTL Nobel" !important;
+      color: #fff;
+
+      &:before {
+        position: absolute;
+        top: -5px;
+        right: 0;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 5px 0 0 5px;
+        content: '';
+      }
+
+      &.few-left {
+        background-color: @profile-red;
+        &:before {
+          border-color: transparent transparent transparent darken(@profile-red, 25%);
+        }
+      }
+
+      &.is-full {
+        background-color: #000;
+        &:before {
+          border-color: transparent transparent transparent #000;
+        }
+      }
+    }
   }
 
   .info {
@@ -90,10 +131,6 @@
       color: #1d1d1d;
       margin-top: 3px;
       margin-bottom: 5px;
-
-      .category {
-        font-weight: bold;
-      }
 
       .date, .duration, .category {
         display: inline-block;
@@ -121,6 +158,6 @@
         color: #959595;
       }
     }
-    
+
   }
 }

@@ -2,7 +2,7 @@
 {% load aktivitet_destination %}
 {% with date.aktivitet.get_image.url as aktivitet_image_url %}
   <a
-    class="aktivitet-item{% if aktivitet_image_url %} has-image{% endif %}"
+    class="aktivitet-item{% if aktivitet_image_url %} has-image {% else %} no-image{% endif %}"
     {% with date|aktivitet_destination:request as destination_site %}
       {% if destination_site == site %}
 
@@ -20,16 +20,29 @@
     {% endwith %}>
 
     {% if aktivitet_image_url %}
-    <div class="image-wrapper">
-      <div class="image" style="background-image: url('{{ aktivitet_image_url }}');"></div>
-    </div>
+      <div class="image-wrapper">
+        <div class="image" style="background-image: url('{{ aktivitet_image_url }}');"></div>
+      </div>
     {% endif %}
 
     <div class="info">
+
+      <div class="availability">
+        {% if date.aktivitet.is_full %}
+        <div class="is-full">
+          <span>Fullt!</span>
+        </div>
+        {% elif date.aktivitet.has_few_spots_left %}
+        <div class="few-left">
+          <span>{{ date.aktivitet.get_spots_left }} plasser igjen!</span>
+        </div>
+        {% endif %}
+      </div>
+
       <h2>
         {{ date.aktivitet.title|default:"(Mangler navn)" }}
       </h2>
-      
+
       <div class="meta">
         <div class="category">{{ date.aktivitet.get_category }}</div>
         <div class="date">
