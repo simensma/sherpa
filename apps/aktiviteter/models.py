@@ -253,6 +253,10 @@ class AktivitetDate(models.Model):
     def __unicode__(self):
         return u'%s (%s, aktivitet: <%s>)' % (self.pk, self.start_date, self.aktivitet)
 
+    #
+    # Signup methods
+    #
+
     def signup_method(self):
         if not self.signup_enabled:
             return 'none'
@@ -290,6 +294,28 @@ class AktivitetDate(models.Model):
             self.start_date.strftime('%Y-%m-%d'),
         )
 
+    def total_signup_count(self):
+        return self.participants.count() + self.simple_participants.count()
+
+    def is_full(self):
+        if self.signup_max_allowed is None:
+            return False
+        return self.total_signup_count() >= self.signup_max_allowed
+
+    def is_waitinglist(self):
+        if self.signup_max_allowed is None:
+            return False
+        return self.total_signup_count() > self.signup_max_allowed
+
+    def total_waitinglist_count(self):
+        if self.signup_max_allowed is None:
+            return 0
+        return self.total_signup_count() - self.signup_max_allowed
+
+    #
+    # End signup-methods
+    #
+
     def other_dates(self):
         return self.aktivitet.dates.exclude(id=self.id)
 
@@ -321,24 +347,6 @@ class AktivitetDate(models.Model):
 
     def get_turledere_ordered(self):
         return sorted(self.turledere.all(), key=lambda p: p.get_first_name())
-
-    def total_signup_count(self):
-        return self.participants.count() + self.simple_participants.count()
-
-    def is_full(self):
-        if self.signup_max_allowed is None:
-            return False
-        return self.total_signup_count() >= self.signup_max_allowed
-
-    def is_waitinglist(self):
-        if self.signup_max_allowed is None:
-            return False
-        return self.total_signup_count() > self.signup_max_allowed
-
-    def total_waitinglist_count(self):
-        if self.signup_max_allowed is None:
-            return 0
-        return self.total_signup_count() - self.signup_max_allowed
 
     @staticmethod
     def get_published():
