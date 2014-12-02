@@ -268,20 +268,29 @@ class AktivitetDate(models.Model):
                 return 'minside'
 
     def accepts_signups(self):
+        if not self.signup_enabled:
+            return False
+
         today = date.today()
-        return self.signup_enabled and self.signup_start <= today and self.signup_deadline >= today
+        return self.signup_start <= today and self.signup_deadline >= today
 
     def will_accept_signups(self):
-        today = date.today()
-        return self.signup_enabled and self.signup_start >= today
+        if not self.signup_enabled:
+            return False
+
+        return self.signup_start >= date.today()
 
     def signup_deadline_passed(self):
-        today = date.today()
-        return self.signup_enabled and self.signup_deadline < today
+        if not self.signup_enabled:
+            return False
+
+        return self.signup_deadline < date.today()
 
     def accepts_signup_cancels(self):
-        today = date.today()
-        return self.signup_enabled and self.cancel_deadline >= today
+        if not self.signup_enabled:
+            return False
+
+        return self.cancel_deadline >= date.today()
 
     def external_signup_url(self):
         # @TODO check if this is a Montis signup
