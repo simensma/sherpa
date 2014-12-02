@@ -333,7 +333,7 @@ def edit(request, aktivitet):
                             "%d.%m.%Y"
                         ).date()
                     else:
-                        model.signup_start = datetime.now()
+                        model.signup_start = None
 
                     if 'no_signup_deadline' in date and date['no_signup_deadline'] == '1':
                         model.signup_deadline = None
