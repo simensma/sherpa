@@ -37,19 +37,6 @@
 
   &.has-image {
 
-    .category {
-      position: absolute;
-      display: block;
-      top: 0;
-      left: 0;
-      padding: 7px 9px;
-      z-index: 150;
-      font-family: "DTL Nobel" !important;
-      font-weight: normal;
-      background-color: rgba(0, 0, 0, 0.6);
-      color: #fff;
-    }
-
     .image-wrapper {
       position: relative;
       // padding-bottom is setting the aspect ratio of content inside wrapper.
@@ -70,16 +57,13 @@
 
   }
 
-  &.no-image {
-    .category {
-      &:after {
-        content: ' |';
-        color: #e5e5e5;
-        margin-left: 1px;
-        margin-right: 1px;
-      }
+  .category { // Is displayed none in less/public/aktiviteter.less for .has-image aktivitet
+    &:after {
+      content: ' |';
+      color: #e5e5e5;
+      margin-left: 1px;
+      margin-right: 1px;
     }
-
   }
 
   .availability {

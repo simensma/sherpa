@@ -66,6 +66,25 @@ div.aktivitet-listing {
 
     .aktivitet-item {
       .aktivitet-item();
+
+      &.has-image {
+        .category {
+          position: absolute;
+          display: block;
+          top: 0;
+          left: 0;
+          padding: 7px 9px;
+          z-index: 150;
+          font-family: "DTL Nobel" !important;
+          font-weight: normal;
+          background-color: rgba(0, 0, 0, 0.6);
+          color: #fff;
+
+          &:after {
+            display: none;
+          }
+        }
+      }
     }
 
   }
