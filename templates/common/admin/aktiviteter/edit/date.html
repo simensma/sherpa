@@ -136,12 +136,38 @@
               </div>
             </div>
 
-            <!-- signup_start -->
+            <!-- signup_start checkbox -->
             <div class="form-group">
-              <label for="" class="col-sm-3 control-label">Påmelding fra</label>
-              <div class="col-sm-5">
+              <label class="col-sm-3 control-label">Påmelding fra</label>
+              <div class="col-sm-9">
+                <div class="checkbox">
+                  <label>
+                    <input
+                      data-dnt-toggle="date-signup-start"
+                      type="checkbox"
+                      name="dates[{{ i }}][no_signup_start]"
+                      value="1"
+                      {% if not date.signup_start %}
+                        checked
+                      {% endif %}>
+
+                    Påmelding åpnes når turen publiseres
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- signup_start input -->
+            <div
+              class="form-group{% if not date.signup_start %} jq-hide{% endif %}"
+              data-dnt-container="date-signup-start">
+
+              <div class="col-sm-offset-3 col-sm-5">
                 <div class="input-group date">
-                  <input type="text" class="form-control" name="dates[{{ i }}][signup_start]"
+                  <input
+                    class="form-control"
+                    type="text"
+                    name="dates[{{ i }}][signup_start]"
                     placeholder="dd.mm.åååå"
                     value="{% firstof date.start_date|date:"d.m.Y" now|date:"d.m.Y" %}">
                   <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
