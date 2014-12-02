@@ -54,80 +54,18 @@ div.aktivitet-listing {
 
   div.column-results {
 
-    @media (min-width: @screen-sm-min) {
-      .wrapper {
-        background-color: #e4e4e4;
-        padding: 30px;
-      }
-    }
-
-    a.aktivitet-item {
-      .aktivitet-item();
-
-      // Up to 1/4
-      &[max-width~="439px"] {
-
-        p.description {
-          &.sm, &.md, &.lg {
-            display: none;
-          }
-          &.xs {
-            display: block;
-          }
-        }
-      }
-
-      &[max-width~="439px"] {
-
-        @height: 110px;
-        height: @height;
-
-        h2 {
-          white-space: nowrap;
-          a {
-            text-overflow: ellipsis;
-          }
-        }
-
-        .image {
-          display: block;
-          height: @height;
-          width: @height;
-        }
-
-        div.meta div {
-          display: inline-block;
-        }
-
-        div.date {
-          span.short {
-            display: inline-block;
-          }
-          span.long {
-            display: none;
-          }
-        }
-      }
-
-      // From 2/3
-      &[min-width~="549px"] {
-
-        p.description {
-          &.xs, &.sm, &.lg {
-            display: none;
-          }
-          &.md {
-            display: block;
-          }
-        }
-
-      }
+    .wrapper {
+      background-color: #e4e4e4;
+      padding: 15px;
 
       @media (min-width: @screen-sm-min) {
-        .info {
-          padding: 10px 15px;
-        }
+        padding: 30px;
       }
+
+    }
+
+    .aktivitet-item {
+      .aktivitet-item();
     }
 
   }
@@ -372,4 +310,3 @@ div.aktivitet-signup {
     }
   }
 }
-

@@ -1,58 +1,51 @@
 {% load stripcomments %}
 {% load aktivitet_destination %}
+{% with date.aktivitet.get_image.url as aktivitet_image_url %}
+  <a
+    class="aktivitet-item{% if aktivitet_image_url %} has-image{% endif %}"
+    {% with date|aktivitet_destination:request as destination_site %}
+      {% if destination_site == site %}
 
-<a
-  class="aktivitet-item"
-  {% with date|aktivitet_destination:request as destination_site %}
-    {% if destination_site == site %}
+        {# Staying where we are - just link to the URL #}
+        href="{% url 'aktiviteter.views.show' date.id %}"
 
-      {# Staying where we are - just link to the URL #}
-      href="{% url 'aktiviteter.views.show' date.id %}"
+      {% else %}
 
-    {% else %}
+        {# Going to an external URL - link to the other site, and add a tooltip #}
+        data-tooltip
+        href="http://{{ destination_site.domain }}{% url 'aktiviteter.views.show' date.id %}"
+        title="Vis denne turen på {{ destination_site.forening.name }} sine nettsider."
 
-      {# Going to an external URL - link to the other site, and add a tooltip #}
-      data-tooltip
-      href="http://{{ destination_site.domain }}{% url 'aktiviteter.views.show' date.id %}"
-      title="Vis denne turen på {{ destination_site.forening.name }} sine nettsider."
+      {% endif %}
+    {% endwith %}>
 
-    {% endif %}
-  {% endwith %}>
-
-  {% with date.aktivitet.get_image.url as aktivitet_image_url %}
     {% if aktivitet_image_url %}
+    <div class="image-wrapper">
       <div class="image" style="background-image: url('{{ aktivitet_image_url }}');"></div>
-    {% else %}
-      <div class="image image-replacement" style="background-image: url('/static/img/icons/thenounproject/icon_385/icon_385.svg');"></div>
-    {% endif %}
-  {% endwith %}
-
-  <div class="info">
-    <h2>
-      {{ date.aktivitet.title|default:"(Mangler navn)" }}
-    </h2>
-    <div class="meta">
-      <div class="category">{{ date.aktivitet.get_category }}</div>
-      <div class="date">
-        <span class="long">{{ date.start_date|date:"j. F Y" }}</span>
-        <span class="short" aria-hidden="true">{{ date.start_date|date:"d.m.y" }}</span>
-      </div>
-      <div class="duration">
-        <span class="">({{ date.get_duration }})</span>
-      </div>
     </div>
-
-    {% if date.aktivitet.is_imported %}
-      <p class="description xs" aria-hidden="true">{{ date.aktivitet.description|stripcomments|truncatewords:"6"|safe }}</p>
-      <p class="description sm" aria-hidden="true">{{ date.aktivitet.description|stripcomments|truncatewords:"12"|safe }}</p>
-      <p class="description md" aria-hidden="true">{{ date.aktivitet.description|stripcomments|truncatewords:"24"|safe }}</p>
-      <p class="description lg">{{ date.aktivitet.description|stripcomments|truncatewords:"48" }}</p>
-    {% else %}
-      <p class="description xs" aria-hidden="true">{{ date.aktivitet.description|truncatewords:"6" }}</p>
-      <p class="description sm" aria-hidden="true">{{ date.aktivitet.description|truncatewords:"12" }}</p>
-      <p class="description md" aria-hidden="true">{{ date.aktivitet.description|truncatewords:"24" }}</p>
-      <p class="description lg">{{ date.aktivitet.description|truncatewords:"48" }}</p>
     {% endif %}
 
-  </div>
-</a>
+    <div class="info">
+      <h2>
+        {{ date.aktivitet.title|default:"(Mangler navn)" }}
+      </h2>
+      <div class="meta">
+        <div class="category">{{ date.aktivitet.get_category }}</div>
+        <div class="date">
+          <span class="long">{{ date.start_date|date:"j. F Y" }}</span>
+          <span class="short" aria-hidden="true">{{ date.start_date|date:"d.m.y" }}</span>
+        </div>
+        <div class="duration">
+          <span class="">({{ date.get_duration }})</span>
+        </div>
+      </div>
+
+      {% if date.aktivitet.is_imported %}
+        <p class="description">{{ date.aktivitet.description|stripcomments|truncatewords:"20" }}</p>
+      {% else %}
+        <p class="description">{{ date.aktivitet.description|truncatewords:"20" }}</p>
+      {% endif %}
+
+    </div>
+  </a>
+{% endwith %}
