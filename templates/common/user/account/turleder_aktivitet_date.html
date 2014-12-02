@@ -1,13 +1,13 @@
 {% extends site.template|add:"/layout.html" %}
 {% block title %}Dine turer og aktiviteter — Min side{% endblock %}
-{% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <a href="{% url 'user.views.turleder_aktivitet_dates' %}">Dine arrangerte turer og aktiviteter</a> / <em>{{ aktivitet_date.aktivitet.title }}</em>{% endblock %}
+{% block breadcrumb %}<a href="{% url 'user.views.home' %}">Min side</a> / <a href="{% url 'user.views.turleder_aktivitet_dates' %}">Dine arrangerte turer og aktiviteter</a> / <em>{{ aktivitet_date.aktivitet.title|safe }}</em>{% endblock %}
 
 {% block body %}
 
 <div class="row">
   <div class="col-md-9">
 
-    <h2>{{ aktivitet_date.aktivitet.title }}</h2>
+    <h2>{{ aktivitet_date.aktivitet.title|safe }}</h2>
 
     {% include 'common/admin/aktiviteter/participants_common_content.html' %}
 

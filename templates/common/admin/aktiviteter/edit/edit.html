@@ -2,7 +2,7 @@
 
 {% load taglist %}
 
-{% block title %}{{ aktivitet.title|default:"Ny aktivitet" }} — {{ block.super }}{% endblock %}
+{% block title %}{{ aktivitet.title|safe|default:"Ny aktivitet" }} — {{ block.super }}{% endblock %}
 
 {% block admin_menu %}{% with 'aktiviteter' as active_entry %}{{ block.super }}{% endwith %}{% endblock %}
 
@@ -45,7 +45,7 @@
 <div class="row">
   <div class="col-lg-12">
     <h1>
-      {{ aktivitet.title|default:"Ny aktivitet" }}
+      {{ aktivitet.title|safe|default:"Ny aktivitet" }}
       <small>legg inn opplysninger om denne aktiviteten</small>
     </h1>
     <ol class="breadcrumb">
@@ -54,7 +54,7 @@
       </li>
       <li><a href="{% url 'admin.aktiviteter.views.index' %}">Turer og aktiviteter</a></li>
       <li><a href="{% url 'admin.aktiviteter.views.edit' aktivitet.id %}">
-        {{ aktivitet.title|default:"Ny aktivitet" }}
+        {{ aktivitet.title|safe|default:"Ny aktivitet" }}
       </a></li>
     </ol>
   </div>
@@ -73,7 +73,7 @@
               <ul>
               {% for i, date in aktivitet.get_dates_ordered %}
                 <li><a href="{% url 'aktiviteter.views.show' date.id %}">
-                  Forhåndsvis "{{ aktivitet.title|default:"aktivitet uten navn" }}" fra
+                  Forhåndsvis "{{ aktivitet.title|safe|default:"aktivitet uten navn" }}" fra
                   {% firstof date.start_date|date:"d.m.Y" "Ingen dato" %} til
                   {% firstof date.end_date|date:"d.m.Y" "Ingen dato" %}
                 </a></li>
@@ -305,7 +305,7 @@
             </label>
             <div class="col-md-8">
               <input class="form-control" name="title" id="title" type="text"
-                value="{{ aktivitet.title }}">
+                value="{{ aktivitet.title|safe }}">
               <div class="hints error jq-hide">
                 Du må jo skrive inn en tittel!
               </div>

@@ -10,7 +10,7 @@
       </div>
       {% endif %}
       <div class="title col-md-8 col-sm-12">
-        <h1>{{ aktivitet_date.aktivitet.title }}</h1>
+        <h1>{{ aktivitet_date.aktivitet.title|safe }}</h1>
       </div>
     </div>
     <div class="content col-lg-12">
@@ -201,10 +201,10 @@
             <div class="map">
               <div id="map" class="leaflet-map"></div>
               <div class="leaflet-popup-content jq-hide">
-                <h3>{{ aktivitet_date.aktivitet.title }}</h3>
+                <h3>{{ aktivitet_date.aktivitet.title|safe }}</h3>
                 <p>
                   {% if aktivitet_date.aktivitet.is_imported %}
-                    {{ aktivitet_date.aktivitet.description|striptags|truncatewords:"30" }}
+                    {{ aktivitet_date.aktivitet.description|striptags|truncatewords:"30"|safe }}
                   {% else %}
                     {{ aktivitet_date.aktivitet.description|truncatewords:"30" }}
                   {% endif %}
