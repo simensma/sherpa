@@ -281,10 +281,24 @@ class AktivitetDate(models.Model):
             return False
 
         today = date.today()
-        return (
-            (self.signup_starts_immediately() or self.signup_start <= today) and
-            (self.signup_available_to_departure() or self.signup_deadline >= today)
-        )
+
+        if not self.signup_starts_immediately() and self.signup_start > today:
+            # Signup not open yet
+            return False
+
+        if not self.signup_available_to_departure() and self.signup_deadline < today:
+            # Signup deadline has passed
+            return False
+
+        if today > self.start_date.date():
+            # Departure was yesterday, signup is now closed regardless of the deadlines
+            # Note that we're not accounting for the start hour for now. If we want to, we'll have to handle
+            # imported aktiviteter as they're all set to 00:00 and signup shouldn't close until the day has passed for
+            # them.
+            return False
+
+        # All guards passed
+        return True
 
     def will_accept_signups(self):
         """Returns True if this date does NOT currently accept signups, but will in the future"""
