@@ -29,6 +29,7 @@
       <h2>
         {{ date.aktivitet.title|default:"(Mangler navn)" }}
       </h2>
+      
       <div class="meta">
         <div class="category">{{ date.aktivitet.get_category }}</div>
         <div class="date">
@@ -40,11 +41,20 @@
         </div>
       </div>
 
-      {% if date.aktivitet.is_imported %}
-        <p class="description">{{ date.aktivitet.description|stripcomments|truncatewords:"20" }}</p>
-      {% else %}
-        <p class="description">{{ date.aktivitet.description|truncatewords:"20" }}</p>
-      {% endif %}
+      <div class="description">
+        {% if date.aktivitet.is_imported %}
+          <p>{{ date.aktivitet.description|stripcomments|truncatewords:"20" }}</p>
+        {% else %}
+          <p>{{ date.aktivitet.description|truncatewords:"20" }}</p>
+        {% endif %}
+      </div>
+
+      <div class="organizer">
+        <p>
+          Arrangeres av
+          <span class="organizer">{% firstof date.aktivitet.forening.name date.aktivitet.forening_cabin.name %}</span>
+        </p>
+      </div>
 
     </div>
   </a>
