@@ -114,9 +114,12 @@
                      class="btn btn-danger">Meld deg på!</a>
 
                 {% endif %}
-                <span class="deadline">
-                  Påmeldingsfrist: {{ aktivitet_date.signup_deadline|date:"j. F Y" }}
-                </span>
+
+                {% if not aktivitet_date.signup_available_to_departure %}
+                  <span class="deadline">
+                    Påmeldingsfrist: {{ aktivitet_date.get_signup_deadline|date:"j. F Y" }}
+                  </span>
+                {% endif %}
               </div>
             {% elif aktivitet_date.will_accept_signups %}
               <div class="signup signup-countdown">
