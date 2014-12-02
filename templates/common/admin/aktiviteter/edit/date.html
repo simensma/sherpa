@@ -169,7 +169,7 @@
                     type="text"
                     name="dates[{{ i }}][signup_start]"
                     placeholder="dd.mm.åååå"
-                    value="{% firstof date.start_date|date:"d.m.Y" now|date:"d.m.Y" %}">
+                    value="{% firstof date.signup_start|date:"d.m.Y" now|date:"d.m.Y" %}">
                   <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 </div>
               </div>
