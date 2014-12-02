@@ -275,6 +275,7 @@ class AktivitetDate(models.Model):
         return self.signup_start <= today and self.signup_deadline >= today
 
     def will_accept_signups(self):
+        """Returns True if this date does NOT currently accept signups, but will in the future"""
         if not self.signup_enabled:
             return False
 
