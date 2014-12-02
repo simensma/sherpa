@@ -1,6 +1,6 @@
 {% extends site.template|add:"/layout.html" %}
-{% block title %}{{ aktivitet_date.aktivitet.title }} — Turer og aktiviteter{% endblock %}
-{% block breadcrumb %}<a href="{% url 'aktiviteter.views.index' %}">Turer og aktiviteter</a> / <a href="{% url 'aktiviteter.views.show' aktivitet_date.id %}">{{ aktivitet_date.aktivitet.title }}</a> / <em>Meld deg av</em> {% endblock %}
+{% block title %}{{ aktivitet_date.aktivitet.title|safe }} — Turer og aktiviteter{% endblock %}
+{% block breadcrumb %}<a href="{% url 'aktiviteter.views.index' %}">Turer og aktiviteter</a> / <a href="{% url 'aktiviteter.views.show' aktivitet_date.id %}">{{ aktivitet_date.aktivitet.title|safe }}</a> / <em>Meld deg av</em> {% endblock %}
 
 {% block body %}
 
@@ -10,7 +10,7 @@
   <div class="span12">
 
     <div class="aktivitet">
-      <h2>Påmelding: {{ aktivitet_date.aktivitet.title }}</h2>
+      <h2>Påmelding: {{ aktivitet_date.aktivitet.title|safe }}</h2>
 
       <p>
         Er du sikker på at du vil melde deg av denne turen?

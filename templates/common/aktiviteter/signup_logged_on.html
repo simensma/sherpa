@@ -1,6 +1,6 @@
 {% extends "common/aktiviteter/layout.html" %}
-{% block title %}{{ aktivitet_date.aktivitet.title }} — Turer og aktiviteter{% endblock %}
-{% block breadcrumb %}<a href="{% url 'aktiviteter.views.index' %}">Turer og aktiviteter</a> / <a href="{% url 'aktiviteter.views.show' aktivitet_date.id %}">{{ aktivitet_date.aktivitet.title }}</a> / <em>Meld deg på</em> {% endblock %}
+{% block title %}{{ aktivitet_date.aktivitet.title|safe }} — Turer og aktiviteter{% endblock %}
+{% block breadcrumb %}<a href="{% url 'aktiviteter.views.index' %}">Turer og aktiviteter</a> / <a href="{% url 'aktiviteter.views.show' aktivitet_date.id %}">{{ aktivitet_date.aktivitet.title|safe }}</a> / <em>Meld deg på</em> {% endblock %}
 
 {% block body %}
 
@@ -10,7 +10,7 @@
   <div class="span12">
 
     <div class="aktivitet">
-      <h2><a href="{% url 'aktiviteter.views.show' aktivitet_date.id %}">{{ aktivitet_date.aktivitet.title }}</a>: Påmelding</h2>
+      <h2><a href="{% url 'aktiviteter.views.show' aktivitet_date.id %}">{{ aktivitet_date.aktivitet.title|safe }}</a>: Påmelding</h2>
 
       <p>
         Er du sikker på at du vil melde deg på denne turen?

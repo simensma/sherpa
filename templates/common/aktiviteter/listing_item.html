@@ -40,7 +40,7 @@
       </div>
 
       <h2>
-        {{ date.aktivitet.title|default:"(Mangler navn)" }}
+        {{ date.aktivitet.title|safe|default:"(Mangler navn)" }}
       </h2>
 
       <div class="meta">

@@ -12,7 +12,7 @@
     <ol class="breadcrumb">
       <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
       <li><a href="{% url 'admin.aktiviteter.views.index' %}">Turer og aktiviteter</a></li>
-      <li><a href="{% url 'admin.aktiviteter.views.edit' aktivitet.id %}">{{ aktivitet.title }}</a></li>
+      <li><a href="{% url 'admin.aktiviteter.views.edit' aktivitet.id %}">{{ aktivitet.title|safe }}</a></li>
       <li><a href="{% url 'admin.aktiviteter.views.participants' aktivitet.id ">Påmeldte</a></li>
     </ol>
   </div>

@@ -13,7 +13,7 @@
       {{ date.start_date|date_fromto:date.end_date }}
     </strong>
 
-    for <strong>{{ date.aktivitet.title|default:"(Mangler navn)" }}</strong>?
+    for <strong>{{ date.aktivitet.title|safe|default:"(Mangler navn)" }}</strong>?
   </p>
 
   <p>

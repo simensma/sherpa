@@ -134,7 +134,7 @@
           <tr>
             <td><input type="checkbox"></td>
             <td>
-              {{ dato.aktivitet.title|default:"(Mangler navn)"|highlight:params.sok }}
+              {{ dato.aktivitet.title|safe|default:"(Mangler navn)"|highlight:params.sok }}
               {% if dato.aktivitet.is_imported %}
                 <span class="label label-info">Importert</span>
               {% endif %}
