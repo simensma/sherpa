@@ -204,7 +204,7 @@
                 <h3>{{ aktivitet_date.aktivitet.title|safe }}</h3>
                 <p>
                   {% if aktivitet_date.aktivitet.is_imported %}
-                    {{ aktivitet_date.aktivitet.description|striptags|truncatewords:"30" }}
+                    {{ aktivitet_date.aktivitet.description|striptags|truncatewords:"30"|safe }}
                   {% else %}
                     {{ aktivitet_date.aktivitet.description|truncatewords:"30" }}
                   {% endif %}
