@@ -232,9 +232,7 @@ class AktivitetDate(models.Model):
     # Signup start/deadline/cancel should only be null when signup_enabled is False
     signup_start = models.DateField(null=True)
     signup_deadline = models.DateField(null=True)
-    # Rename to cancel_deadline
     cancel_deadline = models.DateField(null=True)
-    signup_cancel_deadline = models.DateField(null=True)
 
     should_have_turleder = models.BooleanField(default=False)
     turledere = models.ManyToManyField('user.User', related_name='turleder_aktivitet_dates')
