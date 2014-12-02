@@ -297,15 +297,15 @@ class AktivitetDate(models.Model):
         return self.other_dates().order_by('-start_date')
 
     def get_duration_days(self):
-        diff = self.end_date-self.start_date
+        diff = self.end_date - self.start_date
         return diff.days
 
     def get_duration_hours(self):
-        diff = self.end_date-self.start_date
+        diff = self.end_date - self.start_date
         return diff.seconds / 3600
 
     def get_duration(self):
-        diff = self.end_date-self.start_date
+        diff = self.end_date - self.start_date
         days = diff.days
 
         if diff.total_seconds() == 0:
