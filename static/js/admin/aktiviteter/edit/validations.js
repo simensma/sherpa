@@ -493,11 +493,11 @@ $(function() {
         function SignupCancelDeadlineValidator(root) {
 
             var form_group_signup = root.find("div.form-group.signup");
-            var form_group = root.find("div.form-group.signup_cancel_deadline");
+            var form_group = root.find("div.form-group.cancel_deadline");
             var error = form_group.find("div.error");
-            var signup_cancel_deadline_until_start = form_group.find("input[name='signup_cancel_deadline_until_start']");
-            var signup_cancel_deadline = form_group.find("div.date");
-            var signup_cancel_deadline_input = form_group.find("input[name='signup_cancel_deadline']");
+            var cancel_deadline_until_start = form_group.find("input[name='cancel_deadline_until_start']");
+            var cancel_deadline = form_group.find("div.date");
+            var cancel_deadline_input = form_group.find("input[name='cancel_deadline']");
             this.scrollTo = root;
 
             this.validate = function() {
@@ -506,11 +506,11 @@ $(function() {
                     return true;
                 }
 
-                if(signup_cancel_deadline_until_start.is(":checked")) {
+                if(cancel_deadline_until_start.is(":checked")) {
                     return true;
                 }
 
-                var valid = signup_cancel_deadline_input.val().match(/^\d\d\.\d\d\.\d\d\d\d$/) !== null;
+                var valid = cancel_deadline_input.val().match(/^\d\d\.\d\d\.\d\d\d\d$/) !== null;
 
                 if(!valid) {
                     markError();
@@ -518,10 +518,10 @@ $(function() {
                 return valid;
             };
 
-            signup_cancel_deadline_until_start.change(clearError);
-            signup_cancel_deadline_input.focus(clearError);
-            signup_cancel_deadline.on('show', clearError);
-            signup_cancel_deadline.on('changeDate', this.validate);
+            cancel_deadline_until_start.change(clearError);
+            cancel_deadline_input.focus(clearError);
+            cancel_deadline.on('show', clearError);
+            cancel_deadline.on('changeDate', this.validate);
 
             function markError() {
                 form_group.addClass('has-error');

@@ -187,7 +187,7 @@
                   <label>
                     <input type="checkbox" name="dates[{{ i }}][no_cancel_deadline]" value="1"
                       data-dnt-toggle="date-cancel-deadline"
-                      {% if not date.signup_cancel_deadline %}checked{% endif %}>
+                      {% if not date.cancel_deadline %}checked{% endif %}>
 
                     Avmelding helt frem til turen starter
                   </label>
@@ -197,11 +197,11 @@
 
             <!-- cancel-deadline input -->
             <div data-dnt-container="date-cancel-deadline"
-              class="form-group{% if not date.signup_cancel_deadline %} jq-hide{% endif %}">
+              class="form-group{% if not date.cancel_deadline %} jq-hide{% endif %}">
               <div class="col-sm-5 col-sm-offset-3">
                 <div class="input-group date">
                   <input type="text" class="form-control" name="dates[{{ i }}][cancel_deadline]"
-                    value="{% firstof date.signup_cancel_deadline|date:"d.m.Y" date.end_date|date:"d.m.Y" %}"
+                    value="{% firstof date.cancel_deadline|date:"d.m.Y" date.end_date|date:"d.m.Y" %}"
                     placeholder="dd.mm.åååå">
 
                   <span class="input-group-addon"><i class="fa fa-calendar"></i></span>

@@ -276,7 +276,7 @@ class AktivitetDate(models.Model):
 
     def accepts_signup_cancels(self):
         today = date.today()
-        return self.signup_enabled and self.signup_cancel_deadline >= today
+        return self.signup_enabled and self.cancel_deadline >= today
 
     def external_signup_url(self):
         # @TODO check if this is a Montis signup

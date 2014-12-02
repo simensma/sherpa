@@ -317,7 +317,7 @@ def edit(request, aktivitet):
                     model.signup_enabled = False
                     model.signup_start = None
                     model.signup_deadline = None
-                    model.signup_cancel_deadline = None
+                    model.cancel_deadline = None
 
                 elif date['signup_method'] == 'minside' or date['signup_method'] == 'simple':
                     model.signup_enabled = True
@@ -344,9 +344,9 @@ def edit(request, aktivitet):
                         ).date()
 
                     if 'no_cancel_deadline' in date and date['no_cancel_deadline'] == '1':
-                        model.signup_cancel_deadline = None
+                        model.cancel_deadline = None
                     elif 'cancel_deadline' in date and date['cancel_deadline'] != '':
-                        model.signup_cancel_deadline = datetime.strptime(
+                        model.cancel_deadline = datetime.strptime(
                             date['cancel_deadline'], "%d.%m.%Y"
                         ).date()
 
