@@ -267,12 +267,24 @@ class AktivitetDate(models.Model):
             else:
                 return 'minside'
 
+    def signup_starts_immediately(self):
+        return self.signup_enabled and self.signup_start is None
+
+    def signup_available_to_departure(self):
+        return self.signup_enabled and self.signup_deadline is None
+
+    def cancel_deadline_always_available(self):
+        return self.signup_enabled and self.cancel_deadline is None
+
     def accepts_signups(self):
         if not self.signup_enabled:
             return False
 
         today = date.today()
-        return self.signup_start <= today and self.signup_deadline >= today
+        return (
+            (self.signup_starts_immediately() or self.signup_start <= today) and
+            (self.signup_available_to_departure() or self.signup_deadline >= today)
+        )
 
     def will_accept_signups(self):
         """Returns True if this date does NOT currently accept signups, but will in the future"""
@@ -285,13 +297,13 @@ class AktivitetDate(models.Model):
         if not self.signup_enabled:
             return False
 
-        return self.signup_deadline < date.today()
+        return not self.signup_available_to_departure() and self.signup_deadline < date.today()
 
     def accepts_signup_cancels(self):
         if not self.signup_enabled:
             return False
 
-        return self.cancel_deadline >= date.today()
+        return self.cancel_deadline_always_available() or self.cancel_deadline >= date.today()
 
     def external_signup_url(self):
         # @TODO check if this is a Montis signup
