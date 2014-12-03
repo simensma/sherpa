@@ -3,7 +3,9 @@ from datetime import date
 import json
 
 from django.contrib.gis.db import models
+from django.conf import settings
 
+from core.util import s3_bucket
 from sherpa2.models import Location, Turforslag
 
 class Aktivitet(models.Model):
@@ -417,8 +419,36 @@ class AktivitetImage(models.Model):
     # duplicates during subsequent imports.
     sherpa2_url = models.CharField(max_length=1023, null=True)
 
+    DEFAULT_IMAGE_RESOLUTION = 940
+
     def __unicode__(self):
         return u'%s' % self.pk
+
+    def get_optimized_url(self, min_resolution=DEFAULT_IMAGE_RESOLUTION):
+        """Returns a scaled version of this image, with a minimum of the given resolution. Only images referenced
+        directly from our image archive can be optimized, other references are returned as-is."""
+        # Note that we're ignoring debug context since the image references will have been saved with the prod-bucket,
+        # and that's what we want to compare.
+        local_image_path = '%s/%s' % (s3_bucket(ignore_debug=True), settings.AWS_IMAGEGALLERY_PREFIX)
+        local_image_path_ssl = '%s/%s' % (s3_bucket(ssl=True, ignore_debug=True), settings.AWS_IMAGEGALLERY_PREFIX)
+
+        if local_image_path not in self.url and local_image_path_ssl not in self.url:
+            # Not an image from the image gallery; don't touch it
+            return self.url
+
+        for size in settings.THUMB_SIZES:
+            if ('-%s') % size in self.url:
+                # The image URL contains an explicit size, probably intentional - use it as-is
+                return self.url
+
+        if min_resolution > max(settings.THUMB_SIZES):
+            # No thumbs are large enough, use the original
+            return self.url
+        else:
+            thumb_size = min([t for t in settings.THUMB_SIZES if t >= min_resolution])
+
+        name, extension = self.url.rsplit('.', 1)
+        return '%s-%s.%s' % (name, thumb_size, extension)
 
 class SimpleParticipant(models.Model):
     aktivitet_date = models.ForeignKey(AktivitetDate, related_name='simple_participants')
