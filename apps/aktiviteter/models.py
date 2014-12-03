@@ -31,17 +31,6 @@ class Aktivitet(models.Model):
         ('hard', 'Krevende'),
         ('expert', 'Ekspert'),)
     difficulty = models.CharField(max_length=255, choices=DIFFICULTY_CHOICES)
-    AUDIENCE_CHOICES = (
-        ('adults', 'Voksne'),
-        ('children', 'Barn'),
-        ('youth', 'Ungdom'),
-        ('senior', 'Seniorer'),
-        ('mountaineers', 'Fjellsportinteresserte'),
-        ('disabled', 'Funksjonshemmede'),)
-    # audiences is multiple choice. We *could* model this with an 'audience' table
-    # with one char column and a many-to-many rel, but using a json list is easier
-    # and probably faster.
-    audiences_tmp = models.CharField(max_length=1023)
     audiences = models.ManyToManyField('aktiviteter.AktivitetAudience', related_name='aktiviteter')
     CATEGORY_CHOICES = (
         ('organizedhike', 'Fellestur'),
