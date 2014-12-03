@@ -53,11 +53,15 @@
 
         <div class="search-filters">
           <div class="section">
-            <div class="button-selections category-types">
+            <div class="button-selections" data-dnt-container="category-types">
               {% for category in category_types %}
-                <div class="category {{ category.category }} jq-hide">
+                <div
+                  class="category jq-hide"
+                  data-dnt-container="category"
+                  data-dnt-category="{{ category.category }}">
+
                   {% for type in category.types %}
-                    <button class="btn category-type" data-category-type="{{ type }}">
+                    <button class="btn category-type" data-dnt-category-type="{{ type }}">
                       {{ type }}
                     </button>
                   {% endfor %}

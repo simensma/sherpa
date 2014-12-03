@@ -45,6 +45,18 @@ $(function() {
         }
     });
 
+    button_selections.filter(".categories").click(function() {
+        var types = button_selections.filter('[data-dnt-container="category-types"]');
+        types.find('[data-dnt-container="category"]').hide();
+
+        var selected = $(this).find('.selected');
+        if(selected.length !== 1) {
+            return $(this);
+        }
+
+        var category = selected.attr('data-category');
+        types.find('[data-dnt-category="' + category + '"]').show();
+    });
 
     // Disable enter submit on forms
     filters.find("form").bind("keypress", function(e) {
