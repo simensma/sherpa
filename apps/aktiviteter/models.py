@@ -87,7 +87,10 @@ class Aktivitet(models.Model):
         return json.dumps(self.start_point.get_coords()[1])
 
     def get_locations(self):
-        return Location.get_active().filter(id__in=json.loads(self.locations))
+        # Lookup programmatically, since the entire result set will in most cases already be cached, and iterating
+        # that is faster than performing a new query
+        locations = json.loads(self.locations)
+        return [l for l in Location.get_active_cached() if l.id in locations]
 
     def get_audiences(self):
         return json.loads(self.audiences)
