@@ -48,6 +48,7 @@ $(function() {
     button_selections.filter(".categories").click(function() {
         var types = button_selections.filter('[data-dnt-container="category-types"]');
         types.find('[data-dnt-container="category"]').slideUp('fast');
+        types.find('button.selected').removeClass('selected btn-danger');
 
         var selected = $(this).find('.selected');
         if(selected.length !== 1) {
