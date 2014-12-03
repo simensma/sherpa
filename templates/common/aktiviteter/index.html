@@ -55,17 +55,20 @@
           <div class="section">
             <div class="button-selections" data-dnt-container="category-types">
               {% for category in category_types %}
-                <div
-                  class="category jq-hide"
-                  data-dnt-container="category"
-                  data-dnt-category="{{ category.category }}">
+                {# Note that volunteerwork is excluded, primarily because most of them aren't properly categorized #}
+                {% if category.category != 'volunteerwork' %}
+                  <div
+                    class="category jq-hide"
+                    data-dnt-container="category"
+                    data-dnt-category="{{ category.category }}">
 
-                  {% for type in category.types %}
-                    <button class="btn category-type" data-dnt-category-type="{{ type }}">
-                      {{ type }}
-                    </button>
-                  {% endfor %}
-                </div>
+                    {% for type in category.types %}
+                      <button class="btn category-type" data-dnt-category-type="{{ type }}">
+                        {{ type }}
+                      </button>
+                    {% endfor %}
+                  </div>
+                {% endif %}
               {% endfor %}
             </div>
           </div>
