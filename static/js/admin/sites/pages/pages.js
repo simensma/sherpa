@@ -9,9 +9,9 @@ $(function() {
     var newPage = $("div.new-page");
 
     $("a.new-page").click(function() {
-        newPage.find("input[name='title']").keyup();
         newPage.modal();
     });
+
     newPage.find("img.loader").hide();
     newPage.find("span.valid").hide();
     newPage.find("span.invalid").hide();
