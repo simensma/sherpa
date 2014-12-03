@@ -47,7 +47,7 @@ $(function() {
 
     button_selections.filter(".categories").click(function() {
         var types = button_selections.filter('[data-dnt-container="category-types"]');
-        types.find('[data-dnt-container="category"]').hide();
+        types.find('[data-dnt-container="category"]').slideUp('fast');
 
         var selected = $(this).find('.selected');
         if(selected.length !== 1) {
@@ -55,7 +55,7 @@ $(function() {
         }
 
         var category = selected.attr('data-category');
-        types.find('[data-dnt-category="' + category + '"]').show();
+        types.find('[data-dnt-category="' + category + '"]').slideDown('fast');
     });
 
     // Disable enter submit on forms
