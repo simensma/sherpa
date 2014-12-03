@@ -52,6 +52,22 @@
         </div>
 
         <div class="search-filters">
+          <div class="section">
+            <div class="button-selections category-types">
+              {% for category in category_types %}
+                <div class="category {{ category.category }} jq-hide">
+                  {% for type in category.types %}
+                    <button class="btn category-type" data-category-type="{{ type }}">
+                      {{ type }}
+                    </button>
+                  {% endfor %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <div class="search-filters">
 
           <div class="section">
             <div class="input-group">

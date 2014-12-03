@@ -22,6 +22,7 @@ def index(request):
         'aktivitet_dates': aktivitet_dates_pagenav,
         'difficulties': Aktivitet.DIFFICULTY_CHOICES,
         'categories': Aktivitet.CATEGORY_CHOICES,
+        'category_types': Aktivitet.CATEGORY_TYPES_LIST,
         'audiences': Aktivitet.AUDIENCE_CHOICES,
         'locations': Location.get_active().order_by('name'),
         'all_foreninger': Forening.get_all_sorted_with_type_data(),
