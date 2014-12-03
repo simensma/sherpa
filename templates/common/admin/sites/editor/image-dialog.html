@@ -37,6 +37,15 @@
             <label class="col-md-2 control-label">URL:</label>
             <div class="col-md-10">
               <input class="form-control" type="text" name="src">
+              <p class="help-block warning invalid-image-url jq-hide">
+                Adressen du har oppgitt peker ikke til et bilde.
+              </p>
+              <p class="help-block error image-not-found jq-hide">
+                Fant ikke noe bilde på denne URL-en. Dobbeltsjekk at du har rett og prøv evt. med en ny URL.
+              </p>
+              <p class="help-block info looking-up-image jq-hide">
+                Sjekker URL...
+              </p>
             </div>
           </div>
         </div>
