@@ -41,7 +41,7 @@ class Aktivitet(models.Model):
     # audiences is multiple choice. We *could* model this with an 'audience' table
     # with one char column and a many-to-many rel, but using a json list is easier
     # and probably faster.
-    audiences = models.CharField(max_length=1023)
+    audiences_tmp = models.CharField(max_length=1023)
     CATEGORY_CHOICES = (
         ('organizedhike', 'Fellestur'),
         ('course', 'Kurs'),
