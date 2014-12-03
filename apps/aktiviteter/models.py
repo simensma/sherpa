@@ -470,6 +470,9 @@ class AktivitetAudience(models.Model):
     )
     name = models.CharField(max_length=255, choices=AUDIENCE_CHOICES)
 
+    def __unicode__(self):
+        return u'%s: %s' % (self.id, self.name)
+
 class SimpleParticipant(models.Model):
     aktivitet_date = models.ForeignKey(AktivitetDate, related_name='simple_participants')
     name = models.CharField(max_length=255)
