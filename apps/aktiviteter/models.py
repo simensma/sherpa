@@ -240,6 +240,7 @@ class AktivitetDate(models.Model):
     start_date = models.DateTimeField(db_index=True)
     end_date = models.DateTimeField()
     signup_enabled = models.BooleanField(default=True)
+    signup_montis = models.BooleanField()
     signup_simple_allowed = models.BooleanField()
     signup_max_allowed = models.PositiveIntegerField(default=0, null=True)
 
@@ -276,7 +277,9 @@ class AktivitetDate(models.Model):
         if not self.signup_enabled:
             return 'none'
         else:
-            if self.signup_simple_allowed:
+            if self.signup_montis:
+                return 'montis'
+            elif self.signup_simple_allowed:
                 return 'simple'
             else:
                 return 'minside'
