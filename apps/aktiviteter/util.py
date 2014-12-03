@@ -28,6 +28,12 @@ def filter_aktivitet_dates(filter):
     if 'categories' in filter and len(filter['categories']) > 0:
         dates = dates.filter(aktivitet__category__in=filter['categories'])
 
+    if 'category_types' in filter and len(filter['category_types']) > 0:
+        dates = dates.filter(
+            Q(aktivitet__category_type__in=filter['category_types']) |
+            Q(aktivitet__category_tags__name__in=filter['category_types'])
+        )
+
     if 'difficulties' in filter and len(filter['difficulties']) > 0:
         dates = dates.filter(aktivitet__difficulty__in=filter['difficulties'])
 
