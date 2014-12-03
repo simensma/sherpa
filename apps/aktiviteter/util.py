@@ -29,6 +29,8 @@ def filter_aktivitet_dates(filter):
         dates = dates.filter(aktivitet__category__in=filter['categories'])
 
     if 'category_types' in filter and len(filter['category_types']) > 0:
+        # Note that we're checking for both types and tags, and since objects may have the same tag specified twice,
+        # it'll require an explicit distinct clause in our query
         dates = dates.filter(
             Q(aktivitet__category_type__in=filter['category_types']) |
             Q(aktivitet__category_tags__name__in=filter['category_types'])
@@ -78,7 +80,7 @@ def filter_aktivitet_dates(filter):
                 Q(aktivitet__co_foreninger_cabin__in=cabins)
             )
 
-    dates = dates.order_by(
+    dates = dates.distinct().order_by(
         'start_date'
     )
 
