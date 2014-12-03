@@ -237,7 +237,7 @@ class Aktivitet(models.Model):
 
 class AktivitetDate(models.Model):
     aktivitet = models.ForeignKey(Aktivitet, related_name='dates')
-    start_date = models.DateTimeField()
+    start_date = models.DateTimeField(db_index=True)
     end_date = models.DateTimeField()
     signup_enabled = models.BooleanField(default=True)
     signup_simple_allowed = models.BooleanField()
