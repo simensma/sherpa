@@ -291,6 +291,7 @@ class Location(models.Model):
 
     class Meta:
         db_table = u'location2'
+        ordering = ['name']
 
 class Turforslag(models.Model):
     id = models.IntegerField(db_column='tp_id', primary_key=True)
