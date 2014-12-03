@@ -123,8 +123,11 @@
 
 <div class="modal container jq-hide new-page" data-check-slug-url="{% url 'admin.sites.pages.page.check_slug' active_site.id %}">
   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
-    <h3>Opprett ny side</h3>
+    <button type="button" class="close" data-dismiss="modal">
+      <span aria-hidden="true">&times;</span>
+      <span class="sr-only">Close</span>
+    </button>
+    <h4 class="modal-title">Opprett ny side</h4>
   </div>
   <div class="modal-body">
     <form action="{% url 'admin.sites.pages.page.new' active_site.id %}" method="post">
