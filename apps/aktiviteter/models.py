@@ -450,6 +450,9 @@ class AktivitetImage(models.Model):
         name, extension = self.url.rsplit('.', 1)
         return '%s-%s.%s' % (name, thumb_size, extension)
 
+    class Meta:
+        ordering = ['order']
+
 class SimpleParticipant(models.Model):
     aktivitet_date = models.ForeignKey(AktivitetDate, related_name='simple_participants')
     name = models.CharField(max_length=255)
