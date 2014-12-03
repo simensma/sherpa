@@ -31,17 +31,7 @@ class Aktivitet(models.Model):
         ('hard', 'Krevende'),
         ('expert', 'Ekspert'),)
     difficulty = models.CharField(max_length=255, choices=DIFFICULTY_CHOICES)
-    AUDIENCE_CHOICES = (
-        ('adults', 'Voksne'),
-        ('children', 'Barn'),
-        ('youth', 'Ungdom'),
-        ('senior', 'Seniorer'),
-        ('mountaineers', 'Fjellsportinteresserte'),
-        ('disabled', 'Funksjonshemmede'),)
-    # audiences is multiple choice. We *could* model this with an 'audience' table
-    # with one char column and a many-to-many rel, but using a json list is easier
-    # and probably faster.
-    audiences = models.CharField(max_length=1023)
+    audiences = models.ManyToManyField('aktiviteter.AktivitetAudience', related_name='aktiviteter')
     CATEGORY_CHOICES = (
         ('organizedhike', 'Fellestur'),
         ('course', 'Kurs'),
@@ -87,10 +77,13 @@ class Aktivitet(models.Model):
         return json.dumps(self.start_point.get_coords()[1])
 
     def get_locations(self):
-        return Location.get_active().filter(id__in=json.loads(self.locations))
+        # Lookup programmatically, since the entire result set will in most cases already be cached, and iterating
+        # that is faster than performing a new query
+        locations = json.loads(self.locations)
+        return [l for l in Location.get_active_cached() if l.id in locations]
 
     def get_audiences(self):
-        return json.loads(self.audiences)
+        return [a.name for a in self.audiences.all()]
 
     def get_category(self):
         return [c for c in self.CATEGORY_CHOICES if c[0] == self.category][0][1]
@@ -149,8 +142,11 @@ class Aktivitet(models.Model):
         return enumerate(self.images.order_by('order'))
 
     def get_image(self):
-        for image in self.images.order_by('order'):
-            return image
+        try:
+            # Note that selecting all will help avoid extra queries if the images have been prefetched
+            return self.images.all()[0]
+        except IndexError:
+            return None
 
     def get_images_json(self):
         images = []
@@ -241,7 +237,7 @@ class Aktivitet(models.Model):
 
 class AktivitetDate(models.Model):
     aktivitet = models.ForeignKey(Aktivitet, related_name='dates')
-    start_date = models.DateTimeField()
+    start_date = models.DateTimeField(db_index=True)
     end_date = models.DateTimeField()
     signup_enabled = models.BooleanField(default=True)
     signup_simple_allowed = models.BooleanField()
@@ -449,6 +445,23 @@ class AktivitetImage(models.Model):
 
         name, extension = self.url.rsplit('.', 1)
         return '%s-%s.%s' % (name, thumb_size, extension)
+
+    class Meta:
+        ordering = ['order']
+
+class AktivitetAudience(models.Model):
+    AUDIENCE_CHOICES = (
+        ('adults', 'Voksne'),
+        ('children', 'Barn'),
+        ('youth', 'Ungdom'),
+        ('senior', 'Seniorer'),
+        ('mountaineers', 'Fjellsportinteresserte'),
+        ('disabled', 'Funksjonshemmede'),
+    )
+    name = models.CharField(max_length=255, choices=AUDIENCE_CHOICES)
+
+    def __unicode__(self):
+        return u'%s: %s' % (self.id, self.name)
 
 class SimpleParticipant(models.Model):
     aktivitet_date = models.ForeignKey(AktivitetDate, related_name='simple_participants')

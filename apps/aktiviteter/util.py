@@ -36,6 +36,9 @@ def filter_aktivitet_dates(filter):
             Q(aktivitet__category_tags__name__in=filter['category_types'])
         )
 
+    if 'audiences' in filter and len(filter['audiences']) > 0:
+        dates = dates.filter(aktivitet__audiences__name__in=filter['audiences'])
+
     if 'difficulties' in filter and len(filter['difficulties']) > 0:
         dates = dates.filter(aktivitet__difficulty__in=filter['difficulties'])
 
@@ -88,14 +91,6 @@ def filter_aktivitet_dates(filter):
 
     # Programmatical filters - due to storing JSON etc. Maybe this could be done in the
     # DB with postgres? Or maybe it should be remodelled?
-
-    if 'audiences' in filter and len(filter['audiences']) > 0:
-        dates_to_remove = []
-        for date in dates:
-            if not any(a in filter['audiences'] for a in json.loads(date.aktivitet.audiences)):
-                dates_to_remove.append(date)
-        for d in dates_to_remove:
-            dates.remove(d)
 
     if 'locations' in filter and len(filter['locations']) > 0:
         filter['locations'] = [int(l) for l in filter['locations']]

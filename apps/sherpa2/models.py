@@ -8,6 +8,7 @@ from django.contrib.gis.db import models
 from django.contrib.gis.geos import Point
 from django.core.cache import cache
 from django.conf import settings
+from django.core.cache import cache
 
 import requests
 import PIL.Image
@@ -289,8 +290,17 @@ class Location(models.Model):
     def get_active():
         return Location.objects.filter(online=1)
 
+    @staticmethod
+    def get_active_cached():
+        locations = cache.get('sherpa2.locations')
+        if locations is None:
+            locations = Location.get_active()
+            cache.set('sherpa2.locations', locations, 60 * 60 * 24 * 7)
+        return locations
+
     class Meta:
         db_table = u'location2'
+        ordering = ['name']
 
 class Turforslag(models.Model):
     id = models.IntegerField(db_column='tp_id', primary_key=True)
@@ -513,7 +523,7 @@ class Activity(models.Model):
         aktivitet.start_point = self.get_start_point()
         aktivitet.locations = json.dumps(locations)
         aktivitet.difficulty = difficulty
-        aktivitet.audiences = json.dumps(audiences)
+        aktivitet.audiences = audiences
         aktivitet.published = True
         aktivitet.private = False
 
@@ -755,8 +765,11 @@ class Activity(models.Model):
         return highest_difficulty
 
     def convert_audiences(self):
-        return [Activity.AUDIENCE_CONVERSION_TABLE[extra]
-            for extra in self.get_extras() if extra in Activity.AUDIENCE_CONVERSION_TABLE]
+        from aktiviteter.models import AktivitetAudience
+        return [
+            AktivitetAudience.objects.get(name=Activity.AUDIENCE_CONVERSION_TABLE[extra])
+            for extra in self.get_extras() if extra in Activity.AUDIENCE_CONVERSION_TABLE
+        ]
 
     def convert_locations(self):
         try:

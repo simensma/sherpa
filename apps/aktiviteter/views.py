@@ -9,7 +9,7 @@ from django.contrib import messages
 
 from sherpa.decorators import user_requires_login
 from sherpa2.models import Location
-from aktiviteter.models import Aktivitet, AktivitetDate, SimpleParticipant, Cabin
+from aktiviteter.models import Aktivitet, AktivitetDate, AktivitetAudience, SimpleParticipant, Cabin
 from aktiviteter.util import filter_aktivitet_dates, paginate_aktivitet_dates
 from core import validator
 from foreninger.models import Forening
@@ -23,8 +23,8 @@ def index(request):
         'difficulties': Aktivitet.DIFFICULTY_CHOICES,
         'categories': Aktivitet.CATEGORY_CHOICES,
         'category_types': Aktivitet.CATEGORY_TYPES_LIST,
-        'audiences': Aktivitet.AUDIENCE_CHOICES,
-        'locations': Location.get_active().order_by('name'),
+        'audiences': AktivitetAudience.AUDIENCE_CHOICES,
+        'locations': Location.get_active_cached(),
         'all_foreninger': Forening.get_all_sorted_with_type_data(),
         'cabins': Cabin.objects.order_by('name'),
     }
