@@ -8,6 +8,7 @@ from django.contrib.gis.db import models
 from django.contrib.gis.geos import Point
 from django.core.cache import cache
 from django.conf import settings
+from django.core.cache import cache
 
 import requests
 import PIL.Image
@@ -288,6 +289,14 @@ class Location(models.Model):
     @staticmethod
     def get_active():
         return Location.objects.filter(online=1)
+
+    @staticmethod
+    def get_active_cached():
+        locations = cache.get('sherpa2.locations')
+        if locations is None:
+            locations = Location.get_active()
+            cache.set('sherpa2.locations', locations, 60 * 60 * 24 * 7)
+        return locations
 
     class Meta:
         db_table = u'location2'
