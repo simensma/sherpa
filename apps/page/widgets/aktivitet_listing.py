@@ -4,7 +4,7 @@ import json
 from django.db.models import Q
 
 from page.widgets.widget import Widget
-from aktiviteter.models import Aktivitet, AktivitetDate
+from aktiviteter.models import Aktivitet, AktivitetDate, AktivitetAudience
 from foreninger.models import Forening
 
 class AktivitetListingWidget(Widget):
@@ -24,7 +24,7 @@ class AktivitetListingWidget(Widget):
 
         # Programmatic filtering for json values
         # Skip if none, or all, audiences were chosen
-        if len(widget_options['audiences']) > 0 and len(widget_options['audiences']) < len(Aktivitet.AUDIENCE_CHOICES):
+        if len(widget_options['audiences']) > 0 and len(widget_options['audiences']) < len(AktivitetAudience.AUDIENCE_CHOICES):
             aktivitet_dates = [d for d in aktivitet_dates
                 if any(a in widget_options['audiences'] for a in json.loads(d.aktivitet.audiences))
             ]
@@ -34,6 +34,6 @@ class AktivitetListingWidget(Widget):
     def admin_context(self, site):
         return {
             'all_foreninger_sorted': Forening.get_all_sorted_with_type_data(),
-            'audiences': Aktivitet.AUDIENCE_CHOICES,
+            'audiences': AktivitetAudience.AUDIENCE_CHOICES,
             'categories': Aktivitet.CATEGORY_CHOICES,
         }

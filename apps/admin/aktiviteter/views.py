@@ -14,7 +14,7 @@ from django.contrib.gis.geos import Point
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from aktiviteter.models import Aktivitet, AktivitetDate, AktivitetImage, Cabin, ConversionFailure, SynchronizationDate
+from aktiviteter.models import Aktivitet, AktivitetDate, AktivitetImage, AktivitetAudience, Cabin, ConversionFailure, SynchronizationDate
 from core.util import parse_html_array
 from core.models import Tag, County, Municipality
 from sherpa2.models import Location, Turforslag, Activity as Sherpa2Aktivitet
@@ -133,7 +133,7 @@ def edit(request, aktivitet):
         context = {
             'aktivitet': aktivitet,
             'difficulties': Aktivitet.DIFFICULTY_CHOICES,
-            'audiences': Aktivitet.AUDIENCE_CHOICES,
+            'audiences': AktivitetAudience.AUDIENCE_CHOICES,
             'categories': Aktivitet.CATEGORY_CHOICES,
             'all_foreninger': Forening.get_all_sorted(),
             'cabins': Cabin.objects.order_by('name'),
