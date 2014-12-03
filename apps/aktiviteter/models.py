@@ -175,51 +175,67 @@ class Aktivitet(models.Model):
 
     # A predefined list of subcategory suggestions - they're simply implemented
     # as tags ('core.Tag'), though.
+    SUBCATEGORIES_LIST = [
+        {
+            'category': 'organizedhike',
+            'types': [
+                u'fottur',
+                u'skitur',
+                u'sykkeltur',
+                u'padletur',
+                u'klatretur',
+                u'bretur'
+            ],
+        }, {
+            'category': 'course',
+            'types': [
+                u'turlederkurs',
+                u'instruktørkurs',
+                u'brekurs',
+                u'klatrekurs',
+                u'skredkurs',
+                u'gps-kurs',
+                u'kajakkurs',
+                u'førstehjelpskurs',
+            ],
+        }, {
+            'category': 'event',
+            'types': [
+                u'kom-deg-ut-dagen',
+                u'basecamp',
+                u'opptur',
+                u'oppstart',
+                u'fjellsportsamling',
+                u'sommeråpning',
+                u'konsert',
+                u'festival',
+                u'medlemsmøte',
+                u'foredrag',
+                u'familieleir',
+                u'barneleir',
+            ],
+        }, {
+            'category': 'volunteerwork',
+            'types': [
+                u'merking',
+                u'varding',
+                u'rydding',
+                u'snekring',
+                u'maling',
+                u'vedlikeholdsarbeid',
+                u'turledelse',
+                u'organisasjonsarbeid',
+                u'arrangementsbistand',
+            ],
+        }
+    ]
+
+    # A dictionary structure of the same data
     SUBCATEGORIES = {
-        'organizedhike': [
-            u'fottur',
-            u'skitur',
-            u'sykkeltur',
-            u'padletur',
-            u'klatretur',
-            u'bretur'
-        ],
-        'course': [
-            u'turlederkurs',
-            u'instruktørkurs',
-            u'brekurs',
-            u'klatrekurs',
-            u'skredkurs',
-            u'gps-kurs',
-            u'kajakkurs',
-            u'førstehjelpskurs',
-        ],
-        'event': [
-            u'kom-deg-ut-dagen',
-            u'basecamp',
-            u'opptur',
-            u'oppstart',
-            u'fjellsportsamling',
-            u'sommeråpning',
-            u'konsert',
-            u'festival',
-            u'medlemsmøte',
-            u'foredrag',
-            u'familieleir',
-            u'barneleir',
-        ],
-        'volunteerwork': [
-            u'merking',
-            u'varding',
-            u'rydding',
-            u'snekring',
-            u'maling',
-            u'vedlikeholdsarbeid',
-            u'turledelse',
-            u'organisasjonsarbeid',
-            u'arrangementsbistand',
-        ]
+        category['category']: category['types']
+        for category in SUBCATEGORIES_LIST
     }
+
 
 class AktivitetDate(models.Model):
     aktivitet = models.ForeignKey(Aktivitet, related_name='dates')
