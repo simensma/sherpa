@@ -1076,16 +1076,19 @@ class ActivityDate(models.Model):
 
         if self.convert_signup_enabled():
             date.signup_enabled = True
+            date.signup_montis = self.convert_signup_montis(date.aktivitet.code)
             date.signup_max_allowed = self.convert_signup_max_allowed()
             date.signup_start = self.convert_signup_start()
             date.signup_deadline = self.convert_signup_deadline()
             date.cancel_deadline = self.convert_cancel_deadline()
         else:
             date.signup_enabled = False
+            date.signup_montis = False
             date.signup_max_allowed = None
             date.signup_start = None
             date.signup_deadline = None
             date.cancel_deadline = None
+
         date.signup_simple_allowed = False
 
         date.save()
@@ -1123,6 +1126,9 @@ class ActivityDate(models.Model):
             ActivityDate.ONLINE_SIGNUP_REBUS,
             ActivityDate.ONLINE_SIGNUP_MONTIS,
         ]
+
+    def convert_signup_montis(self, code):
+        return code and self.online == ActivityDate.ONLINE_SIGNUP_MONTIS
 
     def convert_signup_start(self):
         try:
