@@ -1,4 +1,5 @@
 {% load date_fromto %}
+{% load aktivitet_image_optimized_url %}
 
 {% with aktivitet_date.aktivitet.get_image as header_image %}
 <div class="aktivitet{% if header_image %} has-headerimage{% endif %}" data-dnt-container="aktivitet">
@@ -150,7 +151,7 @@
               {% if aktivitet_date.aktivitet.images.count == 1 %}
                 {# A single image #}
                 <div class="single-carousel-item">
-                  <img src="{{ aktivitet_date.aktivitet.images.get.url }}" alt="{{ aktivitet_date.aktivitet.images.get.text }}">
+                  <img src="{{ aktivitet_date.aktivitet.images.get|aktivitet_image_optimized_url:500 }}" alt="{{ aktivitet_date.aktivitet.images.get.text }}">
                   {% if aktivitet_date.aktivitet.images.get.text or aktivitet_date.aktivitet.images.get.photographer %}
                     <div class="carousel-caption">
                       <p>
@@ -172,7 +173,7 @@
                   <div class="carousel-inner">
                     {% for image in aktivitet_date.aktivitet.get_images_ordered %}
                       <div class="{% if forloop.first %}active {% endif %}item">
-                        <img src="{{ image.url }}" alt="{{ image.text }}">
+                        <img src="{{ image|aktivitet_image_optimized_url:500 }}" alt="{{ image.text }}">
                         {% if image.text or image.photographer %}
                           <div class="carousel-caption">
                             <p>

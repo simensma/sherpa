@@ -47,14 +47,18 @@ def membership_year_start(year=None):
         'public_date': date(year=year, month=dates['public_date'].month, day=dates['public_date'].day),
     }
 
-def s3_bucket(ssl=False):
+def s3_bucket(ssl=False, ignore_debug=False):
+    """Returns the s3-bucket to use in this context (dev or prod).
+    ssl can be set to True if the bucket is to be referenced securely.
+    ignore_debug can be set to True if you want to ignore the debug context. This is only useful in some very rare
+    cases, ignore_debug parameter should typically not be used."""
     if not ssl:
-        if not settings.DEBUG:
+        if not settings.DEBUG or ignore_debug:
             return settings.AWS_BUCKET
         else:
             return settings.AWS_BUCKET_DEV
     else:
-        if not settings.DEBUG:
+        if not settings.DEBUG or ignore_debug:
             return settings.AWS_BUCKET_SSL
         else:
             return settings.AWS_BUCKET_SSL_DEV
