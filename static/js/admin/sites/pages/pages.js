@@ -105,7 +105,7 @@ $(function() {
         $(this).find("input[name='slug']").val($(this).find("span.slug").text());
     });
 
-    newPage.find("img[data-template]").click(function() {
+    newPage.find('button[data-dnt-action="create-page"]').click(function() {
         if(!validUrl) {
             alert("URLen du valgte er allerede i bruk av en annen side! Vennligst velg en annen URL.");
             return;
@@ -114,10 +114,14 @@ $(function() {
             alert("Du må skrive inn en tittel på siden før du oppretter den!");
             return;
         }
-        newPage.find("input[name='template']").val($(this).attr('data-template'));
-        $(this).parents("form").submit();
+        newPage.find("input[name='template']").val(newPage.find('.template-select .active').attr('data-template'));
+        newPage.find("form").submit();
     });
 
+    newPage.find('.template-select a').click(function (e) {
+        newPage.find('.template-select a.active').removeClass('active');
+        $(this).addClass('active');
+    });
 
     /* Sortable tree */
 

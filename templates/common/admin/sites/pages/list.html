@@ -153,30 +153,39 @@
 
       </div>
 
-      <h2>Velg en ferdigdefinert mal her:</h2>
+      <h2>Velg mal</h2>
 
-      <div class="row">
+      <div class="row template-select">
         <div class="col-sm-3">
-          <img src="{{ STATIC_URL }}img/admin/sites/editor/templates/empty.jpg" alt="Ferdigdefinert mal" data-template="1">
-          <p>Tom</p>
+          <a href="javascript:undefined" class="thumbnail" data-template="1">
+            <img src="{{ STATIC_URL }}img/admin/sites/editor/templates/empty.jpg" alt="Ferdigdefinert mal">
+            <p>Tom</p>
+          </a>
         </div>
         <div class="col-sm-3">
-          <img src="{{ STATIC_URL }}img/admin/sites/editor/templates/full-width.jpg" alt="Ferdigdefinert mal" data-template="2">
-          <p>Én kolonne</p>
+          <a href="javascript:undefined" class="thumbnail" data-template="2">
+            <img src="{{ STATIC_URL }}img/admin/sites/editor/templates/full-width.jpg" alt="Ferdigdefinert mal">
+            <p>Én kolonne</p>
+          </a>
         </div>
         <div class="col-sm-3">
-          <img src="{{ STATIC_URL }}img/admin/sites/editor/templates/sidebar.jpg" alt="Ferdigdefinert mal" data-template="3">
-          <p>Sidebar (hele)</p>
+          <a href="javascript:undefined" class="thumbnail" data-template="3">
+            <img src="{{ STATIC_URL }}img/admin/sites/editor/templates/sidebar.jpg" alt="Ferdigdefinert mal">
+            <p>Sidebar (hele)</p>
+          </a>
         </div>
         <div class="col-sm-3">
-          <img src="{{ STATIC_URL }}img/admin/sites/editor/templates/3-columns.jpg" alt="Ferdigdefinert mal" data-template="4">
-          <p>Tre kolonner</p>
+          <a href="javascript:undefined" class="thumbnail" data-template="4">
+            <img src="{{ STATIC_URL }}img/admin/sites/editor/templates/3-columns.jpg" alt="Ferdigdefinert mal">
+            <p>Tre kolonner</p>
+          </a>
         </div>
       </div>
     </form>
   </div>
   <div class="modal-footer">
-    <a href="javascript:undefined" class="btn btn-default" data-dismiss="modal">Lukk vindu</a>
+    <button class="btn btn-default" data-dismiss="modal">Avbryt</button>
+    <button class="btn btn-success" data-dnt-action="create-page">Opprett side</button>
   </div>
 </div>
 
