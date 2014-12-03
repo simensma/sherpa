@@ -791,7 +791,7 @@ class Activity(models.Model):
             return locations
 
     def convert_categories(self):
-        """The wrapper for converting category, category type and subcategories"""
+        """The wrapper for converting category, category type and category types"""
         main_category = self.convert_category()
         # Note that while category_type "semantically" should come before category_tags, we will convert category_tags
         # first here because they will rename some tags, and the category_type logic is more likely to find matches
@@ -845,7 +845,7 @@ class Activity(models.Model):
 
     def convert_category_tags(self):
         """Convert the flat category list; adapting similar but different categories to the new suggested
-        subcategories"""
+        category types"""
         categories = self.get_categories()
 
         #
@@ -900,13 +900,13 @@ class Activity(models.Model):
         return categories
 
     def convert_category_type(self, category, category_tags):
-        """Applies the category type based on the main category and converted subcategories"""
+        """Applies the category type based on the main category and converted category types"""
         from aktiviteter.models import Aktivitet
 
         category_type = '' # This empty value will be used if no matches are found
-        for category in Aktivitet.SUBCATEGORIES[category]:
+        for category in Aktivitet.CATEGORY_TYPES[category]:
             if category in category_tags:
-                # Note that we'll overwrite the type if several defined categories matches the subcategory suggestions
+                # Note that we'll overwrite the type if several defined categories matches the category type suggestions
                 category_type = category
 
         return category_type

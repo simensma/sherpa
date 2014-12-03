@@ -2,6 +2,7 @@ $(function() {
     var listing = $("div.aktivitet-listing");
     var filters = listing.find("div.search-filters");
     var button_selections = filters.find("div.button-selections");
+    var category_type_wrapper = button_selections.filter('[data-dnt-container="category-types"]');
     var popups = listing.find("div.popups");
     var results = listing.find("div.results");
     var results_content = results.find("div.content");
@@ -45,6 +46,18 @@ $(function() {
         }
     });
 
+    button_selections.filter(".categories").click(function() {
+        category_type_wrapper.find('[data-dnt-container="category"]').slideUp('fast');
+        category_type_wrapper.find('button.selected').removeClass('selected btn-danger');
+
+        var selected = $(this).find('.selected');
+        if(selected.length !== 1) {
+            return $(this);
+        }
+
+        var category = selected.attr('data-category');
+        category_type_wrapper.find('[data-dnt-category="' + category + '"]').slideDown('fast');
+    });
 
     // Disable enter submit on forms
     filters.find("form").bind("keypress", function(e) {
@@ -122,6 +135,10 @@ $(function() {
         button_selections.filter(".categories").find("button.category.selected").each(function() {
             categories.push($(this).attr('data-category'));
         });
+        var category_types = [];
+        category_type_wrapper.find('button.selected').each(function() {
+            category_types.push($(this).attr('data-dnt-category-type'));
+        });
         var audiences = [];
         button_selections.filter(".audiences").find("button.audience.selected").each(function() {
             audiences.push($(this).attr('data-audience'));
@@ -144,6 +161,7 @@ $(function() {
         var lat_lng = filters.find("input[name='lat_lng']").val();
         return {
             categories: categories,
+            category_types: category_types,
             audiences: audiences,
             difficulties: difficulties,
             locations: locations,
