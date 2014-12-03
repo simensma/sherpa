@@ -92,7 +92,8 @@ def image_details(request, image):
         'tags': tags,
         'origin': request.get_full_path(),
         'all_users': sorted(User.sherpa_users(), key=lambda u: u.get_first_name()),
-        'current_navigation': 'albums'
+        'current_navigation': 'albums',
+        'thumb_sizes': settings.THUMB_SIZES,
     }
     return render(request, 'common/admin/images/image_details.html', context)
 

@@ -58,8 +58,9 @@
         <th>Åpne:</th>
         <td>
           <a href="http://{{ s3_bucket }}/images/{{ image.key }}.{{ image.extension }}">{{ image.width }}x{{ image.height }}</a>,
-          <a href="http://{{ s3_bucket }}/images/{{ image.key }}-500.{{ image.extension }}">500px</a>,
-          <a href="http://{{ s3_bucket }}/images/{{ image.key }}-150.{{ image.extension }}">150px</a>
+          {% for size in thumb_sizes %}
+            <a href="http://{{ s3_bucket }}/images/{{ image.key }}-{{ size }}.{{ image.extension }}">{{ size }}px</a>{% if not forloop.last %},{% endif %}
+          {% endfor %}
         </td>
       </tr>
       <tr>
