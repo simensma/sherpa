@@ -12,6 +12,9 @@ $(function() {
         newPage.modal();
     });
 
+    // Enable select2 for setting parent
+    newPage.find("select[name='parent_id']").select2();
+
     newPage.find("img.loader").hide();
     newPage.find("span.valid").hide();
     newPage.find("span.invalid").hide();
