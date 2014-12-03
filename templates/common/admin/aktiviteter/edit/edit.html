@@ -429,11 +429,11 @@
                 data-placeholder="Velg underkategori">
 
                 <option value=""></option>
-                {% for sub in aktivitet.get_main_subcategories %}
-                  {% if aktivitet.category_type = sub.name %}
-                    <option class="subcategory {{ sub.category }}" selected>{{ sub.name }}</option>
+                {% for type in aktivitet.get_main_category_types %}
+                  {% if aktivitet.category_type = type.name %}
+                    <option class="subcategory {{ type.category }}" selected>{{ type.name }}</option>
                   {% else %}
-                    <option class="subcategory {{ sub.category }}">{{ sub.name }}</option>
+                    <option class="subcategory {{ type.category }}">{{ type.name }}</option>
                   {% endif %}
                 {% endfor %}
               </select>
@@ -442,10 +442,10 @@
             <!-- There is a problem with the name="" being overloaded -->
             <!-- <div class="col-md-10">
               <div data-toggle="buttons" class="btn-group">
-                {% for sub in aktivitet.get_main_subcategories %}
-                  <label class="btn {% if sub.active %}btn-danger{% else %}btn-default{% endif %} subcategory {{ sub.category }} {{ sub.name }}">
+                {% for type in aktivitet.get_main_category_types %}
+                  <label class="btn {% if type.active %}btn-danger{% else %}btn-default{% endif %} subcategory {{ type.category }} {{ type.name }}">
                     <input type="radio" name="">
-                    {{ sub.name }}
+                    {{ type.name }}
                   </label>
                 {% endfor %}
               </div>
@@ -459,12 +459,12 @@
                 data-placeholder="Ingen tagger valgt">
 
                 <option value=""></option>
-                {% for sub in aktivitet.get_other_subcategories %}
+                {% for type in aktivitet.get_other_category_types %}
                   {% if category != 'trip' %}
-                    {% if sub.name in aktivitet.get_active_subcategories %}
-                      <option class="subcategory {{ sub.category }}" selected>{{ sub.name }}</option>
+                    {% if type.name in aktivitet.get_active_category_types %}
+                      <option class="subcategory {{ type.category }}" selected>{{ type.name }}</option>
                     {% else %}
-                      <option class="subcategory {{ sub.category }}">{{ sub.name }}</option>
+                      <option class="subcategory {{ type.category }}">{{ type.name }}</option>
                     {% endif %}
                   {% endif %}
                 {% endfor %}

@@ -93,45 +93,45 @@ class Aktivitet(models.Model):
     def get_category(self):
         return [c for c in self.CATEGORY_CHOICES if c[0] == self.category][0][1]
 
-    def get_main_subcategories(self):
+    def get_main_category_types(self):
         return [{
             'name': sub,
             'category': self.category,
-            'active': sub in self.get_active_subcategories()
-        } for sub in Aktivitet.SUBCATEGORIES[self.category]]
+            'active': sub in self.get_active_category_types()
+        } for sub in Aktivitet.CATEGORY_TYPES[self.category]]
 
-    def get_other_subcategories(self):
-        other_subcategories = []
-        for category, subcategories in Aktivitet.SUBCATEGORIES.items():
+    def get_other_category_types(self):
+        other_category_types = []
+        for category, category_types in Aktivitet.CATEGORY_TYPES.items():
             if category == self.category:
                 continue
 
-            for subcategory in subcategories:
-                other_subcategories.append({
-                    'name': subcategory,
+            for category_type in category_types:
+                other_category_types.append({
+                    'name': category_type,
                     'category': category,
-                    'active': subcategory in self.get_active_subcategories()
+                    'active': category_type in self.get_active_category_types()
                 })
 
-        all_subcategories = []
-        for subs in Aktivitet.SUBCATEGORIES.values():
-            for s in subs:
-                all_subcategories.append(s)
+        all_category_types = []
+        for types in Aktivitet.CATEGORY_TYPES.values():
+            for type in types:
+                all_category_types.append(type)
 
-        for subcategory in self.get_active_subcategories():
-            if subcategory not in all_subcategories:
-                other_subcategories.append({
-                    'name': subcategory,
+        for category_type in self.get_active_category_types():
+            if category_type not in all_category_types:
+                other_category_types.append({
+                    'name': category_type,
                     'category': 'custom',
                     'active': True
                 })
 
-        return other_subcategories
+        return other_category_types
 
-    def has_other_subcategories(self):
-        return any([s['active'] for s in self.get_other_subcategories()])
+    def has_other_category_types(self):
+        return any([s['active'] for s in self.get_other_category_types()])
 
-    def get_active_subcategories(self):
+    def get_active_category_types(self):
         return [t.name for t in self.category_tags.all()]
 
     def get_turforslag(self):
@@ -173,9 +173,9 @@ class Aktivitet(models.Model):
         today = date.today()
         return Aktivitet.objects.filter(published=True, pub_date__lte=today)
 
-    # A predefined list of subcategory suggestions - they're simply implemented
+    # A predefined list of category type suggestions - they're simply implemented
     # as tags ('core.Tag'), though.
-    SUBCATEGORIES_LIST = [
+    CATEGORY_TYPES_LIST = [
         {
             'category': 'organizedhike',
             'types': [
@@ -231,9 +231,9 @@ class Aktivitet(models.Model):
     ]
 
     # A dictionary structure of the same data
-    SUBCATEGORIES = {
+    CATEGORY_TYPES = {
         category['category']: category['types']
-        for category in SUBCATEGORIES_LIST
+        for category in CATEGORY_TYPES_LIST
     }
 
 
