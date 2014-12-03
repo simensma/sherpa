@@ -27,13 +27,9 @@ $(function() {
 
     });
 
-    /* Enable select2 for changing parent */
-    header.find("select[name='parent']").select2();
-
     /* Init Tooltips */
     header.find('.preview').tooltip();
     header.find('.delete-page.disabled').css('pointer-events', 'all').tooltip();
-    header.find('.form-group.parent select[disabled]').parents('[data-toggle="tooltip"]').first().tooltip();
     header.find('.form-group.title input[disabled]').parents('[data-toggle="tooltip"]').first().tooltip();
     header.find('.form-group.slug input[disabled]').parents('[data-toggle="tooltip"]').first().tooltip();
 
