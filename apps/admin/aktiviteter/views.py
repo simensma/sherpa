@@ -135,7 +135,6 @@ def edit(request, aktivitet):
             'difficulties': Aktivitet.DIFFICULTY_CHOICES,
             'audiences': Aktivitet.AUDIENCE_CHOICES,
             'categories': Aktivitet.CATEGORY_CHOICES,
-            'category_types': Aktivitet.CATEGORY_TYPES,
             'all_foreninger': Forening.get_all_sorted(),
             'cabins': Cabin.objects.order_by('name'),
             'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH,
