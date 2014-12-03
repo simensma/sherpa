@@ -523,7 +523,7 @@ class Activity(models.Model):
         aktivitet.start_point = self.get_start_point()
         aktivitet.locations = json.dumps(locations)
         aktivitet.difficulty = difficulty
-        aktivitet.audiences = json.dumps(audiences)
+        aktivitet.audiences = audiences
         aktivitet.published = True
         aktivitet.private = False
 
@@ -765,8 +765,11 @@ class Activity(models.Model):
         return highest_difficulty
 
     def convert_audiences(self):
-        return [Activity.AUDIENCE_CONVERSION_TABLE[extra]
-            for extra in self.get_extras() if extra in Activity.AUDIENCE_CONVERSION_TABLE]
+        from aktiviteter.models import AktivitetAudience
+        return [
+            AktivitetAudience.objects.get(name=Activity.AUDIENCE_CONVERSION_TABLE[extra])
+            for extra in self.get_extras() if extra in Activity.AUDIENCE_CONVERSION_TABLE
+        ]
 
     def convert_locations(self):
         try:

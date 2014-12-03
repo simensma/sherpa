@@ -121,7 +121,6 @@ def new(request):
         forening=request.active_forening,
         pub_date=datetime.now(),
         category=Aktivitet.CATEGORY_CHOICES[0][0],
-        audiences=json.dumps([]),
         locations=json.dumps([]),
     )
     aktivitet.save()
@@ -166,7 +165,10 @@ def edit(request, aktivitet):
             aktivitet.difficulty = request.POST['difficulty']
 
         if 'audiences' in request.POST:
-            aktivitet.audiences = json.dumps(request.POST.getlist('audiences'))
+            aktivitet.audiences = [
+                AktivitetAudience.objects.get(name=audience)
+                for audience in request.POST.getlist('audiences')
+            ]
 
         if 'category' in request.POST:
             aktivitet.category = request.POST['category']

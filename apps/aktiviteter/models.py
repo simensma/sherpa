@@ -83,7 +83,7 @@ class Aktivitet(models.Model):
         return [l for l in Location.get_active_cached() if l.id in locations]
 
     def get_audiences(self):
-        return json.loads(self.audiences)
+        return [a.name for a in self.audiences.all()]
 
     def get_category(self):
         return [c for c in self.CATEGORY_CHOICES if c[0] == self.category][0][1]
