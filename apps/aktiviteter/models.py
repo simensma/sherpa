@@ -149,8 +149,11 @@ class Aktivitet(models.Model):
         return enumerate(self.images.order_by('order'))
 
     def get_image(self):
-        for image in self.images.order_by('order'):
-            return image
+        try:
+            # Note that selecting all will help avoid extra queries if the images have been prefetched
+            return self.images.all()[0]
+        except IndexError:
+            return None
 
     def get_images_json(self):
         images = []
