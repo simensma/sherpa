@@ -1,6 +1,6 @@
 {% load stripcomments %}
 {% load aktivitet_destination %}
-{% with date.aktivitet.get_image.url as aktivitet_image_url %}
+{% with date.aktivitet.get_image.get_optimized_url as aktivitet_image_url %}
   <a
     class="aktivitet-item{% if aktivitet_image_url %} has-image {% else %} no-image{% endif %}"
     {% with date|aktivitet_destination:request as destination_site %}
