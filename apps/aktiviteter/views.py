@@ -24,7 +24,7 @@ def index(request):
         'categories': Aktivitet.CATEGORY_CHOICES,
         'category_types': Aktivitet.CATEGORY_TYPES_LIST,
         'audiences': Aktivitet.AUDIENCE_CHOICES,
-        'locations': Location.get_active().order_by('name'),
+        'locations': Location.get_active_cached(),
         'all_foreninger': Forening.get_all_sorted_with_type_data(),
         'cabins': Cabin.objects.order_by('name'),
     }
