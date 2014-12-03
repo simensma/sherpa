@@ -14,7 +14,7 @@ class AktivitetListingWidget(Widget):
             Q(aktivitet__co_foreninger__in=widget_options['foreninger']),
             aktivitet__private=False,
             start_date__gte=date.today(),
-        )
+        ).order_by('start_date')
 
         # Skip if none, or all, categories were chosen
         if len(widget_options['categories']) > 0 and len(widget_options['categories']) < len(Aktivitet.CATEGORY_CHOICES):
