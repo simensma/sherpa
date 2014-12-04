@@ -523,7 +523,6 @@ class Activity(models.Model):
         aktivitet.start_point = self.get_start_point()
         aktivitet.locations = json.dumps(locations)
         aktivitet.difficulty = difficulty
-        aktivitet.audiences = audiences
         aktivitet.published = True
         aktivitet.private = False
 
@@ -534,6 +533,7 @@ class Activity(models.Model):
         aktivitet.co_foreninger_cabin = foreninger['rest:cabin']
         aktivitet.counties = self.get_counties()
         aktivitet.category_tags.clear()
+        aktivitet.audiences = audiences
         for tag in category_tags:
             obj, created = Tag.objects.get_or_create(name=tag)
             aktivitet.category_tags.add(obj)
