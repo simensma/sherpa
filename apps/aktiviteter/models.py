@@ -4,6 +4,7 @@ import json
 
 from django.contrib.gis.db import models
 from django.conf import settings
+from django.core.urlresolvers import reverse
 
 from core.util import s3_bucket
 from sherpa2.models import Location, Turforslag
@@ -240,6 +241,7 @@ class AktivitetDate(models.Model):
     start_date = models.DateTimeField(db_index=True)
     end_date = models.DateTimeField()
     signup_enabled = models.BooleanField(default=True)
+    signup_montis = models.BooleanField()
     signup_simple_allowed = models.BooleanField()
     signup_max_allowed = models.PositiveIntegerField(default=0, null=True)
 
@@ -276,7 +278,9 @@ class AktivitetDate(models.Model):
         if not self.signup_enabled:
             return 'none'
         else:
-            if self.signup_simple_allowed:
+            if self.signup_montis:
+                return 'montis'
+            elif self.signup_simple_allowed:
                 return 'simple'
             else:
                 return 'minside'
@@ -333,17 +337,21 @@ class AktivitetDate(models.Model):
 
         return self.cancel_deadline_always_available() or self.cancel_deadline >= date.today()
 
-    def external_signup_url(self):
-        # @TODO check if this is a Montis signup
+    def signup_url(self):
+        if self.signup_montis:
+            return 'https://booking.dntoslo.no/finn-avgang/%s/%s' % (
+                self.aktivitet.code,
+                self.start_date.strftime('%Y/%m/%d'),
+            )
 
-        if not self.aktivitet.is_imported():
-            return None
+        if self.aktivitet.is_imported():
+            return u'%s/booking.php?ac_id=%s&ac_date_from=%s' % (
+                self.aktivitet.forening.get_main_foreninger()[0].get_old_url(),
+                self.aktivitet.sherpa2_id,
+                self.start_date.strftime('%Y-%m-%d'),
+            )
 
-        return u'%s/booking.php?ac_id=%s&ac_date_from=%s' % (
-            self.aktivitet.forening.get_main_foreninger()[0].get_old_url(),
-            self.aktivitet.sherpa2_id,
-            self.start_date.strftime('%Y-%m-%d'),
-        )
+        return reverse('aktiviteter.views.signup', args=[self.id])
 
     def total_signup_count(self):
         return self.participants.count() + self.simple_participants.count()
