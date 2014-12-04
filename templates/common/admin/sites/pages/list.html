@@ -136,55 +136,54 @@
       <input type="hidden" name="template" value="0">
       <input type="hidden" name="slug" value="">
 
-        <div class="section">
-          <div class="form-group">
-            <label class="col-sm-3 control-label">Tittel</label>
-            <div class="col-sm-7">
-              <input type="text" name="title" class="form-control">
-            </div>
+      <div class="section">
+        <div class="form-group">
+          <label class="col-sm-3 control-label">Tittel</label>
+          <div class="col-sm-7">
+            <input type="text" name="title" class="form-control">
           </div>
-          <div class="form-group">
-            <label class="col-sm-3 control-label">Permanent URL</label>
-            <div class="col-sm-7">
-              <span>http://{{ active_site.domain }}/</span><span class="slug"></span><span class="slash"></span>
-              <i class="edit-slug fa fa-pencil"></i>
-              <i class="save-slug fa fa-check"></i>
-              <img class="loader" src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" alt="Laster...">
-              <span class="valid">
-                <img src="{{ STATIC_URL }}img/admin/sites/pages/valid.png" alt="Gyldig URL">
-                Ok!
-              </span>
-              <span class="invalid">
-                <img src="{{ STATIC_URL }}img/admin/sites/pages/invalid.png" alt="Ugyldig URL">
-                Denne URLen er allerede i bruk!
-              </span>
-            </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-3 control-label">Permanent URL</label>
+          <div class="col-sm-7">
+            <span>http://{{ active_site.domain }}/</span><span class="slug"></span><span class="slash"></span>
+            <i class="edit-slug fa fa-pencil"></i>
+            <i class="save-slug fa fa-check"></i>
+            <img class="loader" src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" alt="Laster...">
+            <span class="valid">
+              <img src="{{ STATIC_URL }}img/admin/sites/pages/valid.png" alt="Gyldig URL">
+              Ok!
+            </span>
+            <span class="invalid">
+              <img src="{{ STATIC_URL }}img/admin/sites/pages/invalid.png" alt="Ugyldig URL">
+              Denne URLen er allerede i bruk!
+            </span>
           </div>
-          <div class="form-group parent">
-            <label for="title" class="col-sm-3 control-label">Ligger under</label>
-            <div class="col-sm-7">
-              <select name="parent_id">
-                <option value="{{ root_node.id }}">Ingen foreldreside</option>
-                <option disabled>---</option>
-                {% recursetree nodes %}
+        </div>
+        <div class="form-group parent">
+          <label for="title" class="col-sm-3 control-label">Ligger under</label>
+          <div class="col-sm-7">
+            <select name="parent_id">
+              <option value="{{ root_node.id }}">Ingen foreldreside</option>
+              <option disabled>---</option>
+              {% recursetree nodes %}
                 {% if node.id != version.variant.page.id %}
-                {% if node.id != root_node.id %}
-                <option
-                  value="{{ node.id }}"
-                  {% if version.variant.page.parent.id == node.id %} selected class="default"{% endif %}>
-                  {% with node.level|add:"-1" as count %}{% repeat count %}- {% endrepeat %}{% endwith %}
-                  {{ node.title }}
-                </option>
+                  {% if node.id != root_node.id %}
+                    <option
+                      value="{{ node.id }}"
+                      {% if version.variant.page.parent.id == node.id %} selected class="default"{% endif %}>
+                      {% with node.level|add:"-1" as count %}{% repeat count %}- {% endrepeat %}{% endwith %}
+                      {{ node.title }}
+                    </option>
+                  {% endif %}
+                  {% if not node.is_leaf_node %}
+                    {{ children }}
+                  {% endif %}
                 {% endif %}
-                {% if not node.is_leaf_node %}
-                {{ children }}
-                {% endif %}
-                {% endif %}
-                {% endrecursetree %}
-              </select>
-            </div>
+              {% endrecursetree %}
+            </select>
           </div>
-
+        </div>
       </div>
 
       <div class="section">
