@@ -121,9 +121,9 @@ $(function() {
         newPage.find("form").submit();
     });
 
-    newPage.find('.template-select a').click(function (e) {
-        newPage.find('.template-select a.active').removeClass('active');
-        $(this).addClass('active');
+    newPage.find('.template-select .template-item').click(function (e) {
+        newPage.find('.template-select .template-item.active.selected').removeClass('active selected');
+        $(this).addClass('active selected');
     });
 
     /* Sortable tree */
