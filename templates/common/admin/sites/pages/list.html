@@ -132,78 +132,90 @@
   </div>
   <div class="modal-body">
     <form action="{% url 'admin.sites.pages.page.new' active_site.id %}" method="post">
-    {% csrf_token %}
+      {% csrf_token %}
       <input type="hidden" name="template" value="0">
       <input type="hidden" name="slug" value="">
-      <div class="form-group">
-        <label>Tittel</label>
-        <input type="text" name="title" class="form-control">
-      </div>
-      <div class="form-group">
-        <label>Permanent URL:</label>
-        http://{{ active_site.domain }}/<span class="slug"></span><span class="slash"></span> <i class="edit-slug fa fa-pencil"></i><i class="save-slug fa fa-check"></i>
-        <img class="loader" src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" alt="Laster...">
-        <span class="valid">
-          <img src="{{ STATIC_URL }}img/admin/sites/pages/valid.png" alt="Gyldig URL">
-          Ok!
-        </span>
-        <span class="invalid">
-          <img src="{{ STATIC_URL }}img/admin/sites/pages/invalid.png" alt="Ugyldig URL">
-          Denne URLen er allerede i bruk!
-        </span>
-      </div>
 
-      <div class="form-group parent">
-        <label for="title" class="col-sm-4 control-label">Ligger under</label>
-        <div class="col-sm-8">
-          <select name="parent_id">
-            <option value="{{ root_page.id }}">Ingen foreldreside</option>
-            <option disabled>---</option>
-            {% recursetree nodes %}
+      <div class="form-horizontal">
+        <div class="form-group">
+          <label class="col-sm-3 control-label">Tittel</label>
+          <div class="col-sm-7">
+            <input type="text" name="title" class="form-control">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-sm-3 control-label">Permanent URL</label>
+          <div class="col-sm-7">
+            <span>http://{{ active_site.domain }}/</span><span class="slug"></span><span class="slash"></span>
+            <i class="edit-slug fa fa-pencil"></i>
+            <i class="save-slug fa fa-check"></i>
+            <img class="loader" src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" alt="Laster...">
+            <span class="valid">
+              <img src="{{ STATIC_URL }}img/admin/sites/pages/valid.png" alt="Gyldig URL">
+              Ok!
+            </span>
+            <span class="invalid">
+              <img src="{{ STATIC_URL }}img/admin/sites/pages/invalid.png" alt="Ugyldig URL">
+              Denne URLen er allerede i bruk!
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group parent">
+          <label for="title" class="col-sm-3 control-label">Ligger under</label>
+          <div class="col-sm-7">
+            <select name="parent_id">
+              <option value="{{ root_page.id }}">Ingen foreldreside</option>
+              <option disabled>---</option>
+              {% recursetree nodes %}
               {% if node.id != version.variant.page.id %}
-                {% if node.id != root_node.id %}
-                  <option
-                    value="{{ node.id }}"
-                    {% if version.variant.page.parent.id == node.id %} selected class="default"{% endif %}>
-                    {% with node.level|add:"-1" as count %}{% repeat count %}- {% endrepeat %}{% endwith %}
-                    {{ node.title }}
-                  </option>
-                {% endif %}
-                {% if not node.is_leaf_node %}
-                  {{ children }}
-                {% endif %}
+              {% if node.id != root_node.id %}
+              <option
+                value="{{ node.id }}"
+                {% if version.variant.page.parent.id == node.id %} selected class="default"{% endif %}>
+                {% with node.level|add:"-1" as count %}{% repeat count %}- {% endrepeat %}{% endwith %}
+                {{ node.title }}
+              </option>
               {% endif %}
-            {% endrecursetree %}
-          </select>
+              {% if not node.is_leaf_node %}
+              {{ children }}
+              {% endif %}
+              {% endif %}
+              {% endrecursetree %}
+            </select>
+          </div>
         </div>
       </div>
-
-      <h2>Velg mal</h2>
-
-      <div class="row template-select">
-        <div class="col-sm-3">
-          <a href="javascript:undefined" class="thumbnail" data-template="1">
-            <img src="{{ STATIC_URL }}img/admin/sites/editor/templates/empty.jpg" alt="Ferdigdefinert mal">
-            <p>Tom</p>
-          </a>
-        </div>
-        <div class="col-sm-3">
-          <a href="javascript:undefined" class="thumbnail" data-template="2">
-            <img src="{{ STATIC_URL }}img/admin/sites/editor/templates/full-width.jpg" alt="Ferdigdefinert mal">
-            <p>Én kolonne</p>
-          </a>
-        </div>
-        <div class="col-sm-3">
-          <a href="javascript:undefined" class="thumbnail" data-template="3">
-            <img src="{{ STATIC_URL }}img/admin/sites/editor/templates/sidebar.jpg" alt="Ferdigdefinert mal">
-            <p>Sidebar (hele)</p>
-          </a>
-        </div>
-        <div class="col-sm-3">
-          <a href="javascript:undefined" class="thumbnail" data-template="4">
-            <img src="{{ STATIC_URL }}img/admin/sites/editor/templates/3-columns.jpg" alt="Ferdigdefinert mal">
-            <p>Tre kolonner</p>
-          </a>
+      <div class="form-group">
+        <label class="control-label">Mal</label>
+      </div>
+      <div class="well well-sm">
+        <div class="row template-select">
+          <div class="col-sm-3">
+            <a href="javascript:undefined" class="thumbnail" data-template="1">
+              <img src="{{ STATIC_URL }}img/admin/sites/editor/templates/empty.jpg" alt="Ferdigdefinert mal">
+              <p>Tom</p>
+            </a>
+          </div>
+          <div class="col-sm-3">
+            <a href="javascript:undefined" class="thumbnail" data-template="2">
+              <img src="{{ STATIC_URL }}img/admin/sites/editor/templates/full-width.jpg" alt="Ferdigdefinert mal">
+              <p>Én kolonne</p>
+            </a>
+          </div>
+          <div class="col-sm-3">
+            <a href="javascript:undefined" class="thumbnail" data-template="3">
+              <img src="{{ STATIC_URL }}img/admin/sites/editor/templates/sidebar.jpg" alt="Ferdigdefinert mal">
+              <p>Sidebar (hele)</p>
+            </a>
+          </div>
+          <div class="col-sm-3">
+            <a href="javascript:undefined" class="thumbnail" data-template="4">
+              <img src="{{ STATIC_URL }}img/admin/sites/editor/templates/3-columns.jpg" alt="Ferdigdefinert mal">
+              <p>Tre kolonner</p>
+            </a>
+          </div>
         </div>
       </div>
     </form>
