@@ -337,16 +337,20 @@ class AktivitetDate(models.Model):
         return self.cancel_deadline_always_available() or self.cancel_deadline >= date.today()
 
     def external_signup_url(self):
-        # @TODO check if this is a Montis signup
+        if self.signup_montis:
+            return 'https://booking.dntoslo.no/finn-avgang/%s/%s' % (
+                self.aktivitet.code,
+                self.start_date.strftime('%Y/%m/%d'),
+            )
 
-        if not self.aktivitet.is_imported():
-            return None
+        if self.aktivitet.is_imported():
+            return u'%s/booking.php?ac_id=%s&ac_date_from=%s' % (
+                self.aktivitet.forening.get_main_foreninger()[0].get_old_url(),
+                self.aktivitet.sherpa2_id,
+                self.start_date.strftime('%Y-%m-%d'),
+            )
 
-        return u'%s/booking.php?ac_id=%s&ac_date_from=%s' % (
-            self.aktivitet.forening.get_main_foreninger()[0].get_old_url(),
-            self.aktivitet.sherpa2_id,
-            self.start_date.strftime('%Y-%m-%d'),
-        )
+        return None
 
     def total_signup_count(self):
         return self.participants.count() + self.simple_participants.count()
