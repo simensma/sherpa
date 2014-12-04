@@ -63,7 +63,7 @@
                 <dt>Nøkkelord</dt>
                 <dd>
                   {% for tag in aktivitet_date.aktivitet.category_tags.all %}
-                    {{ tag.name }}{% if not forloop.last %}, {% endif%}
+                    {{ tag.name | title }}{% if not forloop.last %}, {% endif%}
                   {% endfor %}
                 </dd>
                 {% endif %}
