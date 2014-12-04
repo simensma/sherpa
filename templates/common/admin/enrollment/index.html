@@ -34,8 +34,6 @@
 
       <div class="search-wrapper">
         <form action="{% url 'admin.enrollment.views.index' %}" method="get">
-          {% csrf_token %}
-
           <div class="input-group">
             <input type="text" name="search" class="form-control" value="{{ search|default:"" }}" placeholder="Søk etter navn, kontaktopplysninger, transaksjonsID eller ordrenummer...">
             <span class="input-group-btn">
