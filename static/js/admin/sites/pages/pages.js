@@ -119,6 +119,12 @@ $(function() {
         }
         newPage.find("input[name='template']").val(newPage.find('.template-select .active').attr('data-template'));
         newPage.find("form").submit();
+
+        var $modal = $(this).parents('.modal').first();
+        maskModal({
+            modal: $modal,
+            message: 'Oppretter siden...'
+        });
     });
 
     newPage.find('.template-select .template-item').click(function (e) {
