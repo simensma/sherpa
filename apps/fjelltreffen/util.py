@@ -4,7 +4,6 @@ logger = logging.getLogger('sherpa')
 
 SUSPICIOUS_PHRASES = [
     'kontonummer',
-    'bank',
     'million',
     'dollar',
 ]
