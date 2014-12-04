@@ -126,6 +126,14 @@ $(function() {
         $(this).addClass('active selected');
     });
 
+    var maskModal = function (options) {
+        options = options || {};
+        var message = options.message || 'Vent...';
+        var $modal = options.modal;
+        var $mask = $('<div class="modal-mask"><div class="splash"><div class="spinner three-quarters"></div><div class="message"><span>' + message + '</span></div></div></div>');
+        $modal.prepend($mask);
+    };
+
     /* Sortable tree */
 
     $treeContainer = $('div.pages.tree');
