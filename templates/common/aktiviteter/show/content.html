@@ -109,7 +109,7 @@
                 <a href="{{ aktivitet_date.signup_url }}" class="btn btn-danger btn-block">Meld deg på!</a>
                 {% if not aktivitet_date.signup_available_to_departure %}
                   <span class="deadline">
-                    Påmeldingsfrist: {{ aktivitet_date.get_signup_deadline|date:"j. F Y" }}
+                    Påmeldingsfrist: {{ aktivitet_date.signup_deadline|date:"j. F Y" }}
                   </span>
                 {% endif %}
               </div>
