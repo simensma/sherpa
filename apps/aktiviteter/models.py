@@ -4,6 +4,7 @@ import json
 
 from django.contrib.gis.db import models
 from django.conf import settings
+from django.core.urlresolvers import reverse
 
 from core.util import s3_bucket
 from sherpa2.models import Location, Turforslag
@@ -336,7 +337,7 @@ class AktivitetDate(models.Model):
 
         return self.cancel_deadline_always_available() or self.cancel_deadline >= date.today()
 
-    def external_signup_url(self):
+    def signup_url(self):
         if self.signup_montis:
             return 'https://booking.dntoslo.no/finn-avgang/%s/%s' % (
                 self.aktivitet.code,
@@ -350,7 +351,7 @@ class AktivitetDate(models.Model):
                 self.start_date.strftime('%Y-%m-%d'),
             )
 
-        return None
+        return reverse('aktiviteter.views.signup', args=[self.id])
 
     def total_signup_count(self):
         return self.participants.count() + self.simple_participants.count()

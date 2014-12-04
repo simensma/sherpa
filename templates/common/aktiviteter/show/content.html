@@ -106,15 +106,7 @@
               </div>
             {% elif aktivitet_date.accepts_signups %}
               <div class="signup accepts-signups">
-                {% if aktivitet_date.external_signup_url %}
-                  <a href="{{ aktivitet_date.external_signup_url }}" class="btn btn-danger">
-                    Meld deg på!
-                  </a>
-                {% else %}
-                  <a href="{% url 'aktiviteter.views.signup' aktivitet_date.id %}"
-                     class="btn btn-danger">Meld deg på!</a>
-
-                {% endif %}
+                <a href="{{ aktivitet_date.signup_url }}" class="btn btn-danger">Meld deg på!</a>
 
                 {% if not aktivitet_date.signup_available_to_departure %}
                   <span class="deadline">
