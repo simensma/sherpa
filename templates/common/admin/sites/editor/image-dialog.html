@@ -1,45 +1,80 @@
 <div class="modal jq-hide change-image" data-missing-url-warning="Du må angi URL-adressen til bildet. Denne kommer automatisk hvis du velger et bilde fra bildearkivet eller laster opp et nytt bilde fra din PC.">
   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+      <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+    </button>
     <h3>Velg et bilde å sette inn...</h3>
   </div>
   <div class="modal-body">
 
-    <div class="image-details">
-      <div class="form-dnt-default form-horizontal">
-        <div class="form-group">
-          <label class="col-md-3 control-label">Bilde:</label>
-          <div class="col-md-9">
-            <input class="form-control" type="text" name="src">
-            <p class="form-control-static">
-              <button class="btn btn-default choose-image">
-                <i class="glyphicon glyphicon-search"></i> Finn bilde i arkivet i Sherpa
+    <div class="form-dnt-default form-horizontal">
+
+      <div class="row image-choices">
+        <div class="col-md-12">
+          <div class="form-group">
+            <div class="col-md-4">
+              <button class="btn btn-block btn-default choose-image">
+                <i class="glyphicon glyphicon-search"></i> Hent fra bildearkivet
               </button>
-              <button class="btn btn-default upload-image">
-                <i class="glyphicon glyphicon-share-alt"></i> Last opp bilde fra din PC
+            </div>
+            <div class="col-md-4">
+              <button class="btn btn-block btn-default upload-image">
+                <i class="glyphicon glyphicon-share-alt"></i> Last opp nytt bilde
               </button>
-            </p>
+            </div>
+            <div class="col-md-4">
+              <button class="btn btn-block btn-default custom-url">
+                <i class="glyphicon glyphicon-globe"></i> Legg inn URL
+              </button>
+            </div>
           </div>
         </div>
+      </div>
 
-        <div class="form-group">
-          <label class="col-md-3 control-label">Bildetekst:</label>
-          <div class="col-md-9">
-            <input class="form-control" type="text" name="description">
+      <div class="row image-url jq-hide">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="col-md-2 control-label">URL:</label>
+            <div class="col-md-10">
+              <input class="form-control" type="text" name="src">
+              <p class="help-block warning invalid-image-url jq-hide">
+                Adressen du har oppgitt peker ikke til et bilde.
+              </p>
+              <p class="help-block error image-not-found jq-hide">
+                Fant ikke noe bilde på denne URL-en. Dobbeltsjekk at du har rett og prøv evt. med en ny URL.
+              </p>
+              <p class="help-block info looking-up-image jq-hide">
+                Sjekker URL...
+              </p>
+            </div>
           </div>
         </div>
+      </div>
 
-        <div class="form-group">
-          <label class="col-md-3 control-label">Fotograf:</label>
-          <div class="col-md-9">
-            <input class="form-control" type="text" name="photographer" autocomplete="off" data-photographers-url="{% url 'admin.images.views.photographer' %}">
+      <div class="row image-info jq-hide">
+        <div class="col-md-8">
+          <div class="form-group">
+            <label class="col-md-3 control-label">Bildetekst:</label>
+            <div class="col-md-9">
+              <input class="form-control" type="text" name="description">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-3 control-label">Fotograf:</label>
+            <div class="col-md-9">
+              <input class="form-control" type="text" name="photographer" autocomplete="off" data-photographers-url="{% url 'admin.images.views.photographer' %}">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-3 control-label">Lenker til:</label>
+            <div class="col-md-9">
+              <input class="form-control" type="text" name="anchor">
+            </div>
           </div>
         </div>
-
-        <div class="form-group">
-          <label class="col-md-3 control-label">Lenker til:</label>
-          <div class="col-md-9">
-            <input class="form-control" type="text" name="anchor">
+        <div class="col-md-4">
+          <div href="#" class="thumbnail">
+            <img src="" alt="">
           </div>
         </div>
       </div>

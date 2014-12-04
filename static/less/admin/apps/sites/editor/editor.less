@@ -1,5 +1,28 @@
 // This sheet needs a good refactoring
 
+div.modal {
+
+  h1, h2, h3, h4, h5, div, span, a, label, button, input, select, li, p, strong {
+    font-family: "Open Sans", sans-serif !important;
+    font-size: 14px !important;
+  }
+
+  div.tooltip-inner {
+    font-size: 12px !important;
+  }
+
+  div.modal-header {
+    h2, h3 {
+      margin-bottom: 0;
+    }
+
+    button.close span {
+      font-size: 21px !important;
+    }
+  }
+
+}
+
 /* Page header editing */
 
 .inline-label {
@@ -449,5 +472,16 @@ div.change-image {
 
   h2 {
     font-size: 20px;
+  }
+
+  .row.image-url,
+  .row.image-info {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #e5e5e5;
+  }
+
+  .form-group:last-child {
+    margin-bottom: 0;
   }
 }
