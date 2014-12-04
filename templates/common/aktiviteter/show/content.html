@@ -63,7 +63,7 @@
                 <dt>Nøkkelord</dt>
                 <dd>
                   {% for tag in aktivitet_date.aktivitet.category_tags.all %}
-                    {{ tag.name }}{% if not forloop.last %}, {% endif%}
+                    {{ tag.name | title }}{% if not forloop.last %}, {% endif%}
                   {% endfor %}
                 </dd>
                 {% endif %}
@@ -81,7 +81,7 @@
                 <dt>Turområde</dt>
                 <dd>{% for location in aktivitet_date.aktivitet.get_locations %}{{ location.name }}{% if not forloop.last %}, {% endif %}{% endfor %} {% if aktivitet_date.aktivitet.start_point %}<a href="#map">(se kart)</a>{% endif %}</dd>
 
-                {% if aktivitet_date.signup_enabled %}
+                {% if aktivitet_date.signup_enabled and not aktivitet_date.aktivitet.is_imported %}
                   <dt>Påmeldte</dt>
                   <dd>
                     {% if aktivitet_date.participants.all|length == 0 %}
@@ -106,11 +106,10 @@
               </div>
             {% elif aktivitet_date.accepts_signups %}
               <div class="signup accepts-signups">
-                <a href="{{ aktivitet_date.signup_url }}" class="btn btn-danger">Meld deg på!</a>
-
+                <a href="{{ aktivitet_date.signup_url }}" class="btn btn-danger btn-block">Meld deg på!</a>
                 {% if not aktivitet_date.signup_available_to_departure %}
                   <span class="deadline">
-                    Påmeldingsfrist: {{ aktivitet_date.get_signup_deadline|date:"j. F Y" }}
+                    Påmeldingsfrist: {{ aktivitet_date.signup_deadline|date:"j. F Y" }}
                   </span>
                 {% endif %}
               </div>
