@@ -79,3 +79,41 @@ if(top != self) {
 $(document).on("click", "*[data-toggle-tab]", function() {
     $("ul.nav-tabs a[href='#" + $(this).attr('data-toggle-tab') + "']").tab('show');
 });
+
+// Extend Bootstrap modal with mask method
+(function ($) {
+    var _original = $.fn.modal.Constructor.prototype.hide;
+
+    function trigger(target, name, relatedTarget) {
+        target.trigger($.Event(name, { relatedTarget: relatedTarget }));
+    }
+
+    $.extend($.fn.modal.Constructor.prototype, {
+        hide: function (_relatedTarget) {
+            if (this.isLocked) return;
+            return _original.call(this, _relatedTarget);
+        },
+
+        mask: function (_relatedTarget) {
+            this.isMasked = true;
+            var message = this.options.maskMessage || 'Vent...';
+            var $mask = $([
+                '<div class="modal-mask">',
+                '  <div class="splash">',
+                '    <div class="spinner three-quarters"></div>',
+                '    <div class="message"><span>' + message + '</span></div>',
+                '  </div>',
+                '</div>',
+            ].join(''));
+            this.$element.prepend($mask);
+            trigger(this.$element, 'mask.bs.modal', _relatedTarget);
+        },
+
+        unmask: function (_relatedTarget) {
+            this.isMasked = false;
+            var $mask = this.$element.find('.modal-mask');
+            $mask.remove();
+            trigger(this.$element, 'unmask.bs.modal', _relatedTarget);
+        }
+    });
+})(jQuery);

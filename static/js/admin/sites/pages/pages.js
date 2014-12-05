@@ -9,7 +9,9 @@ $(function() {
     var newPage = $("div.new-page");
 
     $("a.new-page").click(function() {
-        newPage.modal();
+        newPage.modal({
+            maskMessage: 'Oppretter siden...'
+        });
     });
 
     // Enable select2 for setting parent
@@ -118,27 +120,18 @@ $(function() {
             return;
         }
         newPage.find("input[name='template']").val(newPage.find('.template-select .active').attr('data-template'));
+
         newPage.find("form").submit();
 
         var $modal = $(this).parents('.modal').first();
-        maskModal({
-            modal: $modal,
-            message: 'Oppretter siden...'
-        });
+        $modal.modal('mask');
+
     });
 
     newPage.find('.template-select .template-item').click(function (e) {
         newPage.find('.template-select .template-item.active.selected').removeClass('active selected');
         $(this).addClass('active selected');
     });
-
-    var maskModal = function (options) {
-        options = options || {};
-        var message = options.message || 'Vent...';
-        var $modal = options.modal;
-        var $mask = $('<div class="modal-mask"><div class="splash"><div class="spinner three-quarters"></div><div class="message"><span>' + message + '</span></div></div></div>');
-        $modal.prepend($mask);
-    };
 
     /* Sortable tree */
 
