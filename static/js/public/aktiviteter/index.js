@@ -27,6 +27,9 @@ $(function() {
         toggle_filters_and_results.find('button').show();
         $(this).hide();
 
+        var listing_top = listing.offset().top;
+        $(window).scrollTop(listing_top);
+
         if(action === 'show-activities-filters') {
             column_filters.removeClass('hidden-xs');
             column_results.addClass('hidden-xs');
@@ -208,4 +211,3 @@ $(function() {
         ].join('');
     };
 });
-
