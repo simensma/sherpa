@@ -71,7 +71,7 @@ class Omrade(NTBObject):
         self.fylker = document['fylker']
         self.beskrivelse = document['beskrivelse']
         self.bilder = document['bilder']
-        self._partial = False
+        self._is_partial = False
 
     @staticmethod
     def lookup():
