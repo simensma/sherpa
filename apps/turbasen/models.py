@@ -9,10 +9,12 @@ class NTBObject(object):
     ENDPOINT_URL = u'https://ntbprod-turistforeningen.dotcloud.com/'
     TURBASE_LOOKUP_COUNT = 50
 
-    def lookup_object(self, identifier):
-        return self._lookup_recursively(identifier, skip=0, previous_results=[])
+    @staticmethod
+    def lookup_object(identifier):
+        return NTBObject._lookup_recursively(identifier, skip=0, previous_results=[])
 
-    def _lookup_recursively(self, identifier, skip, previous_results):
+    @staticmethod
+    def _lookup_recursively(identifier, skip, previous_results):
         response = requests.get(
             '%s%s' % (NTBObject.ENDPOINT_URL, identifier),
             params={
@@ -28,11 +30,12 @@ class NTBObject(object):
         if len(previous_results) == response['total']:
             return previous_results
         else:
-            return self._lookup_recursively(identifier, skip=(skip + response['count']), previous_results=previous_results)
+            return NTBObject._lookup_recursively(identifier, skip=(skip + response['count']), previous_results=previous_results)
 
 class Omrade(NTBObject):
     identifier = u'områder'
 
-    def lookup(self):
+    @staticmethod
+    def lookup():
         # TODO objectify
         return self.lookup_object(self.identifier)
