@@ -9,6 +9,14 @@ class NTBObject(object):
     ENDPOINT_URL = u'https://ntbprod-turistforeningen.dotcloud.com/'
     TURBASE_LOOKUP_COUNT = 50
 
+    def __init__(self, objectid, tilbyder, endret, lisens, status, _is_partial=False):
+        self.objectid = objectid
+        self.tilbyder = tilbyder
+        self.endret = endret
+        self.lisens = lisens
+        self.status = status
+        self._is_partial = _is_partial
+
     def __getattr__(self, name):
         """On attribute lookup failure, if the object is only partially retrieved, get the rest of its data and try
         again"""
@@ -19,7 +27,17 @@ class NTBObject(object):
 
     @staticmethod
     def lookup_object(identifier):
-        return NTBObject._lookup_recursively(identifier, skip=0, previous_results=[])
+        return [(
+            document,
+            {
+                'objectid': document['_id'],
+                'tilbyder': document['tilbyder'],
+                'endret': document['endret'],
+                'lisens': document['lisens'],
+                'status': document['status'],
+                '_is_partial': True,
+            }
+        ) for document in NTBObject._lookup_recursively(identifier, skip=0, previous_results=[])]
 
     @staticmethod
     def get_object(identifier, objectid):
@@ -52,14 +70,9 @@ class NTBObject(object):
 class Omrade(NTBObject):
     identifier = u'områder'
 
-    def __init__(self, objectid, tilbyder, endret, lisens, status, navn, _is_partial=False):
-        self.objectid = objectid
-        self.tilbyder = tilbyder
-        self.endret = endret
-        self.lisens = lisens
-        self.status = status
+    def __init__(self, navn, *args, **kwargs):
+        super(Omrade, self).__init__(*args, **kwargs)
         self.navn = navn
-        self._is_partial = _is_partial
 
     def get(self):
         document = NTBObject.get_object(self.identifier, self.objectid)
@@ -75,11 +88,6 @@ class Omrade(NTBObject):
     @staticmethod
     def lookup():
         return [Omrade(
-            _is_partial=True,
-            objectid=doc['_id'],
-            tilbyder=doc['tilbyder'],
-            endret=doc['endret'],
-            lisens=doc['lisens'],
-            status=doc['status'],
-            navn=doc['navn'],
-        ) for doc in NTBObject.lookup_object(Omrade.identifier)]
+            navn=document['navn'],
+            **default_kwargs
+        ) for document, default_kwargs in NTBObject.lookup_object(Omrade.identifier)]
