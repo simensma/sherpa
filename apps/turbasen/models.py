@@ -35,7 +35,20 @@ class NTBObject(object):
 class Omrade(NTBObject):
     identifier = u'områder'
 
+    def __init__(self, navn, status, endret, lisens, tilbyder, _partial=False):
+        self.navn = navn
+        self.status = status
+        self.endret = endret
+        self.lisens = lisens
+        self.tilbyder = tilbyder
+
     @staticmethod
     def lookup():
-        # TODO objectify
-        return self.lookup_object(self.identifier)
+        return [Omrade(
+            _partial=True,
+            navn=doc['navn'],
+            status=doc['status'],
+            endret=doc['endret'],
+            lisens=doc['lisens'],
+            tilbyder=doc['tilbyder'],
+        ) for doc in NTBObject.lookup_object(Omrade.identifier)]
