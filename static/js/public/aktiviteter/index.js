@@ -10,6 +10,10 @@ $(function() {
     var toggle_filters_and_results = listing.find('.toggle-filters-results');
     var column_filters = listing.find('.column-filters');
     var column_results = listing.find('.column-results');
+    var filter_location = filters.find("select[name='location']");
+    var filter_organizers = filters.find("select[name='organizers']");
+
+    var device_is_mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
     var now = new Date();
     var today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
@@ -74,7 +78,11 @@ $(function() {
         refreshContent(results_content.attr('data-current-page'));
     });
 
-    filters.find("select[name='location']").select2().change(function() {
+    if (!device_is_mobile) {
+        filter_location.select2();
+    }
+
+    filter_location.change(function() {
         refreshContent(results_content.attr('data-current-page'));
     });
 
@@ -84,7 +92,11 @@ $(function() {
         refreshContent(results_content.attr('data-current-page'));
     });
 
-    filters.find("select[name='organizers']").select2().on('change', function() {
+    if (!device_is_mobile) {
+        filter_organizers.select2();
+    }
+
+    filter_organizers.on('change', function() {
         refreshContent(results_content.attr('data-current-page'));
     });
 
