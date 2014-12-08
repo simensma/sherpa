@@ -43,9 +43,7 @@ class NTBObject(object):
     def get_object(identifier, objectid):
         return requests.get(
             '%s%s/%s/' % (NTBObject.ENDPOINT_URL, identifier, objectid),
-            params={
-                'api_key': settings.TURBASEN_API_KEY,
-            }
+            params={'api_key': settings.TURBASEN_API_KEY}
         ).json()
 
     @staticmethod
