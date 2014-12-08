@@ -52,13 +52,13 @@ class NTBObject(object):
 class Omrade(NTBObject):
     identifier = u'områder'
 
-    def __init__(self, objectid, navn, status, endret, lisens, tilbyder, _is_partial=False):
+    def __init__(self, objectid, tilbyder, endret, lisens, status, navn, _is_partial=False):
         self.objectid = objectid
-        self.navn = navn
-        self.status = status
+        self.tilbyder = tilbyder
         self.endret = endret
         self.lisens = lisens
-        self.tilbyder = tilbyder
+        self.status = status
+        self.navn = navn
         self._is_partial = _is_partial
 
     def get(self):
@@ -77,9 +77,9 @@ class Omrade(NTBObject):
         return [Omrade(
             _is_partial=True,
             objectid=doc['_id'],
-            navn=doc['navn'],
-            status=doc['status'],
+            tilbyder=doc['tilbyder'],
             endret=doc['endret'],
             lisens=doc['lisens'],
-            tilbyder=doc['tilbyder'],
+            status=doc['status'],
+            navn=doc['navn'],
         ) for doc in NTBObject.lookup_object(Omrade.identifier)]
