@@ -25,6 +25,10 @@ class NTBObject(object):
             return getattr(self, name)
         raise AttributeError
 
+    #
+    # Lookup static methods
+    #
+
     @staticmethod
     def lookup_object(identifier):
         return NTBObject._lookup_recursively(identifier, skip=0, previous_results=[])
@@ -35,6 +39,10 @@ class NTBObject(object):
             '%s%s/%s/' % (NTBObject.ENDPOINT_URL, identifier, objectid),
             params={'api_key': settings.TURBASEN_API_KEY}
         ).json()
+
+    #
+    # Private static methods
+    #
 
     @staticmethod
     def _lookup_recursively(identifier, skip, previous_results):
