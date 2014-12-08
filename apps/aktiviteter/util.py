@@ -53,6 +53,8 @@ def filter_aktivitet_dates(filter):
 
         dates = dates.filter(aktivitet__start_point__within=boundary)
 
+    # @TODO refactor to make use of django range query
+    # https://docs.djangoproject.com/en/dev/ref/models/querysets/#range
     try:
         if 'start_date' in filter and filter['start_date'] != '':
             dates = dates.filter(start_date__gte=datetime.strptime(filter['start_date'], "%d.%m.%Y"))
