@@ -23,7 +23,10 @@ def filter_aktivitet_dates(filter):
 
     if 'search' in filter and len(filter['search']) > 2:
         # @TODO add search on aktivitet__code
-        dates = dates.filter(aktivitet__title__icontains=filter['search'])
+        dates = dates.filter(
+            Q(aktivitet__title__icontains=filter['search']) |
+            Q(aktivitet__description__icontains=filter['search'])
+        )
 
     if 'categories' in filter and len(filter['categories']) > 0:
         dates = dates.filter(aktivitet__category__in=filter['categories'])
