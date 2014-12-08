@@ -64,13 +64,13 @@ class Omrade(NTBObject):
 
     def get(self):
         document = NTBObject.get_object(self.identifier, self.objectid)
-        self.navngiving = document['navngiving']
-        self.status = document['status']
-        self.geojson = document['geojson']
-        self.kommuner = document['kommuner']
-        self.fylker = document['fylker']
-        self.beskrivelse = document['beskrivelse']
-        self.bilder = document['bilder']
+        self.navngiving = document.get('navngiving')
+        self.status = document.get('status')
+        self.geojson = document.get('geojson')
+        self.kommuner = document.get('kommuner')
+        self.fylker = document.get('fylker')
+        self.beskrivelse = document.get('beskrivelse')
+        self.bilder = document.get('bilder')
         self._is_partial = False
 
     @staticmethod
