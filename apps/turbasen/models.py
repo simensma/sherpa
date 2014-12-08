@@ -35,7 +35,7 @@ class NTBObject(object):
 class Omrade(NTBObject):
     identifier = u'områder'
 
-    def __init__(self, navn, status, endret, lisens, tilbyder, _partial=False):
+    def __init__(self, navn, status, endret, lisens, tilbyder, _is_partial=False):
         self.navn = navn
         self.status = status
         self.endret = endret
@@ -45,7 +45,7 @@ class Omrade(NTBObject):
     @staticmethod
     def lookup():
         return [Omrade(
-            _partial=True,
+            _is_partial=True,
             navn=doc['navn'],
             status=doc['status'],
             endret=doc['endret'],
