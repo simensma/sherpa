@@ -22,8 +22,11 @@ def filter_aktivitet_dates(filter):
     ).filter(aktivitet__private=False)
 
     if 'search' in filter and len(filter['search']) > 2:
-        # @TODO add search on aktivitet__code
-        dates = dates.filter(aktivitet__title__icontains=filter['search'])
+        dates = dates.filter(
+            Q(aktivitet__title__icontains=filter['search']) |
+            Q(aktivitet__description__icontains=filter['search']) |
+            Q(aktivitet__code=filter['search'])
+        )
 
     if 'categories' in filter and len(filter['categories']) > 0:
         dates = dates.filter(aktivitet__category__in=filter['categories'])
@@ -50,6 +53,8 @@ def filter_aktivitet_dates(filter):
 
         dates = dates.filter(aktivitet__start_point__within=boundary)
 
+    # @TODO refactor to make use of django range query
+    # https://docs.djangoproject.com/en/dev/ref/models/querysets/#range
     try:
         if 'start_date' in filter and filter['start_date'] != '':
             dates = dates.filter(start_date__gte=datetime.strptime(filter['start_date'], "%d.%m.%Y"))
