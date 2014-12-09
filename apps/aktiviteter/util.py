@@ -106,7 +106,7 @@ def paginate_aktivitet_dates(filter, dates):
     paginator = Paginator(dates, HITS_PER_PAGE)
 
     # Parse "special" values
-    page = filter['page']
+    page = filter.get('page', 1)
     if page == 'min':
         page = 1
     elif page == 'max':

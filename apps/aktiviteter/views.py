@@ -16,7 +16,7 @@ from turbasen.models import Omrade
 
 def index(request):
     aktivitet_dates = filter_aktivitet_dates(request.GET)
-    aktivitet_dates_pagenav = paginate_aktivitet_dates({'page': 1}, aktivitet_dates)
+    aktivitet_dates_pagenav = paginate_aktivitet_dates(request.GET, aktivitet_dates)
 
     context = {
         'aktivitet_dates': aktivitet_dates_pagenav,
