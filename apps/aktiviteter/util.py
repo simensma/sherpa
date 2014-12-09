@@ -25,8 +25,7 @@ def filter_aktivitet_dates(filter):
         words = filter['search'].split(' ')
 
         dates = dates.filter(
-            Q(reduce(lambda x, y: x & y, [Q(aktivitet__title__icontains=word) for word in words])) |
-            Q(reduce(lambda x, y: x & y, [Q(aktivitet__description__icontains=word) for word in words])) |
+            Q(reduce(lambda x, y: x & y, [Q(aktivitet__title__icontains=word) | Q(aktivitet__description__icontains=word) for word in words])) |
             Q(aktivitet__code=filter['search'])
         )
 
