@@ -15,6 +15,7 @@ urlpatterns = patterns('',
     # Note that archived articles are on a separate in order partly to separate hits in google analytics.
     url(r'^nyhetsarkiv/', include('articles.urls_archive')),
     url(r'^aktiviteter-beta/', include('aktiviteter.urls')),
+    url(r'^turbasen/', include('turbasen.urls')),
 
     url(r'^i18n/', include('django.conf.urls.i18n')),
 )
