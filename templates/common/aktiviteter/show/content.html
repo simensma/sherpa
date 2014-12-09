@@ -79,7 +79,7 @@
                 {% endwith %}
 
                 <dt>Turområde</dt>
-                <dd>{% for location in aktivitet_date.aktivitet.get_locations %}{{ location.name }}{% if not forloop.last %}, {% endif %}{% endfor %} {% if aktivitet_date.aktivitet.start_point %}<a href="#map">(se kart)</a>{% endif %}</dd>
+                <dd>{% for omrade in aktivitet_date.aktivitet.get_omrader %}{{ omrade.navn }}{% if not forloop.last %}, {% endif %}{% endfor %} {% if aktivitet_date.aktivitet.start_point %}<a href="#map">(se kart)</a>{% endif %}</dd>
 
                 {% if aktivitet_date.signup_enabled and not aktivitet_date.aktivitet.is_imported %}
                   <dt>Påmeldte</dt>
