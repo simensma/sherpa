@@ -1,5 +1,4 @@
 from datetime import datetime
-import json
 
 from django.db.models import Q
 from django.contrib.gis import geos
@@ -7,7 +6,7 @@ from django.core.paginator import Paginator, EmptyPage
 from django.utils.html import strip_tags
 from django.utils.text import truncate_words
 
-from aktiviteter.models import AktivitetDate
+from aktiviteter.models import Aktivitet, AktivitetDate
 
 HITS_PER_PAGE = 20
 
@@ -27,6 +26,13 @@ def filter_aktivitet_dates(filter):
             Q(aktivitet__description__icontains=filter['search']) |
             Q(aktivitet__code=filter['search'])
         )
+
+    if 'omrader' in filter:
+        for omrade in filter['omrader']:
+            dates = dates.extra(
+                where=['%s = ANY ("{0}"."omrader")'.format(Aktivitet._meta.db_table)],
+                params=[omrade],
+            )
 
     if 'categories' in filter and len(filter['categories']) > 0:
         dates = dates.filter(aktivitet__category__in=filter['categories'])
@@ -93,19 +99,6 @@ def filter_aktivitet_dates(filter):
     )
 
     dates = list(dates)
-
-    # Programmatical filters - due to storing JSON etc. Maybe this could be done in the
-    # DB with postgres? Or maybe it should be remodelled?
-
-    if 'locations' in filter and len(filter['locations']) > 0:
-        filter['locations'] = [int(l) for l in filter['locations']]
-        dates_to_remove = []
-        for date in dates:
-            if not any(l in filter['locations'] for l in json.loads(date.aktivitet.locations)):
-                dates_to_remove.append(date)
-        for d in dates_to_remove:
-            dates.remove(d)
-
     return dates
 
 def paginate_aktivitet_dates(filter, dates):
