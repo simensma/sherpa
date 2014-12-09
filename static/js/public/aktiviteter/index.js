@@ -113,19 +113,12 @@ $(function() {
     });
 
     function updateUrl(filter) {
-        var keys  = Object.keys(filter);
-        var query = [];
+        var keys  = Object.keys(filter),
+            query = [], i;
 
-        for (var i = 0; i < keys.length; i++) {
-            var key = keys[i];
-            var val = filter[key];
-
-            if (typeof val === 'string' && val !== '' && !(key === 'page' && val === '1')) {
-                query.push(key + '=' + val);
-            } else if (typeof val === 'number' && !(key === 'page' && val === 1)) {
-                query.push(key + '=' + val);
-            } else if (val instanceof Array && val.length > 0) {
-                query.push(key + '=' + val.join(','));
+        for (i = 0; i < keys.length; i++) {
+            if (filter[keys[i]] !== '' && !(keys[i] === 'page' && filter[keys[i]] === '1')) {
+                query.push(keys[i] + '=' + filter[keys[i]]);
             }
         }
 
@@ -146,9 +139,7 @@ $(function() {
             }, 2000);
         }
 
-        // @TODO rewirte collectFilter() to only return strings
-        var filter = collectFilter();
-        filter.page = page;
+        var filter = collectFilter(page);
 
         // Here we set the new URL so that user can go back
         updateUrl(filter);
@@ -187,53 +178,46 @@ $(function() {
     }
     updateResultsCount();
 
-    function collectFilter() {
-        var categories = [];
-        button_selections.filter(".categories").find("button.category.selected").each(function() {
-            categories.push($(this).attr('data-category'));
-        });
-        var category_types = [];
-        category_type_wrapper.find('button.selected').each(function() {
-            category_types.push($(this).attr('data-dnt-category-type'));
-        });
-        var audiences = [];
-        button_selections.filter(".audiences").find("button.audience.selected").each(function() {
-            audiences.push($(this).attr('data-audience'));
-        });
-        var difficulties = [];
-        button_selections.filter(".difficulties").find("button.difficulty.selected").each(function() {
-            difficulties.push($(this).attr('data-difficulty'));
-        });
-        var omrader = [];
-        filters.find("select[name='omrader'] option:selected").each(function() {
-            omrader.push($(this).val());
-        });
-        var organizers = [];
-        filters.find("select[name='organizers'] option:selected").each(function() {
-            organizers.push($(this).val());
-        });
-        var start_date = filters.find("input[name='start_date']").val();
-        var end_date = filters.find("input[name='end_date']").val();
-        var search = filters.find("input[name='search']").val();
+    function collectFilter(page) {
+        res = {page: page};
+
+        res.categories = button_selections.filter(".categories").find("button.category.selected").map(function() {
+            return $(this).attr('data-category');
+        }).get().join();
+
+        res.category_types = category_type_wrapper.find('button.selected').map(function() {
+            return $(this).attr('data-dnt-category-type');
+        }).get().join();
+
+        res.audiences = button_selections.filter(".audiences").find("button.audience.selected").map(function() {
+            return $(this).attr('data-audience');
+        }).get().join();
+
+        res.difficulties = button_selections.filter(".difficulties").find("button.difficulty.selected").map(function() {
+            return $(this).attr('data-difficulty');
+        }).get().join();
+
+        res.omrader = filters.find("select[name='omrader'] option:selected").map(function() {
+            return $(this).val();
+        }).get().join();
+
+        res.organizers = filters.find("select[name='organizers'] option:selected").map(function() {
+            return $(this).val();
+        }).get().join();
+
+        res.start_date = filters.find("input[name='start_date']").val();
+        res.end_date = filters.find("input[name='end_date']").val();
+        res.search = filters.find("input[name='search']").val();
         if (/[\d]{4}\-[\d]{2}\-[\d]{2}/.test(start_date)) {
             start_date = start_date.replace(/([\d]{4})\-([\d]{2})\-([\d]{2})/, '$3.$2.$1');
         }
         if (/[\d]{4}\-[\d]{2}\-[\d]{2}/.test(end_date)) {
             end_date = end_date.replace(/([\d]{4})\-([\d]{2})\-([\d]{2})/, '$3.$2.$1');
         }
-        var lat_lng = filters.find("input[name='lat_lng']").val();
-        return {
-            categories: categories,
-            category_types: category_types,
-            audiences: audiences,
-            difficulties: difficulties,
-            omrader: omrader,
-            start_date: start_date,
-            end_date: end_date,
-            search: search,
-            organizers: organizers,
-            lat_lng: lat_lng,
-        };
+        res.lat_lng = filters.find("input[name='lat_lng']").val();
+
+        return res;
+>>>>>>> Return comma-separated strings instead of arrays
     }
 
     $('input[name="ssr_id"]').select2({
