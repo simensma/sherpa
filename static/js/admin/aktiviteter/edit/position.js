@@ -88,7 +88,7 @@ $(function() {
         if (latlng.length === 2) {
             positionMetadataSelect.apply($('select[name="counties"]'), latlng);
             positionMetadataSelect.apply($('select[name="municipalities"]'), latlng);
-            positionMetadataSelect.apply($('select[name="locations"]'), latlng);
+            positionMetadataSelect.apply($('select[name="omrader"]'), latlng);
         }
     };
 
@@ -170,7 +170,7 @@ $(function() {
 
     $(document).on('chosen:updated', 'select[name="municipalities"]', {placeholder: 'municipality'} , positionMetadataPlaceholderUpdate);
     $(document).on('chosen:updated', 'select[name="counties"]'      , {placeholder: 'county'}       , positionMetadataPlaceholderUpdate);
-    $(document).on('chosen:updated', 'select[name="locations"]'     , {placeholder: 'location'}     , positionMetadataPlaceholderUpdate);
+    $(document).on('chosen:updated', 'select[name="omrader"]'       , {placeholder: 'omrade'}       , positionMetadataPlaceholderUpdate);
 
     if (/^\d+(\.\d+)?,\d+(\.\d+)?$/.test($('input[name="latlng"]').val())) {
         $(document).one('postshow', '[data-container="position-map"]', positionMapMarkerUpdate.bind($('input[name="latlng"]')));

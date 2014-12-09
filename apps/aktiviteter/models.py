@@ -6,8 +6,11 @@ from django.contrib.gis.db import models
 from django.conf import settings
 from django.core.urlresolvers import reverse
 
+from djorm_pgarray.fields import TextArrayField
+
 from core.util import s3_bucket
-from sherpa2.models import Location, Turforslag
+from sherpa2.models import Turforslag
+from turbasen.models import Omrade
 
 class Aktivitet(models.Model):
     # Note that *either* forening or forening_cabin should be defined at any time
@@ -22,8 +25,8 @@ class Aktivitet(models.Model):
     start_point = models.PointField(null=True)
     counties = models.ManyToManyField('core.County', related_name='aktiviteter')
     municipalities = models.ManyToManyField('core.Municipality', related_name='aktiviteter')
-    # 'locations' is a cross-db relationship, so store a JSON list of related IDs without DB-level constraints
-    locations = models.CharField(max_length=4091)
+    # Array field of object ids related to the 'områder' datatype in Nasjonal Turbase
+    omrader = TextArrayField(default=[])
     getting_there = models.TextField()
     turforslag = models.IntegerField(null=True) # Cross-DB relationship to sherpa2.models.Turforslag
     DIFFICULTY_CHOICES = (
@@ -77,11 +80,8 @@ class Aktivitet(models.Model):
     def get_start_point_lng_json(self):
         return json.dumps(self.start_point.get_coords()[1])
 
-    def get_locations(self):
-        # Lookup programmatically, since the entire result set will in most cases already be cached, and iterating
-        # that is faster than performing a new query
-        locations = json.loads(self.locations)
-        return [l for l in Location.get_active_cached() if l.id in locations]
+    def get_omrader(self):
+        return [Omrade.get(object_id=object_id) for object_id in self.omrader]
 
     def get_audiences(self):
         return [a.name for a in self.audiences.all()]

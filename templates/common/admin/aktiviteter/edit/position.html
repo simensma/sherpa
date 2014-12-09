@@ -1,4 +1,4 @@
-{% load aktivitet_has_location %}
+{% load aktivitet_has_omrade %}
 
 <div class="alert alert-info search-container"
   data-turforslag-search-url="{% url 'admin.aktiviteter.views.turforslag_search' %}">
@@ -143,35 +143,35 @@
       </div>
     {% endwith %}
 
-    <!-- location -->
+    <!-- område -->
     <div class="col-lg-4 col-md-4 col-sm-4">
       <strong>Område: </strong><br />
-      <div data-container="position-locations-placeholder">
+      <div data-container="position-omrader-placeholder">
         {% include 'common/util/ajaxloader.html' %}
-        <span data-placeholder-for="location">
+        <span data-placeholder-for="omrade">
           {# @TODO how to make this look ok when no selected #}
-          {% for item in locations %}
-            {% if aktivitet|aktivitet_has_location:item %}
-              {{ item.name }}
+          {% for omrade in omrader %}
+            {% if aktivitet|aktivitet_has_omrade:omrade %}
+              {{ omrade.name }}
             {% endif %}
           {% endfor %}
         </span>
         <a class="btn btn-default btn-xs"
-          data-click-show="position-locations-edit"
-          data-click-hide="position-locations-placeholder">
+          data-click-show="position-omrader-edit"
+          data-click-hide="position-omrader-placeholder">
           <span class="glyphicon glyphicon-plus"></span> Flere områder
         </a>
       </div>
-      <div data-container="position-locations-edit" class="jq-hide">
-        <select multiple name="locations" data-chosen data-placeholder="Velg område..."
-            data-lookup-url="{% url 'sherpa2.views.location_lookup' %}">
+      <div data-container="position-omrader-edit" class="jq-hide">
+        <select multiple name="omrader" data-chosen data-placeholder="Velg område..."
+            data-lookup-url="{% url 'turbasen.views.location_lookup' %}">
 
           <option value=""></option>
-          {% for item in locations %}
-            {% if aktivitet|aktivitet_has_location:item %}
-              <option value="{{ item.id }}" selected>{{ item.name }}</option>
+          {% for omrade in omrader %}
+            {% if aktivitet|aktivitet_has_omrade:omrade %}
+              <option value="{{ omrade.object_id }}" selected>{{ omrade.navn }}</option>
             {% else %}
-              <option value="{{ item.id }}">{{ item.name }}</option>
+              <option value="{{ omrade.object_id }}">{{ omrade.navn }}</option>
             {% endif %}
           {% endfor %}
         </select>

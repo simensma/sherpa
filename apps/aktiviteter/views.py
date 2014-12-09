@@ -8,11 +8,11 @@ from django.core.exceptions import PermissionDenied
 from django.contrib import messages
 
 from sherpa.decorators import user_requires_login
-from sherpa2.models import Location
 from aktiviteter.models import Aktivitet, AktivitetDate, AktivitetAudience, SimpleParticipant, Cabin
 from aktiviteter.util import filter_aktivitet_dates, paginate_aktivitet_dates
 from core import validator
 from foreninger.models import Forening
+from turbasen.models import Omrade
 
 def index(request):
     aktivitet_dates = filter_aktivitet_dates({})
@@ -24,7 +24,7 @@ def index(request):
         'categories': Aktivitet.CATEGORY_CHOICES,
         'category_types': Aktivitet.CATEGORY_TYPES_LIST,
         'audiences': AktivitetAudience.AUDIENCE_CHOICES,
-        'locations': Location.get_active_cached(),
+        'omrader': sorted(Omrade.lookup(), key=lambda o: o.navn),
         'all_foreninger': Forening.get_all_sorted_with_type_data(),
         'cabins': Cabin.objects.order_by('name'),
     }
