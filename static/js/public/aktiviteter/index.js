@@ -112,6 +112,26 @@ $(function() {
         refreshContent($(this).attr('data-page'), true);
     });
 
+    function updateUrl(filter) {
+        var keys  = Object.keys(filter);
+        var query = [];
+
+        for (var i = 0; i < keys.length; i++) {
+            var key = keys[i];
+            var val = filter[key];
+
+            if (typeof val === 'string' && val !== '' && !(key === 'page' && val === '1')) {
+                query.push(key + '=' + val);
+            } else if (typeof val === 'number' && !(key === 'page' && val === 1)) {
+                query.push(key + '=' + val);
+            } else if (val instanceof Array && val.length > 0) {
+                query.push(key + '=' + val.join(','));
+            }
+        }
+
+        history.pushState(null, null, '?' + query.join('&'));
+    }
+
     function refreshContent(page, scrollToTop) {
         results_content.find("div.pagination li").addClass('disabled');
         results_content.find('a.aktivitet-item').addClass('disabled');
@@ -126,11 +146,16 @@ $(function() {
             }, 2000);
         }
 
+        // @TODO rewirte collectFilter() to only return strings
         var filter = collectFilter();
         filter.page = page;
+
+        // Here we set the new URL so that user can go back
+        updateUrl(filter);
+
         $.ajaxQueue({
             url: results.attr('data-filter-url'),
-            data: { filter: JSON.stringify(filter) }
+            data: filter
         }).done(function(result) {
             result = JSON.parse(result);
 
