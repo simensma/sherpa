@@ -22,7 +22,7 @@ def filter_aktivitet_dates(filter):
     ).filter(aktivitet__private=False)
 
     if 'search' in filter and len(filter['search']) > 2:
-        words = filter['search'].split(' ')
+        words = filter['search'].split()
 
         dates = dates.filter(
             Q(reduce(lambda x, y: x & y, [Q(aktivitet__title__icontains=word) | Q(aktivitet__description__icontains=word) for word in words])) |
