@@ -1,24 +1,36 @@
-<div class="listing-header clearfix">
-  <p>
-    Viser {{ aktivitet_dates.object_list|length }} av {{ aktivitet_dates.paginator.count }} aktiviteter
-  </p>
+<div class="listing-container" data-dnt-listing-total-results-count="{{ aktivitet_dates.paginator.count|default:"0" }}">
+  {% if aktivitet_dates.paginator.count %}
+    <div class="listing-header clearfix">
+      <p>
+        Viser {{ aktivitet_dates.object_list|length }} av {{ aktivitet_dates.paginator.count }} aktiviteter
+      </p>
 
-  {% with paginator=aktivitet_dates.paginator current=aktivitet_dates.number %}
-    {% include 'common/aktiviteter/util/pagination.html' %}
-  {% endwith %}
-</div>
+      {% with paginator=aktivitet_dates.paginator current=aktivitet_dates.number %}
+        {% include 'common/aktiviteter/util/pagination.html' %}
+      {% endwith %}
+    </div>
 
-{% for date in aktivitet_dates %}
-  {% include 'common/aktiviteter/listing_item.html' with date=date %}
-{% endfor %}
+    {% for date in aktivitet_dates %}
+      {% include 'common/aktiviteter/listing_item.html' with date=date %}
+    {% endfor %}
 
-<div class="listing-footer clearfix">
-  <p>
-    Viser {{ aktivitet_dates.object_list|length }} av
-    <span class="aktiviteter-result-total-count">{{ aktivitet_dates.paginator.count }}</span> aktiviteter
-  </p>
+    <div class="listing-footer clearfix">
+      <p>
+        Viser {{ aktivitet_dates.object_list|length }} av
+        <span class="aktiviteter-result-total-count">{{ aktivitet_dates.paginator.count }}</span> aktiviteter
+      </p>
 
-  {% with paginator=aktivitet_dates.paginator current=aktivitet_dates.number %}
-    {% include 'common/aktiviteter/util/pagination.html' %}
-  {% endwith %}
+      {% with paginator=aktivitet_dates.paginator current=aktivitet_dates.number %}
+        {% include 'common/aktiviteter/util/pagination.html' %}
+      {% endwith %}
+    </div>
+
+  {% else %}
+    <p><strong>Vi fant dessverre ingen aktiviteter som passer til søket ditt!</strong></p>
+    <p>
+      Prøv å endre søkekriteriene eller bruk andre søkeord. Du kan også
+      <a href="{% url 'aktiviteter.views.index' %}">nullstille søket og starte helt på nytt</a>.
+    </p>
+  {% endif %}
+
 </div>
