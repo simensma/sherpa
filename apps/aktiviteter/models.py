@@ -26,6 +26,7 @@ class Aktivitet(models.Model):
     municipalities = models.ManyToManyField('core.Municipality', related_name='aktiviteter')
     # 'locations' is a cross-db relationship, so store a JSON list of related IDs without DB-level constraints
     locations = models.CharField(max_length=4091)
+    # Array field of object ids related to the 'områder' datatype in Nasjonal Turbase
     omrader = TextArrayField()
     getting_there = models.TextField()
     turforslag = models.IntegerField(null=True) # Cross-DB relationship to sherpa2.models.Turforslag
