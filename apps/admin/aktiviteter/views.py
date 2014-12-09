@@ -17,11 +17,12 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from aktiviteter.models import Aktivitet, AktivitetDate, AktivitetImage, AktivitetAudience, Cabin, ConversionFailure, SynchronizationDate
 from core.util import parse_html_array
 from core.models import Tag, County, Municipality
-from sherpa2.models import Location, Turforslag, Activity as Sherpa2Aktivitet
+from sherpa2.models import Turforslag, Activity as Sherpa2Aktivitet
 from sherpa2.exceptions import ConversionImpossible
 from user.models import User
 from focus.models import Actor
 from foreninger.models import Forening
+from turbasen.models import Omrade
 
 def index(request):
     try:
@@ -121,7 +122,6 @@ def new(request):
         forening=request.active_forening,
         pub_date=datetime.now(),
         category=Aktivitet.CATEGORY_CHOICES[0][0],
-        locations=json.dumps([]),
     )
     aktivitet.save()
     return redirect('admin.aktiviteter.views.edit', aktivitet.id)
@@ -139,7 +139,7 @@ def edit(request, aktivitet):
             'admin_user_search_char_length': settings.ADMIN_USER_SEARCH_CHAR_LENGTH,
             'counties': County.typical_objects().order_by('name'),
             'municipalities': Municipality.objects.order_by('name'),
-            'locations': Location.get_active_cached(),
+            'omrader': sorted(Omrade.lookup(), key=lambda o: o.navn),
             'now': datetime.now()
         }
         return render(request, 'common/admin/aktiviteter/edit/edit.html', context)
@@ -182,8 +182,8 @@ def edit(request, aktivitet):
         if 'getting_there' in request.POST:
             aktivitet.getting_there = request.POST['getting_there']
 
-        if 'locations' in request.POST:
-            aktivitet.locations = json.dumps([int(l) for l in request.POST.getlist('locations')])
+        if 'omrader' in request.POST:
+            aktivitet.omrader = request.POST.getlist('omrader')
 
         if 'ntb_id' not in request.POST or request.POST['ntb_id'] == '':
             aktivitet.turforslag = None
