@@ -348,7 +348,6 @@ def users_give_access(request, forening_id):
     for forening in other_user.all_foreninger():
         if forening == request.active_forening:
             # The user already has access to this forening
-            print("Well, %s // %s" % (forening.role, wanted_role))
             if forening.role == 'user' and wanted_role == 'admin':
                 # But it's a user role and we want admin! Update it.
                 forening_role = ForeningRole.objects.get(user=other_user, forening=forening)
