@@ -70,6 +70,9 @@ class Omrade(NTBObject):
         super(Omrade, self).__init__(document, *args, **kwargs)
         self.navn = document['navn']
 
+    def __repr__(self):
+        return (u'Område: %s (%s)' % (self.object_id, self.navn)).encode('utf-8')
+
     def fetch(self):
         """If this object is only partially fetched, this method will retrieve the rest of its fields"""
         document = NTBObject.get_object(self.identifier, self.object_id)
