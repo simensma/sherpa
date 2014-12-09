@@ -145,13 +145,22 @@ $(function() {
             // Initiate tooltips
             results_content.find('[data-tooltip]').tooltip();
 
+            updateResultsCount();
+
         }).fail(function(result) {
             results_content.empty();
             results_fail.show();
+            updateResultsCount();
         }).always(function(result) {
             // we are done
         });
     }
+
+    function updateResultsCount() {
+        var results_count = results_content.find('.aktiviteter-result-total-count').text();
+        $('.search-filters .aktiviteter-result-total-count').html(results_count);
+    }
+    updateResultsCount();
 
     function collectFilter() {
         var categories = [];
