@@ -98,7 +98,6 @@ def filter_aktivitet_dates(filter):
         'start_date'
     )
 
-    dates = list(dates)
     return dates
 
 def paginate_aktivitet_dates(filter, dates):
