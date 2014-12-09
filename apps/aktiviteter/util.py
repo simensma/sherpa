@@ -21,10 +21,11 @@ def filter_aktivitet_dates(filter):
         'aktivitet__co_foreninger',
     ).filter(aktivitet__private=False)
 
-    if 'search' in filter and len(filter['search']) > 2:
+    if 'search' in filter and len(filter['search'].strip()) > 2:
+        words = filter['search'].split()
+
         dates = dates.filter(
-            Q(aktivitet__title__icontains=filter['search']) |
-            Q(aktivitet__description__icontains=filter['search']) |
+            Q(reduce(lambda x, y: x & y, [Q(aktivitet__title__icontains=word) | Q(aktivitet__description__icontains=word) for word in words])) |
             Q(aktivitet__code=filter['search'])
         )
 
