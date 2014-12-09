@@ -41,7 +41,6 @@ div.aktivitet-listing {
   }
 
   div.column-filters {
-
     padding-top: 30px;
 
     h2 {
@@ -51,6 +50,11 @@ div.aktivitet-listing {
   }
 
   div.column-results {
+
+    @media (max-width: @screen-xs-max) {
+      padding-left: 0;
+      padding-right: 0;
+    }
 
     .wrapper {
       background-color: #e4e4e4;
