@@ -504,7 +504,7 @@ class Activity(models.Model):
         foreninger = self.convert_foreninger()
         description = self.convert_description()
         pub_date = self.convert_pub_date()
-        locations = [location.id for location in self.convert_locations()]
+        omrader = self.convert_omrader()
         difficulty = self.convert_difficulty()
         audiences = self.convert_audiences()
         category, category_type, category_tags = self.convert_categories()
@@ -521,7 +521,7 @@ class Activity(models.Model):
         aktivitet.category_type = category_type
         aktivitet.pub_date = pub_date
         aktivitet.start_point = self.get_start_point()
-        aktivitet.locations = json.dumps(locations)
+        aktivitet.omrader = omrader
         aktivitet.difficulty = difficulty
         aktivitet.published = True
         aktivitet.private = False
@@ -771,9 +771,9 @@ class Activity(models.Model):
             for extra in self.get_extras() if extra in Activity.AUDIENCE_CONVERSION_TABLE
         ]
 
-    def convert_locations(self):
+    def convert_omrader(self):
         try:
-            return self.get_locations()
+            locations = self.get_locations()
         except Location.DoesNotExist:
             if self.occurs_in_future():
                 # Isn't known to occur, so we're not handling it explicitly for now - just re-raise the exception
@@ -801,7 +801,12 @@ class Activity(models.Model):
                         else:
                             # Unkown missing location code
                             raise
-            return locations
+
+        # Now convert the locations to turbase object-ids
+        return [
+            NtbId.objects.get(sql_id=location.id, type='L').object_id
+            for location in locations
+        ]
 
     def convert_categories(self):
         """The wrapper for converting category, category type and category types"""
