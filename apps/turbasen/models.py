@@ -84,4 +84,10 @@ class Omrade(NTBObject):
 
     @staticmethod
     def lookup():
+        """Retrieve a complete list of these objects, partially fetched"""
         return [Omrade(document, _is_partial=True) for document in NTBObject.lookup_object(Omrade.identifier)]
+
+    @staticmethod
+    def get(object_id):
+        """Retrieve a single object from NTB by its object id"""
+        return Omrade(NTBObject.get_object(Omrade.identifier, object_id), _is_partial=False)
