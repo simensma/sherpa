@@ -26,7 +26,7 @@ class Aktivitet(models.Model):
     counties = models.ManyToManyField('core.County', related_name='aktiviteter')
     municipalities = models.ManyToManyField('core.Municipality', related_name='aktiviteter')
     # Array field of object ids related to the 'områder' datatype in Nasjonal Turbase
-    omrader = TextArrayField()
+    omrader = TextArrayField(default=[])
     getting_there = models.TextField()
     turforslag = models.IntegerField(null=True) # Cross-DB relationship to sherpa2.models.Turforslag
     DIFFICULTY_CHOICES = (
