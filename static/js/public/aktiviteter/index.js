@@ -157,7 +157,7 @@ $(function() {
     }
 
     function updateResultsCount() {
-        var results_count = results_content.find('.aktiviteter-result-total-count').text();
+        var results_count = results_content.find('.listing-container').attr('data-dnt-listing-total-results-count');
         $('.search-filters .aktiviteter-result-total-count').html(results_count);
     }
     updateResultsCount();
