@@ -20,7 +20,7 @@ def filter_aktivitet_dates(filter):
         'aktivitet__co_foreninger',
     ).filter(aktivitet__private=False)
 
-    if 'search' in filter and len(filter['search'].strip()) > 2:
+    if filter.get('search') and len(filter['search'].strip()) > 2:
         words = filter['search'].split()
 
         dates = dates.filter(
@@ -28,31 +28,31 @@ def filter_aktivitet_dates(filter):
             Q(aktivitet__code=filter['search'])
         )
 
-    if 'omrader' in filter:
-        for omrade in filter['omrader']:
+    if filter.get('omrader') and filter['omrader'].split(','):
+        for omrade in filter['omrader'].split(','):
             dates = dates.extra(
                 where=['%s = ANY ("{0}"."omrader")'.format(Aktivitet._meta.db_table)],
                 params=[omrade],
             )
 
-    if 'categories' in filter and len(filter['categories']) > 0:
-        dates = dates.filter(aktivitet__category__in=filter['categories'])
+    if filter.get('categories') and filter['categories'].split(','):
+        dates = dates.filter(aktivitet__category__in=filter['categories'].split(','))
 
-    if 'category_types' in filter and len(filter['category_types']) > 0:
+    if filter.get('category_types') and filter['category_types'].split(','):
         # Note that we're checking for both types and tags, and since objects may have the same tag specified twice,
         # it'll require an explicit distinct clause in our query
         dates = dates.filter(
-            Q(aktivitet__category_type__in=filter['category_types']) |
-            Q(aktivitet__category_tags__name__in=filter['category_types'])
+            Q(aktivitet__category_type__in=filter['category_types'].split(',')) |
+            Q(aktivitet__category_tags__name__in=filter['category_types'].split(','))
         )
 
-    if 'audiences' in filter and len(filter['audiences']) > 0:
-        dates = dates.filter(aktivitet__audiences__name__in=filter['audiences'])
+    if filter.get('audiences') and filter['audiences'].split(','):
+        dates = dates.filter(aktivitet__audiences__name__in=filter['audiences'].split(','))
 
-    if 'difficulties' in filter and len(filter['difficulties']) > 0:
-        dates = dates.filter(aktivitet__difficulty__in=filter['difficulties'])
+    if filter.get('difficulties') and filter['difficulties'].split(','):
+        dates = dates.filter(aktivitet__difficulty__in=filter['difficulties'].split(','))
 
-    if 'lat_lng' in filter and len(filter['lat_lng'].split(',')) == 2:
+    if filter.get('lat_lng') and len(filter['lat_lng'].split(',')) == 2:
         latlng = filter['lat_lng'].split(',')
 
         # Rule of thumb for buffer; 1 degree is about 100 km
@@ -63,33 +63,34 @@ def filter_aktivitet_dates(filter):
     # @TODO refactor to make use of django range query
     # https://docs.djangoproject.com/en/dev/ref/models/querysets/#range
     try:
-        if 'start_date' in filter and filter['start_date'] != '':
+        if filter.get('start_date'):
             dates = dates.filter(start_date__gte=datetime.strptime(filter['start_date'], "%d.%m.%Y"))
         else:
             dates = dates.filter(start_date__gte=datetime.now())
 
-        if 'end_date' in filter and filter['end_date'] != '':
+        if filter.get('end_date'):
             dates = dates.filter(end_date__lte=datetime.strptime(filter['end_date'], "%d.%m.%Y"))
     except (ValueError, KeyError):
         pass
 
-    if 'organizers' in filter:
+    if filter.get('organizers') and filter['organizers'].split(','):
         foreninger = []
         cabins = []
-        for organizer in filter['organizers']:
+
+        for organizer in filter['organizers'].split(','):
             type, id = organizer.split(':')
             if type == 'forening':
                 foreninger.append(id)
             elif type == 'cabin':
                 cabins.append(id)
 
-        if len(foreninger) > 0:
+        if foreninger:
             dates = dates.filter(
                 Q(aktivitet__forening__in=foreninger) |
                 Q(aktivitet__co_foreninger__in=foreninger)
             )
 
-        if len(cabins) > 0:
+        if cabins:
             dates = dates.filter(
                 Q(aktivitet__forening_cabin__in=cabins) |
                 Q(aktivitet__co_foreninger_cabin__in=cabins)

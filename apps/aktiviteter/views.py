@@ -15,7 +15,7 @@ from foreninger.models import Forening
 from turbasen.models import Omrade
 
 def index(request):
-    aktivitet_dates = filter_aktivitet_dates({})
+    aktivitet_dates = filter_aktivitet_dates(request.GET)
     aktivitet_dates_pagenav = paginate_aktivitet_dates({'page': 1}, aktivitet_dates)
 
     context = {
@@ -34,10 +34,8 @@ def filter(request):
     if not request.is_ajax() or not request.method == 'POST':
         return redirect('aktiviteter.views.index')
 
-    filter = json.loads(request.POST['filter'])
-
-    aktivitet_dates = filter_aktivitet_dates(filter)
-    aktivitet_dates_pagenav = paginate_aktivitet_dates(filter, aktivitet_dates)
+    aktivitet_dates = filter_aktivitet_dates(request.POST)
+    aktivitet_dates_pagenav = paginate_aktivitet_dates(request.POST, aktivitet_dates)
 
     context = RequestContext(request, {
         'aktivitet_dates': aktivitet_dates_pagenav
