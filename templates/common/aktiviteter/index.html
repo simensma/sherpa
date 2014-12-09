@@ -114,7 +114,7 @@
             <select class="form-control" name="omrader" data-placeholder="Velg turområder..." multiple>
               <option value=""></option>
               {% for omrade in omrader %}
-                <option value="{{ omrade.objectid }}">{{ omrade.navn }}</option>
+                <option value="{{ omrade.object_id }}">{{ omrade.navn }}</option>
               {% endfor %}
             </select>
           </div>

@@ -10,7 +10,7 @@ class NTBObject(object):
     TURBASE_LOOKUP_COUNT = 50
 
     def __init__(self, document, _is_partial=False):
-        self.objectid = document['_id']
+        self.object_id = document['_id']
         self.tilbyder = document['tilbyder']
         self.endret = document['endret']
         self.lisens = document['lisens']
@@ -34,9 +34,9 @@ class NTBObject(object):
         return NTBObject._lookup_recursively(identifier, skip=0, previous_results=[])
 
     @staticmethod
-    def get_object(identifier, objectid):
+    def get_object(identifier, object_id):
         return requests.get(
-            '%s%s/%s/' % (NTBObject.ENDPOINT_URL, identifier, objectid),
+            '%s%s/%s/' % (NTBObject.ENDPOINT_URL, identifier, object_id),
             params={'api_key': settings.TURBASEN_API_KEY}
         ).json()
 
@@ -72,7 +72,7 @@ class Omrade(NTBObject):
 
     def fetch(self):
         """If this object is only partially fetched, this method will retrieve the rest of its fields"""
-        document = NTBObject.get_object(self.identifier, self.objectid)
+        document = NTBObject.get_object(self.identifier, self.object_id)
         self.navngiving = document.get('navngiving')
         self.status = document.get('status')
         self.geojson = document.get('geojson')
