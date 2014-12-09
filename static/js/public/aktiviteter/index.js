@@ -74,7 +74,7 @@ $(function() {
         refreshContent(results_content.attr('data-current-page'));
     });
 
-    filters.find("select[name='location']").select2().change(function() {
+    filters.find("select[name='omrader']").select2().change(function() {
         refreshContent(results_content.attr('data-current-page'));
     });
 
@@ -150,9 +150,9 @@ $(function() {
         button_selections.filter(".difficulties").find("button.difficulty.selected").each(function() {
             difficulties.push($(this).attr('data-difficulty'));
         });
-        var locations = [];
-        filters.find("select[name='location'] option:selected").each(function() {
-            locations.push($(this).val());
+        var omrader = [];
+        filters.find("select[name='omrader'] option:selected").each(function() {
+            omrader.push($(this).val());
         });
         var organizers = [];
         filters.find("select[name='organizers'] option:selected").each(function() {
@@ -167,7 +167,7 @@ $(function() {
             category_types: category_types,
             audiences: audiences,
             difficulties: difficulties,
-            locations: locations,
+            omrader: omrader,
             start_date: start_date,
             end_date: end_date,
             search: search,
