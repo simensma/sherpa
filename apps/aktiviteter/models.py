@@ -6,6 +6,8 @@ from django.contrib.gis.db import models
 from django.conf import settings
 from django.core.urlresolvers import reverse
 
+from djorm_pgarray.fields import TextArrayField
+
 from core.util import s3_bucket
 from sherpa2.models import Location, Turforslag
 
@@ -24,6 +26,7 @@ class Aktivitet(models.Model):
     municipalities = models.ManyToManyField('core.Municipality', related_name='aktiviteter')
     # 'locations' is a cross-db relationship, so store a JSON list of related IDs without DB-level constraints
     locations = models.CharField(max_length=4091)
+    omrader = TextArrayField()
     getting_there = models.TextField()
     turforslag = models.IntegerField(null=True) # Cross-DB relationship to sherpa2.models.Turforslag
     DIFFICULTY_CHOICES = (
