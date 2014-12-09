@@ -95,6 +95,7 @@ $(function() {
     });
 
     filters.find('[data-dnt-container="start-date"],[data-dnt-container="end-date"]').on('change', function() {
+        // TODO: This is triggered twice if date is changed using bootstrap datepicker, should be fixed
         refreshContent(results_content.attr('data-current-page'));
     });
 
