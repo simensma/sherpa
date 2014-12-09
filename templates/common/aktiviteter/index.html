@@ -23,19 +23,6 @@
 
 <div class="aktivitet-listing">
 
-  <div class="navbar navbar-default navbar-fixed-bottom visible-xs toggle-filters-results">
-    <div class="container">
-      <div class="col-xs-12">
-        <button class="btn btn-danger btn-lg btn-block" data-dnt-action="show-activities-filters">
-          Endre søk
-        </button>
-        <button class="btn btn-danger btn-lg btn-block jq-hide" data-dnt-action="show-activities-results">
-          Vis resultat
-        </button>
-      </div>
-    </div>
-  </div>
-
   <h1 class="visible-xs">Finn aktiviteter</h1>
 
   <div class="row">
@@ -56,6 +43,17 @@
         </div>
 
         <div class="search-filters">
+
+          <div class="navbar navbar-default navbar-fixed-bottom visible-xs toggle-filters-results">
+            <div class="container">
+              <div class="col-xs-12">
+                <button class="btn btn-danger btn-lg btn-block" data-dnt-action="show-activities-results">
+                  Vis resultat
+                </button>
+              </div>
+            </div>
+          </div>
+
           <div class="section">
             <div class="button-selections" data-dnt-container="category-types">
               {% for category in category_types %}
@@ -172,6 +170,17 @@
     </div>
 
     <div class="column-results col-sm-8">
+
+      <div class="navbar navbar-default navbar-fixed-bottom visible-xs toggle-filters-results">
+        <div class="container">
+          <div class="col-xs-12">
+            <button class="btn btn-danger btn-lg btn-block" data-dnt-action="show-activities-filters">
+              Endre søk
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div class="wrapper">
 
         <div class="results" data-filter-url="{% url 'aktiviteter.views.filter' %}">

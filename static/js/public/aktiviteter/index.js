@@ -36,9 +36,6 @@ $(function() {
     toggle_filters_and_results.find('button').bind('click', function (e) {
         var action = $(this).data('dnt-action');
 
-        toggle_filters_and_results.find('button').show();
-        $(this).hide();
-
         var listing_top = listing.offset().top;
         $(window).scrollTop(listing_top);
 
@@ -82,7 +79,7 @@ $(function() {
         }
     });
 
-    filters.find("button").click(function() {
+    filters.find('button:not([data-dnt-action="show-activities-results"])').click(function() {
         refreshContent(results_content.attr('data-current-page'));
     });
 
