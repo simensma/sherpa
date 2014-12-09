@@ -52,6 +52,8 @@ class NTBObject(object):
                 'api_key': settings.TURBASEN_API_KEY,
                 'limit': NTBObject.TURBASE_LOOKUP_COUNT,
                 'skip': skip,
+                'status': u'Offentlig',  # Ignore Kladd, Privat, og Slettet
+                'tilbyder': u'DNT',      # Future proofing, there might be other objects
             }
         ).json()
 
