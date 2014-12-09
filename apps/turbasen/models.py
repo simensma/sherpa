@@ -21,7 +21,7 @@ class NTBObject(object):
         """On attribute lookup failure, if the object is only partially retrieved, get the rest of its data and try
         again"""
         if self._is_partial:
-            self.get()
+            self.fetch()
             return getattr(self, name)
         raise AttributeError
 
@@ -70,7 +70,8 @@ class Omrade(NTBObject):
         super(Omrade, self).__init__(document, *args, **kwargs)
         self.navn = document['navn']
 
-    def get(self):
+    def fetch(self):
+        """If this object is only partially fetched, this method will retrieve the rest of its fields"""
         document = NTBObject.get_object(self.identifier, self.objectid)
         self.navngiving = document.get('navngiving')
         self.status = document.get('status')
