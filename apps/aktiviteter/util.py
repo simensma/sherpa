@@ -20,50 +20,60 @@ def filter_aktivitet_dates(filter):
         'aktivitet__co_foreninger',
     ).filter(aktivitet__private=False)
 
-    if filter.get('search') and len(filter['search'].strip()) > 2:
-        words = filter['search'].split()
+    if filter.get('search', '') and len(filter['search'].strip()) > 2:
+        filter['search'] = filter['search'].split()
 
         dates = dates.filter(
-            Q(reduce(lambda x, y: x & y, [Q(aktivitet__title__icontains=word) | Q(aktivitet__description__icontains=word) for word in words])) |
+            Q(reduce(lambda x, y: x & y, [Q(aktivitet__title__icontains=word) | Q(aktivitet__description__icontains=word) for word in filter['search']])) |
             Q(aktivitet__code=filter['search'])
         )
 
-    if filter.get('omrader') and filter['omrader'].split(','):
-        for omrade in filter['omrader'].split(','):
+    if filter.get('omrader', ''):
+        filter['omrader'] = filter['omrader'].split(',')
+
+        for omrade in filter['omrader']:
             dates = dates.extra(
                 where=['%s = ANY ("{0}"."omrader")'.format(Aktivitet._meta.db_table)],
                 params=[omrade],
             )
 
-    if filter.get('categories') and filter['categories'].split(','):
-        dates = dates.filter(aktivitet__category__in=filter['categories'].split(','))
+    if filter.get('categories', ''):
+        filter['categories'] = filter['categories'].split(',')
 
-    if filter.get('category_types') and filter['category_types'].split(','):
+        dates = dates.filter(aktivitet__category__in=filter['categories'])
+
+    if filter.get('category_types', ''):
+        filter['category_types'] = filter['category_types'].split(',')
+
         # Note that we're checking for both types and tags, and since objects may have the same tag specified twice,
         # it'll require an explicit distinct clause in our query
         dates = dates.filter(
-            Q(aktivitet__category_type__in=filter['category_types'].split(',')) |
-            Q(aktivitet__category_tags__name__in=filter['category_types'].split(','))
+            Q(aktivitet__category_type__in=filter['category_types']) |
+            Q(aktivitet__category_tags__name__in=filter['category_types'])
         )
 
-    if filter.get('audiences') and filter['audiences'].split(','):
-        dates = dates.filter(aktivitet__audiences__name__in=filter['audiences'].split(','))
+    if filter.get('audiences', ''):
+        filter['audiences'] = filter['audiences'].split(',')
 
-    if filter.get('difficulties') and filter['difficulties'].split(','):
-        dates = dates.filter(aktivitet__difficulty__in=filter['difficulties'].split(','))
+        dates = dates.filter(aktivitet__audiences__name__in=filter['audiences'])
 
-    if filter.get('lat_lng') and len(filter['lat_lng'].split(',')) == 2:
-        latlng = filter['lat_lng'].split(',')
+    if filter.get('difficulties', ''):
+        filter['difficulties'] = filter['difficulties'].split(',')
+
+        dates = dates.filter(aktivitet__difficulty__in=filter['difficulties'])
+
+    if filter.get('lat_lng', '') and len(filter['lat_lng'].split(',')) == 2:
+        filter['lat_lng'] = filter['lat_lng'].split(',')
 
         # Rule of thumb for buffer; 1 degree is about 100 km
-        boundary = geos.Point(float(latlng[0]), float(latlng[1])).buffer(0.5)
+        boundary = geos.Point(float(filter['lat_lng'][0]), float(filter['lat_lng'][1])).buffer(0.5)
 
         dates = dates.filter(aktivitet__start_point__within=boundary)
 
     # @TODO refactor to make use of django range query
     # https://docs.djangoproject.com/en/dev/ref/models/querysets/#range
     try:
-        if filter.get('start_date'):
+        if filter.get('start_date', ''):
             dates = dates.filter(start_date__gte=datetime.strptime(filter['start_date'], "%d.%m.%Y"))
         else:
             dates = dates.filter(start_date__gte=datetime.now())
@@ -73,11 +83,13 @@ def filter_aktivitet_dates(filter):
     except (ValueError, KeyError):
         pass
 
-    if filter.get('organizers') and filter['organizers'].split(','):
+    if filter.get('organizers', ''):
+        filter['organizers'] = filter['organizers'].split(',')
+
         foreninger = []
         cabins = []
 
-        for organizer in filter['organizers'].split(','):
+        for organizer in filter['organizers']:
             type, id = organizer.split(':')
             if type == 'forening':
                 foreninger.append(id)
