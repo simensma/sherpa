@@ -10,22 +10,31 @@ $(function() {
     var toggle_filters_and_results = listing.find('.toggle-filters-results');
     var column_filters = listing.find('.column-filters');
     var column_results = listing.find('.column-results');
+    var filter_omrader = filters.find("select[name='omrader']");
+    var filter_organizers = filters.find("select[name='organizers']");
+
+    var device_is_mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
     var now = new Date();
     var today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
-    filters.find('[data-dnt-container="start-date"],[data-dnt-container="end-date"]').datepicker({
-        format: 'dd.mm.yyyy',
-        weekStart: 1,
-        autoclose: true,
-        startDate: today,
-        forceParse: false
+
+    filters.find('[data-dnt-container="start-date"], [data-dnt-container="end-date"]').each(function (index, el) {
+        if (device_is_mobile) {
+            $(el).find('input').attr('type', 'date');
+
+        } else {
+            $(el).datepicker({
+                format: 'dd.mm.yyyy',
+                weekStart: 1,
+                autoclose: true,
+                startDate: today,
+                forceParse: false
+            });
+        }
     });
 
     toggle_filters_and_results.find('button').bind('click', function (e) {
         var action = $(this).data('dnt-action');
-
-        toggle_filters_and_results.find('button').show();
-        $(this).hide();
 
         var listing_top = listing.offset().top;
         $(window).scrollTop(listing_top);
@@ -70,23 +79,34 @@ $(function() {
         }
     });
 
-    filters.find("button").click(function() {
+    filters.find('button:not([data-dnt-action="show-activities-results"])').click(function() {
         refreshContent(results_content.attr('data-current-page'));
     });
 
-    filters.find("select[name='omrader']").select2().change(function() {
+    if (!device_is_mobile) {
+        filter_omrader.select2();
+    }
+
+    filter_omrader.change(function() {
         refreshContent(results_content.attr('data-current-page'));
     });
 
-    filters.find('[data-dnt-container="start-date"],[data-dnt-container="end-date"]').on('changeDate', function() {
-        refreshContent(results_content.attr('data-current-page'));
-    }).on('change', function() {
+    filters.find('[data-dnt-container="start-date"],[data-dnt-container="end-date"]').on('change', function() {
+        // TODO: This is triggered twice if date is changed using bootstrap datepicker, should be fixed
         refreshContent(results_content.attr('data-current-page'));
     });
 
-    filters.find("select[name='organizers']").select2().on('change', function() {
+    if (!device_is_mobile) {
+        filter_organizers.select2();
+    }
+
+    filter_organizers.on('change', function() {
         refreshContent(results_content.attr('data-current-page'));
     });
+
+    filters.find('input[name="search"]').on('blur', function () {
+        refreshContent(results_content.attr('data-current-page'));
+    })
 
     $(document).on('click', results_content.selector + ' ul.pagination li:not(.disabled):not(.active) a.page', function() {
         refreshContent($(this).attr('data-page'), true);
@@ -125,13 +145,22 @@ $(function() {
             // Initiate tooltips
             results_content.find('[data-tooltip]').tooltip();
 
+            updateResultsCount();
+
         }).fail(function(result) {
             results_content.empty();
             results_fail.show();
+            updateResultsCount();
         }).always(function(result) {
             // we are done
         });
     }
+
+    function updateResultsCount() {
+        var results_count = results_content.find('.listing-container').attr('data-dnt-listing-total-results-count');
+        $('.search-filters .aktiviteter-result-total-count').html(results_count);
+    }
+    updateResultsCount();
 
     function collectFilter() {
         var categories = [];
@@ -161,6 +190,12 @@ $(function() {
         var start_date = filters.find("input[name='start_date']").val();
         var end_date = filters.find("input[name='end_date']").val();
         var search = filters.find("input[name='search']").val();
+        if (/[\d]{4}\-[\d]{2}\-[\d]{2}/.test(start_date)) {
+            start_date = start_date.replace(/([\d]{4})\-([\d]{2})\-([\d]{2})/, '$3.$2.$1');
+        }
+        if (/[\d]{4}\-[\d]{2}\-[\d]{2}/.test(end_date)) {
+            end_date = end_date.replace(/([\d]{4})\-([\d]{2})\-([\d]{2})/, '$3.$2.$1');
+        }
         var lat_lng = filters.find("input[name='lat_lng']").val();
         return {
             categories: categories,

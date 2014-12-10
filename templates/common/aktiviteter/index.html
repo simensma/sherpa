@@ -23,15 +23,6 @@
 
 <div class="aktivitet-listing">
 
-  <div class="navbar navbar-default navbar-fixed-bottom visible-xs toggle-filters-results">
-    <div class="container">
-      <div class="col-xs-12 sm-hidden">
-        <button class="btn btn-danger btn-lg btn-block" data-dnt-action="show-activities-filters">Endre søk</button>
-        <button class="btn btn-danger btn-lg btn-block jq-hide" data-dnt-action="show-activities-results">Vis resultat</button>
-      </div>
-    </div>
-  </div>
-
   <h1 class="visible-xs">Finn aktiviteter</h1>
 
   <div class="row">
@@ -52,6 +43,20 @@
         </div>
 
         <div class="search-filters">
+
+          <div class="navbar navbar-default navbar-fixed-bottom visible-xs toggle-filters-results">
+            <div class="container">
+              <div class="col-xs-12">
+                <button class="btn btn-danger btn-lg btn-block" data-dnt-action="show-activities-results">
+                  Vis resultat
+                </button>
+                <div class="toggle-button-sub aktiviteter-result-info">
+                  <span class="aktiviteter-result-total-count"></span> aktiviteter
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="section">
             <div class="button-selections" data-dnt-container="category-types">
               {% for category in category_types %}
@@ -77,15 +82,6 @@
         <div class="search-filters">
 
           <div class="section">
-            <div class="input-group">
-              <input class="form-control search-query" type="text" name="search">
-              <span class="input-group-btn">
-                <button type="button" class="btn btn-default">Søk</button>
-              </span>
-            </div>
-          </div>
-
-          <div class="section">
             <h3>I tidsrommet</h3>
             <div class="input-group date" data-dnt-container="start-date">
               <input class="form-control date" type="text" name="start_date" placeholder="">
@@ -103,7 +99,7 @@
             </div>
           </div>
 
-          <div class="section">
+          <div class="section hidden-xs">
             <h3>I nærheten av sted</h3>
             <input type="hidden" name="lat_lng">
             <input class="form-control" name="ssr_id" type="hidden" data-select-show="position-map position-metadata">
@@ -165,6 +161,14 @@
             </select>
           </div>
 
+          <div class="section">
+            <h3>Fritekstsøk</h3>
+            <input class="form-control search-query" type="text" name="search">
+            <p class="help-block">
+              Søker i aktivitetenes tittel og beskrivelse.
+            </p>
+          </div>
+
         </div><!-- /.search-filters -->
 
       </div>
@@ -172,6 +176,17 @@
     </div>
 
     <div class="column-results col-sm-8">
+
+      <div class="navbar navbar-default navbar-fixed-bottom visible-xs toggle-filters-results">
+        <div class="container">
+          <div class="col-xs-12">
+            <button class="btn btn-danger btn-lg btn-block" data-dnt-action="show-activities-filters">
+              Endre søk
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div class="wrapper">
 
         <div class="results" data-filter-url="{% url 'aktiviteter.views.filter' %}">
