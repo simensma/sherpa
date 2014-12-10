@@ -10,7 +10,8 @@ from aktiviteter.models import Aktivitet, AktivitetDate
 
 HITS_PER_PAGE = 20
 
-def filter_aktivitet_dates(filter):
+def filter_aktivitet_dates(query):
+    filter = query.copy()
 
     dates = AktivitetDate.get_published().prefetch_related(
         'aktivitet',
@@ -112,7 +113,7 @@ def filter_aktivitet_dates(filter):
         'start_date'
     )
 
-    return dates
+    return filter, dates
 
 def paginate_aktivitet_dates(filter, dates):
     paginator = Paginator(dates, HITS_PER_PAGE)

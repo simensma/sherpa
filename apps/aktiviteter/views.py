@@ -15,8 +15,8 @@ from foreninger.models import Forening
 from turbasen.models import Omrade
 
 def index(request):
-    aktivitet_dates = filter_aktivitet_dates(request.GET)
-    aktivitet_dates_pagenav = paginate_aktivitet_dates(request.GET, aktivitet_dates)
+    filter, aktivitet_dates = filter_aktivitet_dates(request.GET)
+    aktivitet_dates_pagenav = paginate_aktivitet_dates(filter, aktivitet_dates)
 
     context = {
         'aktivitet_dates': aktivitet_dates_pagenav,
@@ -27,6 +27,7 @@ def index(request):
         'omrader': sorted(Omrade.lookup(), key=lambda o: o.navn),
         'all_foreninger': Forening.get_all_sorted_with_type_data(),
         'cabins': Cabin.objects.order_by('name'),
+        'filter': filter,
     }
     return render(request, 'common/aktiviteter/index.html', context)
 
@@ -34,8 +35,8 @@ def filter(request):
     if not request.is_ajax() or not request.method == 'POST':
         return redirect('aktiviteter.views.index')
 
-    aktivitet_dates = filter_aktivitet_dates(request.POST)
-    aktivitet_dates_pagenav = paginate_aktivitet_dates(request.POST, aktivitet_dates)
+    filter, aktivitet_dates = filter_aktivitet_dates(request.POST)
+    aktivitet_dates_pagenav = paginate_aktivitet_dates(filter, aktivitet_dates)
 
     context = RequestContext(request, {
         'aktivitet_dates': aktivitet_dates_pagenav
