@@ -58,12 +58,6 @@
       </a>
     {% endif %}
 
-    {% if user.is_member %}
-      <a href="{% url 'user.views.fotobok' %}" class="list-group-item{% if active == 'fotobok' %} active{% endif %}">
-        Bestill fotoprodukter
-      </a>
-    {% endif %}
-
     {% if not user.is_member %}
       <a href="{% url 'user.views.register_membership' %}" class="list-group-item{% if active == 'register_membership' %} active{% endif %}">
         Registrer medlemskap

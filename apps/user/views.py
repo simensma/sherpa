@@ -1,12 +1,10 @@
 # encoding: utf-8
-from collections import OrderedDict
 from datetime import datetime, date
 import json
 from smtplib import SMTPException
 from ssl import SSLError
 import logging
 import sys
-import hashlib
 
 from django.conf import settings
 from django.shortcuts import render, redirect
@@ -17,8 +15,6 @@ from django.contrib import messages
 from django.db.models import Q
 from django.template import RequestContext
 from django.template.loader import render_to_string
-
-import requests
 
 from user.models import User, NorwayBusTicket
 from user.util import verify_memberid
@@ -420,86 +416,6 @@ def norway_bus_tickets_order(request):
         ticket.delete()
         messages.error(request, 'email_failure')
         return redirect('user.views.norway_bus_tickets')
-
-@user_requires_login()
-@user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
-@user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
-def fotobok(request):
-    return render(request, 'common/user/account/fotobok.html')
-
-@user_requires_login()
-@user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')
-@user_requires(lambda u: u.is_member(), redirect_to='user.views.register_membership')
-@user_requires(lambda u: u.has_paid(), redirect_to='user.views.fotobok')
-def fotobok_eurofoto_request(request):
-    user = request.user
-
-    # Copied descriptions about the API payload from the old user page fotobok script:
-    # publickey  freetext, 36 chars UUID/KEY
-    # identifier freetext, 250 chars  <medlemsnummer@eurofoto.turistforeningen.no>
-    # firstname  freetext, 250 chars
-    # middlename freetext, 250 chars
-    # lastname   freetext, 250 chars
-    # address1   freetext, 250 chars
-    # address2   freetext, 250 chars
-    # zipcode    4-10 chars or empty
-    # city       freetext, 100 chars
-    # country    2 char or empty
-    # phonework  8-15 char or empty
-    # phonehome  8-15 char or empty
-    # phonecell  8-15 char or empty
-    # Note: birthdate and gender were commented out and not in use.
-    # birthdate  '22.03.1981', dd.mm.yyyy
-    # gender     m, f, male, female or blank
-
-    # This needs to be ordered so unpacking it to signature becomes correct
-    payload = OrderedDict([
-        ('publickey', settings.EUROFOTO_PUBLIC_KEY,),
-        ('identifier', '%s@eurofoto.turistforeningen.no' % user.memberid,),
-        ('firstname', user.get_first_name(),),
-        ('middlename', '',), # We could parse this out of 'lastname', but the old API didn't do that, so whatever
-        ('lastname', user.get_last_name(),),
-        ('address1', user.get_address().field1,),
-        ('address2', user.get_address().field2,),
-        ('zipcode', user.get_address().zipcode.zipcode if user.get_address().country.code == 'NO' else '',),
-        ('city', user.get_address().zipcode.area if user.get_address().country.code == 'NO' else '',),
-        ('country', user.get_address().country.code,),
-        ('phonework', '',),
-        ('phonehome', user.get_phone_home(),),
-        ('phonemobile', user.get_phone_mobile(),),
-    ])
-    sha1 = hashlib.sha1()
-    sha1.update(('%s%s' % (settings.EUROFOTO_PRIVATE_KEY, u''.join(payload.values()).encode('utf-8'))))
-    payload['signature'] = sha1.hexdigest()
-
-    try:
-        r = requests.post(settings.EUROFOTO_SIGNUP_SERVICE, data=payload)
-        reply = json.loads(r.text)
-        if reply['result'] and reply['message'] == 'OK':
-            return redirect(reply['url'])
-        else:
-            logger.error(u"Ukjent svar fra Eurofoto-API",
-                extra={
-                    'request': request,
-                    'reply': reply
-                }
-            )
-            messages.error(request, 'eurofoto_api_unparseable_reply')
-            return redirect('user.views.fotobok')
-    except requests.ConnectionError as e:
-        logger.warning(e.message,
-            exc_info=sys.exc_info(),
-            extra={'request': request}
-        )
-        messages.error(request, 'eurofoto_api_connection_error')
-        return redirect('user.views.fotobok')
-    except ValueError as e:
-        logger.error(e.message,
-            exc_info=sys.exc_info(),
-            extra={'request': request}
-        )
-        messages.error(request, 'eurofoto_api_unparseable_reply')
-        return redirect('user.views.fotobok')
 
 @user_requires_login()
 @user_requires(lambda u: not u.is_pending, redirect_to='user.views.home')

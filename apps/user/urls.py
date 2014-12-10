@@ -21,7 +21,5 @@ urlpatterns = patterns('user.views',
     url(r'^publikasjon/(?P<publication>\d+)/$', 'publication'),
     url(r'^bussbilletter/$', 'norway_bus_tickets'),
     url(r'^bussbilletter/bestill/$', 'norway_bus_tickets_order'),
-    url(r'^fotobok/$', 'fotobok'),
-    url(r'^fotobok/eurofoto-autentisering/$', 'fotobok_eurofoto_request'),
     url(r'', include('user.login.urls')),
 )

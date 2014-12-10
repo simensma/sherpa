@@ -213,17 +213,6 @@
         </a>
       {% endcolumn %}
     {% endif %}
-
-    {% if user.is_member %}
-      {% column %}
-        <a href="{% url 'user.views.fotobok' %}" class="element">
-          <p class="title">Bestill fotoprodukter</p>
-          <p>
-            Her kan du bestille fotoprodukter fra Eurofoto til rabatterte priser.
-          </p>
-        </a>
-      {% endcolumn %}
-    {% endif %}
   {% endrowiterator %}
 
 </div>
