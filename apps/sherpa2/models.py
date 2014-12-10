@@ -604,11 +604,33 @@ class Activity(models.Model):
         # Save all new relations
         aktivitet.save()
 
-        # Now delete and re-convert all date objects
+        # Now convert all date objects. We'll try to match start/end date with existing dates and update the object on
+        # match - and create/delete any date that doesn't.
+
+        # Put all date objects here and remove them as they're matched
+        remaining_date_objects = list(aktivitet.dates.all())
+
         try:
-            aktivitet.dates.all().delete()
             for sherpa2_date in self.dates.all():
-                sherpa2_date.convert(aktivitet)
+                matched = False
+                for sherpa3_date in aktivitet.dates.all():
+                    if sherpa2_date.get_date_from() == sherpa3_date.start_date.date() and \
+                            sherpa2_date.get_date_to() == sherpa3_date.end_date.date():
+
+                        # The start/end date matched an existing date - convert into that date object
+                        matched = True
+                        remaining_date_objects.remove(sherpa3_date)
+                        sherpa2_date.convert(aktivitet, sherpa3_date)
+                        break
+
+                # If it didn't match any date, create a new one
+                if not matched:
+                    sherpa2_date.convert(aktivitet)
+
+            # Now the remaining date objects weren't matched and any new ones should have been created, so delete the rest
+            for date in remaining_date_objects:
+                date.delete()
+
         except ConversionImpossible:
             # One of the dates can't be converted - we're not handling the exception here, but we've already created
             # the Aktivitet-object, so we should delete that
