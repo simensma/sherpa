@@ -80,7 +80,11 @@ $(function() {
     });
 
     filters.find('button:not([data-dnt-action="show-activities-results"])').click(function() {
-        refreshContent(results_content.attr('data-current-page'));
+        // We use setTimeout here to make sure this is put at the end of JavaScript the event loop.
+        // This is beacause there are other event listeners for some of these buttons that need to
+        // do their work before we update the result.
+        // Recommended reading: http://strongloop.com/strongblog/node-js-event-loop/
+        setTimeout(function() { refreshContent(results_content.attr('data-current-page')); }, 0);
     });
 
     if (!device_is_mobile) {
