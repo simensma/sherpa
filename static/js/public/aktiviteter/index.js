@@ -217,7 +217,6 @@ $(function() {
         res.lat_lng = filters.find("input[name='lat_lng']").val();
 
         return res;
->>>>>>> Return comma-separated strings instead of arrays
     }
 
     $('input[name="ssr_id"]').select2({
