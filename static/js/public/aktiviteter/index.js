@@ -167,6 +167,8 @@ $(function() {
 
             updateResultsCount();
 
+            togglePositionSearchWarning();
+
         }).fail(function(result) {
             results_content.empty();
             results_fail.show();
@@ -174,6 +176,16 @@ $(function() {
         }).always(function(result) {
             // we are done
         });
+    }
+
+    function togglePositionSearchWarning() {
+        var is_position_search = !!$('[name="ssr_id"]').val();
+        if (is_position_search) {
+            $('.alert.alert-warning.position-search-warning').removeClass('jq-hide');
+
+        } else {
+            $('.alert.alert-warning.position-search-warning').addClass('jq-hide');
+        }
     }
 
     function updateResultsCount() {

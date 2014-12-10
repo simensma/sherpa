@@ -216,18 +216,24 @@
 
       <div class="wrapper">
 
+        <div class="alert alert-warning position-search-warning{% if not filter.lat_lng %} jq-hide{% endif %}">
+          <strong>OBS!</strong> Søk på nærheten av sted kan gi begrenset treff da flere turer og aktiviteter ennå
+          ikke har en geografisk posisjon i systemet vårt. Du kan alternativt søke på turområde eller arrangør.
+        </div>
+
         <div class="results" data-filter-url="{% url 'aktiviteter.views.filter' %}">
           <div class="results-view results-view-list">
             <div class="content" data-current-page="{{ aktivitet_dates.number }}">
               {% include 'common/aktiviteter/listing.html' %}
             </div>
-
             <div class="fail jq-hide alert alert-error">
               <strong>Beklager, det oppstod en teknisk feil!</strong><br>
-              Feilen har blitt logget i vårt system, og vi vil rette den så snart som mulig. I mellomtiden kan du forsøke å <a href="javascript:document.location.reload(true);">oppdatere siden</a>.
+              Feilen har blitt logget i vårt system, og vi vil rette den så snart som mulig.
+              I mellomtiden kan du forsøke å <a href="javascript:document.location.reload(true);">oppdatere siden</a>.
             </div>
           </div>
         </div>
+
       </div>
     </div>
   </div>
