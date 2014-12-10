@@ -208,11 +208,11 @@ $(function() {
         res.start_date = filters.find("input[name='start_date']").val();
         res.end_date = filters.find("input[name='end_date']").val();
         res.search = filters.find("input[name='search']").val();
-        if (/[\d]{4}\-[\d]{2}\-[\d]{2}/.test(start_date)) {
-            start_date = start_date.replace(/([\d]{4})\-([\d]{2})\-([\d]{2})/, '$3.$2.$1');
+        if (/[\d]{4}\-[\d]{2}\-[\d]{2}/.test(res.start_date)) {
+            res.start_date = res.start_date.replace(/([\d]{4})\-([\d]{2})\-([\d]{2})/, '$3.$2.$1');
         }
-        if (/[\d]{4}\-[\d]{2}\-[\d]{2}/.test(end_date)) {
-            end_date = end_date.replace(/([\d]{4})\-([\d]{2})\-([\d]{2})/, '$3.$2.$1');
+        if (/[\d]{4}\-[\d]{2}\-[\d]{2}/.test(res.end_date)) {
+            res.end_date = res.end_date.replace(/([\d]{4})\-([\d]{2})\-([\d]{2})/, '$3.$2.$1');
         }
         res.lat_lng = filters.find("input[name='lat_lng']").val();
 
