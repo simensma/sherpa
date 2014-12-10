@@ -13,7 +13,8 @@
 
 {% block extra_js %}
   <script src="{{ STATIC_URL }}lib/leaflet/leaflet.js"></script>
-  <script src="{{ STATIC_URL }}lib/leaflet.draw/leaflet.draw.js"></script>
+  <script src="{{ STATIC_URL }}js/lib/history.min.js"></script>
+  <script src="{{ STATIC_URL }}js/lib/history.ielte7.min.js"></script>
   <script src="{{ STATIC_URL }}js/public/aktiviteter/index.js"></script>
 {% endblock %}
 
@@ -36,7 +37,11 @@
             <h3>Jeg vil se</h3>
             <div class="button-selections categories">
               {% for category in categories %}
-                <button class="btn category" data-category="{{ category.0 }}">{{ category.1 }}</button>
+                {% if filter.categories and category.0 in filter.categories %}
+                  <button class="btn category selected btn-danger" data-category="{{ category.0 }}">{{ category.1 }}</button>
+                {% else %}
+                  <button class="btn category" data-category="{{ category.0 }}">{{ category.1 }}</button>
+                {% endif %}
               {% endfor %}
             </div>
           </div>
@@ -62,15 +67,18 @@
               {% for category in category_types %}
                 {# Note that volunteerwork is excluded, primarily because most of them aren't properly categorized #}
                 {% if category.category != 'volunteerwork' %}
-                  <div
-                    class="category jq-hide"
-                    data-dnt-container="category"
-                    data-dnt-category="{{ category.category }}">
+                  {% if filter.categories and filter.categories|length == 1 and category.category in filter.categories %}
+                    <div class="category" data-dnt-container="category" data-dnt-category="{{ category.category }}">
+                  {% else %}
+                    <div class="category jq-hide" data-dnt-container="category" data-dnt-category="{{ category.category }}">
+                  {% endif %}
 
                     {% for type in category.types %}
-                      <button class="btn category-type" data-dnt-category-type="{{ type }}">
-                        {{ type }}
-                      </button>
+                      {% if filter.category_types and type in filter.category_types %}
+                        <button class="btn category-type selected btn-danger" data-dnt-category-type="{{ type }}">{{ type|title }}</button>
+                      {% else %}
+                        <button class="btn category-type" data-dnt-category-type="{{ type }}">{{ type|title }}</button>
+                      {% endif %}
                     {% endfor %}
                   </div>
                 {% endif %}
@@ -84,7 +92,7 @@
           <div class="section">
             <h3>I tidsrommet</h3>
             <div class="input-group date" data-dnt-container="start-date">
-              <input class="form-control date" type="text" name="start_date" placeholder="">
+              <input class="form-control date" type="text" name="start_date" value="{{ filter.start_date }}">
               <span class="input-group-addon">
                 <i class="glyphicon glyphicon-calendar"></i>
               </span>
@@ -92,7 +100,7 @@
             <br>
 
             <div class="input-group date" data-dnt-container="end-date">
-              <input class="form-control date" type="text" name="end_date" placeholder="">
+              <input class="form-control date" type="text" name="end_date" value="{{ filter.end_date }}">
               <span class="input-group-addon">
                 <i class="glyphicon glyphicon-calendar"></i>
               </span>
@@ -110,7 +118,11 @@
             <select class="form-control" name="omrader" data-placeholder="Velg turområder..." multiple>
               <option value=""></option>
               {% for omrade in omrader %}
-                <option value="{{ omrade.object_id }}">{{ omrade.navn }}</option>
+                {% if filter.omrade and omrade.id in filter.omrader %}
+                  <option value="{{ omrade.object_id }}" selected="selected">{{ omrade.navn }}</option>
+                {% else %}
+                  <option value="{{ omrade.object_id }}">{{ omrade.navn }}</option>
+                {% endif %}
               {% endfor %}
             </select>
           </div>
@@ -119,7 +131,11 @@
             <h3>Passer for</h3>
             <div class="button-selections audiences">
               {% for audience in audiences %}
-                <button class="btn audience" data-audience="{{ audience.0 }}">{{ audience.1 }}</button>
+                {% if filter.audiences and audience.0 in filter.audiences %}
+                  <button class="btn audience selected btn-danger" data-audience="{{ audience.0 }}">{{ audience.1 }}</button>
+                {% else %}
+                  <button class="btn audience" data-audience="{{ audience.0 }}">{{ audience.1 }}</button>
+                {% endif %}
               {% endfor %}
             </div>
           </div>
@@ -128,7 +144,11 @@
             <h3>Gradering</h3>
             <div class="button-selections difficulties">
               {% for difficulty in difficulties %}
-                <button class="btn difficulty" data-difficulty="{{ difficulty.0 }}">{{ difficulty.1 }}</button>
+                {% if difficulty.0 in filter.difficulties %}
+                  <button class="btn difficulty selected btn-danger" data-difficulty="{{ difficulty.0 }}">{{ difficulty.1 }}</button>
+                {% else %}
+                  <button class="btn difficulty" data-difficulty="{{ difficulty.0 }}">{{ difficulty.1 }}</button>
+                {% endif %}
               {% endfor %}
             </div>
           </div>
@@ -142,7 +162,11 @@
                 {% if type.foreninger|length > 0 %}
                   <optgroup label="{{ type.name }}">
                     {% for forening in type.foreninger %}
-                      <option value="forening:{{ forening.id }}">{{ forening.name }}</option>
+                      {% if filter.foreninger and "forening:"|add:forening.id in filter.foreninger %}
+                        <option value="forening:{{ forening.id }}" selected="selected">{{ forening.name }}</option>
+                      {% else %}
+                        <option value="forening:{{ forening.id }}">{{ forening.name }}</option>
+                      {% endif %}
                     {% endfor %}
                   </optgroup>
                 {% endif %}
@@ -150,8 +174,8 @@
 
               <optgroup label="Hytter">
                 {% for cabin in cabins %}
-                  {% if aktivitet.forening_cabin == cabin %}
-                    <option value="cabin:{{ cabin.id }}" selected>{{ cabin.name }}</option>
+                  {% if filter.foreninger and "cabin:"|add:cabin.id in filter.foreninger %}
+                    <option value="cabin:{{ cabin.id }}" selected="selected">{{ cabin.name }}</option>
                   {% else %}
                     <option value="cabin:{{ cabin.id }}">{{ cabin.name }}</option>
                   {% endif %}
@@ -163,7 +187,7 @@
 
           <div class="section">
             <h3>Fritekstsøk</h3>
-            <input class="form-control search-query" type="text" name="search">
+            <input class="form-control search-query" type="text" name="search" value="{{ filter.search }}">
             <p class="help-block">
               Søker i aktivitetenes tittel og beskrivelse.
             </p>
