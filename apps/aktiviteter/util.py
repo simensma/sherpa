@@ -22,10 +22,10 @@ def filter_aktivitet_dates(query):
     ).filter(aktivitet__private=False)
 
     if filter.get('search', '') and len(filter['search'].strip()) > 2:
-        filter['search'] = filter['search'].split()
+        words = filter['search'].split()
 
         dates = dates.filter(
-            Q(reduce(lambda x, y: x & y, [Q(aktivitet__title__icontains=word) | Q(aktivitet__description__icontains=word) for word in filter['search']])) |
+            Q(reduce(lambda x, y: x & y, [Q(aktivitet__title__icontains=word) | Q(aktivitet__description__icontains=word) for word in words])) |
             Q(aktivitet__code=filter['search'])
         )
 
