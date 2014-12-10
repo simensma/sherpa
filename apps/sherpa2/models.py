@@ -678,6 +678,44 @@ class Activity(models.Model):
         raise Exception("Invalid code path; expected one of the previous clauses to return")
 
     def convert_description(self):
+        def clean_tables(text):
+            replacements = []
+            for match in re.finditer(r'<table.*?</table>', text, re.DOTALL):
+                table = match.group(0)
+
+                # Remove any exising classes and set class only to "table"
+                table = re.sub('class=".*?"', '', table)
+                table = '%s class="table" %s' % (table[0:len('<table')], table[len('<table'):])
+
+                # Remove any styles and borders
+                table = re.sub('style=".*?"', '', table)
+                table = re.sub('border=".*?"', '', table)
+                table = re.sub('width=".*?"', '', table)
+                table = re.sub('height=".*?"', '', table)
+                table = re.sub('valign=".*?"', '', table)
+
+                # Now reinsert the new table in the original text
+                replacements.append({
+                    'start': match.start(0),
+                    'end': match.end(0),
+                    'table': table
+                })
+
+            # Now replace each table with the cleaned one, but keep an offset to know how much we skewed the characters
+            # since the indexes are all based on the original string
+            offset = 0
+            for replacement in replacements:
+                original_length = len(text)
+                text = "%s%s%s" % (
+                    text[:(replacement['start'] + offset)],
+                    replacement['table'],
+                    text[(replacement['end'] + offset):]
+                )
+                new_length = len(text)
+                offset += new_length - original_length
+
+            return text
+
         # TODO: Handle HTML
         # Remove all image tags and merge lede/description
         if self.ingress is None:
@@ -689,6 +727,9 @@ class Activity(models.Model):
             clean_description = ""
         else:
             clean_description = re.sub('<img.*?>', '', self.content)
+
+        clean_lede = clean_tables(clean_lede)
+        clean_description = clean_tables(clean_description)
         return "%s %s" % (clean_lede, clean_description)
 
     def convert_images(self):
