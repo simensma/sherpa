@@ -188,7 +188,7 @@ class Version(models.Model):
                         size_string = str(settings.THUMB_SIZES[-2])
                     t = thumbnail['url']
                     # Remove previous size spec if existing
-                    t = re.sub('-\d+\.', '.', t)
+                    t = re.sub('-\d+(?P<ext>\.[a-z]{3}[a-z]?)$', '\g<ext>', t)
                     thumbnail['url'] = '%s-%s%s' % (
                         t[:t.rfind('.')],
                         size_string,
