@@ -613,10 +613,16 @@ class Activity(models.Model):
         try:
             for sherpa2_date in self.dates.all():
                 matched = False
-                for sherpa3_date in aktivitet.dates.all():
-                    if sherpa2_date.get_date_from() == sherpa3_date.start_date.date() and \
-                            sherpa2_date.get_date_to() == sherpa3_date.end_date.date():
+                try:
+                    start_date = sherpa2_date.convert_start_date()
+                    end_date = sherpa2_date.convert_end_date()
+                except ConversionImpossible:
+                    if sherpa2_date.online != ActivityDate.ONLINE_DISABLED:
+                        # Couldn't convert the start/end date, raise the exception only if it's online
+                        raise
 
+                for sherpa3_date in aktivitet.dates.all():
+                    if start_date == sherpa3_date.start_date.date() and end_date == sherpa3_date.end_date.date():
                         # The start/end date matched an existing date - convert into that date object
                         matched = True
                         remaining_date_objects.remove(sherpa3_date)
