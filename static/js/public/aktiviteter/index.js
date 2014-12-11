@@ -12,6 +12,7 @@ $(function() {
     var column_results = listing.find('.column-results');
     var filter_omrader = filters.find("select[name='omrader']");
     var filter_organizers = filters.find("select[name='organizers']");
+    var reset_search_section = listing.find('.section.reset-search');
 
     var device_is_mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
@@ -135,6 +136,7 @@ $(function() {
         results_content.find('a.aktivitet-item').click(function(e) { e.preventDefault(); });
 
         results_fail.hide();
+        reset_search_section.removeClass('jq-hide');
 
         // Scroll to the top of the results which makes sense
         if (scrollToTop) {

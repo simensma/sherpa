@@ -32,6 +32,12 @@
       <div class="wrapper">
         <h2 class="hidden-xs">Finn tur</h2>
 
+        <div class="section reset-search{% if not filter %} jq-hide{% endif %}">
+          <a href="{% url 'aktiviteter.views.index' %}" class="btn btn-danger">
+            Nullstill søk
+          </a>
+        </div>
+
         <div class="search-filters">
           <div class="section">
             <h3>Jeg vil se</h3>
