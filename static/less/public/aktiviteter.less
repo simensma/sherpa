@@ -14,23 +14,45 @@ div.aktivitet-listing {
     }
   }
 
-  div.search-filters {
-    font-family: "DTL Nobel" !important;
+  .column-filters {
+    padding-top: 30px;
 
-    h3 {
-      font-size: 18px;
+    h2 {
+      font-size: 40px;
+      text-transform: uppercase;
     }
 
-    button {
-      background-color: #e2e2e2;
-    }
+    div.search-filters {
+      font-family: "DTL Nobel" !important;
 
-    select, select:focus, textarea, textarea:focus,
-    input[type="text"], input[type="number"], input[type="password"],
-    input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"],
-    input[type="time"], input[type="week"],
-    input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"] {
-      font-size: 16px;
+      h3 {
+        font-size: 18px;
+      }
+
+      button {
+        background-color: #e2e2e2;
+      }
+
+      select, select:focus, textarea, textarea:focus,
+      input[type="text"], input[type="number"], input[type="password"],
+      input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"],
+      input[type="time"], input[type="week"],
+      input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"] {
+        font-size: 16px;
+      }
+
+      div.button-selections {
+
+        .category {
+          button {
+            text-transform: capitalize;
+          }
+        }
+
+        button {
+          margin-bottom: 5px;
+        }
+      }
     }
 
     .section {
@@ -45,28 +67,6 @@ div.aktivitet-listing {
       }
     }
 
-    div.button-selections {
-
-      .category {
-        button {
-          text-transform: capitalize;
-        }
-      }
-
-      button {
-        margin-bottom: 5px;
-      }
-    }
-
-  }
-
-  div.column-filters {
-    padding-top: 30px;
-
-    h2 {
-      font-size: 40px;
-      text-transform: uppercase;
-    }
   }
 
   div.column-results {
