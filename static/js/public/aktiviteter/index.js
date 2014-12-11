@@ -150,7 +150,7 @@ $(function() {
         if (scrollToTop) {
             $('html, body').animate({
                 scrollTop: $('.aktivitet-listing').offset().top
-            }, 2000);
+            }, 1000);
         }
 
         var filter = collectFilter(page);
