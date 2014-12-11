@@ -12,6 +12,7 @@ $(function() {
     var column_results = listing.find('.column-results');
     var filter_omrader = filters.find("select[name='omrader']");
     var filter_organizers = filters.find("select[name='organizers']");
+    var reset_search_section = listing.find('.section.reset-search');
 
     var device_is_mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
@@ -135,6 +136,7 @@ $(function() {
         results_content.find('a.aktivitet-item').click(function(e) { e.preventDefault(); });
 
         results_fail.hide();
+        reset_search_section.removeClass('jq-hide');
 
         // Scroll to the top of the results which makes sense
         if (scrollToTop) {
@@ -167,6 +169,8 @@ $(function() {
 
             updateResultsCount();
 
+            togglePositionSearchWarning();
+
         }).fail(function(result) {
             results_content.empty();
             results_fail.show();
@@ -176,9 +180,19 @@ $(function() {
         });
     }
 
+    function togglePositionSearchWarning() {
+        var is_position_search = !!$('[name="ssr_id"]').val();
+        if (is_position_search) {
+            $('.alert.alert-warning.position-search-warning').removeClass('jq-hide');
+
+        } else {
+            $('.alert.alert-warning.position-search-warning').addClass('jq-hide');
+        }
+    }
+
     function updateResultsCount() {
         var results_count = results_content.find('.listing-container').attr('data-dnt-listing-total-results-count');
-        $('.search-filters .aktiviteter-result-total-count').html(results_count);
+        $('.toggle-filters-results .aktiviteter-result-total-count').html(results_count);
     }
     updateResultsCount();
 

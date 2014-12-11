@@ -1,7 +1,7 @@
 <div class="listing-container" data-dnt-listing-total-results-count="{{ aktivitet_dates.paginator.count|default:"0" }}">
   {% if aktivitet_dates.paginator.count %}
     <div class="listing-header clearfix">
-      <p>
+      <p class="hidden-xs">
         Viser {{ aktivitet_dates.object_list|length }} av {{ aktivitet_dates.paginator.count }} aktiviteter
       </p>
 
@@ -15,7 +15,7 @@
     {% endfor %}
 
     <div class="listing-footer clearfix">
-      <p>
+      <p class="hidden-xs">
         Viser {{ aktivitet_dates.object_list|length }} av
         <span class="aktiviteter-result-total-count">{{ aktivitet_dates.paginator.count }}</span> aktiviteter
       </p>
