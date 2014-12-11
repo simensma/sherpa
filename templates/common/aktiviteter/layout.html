@@ -1,11 +1,8 @@
 {% extends site.template|add:"/layout.html" %}
 
-{% block body %}
+{% comment %}
+  This layout is unused at the moment - it might be used in the future, but if not, feel free to remove it and
+  point all templates extending this back to the main layout.
+{% endcomment %}
 
-<div class="alert alert-danger">
-  <strong>OBS! OBS! Dette er et testsystem!</strong>
-  Gå <a href="http://{{ site.domain }}/aktiviteter/">her</a> for påmelding til turer og
-  aktiviteter.
-</div>
-
-{% endblock %}
+{% block body %}{% endblock %}
