@@ -135,6 +135,10 @@ $(function() {
     }
 
     function refreshContent(page, scrollToTop) {
+        if (page === 0) {
+            toggle_filters_and_results.addClass('progress-bar progress-bar-striped active');
+        }
+
         results_content.find("div.pagination li").addClass('disabled');
         results_content.find('a.aktivitet-item').addClass('disabled');
         results_content.find('a.aktivitet-item').click(function(e) { e.preventDefault(); });
@@ -174,6 +178,8 @@ $(function() {
             updateResultsCount();
 
             togglePositionSearchWarning();
+
+            toggle_filters_and_results.removeClass('progress-bar progress-bar-striped active');
 
         }).fail(function(result) {
             results_content.empty();
