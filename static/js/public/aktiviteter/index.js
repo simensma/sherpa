@@ -140,7 +140,7 @@ $(function() {
         results_content.find('a.aktivitet-item').click(function(e) { e.preventDefault(); });
 
         results_fail.hide();
-        reset_search_section.removeClass('jq-hide');
+        reset_search_section.show();
 
         // Scroll to the top of the results which makes sense
         if (scrollToTop) {
@@ -187,10 +187,10 @@ $(function() {
     function togglePositionSearchWarning() {
         var is_position_search = !!$('[name="ssr_id"]').val();
         if (is_position_search) {
-            $('.alert.alert-warning.position-search-warning').removeClass('jq-hide');
+            $('.alert.alert-warning.position-search-warning').show();
 
         } else {
-            $('.alert.alert-warning.position-search-warning').addClass('jq-hide');
+            $('.alert.alert-warning.position-search-warning').hide();
         }
     }
 
