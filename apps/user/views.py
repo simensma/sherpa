@@ -149,7 +149,7 @@ def update_account(request):
                     address_attributes['a3'] = request.POST['address3']
                 address_attributes['zipcode'] = zipcode.zipcode
                 address_attributes['area'] = zipcode.area
-            request.user.update_personal_data(attributes, address_attributes)
+            request.user.update_personal_data(attributes, address_attributes, update_changedby=True)
 
             messages.info(request, 'update_success')
             return redirect('user.views.account')

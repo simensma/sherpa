@@ -102,6 +102,12 @@ class Actor(models.Model):
     receive_email = models.BooleanField(db_column=u'OptBit1')
     reserved_against_partneroffers = models.BooleanField(db_column=u'OptBit3')
 
+    # Bookkeeping
+    created_by = models.CharField(max_length=25, db_column=u'CrBy')
+    created_date = models.DateTimeField(db_column=u'CrDt')
+    changed_by = models.CharField(max_length=25, db_column=u'ChBy')
+    changed_date = models.DateTimeField(db_column=u'ChDt')
+
     orgno = models.CharField(max_length=50, db_column=u'OrgNo')
     fax = models.CharField(max_length=50, db_column=u'Fax')
     web = models.CharField(max_length=250, db_column=u'Web')
@@ -162,10 +168,6 @@ class Actor(models.Model):
     weblang = models.CharField(max_length=5, db_column=u'WebLang')
     webcrby = models.CharField(max_length=25, db_column=u'WebCrBy')
     webcrdt = models.DateTimeField(null=True, db_column=u'WebCrDt')
-    crby = models.CharField(max_length=25, db_column=u'CrBy')
-    crdt = models.DateTimeField(db_column=u'CrDt')
-    chby = models.CharField(max_length=25, db_column=u'ChBy')
-    chdt = models.DateTimeField(db_column=u'ChDt')
 
     def __unicode__(self):
         return u'%s (memberid: %s)' % (self.pk, self.memberid)

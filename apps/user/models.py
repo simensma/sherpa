@@ -445,7 +445,7 @@ class User(AbstractBaseUser):
             # No order, and offer expired - hide the item
             return False
 
-    def update_personal_data(self, attributes, address_attributes=None):
+    def update_personal_data(self, attributes, address_attributes=None, update_changedby=False):
         """
         Setter for updating personal data in Focus. Doesn't have a concept of accepted attributes, so they are
         kind of 'leaked out' to the callers (e.g. the field name for address.a1). Maybe it *should* have that
@@ -456,6 +456,11 @@ class User(AbstractBaseUser):
 
         for name, value in attributes.items():
             actor.__setattr__(name, value)
+
+        if update_changedby:
+            actor.changed_by = self.memberid
+            actor.changed_date = datetime.now()
+
         actor.save()
 
         if address_attributes is not None:
