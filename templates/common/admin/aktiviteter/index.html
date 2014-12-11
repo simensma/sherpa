@@ -32,9 +32,9 @@
   behandle aktiviteter som skal publiseres på nettsidene.
 </div>
 
-<h4>Flytting fra gamle Sherpa</h4>
+<h4>Automatisk overføring fra gamle Sherpa</h4>
 <p>
-  Turer og aktiviteter ble sist oppdatert <strong>{{ last_sync|date:"j. F H:i" }}</strong>.
+  Siste overføring ble gjennomført <strong>natt til {{ last_sync|date:"j. F" }}</strong>.<br>
   {% if failed_import_count == 0 %}
     Alle turene under {{ active_forening.name }} har blitt importert uten problemer!
   {% else %}
