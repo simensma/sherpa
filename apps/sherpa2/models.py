@@ -1172,7 +1172,7 @@ class ActivityDate(models.Model):
             if self.date_from is None or self.date_from.strip() == '':
                 self.activity.save_conversion_failure(reason='date_without_start_date')
                 raise DateWithoutStartDate("Date entry has no start date")
-            return self.get_date_from()
+            return datetime.combine(self.get_date_from(), datetime.min.time())
         except ValueError:
             self.activity.save_conversion_failure(reason='date_with_invalid_start_date')
             raise DateWithInvalidStartDate("Invalid date_from: '%s'" % self.date_from.strip())
@@ -1183,11 +1183,11 @@ class ActivityDate(models.Model):
                 # End date isn't defined even though it has to be!
                 if self.get_date_from() < date.today():
                     # This was an event in the past, so we'll let this slide and just set end date to the same as start
-                    return self.get_date_from()
+                    return datetime.combine(self.get_date_from(), datetime.min.time())
                 else:
                     self.activity.save_conversion_failure(reason='date_without_end_date')
                     raise DateWithoutEndDate("Future aktivitet with no end date")
-            return self.get_date_to()
+            return datetime.combine(self.get_date_to(), datetime.min.time())
         except ValueError:
             self.activity.save_conversion_failure(reason='date_with_invalid_end_date')
             raise DateWithInvalidEndDate("Invalid date_to: '%s'" % self.date_to.strip())
