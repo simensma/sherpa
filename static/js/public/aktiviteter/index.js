@@ -88,7 +88,19 @@ $(function() {
         setTimeout(function() { refreshContent(results_content.attr('data-current-page')); }, 0);
     });
 
-    if (!device_is_mobile) {
+    if (device_is_mobile) {
+        filter_omrader.find('option[value=""]').remove();
+        filter_omrader.on('change', function() {
+            filter_omrader.parents('.input-group-hidden-addon').first().removeClass('input-group-hidden-addon').addClass('input-group');
+            filter_omrader.nextAll('.input-group-addon').first().removeClass('jq-hide');
+            // Using show() will not work here, as the element should be display: table-cell
+        });
+        filter_omrader.nextAll('.input-group-addon[data-dnt-action="empty-field"]').click(function() {
+            filter_omrader.val([]);
+            refreshContent(results_content.attr('data-current-page'));
+        });
+
+    } else {
         filter_omrader.select2();
     }
 
@@ -101,7 +113,19 @@ $(function() {
         refreshContent(results_content.attr('data-current-page'));
     });
 
-    if (!device_is_mobile) {
+    if (device_is_mobile) {
+        filter_organizers.find('option[value=""]').remove();
+        filter_organizers.on('change', function() {
+            filter_organizers.parents('.input-group-hidden-addon').first().removeClass('input-group-hidden-addon').addClass('input-group');
+            filter_organizers.nextAll('.input-group-addon').first().removeClass('jq-hide');
+            // Using show() will not work here, as the element should be display: table-cell
+        });
+        filter_organizers.nextAll('.input-group-addon[data-dnt-action="empty-field"]').click(function() {
+            filter_organizers.val([]);
+            refreshContent(results_content.attr('data-current-page'));
+        });
+
+    } else {
         filter_organizers.select2();
     }
 
@@ -117,7 +141,7 @@ $(function() {
         }
     });
 
-    $(document).on('click', results_content.selector + ' ul.pagination li:not(.disabled):not(.active) a.page', function() {
+    $(document).on('click', results_content.selector + ' .pagination :not(.disabled):not(.active) a.page', function() {
         refreshContent($(this).attr('data-page'), true);
     });
 
@@ -135,18 +159,23 @@ $(function() {
     }
 
     function refreshContent(page, scrollToTop) {
+        // Prevent animating footer when paginating. Assuming that scrollToTop only is true when paginating.
+        if (scrollToTop !== true) {
+            toggle_filters_and_results.addClass('progress-bar progress-bar-striped active');
+        }
+
         results_content.find("div.pagination li").addClass('disabled');
         results_content.find('a.aktivitet-item').addClass('disabled');
         results_content.find('a.aktivitet-item').click(function(e) { e.preventDefault(); });
 
         results_fail.hide();
-        reset_search_section.removeClass('jq-hide');
+        reset_search_section.show();
 
         // Scroll to the top of the results which makes sense
         if (scrollToTop) {
             $('html, body').animate({
                 scrollTop: $('.aktivitet-listing').offset().top
-            }, 2000);
+            }, 1000);
         }
 
         var filter = collectFilter(page);
@@ -175,6 +204,8 @@ $(function() {
 
             togglePositionSearchWarning();
 
+            toggle_filters_and_results.removeClass('progress-bar progress-bar-striped active');
+
         }).fail(function(result) {
             results_content.empty();
             results_fail.show();
@@ -187,10 +218,10 @@ $(function() {
     function togglePositionSearchWarning() {
         var is_position_search = !!$('[name="ssr_id"]').val();
         if (is_position_search) {
-            $('.alert.alert-warning.position-search-warning').removeClass('jq-hide');
+            $('.alert.alert-warning.position-search-warning').show();
 
         } else {
-            $('.alert.alert-warning.position-search-warning').addClass('jq-hide');
+            $('.alert.alert-warning.position-search-warning').hide();
         }
     }
 

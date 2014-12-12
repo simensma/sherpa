@@ -57,12 +57,14 @@
 
           <div class="navbar navbar-default navbar-fixed-bottom visible-xs toggle-filters-results">
             <div class="container">
-              <div class="col-xs-12">
-                <button class="btn btn-danger btn-lg btn-block" data-dnt-action="show-activities-results">
-                  Vis resultat
-                </button>
-                <div class="toggle-button-sub aktiviteter-result-info">
-                  <span class="aktiviteter-result-total-count"></span> aktiviteter
+              <div class="row">
+                <div class="col-xs-12">
+                  <button class="btn btn-danger btn-lg btn-block" data-dnt-action="show-activities-results">
+                    Vis resultat
+                  </button>
+                  <div class="toggle-button-sub aktiviteter-result-info">
+                    <span class="aktiviteter-result-total-count"></span> aktiviteter
+                  </div>
                 </div>
               </div>
             </div>
@@ -113,24 +115,29 @@
             </div>
           </div>
 
+          <div class="section clearfix">
+            <h3>Turområde</h3>
+            <div class="{% if filter.omrader %}input-group{% else %}input-group-hidden-addon{% endif %}">
+              <select class="form-control" name="omrader" data-placeholder="Velg turområder..." multiple>
+                <option value=""></option>
+                {% for omrade in omrader %}
+                  {% if filter.omrade and omrade.id in filter.omrader %}
+                    <option value="{{ omrade.object_id }}" selected="selected">{{ omrade.navn }}</option>
+                  {% else %}
+                    <option value="{{ omrade.object_id }}">{{ omrade.navn }}</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+              <span class="input-group-addon hidden-sm hidden-md hidden-lg hidden-xl{% if not filter.omrader %} jq-hide{% endif %}" data-dnt-action="empty-field">
+                <span class="glyphicon glyphicon-remove"></span>
+              </span>
+            </div>
+          </div>
+
           <div class="section hidden-xs">
             <h3>I nærheten av sted</h3>
             <input type="hidden" name="lat_lng">
             <input class="form-control" name="ssr_id" type="hidden" data-select-show="position-map position-metadata">
-          </div>
-
-          <div class="section">
-            <h3>Turområde</h3>
-            <select class="form-control" name="omrader" data-placeholder="Velg turområder..." multiple>
-              <option value=""></option>
-              {% for omrade in omrader %}
-                {% if filter.omrade and omrade.id in filter.omrader %}
-                  <option value="{{ omrade.object_id }}" selected="selected">{{ omrade.navn }}</option>
-                {% else %}
-                  <option value="{{ omrade.object_id }}">{{ omrade.navn }}</option>
-                {% endif %}
-              {% endfor %}
-            </select>
           </div>
 
           <div class="section">
@@ -147,7 +154,7 @@
           </div>
 
           <div class="section">
-            <h3>Gradering</h3>
+            <h3>Vanskelighetsgrad</h3>
             <div class="button-selections difficulties">
               {% for difficulty in difficulties %}
                 {% if difficulty.0 in filter.difficulties %}
@@ -159,40 +166,43 @@
             </div>
           </div>
 
-          <div class="section">
+          <div class="section clearfix">
             <h3>Arrangør</h3>
-            <select class="form-control" name="organizers" data-placeholder="Velg arrangør..." multiple>
-              <option value=""></option>
+            <div class="{% if filter.organizers %}input-group{% else %}input-group-hidden-addon{% endif %}">
 
-              {% for type in all_foreninger %}
-                {% if type.foreninger|length > 0 %}
-                  <optgroup label="{{ type.name }}">
-                    {% for forening in type.foreninger %}
-                      {% if filter.foreninger and "forening:"|add:forening.id in filter.foreninger %}
-                        <option value="forening:{{ forening.id }}" selected="selected">
-                          {{ forening.get_sentral_name }}
-                        </option>
-                      {% else %}
-                        <option value="forening:{{ forening.id }}">
-                          {{ forening.get_sentral_name }}
-                        </option>
-                      {% endif %}
-                    {% endfor %}
-                  </optgroup>
-                {% endif %}
-              {% endfor %}
+              <select class="form-control" name="organizers" data-placeholder="Velg arrangør..." multiple>
+                <option value=""></option>
 
-              <optgroup label="Hytter">
-                {% for cabin in cabins %}
-                  {% if filter.foreninger and "cabin:"|add:cabin.id in filter.foreninger %}
-                    <option value="cabin:{{ cabin.id }}" selected="selected">{{ cabin.name }}</option>
-                  {% else %}
-                    <option value="cabin:{{ cabin.id }}">{{ cabin.name }}</option>
+                {% for type in all_foreninger %}
+                  {% if type.foreninger|length > 0 %}
+                    <optgroup label="{{ type.name }}">
+                      {% for forening in type.foreninger %}
+                        {% if filter.foreninger and "forening:"|add:forening.id in filter.foreninger %}
+                          <option value="forening:{{ forening.id }}" selected="selected">{{ forening.name }}</option>
+                        {% else %}
+                          <option value="forening:{{ forening.id }}">{{ forening.name }}</option>
+                        {% endif %}
+                      {% endfor %}
+                    </optgroup>
                   {% endif %}
                 {% endfor %}
-              </optgroup>
 
-            </select>
+                <optgroup label="Hytter">
+                  {% for cabin in cabins %}
+                    {% if filter.foreninger and "cabin:"|add:cabin.id in filter.foreninger %}
+                      <option value="cabin:{{ cabin.id }}" selected="selected">{{ cabin.name }}</option>
+                    {% else %}
+                      <option value="cabin:{{ cabin.id }}">{{ cabin.name }}</option>
+                    {% endif %}
+                  {% endfor %}
+                </optgroup>
+
+              </select>
+              <span class="input-group-addon hidden-sm hidden-md hidden-lg hidden-xl{% if not filter.organizers %} jq-hide{% endif %}" data-dnt-action="empty-field">
+                <span class="glyphicon glyphicon-remove"></span>
+              </span>
+
+            </div>
           </div>
 
           <div class="section">
@@ -213,12 +223,14 @@
 
       <div class="navbar navbar-default navbar-fixed-bottom visible-xs toggle-filters-results">
         <div class="container">
-          <div class="col-xs-12">
-            <button class="btn btn-danger btn-lg btn-block" data-dnt-action="show-activities-filters">
-              Endre søk
-            </button>
-            <div class="toggle-button-sub aktiviteter-result-info">
-              Fant <span class="aktiviteter-result-total-count"></span> aktiviteter
+          <div class="row">
+            <div class="col-xs-12">
+              <button class="btn btn-danger btn-lg btn-block" data-dnt-action="show-activities-filters">
+                Endre søk
+              </button>
+              <div class="toggle-button-sub aktiviteter-result-info">
+                Fant <span class="aktiviteter-result-total-count"></span> aktiviteter
+              </div>
             </div>
           </div>
         </div>

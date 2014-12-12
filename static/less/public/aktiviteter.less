@@ -5,6 +5,38 @@ div.aktivitet-listing {
     padding-top: 10px;
     font-family: "DTL Nobel";
 
+    &.progress-bar {
+      float: none;
+      width: 100%;
+      height: auto;
+      background-color: #e2e2e2;
+      background-image: -o-linear-gradient(45deg,
+        rgba(255, 255, 255, .45) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255, 255, 255, .45) 50%,
+        rgba(255, 255, 255, .45) 75%,
+        transparent 75%,
+        transparent
+        );
+      background-image: linear-gradient(45deg,
+        rgba(255, 255, 255, .45) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255, 255, 255, .45) 50%,
+        rgba(255, 255, 255, .45) 75%,
+        transparent 75%,
+        transparent
+      );
+      -webkit-transition: none;
+      -o-transition: none;
+      transition: none;
+
+      .toggle-button-sub {
+        display: none;
+      }
+    }
+
     .toggle-button-sub {
       text-align: center;
       margin-top: 7px;
@@ -58,15 +90,17 @@ div.aktivitet-listing {
     .section {
       margin-bottom: 30px;
 
-      input[type="date"] {
+      input[type="text"], input[type="date"], select {
         -webkit-appearance: none;
         -moz-appearance: none;
+      }
+
+      input[type="date"] {
         // Pasted from bootstrap.min.css which had a strange error messing up line height for certain elements
         line-height: 34px;
         line-height: 1.42857143;
       }
     }
-
   }
 
   div.column-results {
@@ -123,9 +157,22 @@ div.aktivitet-listing {
     p {
       float: left;
     }
-    .pagination {
+    ul.pagination {
       float: right;
       margin: 0;
+    }
+    div.pagination-mobile {
+      margin: 10px 0;
+      text-align: center;
+      font-weight: bold;
+
+      span {
+        display: inline-block;
+
+        &.page-number {
+          color: @profile-red;
+        }
+      }
     }
   }
 
