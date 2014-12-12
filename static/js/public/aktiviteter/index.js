@@ -97,6 +97,7 @@ $(function() {
         });
         filter_omrader.nextAll('.input-group-addon[data-dnt-action="empty-field"]').click(function() {
             filter_omrader.val([]);
+            refreshContent(results_content.attr('data-current-page'));
         });
 
     } else {
@@ -121,6 +122,7 @@ $(function() {
         });
         filter_organizers.nextAll('.input-group-addon[data-dnt-action="empty-field"]').click(function() {
             filter_organizers.val([]);
+            refreshContent(results_content.attr('data-current-page'));
         });
 
     } else {
