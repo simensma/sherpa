@@ -159,7 +159,8 @@ $(function() {
     }
 
     function refreshContent(page, scrollToTop) {
-        if (page === 0) {
+        // Prevent animating footer when paginating. Assuming that scrollToTop only is true when paginating.
+        if (scrollToTop !== true) {
             toggle_filters_and_results.addClass('progress-bar progress-bar-striped active');
         }
 
