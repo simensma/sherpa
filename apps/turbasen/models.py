@@ -6,8 +6,11 @@ from django.core.cache import cache
 import requests
 
 class NTBObject(object):
+    # Note that when a secure endpoint for Turbasen is ready, we should generate a new API key as the current one
+    # will have been transmitted in cleartext.
     # ENDPOINT_URL = u'https://api.nasjonalturbase.no/'
-    ENDPOINT_URL = u'https://ntbprod-turistforeningen.dotcloud.com/'
+    # ENDPOINT_URL = u'https://ntbprod-turistforeningen.dotcloud.com/'
+    ENDPOINT_URL = u'http://api.nasjonalturbase.no/'
     TURBASE_LOOKUP_COUNT = 50
 
     def __init__(self, document, _is_partial=False):
