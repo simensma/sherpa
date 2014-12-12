@@ -169,9 +169,13 @@
                   <optgroup label="{{ type.name }}">
                     {% for forening in type.foreninger %}
                       {% if filter.foreninger and "forening:"|add:forening.id in filter.foreninger %}
-                        <option value="forening:{{ forening.id }}" selected="selected">{{ forening.name }}</option>
+                        <option value="forening:{{ forening.id }}" selected="selected">
+                          {{ forening.get_sentral_name }}
+                        </option>
                       {% else %}
-                        <option value="forening:{{ forening.id }}">{{ forening.name }}</option>
+                        <option value="forening:{{ forening.id }}">
+                          {{ forening.get_sentral_name }}
+                        </option>
                       {% endif %}
                     {% endfor %}
                   </optgroup>
