@@ -111,6 +111,10 @@ $(function() {
 
     filters.find('input[name="search"]').on('blur', function () {
         refreshContent(results_content.attr('data-current-page'));
+    }).on('keypress', function(e) {
+        if(e.which === 13) { // Enter
+            $(this).blur();
+        }
     });
 
     $(document).on('click', results_content.selector + ' ul.pagination li:not(.disabled):not(.active) a.page', function() {
