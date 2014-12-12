@@ -90,15 +90,17 @@ div.aktivitet-listing {
     .section {
       margin-bottom: 30px;
 
-      input[type="date"] {
+      input[type="text"], input[type="date"], select {
         -webkit-appearance: none;
         -moz-appearance: none;
+      }
+
+      input[type="date"] {
         // Pasted from bootstrap.min.css which had a strange error messing up line height for certain elements
         line-height: 34px;
         line-height: 1.42857143;
       }
     }
-
   }
 
   div.column-results {
