@@ -1,4 +1,5 @@
 import json
+import logging
 
 from django.http import HttpResponse, Http404
 from django.template import RequestContext
@@ -14,9 +15,26 @@ from core import validator
 from foreninger.models import Forening
 from turbasen.models import Omrade
 
+logger = logging.getLogger('sherpa')
+
 def index(request):
     filter, aktivitet_dates = filter_aktivitet_dates(request.GET)
     aktivitet_dates_pagenav = paginate_aktivitet_dates(filter, aktivitet_dates)
+
+    # Usually, the 'sentral' type is sorted first, but in this case we want it last
+    all_foreninger = Forening.get_all_sorted_with_type_data()
+    sentral = all_foreninger[0]
+    if not sentral['code'] == 'sentral':
+        # We made an incorrect assumption, log it but try to continue rendering instead of raising an error
+        logger.error(u"Assumed first group of forening to be type 'sentral', was really '%s'" % sentral['code'],
+            extra={
+                'request': request,
+                'all_foreninger': all_foreninger,
+            }
+        )
+    # Remove and append the sentral group to the end
+    all_foreninger.remove(sentral)
+    all_foreninger.append(sentral)
 
     context = {
         'aktivitet_dates': aktivitet_dates_pagenav,
@@ -25,7 +43,7 @@ def index(request):
         'category_types': Aktivitet.CATEGORY_TYPES_LIST,
         'audiences': AktivitetAudience.AUDIENCE_CHOICES,
         'omrader': sorted(Omrade.lookup(), key=lambda o: o.navn),
-        'all_foreninger': Forening.get_all_sorted_with_type_data(),
+        'all_foreninger': all_foreninger,
         'cabins': Cabin.objects.order_by('name'),
         'filter': filter,
     }
