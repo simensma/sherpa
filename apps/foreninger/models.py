@@ -48,6 +48,8 @@ class Forening(models.Model):
 
     # Sometimes we'll need to reference foreninger directly by ID. We'll store a couple of IDs here.
     DNT_CENTRAL_ID = 56
+    DNT_FJELLSPORT_ID =60
+    DNT_UNG_ID = 1180
     DNT_OSLO_ID = 2
     DNT_UNG_OSLO_ID = 152
 
@@ -65,6 +67,19 @@ class Forening(models.Model):
 
     def __repr__(self):
         return '%s: %s' % (self.pk, self.name.encode('utf-8'))
+
+    def get_sentral_name(self):
+        """Some of the sentrale foreninger need to be displayed explicitly as sentrale in some cases. These are
+        hardcoded for convenience at the moment, we might consider to reimplement this as a field on the forening-form
+        applicable only for sentrale foreninger."""
+        if self.id == Forening.DNT_CENTRAL_ID:
+            return u'DNT sentralt'
+        elif self.id == Forening.DNT_FJELLSPORT_ID:
+            return u'DNT fjellsport sentralt'
+        elif self.id == Forening.DNT_UNG_ID:
+            return u'DNT ung sentralt'
+        else:
+            return self.name
 
     def get_parents_deep(self):
         parents = []
