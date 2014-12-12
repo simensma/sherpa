@@ -53,6 +53,7 @@ FJELLTREFFEN_REPORT_EMAIL = 'DNT medlemsservice <medlem@turistforeningen.no>'
 FJELLTREFFEN_BULK_COUNT = 20 # Annonser to load when a user requests more
 FJELLTREFFEN_IMAGE_THUMB_SIZE = 150 # Max pixel width and/or height
 ADMIN_USER_SEARCH_CHAR_LENGTH = 4
+DATABASE_CONNECTION_TIMEOUT = 10 # seconds
 
 MSSQL_MAX_PARAMETER_COUNT = 2000 # Actually 2100, but leave room for some other parameters
 

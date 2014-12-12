@@ -3,6 +3,7 @@ from datetime import datetime
 import re
 import logging
 import sys
+import multiprocessing
 
 from django.shortcuts import render, redirect
 from django.conf import settings
@@ -50,10 +51,24 @@ class DBConnection():
         if request.db_connections is None:
             request.db_connections = {}
             for database in external_databases:
-                try:
+
+                # Perform the connection attempt in a separate process in order to be able to handle timeouts
+                def attempt_database_connection():
+                    # If the connection fails, the call will throw an exception resulting in a non-zero exit code
                     connections[database].cursor() # Will select server version from the DB
+
+                connection_process = multiprocessing.Process(target=attempt_database_connection)
+                connection_process.start()
+                connection_process.join(settings.DATABASE_CONNECTION_TIMEOUT)
+
+                # If the connection attempt didn't finish, terminate it; it will get a non-zero exit code
+                if connection_process.is_alive():
+                    connection_process.terminate()
+                    connection_process.join()
+
+                if connection_process.exitcode == 0:
                     request.db_connections[database] = {'is_available': True}
-                except Exception:
+                else:
                     request.db_connections[database] = {
                         'is_available': False,
                         'period_message': "en kort periode", # LIES!
