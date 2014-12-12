@@ -633,6 +633,11 @@ class Activity(models.Model):
                 if not matched:
                     sherpa2_date.convert(aktivitet)
 
+                # If the date isn't published, unpublish the entire aktivitet
+                if aktivitet.published and not sherpa2_date.convert_published():
+                    aktivitet.published = False
+                    aktivitet.save()
+
             # Now the remaining date objects weren't matched and any new ones should have been created, so delete the rest
             for date in remaining_date_objects:
                 date.delete()
@@ -1235,6 +1240,10 @@ class ActivityDate(models.Model):
             # Yes, there are cases of a negative number of signups being stored - assume no limit
             return None
         return self.booking
+
+    def convert_published(self):
+        """Converts published for the *aktivitet* object, not the date."""
+        return self.online != ActivityDate.ONLINE_DISABLED
 
     class Meta:
         db_table = u'activity_date'
