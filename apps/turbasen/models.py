@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 from django.conf import settings
+from django.core.cache import cache
 
 import requests
 
@@ -20,10 +21,14 @@ class NTBObject(object):
     def __getattr__(self, name):
         """On attribute lookup failure, if the object is only partially retrieved, get the rest of its data and try
         again"""
-        if self._is_partial:
+        if not name.startswith('_') and self._is_partial:
+            # Note that we're ignoring internal non-existing attributes, which can occur in various situations, e.g.
+            # when serializing for caching.
             self.fetch()
             return getattr(self, name)
-        raise AttributeError
+        else:
+            # Default behavior - no such attribute
+            raise AttributeError
 
     #
     # Lookup static methods
@@ -68,6 +73,8 @@ class NTBObject(object):
 class Omrade(NTBObject):
     identifier = u'områder'
 
+    LOOKUP_CACHE_PERIOD = 60 * 60 * 24
+
     def __init__(self, document, *args, **kwargs):
         super(Omrade, self).__init__(document, *args, **kwargs)
         self.navn = document['navn']
@@ -90,7 +97,11 @@ class Omrade(NTBObject):
     @staticmethod
     def lookup():
         """Retrieve a complete list of these objects, partially fetched"""
-        return [Omrade(document, _is_partial=True) for document in NTBObject.lookup_object(Omrade.identifier)]
+        omrader = cache.get('turbasen.omrader.lookup')
+        if omrader is None:
+            omrader = [Omrade(document, _is_partial=True) for document in NTBObject.lookup_object(Omrade.identifier)]
+            cache.set('turbasen.omrader.lookup', omrader, Omrade.LOOKUP_CACHE_PERIOD)
+        return omrader
 
     @staticmethod
     def get(object_id):
