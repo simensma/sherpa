@@ -166,40 +166,42 @@
             </div>
           </div>
 
-          <div class="section">
+          <div class="section clearfix">
             <h3>Arrangør</h3>
-            <select class="form-control" name="organizers" data-placeholder="Velg arrangør..." multiple>
-              <option value=""></option>
 
-              {% for type in all_foreninger %}
-                {% if type.foreninger|length > 0 %}
-                  <optgroup label="{{ type.name }}">
-                    {% for forening in type.foreninger %}
-                      {% if filter.foreninger and "forening:"|add:forening.id in filter.foreninger %}
-                        <option value="forening:{{ forening.id }}" selected="selected">
-                          {{ forening.get_sentral_name }}
-                        </option>
-                      {% else %}
-                        <option value="forening:{{ forening.id }}">
-                          {{ forening.get_sentral_name }}
-                        </option>
-                      {% endif %}
-                    {% endfor %}
-                  </optgroup>
-                {% endif %}
-              {% endfor %}
+              <select class="form-control" name="organizers" data-placeholder="Velg arrangør..." multiple>
+                <option value=""></option>
 
-              <optgroup label="Hytter">
-                {% for cabin in cabins %}
-                  {% if filter.foreninger and "cabin:"|add:cabin.id in filter.foreninger %}
-                    <option value="cabin:{{ cabin.id }}" selected="selected">{{ cabin.name }}</option>
-                  {% else %}
-                    <option value="cabin:{{ cabin.id }}">{{ cabin.name }}</option>
+                {% for type in all_foreninger %}
+                  {% if type.foreninger|length > 0 %}
+                    <optgroup label="{{ type.name }}">
+                      {% for forening in type.foreninger %}
+                        {% if filter.foreninger and "forening:"|add:forening.id in filter.foreninger %}
+                          <option value="forening:{{ forening.id }}" selected="selected">{{ forening.name }}</option>
+                        {% else %}
+                          <option value="forening:{{ forening.id }}">{{ forening.name }}</option>
+                        {% endif %}
+                      {% endfor %}
+                    </optgroup>
                   {% endif %}
                 {% endfor %}
-              </optgroup>
 
-            </select>
+                <optgroup label="Hytter">
+                  {% for cabin in cabins %}
+                    {% if filter.foreninger and "cabin:"|add:cabin.id in filter.foreninger %}
+                      <option value="cabin:{{ cabin.id }}" selected="selected">{{ cabin.name }}</option>
+                    {% else %}
+                      <option value="cabin:{{ cabin.id }}">{{ cabin.name }}</option>
+                    {% endif %}
+                  {% endfor %}
+                </optgroup>
+
+              </select>
+              <span class="input-group-addon hidden-sm hidden-md hidden-lg hidden-xl jq-hide" data-dnt-action="empty-field">
+                <span class="glyphicon glyphicon-remove"></span>
+              </span>
+
+            </div>
           </div>
 
           <div class="section">
