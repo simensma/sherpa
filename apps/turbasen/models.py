@@ -20,10 +20,14 @@ class NTBObject(object):
     def __getattr__(self, name):
         """On attribute lookup failure, if the object is only partially retrieved, get the rest of its data and try
         again"""
-        if self._is_partial:
+        if not name.startswith('_') and self._is_partial:
+            # Note that we're ignoring internal non-existing attributes, which can occur in various situations, e.g.
+            # when serializing for caching.
             self.fetch()
             return getattr(self, name)
-        raise AttributeError
+        else:
+            # Default behavior - no such attribute
+            raise AttributeError
 
     #
     # Lookup static methods
