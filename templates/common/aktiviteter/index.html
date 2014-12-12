@@ -115,18 +115,23 @@
             </div>
           </div>
 
-          <div class="section">
+          <div class="section clearfix">
             <h3>Turområde</h3>
-            <select class="form-control" name="omrader" data-placeholder="Velg turområder..." multiple>
-              <option value=""></option>
-              {% for omrade in omrader %}
-                {% if filter.omrade and omrade.id in filter.omrader %}
-                  <option value="{{ omrade.object_id }}" selected="selected">{{ omrade.navn }}</option>
-                {% else %}
-                  <option value="{{ omrade.object_id }}">{{ omrade.navn }}</option>
-                {% endif %}
-              {% endfor %}
-            </select>
+            <div class="input-group-hidden-addon">
+              <select class="form-control" name="omrader" data-placeholder="Velg turområder..." multiple>
+                <option value=""></option>
+                {% for omrade in omrader %}
+                  {% if filter.omrade and omrade.id in filter.omrader %}
+                    <option value="{{ omrade.object_id }}" selected="selected">{{ omrade.navn }}</option>
+                  {% else %}
+                    <option value="{{ omrade.object_id }}">{{ omrade.navn }}</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+              <span class="input-group-addon hidden-sm hidden-md hidden-lg hidden-xl jq-hide" data-dnt-action="empty-field">
+                <span class="glyphicon glyphicon-remove"></span>
+              </span>
+            </div>
           </div>
 
           <div class="section hidden-xs">

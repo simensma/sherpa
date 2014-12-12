@@ -88,7 +88,18 @@ $(function() {
         setTimeout(function() { refreshContent(results_content.attr('data-current-page')); }, 0);
     });
 
-    if (!device_is_mobile) {
+    if (device_is_mobile) {
+        filter_omrader.find('option[value=""]').remove();
+        filter_omrader.on('change', function() {
+            filter_omrader.parents('.input-group-hidden-addon').first().removeClass('input-group-hidden-addon').addClass('input-group');
+            filter_omrader.nextAll('.input-group-addon').first().removeClass('jq-hide');
+            // Using show() will not work here, as the element should be display: table-cell
+        });
+        filter_omrader.nextAll('.input-group-addon[data-dnt-action="empty-field"]').click(function() {
+            filter_omrader.val([]);
+        });
+
+    } else {
         filter_omrader.select2();
     }
 
