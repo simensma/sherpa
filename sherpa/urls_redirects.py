@@ -5,6 +5,7 @@ from django.conf import settings
 urlpatterns = patterns('',
     # Newly changed URLs: /artikler/ -> /nyheter/ - redirect temporarily
     url(r'^artikler/(?P<slug>.*)', 'page.views.perform_redirect', kwargs={'url': '/nyheter/', 'permanent': True}),
+    url(r'^aktiviteter-beta/', 'page.views.perform_redirect', kwargs={'url': '/aktiviteter/', 'permanent': True}),
 
     # More or less permanent local redirects (keep this list short!)
     url(r'^gullgjest/', 'page.views.perform_redirect', kwargs={'url': '/hyttesamler/', 'permanent': True}),
