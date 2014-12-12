@@ -1068,7 +1068,7 @@ class Activity(models.Model):
                 deleted_aktiviteter.add(log.object_id)
 
         # Convert new and changed aktiviteter...
-        for sherpa2_aktivitet in Activity.objects.filter(id__in=new_and_changed_aktiviteter).prefetch_related('dates').order_by('id'):
+        for sherpa2_aktivitet in Activity.objects.all().prefetch_related('dates').order_by('id'):
             try:
                 sherpa3_aktivitet = Aktivitet.objects.prefetch_related('dates').get(sherpa2_id=sherpa2_aktivitet.id)
             except Aktivitet.DoesNotExist:
