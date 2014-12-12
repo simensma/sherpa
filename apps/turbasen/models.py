@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 from django.conf import settings
+from django.core.cache import cache
 
 import requests
 
@@ -72,6 +73,8 @@ class NTBObject(object):
 class Omrade(NTBObject):
     identifier = u'områder'
 
+    LOOKUP_CACHE_PERIOD = 60 * 60 * 24
+
     def __init__(self, document, *args, **kwargs):
         super(Omrade, self).__init__(document, *args, **kwargs)
         self.navn = document['navn']
@@ -94,7 +97,11 @@ class Omrade(NTBObject):
     @staticmethod
     def lookup():
         """Retrieve a complete list of these objects, partially fetched"""
-        return [Omrade(document, _is_partial=True) for document in NTBObject.lookup_object(Omrade.identifier)]
+        omrader = cache.get('turbasen.omrader.lookup')
+        if omrader is None:
+            omrader = [Omrade(document, _is_partial=True) for document in NTBObject.lookup_object(Omrade.identifier)]
+            cache.set('turbasen.omrader.lookup', omrader, Omrade.LOOKUP_CACHE_PERIOD)
+        return omrader
 
     @staticmethod
     def get(object_id):
