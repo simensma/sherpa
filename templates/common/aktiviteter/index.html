@@ -259,6 +259,34 @@
       </div>
     </div>
   </div>
+
+  {% if first_time_visitor %}
+    <div class="modal first-visit" data-dnt-modal="first-visit">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+        <h3>Velkommen til vårt nye søk!</h3>
+      </div>
+      <div class="modal-body">
+
+        <p>
+          Hei!
+        </p>
+
+        <p>
+          Nå har vi laget et splitter nytt søk for å finne DNTs turer, kurs og aktiviteter over hele landet. Vi håper du liker det.
+        </p>
+
+        <p>
+          God tur!<br>
+          Hilsen DNT
+        </p>
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-default" data-dismiss="modal">Vis meg det nye søket!</button>
+      </div>
+    </div>
+  {% endif %}
 </div>
 
 {% endblock %}

@@ -5,6 +5,7 @@ from django.conf import settings
 urlpatterns = patterns('',
     # Newly changed URLs: /artikler/ -> /nyheter/ - redirect temporarily
     url(r'^artikler/(?P<slug>.*)', 'page.views.perform_redirect', kwargs={'url': '/nyheter/', 'permanent': True}),
+    url(r'^aktiviteter-beta/', 'page.views.perform_redirect', kwargs={'url': '/aktiviteter/', 'permanent': True}),
 
     # More or less permanent local redirects (keep this list short!)
     url(r'^gullgjest/', 'page.views.perform_redirect', kwargs={'url': '/hyttesamler/', 'permanent': True}),
@@ -217,7 +218,6 @@ urlpatterns = patterns('',
 
     # Old redirects, keep them at the old site
     url(r'^140/$', 'page.views.perform_redirect', kwargs={'url': 'http://%s/index.php' % settings.OLD_SITE, 'params': {'fo_id': '6007'}}),
-    url(r'^aktiviteter/$', 'page.views.perform_redirect', kwargs={'url': 'http://%s/activity.php' % settings.OLD_SITE, 'params': {'fo_id': '2513'}}),
     url(r'^aretsgave/$', 'page.views.perform_redirect', kwargs={'url': 'http://%s/aretsgave.php' % settings.OLD_SITE}),
     url(r'^butikk/$', 'page.views.perform_redirect', kwargs={'url': 'http://%s/index.php' % settings.OLD_SITE, 'params': {'fo_id': '435'}}),
     url(r'^daltilfjell/$', 'page.views.perform_redirect', kwargs={'url': 'http://%s/article.php' % settings.OLD_SITE, 'params': {'ar_id': '11201'}}),
