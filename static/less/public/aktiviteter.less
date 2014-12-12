@@ -155,9 +155,22 @@ div.aktivitet-listing {
     p {
       float: left;
     }
-    .pagination {
+    ul.pagination {
       float: right;
       margin: 0;
+    }
+    div.pagination-mobile {
+      margin: 10px 0;
+      text-align: center;
+      font-weight: bold;
+
+      span {
+        display: inline-block;
+
+        &.page-number {
+          color: @profile-red;
+        }
+      }
     }
   }
 

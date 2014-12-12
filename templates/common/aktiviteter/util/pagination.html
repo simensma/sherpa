@@ -1,4 +1,24 @@
-<ul class="pagination pagination-sm">
+<div class="pagination pagination-mobile visible-xs">
+  <div class="pull-left previous">
+    <a
+      href="javascript:undefined"
+      class="page{% if not current > 1 %} disabled{% endif %}"
+      data-page="{{ current|add:"-1" }}">
+      &lt; Forrige
+    </a>
+  </div>
+  <span>Side <span class="page-number">{{ current }}</span> av <span class="page-number">{{ paginator.num_pages }}</span></span>
+  <div class="pull-right next">
+    <a
+      href="javascript:undefined"
+      class="page{% if not current <= paginator.num_pages|add:"-1" %} disabled{% endif %}"
+      data-page="{{ current|add:"1" }}">
+      Neste &gt;
+    </a>
+  </div>
+</div>
+
+<ul class="pagination pagination-sm hidden-xs">
   <li{% if current == 1 %} class="disabled"{% endif %}>
     <a href="javascript:undefined" class="page" data-page="min">«</a>
   </li>

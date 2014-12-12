@@ -117,7 +117,7 @@ $(function() {
         }
     });
 
-    $(document).on('click', results_content.selector + ' ul.pagination li:not(.disabled):not(.active) a.page', function() {
+    $(document).on('click', results_content.selector + ' .pagination :not(.disabled):not(.active) a.page', function() {
         refreshContent($(this).attr('data-page'), true);
     });
 
