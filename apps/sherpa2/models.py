@@ -618,8 +618,11 @@ class Activity(models.Model):
                     end_date = sherpa2_date.convert_end_date()
                 except ConversionImpossible:
                     if sherpa2_date.online != ActivityDate.ONLINE_DISABLED:
-                        # Couldn't convert the start/end date, raise the exception only if it's online
+                        # Couldn't convert the date and this date is published; raise the exception
                         raise
+                    else:
+                        # The date isn't published, so ignore it
+                        continue
 
                 for sherpa3_date in aktivitet.dates.all():
                     if start_date == sherpa3_date.start_date.date() and end_date == sherpa3_date.end_date.date():
