@@ -1176,16 +1176,22 @@ class ActivityDate(models.Model):
         date.save()
 
     def convert_start_date(self):
+        # Note that on conversion failure, we'll only record the failure if the date is published. If not, it's
+        # expected to be skipped.
         try:
             if self.date_from is None or self.date_from.strip() == '':
-                self.activity.save_conversion_failure(reason='date_without_start_date')
+                if self.online != ActivityDate.ONLINE_DISABLED:
+                    self.activity.save_conversion_failure(reason='date_without_start_date')
                 raise DateWithoutStartDate("Date entry has no start date")
             return datetime.combine(self.get_date_from(), datetime.min.time())
         except ValueError:
-            self.activity.save_conversion_failure(reason='date_with_invalid_start_date')
+            if self.online != ActivityDate.ONLINE_DISABLED:
+                self.activity.save_conversion_failure(reason='date_with_invalid_start_date')
             raise DateWithInvalidStartDate("Invalid date_from: '%s'" % self.date_from.strip())
 
     def convert_end_date(self):
+        # Note that on conversion failure, we'll only record the failure if the date is published. If not, it's
+        # expected to be skipped.
         try:
             if self.date_to is None or self.date_to.strip() == '':
                 # End date isn't defined even though it has to be!
@@ -1193,11 +1199,13 @@ class ActivityDate(models.Model):
                     # This was an event in the past, so we'll let this slide and just set end date to the same as start
                     return datetime.combine(self.get_date_from(), datetime.min.time())
                 else:
-                    self.activity.save_conversion_failure(reason='date_without_end_date')
+                    if self.online != ActivityDate.ONLINE_DISABLED:
+                        self.activity.save_conversion_failure(reason='date_without_end_date')
                     raise DateWithoutEndDate("Future aktivitet with no end date")
             return datetime.combine(self.get_date_to(), datetime.min.time())
         except ValueError:
-            self.activity.save_conversion_failure(reason='date_with_invalid_end_date')
+            if self.online != ActivityDate.ONLINE_DISABLED:
+                self.activity.save_conversion_failure(reason='date_with_invalid_end_date')
             raise DateWithInvalidEndDate("Invalid date_to: '%s'" % self.date_to.strip())
 
     def convert_signup_enabled(self):
