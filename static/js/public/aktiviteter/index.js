@@ -77,7 +77,7 @@ $(function() {
     // Disable enter submit on forms
     filters.find("form").bind("keypress", function(e) {
         if(e.keyCode == 13) {
-            refreshContent(results_content.attr('data-current-page'));
+            refreshContent(1);
             return false;
         }
     });
@@ -87,7 +87,7 @@ $(function() {
         // This is beacause there are other event listeners for some of these buttons that need to
         // do their work before we update the result.
         // Recommended reading: http://strongloop.com/strongblog/node-js-event-loop/
-        setTimeout(function() { refreshContent(results_content.attr('data-current-page')); }, 0);
+        setTimeout(function() { refreshContent(1); }, 0);
     });
 
     if (device_is_mobile) {
@@ -99,7 +99,7 @@ $(function() {
         });
         filter_omrader.nextAll('.input-group-addon[data-dnt-action="empty-field"]').click(function() {
             filter_omrader.val([]);
-            refreshContent(results_content.attr('data-current-page'));
+            refreshContent(1);
         });
 
     } else {
@@ -107,12 +107,12 @@ $(function() {
     }
 
     filter_omrader.change(function() {
-        refreshContent(results_content.attr('data-current-page'));
+        refreshContent(1);
     });
 
     filters.find('[data-dnt-container="start-date"],[data-dnt-container="end-date"]').on('change', function() {
         // TODO: This is triggered twice if date is changed using bootstrap datepicker, should be fixed
-        refreshContent(results_content.attr('data-current-page'));
+        refreshContent(1);
     });
 
     if (device_is_mobile) {
@@ -124,7 +124,7 @@ $(function() {
         });
         filter_organizers.nextAll('.input-group-addon[data-dnt-action="empty-field"]').click(function() {
             filter_organizers.val([]);
-            refreshContent(results_content.attr('data-current-page'));
+            refreshContent(1);
         });
 
     } else {
@@ -132,11 +132,11 @@ $(function() {
     }
 
     filter_organizers.on('change', function() {
-        refreshContent(results_content.attr('data-current-page'));
+        refreshContent(1);
     });
 
     filters.find('input[name="search"]').on('blur', function () {
-        refreshContent(results_content.attr('data-current-page'));
+        refreshContent(1);
     }).on('keypress', function(e) {
         if(e.which === 13) { // Enter
             $(this).blur();
@@ -304,7 +304,7 @@ $(function() {
         } else {
             $("input[name='lat_lng']").val('');
         }
-        refreshContent(0);
+        refreshContent(1);
     });
 
     function positionSsrToHtml(sted) {
