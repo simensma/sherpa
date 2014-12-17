@@ -14,14 +14,16 @@ class Forening(models.Model):
         (u'sentral', u'Sentral/nasjonal'), # Central/national - only a handful; DNT, DNT ung, DNT Fjellsport
         (u'forening', u'Medlemsforening'), # Member associations (foreninger)
         (u'turlag', u'Lokalt turlag'),     # Local groups, must belong to a member association
-        (u'turgruppe', u'Turgruppe')]      # Tourgroup (has no members), must belong to a member association OR local group
+        (u'turgruppe', u'Turgruppe'),      # Tourgroup (has no members), must belong to a member association OR local group
+    ]
 
     # Applies only to 'turgruppe'-types
     GROUP_TYPES = [
         (u'barn', u'Barnas Turlag'),
         (u'ung', u'Ungdom'),
         (u'fjellsport', u'DNT Fjellsport'),
-        (u'senior', u'DNT Senior')]
+        (u'senior', u'DNT Senior'),
+    ]
 
     name = models.CharField(max_length=255)
     # The child/parent rules are dependent on type; this is defined in admin.forening.forms.ExistingForeningDataForm
