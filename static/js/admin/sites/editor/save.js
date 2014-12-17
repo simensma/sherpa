@@ -191,15 +191,11 @@ $(function() {
         data.publish_time = publish.find("input[name='time']").val();
         data.status = JSON.stringify(publish.find("input[name='publish']:checked").length > 0);
 
-        var parent_select = header.find("select[name='parent']");
         if(header.is(".page")) {
             /* Page-specific */
 
             // Title
             data.title = header.find("input[name='title']").val();
-
-            // Parent page
-            data.parent = parent_select.find("option:selected").val();
 
             // Whether or not to display ads
             data.ads = JSON.stringify(header.find("input[name='display-ads']:checked").length > 0);
