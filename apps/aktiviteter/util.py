@@ -91,11 +91,14 @@ def filter_aktivitet_dates(query):
         cabins = []
 
         for organizer in filter['organizers']:
-            type, id = organizer.split(':')
-            if type == 'forening':
-                foreninger.append(id)
-            elif type == 'cabin':
-                cabins.append(id)
+            try:
+                type, id = organizer.split(':')
+                if type == 'forening':
+                    foreninger.append(int(id))
+                elif type == 'cabin':
+                    cabins.append(int(id))
+            except ValueError:
+                continue
 
         if foreninger:
             dates = dates.filter(
