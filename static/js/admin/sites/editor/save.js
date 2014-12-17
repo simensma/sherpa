@@ -260,16 +260,6 @@ $(function() {
                 done();
             }
 
-            // Parent page-response
-            if(result.parent_error == 'parent_in_parent') {
-                alert('Du kan ikke velge den foreldresiden, fordi *den* allerede er en underside av denne siden.');
-                parent_select.val(parent_select.find("option.default").val());
-                parent_select.trigger('liszt:updated');
-            } else {
-                parent_select.find("option.default").removeClass('default');
-                parent_select.find("option:selected").addClass('default');
-            }
-
             // Article-authors response
             if(result.author_error == 'no_authors') {
                 alert("Artikkelforfattere ble ikke endret; du må velge minst én forfatter!");
