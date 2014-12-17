@@ -9,31 +9,40 @@ $(function() {
     var newPage = $("div.new-page");
 
     $("a.new-page").click(function() {
-        newPage.find("input[name='title']").keyup();
-        newPage.modal();
+        newPage.modal({
+            maskMessage: 'Oppretter siden...'
+        });
     });
+
+    // Enable select2 for setting parent
+    newPage.find("select[name='parent_id']").select2();
+
     newPage.find("img.loader").hide();
     newPage.find("span.valid").hide();
     newPage.find("span.invalid").hide();
     newPage.find("input[name='title']").keyup(function() {
-        lookupVal = $(this).val().replace(/[^-_a-z0-9\s]+/gi, '')
+        slugifiedTitle = $(this).val().replace(/[^-_a-z0-9\s]+/gi, '')
                                  .replace(/\s+/g, "-")
                                  .toLowerCase();
-        updateSlash(lookupVal.length === 0);
-        newPage.find("span.slug").text(lookupVal);
+        newPage.find('input[name="slug"]').val(slugifiedTitle).trigger('input'); // Trigger input event on slug field
+    });
+
+    newPage.find('input[name="slug"]').on('input', function (e) {
+        lookupVal = $(this).val();
         initiateLookup();
         clearTimeout(lookupTimer);
         lookupTimer = setTimeout(performLookup, KEY_LOOKUP_DELAY);
     });
 
+    var slugifiedTitle;
     var lookupTimer;
     var lookupVal;
     var KEY_LOOKUP_DELAY = 1000;
 
     function initiateLookup() {
-        newPage.find("span.valid").hide();
-        newPage.find("span.invalid").hide();
-        newPage.find("img.loader").show();
+        newPage.find('.slug span.valid').hide();
+        newPage.find('.slug span.invalid').hide();
+        newPage.find('img.loader').show();
     }
 
     function performLookup() {
@@ -57,55 +66,7 @@ $(function() {
         });
     }
 
-    newPage.find("i.save-slug").hide().click(saveSlug);
-    newPage.find("i.edit-slug").click(editSlug);
-    newPage.find("span.slug").click(editSlug);
-
-    function editSlug() {
-        newPage.find("i.edit-slug").hide();
-        newPage.find("i.save-slug").show();
-        var span = newPage.find("span.slug");
-        var input = $('<input type="text" name="slug-input" value="' + decodeURIComponent(span.text()) + '">');
-        input.focusout(saveSlug);
-        input.keyup(function() {
-            lookupVal = encodeURIComponent($(this).val()).replace('%2F', '/');
-            initiateLookup();
-            clearTimeout(lookupTimer);
-            lookupTimer = setTimeout(performLookup, KEY_LOOKUP_DELAY);
-        });
-        span.before(input);
-        span.remove();
-        input.focus();
-    }
-
-    function saveSlug() {
-        var input = newPage.find("input[name='slug-input']");
-        var val = input.val();
-        val = val.replace(/\/+$/, '');
-        updateSlash(val.length === 0);
-        var span = $('<span class="slug">' + encodeURIComponent(val).replace('%2F', '/') + '</span>');
-        input.before(span);
-        input.remove();
-        lookupVal = val;
-        initiateLookup();
-        performLookup();
-        newPage.find("i.save-slug").hide();
-        newPage.find("i.edit-slug").show();
-    }
-
-    function updateSlash(hide) {
-        if(hide) {
-            newPage.find("span.slash").text('');
-        } else {
-            newPage.find("span.slash").text('/');
-        }
-    }
-
-    newPage.find("form").submit(function() {
-        $(this).find("input[name='slug']").val($(this).find("span.slug").text());
-    });
-
-    newPage.find("img[data-template]").click(function() {
+    newPage.find('button[data-dnt-action="create-page"]').click(function() {
         if(!validUrl) {
             alert("URLen du valgte er allerede i bruk av en annen side! Vennligst velg en annen URL.");
             return;
@@ -114,10 +75,19 @@ $(function() {
             alert("Du må skrive inn en tittel på siden før du oppretter den!");
             return;
         }
-        newPage.find("input[name='template']").val($(this).attr('data-template'));
-        $(this).parents("form").submit();
+        newPage.find("input[name='template']").val(newPage.find('.template-select .active').attr('data-template'));
+
+        newPage.find("form").submit();
+
+        var $modal = $(this).parents('.modal').first();
+        $modal.modal('mask');
+
     });
 
+    newPage.find('.template-select .template-item').click(function (e) {
+        newPage.find('.template-select .template-item.active.selected').removeClass('active selected');
+        $(this).addClass('active selected');
+    });
 
     /* Sortable tree */
 

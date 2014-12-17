@@ -5,16 +5,31 @@ $(function() {
     var new_article_modal = $("div.new-article");
 
     $("a.new-article").click(function() {
-        new_article_modal.modal();
+        new_article_modal.modal({
+            maskMessage: 'Oppretter nyhet...'
+        });
     });
 
-    new_article_modal.find("img[data-template]").click(function() {
-        if(new_article_modal.find("input[name='title']").val().length === 0) {
+    new_article_modal.find('.template-select .template-item').click(function (e) {
+        new_article_modal.find('.template-select .template-item.active.selected').removeClass('active selected');
+        $(this).addClass('active selected');
+    });
+
+    new_article_modal.find('button[data-dnt-action="create-article"]').click(function() {
+
+        if (new_article_modal.find("input[name='title']").val().length === 0) {
             alert("Du må skrive inn en tittel på artikkelen før du oppretter den!");
             return;
         }
-        new_article_modal.find("input[name='template']").val($(this).attr('data-template'));
-        $(this).parents("form").submit();
+
+        new_article_modal.find("input[name='template']")
+            .val(new_article_modal.find('.template-select .active')
+            .attr('data-template'));
+
+        new_article_modal.find("form").submit();
+
+        var $modal = $(this).parents('.modal').first();
+        $modal.modal('mask');
     });
 
     container.data('bulk', 1);

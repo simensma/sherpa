@@ -48,35 +48,55 @@
 
       <div class="modal jq-hide new-article">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
-          <h3>Opprett ny artikkel</h3>
+          <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">&times;</span>
+            <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title">Opprett nyhet</h4>
         </div>
         <div class="modal-body">
-          <form action="{% url 'admin.sites.articles.views.new' active_site.id %}" method="post">
+          <form class="form-horizontal" action="{% url 'admin.sites.articles.views.new' active_site.id %}" method="post">
             {% csrf_token %}
             <input type="hidden" name="template" value="0">
             <input type="hidden" name="slug" value="">
-            <table class="table">
-            <tr>
-              <td class="big">Tittel på artikkelen:</td>
-              <td><input class="form-control" type="text" name="title"></td>
-            </tr>
-            </table>
-            <h2 class="skinny">Velg en ferdigdefinert mal her:</h2>
-            <div class="row">
-              <div class="col-md-6">
-                <img src="{{ STATIC_URL }}img/admin/sites/editor/templates/full-width.jpg" alt="Ferdigdefinert mal" data-template="0">
-                <p>Én full kolonne</p>
+
+            <div class="section">
+              <div class="form-group">
+                <label class="col-sm-3 control-label">Tittel</label>
+                <div class="col-sm-7">
+                  <input type="text" name="title" class="form-control">
+                </div>
               </div>
-              <div class="col-md-6">
-                <img src="{{ STATIC_URL }}img/admin/sites/editor/templates/sidebar.jpg" alt="Ferdigdefinert mal" data-template="1">
-                <p>Hovedkolonne med sidebar</p>
+            </div>
+
+            <div class="section">
+              <div class="well template-select">
+                <label>Baser på mal</label>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <a href="javascript:undefined" class="template-item thumbnail" data-template="0">
+                      <img
+                      src="{{ STATIC_URL }}img/admin/sites/editor/templates/icon-template-fw-img-fw-text.svg"
+                      alt="Ferdigdefinert mal">
+                      <span>En kolonne</span>
+                    </a>
+                  </div>
+                  <div class="col-sm-3">
+                    <a href="javascript:undefined" class="template-item thumbnail" data-template="1">
+                      <img
+                      src="{{ STATIC_URL }}img/admin/sites/editor/templates/icon-template-fw-img-text-sidebar.svg"
+                      alt="Ferdigdefinert mal">
+                      <span>Med sidebar</span>
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
           </form>
         </div>
-        <div class="modal-footer" style="clear: both;">
-          <a href="javascript:undefined" class="btn btn-default" data-dismiss="modal">Lukk vindu</a>
+        <div class="modal-footer">
+          <button class="btn btn-default" data-dismiss="modal">Avbryt</button>
+          <button class="btn btn-success" data-dnt-action="create-article">Opprett nyhet</button>
         </div>
       </div>
 

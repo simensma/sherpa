@@ -19,9 +19,11 @@ from core.util import parse_html_array
 def list(request, site):
     active_site = Site.objects.get(id=site)
     pages = Page.objects.filter(site=active_site)
+    root_page = Page.on(active_site).get(level=0)
     context = {
         'active_site': active_site,
         'nodes': pages,
+        'root_node': root_page
     }
     return render(request, 'common/admin/sites/pages/list.html', context)
 
@@ -62,7 +64,7 @@ def new(request, site):
         slug=request.POST['slug'],
         published=False,
         created_by=request.user,
-        parent=Page.objects.get(site=active_site, slug=''),
+        parent=Page.objects.get(id=request.POST['parent_id']),
         site=active_site,
     )
     page.save()
