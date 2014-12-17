@@ -68,20 +68,6 @@ def save(request, site, version):
             ### Title ###
             page.title = request.POST['title']
 
-            ### Parent page ###
-            if request.POST['parent'] == '':
-                new_parent = None
-            else:
-                new_parent = Page.on(active_site).get(id=request.POST['parent'])
-                parent = new_parent
-                while parent is not None:
-                    if parent.id == page.id:
-                        response['parent_error'] = 'parent_in_parent'
-                        break
-                    parent = parent.parent
-            if 'parent_error' not in response:
-                page.parent = new_parent
-
             ### Ads ###
             version.ads = json.loads(request.POST['ads'])
 
