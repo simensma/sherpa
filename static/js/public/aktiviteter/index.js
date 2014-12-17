@@ -152,7 +152,7 @@ $(function() {
             query = [], i;
 
         for (i = 0; i < keys.length; i++) {
-            if (filter[keys[i]] !== '' && !(keys[i] === 'page' && filter[keys[i]] === '1')) {
+            if (filter[keys[i]] !== '' && !(keys[i] === 'page' && parseInt(filter[keys[i]], 10) === 1)) {
                 query.push(keys[i] + '=' + filter[keys[i]]);
             }
         }
