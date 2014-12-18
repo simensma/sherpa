@@ -121,10 +121,8 @@ class Forening(models.Model):
     def get_turgrupper_deep_sorted_by_group(self):
         turgrupper = sorted(self.get_turgrupper_deep(), key=lambda g: g.name)
         return {
-            'barn': [g for g in turgrupper if g.group_type == 'barn'],
-            'ung': [g for g in turgrupper if g.group_type == 'ung'],
-            'fjellsport': [g for g in turgrupper if g.group_type == 'fjellsport'],
-            'senior': [g for g in turgrupper if g.group_type == 'senior'],
+            group_type[0]: [group for group in turgrupper if group.group_type == group_type[0]]
+            for group_type in Forening.GROUP_TYPES
         }
 
     def get_main_foreninger(self):
