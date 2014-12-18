@@ -177,7 +177,7 @@
                   {% if type.foreninger|length > 0 %}
                     <optgroup label="{{ type.name }}">
                       {% for forening in type.foreninger %}
-                        {% if filter.foreninger and "forening:"|add:forening.id in filter.foreninger %}
+                        {% if filter.foreninger and forening.id in filter.foreninger %}
                           <option value="forening:{{ forening.id }}" selected="selected">
                             {{ forening.get_sentral_name }}
                           </option>
@@ -193,7 +193,7 @@
 
                 <optgroup label="Hytter">
                   {% for cabin in cabins %}
-                    {% if filter.foreninger and "cabin:"|add:cabin.id in filter.foreninger %}
+                    {% if filter.cabins and cabin.id in filter.cabins %}
                       <option value="cabin:{{ cabin.id }}" selected="selected">{{ cabin.name }}</option>
                     {% else %}
                       <option value="cabin:{{ cabin.id }}">{{ cabin.name }}</option>
