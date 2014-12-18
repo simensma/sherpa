@@ -83,7 +83,9 @@
 
                     {% for type in category.types %}
                       {% if filter.category_types and type in filter.category_types %}
-                        <button class="btn category-type selected btn-danger" data-dnt-category-type="{{ type }}">{{ type|title }}</button>
+                        <button class="btn category-type selected btn-danger" data-dnt-category-type="{{ type }}">
+                          {{ type|title }}
+                        </button>
                       {% else %}
                         <button class="btn category-type" data-dnt-category-type="{{ type }}">{{ type|title }}</button>
                       {% endif %}
