@@ -21,7 +21,7 @@ $(function() {
 
     listing.find('[data-dnt-modal="first-visit"]').modal();
 
-    filters.find('input.form-control.date').each(function (index, el) {
+    filters.find('input[name="start_date"], input[name="end_date"]').each(function (index, el) {
         if (device_is_mobile) {
             $(el).attr('type', 'date');
 
@@ -36,7 +36,7 @@ $(function() {
         }
     });
 
-    filters.find('.section.dates .input-group-addon[data-dnt-action="clear-field"]').click(function() {
+    filters.find('.section.dates [data-dnt-action="clear-field"]').click(function() {
         $(this).prev('input').val('');
         refreshContent(results_content.attr('data-current-page'));
     });
@@ -97,13 +97,13 @@ $(function() {
 
     if (device_is_mobile) {
         filter_omrader.find('option[value=""]').remove();
-        filter_omrader.nextAll('.input-group-addon[data-dnt-action="clear-field"]').click(function() {
+        filter_omrader.nextAll('[data-dnt-action="clear-field"]').click(function() {
             filter_omrader.val([]);
             refreshContent(1);
         });
 
     } else {
-        filter_omrader.nextAll('.input-group-addon[data-dnt-action="clear-field"]').click(function() {
+        filter_omrader.nextAll('[data-dnt-action="clear-field"]').click(function() {
             filter_omrader.select2('val', []);
             refreshContent(results_content.attr('data-current-page'));
         });
@@ -114,21 +114,21 @@ $(function() {
         refreshContent(1);
     });
 
-    filters.find('[data-dnt-container="start-date"],[data-dnt-container="end-date"]').on('change', function() {
+    filters.find('[data-dnt-container="start-date"], [data-dnt-container="end-date"]').on('change', function() {
         // TODO: This is triggered twice if date is changed using bootstrap datepicker, should be fixed
         refreshContent(1);
     });
 
     if (device_is_mobile) {
         filter_organizers.find('option[value=""]').remove();
-        filter_organizers.nextAll('.input-group-addon[data-dnt-action="clear-field"]').click(function() {
+        filter_organizers.nextAll('[data-dnt-action="clear-field"]').click(function() {
             filter_organizers.val([]);
             refreshContent(1);
         });
 
     } else {
         filter_organizers.select2();
-        filter_organizers.nextAll('.input-group-addon[data-dnt-action="clear-field"]').click(function() {
+        filter_organizers.nextAll('[data-dnt-action="clear-field"]').click(function() {
             filter_organizers.select2('val', []);
             refreshContent(results_content.attr('data-current-page'));
         });
