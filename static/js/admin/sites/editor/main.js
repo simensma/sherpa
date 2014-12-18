@@ -339,6 +339,15 @@
             template: popover_template_html,
             trigger: 'click',
         });
+
+        article.find('.add-content').tooltip({
+            placement: 'top'
+        });
+
+        $(document).on('click', '.add-content', function () {
+            $(this).tooltip('hide');
+        });
+
     };
 
     // Insert the specified content at the specified position
