@@ -230,6 +230,10 @@ $(function() {
     function togglePositionSearchWarning() {
         var is_position_search = !!$('[name="ssr_id"]').val();
         if (is_position_search) {
+            var selected_position_data = $('[name="ssr_id"]').select2('data');
+            if (!!selected_position_data && !!selected_position_data.stedsnavn) {
+                $('span[data-dnt-placeholder-for]').html(selected_position_data.stedsnavn);
+            }
             $('.alert.alert-warning.position-search-warning').show();
 
         } else {
