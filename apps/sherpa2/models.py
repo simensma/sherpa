@@ -38,7 +38,7 @@ class Forening(models.Model):
     zipcode = models.CharField(db_column='gr_zip', max_length=12, blank=True)
     ziparea = models.CharField(db_column='gr_ziparea', max_length=50, blank=True)
     country = models.CharField(db_column='gr_country', max_length=50, blank=True)
-    orgnr = models.CharField(db_column='gr_orgnr', max_length=20, blank=True)
+    organization_no = models.CharField(db_column='gr_orgnr', max_length=20, blank=True)
     account = models.CharField(db_column='gr_account', max_length=50, blank=True)
     employees = models.DecimalField(db_column='gr_employees', null=True, max_digits=5, decimal_places=2, blank=True)
     visible = models.IntegerField(db_column='gr_visible', null=True, blank=True)
@@ -55,6 +55,42 @@ class Forening(models.Model):
 
     def __unicode__(self):
         return u'%s' % self.pk
+
+    def get_focus_id(self):
+        focus_id = s2a.focus_id
+        if focus_id == 0:
+            focus_id = None
+        return focus_id
+
+    def get_name(self):
+        return self.name.strip()
+
+    def get_post_address(self):
+        return self.post_address.strip()
+
+    def get_visit_address(self):
+        return self.visit_address.strip()
+
+    def get_phone(self):
+        return self.phone.strip()
+
+    def get_email(self):
+        return self.email.strip()
+
+    def get_organization_no(self):
+        return self.organization_no.strip()
+
+    def get_gmap_url(self):
+        if self.map is None:
+            return ''
+        else:
+            return self.map.strip()
+
+    def get_facebook_url(self):
+        if self.facebook is None:
+            return ''
+        else:
+            return self.facebook.strip()
 
     class Meta:
         db_table = u'groups'
