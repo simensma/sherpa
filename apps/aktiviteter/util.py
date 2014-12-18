@@ -10,9 +10,7 @@ from aktiviteter.models import Aktivitet, AktivitetDate
 
 HITS_PER_PAGE = 20
 
-def filter_aktivitet_dates(query):
-    filter = query.copy()
-
+def filter_aktivitet_dates(filter):
     dates = AktivitetDate.get_published().prefetch_related(
         'aktivitet',
         'aktivitet__images',
