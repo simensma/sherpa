@@ -47,6 +47,7 @@
       {% include 'common/admin/forening/structure_table_forening.html' with display_parent=True header="DNT ung" foreninger=turgrupper.ung %}
       {% include 'common/admin/forening/structure_table_forening.html' with display_parent=True header="DNT Fjellsport" foreninger=turgrupper.fjellsport %}
       {% include 'common/admin/forening/structure_table_forening.html' with display_parent=True header="DNT senior" foreninger=turgrupper.senior %}
+      {% include 'common/admin/forening/structure_table_forening.html' with display_parent=True header="Andre grupper" foreninger=turgrupper.other %}
 
       {% if children|length == 0 and turgrupper.barn|length == 0 and turgrupper.ung|length == 0 and turgrupper.fjellsport|length == 0 and turgrupper.senior|length == 0 %}
         <p>
