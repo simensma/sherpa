@@ -11,6 +11,11 @@ from aktiviteter.models import Aktivitet, AktivitetDate
 HITS_PER_PAGE = 20
 
 def filter_aktivitet_dates(filter):
+
+    # To the next mainainer: The filter param is a mutateable query dict such that this util method
+    # can split strings into lists which the template logic is dependent upon. If you find a better
+    # way, please refactor this code.
+
     dates = AktivitetDate.get_published().prefetch_related(
         'aktivitet',
         'aktivitet__images',
