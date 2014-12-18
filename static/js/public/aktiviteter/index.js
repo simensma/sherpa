@@ -36,6 +36,10 @@ $(function() {
         }
     });
 
+    filters.find('.input-group-addon[data-dnt-action="clear-field"]').click(function() {
+        $(this).prev('input').val('');
+    });
+
     toggle_filters_and_results.find('button').bind('click', function (e) {
         var action = $(this).data('dnt-action');
 
