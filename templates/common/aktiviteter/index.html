@@ -263,8 +263,10 @@
       <div class="wrapper">
 
         <div class="alert alert-warning position-search-warning{% if not filter.lat_lng %} jq-hide{% endif %}">
-          <strong>OBS!</strong> Søk på nærheten av sted kan gi begrenset treff da flere turer og aktiviteter ennå
-          ikke har en geografisk posisjon i systemet vårt. Du kan alternativt søke på turområde eller arrangør.
+          <strong>Hei!</strong>
+          Det er ikke sikkert vi klarte å finne alle turer og aktiviteter i nærheten av
+          <span data-dnt-placeholder-for="selected-position-name">valgt sted</span>.
+          Vi jobber med å gi turene en bedre geografisk plassering. Du kan forsøke å velge turområde eller arrangør i stedet.
         </div>
 
         <div class="results" data-filter-url="{% url 'aktiviteter.views.filter' %}">
