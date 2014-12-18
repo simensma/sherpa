@@ -135,7 +135,7 @@
 
           <div class="section clearfix">
             <h3>Turområde</h3>
-            <div class="{% if filter.omrader %}input-group{% else %}input-group-hidden-addon{% endif %}">
+            <div class="input-group select2-bootstrap-append">
               <select class="form-control" name="omrader" data-placeholder="Velg turområder..." multiple>
                 <option value=""> </option>
                 {% for omrade in omrader %}
@@ -146,9 +146,7 @@
                   {% endif %}
                 {% endfor %}
               </select>
-              <span
-                class="input-group-addon hidden-sm hidden-md hidden-lg hidden-xl{% if not filter.omrader %} jq-hide{% endif %}"
-                data-dnt-action="clear-field">
+              <span class="input-group-addon clear-field" data-dnt-action="clear-field">
                 <span class="glyphicon glyphicon-remove"></span>
               </span>
             </div>
@@ -188,7 +186,7 @@
 
           <div class="section clearfix">
             <h3>Arrangør</h3>
-            <div class="{% if filter.organizers %}input-group{% else %}input-group-hidden-addon{% endif %}">
+            <div class="input-group select2-bootstrap-append">
 
               <select class="form-control" name="organizers" data-placeholder="Velg arrangør..." multiple>
                 <option value=""> </option>
@@ -222,7 +220,7 @@
                 </optgroup>
 
               </select>
-              <span class="input-group-addon hidden-sm hidden-md hidden-lg hidden-xl{% if not filter.organizers %} jq-hide{% endif %}" data-dnt-action="clear-field">
+              <span class="input-group-addon clear-field" data-dnt-action="clear-field">
                 <span class="glyphicon glyphicon-remove"></span>
               </span>
 

@@ -36,7 +36,7 @@ $(function() {
         }
     });
 
-    filters.find('.input-group-addon[data-dnt-action="clear-field"]').click(function() {
+    filters.find('.section.dates .input-group-addon[data-dnt-action="clear-field"]').click(function() {
         $(this).prev('input').val('');
         refreshContent(results_content.attr('data-current-page'));
     });
@@ -97,17 +97,16 @@ $(function() {
 
     if (device_is_mobile) {
         filter_omrader.find('option[value=""]').remove();
-        filter_omrader.on('change', function() {
-            filter_omrader.parents('.input-group-hidden-addon').first().removeClass('input-group-hidden-addon').addClass('input-group');
-            filter_omrader.nextAll('.input-group-addon').first().removeClass('jq-hide');
-            // Using show() will not work here, as the element should be display: table-cell
-        });
         filter_omrader.nextAll('.input-group-addon[data-dnt-action="clear-field"]').click(function() {
             filter_omrader.val([]);
             refreshContent(1);
         });
 
     } else {
+        filter_omrader.nextAll('.input-group-addon[data-dnt-action="clear-field"]').click(function() {
+            filter_omrader.select2('val', []);
+            refreshContent(results_content.attr('data-current-page'));
+        });
         filter_omrader.select2();
     }
 
@@ -122,11 +121,6 @@ $(function() {
 
     if (device_is_mobile) {
         filter_organizers.find('option[value=""]').remove();
-        filter_organizers.on('change', function() {
-            filter_organizers.parents('.input-group-hidden-addon').first().removeClass('input-group-hidden-addon').addClass('input-group');
-            filter_organizers.nextAll('.input-group-addon').first().removeClass('jq-hide');
-            // Using show() will not work here, as the element should be display: table-cell
-        });
         filter_organizers.nextAll('.input-group-addon[data-dnt-action="clear-field"]').click(function() {
             filter_organizers.val([]);
             refreshContent(1);
@@ -134,6 +128,11 @@ $(function() {
 
     } else {
         filter_organizers.select2();
+        filter_organizers.nextAll('.input-group-addon[data-dnt-action="clear-field"]').click(function() {
+            filter_organizers.select2('val', []);
+            refreshContent(results_content.attr('data-current-page'));
+        });
+
     }
 
     filter_organizers.on('change', function() {
