@@ -1,8 +1,11 @@
 {% extends "common/aktiviteter/show/layout.html" %}
 
+{% load advertisement %}
+
 {% block body %}
 
   {{ block.super }}
   {% include 'common/aktiviteter/show/content.html' %}
+  {% advertisement %}
 
 {% endblock %}
