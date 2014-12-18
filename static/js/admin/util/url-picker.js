@@ -187,7 +187,7 @@
             });
         } else if(pick_type === 'custom') {
             var url = custom_input.val().trim();
-            if(!url.startsWith('http://')) {
+            if(!url.match(/^https?:\/\//))) {
                 alert(pick_choices.attr('data-dnt-invalid-url-warning').replace(/\\n/g, '\n'));
                 return;
             }
