@@ -102,7 +102,7 @@ $(function() {
             filter_omrader.nextAll('.input-group-addon').first().removeClass('jq-hide');
             // Using show() will not work here, as the element should be display: table-cell
         });
-        filter_omrader.nextAll('.input-group-addon[data-dnt-action="empty-field"]').click(function() {
+        filter_omrader.nextAll('.input-group-addon[data-dnt-action="clear-field"]').click(function() {
             filter_omrader.val([]);
             refreshContent(1);
         });
@@ -127,7 +127,7 @@ $(function() {
             filter_organizers.nextAll('.input-group-addon').first().removeClass('jq-hide');
             // Using show() will not work here, as the element should be display: table-cell
         });
-        filter_organizers.nextAll('.input-group-addon[data-dnt-action="empty-field"]').click(function() {
+        filter_organizers.nextAll('.input-group-addon[data-dnt-action="clear-field"]').click(function() {
             filter_organizers.val([]);
             refreshContent(1);
         });
