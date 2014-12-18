@@ -23,6 +23,7 @@ class Forening(models.Model):
         (u'ung', u'Ungdom'),
         (u'fjellsport', u'DNT Fjellsport'),
         (u'senior', u'DNT Senior'),
+        (u'other', u'Andre turgrupper'),
     ]
 
     name = models.CharField(max_length=255)
