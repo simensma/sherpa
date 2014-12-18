@@ -21,9 +21,9 @@ $(function() {
 
     listing.find('[data-dnt-modal="first-visit"]').modal();
 
-    filters.find('[data-dnt-container="start-date"], [data-dnt-container="end-date"]').each(function (index, el) {
+    filters.find('input.form-control.date').each(function (index, el) {
         if (device_is_mobile) {
-            $(el).find('input').attr('type', 'date');
+            $(el).attr('type', 'date');
 
         } else {
             $(el).datepicker({
