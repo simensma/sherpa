@@ -21,9 +21,9 @@ $(function() {
 
     listing.find('[data-dnt-modal="first-visit"]').modal();
 
-    filters.find('[data-dnt-container="start-date"], [data-dnt-container="end-date"]').each(function (index, el) {
+    filters.find('input[name="start_date"], input[name="end_date"]').each(function (index, el) {
         if (device_is_mobile) {
-            $(el).find('input').attr('type', 'date');
+            $(el).attr('type', 'date');
 
         } else {
             $(el).datepicker({
@@ -34,6 +34,11 @@ $(function() {
                 forceParse: false
             });
         }
+    });
+
+    filters.find('.section.dates [data-dnt-action="clear-field"]').click(function() {
+        $(this).prev('input').val('');
+        refreshContent(results_content.attr('data-current-page'));
     });
 
     toggle_filters_and_results.find('button').bind('click', function (e) {
@@ -92,17 +97,16 @@ $(function() {
 
     if (device_is_mobile) {
         filter_omrader.find('option[value=""]').remove();
-        filter_omrader.on('change', function() {
-            filter_omrader.parents('.input-group-hidden-addon').first().removeClass('input-group-hidden-addon').addClass('input-group');
-            filter_omrader.nextAll('.input-group-addon').first().removeClass('jq-hide');
-            // Using show() will not work here, as the element should be display: table-cell
-        });
-        filter_omrader.nextAll('.input-group-addon[data-dnt-action="empty-field"]').click(function() {
+        filter_omrader.nextAll('[data-dnt-action="clear-field"]').click(function() {
             filter_omrader.val([]);
             refreshContent(1);
         });
 
     } else {
+        filter_omrader.nextAll('[data-dnt-action="clear-field"]').click(function() {
+            filter_omrader.select2('val', []);
+            refreshContent(results_content.attr('data-current-page'));
+        });
         filter_omrader.select2();
     }
 
@@ -110,25 +114,25 @@ $(function() {
         refreshContent(1);
     });
 
-    filters.find('[data-dnt-container="start-date"],[data-dnt-container="end-date"]').on('change', function() {
+    filters.find('[data-dnt-container="start-date"], [data-dnt-container="end-date"]').on('change', function() {
         // TODO: This is triggered twice if date is changed using bootstrap datepicker, should be fixed
         refreshContent(1);
     });
 
     if (device_is_mobile) {
         filter_organizers.find('option[value=""]').remove();
-        filter_organizers.on('change', function() {
-            filter_organizers.parents('.input-group-hidden-addon').first().removeClass('input-group-hidden-addon').addClass('input-group');
-            filter_organizers.nextAll('.input-group-addon').first().removeClass('jq-hide');
-            // Using show() will not work here, as the element should be display: table-cell
-        });
-        filter_organizers.nextAll('.input-group-addon[data-dnt-action="empty-field"]').click(function() {
+        filter_organizers.nextAll('[data-dnt-action="clear-field"]').click(function() {
             filter_organizers.val([]);
             refreshContent(1);
         });
 
     } else {
         filter_organizers.select2();
+        filter_organizers.nextAll('[data-dnt-action="clear-field"]').click(function() {
+            filter_organizers.select2('val', []);
+            refreshContent(results_content.attr('data-current-page'));
+        });
+
     }
 
     filter_organizers.on('change', function() {
@@ -225,6 +229,10 @@ $(function() {
     function togglePositionSearchWarning() {
         var is_position_search = !!$('[name="ssr_id"]').val();
         if (is_position_search) {
+            var selected_position_data = $('[name="ssr_id"]').select2('data');
+            if (!!selected_position_data && !!selected_position_data.stedsnavn) {
+                $('span[data-dnt-placeholder-for]').html(selected_position_data.stedsnavn);
+            }
             $('.alert.alert-warning.position-search-warning').show();
 
         } else {
