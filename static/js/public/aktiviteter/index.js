@@ -38,6 +38,7 @@ $(function() {
 
     filters.find('.input-group-addon[data-dnt-action="clear-field"]').click(function() {
         $(this).prev('input').val('');
+        refreshContent(results_content.attr('data-current-page'));
     });
 
     toggle_filters_and_results.find('button').bind('click', function (e) {
