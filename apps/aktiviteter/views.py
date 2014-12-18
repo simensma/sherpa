@@ -18,7 +18,11 @@ from turbasen.models import Omrade
 logger = logging.getLogger('sherpa')
 
 def index(request):
-    filter, aktivitet_dates = filter_aktivitet_dates(request.GET)
+    query = request.GET.copy()
+    if not request.GET.get('organizers', '') and request.site.forening.id != Forening.DNT_CENTRAL_ID:
+        query['organizers'] = u'%s:%s' % (u'forening', request.site.forening.id)
+
+    filter, aktivitet_dates = filter_aktivitet_dates(query)
     aktivitet_dates_pagenav = paginate_aktivitet_dates(filter, aktivitet_dates)
 
     # Usually, the 'sentral' type is sorted first, but in this case we want it last
@@ -61,7 +65,7 @@ def filter(request):
     if not request.is_ajax() or not request.method == 'POST':
         return redirect('aktiviteter.views.index')
 
-    filter, aktivitet_dates = filter_aktivitet_dates(request.POST)
+    filter, aktivitet_dates = filter_aktivitet_dates(request.POST.copy())
     aktivitet_dates_pagenav = paginate_aktivitet_dates(filter, aktivitet_dates)
 
     context = RequestContext(request, {

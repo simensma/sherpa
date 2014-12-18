@@ -119,7 +119,7 @@
             <h3>Turområde</h3>
             <div class="{% if filter.omrader %}input-group{% else %}input-group-hidden-addon{% endif %}">
               <select class="form-control" name="omrader" data-placeholder="Velg turområder..." multiple>
-                <option value=""></option>
+                <option value=""> </option>
                 {% for omrade in omrader %}
                   {% if filter.omrade and omrade.id in filter.omrader %}
                     <option value="{{ omrade.object_id }}" selected="selected">{{ omrade.navn }}</option>
@@ -171,13 +171,13 @@
             <div class="{% if filter.organizers %}input-group{% else %}input-group-hidden-addon{% endif %}">
 
               <select class="form-control" name="organizers" data-placeholder="Velg arrangør..." multiple>
-                <option value=""></option>
+                <option value=""> </option>
 
                 {% for type in all_foreninger %}
                   {% if type.foreninger|length > 0 %}
                     <optgroup label="{{ type.name }}">
                       {% for forening in type.foreninger %}
-                        {% if filter.foreninger and "forening:"|add:forening.id in filter.foreninger %}
+                        {% if filter.foreninger and forening.id in filter.foreninger %}
                           <option value="forening:{{ forening.id }}" selected="selected">
                             {{ forening.get_sentral_name }}
                           </option>
@@ -193,7 +193,7 @@
 
                 <optgroup label="Hytter">
                   {% for cabin in cabins %}
-                    {% if filter.foreninger and "cabin:"|add:cabin.id in filter.foreninger %}
+                    {% if filter.cabins and cabin.id in filter.cabins %}
                       <option value="cabin:{{ cabin.id }}" selected="selected">{{ cabin.name }}</option>
                     {% else %}
                       <option value="cabin:{{ cabin.id }}">{{ cabin.name }}</option>

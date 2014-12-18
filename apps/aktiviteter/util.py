@@ -10,8 +10,11 @@ from aktiviteter.models import Aktivitet, AktivitetDate
 
 HITS_PER_PAGE = 20
 
-def filter_aktivitet_dates(query):
-    filter = query.copy()
+def filter_aktivitet_dates(filter):
+
+    # To the next mainainer: The filter param is a mutateable query dict such that this util method
+    # can split strings into lists which the template logic is dependent upon. If you find a better
+    # way, please refactor this code.
 
     dates = AktivitetDate.get_published().prefetch_related(
         'aktivitet',
@@ -87,29 +90,29 @@ def filter_aktivitet_dates(query):
     if filter.get('organizers', ''):
         filter['organizers'] = filter['organizers'].split(',')
 
-        foreninger = []
-        cabins = []
+        filter.foreninger = []
+        filter.cabins = []
 
         for organizer in filter['organizers']:
             try:
                 type, id = organizer.split(':')
                 if type == 'forening':
-                    foreninger.append(int(id))
+                    filter.foreninger.append(int(id))
                 elif type == 'cabin':
-                    cabins.append(int(id))
+                    filter.cabins.append(int(id))
             except ValueError:
                 continue
 
-        if foreninger:
+        if filter.foreninger:
             dates = dates.filter(
-                Q(aktivitet__forening__in=foreninger) |
-                Q(aktivitet__co_foreninger__in=foreninger)
+                Q(aktivitet__forening__in=filter.foreninger) |
+                Q(aktivitet__co_foreninger__in=filter.foreninger)
             )
 
-        if cabins:
+        if filter.cabins:
             dates = dates.filter(
-                Q(aktivitet__forening_cabin__in=cabins) |
-                Q(aktivitet__co_foreninger_cabin__in=cabins)
+                Q(aktivitet__forening_cabin__in=filter.cabins) |
+                Q(aktivitet__co_foreninger_cabin__in=filter.cabins)
             )
 
     dates = dates.distinct().order_by(
