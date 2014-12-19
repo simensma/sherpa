@@ -131,6 +131,15 @@
 
         <div class="col-md-8 pull-left">
 
+          {% if aktivitet_date.has_departed %}
+            <div class="alert alert-danger">
+              <strong>OBS!</strong> Denne turdatoen har passert!
+              {% if aktivitet_date.get_other_dates_ordered|length > 0 %}
+                Fortvil ikke, denne aktiviteten har <strong>alternative datoer</strong> som du kan delta på.
+              {% endif %}
+            </div>
+          {% endif %}
+
           <div class="description">
             <p>
               {% if aktivitet_date.aktivitet.is_imported %}
