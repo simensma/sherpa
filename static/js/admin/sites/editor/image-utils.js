@@ -4,7 +4,7 @@ var PREDEFINED_CROP_RATIOS = {
     Widescreen:"16:9",
     Landskap:"12:8",
     Portrett:"3:4",
-    Firkant:"1:1"
+    Kvadrat:"1:1"
 };
 var DEFAULT_CAROUSEL_CROP_RATIO = PREDEFINED_CROP_RATIOS.Widescreen;
 var DEFAULT_CROP_RATIO = PREDEFINED_CROP_RATIOS.Fri;
