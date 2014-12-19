@@ -379,7 +379,10 @@ class AktivitetDate(models.Model):
         return self.aktivitet.dates.exclude(id=self.id)
 
     def get_other_dates_ordered(self):
-        return self.other_dates().order_by('-start_date')
+        return self.other_dates().exclude(start_date__lt=date.today()).order_by('start_date')
+
+    def get_future_dates_ordered(self):
+        return self.aktivitet.dates.exclude(start_date__lt=date.today()).order_by('start_date')
 
     def get_duration_days(self):
         diff = self.end_date - self.start_date
