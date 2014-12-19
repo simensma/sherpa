@@ -11,4 +11,5 @@ static/css/
 *.sublime-project
 *.sublime-workspace
 *.swp
+*.swo
 .DS_Store
