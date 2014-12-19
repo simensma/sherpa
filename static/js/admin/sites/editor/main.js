@@ -339,6 +339,31 @@
             template: popover_template_html,
             trigger: 'click',
         });
+
+        article.find('.add-content').tooltip({
+            placement: 'top'
+        });
+
+        $(document).on('click', '.add-content', function () {
+            $(this).tooltip('hide');
+        });
+
+        $('.content.html.editable').on('paste', function (e) {
+            setTimeout(function (e) {
+                document.execCommand('selectAll', false, null);
+
+                $remove_format_button = $('.toolbar.toolbar-text-formatter.text-formatter a.button.remove-format');
+
+                if (!!$remove_format_button) {
+                    $remove_format_button.click();
+
+                } else {
+                    document.execCommand('removeformat', false, null);
+                }
+
+            }.bind(this, e), 0);
+        });
+
     };
 
     // Insert the specified content at the specified position
