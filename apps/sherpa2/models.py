@@ -619,7 +619,7 @@ class Activity(models.Model):
 
                     aktivitet.images.add(AktivitetImage(
                         url=image.get_url(),
-                        text='',
+                        text=image.description,
                         photographer='',
                         order=order,
                         sherpa2_url=old_image['url'],
