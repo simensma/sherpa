@@ -34,22 +34,26 @@
                   {% endif %}
                 </dd>
 
-                {% if aktivitet_date.other_dates|length > 0 %}
+                {% if aktivitet_date.get_other_dates_ordered|length > 0 %}
                   <dt>Alternative datoer</dt>
                   <dd>
-                    {% if aktivitet_date.other_dates|length > 1 %}
+                    {% if aktivitet_date.get_other_dates_ordered|length > 1 %}
                       <a href="javascript:undefined" data-dnt-trigger="alternative-dates">
-                        Vis {{ aktivitet_date.other_dates|length }} andre datoer
+                        Vis {{ aktivitet_date.get_other_dates_ordered|length }} andre datoer
                       </a>
                     {% endif %}
                     <span
-                      {% if aktivitet_date.other_dates|length > 1 %}class="jq-hide"{% endif %}
+                      {% if aktivitet_date.get_other_dates_ordered|length > 1 %}class="jq-hide"{% endif %}
                       data-dnt-container="alternative-dates"><br>
 
-                      {% for date in aktivitet_date.get_other_dates_ordered %}
-                        <a href="{% url 'aktiviteter.views.show' date.id %}">
-                          {{ date.start_date|date_fromto:date.end_date }}
-                        </a>
+                      {% for date in aktivitet_date.get_future_dates_ordered %}
+                        {% if date.id == aktivitet_date.id %}
+                          <strong>{{ date.start_date|date_fromto:date.end_date }}</strong>
+                        {% else %}
+                          <a href="{% url 'aktiviteter.views.show' date.id %}">
+                            {{ date.start_date|date_fromto:date.end_date }}
+                          </a>
+                        {% endif %}
                         {% if not forloop.last %}<br>{% endif %}
                       {% endfor %}
                     </span>
