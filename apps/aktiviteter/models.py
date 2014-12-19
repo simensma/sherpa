@@ -412,6 +412,7 @@ class AktivitetDate(models.Model):
         today = date.today()
         return AktivitetDate.objects.filter(aktivitet__published=True, aktivitet__pub_date__lte=today)
 
+# @TODO This should have a forign key to admin.Image!
 class AktivitetImage(models.Model):
     aktivitet = models.ForeignKey(Aktivitet, related_name='images')
     url = models.CharField(max_length=2048)
