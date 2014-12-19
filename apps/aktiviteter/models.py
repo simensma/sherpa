@@ -1,5 +1,5 @@
 # encoding: utf-8
-from datetime import date
+from datetime import date, datetime
 import json
 
 from django.contrib.gis.db import models
@@ -273,6 +273,12 @@ class AktivitetDate(models.Model):
     #
     # Signup methods
     #
+
+    def has_departed(self):
+        return self.start_date < datetime.today()
+
+    def has_returned(self):
+        return self.end_date < datetime.today()
 
     def signup_method(self):
         if not self.signup_enabled:
