@@ -579,8 +579,9 @@ class Activity(models.Model):
             try:
                 aktivitet_image = aktivitet.images.get(sherpa2_url=old_image['url'])
 
-                # Yeah, it already exists - just update the order
+                # Yeah, it already exists - just update the order and text
                 aktivitet_image.order = order
+                aktivitet_image.text = old_image['title']
                 aktivitet_image.save()
             except AktivitetImage.DoesNotExist:
                 # Doesn't exist - download the image and create it in our image archive
