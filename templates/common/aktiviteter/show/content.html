@@ -14,6 +14,7 @@
         <h1>{{ aktivitet_date.aktivitet.title|safe }}</h1>
       </div>
     </div>
+
     <div class="content col-lg-12">
       <div class="row">
         <div class="meta-container col-sm-4 pull-right">
@@ -83,7 +84,16 @@
                 {% endwith %}
 
                 <dt>Turområde</dt>
-                <dd>{% for omrade in aktivitet_date.aktivitet.get_omrader %}{{ omrade.navn }}{% if not forloop.last %}, {% endif %}{% endfor %} {% if aktivitet_date.aktivitet.start_point %}<a href="#map">(se kart)</a>{% endif %}</dd>
+                <dd>
+                  {% for omrade in aktivitet_date.aktivitet.get_omrader %}
+                    {{ omrade.navn }}
+                    {% if not forloop.last %}, {% endif %}
+                  {% endfor %}
+
+                  {% if aktivitet_date.aktivitet.start_point %}
+                    <a href="#map">(se kart)</a>
+                  {% endif %}
+                </dd>
 
                 {% if aktivitet_date.signup_enabled and not aktivitet_date.aktivitet.is_imported %}
                   <dt>Påmeldte</dt>
