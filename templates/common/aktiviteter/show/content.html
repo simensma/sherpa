@@ -14,6 +14,7 @@
         <h1>{{ aktivitet_date.aktivitet.title|safe }}</h1>
       </div>
     </div>
+
     <div class="content col-lg-12">
       <div class="row">
         <div class="meta-container col-sm-4 pull-right">
@@ -34,22 +35,26 @@
                   {% endif %}
                 </dd>
 
-                {% if aktivitet_date.other_dates|length > 0 %}
+                {% if aktivitet_date.get_other_dates_ordered|length > 0 %}
                   <dt>Alternative datoer</dt>
                   <dd>
-                    {% if aktivitet_date.other_dates|length > 1 %}
+                    {% if aktivitet_date.get_other_dates_ordered|length > 1 %}
                       <a href="javascript:undefined" data-dnt-trigger="alternative-dates">
-                        Vis {{ aktivitet_date.other_dates|length }} andre datoer
+                        Vis {{ aktivitet_date.get_other_dates_ordered|length }} andre datoer
                       </a>
                     {% endif %}
                     <span
-                      {% if aktivitet_date.other_dates|length > 1 %}class="jq-hide"{% endif %}
+                      {% if aktivitet_date.get_other_dates_ordered|length > 1 %}class="jq-hide"{% endif %}
                       data-dnt-container="alternative-dates"><br>
 
-                      {% for date in aktivitet_date.get_other_dates_ordered %}
-                        <a href="{% url 'aktiviteter.views.show' date.id %}">
-                          {{ date.start_date|date_fromto:date.end_date }}
-                        </a>
+                      {% for date in aktivitet_date.get_future_dates_ordered %}
+                        {% if date.id == aktivitet_date.id %}
+                          <strong>{{ date.start_date|date_fromto:date.end_date }}</strong>
+                        {% else %}
+                          <a href="{% url 'aktiviteter.views.show' date.id %}">
+                            {{ date.start_date|date_fromto:date.end_date }}
+                          </a>
+                        {% endif %}
                         {% if not forloop.last %}<br>{% endif %}
                       {% endfor %}
                     </span>
@@ -79,7 +84,16 @@
                 {% endwith %}
 
                 <dt>Turområde</dt>
-                <dd>{% for omrade in aktivitet_date.aktivitet.get_omrader %}{{ omrade.navn }}{% if not forloop.last %}, {% endif %}{% endfor %} {% if aktivitet_date.aktivitet.start_point %}<a href="#map">(se kart)</a>{% endif %}</dd>
+                <dd>
+                  {% for omrade in aktivitet_date.aktivitet.get_omrader %}
+                    {{ omrade.navn }}
+                    {% if not forloop.last %}, {% endif %}
+                  {% endfor %}
+
+                  {% if aktivitet_date.aktivitet.start_point %}
+                    <a href="#map">(se kart)</a>
+                  {% endif %}
+                </dd>
 
                 {% if aktivitet_date.signup_enabled and not aktivitet_date.aktivitet.is_imported %}
                   <dt>Påmeldte</dt>
@@ -97,7 +111,7 @@
 
             {% if not aktivitet_date.signup_enabled %}
               <div class="signup no-signup">
-                Det er ingen påmelding til denne turen.
+                <!-- Det er ingen påmelding til denne turen. -->
               </div>
             {% elif user_is_participating %}
               {# TODO Present overview and signup-cancelling options #}
@@ -126,6 +140,15 @@
         </div>
 
         <div class="col-md-8 pull-left">
+
+          {% if aktivitet_date.has_departed %}
+            <div class="alert alert-danger">
+              <strong>OBS!</strong> Denne turdatoen har passert!
+              {% if aktivitet_date.get_other_dates_ordered|length > 0 %}
+                Fortvil ikke, denne aktiviteten har <strong>alternative datoer</strong> som du kan delta på.
+              {% endif %}
+            </div>
+          {% endif %}
 
           <div class="description">
             <p>
