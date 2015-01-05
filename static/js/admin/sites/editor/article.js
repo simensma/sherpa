@@ -23,27 +23,50 @@ $(function() {
         });
     });
 
-    /* Change thumbnail-image */
-    if(header.find("input[name='thumbnail'][value='default'][checked]").length > 0 ||
-        header.find("input[name='thumbnail'][value='none'][checked]").length > 0) {
-        header.find("img.article-thumbnail").hide();
+    // Is use default image as article thumbnail preview checked?
+    if (header.find('input[name="thumbnail"][value="default"][checked]').length > 0) {
+        header.find('.article-thumbnail-preview.default').show();
+        header.find('.article-thumbnail-preview.custom').hide();
     }
 
-    header.find("input[name='thumbnail'][value='none']").change(function() {
+    // Is use custom image as article thumbnail preview checked?
+    if (header.find('input[name="thumbnail"][value="custom"][checked]').length > 0) {
+        header.find('.article-thumbnail-preview.default').hide();
+        header.find('.article-thumbnail-preview.custom').show();
+    }
+
+    // Is use no article thumbnail preview checked?
+    if (header.find('input[name="thumbnail"][value="none"][checked]').length > 0) {
+        header.find('.article-thumbnail-preview.default').hide();
+        header.find('.article-thumbnail-preview.custom').hide();
+    }
+
+    // When selecting use no article thumbnail
+    header.find('input[name="thumbnail"][value="none"]').change(function() {
         if($(this).is(':checked')) {
-            header.find("img.article-thumbnail").hide();
+            header.find('.article-thumbnail-preview').hide();
         }
     });
 
+    // When selecting use default article thumbnail
     header.find("input[name='thumbnail'][value='default']").change(function(e) {
         if($(this).is(':checked')) {
-            header.find("img.article-thumbnail").hide();
+            header.find('.article-thumbnail-preview.default').show();
+            header.find('.article-thumbnail-preview.custom').hide();
+
+            var $first_image = article.find('.content.image img').first();
+            if (!!$first_image) {
+                var first_image_url = $first_image.attr('src');
+                header.find('.article-thumbnail-preview.default img').attr('src', first_image_url);
+            }
         }
     });
 
+    // When selecting use custom article thumbnail
     header.find("input[name='thumbnail'][value='new']").change(function() {
         if($(this).is(':checked')) {
-            header.find("img.article-thumbnail").show();
+            header.find('.article-thumbnail-preview.default').hide();
+            header.find('.article-thumbnail-preview.custom').show();
         }
     });
 
