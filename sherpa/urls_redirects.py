@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     url(r'^fjelltreff/$', 'page.views.perform_redirect', kwargs={'url': '/fjelltreffen/', 'permanent': True}),
     url(r'^merkehandboka/$', 'page.views.perform_redirect', kwargs={'url': 'http://www.merkehandboka.no/', 'permanent': True}),
     url(r'^nasjonalt-skiltprosjekt/$', 'page.views.perform_redirect', kwargs={'url': 'http://www.turskiltprosjektet.no/', 'permanent': True}),
+    url(r'^turplanlegger/$', 'page.views.perform_redirect', kwargs={'url': 'http://ut.no/', 'permanent': True}),
 
     # Keep old admin-ui for now (difference is /admin/ vs /sherpa/)
     url(r'^admin/(?P<slug>.*)', 'page.views.perform_redirect', kwargs={'url': 'http://%s/admin/' % settings.OLD_SITE}),
