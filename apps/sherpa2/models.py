@@ -574,12 +574,16 @@ class Activity(models.Model):
             obj, created = Tag.objects.get_or_create(name=tag)
             aktivitet.category_tags.add(obj)
 
+        # Remove all existing images by default
+        images_to_delete = [image.id for image in aktivitet.images.all()]
+
         for order, old_image in enumerate(converted_images):
             # Check if this image has already been imported
             try:
                 aktivitet_image = aktivitet.images.get(sherpa2_url=old_image['url'])
 
-                # Yeah, it already exists - just update the order and text
+                # Yeah, it already exists - just update the order and text, and don't remove it
+                images_to_delete.remove(aktivitet_image.id)
                 aktivitet_image.order = order
                 aktivitet_image.text = old_image['title']
                 aktivitet_image.save()
@@ -636,7 +640,7 @@ class Activity(models.Model):
                     pass
 
         # All converted images are accounted for; delete all others
-        aktivitet.images.filter(order__gte=len(converted_images)).delete()
+        aktivitet.images.filter(id__in=images_to_delete).delete()
 
         # Save all new relations
         aktivitet.save()
