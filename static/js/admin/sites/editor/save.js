@@ -210,16 +210,16 @@ $(function() {
             data.authors = JSON.stringify(authors);
 
             // Thumbnail
-            if(header.find("input[name='thumbnail'][value='none']").is(":checked")) {
+            if (header.find('input[name="thumbnail"][value="none"]').is(':checked')) {
                 data.thumbnail = 'none';
-            } else if(header.find("input[name='thumbnail'][value='default']").is(":checked")) {
+            } else if (header.find('input[name="thumbnail"][value="default"]').is(':checked')) {
                 data.thumbnail = 'default';
-            } else if(header.find("input[name='thumbnail'][value='new']").is(":checked")) {
+            } else if (header.find('input[name="thumbnail"][value="new"]').is(':checked')) {
                 data.thumbnail = 'specified';
-                data.thumbnail_url = header.find("img.article-thumbnail").attr('src');
+                data.thumbnail_url = header.find('.article-thumbnail-preview.custom img').attr('src');
 
                 // Verify that the user isn't saving a placeholder image
-                if(data.thumbnail_url.contains(placeholder_image_path) && !abort) {
+                if (data.thumbnail_url.contains(placeholder_image_path) && !abort) {
                     alert(placeholder_image_warning);
                     abort = true;
                 }
