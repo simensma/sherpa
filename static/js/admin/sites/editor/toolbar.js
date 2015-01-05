@@ -335,4 +335,10 @@ $(function() {
         }
     });
 
+    $(document).on('focus', 'div.content.html.editable', function () {
+        if (text_formatter.is(':hidden')) {
+            showTextFormatter();
+        }
+    });
+
 });
