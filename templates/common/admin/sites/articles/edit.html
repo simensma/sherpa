@@ -175,7 +175,7 @@
                     <img
                       class="article-thumbnail"
                       src="
-                        {% if not version.get_thumbnail or version.variant.article.thumbnail %}
+                        {% if not version.get_thumbnail.url or version.variant.article.thumbnail %}
                           {{ editor_placeholder_image }}
                         {% else %}
                           {{ version.get_thumbnail.url }}
