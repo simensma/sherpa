@@ -655,8 +655,8 @@ class Activity(models.Model):
             for sherpa2_date in self.dates.all():
                 matched = False
                 try:
-                    start_date = sherpa2_date.convert_start_date()
-                    end_date = sherpa2_date.convert_end_date()
+                    start_date = sherpa2_date.convert_start_date().date()
+                    end_date = sherpa2_date.convert_end_date().date()
                 except ConversionImpossible:
                     if sherpa2_date.online != ActivityDate.ONLINE_DISABLED:
                         # Couldn't convert the date and this date is published; raise the exception
