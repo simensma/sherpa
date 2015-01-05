@@ -325,12 +325,14 @@ $(function() {
         var clicked_inside_editable_element = ($clicked_element.hasClass('editable') || !!$clicked_element.parents('.editable').length);
         var clicked_inside_text_formatter = !!($clicked_element.parents('.text-formatter').length);
 
+        var html_editables_with_focus = $('div.content.editable:focus');
+
         if (clicked_inside_editable_element || clicked_inside_text_formatter) {
             if (text_formatter.is(':hidden')) {
                 showTextFormatter();
             }
 
-        } else {
+        } else if (html_editables_with_focus.length === 0) {
             hideTextFormatter();
         }
     });
