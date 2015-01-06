@@ -235,9 +235,7 @@ def register_membership(request):
             user.save()
 
             # Save the chosen email in Focus
-            actor = user.get_actor()
-            actor.email = chosen_email
-            actor.save()
+            user.get_actor().set_email(chosen_email)
 
             return redirect('user.views.home')
 
