@@ -285,6 +285,6 @@ class FocusCountry(models.Model):
         countries = FocusCountry.objects.all()
         return {
             'norway': countries.get(code='NO'),
-            'scandinavia': countries.filter(scandinavian=True).exclude(code='NO'),
-            'other': countries.filter(scandinavian=False)
+            'scandinavia': countries.filter(scandinavian=True).exclude(code='NO').order_by('name'),
+            'other': countries.filter(scandinavian=False).order_by('name')
         }
