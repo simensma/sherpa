@@ -58,7 +58,7 @@ def verify_memberid(ip_address, memberid, country_code, zipcode):
         if not actor.is_personal_member():
             raise ActorIsNotPersonalMember
 
-        return actor
+        return User.get_or_create_inactive(memberid=actor.memberid)
 
     # No matching actors, check for pending users
     enrollment = Enrollment.get_active().filter(memberid=memberid)
@@ -68,7 +68,7 @@ def verify_memberid(ip_address, memberid, country_code, zipcode):
         enrollment = enrollment.filter(zipcode=zipcode)
 
     if enrollment.exists():
-        return User.get_or_create_inactive(memberid=memberid, include_pending=True).get_actor()
+        return User.get_or_create_inactive(memberid=memberid, include_pending=True)
 
     # No matches
     raise NoMatchingMemberid

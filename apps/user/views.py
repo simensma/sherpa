@@ -186,7 +186,8 @@ def register_membership(request):
         return render(request, 'common/user/account/register_membership.html', context)
     elif request.method == 'POST':
         try:
-            actor = verify_memberid(
+            user = request.user
+            verified_user = verify_memberid(
                 ip_address=request.META['REMOTE_ADDR'],
                 memberid=request.POST['memberid'],
                 country_code=request.POST['country'],
@@ -195,11 +196,11 @@ def register_membership(request):
 
             if request.POST['email-equal'] == 'true':
                 # Focus-email is empty, or equal to this email, so just use it
-                chosen_email = request.user.get_email()
+                chosen_email = user.get_email()
             elif request.POST['email-choice'] == 'sherpa':
-                chosen_email = request.user.get_email()
+                chosen_email = user.get_email()
             elif request.POST['email-choice'] == 'focus':
-                chosen_email = actor.email
+                chosen_email = verified_user.get_email()
             elif request.POST['email-choice'] == 'custom':
                 # Check that the email address is valid
                 if not validator.email(request.POST['email']):
@@ -210,42 +211,20 @@ def register_membership(request):
                 raise Exception("Missing email-equal / email-choise-parameters")
 
             # Check that the user doesn't already have an account
-            if User.get_users(
-                include_expired=True,
-            ).filter(
-                memberid=request.POST['memberid'],
-                is_inactive=False,
-            ).exists():
+            if not verified_user.is_inactive:
                 messages.error(request, 'user_exists')
                 return redirect('user.views.register_membership')
 
             # Ok, registration successful, update the user
-            user = request.user
 
-            try:
-                # If this memberid is already an imported inactive member, merge them
-                other_user = User.get_users(
-                    include_expired=True,
-                ).get(
-                    memberid=request.POST['memberid'],
-                    is_inactive=True,
-                )
-                user.merge_with(other_user, move_password=True) # This will delete the other user
-            except User.DoesNotExist:
-                # It could be a pending user. If inactive, that's fine. If active, they already
-                # gave it a password - but they authenticated anyway, so we should still merge them.
-                try:
-                    other_user = User.get_users(
-                        include_pending=True,
-                        include_expired=True,
-                    ).get(
-                        memberid=request.POST['memberid'],
-                        is_pending=True,
-                    )
-                    user.merge_with(other_user, move_password=True) # This will delete the other user
-                except User.DoesNotExist:
-                    # All right then, the user doesn't exist.
-                    pass
+            # The verified user might be pending. The merge method only merges related objects, so if that's the case,
+            # set the new user's state to pending.
+            if verified_user.is_pending:
+                user.is_pending = True
+                user.save()
+
+            # The verification lookup will ensure there's already an inactive user, pending or not, so merge them
+            user.merge_with(verified_user, move_password=True) # This will delete the other user
 
             # Point the user to its corresponding memberid and clear other personal information
             user.identifier = request.POST['memberid']
@@ -256,8 +235,7 @@ def register_membership(request):
             user.save()
 
             # Save the chosen email in Focus
-            actor.email = chosen_email
-            actor.save()
+            user.get_actor().set_email(chosen_email)
 
             return redirect('user.views.home')
 
