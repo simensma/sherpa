@@ -2,6 +2,7 @@
 from datetime import datetime, date
 
 from django.contrib.gis.db import models
+from django.core.cache import cache
 
 from admin.models import Campaign
 from articles.models import Article
@@ -282,9 +283,13 @@ class FocusCountry(models.Model):
 
     @staticmethod
     def get_sorted():
-        countries = FocusCountry.objects.all()
-        return {
-            'norway': countries.get(code='NO'),
-            'scandinavia': countries.filter(scandinavian=True).exclude(code='NO').order_by('name'),
-            'other': countries.filter(scandinavian=False).order_by('name')
-        }
+        countries = cache.get('focuscountries.sorted')
+        if countries is None:
+            all_countries = FocusCountry.objects.all()
+            countries = {
+                'norway': all_countries.get(code='NO'),
+                'scandinavia': all_countries.filter(scandinavian=True).exclude(code='NO').order_by('name'),
+                'other': all_countries.filter(scandinavian=False).order_by('name')
+            }
+            cache.set('focuscountries.sorted', countries, 60 * 60 * 24 * 7)
+        return countries
