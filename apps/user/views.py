@@ -216,6 +216,13 @@ def register_membership(request):
                 return redirect('user.views.register_membership')
 
             # Ok, registration successful, update the user
+
+            # The verified user might be pending. The merge method only merges related objects, so if that's the case,
+            # set the new user's state to pending.
+            if verified_user.is_pending:
+                user.is_pending = True
+                user.save()
+
             # The verification lookup will ensure there's already an inactive user, pending or not, so merge them
             user.merge_with(verified_user, move_password=True) # This will delete the other user
 
