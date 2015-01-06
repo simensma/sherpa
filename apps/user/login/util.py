@@ -92,49 +92,20 @@ def attempt_registration(request):
         return None, 'invalid_email'
 
     try:
-        actor = verify_memberid(
+        user = verify_memberid(
             ip_address=request.META['REMOTE_ADDR'],
             memberid=request.POST['memberid'],
             country_code=request.POST['country'],
             zipcode=request.POST['zipcode'],
         )
 
-        # Check that the user doesn't already have an account.
-        # Note that we're treating expired users as regular users here because the Actor lookup above
-        # confirmed that they're not expired anymore.
-        if User.get_users(
-            include_pending=True,
-            include_expired=True,
-        ).filter(
-            memberid=request.POST['memberid'],
-            is_inactive=False,
-        ).exists():
+        if not user.is_inactive:
             return None, 'user_exists'
 
-        actor.set_email(request.POST['email'].strip())
-
-        try:
-            # Check if the user's already created as inactive
-            user = User.get_users(
-                include_pending=True,
-                include_expired=True,
-            ).get(
-                memberid=request.POST['memberid'],
-                is_inactive=True,
-            )
-
-            # This user is not expired, fix it if current state happens to be incorrect
-            if user.is_expired:
-                user.is_expired = False
-
-            user.is_inactive = False
-            user.set_password(request.POST['password'])
-            user.save()
-        except User.DoesNotExist:
-            # New user
-            user = User(identifier=actor.memberid, memberid=actor.memberid)
-            user.set_password(request.POST['password'])
-            user.save()
+        user.get_actor().set_email(request.POST['email'].strip())
+        user.is_inactive = False
+        user.set_password(request.POST['password'])
+        user.save()
 
         authenticate(user=user)
         log_user_in(request, user)

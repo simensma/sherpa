@@ -157,39 +157,18 @@ def verify_memberid(request):
         raise PermissionDenied
 
     try:
-        actor = verify_memberid_util(
+        user = verify_memberid_util(
             ip_address=request.META['REMOTE_ADDR'],
             memberid=request.POST['memberid'],
             country_code=request.POST['country'],
             zipcode=request.POST['zipcode'],
         )
 
-        # Check whether or not the user already has an account.
-        # Note that we're treating expired users as regular users here because the Actor lookup above
-        # confirmed that they're not expired anymore.
-        try:
-            user = User.get_users(
-                include_pending=True,
-                include_expired=True,
-            ).get(
-                memberid=request.POST['memberid'],
-                is_inactive=False,
-            )
-
-            # This user is not expired, fix it if current state happens to be incorrect
-            if user.is_expired:
-                user.is_expired = False
-                user.save()
-
-            user_exists = True
-        except User.DoesNotExist:
-            user_exists = False
-
         return HttpResponse(json.dumps({
             'exists': True,
-            'name': actor.get_full_name(),
-            'email': actor.get_email(),
-            'user_exists': user_exists,
+            'name': user.get_full_name(),
+            'email': user.get_email(),
+            'user_exists': not user.is_inactive,
         }))
 
     except MemberidLookupsExceeded:
