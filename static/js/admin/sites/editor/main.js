@@ -348,7 +348,7 @@
             $(this).tooltip('hide');
         });
 
-        $('.content.html.editable').on('paste', function (e) {
+        $('.content.editable').on('paste', function (e) {
             setTimeout(function (e) {
                 document.execCommand('selectAll', false, null);
 
