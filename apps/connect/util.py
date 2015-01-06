@@ -21,7 +21,7 @@ logger = logging.getLogger('sherpa')
 
 def get_request_data(request):
     if not request.GET.get('client', '') in settings.DNT_CONNECT:
-        logger.warning(u"DNT Connect: Mangler 'client' GET parameter",
+        logger.warning(u"DNT Connect: Manglende eller feil 'client' GET parameter",
             extra={'request': request}
         )
         raise PermissionDenied
