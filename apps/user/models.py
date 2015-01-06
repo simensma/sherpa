@@ -811,6 +811,12 @@ class User(AbstractBaseUser):
                 existing_user.is_expired = False
                 existing_user.save()
 
+            if not existing_user.is_pending:
+                # Oh, what happened here? Since our context is that a corresponding actor doesn't exist (see method
+                # comment), this user should be pending, so fix it and let them pass
+                existing_user.is_pending = True
+                existing_user.save()
+
             return existing_user
         except User.DoesNotExist:
             user = User(
