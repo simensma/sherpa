@@ -89,8 +89,18 @@ $(function() {
                     photographer: photographer,
                     crop: json_content.crop,
                 }));
-            },
+
+                if (!!json_content.crop) {
+                    ImageCropper.cropImage(
+                        json_content.crop,
+                        image_content.find('img'),
+                        image_content,
+                        image_content.parents('div.column').width()
+                    );
+                }
+            }
         });
+
     });
 
     $(document).on('click', article.selector + ' div.content-control.edit-content', function() {

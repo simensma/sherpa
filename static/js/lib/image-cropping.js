@@ -40,6 +40,9 @@
         $image.css('margin-left', '-' + offset_left + 'px');
         $image.css('margin-top', '-' + offset_top + 'px');
         $container.css('height', selection_height * scaled_height + 'px');
+
+        // Add class `cropped`
+        $image.addClass('cropped');
     };
 
 }(window.ImageCropper = window.ImageCropper || {}, jQuery ));
