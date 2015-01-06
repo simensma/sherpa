@@ -247,19 +247,17 @@ def register_membership(request):
                     # All right then, the user doesn't exist.
                     pass
 
+            # Point the user to its corresponding memberid and clear other personal information
+            user.identifier = request.POST['memberid']
             user.memberid = request.POST['memberid']
+            user.first_name = ''
+            user.last_name = ''
+            user.email = ''
             user.save()
 
             # Save the chosen email in Focus
             actor.email = chosen_email
             actor.save()
-
-            # Reset the User-object state, this data will come from Focus
-            request.user.identifier = request.POST['memberid']
-            request.user.first_name = ''
-            request.user.last_name = ''
-            request.user.email = ''
-            request.user.save()
 
             return redirect('user.views.home')
 
