@@ -102,10 +102,14 @@
                     </button>
                   </td>
                   <td>
-                    {{ active_site.domain }}/<strong>{{ redirect.path }}</strong>
+                    <a href="https://{{ active_site.domain }}/{{ redirect.path }}">
+                      {{ active_site.domain }}/<strong>{{ redirect.path }}</strong>
+                    </a>
                   </td>
                   <td>
-                    {{ redirect.destination }}
+                    <a href="{{ redirect.destination }}">
+                      {{ redirect.destination }}
+                    </a>
                   </td>
                 </tr>
               {% endfor %}
