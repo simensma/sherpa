@@ -11,7 +11,7 @@ urlpatterns = patterns('admin.sites.views',
     url(r'^(?P<site>\d+)/sider/', include('admin.sites.pages.urls')),
     url(r'^(?P<site>\d+)/nyheter/', include('admin.sites.articles.urls')),
     url(r'^(?P<site>\d+)/annonser/', include('admin.sites.ads.urls')),
-    url(r'^(?P<site>\d+)/meny/', include('admin.sites.navigation.urls')),
+    url(r'^(?P<site>\d+)/navigasjon/', include('admin.sites.navigation.urls')),
     url(r'^(?P<site>\d+)/innstillinger/', include('admin.sites.settings.urls')),
     url(r'^(?P<site>\d+)/kampanjer/', include('admin.sites.campaigns.urls')),
 
