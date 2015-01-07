@@ -221,6 +221,11 @@ class Site(models.Model):
             'prefix': prefix,
         }
 
+class Redirect(models.Model):
+    site = models.ForeignKey('Site', related_name='redirects')
+    path = models.CharField(max_length=512)
+    destination = models.CharField(max_length=2048)
+
 class Zipcode(models.Model):
     zipcode = models.CharField(max_length=4)
     area = models.CharField(max_length=255)
