@@ -6,7 +6,7 @@ from django.db import models
 from page.models import Variant
 
 class Article(models.Model):
-    thumbnail = models.CharField(max_length=100, null=True)
+    thumbnail = models.CharField(max_length=2048, null=True)
     hide_thumbnail = models.BooleanField()
     published = models.BooleanField()
     pub_date = models.DateTimeField(null=True)
