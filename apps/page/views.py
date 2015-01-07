@@ -194,6 +194,10 @@ def permission_denied(request, template_name='common/403.html'):
     return HttpResponseForbidden(render_to_string(template_name, context))
 
 def page_not_found(request, template_name='common/404.html'):
+    site_redirect = request.site.match_redirect(request.path)
+    if site_redirect is not None:
+        return redirect(site_redirect.destination)
+
     # Record the attempted 404-path
     nf = NotFound(
         path=request.path[:2048],

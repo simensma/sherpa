@@ -138,6 +138,16 @@ class Site(models.Model):
             published=True,
         ).exists()
 
+    def match_redirect(self, path):
+        for site_redirect in self.redirects.all():
+            # Strip slashes both pre and post
+            if path.strip('/') == site_redirect.path.strip('/'):
+                # Matched! Redirect there.
+                return site_redirect
+
+        # Path doesn't match any redirects
+        return None
+
     @staticmethod
     def sort(sites):
         """Sort the given sites iterable by title and return a dict with a key for each site type, containing
