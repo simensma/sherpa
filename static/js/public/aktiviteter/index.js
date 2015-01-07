@@ -164,7 +164,7 @@ $(function() {
         history.pushState(null, null, '?' + query.join('&'));
 
         // Tack the updated URL in Google Analtycis
-        if (_gaq && _gaq.push instanceof Function) {
+        if (typeof _gaq === 'object' && _gaq.push instanceof Function) {
             _gaq.push(['_trackPageview']);
         }
     }
