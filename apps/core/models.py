@@ -226,6 +226,9 @@ class Redirect(models.Model):
     path = models.CharField(max_length=512)
     destination = models.CharField(max_length=2048)
 
+    class Meta:
+        ordering = ['path']
+
 class Zipcode(models.Model):
     zipcode = models.CharField(max_length=4)
     area = models.CharField(max_length=255)
