@@ -11,6 +11,7 @@
     var input_description;
     var input_url;
     var input_anchor;
+    var crop;
 
     $(function() {
 
@@ -126,9 +127,11 @@
         image_dialog.find('.row.image-url').removeClass('jq-hide');
     };
 
-    ImageDialog.insertImageDetails = function (url, description, photographer) {
+    ImageDialog.insertImageDetails = function (url, description, photographer, crop) {
         ImageDialog.resetDialog();
         ImageDialog.showInfoFields();
+
+        image_dialog.data('crop', crop);
 
         thumbnail_preview.attr('src', url);
         input_url.val(url);
@@ -153,7 +156,7 @@
             }
 
             // Important to insert image details first, as this resets all fields
-            this.insertImageDetails(opts.src, opts.description, opts.photographer);
+            this.insertImageDetails(opts.src, opts.description, opts.photographer, opts.crop);
 
             input_anchor.val(opts.anchor);
         }
