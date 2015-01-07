@@ -178,7 +178,12 @@
         <div class="form-group">
           <label class="col-md-3 control-label" for="path">Lenke</label>
           <div class="col-md-9">
-            <input class="form-control" type="text" name="path" id="path">
+            <div class="input-group">
+              <span class="input-group-addon">
+                {{ active_site.domain }}/
+              </span>
+              <input class="form-control" type="text" name="path" id="path">
+            </div>
           </div>
         </div>
 
