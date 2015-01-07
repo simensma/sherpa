@@ -6,6 +6,7 @@
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/util/url-picker.js"></script>
   <script src="{{ STATIC_URL }}js/admin/sites/navigation/menu.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/sites/navigation/redirect.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -64,6 +65,63 @@
         <h2 class="loading-title">Lagrer toppmeny...</h2>
         <img class="ajaxloader" src="/static/img/common/ajax-loader-large.gif" alt="Lagrer, vennligst vent...">
       </div>
+
+
+      <h2>Videresendinger</h2>
+
+      <p>
+        Videresendinger kan brukes til å peke en adresse til en annen. Det kan være en snarvei, enklere adresse, som for eksempel kan være nyttig om man ønsker å peke til en enkel adresse i noe som skal på trykk.
+      </p>
+
+      <p>
+        For eksempel: <strong>{{ active_site.domain }}/turtips</strong> kan peke til <strong>{{ active_site.domain }}/nyheter/519-10-flotte-turtips</strong>
+      </p>
+
+      <p>
+        <button class="btn btn-primary" data-dnt-trigger="add-redirect">
+          Opprett ny videresending
+        </button>
+      </p>
+
+      {% with active_site.redirects.all as redirects %}
+        {% if redirects %}
+          <table class="table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Lenke</th>
+                <th>Destinasjon</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for redirect in redirects %}
+                <tr
+                  data-dnt-redirect="{{ redirect.id }}"
+                  data-dnt-path="{{ redirect.path }}"
+                  data-dnt-destination="{{ redirect.destination }}">
+                  <td>
+                    <button class="btn btn-default btn-sm" data-dnt-trigger="edit-redirect">
+                      <i class="glyphicon glyphicon-pencil"></i>
+                      Endre/Slett
+                    </button>
+                  </td>
+                  <td>
+                    <a href="https://{{ active_site.domain }}/{{ redirect.path }}">
+                      {{ active_site.domain }}/<strong>{{ redirect.path }}</strong>
+                    </a>
+                  </td>
+                  <td>
+                    <a href="{{ redirect.destination }}">
+                      {{ redirect.destination }}
+                    </a>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% endif %}
+      {% endwith %}
+
     </div>
   </div><!-- /.row -->
 
@@ -100,6 +158,52 @@
       <button class="btn btn-default" data-dnt-trigger="cancel" data-dismiss="modal">Avbryt</button>
       <button class="btn btn-danger" data-dnt-trigger="delete">Slett lenken</button>
 
+    </div>
+  </div>
+
+  <div class="modal jq-hide redirect" data-dnt-container="redirect-modal">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+      <h3>Videresending</h3>
+    </div>
+    <div class="modal-body">
+      <form
+        class="form-horizontal"
+        action="{% url 'admin.sites.navigation.views.save_redirect' active_site.id %}"
+        method="post">
+        {% csrf_token %}
+        <input type="hidden" name="existing-redirect" value="">
+        <input type="hidden" name="delete" value="">{# Set value to 1 to trigger delete #}
+
+        <div class="form-group">
+          <label class="col-md-3 control-label" for="path">Lenke</label>
+          <div class="col-md-9">
+            <div class="input-group">
+              <span class="input-group-addon">
+                {{ active_site.domain }}/
+              </span>
+              <input class="form-control" type="text" name="path" id="path">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-md-3 control-label" for="destination">Destinasjon</label>
+          <div class="col-md-9">
+            <input class="form-control" type="text" name="destination" id="destination">
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-success" data-dnt-trigger="save">Lagre</button>
+      <button class="btn btn-default" data-dnt-trigger="cancel" data-dismiss="modal">Avbryt</button>
+      <button
+        class="btn btn-danger"
+        data-dnt-trigger="delete"
+        data-dnt-confirm-delete="Er du sikker på at du vil slette denne videresendingen?">
+        Slett
+      </button>
     </div>
   </div>
 
