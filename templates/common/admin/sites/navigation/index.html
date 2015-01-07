@@ -6,6 +6,7 @@
 {% block extra_js %}
   <script src="{{ STATIC_URL }}js/admin/util/url-picker.js"></script>
   <script src="{{ STATIC_URL }}js/admin/sites/navigation/menu.js"></script>
+  <script src="{{ STATIC_URL }}js/admin/sites/navigation/redirect.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -77,7 +78,7 @@
       </p>
 
       <p>
-        <button class="btn btn-primary" data-dnt-trigger="create-redirect-modal">
+        <button class="btn btn-primary" data-dnt-trigger="add-redirect">
           Opprett ny videresending
         </button>
       </p>
@@ -94,11 +95,14 @@
             </thead>
             <tbody>
               {% for redirect in redirects %}
-                <tr>
+                <tr
+                  data-dnt-redirect="{{ redirect.id }}"
+                  data-dnt-path="{{ redirect.path }}"
+                  data-dnt-destination="{{ redirect.destination }}">
                   <td>
-                    <button class="btn btn-danger btn-sm">
-                      <i class="glyphicon glyphicon-remove"></i>
-                      Slett
+                    <button class="btn btn-default btn-sm" data-dnt-trigger="edit-redirect">
+                      <i class="glyphicon glyphicon-pencil"></i>
+                      Endre/Slett
                     </button>
                   </td>
                   <td>
@@ -157,37 +161,44 @@
     </div>
   </div>
 
-  <div class="modal jq-hide redirect">
+  <div class="modal jq-hide redirect" data-dnt-container="redirect-modal">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
       <h3>Videresending</h3>
     </div>
     <div class="modal-body">
       <form
-        class="form-horizontal form-default"
-        action="{% url 'admin.sites.navigation.views.redirect' %}"
+        class="form-horizontal"
+        action="{% url 'admin.sites.navigation.views.save_redirect' active_site.id %}"
         method="post">
         {% csrf_token %}
+        <input type="hidden" name="existing-redirect" value="">
+        <input type="hidden" name="delete" value="">{# Set value to 1 to trigger delete #}
 
         <div class="form-group">
-          <label class="col-md-2 control-label" for="path">Lenke</label>
-          <div class="col-md-10">
+          <label class="col-md-3 control-label" for="path">Lenke</label>
+          <div class="col-md-9">
             <input class="form-control" type="text" name="path" id="path">
           </div>
         </div>
 
         <div class="form-group">
-          <label class="col-md-2 control-label" for="destination">Destinasjon</label>
-          <div class="col-md-10">
+          <label class="col-md-3 control-label" for="destination">Destinasjon</label>
+          <div class="col-md-9">
             <input class="form-control" type="text" name="destination" id="destination">
           </div>
         </div>
       </form>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-success save"><i class="glyphicon glyphicon-ok"></i> Lagre</button>
-      <button class="btn btn-default jq-hide" data-dismiss="modal">Avbryt</button>
-      <button class="btn btn-default jq-hide" data-dismiss="modal">Slett</button>
+      <button class="btn btn-success" data-dnt-trigger="save">Lagre</button>
+      <button class="btn btn-default" data-dnt-trigger="cancel" data-dismiss="modal">Avbryt</button>
+      <button
+        class="btn btn-danger"
+        data-dnt-trigger="delete"
+        data-dnt-confirm-delete="Er du sikker på at du vil slette denne videresendingen?">
+        Slett
+      </button>
     </div>
   </div>
 
