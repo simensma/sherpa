@@ -149,7 +149,7 @@
                                 name="thumbnail"
                                 value="default"
                                 {% if not version.get_thumbnail.hide and not version.variant.article.thumbnail %} checked{% endif %}>
-                              Bruk liten versjon av hovedbildet
+                              Bruk liten versjon av første bilde
                             </label>
                           </div>
                           <div class="radio">
@@ -174,12 +174,7 @@
                   <div class="thumbnail">
                     <img
                       class="article-thumbnail"
-                      src="
-                        {% if not version.get_thumbnail or version.variant.article.thumbnail %}
-                          {{ editor_placeholder_image }}
-                        {% else %}
-                          {{ version.get_thumbnail.url }}
-                        {% endif %}"
+                      src="{% if not version.get_thumbnail.url or version.variant.article.thumbnail %}{{ editor_placeholder_image }}{% else %}{{ version.get_thumbnail.url }}{% endif %}"
                       data-dnt-editor-placeholder-image-url="{{ editor_placeholder_image }}"
                       alt="{{ title|striptags }}">
                   </div>
@@ -188,12 +183,7 @@
                   <div class="thumbnail">
                     <img
                       class="article-thumbnail"
-                      src="
-                        {% if not version.variant.article.thumbnail %}
-                          {{ editor_placeholder_image }}
-                        {% else %}
-                          {{ version.variant.article.thumbnail }}
-                        {% endif %}"
+                      src="{% firstof version.variant.article.thumbnail editor_placeholder_image %}"
                       data-dnt-editor-placeholder-image-url="{{ editor_placeholder_image }}"
                       alt="{{ title|striptags }}">
                   </div>
