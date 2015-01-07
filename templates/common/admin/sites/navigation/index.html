@@ -64,6 +64,56 @@
         <h2 class="loading-title">Lagrer toppmeny...</h2>
         <img class="ajaxloader" src="/static/img/common/ajax-loader-large.gif" alt="Lagrer, vennligst vent...">
       </div>
+
+
+      <h2>Videresendinger</h2>
+
+      <p>
+        Videresendinger kan brukes til å peke en adresse til en annen. Det kan være en snarvei, enklere adresse, som for eksempel kan være nyttig om man ønsker å peke til en enkel adresse i noe som skal på trykk.
+      </p>
+
+      <p>
+        For eksempel: <strong>{{ active_site.domain }}/turtips</strong> kan peke til <strong>{{ active_site.domain }}/nyheter/519-10-flotte-turtips</strong>
+      </p>
+
+      <p>
+        <button class="btn btn-primary" data-dnt-trigger="create-redirect-modal">
+          Opprett ny videresending
+        </button>
+      </p>
+
+      {% with active_site.redirects.all as redirects %}
+        {% if redirects %}
+          <table class="table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Lenke</th>
+                <th>Destinasjon</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for redirect in redirects %}
+                <tr>
+                  <td>
+                    <button class="btn btn-danger">
+                      <i class="glyphicon glyphicon-remove"></i>
+                      Slett
+                    </button>
+                  </td>
+                  <td>
+                    {{ redirect.path }}
+                  </td>
+                  <td>
+                    {{ redirect.destination }}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% endif %}
+      {% endwith %}
+
     </div>
   </div><!-- /.row -->
 
