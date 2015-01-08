@@ -703,6 +703,9 @@ class Activity(models.Model):
         # A list of forening IDs which we're remapping at the time of import
         FORENING_MAPPINGS = {
             165: 724, # DNT ung Trondheim -> DNT ung Trøndelag
+            228: 1193, # Dagsturkomitéen -> Voksengruppa (STF)
+            223: 1193, # Søndagsturkomitéen -> Voksengruppa (STF)
+            211: 1193, # Fjellturkomitéen -> Voksengruppa (STF)
         }
 
         foreninger = []
