@@ -242,6 +242,26 @@ $(function() {
         }
     });
 
+    // Confirm and remove row when 'remove-row' icon clicked
+    $(document).on('click', 'article a.remove-row', function(e) {
+
+        e.stopPropagation(); // Avoid click-event on an image or widget
+
+        if(confirm($(this).attr('data-confirm'))) {
+
+            $(this).tooltip('destroy');
+
+            var row_edit_structure = $(this).parents('div.row.edit-structure').first();
+            var row_content = row_edit_structure.nextAll('div[data-dnt-row]').first();
+            var row_add_row = row_content.next('div.row');
+
+            row_edit_structure.remove();
+            row_content.remove();
+            row_add_row.remove();
+
+        }
+    });
+
     // Enable content moving on 'move-content' icon click
     $(document).on('click', 'article div.move-content', function(e) {
         e.stopPropagation(); // Avoid click-event on an image or widget

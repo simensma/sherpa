@@ -272,6 +272,7 @@
         function cloneAddContentRow() {
             var new_row = insertion_templates.find('[data-dnt-row]').clone();
             new_row.removeAttr('data-dnt-row');
+            new_row.addClass('add-row');
 
             var add_content = insertion_templates.find('div.add-content').clone();
             add_content.prependTo(new_row.find('.column'));
