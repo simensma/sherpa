@@ -587,6 +587,11 @@ class Activity(models.Model):
                 aktivitet_image.order = order
                 aktivitet_image.text = old_image['title']
                 aktivitet_image.save()
+            except ValueError:
+                # Might occur if some sherpa2 activity has multiple occurrences of the same image, and the converted
+                # aktivitet has only one - would attempt to remove the id twice, which we can ignore since we don't
+                # want to add the image twice
+                pass
             except AktivitetImage.DoesNotExist:
                 # Doesn't exist - download the image and create it in our image archive
                 try:
