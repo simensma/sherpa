@@ -311,10 +311,6 @@
                 });
                 insertion_templates.find("div.edit-structure").clone().insertBefore($(this));
 
-                // If this is multiple-column, let user add single row before this row
-                if(!single_column) {
-                    cloneAddContentRow().insertBefore($(this));
-                }
                 cloneAddContentRow().insertAfter($(this));
             });
         }
