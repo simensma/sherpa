@@ -59,7 +59,8 @@ $(function() {
             anchor: json_content.anchor,
             description: json_content.description,
             photographer: json_content.photographer,
-            save: function(src, anchor, description, photographer) {
+            crop: json_content.crop,
+            save: function(src, anchor, description, photographer, crop) {
                 var image_content = insertion_templates.find("div.content.image").clone();
                 content.replaceWith(image_content);
                 if(anchor === '') {
@@ -87,12 +88,12 @@ $(function() {
                     anchor: anchor,
                     description: description,
                     photographer: photographer,
-                    crop: json_content.crop,
+                    crop: crop,
                 }));
 
-                if (!!json_content.crop) {
+                if (!!crop) {
                     ImageCropper.cropImage(
-                        json_content.crop,
+                        crop,
                         image_content.find('img'),
                         image_content,
                         image_content.parents('div.column').width()

@@ -53,6 +53,7 @@ $(function() {
             editor.find('[data-dnt-input="url"]').val('http://');
             editor.find("input[name='color'][value='btn-default']").prop('checked', true);
             editor.find("input[name='size'][value='']").prop('checked', true);
+            preview_button.text(preview_button.attr('data-dnt-placeholder'));
         },
 
         onEdit: function(editor, widget_content) {
