@@ -272,6 +272,7 @@
         function cloneAddContentRow() {
             var new_row = insertion_templates.find('[data-dnt-row]').clone();
             new_row.removeAttr('data-dnt-row');
+            new_row.addClass('add-row');
 
             var add_content = insertion_templates.find('div.add-content').clone();
             add_content.prependTo(new_row.find('.column'));
@@ -290,34 +291,27 @@
         article.find('div.add-content,.tooltip').remove();
 
         var rows = article.find("div[data-dnt-row]");
-        if(rows.length === 0) {
-            // Edge case; if there are *no* rows
-            cloneAddContentRow().prependTo(article);
-        } else {
-            // Iterate existing rows
-            rows.each(function() {
-                var columns = $(this).find("div.column");
-                var single_column = columns.length == 1;
 
-                columns.each(function() {
-                    insertion_templates.find("div.add-content").clone().prependTo($(this));
-                    $(this).find("div.content").each(function() {
-                        insertion_templates.find("div.add-content").clone().insertAfter($(this));
-                    });
-                    // If there is one great column, no nead for a trailing add-column after last content
-                    if(single_column) {
-                        $(this).children("div.add-content").last().remove();
-                    }
+        cloneAddContentRow().prependTo(article);
+
+        // Iterate existing rows
+        rows.each(function() {
+            var columns = $(this).find("div.column");
+            var single_column = columns.length == 1;
+
+            columns.each(function() {
+                insertion_templates.find("div.add-content").clone().prependTo($(this));
+                $(this).find("div.content").each(function() {
+                    insertion_templates.find("div.add-content").clone().insertAfter($(this));
                 });
-                insertion_templates.find("div.edit-structure").clone().insertBefore($(this));
-
-                // If this is multiple-column, let user add single row before this row
-                if(!single_column) {
-                    cloneAddContentRow().insertBefore($(this));
+                // If there is one great column, no nead for a trailing add-column after last content
+                if(single_column) {
+                    $(this).children("div.add-content").last().remove();
                 }
-                cloneAddContentRow().insertAfter($(this));
             });
-        }
+            insertion_templates.find("div.edit-structure").clone().insertBefore($(this));
+            cloneAddContentRow().insertAfter($(this));
+        });
 
         // Re-add tooltips to the new edit-structure buttons
         editor.find('.edit-structure button').tooltip();

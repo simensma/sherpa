@@ -6,6 +6,8 @@
     var article;
     var insertion_templates;
     var is_moving = false;
+    var move_type_selector;
+    var move_type_add_selector;
 
     $(function() {
         editor = $("div.cms-editor");
@@ -17,6 +19,18 @@
         moved_content = opts.content;
         endCallback = opts.endCallback;
 
+        if (moved_content.hasClass('content')) {
+            move_type_selector = 'div.content';
+            move_type_add_selector = 'div.add-content';
+
+        } else if (moved_content.hasClass('row')) {
+            move_type_selector = 'div.row[data-dnt-row]';
+            move_type_add_selector = 'div.row.add-row';
+
+        } else {
+            return;
+        }
+
         is_moving = true;
 
         // Hovered content will have the custom 'hover' class but the mouseover which is supposed to remove
@@ -24,9 +38,9 @@
         moved_content.removeClass('hover');
 
         // Hide add-content fields and insert drop-areas below
-        article.find('div.add-content').each(function() {
+        article.find(move_type_add_selector).each(function() {
             // Hide drop-areas adjacent to the content being moved
-            if($(this).prevAll('div.content').first().is(moved_content) || $(this).nextAll('div.content').first().is(moved_content)) {
+            if($(this).prevAll(move_type_selector).first().is(moved_content) || $(this).nextAll(move_type_selector).first().is(moved_content)) {
                 // Just set visibility hidden so nothing jumps, and the controls will re-appear when reset
                 $(this).css('visibility', 'hidden');
             } else {
@@ -38,10 +52,10 @@
 
         // Disable most of the hover effects
         article.find("div.edit-structure button").tooltip('destroy');
-        article.find("div.content").addClass('moving');
+        article.find(move_type_selector).addClass('moving');
 
         // Add hover effect to add-content elements
-        article.find("div.add-content:not(.disabled)").on('mouseover.EditorMoveContent', function() {
+        article.find(move_type_add_selector + ':not(.disabled)').on('mouseover.EditorMoveContent', function() {
             $(this).addClass('droparea');
         });
 

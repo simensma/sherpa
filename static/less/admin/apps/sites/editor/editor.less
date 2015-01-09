@@ -329,6 +329,25 @@ div.cms-editor {
       border-left: 1px solid rgb(200, 200, 200);
       border-right: 1px solid rgb(200, 200, 200);
 
+      a {
+        display: none;
+      }
+
+      &:hover {
+        a {
+          position: absolute;
+          display: block;
+          top: 10px;
+
+          &.move-row {
+            right: 75px;
+          }
+          &.remove-row {
+            right: 25px;
+          }
+        }
+      }
+
       button {
         width: 30px;
         height: 30px;

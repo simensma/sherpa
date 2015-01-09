@@ -225,6 +225,52 @@ $(function() {
 
     });
 
+    // Enable content moving on 'move-content' icon click
+    $(document).on('click', 'article a.move-row', function(e) {
+        e.stopPropagation(); // Avoid click-event on an image or widget
+
+        var row_controls = $(this).parents('div.row.edit-structure').first();
+        var row = row_controls.nextAll('div[data-dnt-row]').first();
+
+        EditorMoveContent.init({
+            content: row,
+            endCallback: Editor.resetControls
+        });
+        $(this).tooltip('destroy'); // Just in case the browser doesn't trigger the mouseleave
+    });
+
+    // Confirm and remove row when 'remove-row' icon clicked
+    $(document).on('click', 'article a.remove-row', function(e) {
+
+        e.stopPropagation(); // Avoid click-event on an image or widget
+
+        if(confirm($(this).attr('data-confirm'))) {
+
+            $(this).tooltip('destroy');
+
+            var row_edit_structure = $(this).parents('div.row.edit-structure').first();
+            var row_content = row_edit_structure.nextAll('div[data-dnt-row]').first();
+            var row_add_row = row_content.next('div.row');
+
+            row_edit_structure.remove();
+            row_content.remove();
+            row_add_row.remove();
+
+        }
+    });
+
+    // Enable content moving on 'move-content' icon click
+    $(document).on('click', 'article div.move-content', function(e) {
+        e.stopPropagation(); // Avoid click-event on an image or widget
+        EditorMoveContent.init({
+            content: $(this).nextAll("div.content").first(),
+            endCallback: Editor.resetControls,
+        });
+        $(this).tooltip('destroy'); // Just in case the browser doesn't trigger the mouseleave
+        $(this).siblings("div.content-control").remove();
+        $(this).remove();
+    });
+
     // Confirm and remove content when 'remove-content' icon clicked
     $(document).on('click', 'article div.remove-content', function(e) {
         e.stopPropagation(); // Avoid click-event on an image or widget
@@ -240,18 +286,6 @@ $(function() {
             $(this).siblings("div.content-control").remove();
             $(this).remove();
         }
-    });
-
-    // Enable content moving on 'move-content' icon click
-    $(document).on('click', 'article div.move-content', function(e) {
-        e.stopPropagation(); // Avoid click-event on an image or widget
-        EditorMoveContent.init({
-            content: $(this).nextAll("div.content").first(),
-            endCallback: Editor.resetControls,
-        });
-        $(this).tooltip('destroy'); // Just in case the browser doesn't trigger the mouseleave
-        $(this).siblings("div.content-control").remove();
-        $(this).remove();
     });
 
     // Choose crop ratio on 'crop-content' icon click
