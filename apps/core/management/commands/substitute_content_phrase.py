@@ -50,7 +50,7 @@ class Command(BaseCommand):
         # Replace all menu URLs
         print("Erstatter menyer...")
         for menu in Menu.objects.all():
-            if string in content.content:
+            if string in menu.url:
                 menu.url = re.sub(string, replacement, menu.url)
                 menu.save()
         print("Done.")
