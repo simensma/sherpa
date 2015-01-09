@@ -225,21 +225,18 @@ $(function() {
 
     });
 
-    // Confirm and remove content when 'remove-content' icon clicked
-    $(document).on('click', 'article div.remove-content', function(e) {
+    // Enable content moving on 'move-content' icon click
+    $(document).on('click', 'article a.move-row', function(e) {
         e.stopPropagation(); // Avoid click-event on an image or widget
-        // Some browsers may handle mouse movement events even after confirm-window is opened, and that
-        // may detach the content-control. So save the content-reference before continuing
-        var content = $(this).nextAll("div.content").first();
-        if(confirm($(this).attr('data-confirm'))) {
-            content.slideUp(function() {
-                $(this).remove();
-                Editor.resetControls();
-            });
-            $(this).tooltip('destroy');
-            $(this).siblings("div.content-control").remove();
-            $(this).remove();
-        }
+
+        var row_controls = $(this).parents('div.row.edit-structure').first();
+        var row = row_controls.nextAll('div[data-dnt-row]').first();
+
+        EditorMoveContent.init({
+            content: row,
+            endCallback: Editor.resetControls
+        });
+        $(this).tooltip('destroy'); // Just in case the browser doesn't trigger the mouseleave
     });
 
     // Confirm and remove row when 'remove-row' icon clicked
@@ -272,6 +269,23 @@ $(function() {
         $(this).tooltip('destroy'); // Just in case the browser doesn't trigger the mouseleave
         $(this).siblings("div.content-control").remove();
         $(this).remove();
+    });
+
+    // Confirm and remove content when 'remove-content' icon clicked
+    $(document).on('click', 'article div.remove-content', function(e) {
+        e.stopPropagation(); // Avoid click-event on an image or widget
+        // Some browsers may handle mouse movement events even after confirm-window is opened, and that
+        // may detach the content-control. So save the content-reference before continuing
+        var content = $(this).nextAll("div.content").first();
+        if(confirm($(this).attr('data-confirm'))) {
+            content.slideUp(function() {
+                $(this).remove();
+                Editor.resetControls();
+            });
+            $(this).tooltip('destroy');
+            $(this).siblings("div.content-control").remove();
+            $(this).remove();
+        }
     });
 
     // Choose crop ratio on 'crop-content' icon click
