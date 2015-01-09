@@ -43,12 +43,14 @@ class Command(BaseCommand):
         # Replace in all content
         print("Erstatter innhold...")
         for content in Content.objects.all():
-            content.content = re.sub(string, replacement, content.content)
-            content.save()
+            if string in content.content:
+                content.content = re.sub(string, replacement, content.content)
+                content.save()
 
         # Replace all menu URLs
         print("Erstatter menyer...")
         for menu in Menu.objects.all():
-            menu.url = re.sub(string, replacement, menu.url)
-            menu.save()
+            if string in content.content:
+                menu.url = re.sub(string, replacement, menu.url)
+                menu.save()
         print("Done.")
