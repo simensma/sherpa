@@ -16,7 +16,7 @@ class Command(BaseCommand):
         print("hvis et nettsted har lansert sin hjemmeside og du vil automatisk oppdatere")
         print("alle lenker og referanser til URL-adressen.")
         print()
-        print("Vzr obs på at dette vil erstatter ALT innhold som matcher strengen du skriver inn.")
+        print("Vær obs på at dette vil erstatter ALT innhold som matcher strengen du skriver inn.")
 
         string = raw_input("Gammel tekststreng: ")
         replacement = raw_input("Erstattes med: ")
