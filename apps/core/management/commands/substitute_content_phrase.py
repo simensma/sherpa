@@ -4,6 +4,7 @@ from __future__ import print_function
 from django.core.management.base import BaseCommand
 
 from page.models import *
+from admin.models import Campaign
 
 class Command(BaseCommand):
     args = u""
@@ -33,7 +34,7 @@ class Command(BaseCommand):
         print("Erstattes med: '%s'" % replacement)
         print("Tilsvarer:     re.sub(%s, %s, <innhold>)" % (string, replacement))
         print()
-        print("Vil erstattes i alt innhold (sider og artikler), samt i URLer i toppmenyen.")
+        print("Vil erstattes i alt innhold (sider og artikler), URLer i toppmenyen, samt kampanjeknapper.")
         print()
 
         if raw_input("Ser dette riktig ut? (y/N) ") != 'y':
@@ -53,4 +54,11 @@ class Command(BaseCommand):
             if string in menu.url:
                 menu.url = re.sub(string, replacement, menu.url)
                 menu.save()
+
+        # Replace all campaigns
+        print("Erstatter kampanjeknapper...")
+        for campaign in Campaign.objects.all():
+            if string in campaign.button_anchor:
+                campaign.button_anchor = re.sub(string, replacement, campaign.button_anchor)
+                campaign.save()
         print("Done.")
