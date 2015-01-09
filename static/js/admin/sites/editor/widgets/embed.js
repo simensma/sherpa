@@ -4,11 +4,11 @@ $(function() {
         widget_name: 'embed',
 
         onNew: function(editor, widget_content) {
-            editor.find("textarea[name='code']").text('');
+            editor.find("textarea[name='code']").val('');
         },
 
         onEdit: function(editor, widget_content) {
-            editor.find("textarea[name='code']").text(widget_content.code);
+            editor.find("textarea[name='code']").val(widget_content.code);
         },
 
         onSave: function(editor) {
