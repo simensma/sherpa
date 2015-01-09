@@ -729,9 +729,9 @@ class Activity(models.Model):
                         # Ok, this is an age-old Forening; ignore the relation
                         pass
                     else:
-                        # One of the owner relations is invalid; skip this import
-                        self.save_conversion_failure(reason='owner_doesnotexist', include_foreninger=False)
-                        raise OwnerDoesNotExist("One of the related 'owner' groups doesn't exist in the new ForeningDB")
+                        # One of the owner relations is invalid; this is a problem, but continue in case other ones
+                        # are valid, in which case we'll ignore this.
+                        pass
 
         if len(foreninger) == 0 and len(cabins) == 0:
             self.save_conversion_failure(reason='no_owners', include_foreninger=False)
