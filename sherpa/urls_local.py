@@ -8,5 +8,6 @@ handler500 = 'page.views.server_error'
 urlpatterns = patterns('',
     url(r'^', include('sherpa.urls_common_pre')),
 
+    url(r'^', include('sherpa.urls_redirects_common')),
     url(r'^', include('sherpa.urls_common_post')),
 )

@@ -173,6 +173,10 @@ def perform_redirect(request, url, slug="", params={}, permanent=False, include_
         uri = "%s%s" % (url, slug)
     return redirect(uri, permanent=permanent)
 
+def perform_site_redirect(request, url, slug="", params={}, permanent=False, include_params=True):
+    url = '%s/%s' % (request.site.forening.get_old_url(), url)
+    return perform_redirect(request, url, slug, params, permanent, include_params)
+
 def redirect_cabin(request):
     try:
         if not 'ca_id' in request.GET:

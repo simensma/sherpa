@@ -25,6 +25,7 @@ urlpatterns = patterns('',
     url(r'^connect/', include('connect.urls')),
     url(r'^api/', include('api.urls')),
 
-    url(r'^', include('sherpa.urls_redirects')),
+    url(r'^', include('sherpa.urls_redirects_central')),
+    url(r'^', include('sherpa.urls_redirects_common')),
     url(r'^', include('sherpa.urls_common_post')),
 )
