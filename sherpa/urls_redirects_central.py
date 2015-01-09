@@ -11,24 +11,12 @@ urlpatterns = patterns('',
     url(r'^admin/(?P<slug>.*)', 'page.views.perform_redirect', kwargs={'url': 'http://%s/admin/' % settings.OLD_SITE}),
 
     # Old static content
-    url(r'^img/(?P<slug>.*)', 'page.views.perform_redirect', kwargs={'url': 'http://%s/img/' % settings.OLD_SITE}),
-    url(r'^images/(?P<slug>.*)', 'page.views.perform_redirect', kwargs={'url': 'http://%s/images/' % settings.OLD_SITE}),
-    url(r'^album/(?P<slug>.*)', 'page.views.perform_redirect', kwargs={'url': 'http://%s/album/' % settings.OLD_SITE}),
-    url(r'^files/(?P<slug>.*)', 'page.views.perform_redirect', kwargs={'url': 'http://%s/files/' % settings.OLD_SITE}),
-    url(r'^share/(?P<slug>.*)', 'page.views.perform_redirect', kwargs={'url': 'http://%s/share/' % settings.OLD_SITE}),
     url(r'^turforslag/(?P<slug>.*)', 'page.views.perform_redirect', kwargs={'url': 'http://ut.no/tur/'}),
 
     # Old dynamic content that we want directly redirected
-    url(r'^activity.php$', 'page.views.perform_redirect', kwargs={'url': 'http://%s/activity.php' % settings.OLD_SITE}),
-    url(r'^article.php$', 'page.views.perform_redirect', kwargs={'url': 'http://%s/article.php' % settings.OLD_SITE}),
-    url(r'^booking.php$', 'page.views.perform_redirect', kwargs={'url': 'http://%s/booking.php' % settings.OLD_SITE}),
-    url(r'^payment/(?P<slug>.*)', 'page.views.perform_redirect', kwargs={'url': 'http://%s/payment/' % settings.OLD_SITE}),
-    url(r'^list.php$', 'page.views.perform_redirect', kwargs={'url': 'http://%s/list.php' % settings.OLD_SITE}),
     url(r'^nor-way.php$', 'page.views.perform_redirect', kwargs={'url': 'http://%s/nor-way.php' % settings.OLD_SITE}),
     url(r'^hytteadmin/(?P<slug>.*)', 'page.views.perform_redirect', kwargs={'url': 'http://%s/hytteadmin/' % settings.OLD_SITE}),
-    url(r'^gmap.php$', 'page.views.perform_redirect', kwargs={'url': 'http://%s/gmap.php' % settings.OLD_SITE}),
     url(r'^balsfjord/$', 'page.views.perform_redirect', kwargs={'url': 'http://troms.turistforeningen.no/index.php?fo_id=10333'}),
-    url(r'^static.php$', 'page.views.perform_redirect', kwargs={'url': 'http://%s/static.php' % settings.OLD_SITE}),
 
     # Old URLs that are still in use somewhere, even though the old site would link correctly
     url(r'^index.php$', 'page.views.redirect_index'),
