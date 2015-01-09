@@ -40,13 +40,6 @@ def index(request):
     all_foreninger.remove(sentral)
     all_foreninger.append(sentral)
 
-    # Detect first-time visitors
-    if not 'has_visited_aktiviteter' in request.session:
-        first_time_visitor = True
-        request.session['has_visited_aktiviteter'] = True
-    else:
-        first_time_visitor = False
-
     context = {
         'aktivitet_dates': aktivitet_dates_pagenav,
         'difficulties': Aktivitet.DIFFICULTY_CHOICES,
@@ -57,7 +50,6 @@ def index(request):
         'all_foreninger': all_foreninger,
         'cabins': Cabin.objects.order_by('name'),
         'filter': filter,
-        'first_time_visitor': first_time_visitor,
     }
     return render(request, 'common/aktiviteter/index.html', context)
 

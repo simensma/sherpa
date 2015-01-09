@@ -19,8 +19,6 @@ $(function() {
     var now = new Date();
     var today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
 
-    listing.find('[data-dnt-modal="first-visit"]').modal();
-
     filters.find('input[name="start_date"], input[name="end_date"]').each(function (index, el) {
         if (device_is_mobile) {
             $(el).attr('type', 'date');
