@@ -8,6 +8,7 @@ $(function() {
             $(this),
             $(this).parent().width()
         );
+        $(this).css('display', '');
     });
 
 });

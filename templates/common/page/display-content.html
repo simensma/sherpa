@@ -15,7 +15,7 @@
 
             {% elif content.type == 'image' %}
 
-              <div class="content image" style="{% if content.get_content.parentHeight %}height:{{ content.get_content.parentHeight }}px;{% endif %}"{% if content.get_cropping_json %} data-crop="{{ content.get_cropping_json }}"{% endif %}>
+              <div class="content image" style="{% if content.get_cropping_json %}display: none; {% endif %}{% if content.get_content.parentHeight %}height:{{ content.get_content.parentHeight }}px;{% endif %}"{% if content.get_cropping_json %} data-crop="{{ content.get_cropping_json }}"{% endif %}>
                 {% if content.get_content.anchor %}<a href="{{ content.get_content.anchor }}">{% endif %}
                   <img src="{{ content.get_image_source }}" {% if content.get_content.style %}style="{{ content.get_content.style }}"{% endif %} alt="{{ content.get_content.description }}">
                 {% if content.get_content.anchor %}</a>{% endif %}
