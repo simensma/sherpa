@@ -57,7 +57,7 @@
   {% for image in images %}
     <li
       class="clickable-image"
-      data-dnt-url="{{ image.url }}"
+      data-dnt-url="{% firstof image.get_url image.url %}"
       data-description="{{ image.description }}"
       data-photographer="{{ image.photographer }}">
 
