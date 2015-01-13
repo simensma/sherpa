@@ -37,7 +37,7 @@
                 In case the user changes the column size we want the image to keep its quality.
               {% endcomment %}
 
-              <div class="content image" data-json="{{ content.content }}" data-id="{{ content.id }}">
+              <div class="content image" data-json="{{ content.content }}" data-id="{{ content.id }}" style="display: none;">
                 {% if content.get_content.anchor %}
                   <a href="{{ content.get_content.anchor }}">
                     <img src="{{ content.get_content.src }}" alt="{{ content.get_content.description }}">
