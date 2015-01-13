@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import patterns, include, url
+from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('admin.views',
     # Note: Many paths here are harcoded in CheckSherpaPermissions middleware
