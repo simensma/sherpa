@@ -54,9 +54,11 @@ $(function() {
         onSave: function($editor) {
             var $audiences = $editor.find('select[name="audiences"]');
             var $categories = $editor.find('select[name="categories"]');
+            var $limit = $editor.find('input[name="limit"]');
 
             var audiences = $audiences.select2('val');
             var categories = $categories.select2('val');
+            var limit = $limit.val() || undefined;
 
             if(audiences.length === 0) {
                 audiences = allOptionsFor($audiences);
@@ -71,6 +73,7 @@ $(function() {
                 foreninger: $editor.find('select[name="foreninger"]').select2('val'),
                 audiences: audiences,
                 categories: categories,
+                limit: limit
             });
             return true;
         }

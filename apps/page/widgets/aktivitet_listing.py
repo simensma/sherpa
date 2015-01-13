@@ -27,6 +27,9 @@ class AktivitetListingWidget(Widget):
 
         aktivitet_dates = aktivitet_dates.order_by('start_date')
 
+        if 'limit' in widget_options:
+            aktivitet_dates = aktivitet_dates[:widget_options['limit']]
+
         return {'aktivitet_dates': aktivitet_dates}
 
     def admin_context(self, site):
