@@ -96,7 +96,7 @@ $(document).on("click", "*[data-toggle-tab]", function() {
 
         mask: function (_relatedTarget) {
             this.isMasked = true;
-            var message = this.options.maskMessage || 'Vent...';
+            var message = this.options.maskMessage || 'Vent...';
             var $mask = $([
                 '<div class="modal-mask">',
                 '  <div class="splash">',
