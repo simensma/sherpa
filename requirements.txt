@@ -5,7 +5,7 @@ boto==2.9.4
 cffi==0.8.6
 cryptography==0.6.1
 django-mptt==0.6.1
--e git://github.com/lionheart/django-pyodbc.git@8c3f91880c9fb08ba17c5b7950d0a379409d7c3a#egg=django-pyodbc
+django-pyodbc==0.2.6
 django-recaptcha==0.0.9
 djorm-pgarray==1.2
 gevent==0.13.8
