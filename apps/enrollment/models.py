@@ -2,7 +2,7 @@
 from datetime import datetime, date
 import random
 
-from django.db import models, transaction, connections
+from django.db import models, connections
 from django.core.cache import cache
 
 from core import validator
@@ -377,11 +377,9 @@ class User(models.Model):
             partneroffers_optin_date = None
 
         # Fetch and increment memberid with stored procedure
-        with transaction.commit_manually():
-            cursor = connections['focus'].cursor()
-            cursor.execute("exec sp_custTurist_updateMemberId")
-            memberid = cursor.fetchone()[0]
-            connections['focus'].commit_unless_managed()
+        cursor = connections['focus'].cursor()
+        cursor.execute("exec sp_custTurist_updateMemberId")
+        memberid = cursor.fetchall()[0][0]
 
         focus_user = FocusEnrollment(
             memberid=memberid,
