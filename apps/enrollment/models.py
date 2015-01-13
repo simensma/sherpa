@@ -29,11 +29,11 @@ class Enrollment(models.Model):
         ('complete', 'Fullført'),
     )
     state = models.CharField(max_length=255)
-    accepts_conditions = models.BooleanField()
-    partneroffers_optin = models.BooleanField()
+    accepts_conditions = models.BooleanField(default=False)
+    partneroffers_optin = models.BooleanField(default=False)
     existing_memberid = models.CharField(max_length=51)
-    wants_yearbook = models.BooleanField()
-    attempted_yearbook = models.BooleanField()
+    wants_yearbook = models.BooleanField(default=False)
+    attempted_yearbook = models.BooleanField(default=False)
     payment_method = models.CharField(max_length=51)
     RESULT_CHOICES = (
         ('success_invoice', 'Faktura bestilt'),
@@ -175,12 +175,12 @@ class User(models.Model):
     phone = models.CharField(max_length=255)
     email = models.CharField(max_length=511)
     gender = models.CharField(max_length=1)
-    key = models.BooleanField()
+    key = models.BooleanField(default=False)
     dob = models.DateField(null=True)
-    chosen_main_member = models.BooleanField()
+    chosen_main_member = models.BooleanField(default=False)
     memberid = models.IntegerField(null=True)
     pending_user = models.ForeignKey('user.User', related_name='+', null=True)
-    sms_sent = models.BooleanField()
+    sms_sent = models.BooleanField(default=False)
 
     def __unicode__(self):
         return u'%s' % self.pk
