@@ -16,10 +16,11 @@ def filter_aktivitet_dates(filter):
     # can split strings into lists which the template logic is dependent upon. If you find a better
     # way, please refactor this code.
 
-    dates = AktivitetDate.get_published().prefetch_related(
+    dates = AktivitetDate.get_published().select_related(
+        'aktivitet__forening',
+    ).prefetch_related(
         'aktivitet',
         'aktivitet__images',
-        'aktivitet__forening',
         'aktivitet__forening__sites',
         'aktivitet__co_foreninger',
     ).filter(aktivitet__private=False)

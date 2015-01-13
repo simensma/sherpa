@@ -179,7 +179,7 @@ class User(models.Model):
     dob = models.DateField(null=True)
     chosen_main_member = models.BooleanField(default=False)
     memberid = models.IntegerField(null=True)
-    pending_user = models.ForeignKey('user.User', related_name='+', null=True)
+    pending_user = models.ForeignKey('user.User', related_name='enrollment_users', null=True)
     sms_sent = models.BooleanField(default=False)
 
     def __unicode__(self):
