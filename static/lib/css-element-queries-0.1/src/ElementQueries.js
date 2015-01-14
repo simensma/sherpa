@@ -224,7 +224,7 @@
                 try {
                     readRules(document.styleSheets[i].cssText || document.styleSheets[i].cssRules || document.styleSheets[i].rules);
                 } catch(e) {
-                    if (e.name !== 'SecurityError') {
+                    if (e.name !== 'SecurityError' && e.name !== 'ReferenceError') {
                         throw e;
                     }
                 }
