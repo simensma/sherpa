@@ -25,9 +25,23 @@ var ravenOptions = {
       'A security problem occurred.',
       'Det oppstod et sikkerhetsproblem.'
     ],
-    whitelistUrls: [
-      /turistforeningen\.no/
+    ignoreUrls: [
+      // Facebook flakiness
+      /graph\.facebook\.com/i,
+      // Facebook blocked
+      /connect\.facebook\.net\/en_US\/all\.js/i,
+      // Woopra flakiness
+      /eatdifferent\.com\.woopra-ns\.com/i,
+      /static\.woopra\.com\/js\/woopra\.js/i,
+      // Chrome extensions
+      /extensions\//i,
+      /^chrome:\/\//i,
+      // Other plugins
+      /127\.0\.0\.1:4001\/isrunning/i,  // Cacaoweb
+      /webappstoolbarba\.texthelp\.com\//i,
+      /metrics\.itunes\.apple\.com\.edgesuite\.net\//i
     ]
 };
 
-Raven.config('https://d8a4a2875dba4bbba8e7d3b355d8a6a4@sentry.turistforeningen.no/6').install();
+Raven.config('https://d89db6ea46d04084a4d1440c2dd25dd5@sentry.turistforeningen.no/13').install();
+
