@@ -6,6 +6,7 @@ SUSPICIOUS_PHRASES = [
     'kontonummer',
     'million',
     'dollar',
+    'lovepedia',
 ]
 
 def parse_for_spam(request, name, email, text, annonse):
