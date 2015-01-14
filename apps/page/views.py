@@ -84,22 +84,24 @@ def search(request):
     if 'q' not in request.GET:
         return render(request, 'common/page/search.html')
 
-    if len(request.GET['q']) < SEARCH_CHAR_LIMIT:
+    search_query = request.GET['q'].strip()
+
+    if len(search_query) < SEARCH_CHAR_LIMIT:
         context = {
-            'search_query': request.GET['q'],
+            'search_query': search_query,
             'query_too_short': True,
             'search_char_limit': SEARCH_CHAR_LIMIT,
         }
         return render(request, 'common/page/search.html', context)
 
     # Record the search
-    search = Search(query=request.GET['q'], site=request.site)
+    search = Search(query=search_query, site=request.site)
     search.save()
 
     pages = Page.on(request.site).filter(
         # Match page title or content
-        Q(variant__version__rows__columns__contents__content__icontains=request.GET['q']) |
-        Q(title__icontains=request.GET['q']),
+        Q(variant__version__rows__columns__contents__content__icontains=search_query) |
+        Q(title__icontains=search_query),
 
         # Default segment, active version, published page
         variant__segment=None,
@@ -109,7 +111,7 @@ def search(request):
 
     article_versions = Version.objects.filter(
         # Match content
-        variant__version__rows__columns__contents__content__icontains=request.GET['q'],
+        variant__version__rows__columns__contents__content__icontains=search_query,
 
         # Active version, default segment, published article
         active=True,
@@ -121,15 +123,15 @@ def search(request):
 
     if request.site.id == Site.DNT_CENTRAL_ID:
         old_articles = OldArticle.objects.filter(
-            Q(title__icontains=request.GET['q']) |
-            Q(lede__icontains=request.GET['q']) |
-            Q(content__icontains=request.GET['q'])
+            Q(title__icontains=search_query) |
+            Q(lede__icontains=search_query) |
+            Q(content__icontains=search_query)
         ).distinct().order_by('-date')
     else:
         old_articles = []
 
     context = {
-        'search_query': request.GET['q'],
+        'search_query': search_query,
         'article_versions': article_versions,
         'pages': pages,
         'old_articles': old_articles,
