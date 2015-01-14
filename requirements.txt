@@ -1,6 +1,5 @@
 Django==1.7
 Pillow==2.0.0
-South==0.7.6
 boto==2.9.4
 cffi==0.8.6
 cryptography==0.6.1
