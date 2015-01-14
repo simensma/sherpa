@@ -17,6 +17,7 @@ from analytics.models import Search, NotFound
 from sherpa2.models import Cabin as Sherpa2Cabin
 from core.models import Site
 from aktiviteter.util import filter_aktivitet_dates
+from foreninger.models import Forening
 
 variant_key = 'var'
 
@@ -122,10 +123,10 @@ def search(request):
         variant__article__site=request.site,
     ).distinct().order_by('-variant__article__pub_date')
 
-    _, aktivitet_dates = filter_aktivitet_dates({
-        'search': search_query,
-    })
-
+    aktivitet_filter = {'search': search_query}
+    if request.site.forening.id != Forening.DNT_CENTRAL_ID:
+        aktivitet_filter['organizers'] = '%s:%s' % ('forening', request.site.forening.id)
+    _, aktivitet_dates = filter_aktivitet_dates(aktivitet_filter)
     aktivitet_date_count = aktivitet_dates.count()
 
     if request.site.id == Site.DNT_CENTRAL_ID:
