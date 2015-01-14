@@ -15,22 +15,40 @@ class AktivitetListingWidget(Widget):
             start_date__gte=date.today(),
         )
 
+        url_query_parameters = []
+        limit = widget_options.get('limit', 50)
+        total = aktivitet_dates.count()
+        more_activities_count = total - limit
+
         # Skip if none, or all, audiences were chosen
         if len(widget_options['audiences']) > 0 and len(widget_options['audiences']) < len(AktivitetAudience.AUDIENCE_CHOICES):
             aktivitet_dates = aktivitet_dates.filter(aktivitet__audiences__name__in=widget_options['audiences'])
+            url_query_parameters.append("audiences=%s" % ",".join(widget_options['audiences']))
 
         # Skip if none, or all, categories were chosen
         if len(widget_options['categories']) > 0 and len(widget_options['categories']) < len(Aktivitet.CATEGORY_CHOICES):
             aktivitet_dates = aktivitet_dates.filter(
                 aktivitet__category__in=widget_options['categories'],
             )
+            url_query_parameters.append("categories=%s" % ",".join(widget_options['categories']))
 
-        aktivitet_dates = aktivitet_dates.order_by('start_date')
+        if len(widget_options['foreninger']) > 0:
+            organizers = []
+            for forening in widget_options['foreninger']:
+                organizers.append("forening:%s" % forening)
 
-        if 'limit' in widget_options:
-            aktivitet_dates = aktivitet_dates[:widget_options['limit']]
+            url_query_parameters.append("organizers=%s" % ",".join(organizers))
 
-        return {'aktivitet_dates': aktivitet_dates}
+        aktivitet_dates = aktivitet_dates.order_by('start_date')[:limit]
+        see_more_query_params = "&".join(url_query_parameters)
+
+        return {
+            'aktivitet_dates': aktivitet_dates,
+            'see_more_query_params': see_more_query_params,
+            'total': total,
+            'limit': limit,
+            'more_activities_count': more_activities_count
+        }
 
     def admin_context(self, site):
         return {

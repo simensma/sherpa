@@ -34,6 +34,7 @@ $(function() {
             // Default the organizer to the active forening of the current site
             var default_forening = $editor.attr('data-dnt-active-forening');
             $editor.find('select[name="foreninger"]').select2('val', default_forening);
+            $editor.find('input[name="limit"]').val(5);
 
             // Hide editable filter controls by default
             $editor.find('[data-dnt-container="edit-filters"]').show();
@@ -50,6 +51,7 @@ $(function() {
             $editor.find('select[name="foreninger"]').select2('val', widget_content.foreninger);
             $editor.find('select[name="audiences"]').select2('val', widget_content.audiences);
             $editor.find('select[name="categories"]').select2('val', widget_content.categories);
+            $editor.find('input[name="limit"]').val(widget_content.limit);
 
             var audience_options = allOptionsFor($editor.find('select[name="audiences"]'));
             var category_options = allOptionsFor($editor.find('select[name="categories"]'));
@@ -59,6 +61,7 @@ $(function() {
                 // This widget is configured to show all audiences and categories; hide filter controls
                 $editor.find('[data-dnt-container="edit-filters"]').show();
                 $editor.find('[data-dnt-container="filters"]').hide();
+
             } else {
                 // User has changed audiences and/or categories; show the controls
                 $editor.find('[data-dnt-container="edit-filters"]').hide();
@@ -74,7 +77,7 @@ $(function() {
 
             var audiences = $audiences.select2('val');
             var categories = $categories.select2('val');
-            var limit = $limit.val() || 50;
+            var limit = parseInt($limit.val(), 10) || 50;
 
             if(audiences.length === 0) {
                 audiences = allOptionsFor($audiences);
