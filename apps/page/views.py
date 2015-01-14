@@ -83,10 +83,13 @@ def search(request):
     # Very simple search for now
     if not 'q' in request.GET:
         return render(request, 'common/page/search.html')
+
     if len(request.GET['q']) < SEARCH_CHAR_LIMIT:
-        context = {'search_query': request.GET['q'],
+        context = {
+            'search_query': request.GET['q'],
             'query_too_short': True,
-            'search_char_limit': SEARCH_CHAR_LIMIT}
+            'search_char_limit': SEARCH_CHAR_LIMIT,
+        }
         return render(request, 'common/page/search.html', context)
 
     # Record the search
@@ -101,7 +104,8 @@ def search(request):
         # Default segment, active version, published page
         variant__segment=None,
         variant__version__active=True,
-        published=True).distinct()
+        published=True,
+    ).distinct()
 
     article_versions = Version.objects.filter(
         # Match content
@@ -112,15 +116,15 @@ def search(request):
         variant__segment=None,
         variant__article__published=True,
         variant__article__pub_date__lt=datetime.now(),
-        variant__article__site=request.site
-        ).distinct().order_by('-variant__article__pub_date')
+        variant__article__site=request.site,
+    ).distinct().order_by('-variant__article__pub_date')
 
     if request.site.id == Site.DNT_CENTRAL_ID:
         old_articles = OldArticle.objects.filter(
             Q(title__icontains=request.GET['q']) |
             Q(lede__icontains=request.GET['q']) |
             Q(content__icontains=request.GET['q'])
-            ).distinct().order_by('-date')
+        ).distinct().order_by('-date')
     else:
         old_articles = []
 
@@ -129,7 +133,7 @@ def search(request):
         'article_versions': article_versions,
         'pages': pages,
         'old_articles': old_articles,
-        'article_count': len(article_versions) + len(old_articles)
+        'article_count': len(article_versions) + len(old_articles),
     }
     return render(request, 'common/page/search.html', context)
 
