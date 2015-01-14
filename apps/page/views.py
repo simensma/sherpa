@@ -81,7 +81,7 @@ def parse_content(request, version):
 @csrf_exempt
 def search(request):
     # Very simple search for now
-    if not 'q' in request.GET:
+    if 'q' not in request.GET:
         return render(request, 'common/page/search.html')
 
     if len(request.GET['q']) < SEARCH_CHAR_LIMIT:
