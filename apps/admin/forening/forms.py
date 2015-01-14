@@ -269,8 +269,6 @@ class ForeningDataForm(forms.Form):
             if 'parents' in cleaned_data:
                 del cleaned_data['parents']
 
-        return cleaned_data
-
 class ExistingForeningDataForm(ForeningDataForm):
 
     forening = forms.IntegerField(required=False, widget=forms.HiddenInput())
@@ -289,7 +287,7 @@ class ExistingForeningDataForm(ForeningDataForm):
         # Ideally, we should carefully check each case and provide as many errors as possible, but can't
         # spend time on that right now
         if not 'forening' in cleaned_data or not 'parents' in cleaned_data or not 'type' in cleaned_data:
-            return cleaned_data
+            return
 
         # Non DNT admins cannot *change* the type to forening/sentral
         if not self._user.is_admin_in_dnt_central():
@@ -351,5 +349,3 @@ class ExistingForeningDataForm(ForeningDataForm):
                 )
             ])
             del cleaned_data['parents']
-
-        return cleaned_data

@@ -94,8 +94,6 @@ class SiteForm(forms.Form):
                 cleaned_data['template_type'] = ''
                 cleaned_data['template_description'] = ''
 
-        return cleaned_data
-
 class CreateSiteForm(SiteForm):
     domain = forms.CharField(
         error_messages={
