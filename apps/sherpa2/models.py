@@ -409,7 +409,10 @@ class Turforslag(models.Model):
         db_table = u'trip'
 
 class NtbId(models.Model):
-    sql_id = models.IntegerField(db_column='id')
+    # Note that although the sql_id is absolutely not the primary key, we need to mark it as such to have Django allow
+    # us to reference 'id'. Note also that this will make certain operations dependent on the PK not work. This table
+    # should only be used for simple lookups on both ids and type explicitly.
+    sql_id = models.IntegerField(db_column='id', primary_key=True)
     object_id = models.CharField(db_column='oid', max_length=24, unique=True)
     type = models.CharField(max_length=1)
 
