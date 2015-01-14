@@ -12,6 +12,22 @@ $(function() {
                 $editor.find('[data-dnt-container="edit-filters"]').hide();
                 $editor.find('[data-dnt-container="filters"]').slideDown();
             });
+
+            var $limit = $editor.find('input[name="limit"]');
+            var $save = $editor.find('button.save');
+
+            $limit.on('input', function () {
+                var val = parseInt($(this).val(), 10);
+                if (val > 50) {
+                    $(this).parents('[data-dnt-container]').first().addClass('has-error');
+                    $(this).focus();
+                    $save.attr('disabled', true);
+
+                } else {
+                    $(this).parents('[data-dnt-container]').first().removeClass('has-error');
+                    $save.attr('disabled', false);
+                }
+            });
         },
 
         onNew: function($editor) {
@@ -58,7 +74,7 @@ $(function() {
 
             var audiences = $audiences.select2('val');
             var categories = $categories.select2('val');
-            var limit = $limit.val() || undefined;
+            var limit = $limit.val() || 50;
 
             if(audiences.length === 0) {
                 audiences = allOptionsFor($audiences);

@@ -4,7 +4,7 @@
   data-dnt-active-forening="{{ active_site.forening.id }}">
 
   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
     <h3>Liste med turer og aktiviteter</h3>
   </div>
 
@@ -53,8 +53,9 @@
     </div>
 
     <div data-dnt-container="limit">
-      <h3>Maks antall aktiviteter</h3>
-      <input class="form-control" name="limit" data-placeholder="Ingen begrensing" value="{{ widget_data.limit|default:"5" }}">
+      <h3>Antall</h3>
+      <input class="form-control" name="limit" placeholder="50" value="{{ widget_data.limit|default:"5" }}">
+      <p class="help-block">Listen kan vise maksimalt 50 aktiviteter</p>
     </div>
 
   </div>
