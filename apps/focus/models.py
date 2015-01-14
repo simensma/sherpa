@@ -43,7 +43,7 @@ class Enrollment(models.Model):
     linked_to = models.CharField(db_column=u'LinkedTo', max_length=255)
     enlisted_by = models.CharField(db_column=u'EnlistedBy', max_length=255, default=0)
     enlisted_article = models.CharField(db_column=u'EnlistedArticle', max_length=255, default=None)
-    receive_yearbook = models.BooleanField(db_column=u'ReceiveYearbook')
+    receive_yearbook = models.BooleanField(db_column=u'ReceiveYearbook', default=False)
     type = models.FloatField(db_column=u'Type')
     yearbook = models.CharField(db_column=u'Yearbook', max_length=255)
     contract_giro = models.BooleanField(db_column=u'ContractGiro', default=False)
@@ -54,7 +54,7 @@ class Enrollment(models.Model):
     submitted_date = models.DateTimeField(db_column=u'SubmittedDt', null=True, default=None)
     updated_card = models.BooleanField(db_column=u'UpdatedCard', default=False)
 
-    partneroffers_optin = models.BooleanField(db_column=u'Gjensidige')
+    partneroffers_optin = models.BooleanField(db_column=u'Gjensidige', default=False)
     partneroffers_optin_date = models.DateTimeField(db_column=u'GjensidigeDate')
 
     def __unicode__(self):
@@ -99,8 +99,8 @@ class Actor(models.Model):
     end_code = models.CharField(max_length=5, db_column=u'EndCd')
 
     # Other relevant stuff
-    receive_email = models.BooleanField(db_column=u'OptBit1')
-    reserved_against_partneroffers = models.BooleanField(db_column=u'OptBit3')
+    receive_email = models.BooleanField(db_column=u'OptBit1', default=True)
+    reserved_against_partneroffers = models.BooleanField(db_column=u'OptBit3', default=True)
 
     # Bookkeeping
     created_by = models.CharField(max_length=25, db_column=u'CrBy')
@@ -119,7 +119,7 @@ class Actor(models.Model):
     payterm = models.IntegerField(db_column=u'PayTerm')
     accno = models.CharField(max_length=50, db_column=u'AccNo')
     disc = models.SmallIntegerField(null=True, db_column=u'Disc')
-    vatcd = models.BooleanField(db_column=u'VatCd')
+    vatcd = models.BooleanField(db_column=u'VatCd', default=False)
     optint1 = models.IntegerField(db_column=u'OptInt1')
     optint2 = models.IntegerField(db_column=u'OptInt2')
     optint3 = models.IntegerField(db_column=u'OptInt3')
@@ -138,10 +138,10 @@ class Actor(models.Model):
     optchar7 = models.CharField(max_length=10, db_column=u'OptChar7')
     optchar8 = models.CharField(max_length=10, db_column=u'OptChar8')
     optchar9 = models.CharField(max_length=10, db_column=u'OptChar9')
-    optbit2 = models.BooleanField(db_column=u'OptBit2')
-    optbit4 = models.BooleanField(db_column=u'OptBit4')
-    optbit5 = models.BooleanField(db_column=u'OptBit5')
-    optbit6 = models.BooleanField(db_column=u'OptBit6')
+    optbit2 = models.BooleanField(db_column=u'OptBit2', default=False)
+    optbit4 = models.BooleanField(db_column=u'OptBit4', default=False)
+    optbit5 = models.BooleanField(db_column=u'OptBit5', default=False)
+    optbit6 = models.BooleanField(db_column=u'OptBit6', default=False)
     optlng1 = models.FloatField(db_column=u'OptLng1')
     optlng2 = models.FloatField(db_column=u'OptLng2')
     optlng3 = models.FloatField(db_column=u'OptLng3')

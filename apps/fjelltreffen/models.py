@@ -33,7 +33,7 @@ class Annonse(models.Model):
     text = models.TextField()
     hidden = models.BooleanField(default=False)
     hideage = models.BooleanField(default=False)
-    is_image_old = models.BooleanField() # True for those imported from old Fjelltreffen
+    is_image_old = models.BooleanField(default=False) # True for those imported from old Fjelltreffen
 
     def __unicode__(self):
         return u'%s' % self.pk

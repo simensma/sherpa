@@ -294,7 +294,7 @@ class Municipality(models.Model):
 class FocusCountry(models.Model):
     code = models.CharField(max_length=2)
     name = models.CharField(max_length=255)
-    scandinavian = models.BooleanField()
+    scandinavian = models.BooleanField(default=False)
 
     def __unicode__(self):
         return u'%s: %s' % (self.pk, self.name)

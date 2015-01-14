@@ -7,8 +7,8 @@ from page.models import Variant
 
 class Article(models.Model):
     thumbnail = models.CharField(max_length=2048, null=True)
-    hide_thumbnail = models.BooleanField()
-    published = models.BooleanField()
+    hide_thumbnail = models.BooleanField(default=False)
+    published = models.BooleanField(default=False)
     pub_date = models.DateTimeField(null=True)
     created_by = models.ForeignKey('user.User', related_name='articles_created')
     created_date = models.DateTimeField(auto_now_add=True)
