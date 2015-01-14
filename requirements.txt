@@ -4,7 +4,7 @@ boto==2.9.4
 cffi==0.8.6
 cryptography==0.6.1
 django-mptt==0.6.1
-django-pyodbc==0.2.6
+django-pyodbc-azure==1.2.2
 django-recaptcha==0.0.9
 djorm-pgarray==1.2
 gevent==0.13.8
