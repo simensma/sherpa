@@ -24,12 +24,6 @@ from enrollment.util import current_template_layout
 
 logger = logging.getLogger('sherpa')
 
-# Make sure models are loaded. This fixes a TypeError that
-# occurs when restarting the gunicorn server.
-from django.db.models.loading import cache as model_cache
-if not model_cache.loaded:
-    model_cache.get_models()
-
 from django import template
 template.add_to_builtins('core.templatetags.url')
 

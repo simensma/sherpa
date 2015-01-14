@@ -60,13 +60,13 @@ class Member(models.Model):
     workphone = models.TextField(db_column='workPhone')
     cellphone = models.TextField(db_column='cellPhone')
     email = models.TextField()
-    receiveemail = models.BooleanField(db_column='receiveEmail')
+    receiveemail = models.BooleanField(db_column='receiveEmail', default=False)
     password = models.TextField()
     gender = models.CharField(max_length=1, db_column='sex')
     birthdate = models.DateField(null=True, db_column='birthDate')
     countryname = models.TextField(db_column='countryName')
     countrycode = models.TextField(db_column='countryCode')
-    receivesms = models.BooleanField(db_column='receiveSms')
+    receivesms = models.BooleanField(db_column='receiveSms', default=False)
     memberid = models.IntegerField(unique=True, null=True, db_column='memberId')
     memberparent = models.IntegerField(null=True, db_column='memberParent')
     memberrecruiter = models.IntegerField(null=True, db_column='memberRecruiter')
@@ -80,7 +80,7 @@ class Member(models.Model):
     created = models.DateTimeField(null=True)
     modified = models.DateTimeField(null=True)
     status = models.IntegerField(null=True)
-    online = models.BooleanField()
+    online = models.BooleanField(default=True)
 
     def __unicode__(self):
         return u'%s' % self.pk

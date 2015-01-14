@@ -1,35 +1,46 @@
-# encoding: utf-8
-import datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
-class Migration(SchemaMigration):
-
-    def forwards(self, orm):
-        
-        # Adding model 'Segment'
-        db.create_table('analytics_segment', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=200)),
-            ('description', self.gf('django.db.models.fields.TextField')()),
-        ))
-        db.send_create_signal('analytics', ['Segment'])
+from django.db import models, migrations
 
 
-    def backwards(self, orm):
-        
-        # Deleting model 'Segment'
-        db.delete_table('analytics_segment')
+class Migration(migrations.Migration):
 
+    dependencies = [
+    ]
 
-    models = {
-        'analytics.segment': {
-            'Meta': {'object_name': 'Segment'},
-            'description': ('django.db.models.fields.TextField', [], {}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '200'})
-        }
-    }
-
-    complete_apps = ['analytics']
+    operations = [
+        migrations.CreateModel(
+            name='NotFound',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('path', models.CharField(max_length=2048)),
+                ('date', models.DateTimeField()),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Search',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('query', models.CharField(max_length=1024)),
+                ('date', models.DateTimeField(auto_now_add=True)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Segment',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=200)),
+                ('description', models.TextField()),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+    ]

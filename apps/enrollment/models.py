@@ -16,8 +16,8 @@ from enrollment.exceptions import BirthDateNotDefined
 
 # Has always only *one* row
 class State(models.Model):
-    active = models.BooleanField()
-    card = models.BooleanField() # Accept card-payment
+    active = models.BooleanField(default=True)
+    card = models.BooleanField(default=True) # Accept card-payment
 
     def __unicode__(self):
         return u'%s (active: %s, card: %s)' % (self.pk, self.active, self.card)

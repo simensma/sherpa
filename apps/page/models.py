@@ -39,7 +39,7 @@ def delete_menu(sender, **kwargs):
 class Page(MPTTModel):
     title = models.CharField(max_length=255)
     slug = models.CharField(max_length=255)
-    published = models.BooleanField()
+    published = models.BooleanField(default=False)
     created_by = models.ForeignKey('user.User', related_name='pages_created')
     created_date = models.DateTimeField(auto_now_add=True)
     modified_by = models.ForeignKey('user.User', related_name='pages_modified', null=True)
@@ -102,9 +102,9 @@ class Version(models.Model):
     version = models.IntegerField()
     owner = models.ForeignKey('user.User', related_name='+')
     publishers = models.ManyToManyField('user.User', related_name='versions')
-    active = models.BooleanField()
+    active = models.BooleanField(default=True)
     tags = models.ManyToManyField('core.Tag', related_name='versions')
-    ads = models.BooleanField()
+    ads = models.BooleanField(default=True)
 
     def __unicode__(self):
         return u'%s' % self.pk

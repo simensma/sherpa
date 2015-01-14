@@ -173,11 +173,11 @@ class ForeningDataForm(forms.Form):
         if cleaned_data.get('choose_contact') == 'person':
             if cleaned_data.get('contact_person') is None and \
                 (cleaned_data.get('contact_person_name') is None or cleaned_data.get('contact_person_name') == ''):
-                self._errors['contact_person_name'] = self.error_class([
-                    u"Hvis det er en kontaktperson som kan kontaktes, må du oppgi et navn eller velge en person fra medlemsregisteret."
-                ])
-                if 'contact_person_name' in cleaned_data:
-                    del cleaned_data['contact_person_name']
+                self.add_error(
+                    'contact_person_name',
+                    u"Hvis det er en kontaktperson som kan kontaktes, må du oppgi et navn eller velge en person " \
+                    u"fra medlemsregisteret.",
+                )
 
         type_ = cleaned_data.get('type')
         parents = cleaned_data.get('parents')
@@ -191,24 +191,23 @@ class ForeningDataForm(forms.Form):
         # These types must have a parent, but that can't be enforced on the DB-level for *new* foreninger since parents
         # are a M2M-relationship (so the child needs to be saved before the parent can be related), so check it here.
         elif type_ in ['turlag', 'turgruppe'] and len(parents) == 0:
-            self._errors['parents'] = self.error_class([
+            self.add_error(
+                'parents',
                 u"%s må ha en moderforening!" % (
                     'Et turlag' if type_ == 'turlag' else 'En turgruppe',
                 )
-            ])
-            if 'parents' in cleaned_data:
-                del cleaned_data['parents']
+            )
             parents = None
 
         # Non DNT admins cannot *create* forening with type forening/sentral
         # Note that this might be legal in derived classes, so check this only for the base class
         # Shouldn't be possible without a manual POST
         if type(self) == ForeningDataForm and not self._user.is_admin_in_dnt_central() and type_ in ['sentral', 'forening']:
-            self._errors['type'] = self.error_class([
-                u"Du har ikke tillatelse til å opprette sentrale grupper eller medlemsforeninger. Vennligst ta kontakt med DNT sentralt."
-            ])
-            if 'type' in cleaned_data:
-                del cleaned_data['type']
+            self.add_error(
+                'type',
+                u"Du har ikke tillatelse til å opprette sentrale grupper eller medlemsforeninger. Vennligst ta " \
+                u"kontakt med DNT sentralt.",
+            )
 
         # Validate the new forening type and parents relationship
         try:
@@ -220,56 +219,47 @@ class ForeningDataForm(forms.Form):
 
         except ForeningWithItselfAsParent:
             # Shouldn't be possible without a manual POST
-            self._errors['parents'] = self.error_class([
+            self.add_error(
+                'parents',
                 u"%s kan ikke være underlagt seg selv." % forening.name
-            ])
-            if 'parents' in cleaned_data:
-                del cleaned_data['parents']
+            )
 
         except SentralForeningWithRelation:
             # Shouldn't be possible without a manual POST
-            self._errors['parents'] = self.error_class([
+            self.add_error(
+                'parents',
                 u"En sentral forening kan ikke ha noen koblinger til andre foreningstyper."
-            ])
-            if 'parents' in cleaned_data:
-                del cleaned_data['parents']
+            )
 
         except ForeningWithForeningParent:
-            self._errors['parents'] = self.error_class([
+            self.add_error(
+                'parents',
                 u"En forening kan ikke være underlagt en annen forening."
-            ])
-            if 'parents' in cleaned_data:
-                del cleaned_data['parents']
+            )
 
         except TurlagWithTurlagParent:
-            self._errors['parents'] = self.error_class([
+            self.add_error(
+                'parents',
                 u"Et turlag kan ikke være underlagt et annet turlag."
-            ])
-            if 'parents' in cleaned_data:
-                del cleaned_data['parents']
+            )
 
         except TurgruppeWithTurgruppeParent:
-            self._errors['parents'] = self.error_class([
+            self.add_error(
+                'parents',
                 u"En turgruppe kan ikke være underlagt en annen turgruppe."
-            ])
-            if 'parents' in cleaned_data:
-                del cleaned_data['parents']
+            )
 
         except ForeningWithTurlagParent:
-            self._errors['parents'] = self.error_class([
+            self.add_error(
+                'parents',
                 u"Foreninger kan ikke være underlagt turlag/turgrupper."
-            ])
-            if 'parents' in cleaned_data:
-                del cleaned_data['parents']
+            )
 
         except TurlagWithTurgruppeParent:
-            self._errors['parents'] = self.error_class([
+            self.add_error(
+                'parents',
                 u"Et turlag kan ikke være underlagt en turgruppe."
-            ])
-            if 'parents' in cleaned_data:
-                del cleaned_data['parents']
-
-        return cleaned_data
+            )
 
 class ExistingForeningDataForm(ForeningDataForm):
 
@@ -289,29 +279,25 @@ class ExistingForeningDataForm(ForeningDataForm):
         # Ideally, we should carefully check each case and provide as many errors as possible, but can't
         # spend time on that right now
         if not 'forening' in cleaned_data or not 'parents' in cleaned_data or not 'type' in cleaned_data:
-            return cleaned_data
+            return
 
         # Non DNT admins cannot *change* the type to forening/sentral
         if not self._user.is_admin_in_dnt_central():
             # Cannot change an existing sentral/forening at all
             if forening.type in ['sentral', 'forening'] and forening.type != new_type:
-                self._errors['type'] = self.error_class([
-                    u"Du har ikke tillatelse til å endre gruppetypen for %s - vennligst ta kontakt med DNT sentralt." % (
-                        forening.name,
-                    )
-                ])
-                if 'type' in cleaned_data:
-                    del cleaned_data['type']
+                self.add_error(
+                    'type',
+                    u"Du har ikke tillatelse til å endre gruppetypen for %s - vennligst ta kontakt med DNT " \
+                    u"sentralt." % forening.name
+                )
 
             # Cannot change turlag/turgruppe to sentral/forening
             elif forening.type in ['turlag', 'turgruppe'] and new_type in ['sentral', 'forening']:
-                self._errors['type'] = self.error_class([
-                    u"Du har ikke tillatelse til å endre gruppetypen for %s til denne typen forening - vennligst ta kontakt med DNT sentralt." % (
-                        forening.name,
-                    )
-                ])
-                if 'type' in cleaned_data:
-                    del cleaned_data['type']
+                self.add_error(
+                    'type',
+                    u"Du har ikke tillatelse til å endre gruppetypen for %s til denne typen forening - vennligst " \
+                    u"ta kontakt med DNT sentralt." % forening.name
+                )
 
         # This validation was performed in our base class for a new forening, but recheck for the chosen existing
         # forening. We only need to catch the relevant new types; this forening may have children, and it
@@ -326,30 +312,26 @@ class ExistingForeningDataForm(ForeningDataForm):
             # This will never happen as long as our base class performs this check explicitly for us, and we're
             # skipping these validations when our base class has errors. However, this is where it would belong
             # if one of those conditions ever change.
-            self._errors['parent'] = self.error_class([
+            self.add_error(
+                'parent',
                 u"%s må ha en moderforening!" % (
                     'Et turlag' if new_type == 'turlag' else 'En turgruppe',
-                )
-            ])
-            if 'parent' in cleaned_data:
-                del cleaned_data['parent']
+                ),
+            )
 
         except ForeningTypeCannotHaveChildren:
-            self._errors['type'] = self.error_class([
-                u"Hvis du vil gjøre %s til %s, kan den ikke ha noen underforeninger. (Gruppen har %s underforeninger i dag)" % (
-                    forening.name,
-                    new_type,
-                    forening.children.count(),
-                )
-            ])
-            del cleaned_data['type']
+            self.add_error(
+                'type',
+                u"Hvis du vil gjøre %s til %s, kan den ikke ha noen underforeninger. (Gruppen har %s " \
+                u"underforeninger i dag)" % (
+                    forening.name, new_type, forening.children.count(),
+                ),
+            )
 
         except ForeningParentIsChild as e:
-            self._errors['parents'] = self.error_class([
+            self.add_error(
+                'parents',
                 u"%s er allerede en undergruppe av %s. Da kan ikke %s være underlagt %s samtidig." % (
-                    e.parent.name, forening.name, forening.name, e.parent.name
-                )
-            ])
-            del cleaned_data['parents']
-
-        return cleaned_data
+                    e.parent.name, forening.name, forening.name, e.parent.name,
+                ),
+            )
