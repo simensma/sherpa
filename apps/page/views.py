@@ -16,6 +16,7 @@ from articles.models import OldArticle
 from analytics.models import Search, NotFound
 from sherpa2.models import Cabin as Sherpa2Cabin
 from core.models import Site
+from aktiviteter.util import filter_aktivitet_dates
 
 variant_key = 'var'
 
@@ -121,6 +122,12 @@ def search(request):
         variant__article__site=request.site,
     ).distinct().order_by('-variant__article__pub_date')
 
+    _, aktivitet_dates = filter_aktivitet_dates({
+        'search': search_query,
+    })
+
+    aktivitet_date_count = aktivitet_dates.count()
+
     if request.site.id == Site.DNT_CENTRAL_ID:
         old_articles = OldArticle.objects.filter(
             Q(title__icontains=search_query) |
@@ -136,6 +143,7 @@ def search(request):
         'pages': pages,
         'old_articles': old_articles,
         'article_count': len(article_versions) + len(old_articles),
+        'aktivitet_date_count': aktivitet_date_count,
     }
     return render(request, 'common/page/search.html', context)
 
