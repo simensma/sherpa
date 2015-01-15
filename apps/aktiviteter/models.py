@@ -329,7 +329,7 @@ class AktivitetDate(models.Model):
         if not self.signup_enabled:
             return False
 
-        return self.signup_start >= date.today()
+        return not self.signup_starts_immediately() and self.signup_start >= date.today()
 
     def signup_deadline_passed(self):
         if not self.signup_enabled:
