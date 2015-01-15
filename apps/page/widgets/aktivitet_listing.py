@@ -33,10 +33,7 @@ class AktivitetListingWidget(Widget):
             url_query_parameters.append("categories=%s" % ",".join(widget_options['categories']))
 
         if len(widget_options['foreninger']) > 0:
-            organizers = []
-            for forening in widget_options['foreninger']:
-                organizers.append("forening:%s" % forening)
-
+            organizers = ["forening:%s" % f for f in widget_options['foreninger']]
             url_query_parameters.append("organizers=%s" % ",".join(organizers))
 
         aktivitet_dates = aktivitet_dates.order_by('start_date')[:limit]
