@@ -1,5 +1,5 @@
 # encoding: utf-8
-from django.conf.urls.defaults import patterns, url
+from django.conf.urls import patterns, url
 
 urlpatterns = patterns('admin.enrollment.views',
     url(r'^$', 'index'),

@@ -31,9 +31,9 @@ class Annonse(models.Model):
     image_thumb = models.CharField(max_length=2048)
 
     text = models.TextField()
-    hidden = models.BooleanField()
-    hideage = models.BooleanField()
-    is_image_old = models.BooleanField() # True for those imported from old Fjelltreffen
+    hidden = models.BooleanField(default=False)
+    hideage = models.BooleanField(default=False)
+    is_image_old = models.BooleanField(default=False) # True for those imported from old Fjelltreffen
 
     def __unicode__(self):
         return u'%s' % self.pk

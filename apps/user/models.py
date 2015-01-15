@@ -887,12 +887,13 @@ class Turleder(models.Model):
         (u'vinter', u'Vinterturleder'),
         (u'sommer', u'Sommerturleder'),
         (u'grunnleggende', u'Grunnleggende turleder'),
-        (u'ambassadør', u'DNT Ambassadør'),)
+        (u'ambassadør', u'DNT Ambassadør'),
+    )
     user = models.ForeignKey(User, related_name='turledere')
     role = models.CharField(max_length=255, choices=TURLEDER_CHOICES)
     forening_approved = models.ForeignKey('foreninger.Forening', related_name='turledere_approved')
     date_start = models.DateField(null=True)
-    date_end = models.DateField(null=True)
+    date_end = models.DateField(null=True) # Will be NULL for roles 'ambassadør' and 'grunnleggende'
 
     def __unicode__(self):
         return u'%s' % self.pk
@@ -901,6 +902,8 @@ class Turleder(models.Model):
         return [c[1] for c in self.TURLEDER_CHOICES if c[0] == self.role][0]
 
     def is_expired(self):
+        if self.role == 'ambassadør' or self.role == 'grunnleggende':
+            return False
         return self.date_end <= date.today()
 
     @staticmethod

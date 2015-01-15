@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.contrib.gis import geos
 from django.core.paginator import Paginator, EmptyPage
 from django.utils.html import strip_tags
-from django.utils.text import truncate_words
+from django.template.defaultfilters import truncatewords
 
 from aktiviteter.models import Aktivitet, AktivitetDate
 
@@ -16,10 +16,11 @@ def filter_aktivitet_dates(filter):
     # can split strings into lists which the template logic is dependent upon. If you find a better
     # way, please refactor this code.
 
-    dates = AktivitetDate.get_published().prefetch_related(
+    dates = AktivitetDate.get_published().select_related(
+        'aktivitet__forening',
+    ).prefetch_related(
         'aktivitet',
         'aktivitet__images',
-        'aktivitet__forening',
         'aktivitet__forening__sites',
         'aktivitet__co_foreninger',
     ).filter(aktivitet__private=False)
@@ -149,7 +150,7 @@ def mapify_aktivitet_dates(filter, dates):
     return [{
         'id': date.aktivitet.id,
         'title': date.aktivitet.title,
-        'desc': truncate_words(strip_tags(date.aktivitet.description), 30),
+        'desc': truncatewords(strip_tags(date.aktivitet.description), 30),
         'lat': date.aktivitet.start_point.get_coords()[0],
         'lng': date.aktivitet.start_point.get_coords()[1],
     } for date in dates]

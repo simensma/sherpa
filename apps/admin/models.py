@@ -219,10 +219,10 @@ class Campaign(models.Model):
         (u'black', u'Sort'),
     )
     photographer_color = models.CharField(max_length=10, choices=PHOTOGRAPHER_COLOR_CHOICES)
-    button_enabled = models.BooleanField()
+    button_enabled = models.BooleanField(default=True)
     button_label = models.CharField(max_length=1024)
     button_anchor = models.CharField(max_length=2048)
-    button_large = models.BooleanField()
+    button_large = models.BooleanField(default=False)
     button_position = models.CharField(max_length=512) # JSON
 
     created = models.DateTimeField(auto_now_add=True)

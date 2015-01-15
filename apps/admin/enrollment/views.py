@@ -27,7 +27,11 @@ def index(request):
                 Q(transactions__order_number__icontains=q)
             )
 
-    enrollments = enrollments.prefetch_related('users', 'transactions', 'users__pending_user').order_by('-date_modified')
+    enrollments = enrollments.prefetch_related(
+        'users',
+        'users__pending_user',
+        'transactions',
+    ).order_by('-date_modified')
     paginator = Paginator(enrollments, 20)
     try:
         enrollments = paginator.page(request.GET.get('page', 1))

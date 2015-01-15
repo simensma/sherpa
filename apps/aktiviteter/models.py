@@ -241,8 +241,8 @@ class AktivitetDate(models.Model):
     start_date = models.DateTimeField(db_index=True)
     end_date = models.DateTimeField()
     signup_enabled = models.BooleanField(default=True)
-    signup_montis = models.BooleanField()
-    signup_simple_allowed = models.BooleanField()
+    signup_montis = models.BooleanField(default=False)
+    signup_simple_allowed = models.BooleanField(default=False)
     signup_max_allowed = models.PositiveIntegerField(default=0, null=True)
 
     # If signup_enabled is False, these values are not applicable and should always be null

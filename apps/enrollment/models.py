@@ -2,7 +2,7 @@
 from datetime import datetime, date
 import random
 
-from django.db import models, transaction, connections
+from django.db import models, connections
 from django.core.cache import cache
 
 from core import validator
@@ -16,8 +16,8 @@ from enrollment.exceptions import BirthDateNotDefined
 
 # Has always only *one* row
 class State(models.Model):
-    active = models.BooleanField()
-    card = models.BooleanField() # Accept card-payment
+    active = models.BooleanField(default=True)
+    card = models.BooleanField(default=True) # Accept card-payment
 
     def __unicode__(self):
         return u'%s (active: %s, card: %s)' % (self.pk, self.active, self.card)
@@ -29,11 +29,11 @@ class Enrollment(models.Model):
         ('complete', 'Fullført'),
     )
     state = models.CharField(max_length=255)
-    accepts_conditions = models.BooleanField()
-    partneroffers_optin = models.BooleanField()
+    accepts_conditions = models.BooleanField(default=False)
+    partneroffers_optin = models.BooleanField(default=False)
     existing_memberid = models.CharField(max_length=51)
-    wants_yearbook = models.BooleanField()
-    attempted_yearbook = models.BooleanField()
+    wants_yearbook = models.BooleanField(default=False)
+    attempted_yearbook = models.BooleanField(default=False)
     payment_method = models.CharField(max_length=51)
     RESULT_CHOICES = (
         ('success_invoice', 'Faktura bestilt'),
@@ -175,12 +175,12 @@ class User(models.Model):
     phone = models.CharField(max_length=255)
     email = models.CharField(max_length=511)
     gender = models.CharField(max_length=1)
-    key = models.BooleanField()
+    key = models.BooleanField(default=False)
     dob = models.DateField(null=True)
-    chosen_main_member = models.BooleanField()
+    chosen_main_member = models.BooleanField(default=False)
     memberid = models.IntegerField(null=True)
-    pending_user = models.ForeignKey('user.User', related_name='+', null=True)
-    sms_sent = models.BooleanField()
+    pending_user = models.ForeignKey('user.User', related_name='enrollment_users', null=True)
+    sms_sent = models.BooleanField(default=False)
 
     def __unicode__(self):
         return u'%s' % self.pk
@@ -377,11 +377,9 @@ class User(models.Model):
             partneroffers_optin_date = None
 
         # Fetch and increment memberid with stored procedure
-        with transaction.commit_manually():
-            cursor = connections['focus'].cursor()
-            cursor.execute("exec sp_custTurist_updateMemberId")
-            memberid = cursor.fetchone()[0]
-            connections['focus'].commit_unless_managed()
+        cursor = connections['focus'].cursor()
+        cursor.execute("exec sp_custTurist_updateMemberId")
+        memberid = cursor.fetchall()[0][0]
 
         focus_user = FocusEnrollment(
             memberid=memberid,

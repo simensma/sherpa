@@ -1,5 +1,5 @@
 # encoding: utf-8
-from django.conf.urls.defaults import patterns, url
+from django.conf.urls import patterns, url
 
 # Common URL patterns for all sites to be applied last
 

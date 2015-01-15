@@ -14,9 +14,9 @@ def index(request, site):
                 continue
         available_site_types.append(t)
 
-    if 'form_data' in request.session:
-        form = request.session['form_data']
-        del request.session['form_data']
+    if 'form_post_data' in request.session:
+        form = SiteForm(request.user, request.session['form_post_data'], auto_id='%s')
+        del request.session['form_post_data']
     else:
         form = SiteForm(request.user, auto_id='%s')
 
@@ -41,7 +41,7 @@ def save(request, site):
     form = SiteForm(request.user, request.POST, auto_id='%s')
 
     if not form.is_valid():
-        request.session['form_data'] = form
+        request.session['form_post_data'] = request.POST
         return redirect('admin.sites.settings.views.index', site)
 
     site_forening = form.cleaned_data['forening']

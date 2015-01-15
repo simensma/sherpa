@@ -183,7 +183,7 @@ def turleder_search(request):
     BULK_COUNT = 40
     start = int(request.POST['bulk']) * BULK_COUNT
     end = start + BULK_COUNT
-    turledere = turledere.distinct().prefetch_related('turledere', 'turledere__forening_approved')
+    turledere = turledere.distinct().select_related('turledere', 'turledere__forening_approved')
     total_count = turledere.count()
 
     # To sort them by name, we'll need the Actor data - prefetch the hits in one query, and cache them

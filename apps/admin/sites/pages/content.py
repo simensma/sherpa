@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.db import transaction
 from django.core.cache import cache
 
-from page.models import Page, Version, Row, Column, Content
+from page.models import Version, Row, Column, Content
 from page.widgets.util import render_widget
 from user.models import User
 from core.models import Tag, Site

@@ -46,10 +46,7 @@ def current_template_layout(request):
 def get_or_create_enrollment(request):
     from enrollment.models import Enrollment
     def create_enrollment(request):
-        enrollment = Enrollment(
-            state='registration',
-            accepts_conditions=False,
-        )
+        enrollment = Enrollment(state='registration')
         enrollment.save()
         request.session['enrollment'] = enrollment.pk
         return enrollment

@@ -1,12 +1,11 @@
-Django==1.5.8
+Django>=1.7,<1.8
 Pillow==2.0.0
-South==0.7.6
 boto==2.9.4
 cffi==0.8.6
 cryptography==0.6.1
 django-mptt==0.6.1
--e git://github.com/lionheart/django-pyodbc.git@8c3f91880c9fb08ba17c5b7950d0a379409d7c3a#egg=django-pyodbc
-django-recaptcha==0.0.9
+django-pyodbc-azure==1.2.2
+django-recaptcha==1.0.3
 djorm-pgarray==1.2
 gevent==0.13.8
 greenlet==0.4.0

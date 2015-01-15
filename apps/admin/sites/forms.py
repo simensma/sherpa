@@ -72,9 +72,10 @@ class SiteForm(forms.Form):
                 if edited_site is None or edited_site != homepage:
                     # This forening already has *another* homepage. Shouldn't happen if the client-side logic works
                     # as it is supposed to.
-                    self._errors['forening'] = self.error_class([
-                        "%s har allerede en hjemmeside, du kan ikke sette opp en ny." % forening.name,
-                    ])
+                    self.add_error(
+                        'forening',
+                        u"%s har allerede en hjemmeside, du kan ikke sette opp en ny." % forening.name,
+                    )
 
         if type is not None:
             if type in ['hytte', 'kampanje', 'mal']:
@@ -86,15 +87,14 @@ class SiteForm(forms.Form):
                 # Since the fields aren't required by default but *are* required in this case; check explicitly
                 if template_type is None or template_main is None or template_description is None:
                     # Don't ever expect this to happen
-                    self._errors['template_type'] = self.error_class([
-                        "Du har valgt å opprette en mal uten å sende med informasjon om malen!"
-                    ])
+                    self.add_error(
+                        'template_type',
+                        u"Du har valgt å opprette en mal uten å sende med informasjon om malen!"
+                    )
             else:
                 cleaned_data['template_main'] = False
                 cleaned_data['template_type'] = ''
                 cleaned_data['template_description'] = ''
-
-        return cleaned_data
 
 class CreateSiteForm(SiteForm):
     domain = forms.CharField(
