@@ -8,7 +8,7 @@ import sys
 sys.path.insert(1, "%s/apps" % sys.path[0])
 
 class Prod(Configuration):
-    from secret_prod import *
+    from settings_secret_prod import *
 
     ROOT_URLCONF = 'sherpa.urls_central' # Should be overridden from the Sites middleware in almost all cases, but not when raising PermissionDenied in other middleware.
     AUTH_USER_MODEL = 'user.User'
@@ -406,7 +406,7 @@ class Prod(Configuration):
     }
 
 class Dev(Prod):
-    from secret_dev import *
+    from settings_secret_dev import *
 
     TEMPLATE_DEBUG = DEBUG = True
     INTERNAL_IPS = ('127.0.0.1',)
