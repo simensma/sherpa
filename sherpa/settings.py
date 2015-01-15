@@ -406,6 +406,8 @@ class Prod(Configuration):
     }
 
 class Dev(Prod):
+    from secret_dev import *
+
     TEMPLATE_DEBUG = DEBUG = True
     INTERNAL_IPS = ('127.0.0.1',)
 
