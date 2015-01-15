@@ -27,6 +27,14 @@ logger = logging.getLogger('sherpa')
 from django import template
 template.add_to_builtins('core.templatetags.url')
 
+class Redirect():
+    """Domain-specific redirects"""
+    def process_request(self, request):
+        # At the start of 2015, the main site changed domain from turistforeningen.no to dnt.no. This temporary
+        # redirect should be kept for a long while, perhaps about a year.
+        if request.get_host().lower() == 'www.turistforeningen.no':
+            return redirect('https://www.dnt.no%s' % request.get_full_path())
+
 class DBConnection():
     """Checks connections to external DBs and saves the state in the request object"""
     def process_request(self, request):
