@@ -297,3 +297,110 @@ class Prod(Configuration):
         'sherpa.middleware.FocusDowntime',
         'sherpa.middleware.ActorDoesNotExist',
     )
+
+    TEMPLATE_DEBUG = DEBUG = False
+
+    TEMPLATE_DIRS = (
+        "/sherpa/templates",
+    )
+
+    LOCALE_PATHS = (
+        "/sherpa/locale",
+    )
+
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
+            'LOCATION': '127.0.0.1:11211',
+        }
+    }
+
+    RAVEN_CONFIG = {
+        'string_max_length': 100000
+    }
+
+    # Note: sentry automatically logs uncaught exceptions, so there's
+    # no need to add it to the 'root' or 'django' loggers
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': True,
+        'formatters': {
+            'simple': {
+                'format': '%(levelname)s %(asctime)s\n%(message)s\n'
+            },
+            'verbose': {
+                'format': '%(levelname)s (%(name)s) %(asctime)s\n%(pathname)s:%(lineno)d in %(funcName)s\n%(message)s\n'
+            },
+        },
+        'filters': {
+            'require_debug_false': {
+                '()': 'django.utils.log.RequireDebugFalse'
+            },
+            'ignore_404': {
+                '()': 'sherpa.log_filters.Ignore404'
+            }
+        },
+        'handlers': {
+            'sentry': {
+                'level': 'DEBUG',
+                'class': 'raven.contrib.django.handlers.SentryHandler',
+            },
+            'mail_admins': {
+                'level': 'ERROR',
+                'class': 'django.utils.log.AdminEmailHandler',
+                'include_html': True,
+                'filters': ['require_debug_false'],
+            },
+            'sherpa_file': {
+                'level': 'DEBUG',
+                'class': 'logging.FileHandler',
+                'filename': '/logs/sherpa/sherpa.log',
+                'formatter': 'verbose',
+                'filters': ['ignore_404'],
+            },
+            'sentry_file': {
+                'level': 'DEBUG',
+                'class': 'logging.FileHandler',
+                'filename': '/logs/sherpa/sentry.log',
+                'formatter': 'verbose',
+                'filters': ['ignore_404'],
+            },
+            'console': {
+                'level': 'DEBUG',
+                'class': 'logging.StreamHandler',
+                'formatter': 'verbose',
+            },
+        },
+        'loggers': {
+            'sherpa': {
+                'handlers': ['sentry', 'sherpa_file'],
+                'level': 'DEBUG',
+                'propagate': False,
+            },
+            'django': {
+                'level': 'DEBUG',
+                'handlers': ['sherpa_file'],
+                'propagate': False,
+            },
+            'boto': {
+                # DEBUG is very verbose
+                'level': 'INFO',
+                'handlers': ['sherpa_file'],
+                'propagate': False,
+            },
+            'sentry': {
+               'level': 'DEBUG',
+               'handlers': ['sentry_file'],
+               'propagate': False,
+            },
+            'raven': {
+               'level': 'DEBUG',
+               'handlers': ['sentry_file'],
+               'propagate': False,
+            },
+        },
+        'root': {
+            'level': 'DEBUG',
+            'handlers': ['sherpa_file'],
+        }
+    }
