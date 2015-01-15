@@ -8,6 +8,8 @@ import sys
 sys.path.insert(1, "%s/apps" % sys.path[0])
 
 class Prod(Configuration):
+    from secret_prod import *
+
     ROOT_URLCONF = 'sherpa.urls_central' # Should be overridden from the Sites middleware in almost all cases, but not when raising PermissionDenied in other middleware.
     AUTH_USER_MODEL = 'user.User'
     LOGIN_URL = '/minside/logg-inn/'
