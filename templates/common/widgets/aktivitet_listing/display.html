@@ -1,11 +1,11 @@
 {% for date in widget.aktivitet_dates %}
-    {% include 'common/aktiviteter/listing_item.html' with date=date %}
+  {% include 'common/aktiviteter/listing_item.html' with date=date %}
 {% empty %}
   <p>Ingen kommende aktiviteter.</p>
 {% endfor %}
 
 {% if widget.total > widget.limit %}
-	<a class="btn btn-block btn-danger" href="{% url 'aktiviteter.views.index' %}?{{ widget.see_more_query_params }}">
+  <a class="btn btn-block btn-danger" href="{% url 'aktiviteter.views.index' %}?{{ widget.see_more_query_params }}">
     Se {{ widget.more_activities_count }} flere turer og aktiviteter
     &nbsp;<span class="glyphicons glyphicons-right-arrow"></span>
   </a>
