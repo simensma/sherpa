@@ -491,13 +491,14 @@ $(function() {
     // Returns true if the given element position contains the given mouse coordinates
     function contains(element, mouseX, mouseY) {
         var offset = element.offset();
+        if (typeof offset === 'undefined' || typeof offset.left === 'undefined' || typeof offset.top === 'undefined') {
+            return false;
+        }
         var objX = offset.left;
         var objY = offset.top;
         var objW = element.width();
         var objH = element.height();
         return mouseX >= objX && mouseX <= objX + objW && mouseY >= objY && mouseY <= objY + objH;
-
-
     }
 
 });
