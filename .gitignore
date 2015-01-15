@@ -1,7 +1,9 @@
 *.log
 *.pot
 *.pyc
-local_settings.py
+settings_secret_dev.py
+settings_secret_prod.py
+settings_private.py
 fabfile_settings.py
 dnt.db
 env/
