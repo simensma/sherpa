@@ -904,6 +904,11 @@ class Turleder(models.Model):
     def is_expired(self):
         if self.role == u'ambassadør' or self.role == u'grunnleggende':
             return False
+
+        if self.date_end is None:
+            # Invalid state, all other roles should have an end date. Consider warning somebody?
+            return False
+
         return self.date_end <= date.today()
 
     @staticmethod
