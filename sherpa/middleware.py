@@ -31,12 +31,12 @@ class DBConnection():
     """Checks connections to external DBs and saves the state in the request object"""
     def process_request(self, request):
         # Define the external databases that we want to check here.
-        # Note that the check for sherpa-2 and sherpa-25 does NOT work at the moment. This is because the
+        # Note that checks for sherpa-2 and sherpa-25 DBs would NOT work at the moment. This is because the
         # postgis engine needs to check the DB version in its init, and if the connection is down it will
         # raise an exception. We cannot hook into or handle that exception. This is also why the entire site
         # will go down if one of these databases is unavailable.
         # Here's an example stacktrace: http://pastie.org/private/ge6yxjymjfyb6nwtj9ug
-        external_databases = ['focus', 'sherpa-2', 'sherpa-25']
+        external_databases = ['focus']
 
         # Cache the connection status for a few minutes. It's okay to display the 500 page for a few request
         # if there's a short-lasting problem. It's when a DB goes unavailable for a long while that we want
@@ -68,6 +68,10 @@ class DBConnection():
                         'period_message': "en kort periode", # LIES!
                     }
             cache.set('db_connection_status', request.db_connections, 60 * 15)
+
+        # Always assume sherpa-2 and sherpa-25 are available (see comments above).
+        request.db_connections['sherpa-2'] = {'is_available': True}
+        request.db_connections['sherpa-25'] = {'is_available': True}
 
         # Override the focus DB's value if we're in a planned downtime period
         # Note that we don't need to cache this; and shouldn't since it's dependent on the current time
