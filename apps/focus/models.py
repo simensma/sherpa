@@ -296,7 +296,10 @@ class Actor(models.Model):
         there isn't a parent is set, so handle both cases.
         """
         is_household_by_parent = self.parent != 0 and self.parent != self.memberid
-        is_household_by_service = self.get_services().filter(code__in=HOUSEHOLD_MEMBER_SERVICE_CODES).exists()
+        is_household_by_service = self.get_services().filter(
+            code__in=HOUSEHOLD_MEMBER_SERVICE_CODES,
+            stop_date__isnull=True,
+        ).exists()
         return is_household_by_parent or is_household_by_service
 
     def has_paid(self):
