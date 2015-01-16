@@ -31,7 +31,11 @@ def index(request):
             total_membership_count = None
             local_membership_count = None
 
-    turledere = User.get_users().filter(turledere__isnull=False).distinct().count()
+    turledere = cache.get('admin.turleder_count')
+    if turledere is None:
+        turledere = User.get_users().filter(turledere__isnull=False).distinct().count()
+        cache.set('admin.turleder_count', turledere, 60 * 60 * 6)
+
     aktiviteter = Aktivitet.objects.filter(
         Q(forening=request.active_forening) |
         Q(co_foreninger=request.active_forening),

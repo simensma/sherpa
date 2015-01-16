@@ -56,6 +56,7 @@ def edit_turleder_certificate(request, user):
         turleder.date_start = date_start
         turleder.date_end = date_end
         turleder.save()
+        cache.delete('admin.turleder_count')
     else:
         # New object, but use get_or_create to avoid creating a duplicate role in case of a double-POST or something
         turleder, created = Turleder.objects.get_or_create(user=user, role=request.POST['role'], defaults={
@@ -69,6 +70,7 @@ def edit_turleder_certificate(request, user):
             turleder.date_start = date_start
             turleder.date_end = date_end
             turleder.save()
+            cache.delete('admin.turleder_count')
 
     messages.info(request, "success")
     return redirect('%s#turledersertifikat' % reverse('admin.users.views.show', args=[user.id]))
@@ -87,6 +89,7 @@ def edit_kursleder_certificate(request, user):
     kursleder.date_start = datetime.strptime(request.POST['date_start'], '%d.%m.%Y').date()
     kursleder.date_end = datetime.strptime(request.POST['date_end'], '%d.%m.%Y').date()
     kursleder.save()
+    cache.delete('admin.turleder_count')
 
     messages.info(request, "success")
     return redirect('%s#turledersertifikat' % reverse('admin.users.views.show', args=[user.id]))
@@ -99,6 +102,7 @@ def edit_instruktor_roles(request, user):
         if role['key'] in request.POST:
             instruktor = Instruktor(user=user, role=role['key'])
             instruktor.save()
+            cache.delete('admin.turleder_count')
 
     messages.info(request, "success")
     return redirect('%s#turledersertifikat' % reverse('admin.users.views.show', args=[user.id]))
