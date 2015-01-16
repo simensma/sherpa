@@ -12,7 +12,6 @@ import requests
 # should be 'from aktiviteter.models import Aktivitet'
 from aktiviteter.views import Aktivitet
 from focus.models import Actor
-from page.models import Page
 from user.models import User
 
 def index(request):
