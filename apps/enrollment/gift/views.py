@@ -63,7 +63,7 @@ def form(request):
         'giver': request.session['gift_membership'].get('giver', None),
         'receivers': request.session['gift_membership'].get('receivers', []),
         'chosen_type': chosen_type,
-        'display_christmas_warning': date.today() <= CHRISTMAS_WARNING_END
+        'display_christmas_warning': date.today() <= CHRISTMAS_WARNING_END,
     }
     return render(request, 'central/enrollment/gift/form.html', context)
 
@@ -82,7 +82,8 @@ def validate(request):
         request.POST['giver_zipcode'].strip(),
         request.POST['giver_memberid'].strip(),
         request.POST['giver_phone'].strip(),
-        request.POST['giver_email'].strip())
+        request.POST['giver_email'].strip(),
+    )
 
     receivers = []
     try:
