@@ -67,6 +67,16 @@ class Giver():
 
         return valid
 
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'address': self.address,
+            'zipcode': self.zipcode,
+            'memberid': self.memberid,
+            'phone': self.phone,
+            'email': self.email,
+        }
+
 # Not a DB-model! Used in session for gift memberships
 class Receiver():
     def __init__(self, type, name, dob, address, zipcode, phone, email):
@@ -75,7 +85,7 @@ class Receiver():
         self.name = name
         try:
             self.dob = datetime.strptime(dob, "%d.%m.%Y")
-        except ValueError:
+        except (ValueError, TypeError):
             self.dob = None
         self.address = address
         self.zipcode = zipcode
@@ -133,3 +143,14 @@ class Receiver():
             valid = False
 
         return valid
+
+    def to_dict(self):
+        return {
+            'type': self.type_index,
+            'name': self.name,
+            'dob': self.dob.strftime('%d.%m.%Y') if self.dob is not None else None,
+            'address': self.address,
+            'zipcode': self.zipcode,
+            'phone': self.phone,
+            'email': self.email,
+        }

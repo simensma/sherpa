@@ -39,11 +39,15 @@ def form(request):
     if 'order_sent' in request.session['gift_membership']:
         return redirect('enrollment.gift.views.receipt')
 
+    giver = None
     if 'giver' in request.session['gift_membership']:
-        request.session['gift_membership']['giver'].validate(request, add_messages=True)
+        giver = Giver(**request.session['gift_membership']['giver'])
+        giver.validate(request, add_messages=True)
 
+    receivers = []
     if 'receivers' in request.session['gift_membership']:
-        for receiver in request.session['gift_membership']['receivers']:
+        receivers = [Receiver(**r) for r in request.session['gift_membership']['receivers']]
+        for receiver in receivers:
             receiver.validate(request, add_messages=True)
 
     if 'type' in request.POST:
@@ -60,8 +64,8 @@ def form(request):
 
     context = {
         'types': membership_types,
-        'giver': request.session['gift_membership'].get('giver', None),
-        'receivers': request.session['gift_membership'].get('receivers', []),
+        'giver': giver,
+        'receivers': receivers,
         'chosen_type': chosen_type,
         'display_christmas_warning': date.today() <= CHRISTMAS_WARNING_END,
     }
@@ -103,8 +107,8 @@ def validate(request):
         return redirect('enrollment.gift.views.form')
 
     request.session['gift_membership'] = {
-        'giver': giver,
-        'receivers': receivers,
+        'giver': giver.to_dict(),
+        'receivers': [r.to_dict() for r in receivers],
         'any_normal_memberships': any(r.type['code'] == 'normal' for r in receivers)
     }
 
@@ -126,15 +130,19 @@ def confirm(request):
     if 'order_sent' in request.session['gift_membership']:
         return redirect('enrollment.gift.views.receipt')
 
-    form_valid = request.session['gift_membership']['giver'].validate()
-    for receiver in request.session['gift_membership']['receivers']:
+    giver = Giver(**request.session['gift_membership']['giver'])
+    receivers = [Receiver(**r) for r in request.session['gift_membership']['receivers']]
+
+    form_valid = giver.validate()
+    for receiver in receivers:
         form_valid = form_valid and receiver.validate()
+
     if not form_valid:
         return redirect('enrollment.gift.views.form')
 
     context = {
-        'giver': request.session['gift_membership']['giver'],
-        'receivers': request.session['gift_membership']['receivers'],
+        'giver': giver,
+        'receivers': receivers,
         'display_christmas_warning': date.today() <= CHRISTMAS_WARNING_END
     }
     return render(request, 'central/enrollment/gift/confirm.html', context)
@@ -142,12 +150,16 @@ def confirm(request):
 def send(request):
     if not 'gift_membership' in request.session:
         return redirect('enrollment.gift.views.index')
+
+    giver = Giver(**request.session['gift_membership']['giver'])
+    receivers = [Receiver(**r) for r in request.session['gift_membership']['receivers']]
+
     t1 = loader.get_template('central/enrollment/gift/emails/memberservice.txt')
     t2 = loader.get_template('central/enrollment/gift/emails/giver.txt')
     # Note that this context is used for both email templates
     c = RequestContext(request, {
-        'giver': request.session['gift_membership']['giver'],
-        'receivers': request.session['gift_membership']['receivers']
+        'giver': giver,
+        'receivers': receivers,
     })
     memberservice_message = t1.render(c)
     giver_message = t2.render(c)
@@ -162,9 +174,9 @@ def send(request):
         messages.error(request, 'email_memberservice_fail')
         return redirect('enrollment.gift.views.confirm')
 
-    if request.session['gift_membership']['giver'].email != '':
+    if giver.email != '':
         try:
-            send_mail(EMAIL_GIVER_SUBJECT, giver_message, EMAIL_FROM_GIVER, ['"%s" <%s>' % (request.session['gift_membership']['giver'].name, request.session['gift_membership']['giver'].email)])
+            send_mail(EMAIL_GIVER_SUBJECT, giver_message, EMAIL_FROM_GIVER, ['"%s" <%s>' % (giver.name, giver.email)])
         except (SMTPException, SSLError):
             logger.warning(u"Klarte ikke å sende gavemedlemskapskvittering på e-post",
                 exc_info=sys.exc_info(),
@@ -178,12 +190,14 @@ def send(request):
 def receipt(request):
     if not 'gift_membership' in request.session:
         return redirect('enrollment.gift.views.index')
+
     if not 'giver' in request.session['gift_membership']:
         return redirect('enrollment.gift.views.form')
+
     context = {
-        'giver': request.session['gift_membership']['giver'],
-        'receivers': request.session['gift_membership']['receivers'],
-        'any_normal_memberships': request.session['gift_membership']['any_normal_memberships']
+        'giver': Giver(**request.session['gift_membership']['giver']),
+        'receivers': [Receiver(**r) for r in request.session['gift_membership']['receivers']],
+        'any_normal_memberships': request.session['gift_membership']['any_normal_memberships'],
     }
     return render(request, 'central/enrollment/gift/receipt.html', context)
 
