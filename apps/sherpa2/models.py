@@ -700,6 +700,8 @@ class Activity(models.Model):
             aktivitet.delete()
             raise
 
+        cache.delete('admin.aktivitet_count')
+
     def convert_foreninger(self):
         """sherpa2 models foreninger as a flat list, while sherpa3 separates the main forening and co_foreninger.
         We'll assume that the forening with the lowest 'type' (turgruppe/forening/sentral) is the main forening.

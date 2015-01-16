@@ -36,13 +36,17 @@ def index(request):
         turledere = User.get_users().filter(turledere__isnull=False).distinct().count()
         cache.set('admin.turleder_count', turledere, 60 * 60 * 6)
 
-    aktiviteter = Aktivitet.objects.filter(
-        Q(forening=request.active_forening) |
-        Q(co_foreninger=request.active_forening),
-        pub_date__lte=date.today(),
-        published=True,
-        private=False,
-    ).count()
+    aktiviteter = cache.get('admin.aktivitet_count')
+    if aktiviteter is None:
+        aktiviteter = Aktivitet.objects.filter(
+            Q(forening=request.active_forening) |
+            Q(co_foreninger=request.active_forening),
+            pub_date__lte=date.today(),
+            published=True,
+            private=False,
+        ).count()
+        cache.set('admin.aktivitet_count', aktiviteter, 60 * 60 * 6)
+
     dashboard_stats = {
         'members': {
             'total': "{:,}".format(total_membership_count) if total_membership_count is not None else '?',

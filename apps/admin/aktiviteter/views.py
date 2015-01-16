@@ -13,6 +13,7 @@ from django.db.models import Q
 from django.contrib.gis.geos import Point
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.cache import cache
 
 from aktiviteter.models import Aktivitet, AktivitetDate, AktivitetImage, AktivitetAudience, Cabin, ConversionFailure, SynchronizationDate
 from core.util import parse_html_array
@@ -124,6 +125,7 @@ def new(request):
         category=Aktivitet.CATEGORY_CHOICES[0][0],
     )
     aktivitet.save()
+    cache.delete('admin.aktivitet_count')
     return redirect('admin.aktiviteter.views.edit', aktivitet.id)
 
 def edit(request, aktivitet):
