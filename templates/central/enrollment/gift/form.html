@@ -68,7 +68,17 @@
           <label>Fullt navn <span class="asterisk red">*</span></label>
           <div class="row">
             <div class="col-sm-8">
-              <input class="form-control" type="text" name="giver_name" value="{% firstof giver.name user.get_full_name %}">
+              <input
+                class="form-control"
+                type="text"
+                name="giver_name"
+                value="{% spaceless %}
+                  {% if not db_connections.focus.is_available %}
+                    {{ giver.name }}
+                  {% else %}
+                    {% firstof giver.name user.get_full_name %}
+                  {% endif %}
+                {% endspaceless %}">
             </div>
           </div>
         </div>
@@ -77,7 +87,19 @@
           <label>Adresse <span class="asterisk red">*</span></label>
           <div class="row">
             <div class="col-sm-8">
-              <input class="form-control" type="text" name="giver_address" value="{% if user.is_member and user.get_address.country.code == 'NO' %}{% firstof giver.address user.get_address.field1 %}{% else %}{{ giver.address }}{% endif %}">
+              <input
+                class="form-control"
+                type="text"
+                name="giver_address"
+                value="{% spaceless %}
+                  {% if not db_connections.focus.is_available %}
+                    {{ giver.address }}
+                  {% elif not user.is_member or user.get_address.country.code != 'NO' %}
+                    {{ giver.address }}
+                  {% else %}
+                    {% firstof giver.address user.get_address.field1 %}
+                  {% endif %}
+                {% endspaceless %}">
             </div>
           </div>
         </div>
@@ -88,8 +110,36 @@
           {# zipcode-inline assumes form-horizontal, so add a break to force the inputs on a new line #}
           <br>
 
-          <input class="form-control zipcode zipcode-inline" type="text" name="giver_zipcode" value="{% if user.is_member and user.get_address.country.code == 'NO' %}{% firstof giver.zipcode user.get_address.zipcode.zipcode %}{% else %}{{ giver.zipcode }}{% endif %}" maxlength="10">
-          <input type="text" class="form-control area area-inline" name="giver_area" value="{% if user.is_member and user.get_address.country.code == 'NO' %}{% firstof giver.area user.get_address.zipcode.area %}{% else %}{{ giver.area }}{% endif %}" disabled>
+          <input
+            class="form-control zipcode zipcode-inline"
+            type="text"
+            name="giver_zipcode"
+            maxlength="10"
+            value="{% spaceless %}
+              {% if not db_connections.focus.is_available %}
+                {{ giver.zipcode }}
+              {% elif not user.is_member or user.get_address.country.code != 'NO' %}
+                {{ giver.zipcode }}
+              {% else %}
+                {% firstof giver.zipcode user.get_address.zipcode.zipcode %}
+              {% endif %}
+            {% endspaceless %}">
+
+          <input
+            type="text"
+            class="form-control area area-inline"
+            name="giver_area"
+            value="{% spaceless %}
+              {% if not db_connections.focus.is_available %}
+                {{ giver.area }}
+              {% elif not user.is_member or user.get_address.country.code != 'NO' %}
+                {{ giver.area }}
+              {% else %}
+                {% firstof giver.area user.get_address.zipcode.area %}
+              {% endif %}
+            {% endspaceless %}"
+            disabled>
+
           <img src="{{ STATIC_URL }}img/common/ajax-loader-small.gif" class="jq-hide ajaxloader" alt="Laster poststed..." title="Laster poststed...">
         </div>
 
@@ -124,7 +174,17 @@
           <label>Mobiltelefon</label>
           <div class="row">
             <div class="col-sm-5">
-              <input class="form-control" type="text" name="giver_phone" value="{% if user.is_member %}{% firstof giver.phone user.get_phone_mobile user.get_phone_home %}{% endif %}">
+              <input
+                class="form-control"
+                type="text"
+                name="giver_phone"
+                value="{% spaceless %}
+                  {% if not db_connections.focus.is_available %}
+                    {{ giver.phone }}
+                  {% elif user.is_member %}
+                    {% firstof giver.phone user.get_phone_mobile user.get_phone_home %}
+                  {% endif %}
+                {% endspaceless %}">
             </div>
           </div>
         </div>
@@ -142,7 +202,17 @@
           <label>E-post</label>
           <div class="row">
             <div class="col-sm-8">
-              <input class="form-control" type="text" name="giver_email" value="{% firstof giver.email user.get_email %}">
+              <input
+                class="form-control"
+                type="text"
+                name="giver_email"
+                value="{% spaceless %}
+                  {% if not db_connections.focus.is_available %}
+                    {{ giver.email }}
+                  {% else %}
+                    {% firstof giver.email user.get_email %}
+                  {% endif %}
+                {% endspaceless %}">
             </div>
           </div>
         </div>
