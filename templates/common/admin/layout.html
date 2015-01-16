@@ -302,13 +302,16 @@
     });
   </script>
 
-  <script>
-    window.User = {
-      email: '{{ user.get_sherpa_email }}',
-      name: '{{ user.get_full_name }}',
-      id: {{ user.id }},
-    };
-  </script>
+  {% if db_connections.focus.is_available %}
+    <script>
+      window.User = {
+        email: '{{ user.get_sherpa_email }}',
+        name: '{{ user.get_full_name }}',
+        id: {{ user.id }},
+      };
+    </script>
+  {% endif %}
+
   <script src="{{ STATIC_URL }}js/uservoice.js"></script>
   <script src="{{ STATIC_URL }}lib/outdatedBrowser/outdatedBrowser.min.js"></script>
 

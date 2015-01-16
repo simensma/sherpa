@@ -12,20 +12,24 @@ import requests
 # should be 'from aktiviteter.models import Aktivitet'
 from aktiviteter.views import Aktivitet
 from focus.models import Actor
-from page.models import Page
 from user.models import User
 
 def index(request):
     total_membership_count = cache.get('admin.total_membership_count')
     local_membership_count = cache.get('admin.local_membership_count.%s' % request.active_forening.id)
     if total_membership_count is None or local_membership_count is None:
-        all_active_members = Actor.all_active_members()
-        total_membership_count = all_active_members.count()
-        local_membership_count = all_active_members.filter(
-            main_forening_id__in=[f.focus_id for f in request.active_forening.get_main_foreninger()],
-        ).count()
-        cache.set('admin.total_membership_count', total_membership_count, 60 * 60 * 12)
-        cache.set('admin.local_membership_count.%s' % request.active_forening.id, local_membership_count, 60 * 60 * 12)
+        if request.db_connections['focus']['is_available']:
+            all_active_members = Actor.all_active_members()
+            total_membership_count = all_active_members.count()
+            local_membership_count = all_active_members.filter(
+                main_forening_id__in=[f.focus_id for f in request.active_forening.get_main_foreninger()],
+            ).count()
+            cache.set('admin.total_membership_count', total_membership_count, 60 * 60 * 12)
+            cache.set('admin.local_membership_count.%s' % request.active_forening.id, local_membership_count, 60 * 60 * 12)
+        else:
+            # Fallback if Focus is down
+            total_membership_count = None
+            local_membership_count = None
 
     turledere = User.get_users().filter(turledere__isnull=False).distinct().count()
     aktiviteter = Aktivitet.objects.filter(
@@ -37,8 +41,8 @@ def index(request):
     ).count()
     dashboard_stats = {
         'members': {
-            'total': "{:,}".format(total_membership_count),
-            'local': "{:,}".format(local_membership_count),
+            'total': "{:,}".format(total_membership_count) if total_membership_count is not None else '?',
+            'local': "{:,}".format(local_membership_count) if local_membership_count is not None else '?',
         },
         'turledere': turledere,
         'aktiviteter': aktiviteter,

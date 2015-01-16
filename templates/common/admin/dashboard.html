@@ -15,10 +15,10 @@
 
 {% if not db_connections.focus.is_available %}
   <div class="alert alert-danger">
-    <strong>Focus er nede for midlertidig vedlikehold {{ db_connections.focus.period_message }}.</strong><br>
-    Sherpa er tilgjengelig, men vi er avhengige av Focus for mange av funksjonene her.<br>
-    Derfor er det <strong>stor sannsynlighet for at du kan oppleve teknisk feil</strong> mens du bruker Sherpa.<br>
-    Det er også derfor vi ikke kan vise navnet ditt oppe i høyre hjørne!
+    <h3>Focus er nede for midlertidig vedlikehold {{ db_connections.focus.period_message }}.</h3>
+    Sherpa er tilgjengelig, men vi er avhengige av Focus for mange av funksjonene her. Derfor er det <strong>stor
+    sannsynlighet for at du kan oppleve teknisk feil</strong> mens du bruker Sherpa. Det er også derfor vi ikke kan
+    vise navnet ditt oppe til høyre!
   </div>
 {% endif %}
 
