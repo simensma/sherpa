@@ -8,9 +8,6 @@ from datetime import datetime, date
 import sys
 sys.path.insert(1, "%s/apps" % sys.path[0])
 
-# Tempoarily dissable
-TEST_RUNNER = 'django.test.simple.DjangoTestSuiteRunner'
-
 from sherpa.local_settings import *
 
 ROOT_URLCONF = 'sherpa.urls_central' # Should be overridden from the Sites middleware in almost all cases, but not when raising PermissionDenied in other middleware.
@@ -203,11 +200,6 @@ FOCUS_DOWNTIME_PERIODS = [
         'from': datetime(year=2014, month=11, day=5, hour=16),
         'to': datetime(year=2014, month=11, day=5, hour=18),
         'period_message': 'et par timer i kveld'
-    },
-    {
-        'from': datetime(year=2015, month=1, day=15, hour=20),
-        'to': datetime(year=2015, month=1, day=16, hour=10),
-        'period_message': 'til fredag morgen'
     },
 ]
 
