@@ -67,7 +67,7 @@ class DBConnection():
                         'is_available': False,
                         'period_message': "en kort periode", # LIES!
                     }
-            cache.set('db_connection_status', request.db_connections, 60 * 15)
+            cache.set('db_connection_status', request.db_connections, 60)
 
         # Always assume sherpa-2 and sherpa-25 are available (see comments above).
         request.db_connections['sherpa-2'] = {'is_available': True}
