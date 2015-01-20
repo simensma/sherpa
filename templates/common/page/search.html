@@ -17,19 +17,27 @@
     {% if pages|length > 0 or article_versions|length > 0 or old_articles|length > 0 or aktivitet_date_count > 0 %}
 
       <p class="hits">
-        Søk på "<strong>{{ search_query }}</strong>" gav treff på {{ pages|length }} sider og {{ article_count }} nyheter.
-
-        {% if aktivitet_date_count > 0 %}
-          <br>
-          {% if pages|length > 0 or article_versions|length > 0 or old_articles|length > 0 %}
-            Vi fant også
-          {% else %}
-            Men vi fant
-          {% endif %}
-
-          {{ aktivitet_date_count }} treff på turer og aktiviteter, <a href="">disse finner du her</a>.
-        {% endif %}
+        Søk på "<strong>{{ search_query }}</strong>" gav treff på
+        {{ pages|length }} sider,
+        {{ article_count }} nyheter, og
+        {{ aktivitet_date_count }} aktiviteter.
+        <br>
       </p>
+
+      <h2>Fellesturer, kurs og aktiviteter</h2>
+
+      {% if aktivitet_date_count > 0 %}
+
+        <p>
+          {{ aktivitet_date_count }} turer og aktiviteter inneholder "<strong>{{ search_query }}</strong>",
+          disse finner du på <a href="{% url 'aktiviteter.views.index' %}?search={{ search_query }}">våre aktivitetsider</a>.
+        </p>
+
+      {% else %}
+
+        <p>Ingen <a href="{% url 'aktiviteter.views.index' %}">turer eller aktiviteter</a> matchet søket.</p>
+
+      {% endif %}
 
       <div class="row">
         <div class="col-md-6">
@@ -87,24 +95,13 @@
         </div>
       </div>
 
-      <h3>Fant du ikke det du lette etter?</h3>
-
     {% else %}
 
       <p>Vi fant dessverre ingenting som inneholdt "<strong>{{ search_query }}</strong>".</p>
 
     {% endif %}
 
-    <p>
-      <a href="http://{{ old_site }}/">Våre gamle nettsider</a> er fortsatt tilgjengelige, i tilfelle du ikke finner det du leter etter her. Inntil videre vil deler av innholdet og tjenestene, som <a href="http://{{ old_site }}/activity.php">turer og aktiviteter</a>, være på de gamle sidene, mens vi jobber med å flytte dette over.
-    </p>
-
-    <h3>Spørsmål?</h3>
-    <p>
-      <a href="/kontakt/">Ta kontakt med oss</a> hvis du lurer på noe.
-    </p>
-
-    <h3>Skal du ut på tur?</h3>
+    <h3>Fant du ikke det du lette etter?</h3>
     <p>
       På <a href="http://ut.no">UT.no</a> finner du alle våre hytter, ruter, forslag til fine turer og mye mer.
     </p>
