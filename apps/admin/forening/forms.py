@@ -269,7 +269,7 @@ class ExistingForeningDataForm(ForeningDataForm):
         return Forening.objects.get(id=self.cleaned_data['forening'])
 
     def clean(self):
-        cleaned_data = super(ExistingForeningDataForm, self).clean()
+        cleaned_data = super(ExistingForeningDataForm, self).clean() or self.cleaned_data
 
         forening = cleaned_data.get('forening')
         parents = cleaned_data.get('parents')
