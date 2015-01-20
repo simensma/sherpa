@@ -61,7 +61,7 @@
 
 <div class="row">
   <div class="col-lg-12">
-    <h1>{{ active_site.get_title }} <small>{{ active_site.domain }}</small></h1>
+    <h1>{{ active_site.get_title }} <small>se nettstedet på <a href="https://{{ active_site.domain }}/">{{ active_site.domain }}</a></small></h1>
     <ol class="breadcrumb">
       <li class="active"><i class="fa fa-dashboard"></i> <a href="{% url 'admin.views.index' %}">Sherpa</a></li>
       <li><a href="{% url 'admin.sites.views.index' %}">Nettsteder</a></li>
