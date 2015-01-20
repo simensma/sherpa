@@ -14,7 +14,7 @@ from admin.models import Campaign
 from articles.models import Article
 from core.models import Site
 from foreninger.models import Forening
-from page.models import Menu, Page, Version
+from page.models import Menu, Page
 
 logger = logging.getLogger('sherpa')
 
@@ -279,19 +279,4 @@ def create(request):
                     campaign_text.save()
 
         request.session.modified = True
-        return redirect('admin.sites.views.created', site.id)
-
-def created(request, site):
-    if not request.user.is_admin_in_forening(request.active_forening):
-        raise PermissionDenied
-
-    site = Site.objects.get(id=site)
-    forside_version = Version.objects.get(
-        variant__page__title='Forside',
-        variant__page__site=site,
-    )
-    context = {
-        'created_site': site,
-        'forside_version': forside_version,
-    }
-    return render(request, 'common/admin/sites/created.html', context)
+        return redirect('admin.sites.views.show', site.id)
