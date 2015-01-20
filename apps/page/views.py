@@ -16,6 +16,8 @@ from articles.models import OldArticle
 from analytics.models import Search, NotFound
 from sherpa2.models import Cabin as Sherpa2Cabin
 from core.models import Site
+from aktiviteter.util import filter_aktivitet_dates
+from foreninger.models import Forening
 
 variant_key = 'var'
 
@@ -81,55 +83,68 @@ def parse_content(request, version):
 @csrf_exempt
 def search(request):
     # Very simple search for now
-    if not 'q' in request.GET:
+    if 'q' not in request.GET:
         return render(request, 'common/page/search.html')
-    if len(request.GET['q']) < SEARCH_CHAR_LIMIT:
-        context = {'search_query': request.GET['q'],
+
+    search_query = request.GET['q'].strip()
+
+    if len(search_query) < SEARCH_CHAR_LIMIT:
+        context = {
+            'search_query': search_query,
             'query_too_short': True,
-            'search_char_limit': SEARCH_CHAR_LIMIT}
+            'search_char_limit': SEARCH_CHAR_LIMIT,
+        }
         return render(request, 'common/page/search.html', context)
 
     # Record the search
-    search = Search(query=request.GET['q'], site=request.site)
+    search = Search(query=search_query, site=request.site)
     search.save()
 
     pages = Page.on(request.site).filter(
         # Match page title or content
-        Q(variant__version__rows__columns__contents__content__icontains=request.GET['q']) |
-        Q(title__icontains=request.GET['q']),
+        Q(variant__version__rows__columns__contents__content__icontains=search_query) |
+        Q(title__icontains=search_query),
 
         # Default segment, active version, published page
         variant__segment=None,
         variant__version__active=True,
-        published=True).distinct()
+        published=True,
+    ).distinct()
 
     article_versions = Version.objects.filter(
         # Match content
-        variant__version__rows__columns__contents__content__icontains=request.GET['q'],
+        variant__version__rows__columns__contents__content__icontains=search_query,
 
         # Active version, default segment, published article
         active=True,
         variant__segment=None,
         variant__article__published=True,
         variant__article__pub_date__lt=datetime.now(),
-        variant__article__site=request.site
-        ).distinct().order_by('-variant__article__pub_date')
+        variant__article__site=request.site,
+    ).distinct().order_by('-variant__article__pub_date')
+
+    aktivitet_filter = {'search': search_query}
+    if request.site.forening.id != Forening.DNT_CENTRAL_ID:
+        aktivitet_filter['organizers'] = '%s:%s' % ('forening', request.site.forening.id)
+    _, aktivitet_dates = filter_aktivitet_dates(aktivitet_filter)
+    aktivitet_date_count = aktivitet_dates.count()
 
     if request.site.id == Site.DNT_CENTRAL_ID:
         old_articles = OldArticle.objects.filter(
-            Q(title__icontains=request.GET['q']) |
-            Q(lede__icontains=request.GET['q']) |
-            Q(content__icontains=request.GET['q'])
-            ).distinct().order_by('-date')
+            Q(title__icontains=search_query) |
+            Q(lede__icontains=search_query) |
+            Q(content__icontains=search_query)
+        ).distinct().order_by('-date')
     else:
         old_articles = []
 
     context = {
-        'search_query': request.GET['q'],
+        'search_query': search_query,
         'article_versions': article_versions,
         'pages': pages,
         'old_articles': old_articles,
-        'article_count': len(article_versions) + len(old_articles)
+        'article_count': len(article_versions) + len(old_articles),
+        'aktivitet_date_count': aktivitet_date_count,
     }
     return render(request, 'common/page/search.html', context)
 

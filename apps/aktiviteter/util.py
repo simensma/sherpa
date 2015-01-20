@@ -91,29 +91,29 @@ def filter_aktivitet_dates(filter):
     if filter.get('organizers', ''):
         filter['organizers'] = filter['organizers'].split(',')
 
-        filter.foreninger = []
-        filter.cabins = []
+        filter['foreninger'] = []
+        filter['cabins'] = []
 
         for organizer in filter['organizers']:
             try:
                 type, id = organizer.split(':')
                 if type == 'forening':
-                    filter.foreninger.append(int(id))
+                    filter['foreninger'].append(int(id))
                 elif type == 'cabin':
-                    filter.cabins.append(int(id))
+                    filter['cabins'].append(int(id))
             except ValueError:
                 continue
 
-        if filter.foreninger:
+        if filter['foreninger']:
             dates = dates.filter(
-                Q(aktivitet__forening__in=filter.foreninger) |
-                Q(aktivitet__co_foreninger__in=filter.foreninger)
+                Q(aktivitet__forening__in=filter['foreninger']) |
+                Q(aktivitet__co_foreninger__in=filter['foreninger'])
             )
 
-        if filter.cabins:
+        if filter['cabins']:
             dates = dates.filter(
-                Q(aktivitet__forening_cabin__in=filter.cabins) |
-                Q(aktivitet__co_foreninger_cabin__in=filter.cabins)
+                Q(aktivitet__forening_cabin__in=filter['cabins']) |
+                Q(aktivitet__co_foreninger_cabin__in=filter['cabins'])
             )
 
     dates = dates.distinct().order_by(
