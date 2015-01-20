@@ -5,6 +5,7 @@ import logging
 import json
 
 from django.conf import settings
+from django.contrib import messages
 from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect
@@ -279,4 +280,5 @@ def create(request):
                     campaign_text.save()
 
         request.session.modified = True
+        messages.info(request, 'site_created')
         return redirect('admin.sites.views.show', site.id)

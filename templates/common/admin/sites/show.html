@@ -72,6 +72,15 @@
 
 <div class="site-admin" data-dnt-container="site-admin">
 
+  {% for message in messages %}
+    {% if message.message == 'site_created' %}
+      <div class="alert alert-success">
+        <h3>Nettstedet <strong>{{ active_site.get_title }}</strong> har blitt opprettet!</h3>
+        Du kan se nettstedet på adressen <a href="https://{{ active_site.domain }}/">{{ active_site.domain }}</a> mens du jobber med det.
+      </div>
+    {% endif %}
+  {% endfor %}
+
   {% if not active_site.has_published_front_page %}
 
     <div class="alert alert-danger">
