@@ -1,75 +1,112 @@
-<div class="modal container jq-hide widget-editor" data-widget="carousel">
+<div class="modal container jq-hide widget-editor carousel" data-widget="carousel">
   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
-    <h3>Bildekarusell</h3>
+    <button type="button" class="close" data-dismiss="modal">
+      <span aria-hidden="true">×</span>
+      <span class="sr-only">Close</span>
+    </button>
+    <h4 class="modal-title">Bildesett</h4>
   </div>
+
   <div class="modal-body">
-    <p>
-      <table>
-        <tr>
-          <td>
-            <label>Bilde:</label>
-          </td>
-          <td>
-            <input name="url" type="text" class="form-control">
-          </td>
-          <td>
-            <button name="choose" class="btn btn-success choose-image">
-              <i class="glyphicon glyphicon-share-alt"></i> Finn i arkivet
-            </button>
-          </td>
-          <td>
-            <button name="upload" class="btn btn-success">
-              <i class="glyphicon glyphicon-share-alt"></i> Last opp
-            </button>
-          </td>
-          <td>
-            <button name="remove" class="btn btn-danger remove-image">
-              <i class="glyphicon glyphicon-remove"></i> Fjern
-            </button>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <label>Bildetekst:</label>
-          </td>
-          <td>
-            <input class="form-control" name="description" type="text">
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <label>Fotograf:</label>
-          </td>
-          <td>
-            <input class="form-control" name="photographer" type="text">
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <label name="sequence">Bilde 1 av 1 </label>
-          </td>
-          <td>
-            <button class="btn btn-success previous"><i class="glyphicon glyphicon-chevron-left"></i> Forrige bilde</button>
-            <button class="btn btn-success next">Neste bilde <i class="glyphicon glyphicon-chevron-right"></i></button>
-          </td>
-        </tr>
-      </table>
 
-      <br>
-      <br>
-      <br>
+    <div class="well well-lg jq-hide section section-empty">
+      <div class="lead-block">Finn eller last opp bildene som skal ligge i bildesettet</div>
+      <button class="btn btn-default btn-lg add-images" data-dnt-trigger="open-add-images-dialog">
+        <span class="glyphicons glyphicons-picture"></span> Hent fra bildearkiv
+      </button>
+      <span class="btn-label-middle">eller</span>
+      <button class="btn btn-default btn-lg add-images" data-dnt-trigger="open-upload-image-dialog">
+        <span class="glyphicons glyphicons-cloud-upload"></span> Last opp bilde
+      </button>
+    </div>
 
-      <div id="preview"style="max-width:100%;;">
-        <h2>Her kan du beskjære bildet:</h2>
-          <div id="ratio-radio">
+    <div class="row section jq-hide section-images">
+      <div class="col-sm-12">
+        <div class="row heading">
+          <div class="col-sm-12">
+            <h5>Bilder</h5>
           </div>
-         <img name="preview" default="{{ STATIC_URL }}/img/admin/sites/editor/blank_placeholder.png" src="{{ STATIC_URL }}/img/admin/sites/editor/blank_placeholder.png"></img>
+        </div>
+        <div class="row image-list" data-dnt-container="image-list"></div>
+        <div class="well image-meta-editor jq-hide" data-dnt-current-image="">
+          <button type="button" class="close" data-dismiss="well">
+            <span aria-hidden="true">×</span>
+            <span class="sr-only">Close</span>
+          </button>
+          <h6>Endre bildedetaljer</h6>
+          <div class="row">
+            <div class="col-sm-6 preview">
+              <div class="thumbnail">
+                <img src="">
+              </div>
+            </div>
+            <div class="col-sm-6 form form-horizontal label-align-left">
+              <div class="form-group">
+                <label for="carousel-editor-image-editor-description" class="col-sm-3 control-label">Bildetekst</label>
+                <div class="col-sm-9">
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="description"
+                    id="carousel-editor-image-editor-description"
+                    placeholder="Bildetekst">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="carousel-editor-image-editor-photographer" class="col-sm-3 control-label">Fotograf</label>
+                <div class="col-sm-9">
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="photographer"
+                    id="carousel-editor-image-editor-photographer"
+                    placeholder="Fotograf">
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-9 col-sm-offset-3">
+                  <button class="btn btn-block btn-default" disabled><span class="glyphicons glyphicons-crop"></span> Endre utsnitt</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="well well-sm clearfix footer">
+          <div class="pull-left hint">
+            <span class="glyphicons glyphicons-move"></span> Dra og slipp for å endre rekkefølge på bildene
+          </div>
+        </div>
       </div>
-    </p>
+    </div>
+
+    <div class="row section section-settings">
+      <div class="col-xs-12">
+        <div class="pull-left">
+          <span class="btn-label">Vis bildesettet som</span>
+          <div class="btn-group" role="group" aria-label="Vis bildesettet som">
+            <button type="button" class="btn btn-default" data-dnt-name="layout" data-dnt-value="album" disabled>
+              <span class="glyphicons glyphicons-show-thumbnails"></span> Album
+            </button>
+            <button type="button" class="btn btn-default" data-dnt-name="layout" data-dnt-value="carousel">
+              <span class="glyphicons glyphicons-picture"></span> Bildekarusell
+            </button>
+          </div>
+        </div>
+        <div class="pull-right add-images">
+          <span class="btn-label">Legg til bilder</span>
+          <button class="btn btn-default add-images" data-dnt-trigger="open-add-images-dialog">
+            <span class="glyphicons glyphicons-picture"></span> Hent fra bildearkiv
+          </button>
+          <button class="btn btn-default add-images" data-dnt-trigger="open-upload-image-dialog">
+            <span class="glyphicons glyphicons-cloud-upload"></span> Last opp bilde
+          </button>
+        </div>
+      </div>
+    </div>
+
   </div>
   <div class="modal-footer" style="clear: both;">
-    <button class="btn btn-success save"><i class="glyphicon glyphicon-ok"></i> Sett inn bildekarusell</button>
+    <button class="btn btn-success save"><i class="glyphicon glyphicon-ok"></i> Lagre</button>
     <button class="btn btn-default" data-dismiss="modal">Avbryt</button>
   </div>
 </div>

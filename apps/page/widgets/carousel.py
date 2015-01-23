@@ -8,4 +8,5 @@ class CarouselWidget(Widget):
         return {
             'id':random.randint(0,10000),
             'images':widget_options['images'],
+            'layout': widget_options.get('layout', 'carousel'),
         }
