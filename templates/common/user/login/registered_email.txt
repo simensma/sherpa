@@ -1,7 +1,7 @@
 Hei {{ user.get_full_name }}!
 
 Du er nå registrert som bruker på DNTs nettsted. Logg deg inn på
-https://www.turistforeningen.no{% url 'user.views.home' %} med din e-postadresse og passordet
+https://www.dnt.no{% url 'user.views.home' %} med din e-postadresse og passordet
 du valgte.
 
 På Min side kan du blant annet finne informasjon om ditt medlemskap, endre
@@ -14,4 +14,4 @@ medlemsservice på telefon 4000 1870 eller e-post medlem@turistforeningen.no.
 
 Med vennlig hilsen
 Den Norske Turistforening
-www.turistforeningen.no
+www.dnt.no

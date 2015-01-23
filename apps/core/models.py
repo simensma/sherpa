@@ -186,8 +186,8 @@ class Site(models.Model):
             try:
                 # Prefix folder specified
                 domain, prefix = domain.split('/')
-                # Only allowed for turistforeningen.no
-                if domain != 'turistforeningen.no' and domain != 'www.turistforeningen.no':
+                # Only allowed for dnt.no
+                if domain != 'dnt.no' and domain != 'www.dnt.no':
                     return {
                         'valid': False,
                         'error': 'prefix_for_disallowed_domain',
@@ -205,7 +205,7 @@ class Site(models.Model):
                 'error': 'prefix_not_supported_yet',
             }
 
-        if not domain.endswith('.test.turistforeningen.no'):
+        if not domain.endswith('.test.dnt.no'):
             return {
                 'valid': False,
                 'error': 'test_period_requires_test_domain',
