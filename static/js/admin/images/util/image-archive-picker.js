@@ -4,6 +4,8 @@
 
     var picker;
     var ajaxloader;
+    var multiselect;
+
     $(function() {
         picker = $("div.image-archive-picker");
         ajaxloader = picker.find("img.ajaxloader");
@@ -35,17 +37,52 @@
     });
 
     $(document).on('click', 'div.image-archive-picker .clickable-image', function() {
-        var url = $(this).attr('data-dnt-url');
-        var description = $(this).attr('data-description');
-        var photographer = $(this).attr('data-photographer');
+        if (multiselect === true) {
+            $(this).toggleClass('selected');
+            if ($(this).hasClass('selected')) {
+                $(this).attr('data-dnt-selected', '');
+            } else {
+                $(this).removeAttr('data-dnt-selected');
+            }
+
+
+        } else {
+            var url = $(this).attr('data-dnt-url');
+            var description = $(this).attr('data-description');
+            var photographer = $(this).attr('data-photographer');
+
+            picker.modal('hide');
+            ImageArchivePicker.callback(url.trim(), description.trim(), photographer.trim());
+        }
+    });
+
+    $(document).on('click', 'div.image-archive-picker [data-dnt-trigger="use-selected"]', function (e) {
+        var selected_images = [];
+
+        $('div.image-archive-picker ul.images [data-dnt-selected]').each(function (index, image) {
+            $(image).removeClass('selected').removeAttr('data-dnt-selected');
+
+            selected_images.push({
+                url: $(image).attr('data-dnt-url').trim(),
+                description: $(image).attr('data-description').trim(),
+                photographer: $(image).attr('data-photographer').trim()
+            });
+        });
 
         picker.modal('hide');
-        ImageArchivePicker.callback(url.trim(), description.trim(), photographer.trim());
+        ImageArchivePicker.callback(selected_images);
     });
 
     /* Public methods */
 
-    ImageArchivePicker.pick = function(callback) {
+    ImageArchivePicker.pick = function(callback, options) {
+        options = options || {};
+        multiselect = options.multiselect || false;
+        if (multiselect) {
+            picker.find('[data-dnt-trigger="use-selected"]').show();
+        } else {
+            picker.find('[data-dnt-trigger="use-selected"]').hide();
+        }
         ImageArchivePicker.callback = callback;
         archiveCallback = callback;
         picker.modal();
