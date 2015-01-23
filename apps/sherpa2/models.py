@@ -643,7 +643,6 @@ class Activity(models.Model):
                 except requests.packages.urllib3.exceptions.LocationParseError:
                     # Any problems with the URI might throw this. One example of this:
                     # http://www2.turistforeningen.nofile://server/eva/mail/eudora/attach/017%20Lavendel.jpg
-                    # See https://sentry.turistforeningen.no/turistforeningen/sherpa/group/34471/
                     # Simply ignore images with this occurence
                     pass
 

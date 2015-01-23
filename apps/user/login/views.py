@@ -152,8 +152,7 @@ def register_nonmember(request):
 
 def verify_memberid(request):
     if not all([q in request.POST for q in ['country', 'memberid', 'zipcode']]):
-        # Some clients seem to send empty query dicts, see e.g.:
-        # https://sentry.turistforeningen.no/turistforeningen/sherpa/group/1173/
+        # Some clients seem to send empty query dicts
         raise PermissionDenied
 
     try:

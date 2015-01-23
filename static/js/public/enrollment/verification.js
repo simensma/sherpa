@@ -74,7 +74,6 @@ $(function() {
         var main = price_table.find("tr.main");
         if(main.attr('data-id') !== undefined) {
             // This is probably already filled with the chosen main-member, but set it again just in case
-            // See https://sentry.turistforeningen.no/turistforeningen/sherpa/group/1401/
             form.find("input[name='main-member']").val(main.attr('data-id'));
         }
         form.submit();

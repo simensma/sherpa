@@ -54,7 +54,6 @@ def form(request):
         # We had some error where type was set to the empty string. Not sure how
         # that can happen (it was with Firefox 20.0), but the type isn't that
         # important so just ignore this error.
-        # If you want to, see https://sentry.turistforeningen.no/turistforeningen/sherpa/group/127/events/
         try:
             chosen_type = int(request.POST['type'])
         except ValueError:
@@ -102,8 +101,7 @@ def validate(request):
                 r['email'].strip(),
             ))
     except ValueError:
-        # Something wrong with the json-formatted POST value. Not quite sure how this can happen, see:
-        # https://sentry.turistforeningen.no/turistforeningen/sherpa/group/885/
+        # Something wrong with the json-formatted POST value. Not quite sure how this can happen, but it has happened.
         return redirect('enrollment.gift.views.form')
 
     request.session['gift_membership'] = {
@@ -124,8 +122,7 @@ def confirm(request):
     if not 'gift_membership' in request.session:
         return redirect('enrollment.gift.views.index')
     if not 'giver' in request.session['gift_membership']:
-        # Not quite sure how this can happen, see:
-        # https://sentry.turistforeningen.no/turistforeningen/sherpa/group/1262/
+        # Not quite sure how this can happen, but it has happened.
         return redirect('enrollment.gift.views.form')
     if 'order_sent' in request.session['gift_membership']:
         return redirect('enrollment.gift.views.receipt')

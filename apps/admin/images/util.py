@@ -259,9 +259,7 @@ def get_exif_tags(pil_image):
         # Not sure what that means but we'll ignore exif data on those images for now.
         return {}
     except IndexError:
-        # Invalid exif data; ignore. See:
-        # - https://sentry.turistforeningen.no/turistforeningen/sherpa/group/33881/events/1272445/
-        # - https://github.com/python-pillow/Pillow/issues/518
+        # Invalid exif data; ignore. See https://github.com/python-pillow/Pillow/issues/518
         return {}
 
 def create_thumb(pil_image, extension, size):

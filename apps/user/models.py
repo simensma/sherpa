@@ -776,8 +776,7 @@ class User(AbstractBaseUser):
     def create_pending_user(memberid):
         """Create an inactive pending user. Note that the caller must verify that the memberid does not exist in Actor
         first. Read the implementation for more details."""
-        # Note that a known bug will result in an exception here, more specifically:
-        # https://sentry.turistforeningen.no/turistforeningen/sherpa/group/1655/
+        # Note that a known bug will result in an exception here.
         # This occurs during enrollment. When saving an enrollment in Focus, the payment_method field should be set to
         # one of two sentinel values for card or invoice; see focus.util.PAYMENT_METHOD_CODES. However, for some
         # reason, some of these entries are saved with payment_method=0 (which is NOT one of the sentinel values). This
