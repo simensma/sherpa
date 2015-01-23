@@ -83,6 +83,7 @@
 
     ImageCarouselWidgetEditor.init = function () {
         $image_list_container.empty();
+        $meta_editor.hide();
         $empty_section.hide();
         $images_section.hide();
         $settings_section.hide();
