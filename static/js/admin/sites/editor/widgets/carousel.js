@@ -16,14 +16,16 @@
 
     /* Private methods */
 
-    function chooseFromSource (url, description, photographer) {
-        var image = {
-            url: url,
-            selection: undefined,
-            description: description,
-            photographer: photographer
-        };
-        addImage(image);
+    function chooseFromSource (images) {
+        for (var i = 0; i < images.length; i++) {
+            var image = images[i];
+            addImage({
+                url: image.url,
+                selection: undefined,
+                description: image.description,
+                photographer: image.photographer
+            });
+        }
     }
 
     function addImage (image) {
@@ -193,7 +195,7 @@
 
         // Clicked add images button
         $widget_editor.find('[data-dnt-trigger="open-add-images-dialog"]').click(function () {
-            ImageArchivePicker.pick(chooseFromSource);
+            ImageArchivePicker.pick(chooseFromSource, {multiselect: true});
         });
 
         // Clicked upload image button
