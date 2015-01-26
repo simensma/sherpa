@@ -58,9 +58,9 @@ def index(request, forening_id):
 
     # If the parent of the current forening isn't in the user's permissions, we still need to include that one as an
     # available parent so that they're able to make changes.
-    current_parent = current_forening.get_main_foreninger()[0] # Pick the first occurrence
-    if current_parent not in parents_choices['forening'] and current_parent not in parents_choices['turlag']:
-        parents_choices[current_parent.type].append(current_parent)
+    for current_parent in current_forening.get_main_foreninger():
+        if current_parent not in parents_choices['forening'] and current_parent not in parents_choices['turlag']:
+            parents_choices[current_parent.type].append(current_parent)
 
     context = {
         'current_forening': current_forening,
