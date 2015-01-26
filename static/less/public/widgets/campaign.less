@@ -11,6 +11,14 @@
 
     .text {
       line-height: @campaign-text-line-height;
+
+      // The text elements are contenteditable, and some browsers choose to put paragraphs in here, so make sure the
+      // styles are inherited for those too
+      * {
+        font-family: inherit !important;
+        font-size: inherit;
+        line-height: inherit;
+      }
     }
 
     .photographer {
