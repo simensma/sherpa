@@ -58,9 +58,9 @@
       <tr>
         <th>Din medlemsforening:</th>
         <td>
-          {% if user.main_forening.get_homepage_site %}<a href="http://{{ user.main_forening.get_homepage_site.domain }}/">{% endif %}
+          {% if user.main_forening.get_active_url %}<a href="{{ user.main_forening.get_active_url }}">{% endif %}
             {{ user.main_forening.name }}
-          {% if user.main_forening.get_homepage_site %}</a>{% endif %}
+          {% if user.main_forening.get_active_url %}</a>{% endif %}
         </td>
       </tr>
       {% if user.turledere.count > 0 %}
