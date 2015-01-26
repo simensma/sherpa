@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from datetime import datetime
 import logging
 import json
+import re
 
 from django.conf import settings
 from django.contrib import messages
@@ -147,12 +148,17 @@ def create(request):
             # new site, and save it, which will insert a new object.
             # For related fields, we'll need to save the related set in memory before saving the new object, so
             # that we can iterate it, clone them and re-relate them to the new object
+            # Additionally, replace domain name references in content from the template-domain to the new one
             template_site = Site.objects.get(id=request.POST['template'], type='mal')
 
             # Menus
             for menu in Menu.objects.filter(site=template_site):
                 menu.id = None
                 menu.site = site
+
+                # Replace domain references with the new site domain
+                menu.url = re.sub(template_site.domain, site.domain, menu.url)
+
                 menu.save()
 
             # Pages
@@ -196,6 +202,12 @@ def create(request):
                                 for content in contents:
                                     content.id = None
                                     content.column = column
+
+                                    # Replace domain references with the new site domain
+                                    # Use a json dump with prepended/trailing quotes stripped to ensure the
+                                    # replacement string is properly escaped if inserted into json-formatted content
+                                    json_safe_domain = json.dumps(site.domain)[1:-1]
+                                    content.content = re.sub(template_site.domain, json_safe_domain, content.content)
 
                                     # For aktiviteteslisting-widgets, force arranger-filter to the new site's related
                                     # forening
@@ -253,6 +265,12 @@ def create(request):
                                     content.id = None
                                     content.column = column
 
+                                    # Replace domain references with the new site domain
+                                    # Use a json dump with prepended/trailing quotes stripped to ensure the
+                                    # replacement string is properly escaped if inserted into json-formatted content
+                                    json_safe_domain = json.dumps(site.domain)[1:-1]
+                                    content.content = re.sub(template_site.domain, json_safe_domain, content.content)
+
                                     # For aktiviteteslisting-widgets, force arranger-filter to the new site's related
                                     # forening
                                     if content.type == 'widget':
@@ -272,6 +290,10 @@ def create(request):
                 campaign_texts = campaign.text.all()
                 campaign.id = None
                 campaign.site = site
+
+                # Replace domain references with the new site domain
+                campaign.button_anchor = re.sub(template_site.domain, site.domain, campaign.button_anchor)
+
                 campaign.save()
 
                 for campaign_text in campaign_texts:
