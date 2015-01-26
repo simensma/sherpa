@@ -48,12 +48,19 @@ def index(request, forening_id):
     forening_users_by_parent = sorted(forening_users_by_parent, key=lambda u: u.get_full_name())
     sherpa_admins = sorted(User.objects.filter(permissions__name='sherpa_admin'), key=lambda u: u.get_full_name())
 
-    # The parent choices are tricky to define in the forms API, so do it here
+    # The parent choices are tricky to define in the forms API, so do it here.
+    # Note that we're intentionally letting users choose parents among only those they have permission to.
     all_sorted = request.user.all_foreninger_sorted()
     parents_choices = {
         'forening': all_sorted['forening'],
         'turlag': all_sorted['turlag'],
     }
+
+    # If the parent of the current forening isn't in the user's permissions, we still need to include that one as an
+    # available parent so that they're able to make changes.
+    current_parent = current_forening.get_main_foreninger()[0] # Pick the first occurrence
+    if current_parent not in parents_choices['forening'] and current_parent not in parents_choices['turlag']:
+        parents_choices[current_parent.type].append(current_parent)
 
     context = {
         'current_forening': current_forening,
