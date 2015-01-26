@@ -3,7 +3,6 @@
     position: relative;
     width: 940px;
     height: 480px;
-
     font-family: "DTL Nobel" !important;
 
     .text, .button, .photographer {
@@ -22,11 +21,11 @@
     /* Core menu - used only on the main site */
 
     .menu {
-      font-family: "DTL Nobel";
       position: absolute;
       top: 20px;
-      font-size: 15px;
       z-index: 200;
+      font-family: "DTL Nobel";
+      font-size: 15px;
 
       ul {
         padding: 0;
@@ -37,11 +36,11 @@
         }
 
         li {
-          background-color: white;
-          border-top: 1px solid rgb(210, 210, 210);
           font-family: "DTL Nobel" !important;
           font-size: 15px !important;
           line-height: 18px;
+          background-color: white;
+          border-top: 1px solid rgb(210, 210, 210);
 
           &:first-of-type {
             border-top: none;
@@ -49,13 +48,13 @@
 
           &.active {
             .li-padding; // No anchor-element here, so apply the padding to the li
-            background-color: @profile-red;
             color: white;
+            background-color: @profile-red;
           }
 
           &:not(.active):hover {
-            background-color: rgb(150, 150, 150);
             cursor: pointer;
+            background-color: rgb(150, 150, 150);
           }
 
           a {
@@ -113,10 +112,10 @@
       }
 
       .menu {
-        display: none;
         position: static;
-        background-color: white;
+        display: none;
         padding-bottom: 20px;
+        background-color: white;
       }
     }
   }
