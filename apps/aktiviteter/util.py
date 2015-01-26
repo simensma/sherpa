@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 
 from django.db.models import Q
 from django.contrib.gis import geos
@@ -81,7 +81,8 @@ def filter_aktivitet_dates(filter):
         if filter.get('start_date', ''):
             dates = dates.filter(start_date__gte=datetime.strptime(filter['start_date'], "%d.%m.%Y"))
         else:
-            dates = dates.filter(start_date__gte=datetime.now())
+            today = date.today()
+            dates = dates.filter(start_date__gte=datetime(today.year, today.month, today.day))
 
         if filter.get('end_date'):
             dates = dates.filter(end_date__lte=datetime.strptime(filter['end_date'], "%d.%m.%Y"))
