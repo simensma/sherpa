@@ -1,5 +1,38 @@
 .widget.carousel {
 
+  .view {
+    &.carousel {
+      position: relative;
+      padding-bottom: 66.55%;
+      height: 0;
+      overflow: hidden;
+
+      .carousel-inner {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #000;
+
+        .item {
+          height: 100%;
+          text-align: center;
+
+          .item-inner {
+            height: 100%;
+
+            img {
+              display: inline-block;
+              width: auto;
+              max-height: 100%;
+            }
+          }
+        }
+      }
+    }
+  }
+
   img {
     width: 100%;
   }
