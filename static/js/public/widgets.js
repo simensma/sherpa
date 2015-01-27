@@ -25,11 +25,31 @@ $(function() {
     Widgets.run = function(type, widget) {
         if(type === 'carousel') {
 
-            //carousel, stop spinning
-            $(this).find("div.carousel").each(function() {
-                $(this).carousel({
-                    interval:false
+            widget.each(function (index, carousel_widget) {
+
+                var $album_view = $(carousel_widget).find('.album').first();
+                var $carousel_view = $(carousel_widget).find('.carousel').first();
+
+                // Turn off auto slide
+                $(carousel_widget).carousel({
+                    interval: false
                 });
+
+                // When in album view, click thumbnail to open full size view in carousel
+                $(carousel_widget).find('.album .item a').click(function (e) {
+                    $album_view.hide();
+
+                    var image_index = $(this).parents('.item').first().index();
+                    $(carousel_widget).carousel(image_index);
+                    $carousel_view.show();
+                });
+
+                // When in carousel view, go to album view by clicking switch view button
+                $(carousel_widget).find('.carousel .switch-view button').on('click', function () {
+                    $album_view.show();
+                    $carousel_view.hide();
+                });
+
             });
 
         } else if(type === 'articles') {
