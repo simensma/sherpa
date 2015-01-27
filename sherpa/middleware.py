@@ -33,11 +33,21 @@ class Redirect():
     def process_request(self, request):
         # At the start of 2015, the main site changed domain from turistforeningen.no to dnt.no. This temporary
         # redirect should be kept for a long while, perhaps about a year.
-        if request.get_host().lower() == 'www.turistforeningen.no':
-            response = HttpResponseRedirect('https://www.dnt.no%s' % request.get_full_path())
+        requested_host = request.get_host().lower()
+        if requested_host.endswith('turistforeningen.no'):
+            # Keep the requested subdomain. The turistforeningen.no domain (without subdomain) shouldn't in theory end
+            # up here, but handle it just in case.
+            if requested_host == 'turistforeningen.no':
+                subdomain = 'www'
+            else:
+                subdomain = requested_host[:-len('.turistforeningen.no')]
+
+            response = HttpResponseRedirect('https://%s.dnt.no%s' % (subdomain, request.get_full_path()))
+
             # Add CORS header to the redirect response for API requests
             if request.path.startswith('/api/'):
                 response['Access-Control-Allow-Origin'] = '*'
+
             return response
 
 class DBConnection():
