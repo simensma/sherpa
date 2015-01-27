@@ -5,7 +5,17 @@
 <div id="album{{ widget.id }}" class="row view album{% if widget.layout == "carousel" %} jq-hide{% endif %}">
   {% for image in widget.images %}
     <div class="item col-xs-6 col-sm-3">
-      <a class="thumbnail"><img src="{{ image.url }}" alt="{{ image.description }}"></a>
+      <a
+        class="thumbnail"
+        {% if image.description or image.photographer %}
+          data-toggle="tooltip"
+          data-placement="bottom"
+          title="{{ image.description }}{% if image.photographer %} Foto: {{ image.photographer }}{% endif %}"
+        {% endif %}>
+        <div class="thumbnail-inner">
+          <img src="{{ image.url }}" alt="{{ image.description }}">
+        </div>
+      </a>
     </div>
   {% endfor %}
 </div>

@@ -44,6 +44,8 @@ $(function() {
                     $carousel_view.show();
                 });
 
+                $('[data-toggle="tooltip"]').tooltip();
+
                 // When in carousel view, go to album view by clicking switch view button
                 $(carousel_widget).find('.carousel .switch-view button').on('click', function () {
                     $album_view.show();
