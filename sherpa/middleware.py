@@ -12,6 +12,7 @@ from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import resolve, Resolver404
 from django.contrib.auth import logout
+from django.http import HttpResponseRedirect
 from django.utils import translation
 from django.db import connections
 
@@ -33,7 +34,11 @@ class Redirect():
         # At the start of 2015, the main site changed domain from turistforeningen.no to dnt.no. This temporary
         # redirect should be kept for a long while, perhaps about a year.
         if request.get_host().lower() == 'www.turistforeningen.no':
-            return redirect('https://www.dnt.no%s' % request.get_full_path())
+            response = HttpResponseRedirect('https://www.dnt.no%s' % request.get_full_path())
+            # Add CORS header to the redirect response for API requests
+            if request.path.startswith('/api/'):
+                response['Access-Control-Allow-Origin'] = '*'
+            return response
 
 class DBConnection():
     """Checks connections to external DBs and saves the state in the request object"""
