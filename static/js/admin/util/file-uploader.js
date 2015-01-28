@@ -59,7 +59,7 @@
             error_msg.hide();
             section_select_file.hide();
             section_uploading_file.show();
-        })
+        });
 
     });
 
