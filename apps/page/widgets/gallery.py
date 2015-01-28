@@ -2,7 +2,7 @@ import random
 
 from page.widgets.widget import Widget
 
-class CarouselWidget(Widget):
+class GalleryWidget(Widget):
     def parse(self, widget_options, site):
         # NO! BAD HAVARD, dont use hax, create an id(but not now)
         return {

@@ -12,7 +12,7 @@ import requests
 from admin.models import Campaign
 
 from page.widgets.quote import QuoteWidget
-from page.widgets.carousel import CarouselWidget
+from page.widgets.gallery import GalleryWidget
 from page.widgets.articles import ArticlesWidget
 from page.widgets.aktivitet_listing import AktivitetListingWidget
 from page.widgets.embed import EmbedWidget
@@ -23,7 +23,7 @@ from page.widgets.campaign import CampaignWidget
 
 WIDGETS = {
     'quote': QuoteWidget(),
-    'carousel': CarouselWidget(),
+    'gallery': GalleryWidget(),
     'articles': ArticlesWidget(),
     'aktivitet_listing': AktivitetListingWidget(),
     'embed': EmbedWidget(),

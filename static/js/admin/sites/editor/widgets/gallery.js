@@ -1,11 +1,11 @@
-(function(ImageCarouselWidgetEditor, $, undefined ) {
+(function(ImageGalleryWidgetEditor, $, undefined ) {
 
     /* Private variables */
 
     var image_list = [];
     var $widget_editor; // Will be set in the document.ready block further down
     var $widget_being_edited; // Used when editing existing widget
-    var imageset_layout = 'carousel'; // Alternative is album
+    var gallery_layout = 'carousel'; // Alternative is album
 
     var $empty_section = $('.section.section-empty');
     var $images_section = $('.section.section-images');
@@ -36,7 +36,7 @@
             $settings_section.show();
         }
 
-        var $new_image_container = $('[data-dnt-container="insertion-templates"] .carousel-editor-image.image').clone();
+        var $new_image_container = $('[data-dnt-container="insertion-templates"] .gallery-editor-image.image').clone();
         $new_image_container.find('img').attr('src', image.url);
 
         setImageMetaData($new_image_container.find('img'), image);
@@ -83,7 +83,7 @@
 
     /* Public methods */
 
-    ImageCarouselWidgetEditor.init = function () {
+    ImageGalleryWidgetEditor.init = function () {
         $image_list_container.empty();
         $meta_editor.hide();
         $empty_section.hide();
@@ -98,16 +98,16 @@
         });
 
         // Add the imageset images to the editor if any
-        ImageCarouselWidgetEditor.listImages();
+        ImageGalleryWidgetEditor.listImages();
 
         // Show the correct layout group button as the active one
-        $widget_editor.find('[data-dnt-name="layout"][data-dnt-value="' + imageset_layout + '"]').addClass('active');
+        $widget_editor.find('[data-dnt-name="layout"][data-dnt-value="' + gallery_layout + '"]').addClass('active');
 
         // Open modal
         $widget_editor.modal();
     };
 
-    ImageCarouselWidgetEditor.listImages = function () {
+    ImageGalleryWidgetEditor.listImages = function () {
 
         if (typeof $widget_being_edited === 'undefined') {
             $empty_section.show();
@@ -127,20 +127,20 @@
 
     /* New widget */
 
-    $(document).on('widget.new.carousel', function (e, editor_callback) {
+    $(document).on('widget.new.gallery', function (e, editor_callback) {
         WidgetEditor.setCallback(editor_callback);
         $widget_being_edited = undefined;
-        ImageCarouselWidgetEditor.init();
+        ImageGalleryWidgetEditor.init();
     });
 
 
     /* Edit widget */
 
-    $(document).on('widget.edit', 'div.widget.carousel', function (e, widget_content, editor_callback) {
+    $(document).on('widget.edit', 'div.widget.gallery', function (e, widget_content, editor_callback) {
         WidgetEditor.setCallback(editor_callback);
         $widget_being_edited = $(this);
-        imageset_layout = widget_content.layout || imageset_layout;
-        ImageCarouselWidgetEditor.init();
+        gallery_layout = widget_content.layout || gallery_layout;
+        ImageGalleryWidgetEditor.init();
     });
 
 
@@ -148,7 +148,7 @@
 
     $(function () {
 
-        $widget_editor = $('div.widget-editor[data-widget="carousel"]');
+        $widget_editor = $('div.widget-editor[data-widget="gallery"]');
         $meta_editor = $widget_editor.find('.image-meta-editor');
 
         $(document).on('click', $image_list_container.find('.image a').selector, function (e) {
@@ -190,7 +190,7 @@
         $(document).on('click', $widget_editor.find('[data-dnt-name="layout"]').selector, function (e) {
             $(this).siblings().removeClass('active');
             $(this).addClass('active');
-            imageset_layout = $(this).attr('data-dnt-value');
+            gallery_layout = $(this).attr('data-dnt-value');
         });
 
         // Clicked add images button
@@ -232,13 +232,13 @@
             }
 
             WidgetEditor.saveWidget({
-                widget: 'carousel',
+                widget: 'gallery',
                 images: image_list,
-                layout: imageset_layout
+                layout: gallery_layout
             });
             $widget_editor.modal('hide');
         });
 
     });
 
-}(window.ImageCarouselWidgetEditor = window.ImageCarouselWidgetEditor || {}, jQuery ));
+}(window.ImageGalleryWidgetEditor = window.ImageGalleryWidgetEditor || {}, jQuery ));
