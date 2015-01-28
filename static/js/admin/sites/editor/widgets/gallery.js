@@ -45,7 +45,9 @@ $(function() {
             });
 
             // Remove image from carousel
-            $(document).on('click', $editor.find('[data-dnt-trigger="remove-image"]').selector, function (e) {
+            // Note that we can't use the $editor selector here because the modal will have been moved in DOM outside
+            // the .cms-editor wrapper by the time the remove-button lookup is performed, and not match
+            $(document).on('click', '.widget-editor[data-widget="gallery"] [data-dnt-trigger="remove-image"]', function (e) {
                 e.stopPropagation(); // Prevent sending click event to image as that will trigger metadata editor
                 var $image_to_remove = $(this).parents('.image').first();
                 var image_to_remove_url = $image_to_remove.find('img').first().attr('src');
