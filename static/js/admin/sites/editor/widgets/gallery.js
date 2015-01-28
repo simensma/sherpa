@@ -16,29 +16,6 @@
 
     /* Private methods */
 
-    function chooseFromSource (images) {
-        if (typeof images === 'object') {
-            for (var i = 0; i < images.length; i++) {
-                var image = images[i];
-                addImage({
-                    url: image.url,
-                    selection: undefined,
-                    description: image.description,
-                    photographer: image.photographer
-                });
-            }
-        }
-    }
-
-    function getFromUpload (url, description, photographer) {
-        addImage({
-            url: url,
-            selection: undefined,
-            description: description,
-            photographer: photographer
-        });
-    }
-
     function addImage (image) {
 
         if ($empty_section.is(':visible')) {
@@ -206,12 +183,16 @@
 
         // Clicked add images button
         $widget_editor.find('[data-dnt-trigger="open-add-images-dialog"]').click(function () {
-            ImageArchivePicker.pick(chooseFromSource, {multiselect: true});
+            ImageArchivePicker.pick(function(images) {
+                for (var i = 0; i < images.length; i++) {
+                    addImage(images[i]);
+                }
+            }, {multiselect: true});
         });
 
         // Clicked upload image button
         $widget_editor.find('[data-dnt-trigger="open-upload-image-dialog"]').click(function () {
-            ImageUploadDialog.open(getFromUpload);
+            ImageUploadDialog.open(addImage);
         });
 
         // Update image metadata on input

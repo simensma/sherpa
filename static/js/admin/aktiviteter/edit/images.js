@@ -10,19 +10,19 @@ $(function() {
         });
     };
 
-    function imageAddHandler(url, description, photographer) {
+    function imageAddHandler(image) {
         // Remove any alerts before adding the new image
         scope.find('[data-dnt-container="images"] > .alert').remove();
 
         var i = scope.find('[data-dnt-container="images"]').children().length;
-        var image = scope.find('[data-dnt-template="image"] > div').clone(true, true);
+        var $image = scope.find('[data-dnt-template="image"] > div').clone(true, true);
 
-        image.find('.thumbnail img').attr('src', url);
-        image.find('[name="images[tmp][url]"]').val(url);
-        image.find('[name="images[tmp][description]"]').val(description);
-        image.find('[name="images[tmp][photographer]"]').val(photographer);
+        $image.find('.thumbnail img').attr('src', image.url);
+        $image.find('[name="images[tmp][url]"]').val(image.url);
+        $image.find('[name="images[tmp][description]"]').val(image.description);
+        $image.find('[name="images[tmp][photographer]"]').val(image.photographer);
 
-        scope.find('[data-dnt-container="images"]').append(image);
+        scope.find('[data-dnt-container="images"]').append($image);
         scope.find('[data-dnt-container="images"] > div').reIndexInputNames();
     }
 

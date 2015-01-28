@@ -113,17 +113,17 @@ $(function() {
     });
 
     $wrapper.find('button.pick-from-image-archive').click(function() {
-        ImageArchivePicker.pick(function(url, description, photographer) {
-            setOriginalImage(url);
-            setPhotographer(photographer.trim(), 'left', 'black'); // Default alignment/color
+        ImageArchivePicker.pick(function(image) {
+            setOriginalImage(image.url);
+            setPhotographer(image.photographer.trim(), 'left', 'black'); // Default alignment/color
             enableStep(2);
         });
     });
 
     $wrapper.find('button.upload-new-image').click(function() {
-        ImageUploadDialog.open(function(url, description, photographer) {
-            setOriginalImage(url);
-            setPhotographer(photographer.trim(), 'left', 'black'); // Default alignment/color
+        ImageUploadDialog.open(function(image) {
+            setOriginalImage(image.url);
+            setPhotographer(image.photographer.trim(), 'left', 'black'); // Default alignment/color
             enableStep(2);
         });
     });

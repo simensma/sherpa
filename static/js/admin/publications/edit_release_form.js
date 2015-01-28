@@ -17,15 +17,15 @@ $(function() {
     });
 
     form.find("div.form-group.cover_photo a.pick-from-image-archive").click(function() {
-        ImageArchivePicker.pick(function(url, description, photographer) {
-            input_cover_photo.val(url);
+        ImageArchivePicker.pick(function(image) {
+            input_cover_photo.val(image.url);
             input_cover_photo.change();
         });
     });
 
     form.find("div.form-group.cover_photo a.upload-new-image").click(function() {
-        ImageUploadDialog.open(function(url, description, photographer) {
-            input_cover_photo.val(url);
+        ImageUploadDialog.open(function(image) {
+            input_cover_photo.val(image.url);
             input_cover_photo.change();
         });
     });

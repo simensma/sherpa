@@ -126,16 +126,16 @@
         image_dialog.find('.row.image-url').removeClass('jq-hide');
     };
 
-    ImageDialog.insertImageDetails = function (url, description, photographer, crop) {
+    ImageDialog.insertImageDetails = function (image, crop) {
         ImageDialog.resetDialog();
         ImageDialog.showInfoFields();
 
         image_dialog.data('crop', crop);
 
-        thumbnail_preview.attr('src', url);
-        input_url.val(url);
-        input_description.val(description);
-        input_photographer.typeahead('val', photographer);
+        thumbnail_preview.attr('src', image.url);
+        input_url.val(image.url);
+        input_description.val(image.description);
+        input_photographer.typeahead('val', image.photographer);
     };
 
     ImageDialog.open = function(opts) {
@@ -155,7 +155,11 @@
             }
 
             // Important to insert image details first, as this resets all fields
-            this.insertImageDetails(opts.src, opts.description, opts.photographer, opts.crop);
+            this.insertImageDetails({
+                url: opts.src,
+                description: opts.description,
+                photographer: opts.photographer,
+            }, opts.crop);
 
             input_anchor.val(opts.anchor);
         }

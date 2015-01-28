@@ -64,7 +64,11 @@
             var photographer = $(this).attr('data-photographer');
 
             picker.modal('hide');
-            ImageArchivePicker.callback(url.trim(), description.trim(), photographer.trim());
+            ImageArchivePicker.callback({
+                url: url.trim(),
+                description: description.trim(),
+                photographer: photographer.trim(),
+            });
         }
     });
 
