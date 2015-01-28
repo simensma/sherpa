@@ -17,14 +17,16 @@
     /* Private methods */
 
     function chooseFromSource (images) {
-        for (var i = 0; i < images.length; i++) {
-            var image = images[i];
-            addImage({
-                url: image.url,
-                selection: undefined,
-                description: image.description,
-                photographer: image.photographer
-            });
+        if (typeof images === 'object') {
+            for (var i = 0; i < images.length; i++) {
+                var image = images[i];
+                addImage({
+                    url: image.url,
+                    selection: undefined,
+                    description: image.description,
+                    photographer: image.photographer
+                });
+            }
         }
     }
 
