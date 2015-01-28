@@ -105,7 +105,6 @@
             picker.find('[data-dnt-trigger="select-all"]').hide();
         }
         ImageArchivePicker.callback = callback;
-        archiveCallback = callback;
         picker.modal();
     };
 
