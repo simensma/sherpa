@@ -11,7 +11,6 @@
     var input_description;
     var input_url;
     var input_anchor;
-    var crop;
 
     $(function() {
 
