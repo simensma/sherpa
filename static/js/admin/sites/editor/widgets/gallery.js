@@ -30,6 +30,15 @@
         }
     }
 
+    function getFromUpload (url, description, photographer) {
+        addImage({
+            url: url,
+            selection: undefined,
+            description: description,
+            photographer: photographer
+        });
+    }
+
     function addImage (image) {
 
         if ($empty_section.is(':visible')) {
@@ -202,7 +211,7 @@
 
         // Clicked upload image button
         $widget_editor.find('[data-dnt-trigger="open-upload-image-dialog"]').click(function () {
-            ImageUploadDialog.open(chooseFromSource);
+            ImageUploadDialog.open(getFromUpload);
         });
 
         // Update image metadata on input
