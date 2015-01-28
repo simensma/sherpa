@@ -12,6 +12,7 @@ from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import resolve, Resolver404
 from django.contrib.auth import logout
+from django.http import HttpResponseRedirect
 from django.utils import translation
 from django.db import connections
 
@@ -26,6 +27,28 @@ logger = logging.getLogger('sherpa')
 
 from django import template
 template.add_to_builtins('core.templatetags.url')
+
+class Redirect():
+    """Domain-specific redirects"""
+    def process_request(self, request):
+        # At the start of 2015, the main site changed domain from turistforeningen.no to dnt.no. This temporary
+        # redirect should be kept for a long while, perhaps about a year.
+        requested_host = request.get_host().lower()
+        if requested_host.endswith('turistforeningen.no'):
+            # Keep the requested subdomain. The turistforeningen.no domain (without subdomain) shouldn't in theory end
+            # up here, but handle it just in case.
+            if requested_host == 'turistforeningen.no':
+                subdomain = 'www'
+            else:
+                subdomain = requested_host[:-len('.turistforeningen.no')]
+
+            response = HttpResponseRedirect('https://%s.dnt.no%s' % (subdomain, request.get_full_path()))
+
+            # Add CORS header to the redirect response for API requests
+            if request.path.startswith('/api/'):
+                response['Access-Control-Allow-Origin'] = '*'
+
+            return response
 
 class DBConnection():
     """Checks connections to external DBs and saves the state in the request object"""

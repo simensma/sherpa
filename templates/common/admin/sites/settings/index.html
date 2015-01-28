@@ -87,11 +87,11 @@
         </div>
       {% elif message.message == 'prefix_not_supported_yet' %}
         <div class="alert alert-danger">
-          Domenet kan ikke være en undermappe under turistforeningen.no (for eksempel: <strong>{{ main_site.domain }}/mitt-turlag</strong>) fordi vi ikke har satt opp teknisk støtte for det ennå.
+          Domenet kan ikke være en undermappe under dnt.no (for eksempel: <strong>{{ main_site.domain }}/mitt-turlag</strong>) fordi vi ikke har satt opp teknisk støtte for det ennå.
         </div>
       {% elif message.message == 'test_period_requires_test_domain' %}
         <div class="alert alert-danger">
-          I test-perioden <strong>må</strong> dere ha "<strong>.test.turistforeningen.no</strong>" bak domenet. For eksempel: <strong>http://stf.test.turistforeningen.no</strong>
+          I test-perioden <strong>må</strong> dere ha "<strong>.test.dnt.no</strong>" bak domenet. For eksempel: <strong>http://stf.test.dnt.no</strong>
         </div>
       {% endif %}
     {% endfor %}

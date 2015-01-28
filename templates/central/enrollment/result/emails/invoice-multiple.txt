@@ -6,7 +6,7 @@
 i posten. Medlemskapet er gyldig når betalingen er registrert i vårt system.{% endblocktrans %}
 
 {% blocktrans %}Mer informasjon om medlemskapet og medlemsfordelene deres finner dere på:{% endblocktrans %}
-http://www.turistforeningen.no/medlem/
+http://www.dnt.no/medlem/
 
 {% blocktrans %}Hvis dere har spørsmål om deres medlemskap, kan dere kontakte DNTs
 medlemsservice på telefon 40001870 eller medlem@turistforeningen.no{% endblocktrans %}
@@ -16,7 +16,7 @@ Her kan du melde adresseendring, lese Fjell og Vidde, UT og årboka og få
 tilgang til Fjelltreffen. Merk at deres innmelding må være behandlet i vårt
 medlemssystem før du får tilgang til medlemstjenestene, og dette gjøres
 påfølgende virkedag. Registrer deg her:{% endblocktrans %}
-https://www.turistforeningen.no/minside/logg-inn/?registreringsnokkel={{ user.pending_user.pending_registration_key }}#registrering
+https://www.dnt.no/minside/logg-inn/?registreringsnokkel={{ user.pending_user.pending_registration_key }}#registrering
 
 {% blocktrans %}Planlegg turen på UT.no:
 På http://ut.no/ finner dere hytter og turer over hele landet.{% endblocktrans %}
@@ -29,4 +29,4 @@ hele året. Sjekk tilbudet på {{ forening_url }}{% endblocktrans %}
 
 Med vennlig hilsen
 Den Norske Turistforening
-www.turistforeningen.no{% endblocktrans %}
+www.dnt.no{% endblocktrans %}

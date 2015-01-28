@@ -1,8 +1,8 @@
 Hei
 
-{{ user_providing_access.get_full_name }} har opprettet deg som bruker under {{ forening.name }} i nye Sherpa: www.turistforeningen.no/sherpa
+{{ user_providing_access.get_full_name }} har opprettet deg som bruker under {{ forening.name }} i nye Sherpa: www.dnt.no/sherpa
 
-For å få tilgang til nye Sherpa må du først registrere deg / logge inn på Min side www.turistforeningen.no/minside
+For å få tilgang til nye Sherpa må du først registrere deg / logge inn på Min side www.dnt.no/minside
 
 Skulle du ikke hatt denne tilgangen?
 Ta kontakt med {{ forening.name }} hvis du lurer på hvorfor du har fått tilgang til dette eller har andre spørsmål.

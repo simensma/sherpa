@@ -109,7 +109,7 @@ class CreateSiteForm(SiteForm):
         domain = domain.strip('/').strip('.')
 
         # Requiring test-domain at the moment
-        domain = '%s.test.turistforeningen.no' % domain
+        domain = '%s.test.dnt.no' % domain
 
         result = Site.verify_domain(domain)
 
@@ -138,13 +138,13 @@ class CreateSiteForm(SiteForm):
             elif result['error'] == 'prefix_not_supported_yet':
                 main_site = Site.objects.get(id=Site.DNT_CENTRAL_ID)
                 raise forms.ValidationError(
-                    u"Domenet kan ikke være en undermappe under turistforeningen.no (for eksempel: <strong>%s/mitt-turlag</strong>) fordi vi ikke har satt opp teknisk støtte for det ennå." % main_site.domain,
+                    u"Domenet kan ikke være en undermappe under dnt.no (for eksempel: <strong>%s/mitt-turlag</strong>) fordi vi ikke har satt opp teknisk støtte for det ennå." % main_site.domain,
                     code=result['error'],
                 )
             elif result['error'] == 'test_period_requires_test_domain':
                 # Shouldn't happen since we're explicitly appending the test-domain, but handle it nevertheless
                 raise forms.ValidationError(
-                    u"I test-perioden <strong>må</strong> dere ha \"<strong>.test.turistforeningen.no</strong>\" bak domenet. For eksempel: <strong>http://stf.test.turistforeningen.no</strong>.",
+                    u"I test-perioden <strong>må</strong> dere ha \"<strong>.test.dnt.no</strong>\" bak domenet. For eksempel: <strong>http://stf.test.dnt.no</strong>.",
                     code=result['error'],
                 )
             else:

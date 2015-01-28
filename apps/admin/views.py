@@ -60,7 +60,7 @@ def index(request):
     if betablog is None:
         try:
             betablog = []
-            r = requests.get("http://beta.turistforeningen.no/", params={'feed': 'rss2'})
+            r = requests.get("http://beta.dnt.no/", params={'feed': 'rss2'})
             channel = etree.fromstring(r.content).find('channel')
             for item in channel.findall('item'):
                 content = item.find('description').text
