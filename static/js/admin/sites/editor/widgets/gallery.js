@@ -7,6 +7,7 @@ $(function() {
     var $settings_section;
     var $meta_editor;
     var $image_list_container;
+    var $templates;
 
     WidgetEditor.listen({
         widget_name: 'gallery',
@@ -20,6 +21,7 @@ $(function() {
             $settings_section = $editor.find('.section.section-settings');
             $meta_editor = $editor.find('.image-meta-editor');
             $image_list_container = $editor.find('[data-dnt-container="image-list"]');
+            $templates = $editor.find('[data-dnt-container="templates"]');
 
             // Init sortable behavior of images container
             // No need to wait for images, as it will be refreshed for each image added
@@ -160,7 +162,7 @@ $(function() {
             $settings_section.show();
         }
 
-        var $new_image_container = $('[data-dnt-container="insertion-templates"] .gallery-editor-image.image').clone();
+        var $new_image_container = $templates.find('.gallery-editor-image.image').clone();
         $new_image_container.find('img').attr('src', image.url);
 
         setImageMetaData($new_image_container.find('img'), image);
