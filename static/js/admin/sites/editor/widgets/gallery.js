@@ -127,7 +127,7 @@
     $(document).on('widget.edit', 'div.widget.gallery', function (e, widget_content, editor_callback) {
         WidgetEditor.setCallback(editor_callback);
         $widget_being_edited = $(this);
-        gallery_layout = widget_content.layout || gallery_layout;
+        gallery_layout = widget_content.layout;
         ImageGalleryWidgetEditor.init();
     });
 
