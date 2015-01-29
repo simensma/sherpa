@@ -5,6 +5,7 @@ import json
 from django.contrib.gis.db import models
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.core.cache import cache
 
 from djorm_pgarray.fields import TextArrayField
 
@@ -423,11 +424,15 @@ class AktivitetDate(models.Model):
 
     def get_sherpa2_date(self):
         """Returns the corresponding date object in sherpa2. It is not guaranteed to exist."""
-        return ActivityDate.objects.get(
-            activity__id=self.aktivitet.sherpa2_id,
-            date_from=self.start_date.strftime('%Y-%m-%d'),
-            date_to=self.end_date.strftime('%Y-%m-%d'),
-        )
+        activity_date = cache.get('aktiviteter.dato.%s.sherpa2' % self.id)
+        if activity_date is None:
+            activity_date = ActivityDate.objects.get(
+                activity__id=self.aktivitet.sherpa2_id,
+                date_from=self.start_date.strftime('%Y-%m-%d'),
+                date_to=self.end_date.strftime('%Y-%m-%d'),
+            )
+            cache.set('aktiviteter.dato.%s.sherpa2' % self.id, activity_date, 60 * 60)
+        return activity_date
 
     def is_waitinglist_sherpa2(self):
         try:
