@@ -450,6 +450,21 @@ class AktivitetDate(models.Model):
             # isn't the right place to raise any exception about that, so ignore it
             return 0
 
+    def max_participant_count_sherpa2(self):
+        try:
+            return self.get_sherpa2_date().booking
+        except ActivityDate.DoesNotExist:
+            # Well, if the date doesn't exist, the signup button won't work anyway, this is a problem but this method
+            # isn't the right place to raise any exception about that, so ignore it
+            return 0
+
+    def spots_available_sherpa2(self):
+        return self.max_participant_count_sherpa2() - self.total_signup_count_sherpa2()
+
+    def is_almost_full_sherpa2(self):
+        HIGHEST_ALMOST_FULL_COUNT = 3
+        return self.spots_available_sherpa2() <= HIGHEST_ALMOST_FULL_COUNT
+
     #
     # End Sherpa2 methods
     #
