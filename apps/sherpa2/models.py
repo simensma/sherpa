@@ -1312,6 +1312,24 @@ class ActivityDate(models.Model):
     class Meta:
         db_table = u'activity_date'
 
+class ContractItem(models.Model):
+    id = models.IntegerField(db_column=u'ci_co_id', primary_key=True)
+    item = models.IntegerField(db_column=u'ci_item', null=True, blank=True)
+    type = models.IntegerField(db_column=u'ci_type', null=True, blank=True)
+    pe_id = models.IntegerField(db_column=u'ci_pe_id', null=True, blank=True)
+    gr_id = models.IntegerField(db_column=u'ci_gr_id', null=True, blank=True)
+    prod_type = models.CharField(db_column=u'ci_prod_type', max_length=50, blank=True)
+    prod_id = models.CharField(db_column=u'ci_prod_id', max_length=50, blank=True)
+    prod_version = models.CharField(db_column=u'ci_prod_version', max_length=50, blank=True)
+    date_reg = models.CharField(db_column=u'ci_date_reg', max_length=12, blank=True)
+    date_from = models.CharField(db_column=u'ci_date_from', max_length=12, blank=True)
+    date_to = models.CharField(db_column=u'ci_date_to', max_length=12, blank=True)
+    status = models.CharField(db_column=u'ci_status', max_length=25, blank=True)
+    extra = models.IntegerField(db_column=u'ci_extra', null=True, blank=True)
+
+    class Meta:
+        db_table = u'contract_item'
+
 class Log(models.Model):
     id = models.IntegerField(db_column='lg_id', primary_key=True)
     object = models.TextField(db_column='lg_object', blank=True)
