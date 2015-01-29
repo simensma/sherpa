@@ -434,28 +434,26 @@ class AktivitetDate(models.Model):
             cache.set('aktiviteter.dato.%s.sherpa2' % self.id, activity_date, 60 * 60)
         return activity_date
 
+    # The below methods will have to handle ActivityDate.DoesNotExist. If the date doesn't exist, the signup button
+    # won't work anyway, which is a problem, but these methods aren't the right place to raise any exception about
+    # that, so ignore it
+
     def is_waitinglist_sherpa2(self):
         try:
             return self.get_sherpa2_date().is_waitinglist()
         except ActivityDate.DoesNotExist:
-            # Well, if the date doesn't exist, the signup button won't work anyway, this is a problem but this method
-            # isn't the right place to raise any exception about that, so ignore it
             return False
 
     def total_signup_count_sherpa2(self):
         try:
             return self.get_sherpa2_date().participant_count()
         except ActivityDate.DoesNotExist:
-            # Well, if the date doesn't exist, the signup button won't work anyway, this is a problem but this method
-            # isn't the right place to raise any exception about that, so ignore it
             return 0
 
     def max_participant_count_sherpa2(self):
         try:
             return self.get_sherpa2_date().booking
         except ActivityDate.DoesNotExist:
-            # Well, if the date doesn't exist, the signup button won't work anyway, this is a problem but this method
-            # isn't the right place to raise any exception about that, so ignore it
             return 0
 
     def spots_available_sherpa2(self):
