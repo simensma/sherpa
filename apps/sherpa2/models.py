@@ -1186,6 +1186,18 @@ class ActivityDate(models.Model):
     def get_signup_date_to(self):
         return datetime.strptime(self.signup_date_to.strip(), "%Y-%m-%d").date()
 
+    def is_waitinglist(self):
+        """Returns True if this date is fully booked, and any subsequent bookings would be put on a waitinglist"""
+        return self.participant_count() >= self.booking
+
+    def participant_count(self):
+        return ContractItem.objects.filter(
+            prod_type='activity',
+            prod_id=self.activity.id,
+            prod_version=self.date_from.strip(),
+            status=u'Påmeldt',
+        ).count()
+
     #
     # Conversion
     #
