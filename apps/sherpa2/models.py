@@ -1186,6 +1186,18 @@ class ActivityDate(models.Model):
     def get_signup_date_to(self):
         return datetime.strptime(self.signup_date_to.strip(), "%Y-%m-%d").date()
 
+    def is_waitinglist(self):
+        """Returns True if this date is fully booked, and any subsequent bookings would be put on a waitinglist"""
+        return self.participant_count() >= self.booking
+
+    def participant_count(self):
+        return ContractItem.objects.filter(
+            prod_type='activity',
+            prod_id=self.activity.id,
+            prod_version=self.date_from.strip(),
+            status=u'Påmeldt',
+        ).count()
+
     #
     # Conversion
     #
@@ -1311,6 +1323,24 @@ class ActivityDate(models.Model):
 
     class Meta:
         db_table = u'activity_date'
+
+class ContractItem(models.Model):
+    id = models.IntegerField(db_column=u'ci_co_id', primary_key=True)
+    item = models.IntegerField(db_column=u'ci_item', null=True, blank=True)
+    type = models.IntegerField(db_column=u'ci_type', null=True, blank=True)
+    pe_id = models.IntegerField(db_column=u'ci_pe_id', null=True, blank=True)
+    gr_id = models.IntegerField(db_column=u'ci_gr_id', null=True, blank=True)
+    prod_type = models.CharField(db_column=u'ci_prod_type', max_length=50, blank=True)
+    prod_id = models.CharField(db_column=u'ci_prod_id', max_length=50, blank=True)
+    prod_version = models.CharField(db_column=u'ci_prod_version', max_length=50, blank=True)
+    date_reg = models.CharField(db_column=u'ci_date_reg', max_length=12, blank=True)
+    date_from = models.CharField(db_column=u'ci_date_from', max_length=12, blank=True)
+    date_to = models.CharField(db_column=u'ci_date_to', max_length=12, blank=True)
+    status = models.CharField(db_column=u'ci_status', max_length=25, blank=True)
+    extra = models.IntegerField(db_column=u'ci_extra', null=True, blank=True)
+
+    class Meta:
+        db_table = u'contract_item'
 
 class Log(models.Model):
     id = models.IntegerField(db_column='lg_id', primary_key=True)

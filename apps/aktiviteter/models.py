@@ -5,11 +5,12 @@ import json
 from django.contrib.gis.db import models
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.core.cache import cache
 
 from djorm_pgarray.fields import TextArrayField
 
 from core.util import s3_bucket
-from sherpa2.models import Turforslag
+from sherpa2.models import Turforslag, ActivityDate
 from turbasen.models import Omrade
 
 class Aktivitet(models.Model):
@@ -377,6 +378,7 @@ class AktivitetDate(models.Model):
             return 0
         return self.total_signup_count() - self.signup_max_allowed
 
+
     #
     # End signup-methods
     #
@@ -415,6 +417,55 @@ class AktivitetDate(models.Model):
 
     def get_turledere_ordered(self):
         return sorted(self.turledere.all(), key=lambda p: p.get_first_name())
+
+    #
+    # Temporary Sherpa2 methods
+    #
+
+    def get_sherpa2_date(self):
+        """Returns the corresponding date object in sherpa2. It is not guaranteed to exist."""
+        activity_date = cache.get('aktiviteter.dato.%s.sherpa2' % self.id)
+        if activity_date is None:
+            activity_date = ActivityDate.objects.get(
+                activity__id=self.aktivitet.sherpa2_id,
+                date_from=self.start_date.strftime('%Y-%m-%d'),
+                date_to=self.end_date.strftime('%Y-%m-%d'),
+            )
+            cache.set('aktiviteter.dato.%s.sherpa2' % self.id, activity_date, 60 * 60)
+        return activity_date
+
+    # The below methods will have to handle ActivityDate.DoesNotExist. If the date doesn't exist, the signup button
+    # won't work anyway, which is a problem, but these methods aren't the right place to raise any exception about
+    # that, so ignore it
+
+    def is_waitinglist_sherpa2(self):
+        try:
+            return self.get_sherpa2_date().is_waitinglist()
+        except ActivityDate.DoesNotExist:
+            return False
+
+    def total_signup_count_sherpa2(self):
+        try:
+            return self.get_sherpa2_date().participant_count()
+        except ActivityDate.DoesNotExist:
+            return 0
+
+    def max_participant_count_sherpa2(self):
+        try:
+            return self.get_sherpa2_date().booking
+        except ActivityDate.DoesNotExist:
+            return 0
+
+    def spots_available_sherpa2(self):
+        return self.max_participant_count_sherpa2() - self.total_signup_count_sherpa2()
+
+    def is_almost_full_sherpa2(self):
+        HIGHEST_ALMOST_FULL_COUNT = 3
+        return self.spots_available_sherpa2() <= HIGHEST_ALMOST_FULL_COUNT
+
+    #
+    # End Sherpa2 methods
+    #
 
     @staticmethod
     def get_published():
