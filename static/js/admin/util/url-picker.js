@@ -205,7 +205,7 @@
 
             callback({
                 type: 'email',
-                url: email,
+                url: 'mailto:' + email,
             });
         } else {
             if(typeof(cancel_callback) === 'function') {
