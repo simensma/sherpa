@@ -119,14 +119,41 @@
                 Du har meldt deg på denne turen!
               </div>
             {% elif aktivitet_date.accepts_signups %}
+
               <div class="signup accepts-signups">
-                <a href="{{ aktivitet_date.signup_url }}" class="btn btn-danger btn-block">Meld deg på!</a>
+                {% if aktivitet_date.is_waitinglist_sherpa2 %}
+
+                  <span class="fully-booked">
+                    Det er ingen ledige plasser.
+                  </span>
+                  <a href="{{ aktivitet_date.signup_url }}" class="btn btn-danger btn-block">
+                    Sett deg på venteliste
+                  </a>
+
+                {% elif aktivitet_date.is_almost_full_sherpa2 %}
+
+                  <span class="almost-fully-booked">
+                    Kun {{ aktivitet_date.spots_available_sherpa2 }} plasser igjen!
+                  </span>
+                  <a href="{{ aktivitet_date.signup_url }}" class="btn btn-danger btn-block">
+                    Meld deg på!
+                  </a>
+
+                {% else %}
+
+                  <a href="{{ aktivitet_date.signup_url }}" class="btn btn-danger btn-block">
+                    Meld deg på!
+                  </a>
+
+                {% endif %}
+
                 {% if not aktivitet_date.signup_available_to_departure %}
                   <span class="deadline">
                     Påmeldingsfrist: {{ aktivitet_date.signup_deadline|date:"j. F Y" }}
                   </span>
                 {% endif %}
               </div>
+
             {% elif aktivitet_date.will_accept_signups %}
               <div class="signup signup-countdown">
                 Påmelding fra {{ aktivitet_date.signup_start|date:"j. F Y" }} {% if aktivitet_date.signup_deadline %} til {{ aktivitet_date.signup_deadline|date:"j. F Y" }} {% endif %}
