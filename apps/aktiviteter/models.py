@@ -377,18 +377,6 @@ class AktivitetDate(models.Model):
             return 0
         return self.total_signup_count() - self.signup_max_allowed
 
-    def is_waitinglist_sherpa2(self):
-        """This temporary method checks if the date is fully booked in sherpa2"""
-        try:
-            return ActivityDate.objects.get(
-                activity__id=self.aktivitet.sherpa2_id,
-                date_from=self.start_date.strftime('%Y-%m-%d'),
-                date_to=self.end_date.strftime('%Y-%m-%d'),
-            ).is_waitinglist()
-        except ActivityDate.DoesNotExist:
-            # Well, if the date doesn't exist, the signup button won't work anyway, this is a problem but this method
-            # isn't the right place to raise any exception about that, so ignore it
-            return False
 
     #
     # End signup-methods
@@ -428,6 +416,38 @@ class AktivitetDate(models.Model):
 
     def get_turledere_ordered(self):
         return sorted(self.turledere.all(), key=lambda p: p.get_first_name())
+
+    #
+    # Temporary Sherpa2 methods
+    #
+
+    def get_sherpa2_date(self):
+        """Returns the corresponding date object in sherpa2. It is not guaranteed to exist."""
+        return ActivityDate.objects.get(
+            activity__id=self.aktivitet.sherpa2_id,
+            date_from=self.start_date.strftime('%Y-%m-%d'),
+            date_to=self.end_date.strftime('%Y-%m-%d'),
+        )
+
+    def is_waitinglist_sherpa2(self):
+        try:
+            return self.get_sherpa2_date().is_waitinglist()
+        except ActivityDate.DoesNotExist:
+            # Well, if the date doesn't exist, the signup button won't work anyway, this is a problem but this method
+            # isn't the right place to raise any exception about that, so ignore it
+            return False
+
+    def total_signup_count_sherpa2(self):
+        try:
+            return self.get_sherpa2_date().participant_count()
+        except ActivityDate.DoesNotExist:
+            # Well, if the date doesn't exist, the signup button won't work anyway, this is a problem but this method
+            # isn't the right place to raise any exception about that, so ignore it
+            return 0
+
+    #
+    # End Sherpa2 methods
+    #
 
     @staticmethod
     def get_published():
