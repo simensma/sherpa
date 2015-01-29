@@ -9,7 +9,7 @@ from django.core.urlresolvers import reverse
 from djorm_pgarray.fields import TextArrayField
 
 from core.util import s3_bucket
-from sherpa2.models import Turforslag
+from sherpa2.models import Turforslag, ActivityDate
 from turbasen.models import Omrade
 
 class Aktivitet(models.Model):
@@ -376,6 +376,19 @@ class AktivitetDate(models.Model):
         if self.signup_max_allowed is None:
             return 0
         return self.total_signup_count() - self.signup_max_allowed
+
+    def is_waitinglist_sherpa2(self):
+        """This temporary method checks if the date is fully booked in sherpa2"""
+        try:
+            return ActivityDate.objects.get(
+                activity__id=self.aktivitet.sherpa2_id,
+                date_from=self.start_date.strftime('%Y-%m-%d'),
+                date_to=self.end_date.strftime('%Y-%m-%d'),
+            ).is_waitinglist()
+        except ActivityDate.DoesNotExist:
+            # Well, if the date doesn't exist, the signup button won't work anyway, this is a problem but this method
+            # isn't the right place to raise any exception about that, so ignore it
+            return False
 
     #
     # End signup-methods
