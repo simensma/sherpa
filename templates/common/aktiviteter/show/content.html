@@ -133,7 +133,7 @@
                 {% elif aktivitet_date.is_almost_full %}
 
                   <span class="almost-fully-booked">
-                    Kun {{ aktivitet_date.spots_available }} plasser igjen!
+                    Kun {{ aktivitet_date.spots_available }} plass{% if aktivitet_date.spots_available > 1 %}er{% endif %} igjen!
                   </span>
                   <a href="{{ aktivitet_date.signup_url }}" class="btn btn-danger btn-block">
                     Meld deg på!
