@@ -48,7 +48,7 @@ class AktivitetDate(object):
         self.waitinglist_count = waitinglist_count
 
     def is_waitinglist(self):
-        return self.spots_available > 0
+        return self.spots_available <= 0
 
     def total_signup_count(self):
         return self.spots_total - self.spots_available
