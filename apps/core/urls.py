@@ -8,5 +8,4 @@ urlpatterns = patterns('core.views',
     url(r'^geosok/fylker/$', 'county_lookup'),
     url(r'^geosok/kommuner/$', 'municipality_lookup'),
     url(r'^doge/$', 'doge'),
-    url(r'^booking/ledige-plasser/(?P<code>\d+)/(?P<date>\d{4}-\d{2}-\d{2})/$', 'booking_spots'),
 )
