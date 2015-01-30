@@ -7,7 +7,8 @@ import requests
 from .exceptions import AktivitetDateNotFound
 
 class Aktivitet(object):
-    def __init__(self, dates):
+    def __init__(self, code, dates):
+        self.code = code
         self.dates = dates
 
     def get_date(self, date):
@@ -27,6 +28,7 @@ class Aktivitet(object):
             },
         )
         return Aktivitet(
+            code=code,
             dates=[
                 AktivitetDate(**AktivitetDate.map_fields(json_date))
                 for json_date in r.json()
