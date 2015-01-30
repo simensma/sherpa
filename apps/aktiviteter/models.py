@@ -366,6 +366,9 @@ class AktivitetDate(models.Model):
         return reverse('aktiviteter.views.signup', args=[self.id])
 
     def total_signup_count(self):
+        if self.signup_montis:
+            return self.get_montis_date().total_signup_count()
+
         return self.total_signup_count_sherpa2()
 
         # The future implementation will be something like this:
@@ -377,6 +380,9 @@ class AktivitetDate(models.Model):
         return self.total_signup_count() >= self.signup_max_allowed
 
     def is_waitinglist(self):
+        if self.signup_montis:
+            return self.get_montis_date().is_waitinglist()
+
         # Get the state from sherpa2 for now
         return self.is_waitinglist_sherpa2()
 
@@ -386,11 +392,17 @@ class AktivitetDate(models.Model):
         # return self.total_signup_count() > self.signup_max_allowed
 
     def total_waitinglist_count(self):
+        if self.signup_montis:
+            return self.get_montis_date().waitinglist_count
+
         if self.signup_max_allowed is None:
             return 0
         return self.total_signup_count() - self.signup_max_allowed
 
     def max_participant_count(self):
+        if self.signup_montis:
+            return self.get_montis_date().spots_total
+
         # Get the state from sherpa2 for now
         return self.max_participant_count_sherpa2()
 
@@ -398,6 +410,9 @@ class AktivitetDate(models.Model):
         # return self.signup_max_allowed
 
     def spots_available(self):
+        if self.signup_montis:
+            return self.get_montis_date().spots_available
+
         return self.max_participant_count() - self.total_signup_count()
 
     def is_almost_full(self):
