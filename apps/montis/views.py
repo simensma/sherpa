@@ -1,34 +1,21 @@
 from datetime import datetime
-import json
 
 from django.shortcuts import render
-from django.conf import settings
 from django.http import HttpResponse
 
-import requests
+from montis.models import Aktivitet
 
 def booking_spots(request, code, date):
     """This view is used by gamle Sherpa to display available spots in a small iframe next to the signup buttons."""
     try:
         date = datetime.strptime(date, "%Y-%m-%d")
-        r = requests.get(
-            "%s/%s/" % (settings.DNTOSLO_MONTIS_API_URL, code),
-            params={
-                'client': 'dnt',
-                'autentisering': settings.DNTOSLO_MONTIS_API_KEY,
-            },
-        )
-        for tour_date in json.loads(r.text):
-            if date == datetime.fromtimestamp(tour_date['startdato']):
-                context = {
-                    'available': tour_date['plasserLedig'],
-                    'total': tour_date['plasserTotalt'],
-                    'waiting_list': tour_date['venteliste'],
-                }
-                return render(request, 'central/booking_spots.html', context)
-
-        # Invalid date?
-        raise Exception()
+        aktivitet_date = Aktivitet.get(code).get_date(date)
+        context = {
+            'available': aktivitet_date.spots_available,
+            'total': aktivitet_date.spots_total,
+            'waiting_list': aktivitet_date.waitinglist_count,
+        }
+        return render(request, 'central/booking_spots.html', context)
     except Exception:
         # Don't handle; ignore any errors for now
         return HttpResponse('')
