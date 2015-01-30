@@ -12,6 +12,7 @@ from djorm_pgarray.fields import TextArrayField
 from core.util import s3_bucket
 from sherpa2.models import Turforslag, ActivityDate
 from turbasen.models import Omrade
+from montis.models import Aktivitet as MontisAktivitet
 
 class Aktivitet(models.Model):
     # Note that *either* forening or forening_cabin should be defined at any time
@@ -440,6 +441,18 @@ class AktivitetDate(models.Model):
 
     def get_turledere_ordered(self):
         return sorted(self.turledere.all(), key=lambda p: p.get_first_name())
+
+    #
+    # Montis date
+    #
+
+    def get_montis_date(self):
+        """Returns the corresponding date object in Montis. It is not guaranteed to exist."""
+        aktivitet_date = cache.get('aktiviteter.dato.%s.montis' % self.id)
+        if aktivitet_date is None:
+            aktivitet_date = MontisAktivitet.get(self.aktivitet.code).get_date(self.start_date)
+            cache.set('aktiviteter.dato.%s.montis' % self.id, aktivitet_date, 60 * 60)
+        return aktivitet_date
 
     #
     # Temporary Sherpa2 methods
