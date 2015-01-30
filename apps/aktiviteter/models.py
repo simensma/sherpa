@@ -238,6 +238,10 @@ class Aktivitet(models.Model):
 
 
 class AktivitetDate(models.Model):
+
+    # If there are this many or fewer spots available, it signifies that the date is almost fully booked
+    HIGHEST_ALMOST_FULL_COUNT = 3
+
     aktivitet = models.ForeignKey(Aktivitet, related_name='dates')
     start_date = models.DateTimeField(db_index=True)
     end_date = models.DateTimeField()
@@ -361,7 +365,10 @@ class AktivitetDate(models.Model):
         return reverse('aktiviteter.views.signup', args=[self.id])
 
     def total_signup_count(self):
-        return self.participants.count() + self.simple_participants.count()
+        return self.total_signup_count_sherpa2()
+
+        # The future implementation will be something like this:
+        # return self.participants.count() + self.simple_participants.count()
 
     def is_full(self):
         if self.signup_max_allowed is None:
@@ -369,15 +376,31 @@ class AktivitetDate(models.Model):
         return self.total_signup_count() >= self.signup_max_allowed
 
     def is_waitinglist(self):
-        if self.signup_max_allowed is None:
-            return False
-        return self.total_signup_count() > self.signup_max_allowed
+        # Get the state from sherpa2 for now
+        return self.is_waitinglist_sherpa2()
+
+        # The future implementation will be something like this:
+        # if self.signup_max_allowed is None:
+        #     return False
+        # return self.total_signup_count() > self.signup_max_allowed
 
     def total_waitinglist_count(self):
         if self.signup_max_allowed is None:
             return 0
         return self.total_signup_count() - self.signup_max_allowed
 
+    def max_participant_count(self):
+        # Get the state from sherpa2 for now
+        return self.max_participant_count_sherpa2()
+
+        # The future implementation will be something like this
+        # return self.signup_max_allowed
+
+    def spots_available(self):
+        return self.max_participant_count() - self.total_signup_count()
+
+    def is_almost_full(self):
+        return self.spots_available() <= AktivitetDate.HIGHEST_ALMOST_FULL_COUNT
 
     #
     # End signup-methods
@@ -455,13 +478,6 @@ class AktivitetDate(models.Model):
             return self.get_sherpa2_date().booking
         except ActivityDate.DoesNotExist:
             return 0
-
-    def spots_available_sherpa2(self):
-        return self.max_participant_count_sherpa2() - self.total_signup_count_sherpa2()
-
-    def is_almost_full_sherpa2(self):
-        HIGHEST_ALMOST_FULL_COUNT = 3
-        return self.spots_available_sherpa2() <= HIGHEST_ALMOST_FULL_COUNT
 
     #
     # End Sherpa2 methods

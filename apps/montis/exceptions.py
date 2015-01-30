@@ -1,0 +1,2 @@
+class AktivitetDateNotFound(Exception):
+    pass
