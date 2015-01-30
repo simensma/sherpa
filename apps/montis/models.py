@@ -50,6 +50,9 @@ class AktivitetDate(object):
     def is_waitinglist(self):
         return self.spots_available >= self.spots_total
 
+    def total_signup_count(self):
+        return self.spots_total - self.spots_available
+
     @staticmethod
     def map_fields(json_date):
         """Map the fields from the json API to the model fields"""
