@@ -451,6 +451,9 @@ class AktivitetDate(models.Model):
     def is_fully_booked(self, *args, **kwargs):
         return self._call_signup_dynamically('is_fully_booked', *args, **kwargs)
 
+    def total_waitinglist_count(self, *args, **kwargs):
+        return self._call_signup_dynamically('total_waitinglist_count', *args, **kwargs)
+
     #
     # Implementations for normal signups handled in Sherpa 3
     #
@@ -466,10 +469,7 @@ class AktivitetDate(models.Model):
             return False
         return self.participant_count() >= self.max_participants
 
-    def total_waitinglist_count(self):
-        if self.signup_montis:
-            return self.get_montis_date().waitinglist_count
-
+    def _total_waitinglist_count_normal(self):
         if self.max_participants is None:
             return 0
         return self.participant_count() - self.max_participants
@@ -521,6 +521,9 @@ class AktivitetDate(models.Model):
     def _is_fully_booked_montis(self):
         return self.get_montis_date().is_fully_booked()
 
+    def _total_waitinglist_count_montis(self):
+        return self.get_montis_date().waitinglist_count
+
     #
     # Temporary Sherpa2 signup implementations
     #
@@ -559,6 +562,9 @@ class AktivitetDate(models.Model):
             return self.get_sherpa2_date().participant_count()
         except ActivityDate.DoesNotExist:
             return 0
+
+    def _total_waitinglist_count_sherpa2(self):
+        raise NotImplementedError
 
     def max_participant_count_sherpa2(self):
         try:
