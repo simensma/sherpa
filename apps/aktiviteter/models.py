@@ -309,6 +309,41 @@ class AktivitetDate(models.Model):
     def __unicode__(self):
         return u'%s (%s, aktivitet: <%s>)' % (self.pk, self.start_date, self.aktivitet)
 
+    def other_dates(self):
+        return self.aktivitet.dates.exclude(id=self.id)
+
+    def get_other_dates_ordered(self):
+        return self.other_dates().exclude(start_date__lt=date.today()).order_by('start_date')
+
+    def get_future_dates_ordered(self):
+        return self.aktivitet.dates.exclude(start_date__lt=date.today()).order_by('start_date')
+
+    def get_duration_days(self):
+        diff = self.end_date - self.start_date
+        return diff.days
+
+    def get_duration_hours(self):
+        diff = self.end_date - self.start_date
+        return diff.seconds / 3600
+
+    def get_duration(self):
+        diff = self.end_date - self.start_date
+        days = diff.days
+
+        if diff.total_seconds() == 0:
+            return u'1 dag'
+        elif days == 0:
+            hours = diff.seconds / 3600
+            return u'%s timer' % (hours)
+        else:
+            # Huh? What?! Did you just add an extra day? Yes, I did. We need to round up the number
+            # of days to avoid confusion. A trip from a friday to a sunday is not 3 full days but,
+            # but it is though of as a 3 day hike.
+            return u'%s dager' % (days + 1)
+
+    def get_turledere_ordered(self):
+        return sorted(self.turledere.all(), key=lambda p: p.get_first_name())
+
     #
     # Signup methods
     #
@@ -454,41 +489,6 @@ class AktivitetDate(models.Model):
     #
     # End signup-methods
     #
-
-    def other_dates(self):
-        return self.aktivitet.dates.exclude(id=self.id)
-
-    def get_other_dates_ordered(self):
-        return self.other_dates().exclude(start_date__lt=date.today()).order_by('start_date')
-
-    def get_future_dates_ordered(self):
-        return self.aktivitet.dates.exclude(start_date__lt=date.today()).order_by('start_date')
-
-    def get_duration_days(self):
-        diff = self.end_date - self.start_date
-        return diff.days
-
-    def get_duration_hours(self):
-        diff = self.end_date - self.start_date
-        return diff.seconds / 3600
-
-    def get_duration(self):
-        diff = self.end_date - self.start_date
-        days = diff.days
-
-        if diff.total_seconds() == 0:
-            return u'1 dag'
-        elif days == 0:
-            hours = diff.seconds / 3600
-            return u'%s timer' % (hours)
-        else:
-            # Huh? What?! Did you just add an extra day? Yes, I did. We need to round up the number
-            # of days to avoid confusion. A trip from a friday to a sunday is not 3 full days but,
-            # but it is though of as a 3 day hike.
-            return u'%s dager' % (days + 1)
-
-    def get_turledere_ordered(self):
-        return sorted(self.turledere.all(), key=lambda p: p.get_first_name())
 
     #
     # Montis date
