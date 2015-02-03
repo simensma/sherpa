@@ -306,12 +306,6 @@ class AktivitetDate(models.Model):
     # Signup methods
     #
 
-    def has_departed(self):
-        return self.start_date < datetime.now()
-
-    def has_returned(self):
-        return self.end_date < datetime.now()
-
     def signup_method(self):
         if not self.signup_enabled:
             return 'none'
@@ -322,6 +316,12 @@ class AktivitetDate(models.Model):
                 return 'simple'
             else:
                 return 'minside'
+
+    def has_departed(self):
+        return self.start_date < datetime.now()
+
+    def has_returned(self):
+        return self.end_date < datetime.now()
 
     def signup_starts_immediately(self):
         return self.signup_enabled and self.signup_start is None
