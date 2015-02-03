@@ -401,9 +401,9 @@ class AktivitetDate(models.Model):
         # return self.participants.count() + self.simple_participants.count()
 
     def is_full(self):
-        if self.signup_max_allowed is None:
+        if self.max_participants is None:
             return False
-        return self.total_signup_count() >= self.signup_max_allowed
+        return self.total_signup_count() >= self.max_participants
 
     def is_waitinglist(self):
         if self.signup_montis:
@@ -413,17 +413,17 @@ class AktivitetDate(models.Model):
         return self.is_waitinglist_sherpa2()
 
         # The future implementation will be something like this:
-        # if self.signup_max_allowed is None:
+        # if self.max_participants is None:
         #     return False
-        # return self.total_signup_count() > self.signup_max_allowed
+        # return self.total_signup_count() > self.max_participants
 
     def total_waitinglist_count(self):
         if self.signup_montis:
             return self.get_montis_date().waitinglist_count
 
-        if self.signup_max_allowed is None:
+        if self.max_participants is None:
             return 0
-        return self.total_signup_count() - self.signup_max_allowed
+        return self.total_signup_count() - self.max_participants
 
     def max_participant_count(self):
         if self.signup_montis:
@@ -433,7 +433,7 @@ class AktivitetDate(models.Model):
         return self.max_participant_count_sherpa2()
 
         # The future implementation will be something like this
-        # return self.signup_max_allowed
+        # return self.max_participants
 
     def spots_available(self):
         if self.signup_montis:

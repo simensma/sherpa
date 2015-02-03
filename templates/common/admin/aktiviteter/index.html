@@ -165,9 +165,9 @@
             <td>
               {% if dato.signup_enabled %}
                 {% if dato.is_full %}
-                  {{ dato.signup_max_allowed }}
-                  {% if dato.signup_max_allowed %}
-                    av {{ dato.signup_max_allowed }}
+                  {{ dato.max_participants }}
+                  {% if dato.max_participants %}
+                    av {{ dato.max_participants }}
                   {% endif %}
                   <br>
 
@@ -178,8 +178,8 @@
                   {% endif %}
                 {% else %}
                   {{ dato.total_signup_count }}
-                  {% if dato.signup_max_allowed %}
-                    av {{ dato.signup_max_allowed }}
+                  {% if dato.max_participants %}
+                    av {{ dato.max_participants }}
                   {% endif %}
                 {% endif %}
               {% else %}
