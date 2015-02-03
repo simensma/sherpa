@@ -445,6 +445,9 @@ class AktivitetDate(models.Model):
     def signup_url(self, *args, **kwargs):
         return self._call_signup_dynamically('signup_url', *args, **kwargs)
 
+    def participant_count(self, *args, **kwargs):
+        return self._call_signup_dynamically('participant_count', *args, **kwargs)
+
     #
     # Implementations for normal signups handled in Sherpa 3
     #
@@ -452,14 +455,8 @@ class AktivitetDate(models.Model):
     def _signup_url_normal(self):
         return reverse('aktiviteter.views.signup', args=[self.id])
 
-    def participant_count(self):
-        if self.signup_montis:
-            return self.get_montis_date().participant_count()
-
-        return self.participant_count_sherpa2()
-
-        # The future implementation will be something like this:
-        # return self.participants.count() + self.simple_participants.count()
+    def _participant_count_normal(self):
+        return self.participants.count() + self.simple_participants.count()
 
     def is_fully_booked(self):
         if self.signup_montis:
@@ -522,6 +519,9 @@ class AktivitetDate(models.Model):
             self.start_date.strftime('%Y/%m/%d'),
         )
 
+    def _participant_count_montis(self):
+        return self.get_montis_date().participant_count()
+
     #
     # Temporary Sherpa2 signup implementations
     #
@@ -555,7 +555,7 @@ class AktivitetDate(models.Model):
         except ActivityDate.DoesNotExist:
             return False
 
-    def participant_count_sherpa2(self):
+    def _participant_count_sherpa2(self):
         try:
             return self.get_sherpa2_date().participant_count()
         except ActivityDate.DoesNotExist:
