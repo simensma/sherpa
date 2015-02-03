@@ -457,6 +457,9 @@ class AktivitetDate(models.Model):
     def max_participant_count(self, *args, **kwargs):
         return self._call_signup_dynamically('max_participant_count', *args, **kwargs)
 
+    def spots_available(self, *args, **kwargs):
+        return self._call_signup_dynamically('spots_available', *args, **kwargs)
+
     #
     # Implementations for normal signups handled in Sherpa 3
     #
@@ -480,10 +483,7 @@ class AktivitetDate(models.Model):
     def _max_participant_count_normal(self):
         return self.max_participants
 
-    def spots_available(self):
-        if self.signup_montis:
-            return self.get_montis_date().spots_available
-
+    def _spots_available_normal(self):
         return self.max_participant_count() - self.participant_count()
 
     def is_almost_full(self):
@@ -522,6 +522,9 @@ class AktivitetDate(models.Model):
 
     def _max_participant_count_montis(self):
         return self.get_montis_date().spots_total
+
+    def _spots_available_montis(self):
+        return self.get_montis_date().spots_available
 
     #
     # Temporary Sherpa2 signup implementations
@@ -571,6 +574,9 @@ class AktivitetDate(models.Model):
             return self.get_sherpa2_date().booking
         except ActivityDate.DoesNotExist:
             return 0
+
+    def _spots_available_sherpa2(self):
+        return self.max_participant_count() - self.participant_count()
 
     #
     # End Sherpa2 methods
