@@ -172,7 +172,7 @@
                   <br>
 
                   {% if dato.is_fully_booked %}
-                    <span class="label label-warning">{{ dato.total_waitinglist_count }} på venteliste</span>
+                    <span class="label label-warning">{{ dato.waitinglist_count }} på venteliste</span>
                   {% else %}
                     <span class="label label-primary">Ingen ledig plass</span>
                   {% endif %}
