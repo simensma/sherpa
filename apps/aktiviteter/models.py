@@ -244,11 +244,44 @@ class AktivitetDate(models.Model):
     HIGHEST_ALMOST_FULL_COUNT = 3
 
     aktivitet = models.ForeignKey(Aktivitet, related_name='dates')
+
+    # Start/end dates for this object
     start_date = models.DateTimeField(db_index=True)
     end_date = models.DateTimeField()
+
+    # Where and when to meet
+    meeting_place = models.TextField()
+    meeting_time = models.DateTimeField(null=True)
+
+    #
+    # Contact details
+    #
+
+    CONTACT_TYPE_CHOICES = (
+        (u'arrangør', 'Arrangørforening'),
+        (u'turleder', 'Turleder'),
+        (u'custom', 'Skriv inn'),
+    )
+    contact_type = models.CharField(max_length=255, choices=CONTACT_TYPE_CHOICES, default=u'arrangør')
+    contact_custom_name = models.CharField(max_length=255)
+    contact_custom_phone = models.CharField(max_length=255)
+    contact_custom_email = models.CharField(max_length=255)
+
+    #
+    # Signup options
+    #
+
+    # Signup may be completely disabled by setting this to False
     signup_enabled = models.BooleanField(default=True)
+
+    # signup_montis should be True only for DNT Oslo og Omegns aktiviteter, for whom signups are handled by an external
+    # system. Setting this to True renders other signup options moot.
     signup_montis = models.BooleanField(default=False)
+
+    # Simple signup was the first attempt of an option requiring less details from participants - due to change.
     signup_simple_allowed = models.BooleanField(default=False)
+
+    # How many participants are allowed to sign up for this trip? NULL means unlimited.
     signup_max_allowed = models.PositiveIntegerField(default=0, null=True)
 
     # If signup_enabled is False, these values are not applicable and should always be null
@@ -257,19 +290,12 @@ class AktivitetDate(models.Model):
     signup_deadline = models.DateField(null=True)
     cancel_deadline = models.DateField(null=True)
 
+    # Turledere
     should_have_turleder = models.BooleanField(default=False)
     turledere = models.ManyToManyField('user.User', related_name='turleder_aktivitet_dates')
+
+    # Participants
     participants = models.ManyToManyField('user.User', related_name='aktiviteter')
-    meeting_place = models.TextField()
-    meeting_time = models.DateTimeField(null=True)
-    CONTACT_TYPE_CHOICES = (
-        (u'arrangør', 'Arrangørforening'),
-        (u'turleder', 'Turleder'),
-        (u'custom', 'Skriv inn'),)
-    contact_type = models.CharField(max_length=255, choices=CONTACT_TYPE_CHOICES, default=u'arrangør')
-    contact_custom_name = models.CharField(max_length=255)
-    contact_custom_phone = models.CharField(max_length=255)
-    contact_custom_email = models.CharField(max_length=255)
 
     objects = models.GeoManager()
 
