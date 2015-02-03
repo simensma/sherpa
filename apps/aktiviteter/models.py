@@ -417,6 +417,8 @@ class AktivitetDate(models.Model):
             if self.signup_montis:
                 return 'montis'
             elif self.signup_simple_allowed:
+                # TODO: The simple signup method is due to be removed. Instead, an option for requiring contact
+                # information (or not) will be added, and that will only be applicable for normal signups.
                 return 'simple'
             else:
                 return 'normal'
@@ -435,6 +437,10 @@ class AktivitetDate(models.Model):
                 method,
                 signup_method,
             ))
+
+    # The following methods define the publicly available methods that change behavior based on the signup method.
+    # E.g. the signup_url method will call _signup_url_normal for normal signups. See the signup_method method for
+    # which signup methods are available.
 
     def signup_url(self, *args, **kwargs):
         return self._call_signup_dynamically('signup_url', *args, **kwargs)
