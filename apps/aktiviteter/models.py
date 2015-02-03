@@ -282,7 +282,7 @@ class AktivitetDate(models.Model):
     signup_simple_allowed = models.BooleanField(default=False)
 
     # How many participants are allowed to sign up for this trip? NULL means unlimited.
-    signup_max_allowed = models.PositiveIntegerField(default=0, null=True)
+    max_participants = models.PositiveIntegerField(default=0, null=True)
 
     # If signup_enabled is False, these values are not applicable and should always be null
     # If signup_enabled is True, null means that there are no deadlines, signup & cancel should always be available
