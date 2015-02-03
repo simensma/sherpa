@@ -452,11 +452,11 @@ class AktivitetDate(models.Model):
     def _signup_url_normal(self):
         return reverse('aktiviteter.views.signup', args=[self.id])
 
-    def total_signup_count(self):
+    def participant_count(self):
         if self.signup_montis:
-            return self.get_montis_date().total_signup_count()
+            return self.get_montis_date().participant_count()
 
-        return self.total_signup_count_sherpa2()
+        return self.participant_count_sherpa2()
 
         # The future implementation will be something like this:
         # return self.participants.count() + self.simple_participants.count()
@@ -471,7 +471,7 @@ class AktivitetDate(models.Model):
         # The future implementation will be something like this:
         # if self.max_participants is None:
         #     return False
-        # return self.total_signup_count() >= self.max_participants
+        # return self.participant_count() >= self.max_participants
 
     def total_waitinglist_count(self):
         if self.signup_montis:
@@ -479,7 +479,7 @@ class AktivitetDate(models.Model):
 
         if self.max_participants is None:
             return 0
-        return self.total_signup_count() - self.max_participants
+        return self.participant_count() - self.max_participants
 
     def max_participant_count(self):
         if self.signup_montis:
@@ -495,7 +495,7 @@ class AktivitetDate(models.Model):
         if self.signup_montis:
             return self.get_montis_date().spots_available
 
-        return self.max_participant_count() - self.total_signup_count()
+        return self.max_participant_count() - self.participant_count()
 
     def is_almost_full(self):
         return self.spots_available() <= AktivitetDate.HIGHEST_ALMOST_FULL_COUNT
@@ -555,7 +555,7 @@ class AktivitetDate(models.Model):
         except ActivityDate.DoesNotExist:
             return False
 
-    def total_signup_count_sherpa2(self):
+    def participant_count_sherpa2(self):
         try:
             return self.get_sherpa2_date().participant_count()
         except ActivityDate.DoesNotExist:

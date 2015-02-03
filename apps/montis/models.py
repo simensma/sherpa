@@ -50,7 +50,7 @@ class AktivitetDate(object):
     def is_fully_booked(self):
         return self.spots_available <= 0
 
-    def total_signup_count(self):
+    def participant_count(self):
         return self.spots_total - self.spots_available
 
     @staticmethod

@@ -283,7 +283,7 @@ def edit(request, aktivitet):
             # Explicit delete of dates
             if date['status'] == 'delete':
                 if date['id'] != '':
-                    if model.total_signup_count() > 0:
+                    if model.participant_count() > 0:
                         raise Exception("Date with participants can not be deleted!")
                     model.delete()
                 continue
