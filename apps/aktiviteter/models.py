@@ -58,6 +58,13 @@ class Aktivitet(models.Model):
     # Applicable for aktiviteter imported from sherpa2
     sherpa2_id = models.IntegerField(null=True)
 
+    # All imported aktiviteter will have their signup system and participants in Sherpa 2 by default. When ready to
+    # deploy the new admin and signup system, this field will be set to False, the import will stop syncing this
+    # aktivitet, and all administration is from now done through Sherpa 3. Although this isn't applicable for
+    # aktiviteter created in Sherpa 3, it's still set to False for them (instead of null which could be considered
+    # more semantically correct).
+    sherpa2_signup = models.BooleanField(default=False)
+
     objects = models.GeoManager()
 
     def __unicode__(self):
