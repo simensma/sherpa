@@ -419,14 +419,14 @@ class AktivitetDate(models.Model):
             elif self.signup_simple_allowed:
                 return 'simple'
             else:
-                return 'minside'
+                return 'normal'
 
     def _call_signup_dynamically(self, method, *args, **kwargs):
         try:
             signup_method = self.signup_method()
 
             # Temporary override - normal signup and imported always means sherpa2 for now
-            if signup_method == 'minside' and self.aktivitet.is_imported():
+            if signup_method == 'normal' and self.aktivitet.is_imported():
                 signup_method = 'sherpa2'
 
             return getattr(self, '_%s_%s' % (method, signup_method))(*args, **kwargs)
@@ -443,7 +443,7 @@ class AktivitetDate(models.Model):
     # Implementations for normal signups handled in Sherpa 3
     #
 
-    def _signup_url_minside(self):
+    def _signup_url_normal(self):
         return reverse('aktiviteter.views.signup', args=[self.id])
 
     def total_signup_count(self):
