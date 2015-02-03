@@ -345,19 +345,8 @@ class AktivitetDate(models.Model):
         return sorted(self.turledere.all(), key=lambda p: p.get_first_name())
 
     #
-    # Signup methods
+    # Signup methods (common)
     #
-
-    def signup_method(self):
-        if not self.signup_enabled:
-            return 'none'
-        else:
-            if self.signup_montis:
-                return 'montis'
-            elif self.signup_simple_allowed:
-                return 'simple'
-            else:
-                return 'minside'
 
     def has_departed(self):
         return self.start_date < datetime.now()
@@ -416,6 +405,31 @@ class AktivitetDate(models.Model):
             return False
 
         return self.cancel_deadline_always_available() or self.cancel_deadline >= date.today()
+
+    #
+    # Signup methods that vary with what kind of signup this is (normal, sherpa2, montis)
+    #
+
+    def signup_method(self):
+        if not self.signup_enabled:
+            return 'none'
+        else:
+            if self.signup_montis:
+                return 'montis'
+            elif self.signup_simple_allowed:
+                return 'simple'
+            else:
+                return 'minside'
+
+    def _call_signup_dynamically(self, method, *args, **kwargs):
+        try:
+            signup_method = self.signup_method()
+            return getattr(self, '_%s_%s' % (method, signup_method))(*args, **kwargs)
+        except AttributeError:
+            raise NotImplementedError("Haven't yet implemented method '%s' for signup method '%s'" % (
+                method,
+                signup_method,
+            ))
 
     def signup_url(self):
         if self.signup_montis:
