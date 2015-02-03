@@ -307,10 +307,10 @@ class AktivitetDate(models.Model):
     #
 
     def has_departed(self):
-        return self.start_date < datetime.today()
+        return self.start_date < datetime.now()
 
     def has_returned(self):
-        return self.end_date < datetime.today()
+        return self.end_date < datetime.now()
 
     def signup_method(self):
         if not self.signup_enabled:
