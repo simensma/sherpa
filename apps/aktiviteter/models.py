@@ -424,6 +424,11 @@ class AktivitetDate(models.Model):
     def _call_signup_dynamically(self, method, *args, **kwargs):
         try:
             signup_method = self.signup_method()
+
+            # Temporary override - normal signup and imported always means sherpa2 for now
+            if signup_method == 'minside' and self.aktivitet.is_imported():
+                signup_method = 'sherpa2'
+
             return getattr(self, '_%s_%s' % (method, signup_method))(*args, **kwargs)
         except AttributeError:
             raise NotImplementedError("Haven't yet implemented method '%s' for signup method '%s'" % (
@@ -431,20 +436,14 @@ class AktivitetDate(models.Model):
                 signup_method,
             ))
 
-    def signup_url(self):
-        if self.signup_montis:
-            return 'https://booking.dntoslo.no/finn-avgang/%s/%s' % (
-                self.aktivitet.code,
-                self.start_date.strftime('%Y/%m/%d'),
-            )
+    def signup_url(self, *args, **kwargs):
+        return self._call_signup_dynamically('signup_url', *args, **kwargs)
 
-        if self.aktivitet.is_imported():
-            return u'%s/booking.php?ac_id=%s&ac_date_from=%s' % (
-                self.aktivitet.forening.get_main_foreninger()[0].get_old_url(),
-                self.aktivitet.sherpa2_id,
-                self.start_date.strftime('%Y-%m-%d'),
-            )
+    #
+    # Implementations for normal signups handled in Sherpa 3
+    #
 
+    def _signup_url_minside(self):
         return reverse('aktiviteter.views.signup', args=[self.id])
 
     def total_signup_count(self):
@@ -500,7 +499,7 @@ class AktivitetDate(models.Model):
     #
 
     #
-    # Montis date
+    # Montis date and signup implementations
     #
 
     def get_montis_date(self):
@@ -511,8 +510,14 @@ class AktivitetDate(models.Model):
             cache.set('aktiviteter.dato.%s.montis' % self.id, aktivitet_date, 60 * 60)
         return aktivitet_date
 
+    def _signup_url_montis(self):
+        return 'https://booking.dntoslo.no/finn-avgang/%s/%s' % (
+            self.aktivitet.code,
+            self.start_date.strftime('%Y/%m/%d'),
+        )
+
     #
-    # Temporary Sherpa2 methods
+    # Temporary Sherpa2 signup implementations
     #
 
     def get_sherpa2_date(self):
@@ -526,6 +531,13 @@ class AktivitetDate(models.Model):
             )
             cache.set('aktiviteter.dato.%s.sherpa2' % self.id, activity_date, 60 * 60)
         return activity_date
+
+    def _signup_url_sherpa2(self):
+        return u'%s/booking.php?ac_id=%s&ac_date_from=%s' % (
+            self.aktivitet.forening.get_main_foreninger()[0].get_old_url(),
+            self.aktivitet.sherpa2_id,
+            self.start_date.strftime('%Y-%m-%d'),
+        )
 
     # The below methods will have to handle ActivityDate.DoesNotExist. If the date doesn't exist, the signup button
     # won't work anyway, which is a problem, but these methods aren't the right place to raise any exception about
