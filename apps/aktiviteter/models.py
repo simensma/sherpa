@@ -564,7 +564,8 @@ class AktivitetDate(models.Model):
             return 0
 
     def _waitinglist_count_sherpa2(self):
-        raise NotImplementedError
+        # TODO: Implement if needed
+        return 0
 
     def max_participant_count_sherpa2(self):
         try:
