@@ -164,7 +164,7 @@
             <td>{{ dato.end_date|date:"Y-m-d" }}</td>
             <td>
               {% if dato.signup_enabled %}
-                {% if dato.is_full %}
+                {% if dato.is_fully_booked %}
                   {{ dato.max_participants }}
                   {% if dato.max_participants %}
                     av {{ dato.max_participants }}

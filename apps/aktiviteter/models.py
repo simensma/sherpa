@@ -442,7 +442,7 @@ class AktivitetDate(models.Model):
         # The future implementation will be something like this:
         # return self.participants.count() + self.simple_participants.count()
 
-    def is_full(self):
+    def is_fully_booked(self):
         if self.max_participants is None:
             return False
         return self.total_signup_count() >= self.max_participants
