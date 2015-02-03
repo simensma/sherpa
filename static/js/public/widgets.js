@@ -2,7 +2,7 @@
 
 $(function() {
 
-    Widgets.runIfExists('carousel', $("div.widget.carousel"));
+    Widgets.runIfExists('gallery', $("div.widget.gallery"));
     Widgets.runIfExists('articles', $("div.widget.articles"));
     Widgets.runIfExists('campaign', $("div.widget.campaign"), true);
     // Note that there's no need to run the aktivitet_listing widget
@@ -23,13 +23,35 @@ $(function() {
     };
 
     Widgets.run = function(type, widget) {
-        if(type === 'carousel') {
+        if(type === 'gallery') {
 
-            //carousel, stop spinning
-            $(this).find("div.carousel").each(function() {
-                $(this).carousel({
-                    interval:false
+            widget.each(function (index, gallery_widget) {
+
+                var $album_view = $(gallery_widget).find('.album').first();
+                var $carousel_view = $(gallery_widget).find('.carousel').first();
+
+                // Turn off auto slide
+                $(gallery_widget).carousel({
+                    interval: false
                 });
+
+                // When in album view, click thumbnail to open full size view in carousel
+                $(gallery_widget).find('.album .item a').click(function (e) {
+                    $album_view.hide();
+
+                    var image_index = $(this).parents('.item').first().index();
+                    $(gallery_widget).carousel(image_index);
+                    $carousel_view.show();
+                });
+
+                $('[data-toggle="tooltip"]').tooltip();
+
+                // When in carousel view, go to album view by clicking switch view button
+                $(gallery_widget).find('.carousel .switch-view button').on('click', function () {
+                    $album_view.show();
+                    $carousel_view.hide();
+                });
+
             });
 
         } else if(type === 'articles') {

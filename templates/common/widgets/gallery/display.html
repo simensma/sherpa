@@ -1,0 +1,60 @@
+{% comment %}
+  Note that the carousel images contain some extra attributes (parentHeight, style etc.) used for cropping and
+  achieving a fixed image height, that we are intentionally ignoring (for now).
+{% endcomment %}
+<div id="album{{ widget.id }}" class="row view album{% if widget.layout == "carousel" %} jq-hide{% endif %}">
+  {% for image in widget.images %}
+    <div class="item col-xs-6 col-sm-3">
+      <a
+        class="thumbnail"
+        {% if image.description or image.photographer %}
+          data-toggle="tooltip"
+          data-placement="bottom"
+          title="{{ image.description }}{% if image.photographer %} Foto: {{ image.photographer }}{% endif %}"
+        {% endif %}>
+        <div class="thumbnail-inner">
+          <img src="{{ image.url }}" alt="{{ image.description }}">
+        </div>
+      </a>
+    </div>
+  {% endfor %}
+</div>
+<div
+  id="carousel{{ widget.id }}"
+  class="view carousel slide{% if widget.layout == "album" %} jq-hide{% endif %}"
+  data-interval="false"
+  data-ride="carousel">
+  <div class="gallery-control switch-view">
+    <button><span class="glyphicon glyphicon-th"></span></button>
+  </div>
+  <ol class="carousel-indicators">
+    {% for image in widget.images %}
+      <li data-target="#carousel{{ widget.id }}" data-slide-to="{{ forloop.counter0 }}"{% if forloop.first %} class="active"{% endif %}></li>
+    {% endfor %}
+  </ol>
+  <div class="carousel-inner">
+    {% for image in widget.images %}
+      <div class="{% if forloop.first %}active {% endif %}item">
+        <div class="item-inner">
+          <img src="{{ image.url }}" alt="{{ image.description }}">
+          {% if image.description or image.photographer %}
+            <div class="carousel-caption">
+              <p>
+                {{ image.description }}
+                {% if image.photographer %}
+                  Foto: {{ image.photographer }}
+                {% endif %}
+              </p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  <a class="left carousel-control" href="#carousel{{ widget.id }}" role="button" data-slide="prev">
+    <span class="glyphicon glyphicon-chevron-left"></span>
+  </a>
+  <a class="right carousel-control" href="#carousel{{ widget.id }}" role="button" data-slide="next">
+    <span class="glyphicon glyphicon-chevron-right"></span>
+  </a>
+</div>

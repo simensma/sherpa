@@ -51,7 +51,11 @@
             var photographer = uploader.find("input[name='photographer']").val();
             uploader.find("div.uploading").hide();
             uploader.modal('hide');
-            ImageUploadDialog.callback(result.url, description, photographer);
+            ImageUploadDialog.callback({
+                url: result.url,
+                description: description,
+                photographer: photographer,
+            });
         } else if(result.status === "no_files") {
             button_submit.prop('disabled', false);
             uploader.find("div.upload-no-files").show();
