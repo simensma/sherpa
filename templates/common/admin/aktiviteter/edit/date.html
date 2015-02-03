@@ -103,7 +103,7 @@
 
                   <input type="radio" name="dates[{{ i }}][signup_method]" value="normal"
                     data-dnt-toggle="date-signup"
-                    {% if date.signup_method == "normal" %}checked{% endif %}>
+                    {% if date.signup_method == "normal" or date.signup_method == "sherpa2" %}checked{% endif %}>
 
                   Vanlig påmelding <span class="label label-info">?</span>
                 </label>
