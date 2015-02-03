@@ -443,21 +443,16 @@ class AktivitetDate(models.Model):
         # return self.participants.count() + self.simple_participants.count()
 
     def is_fully_booked(self):
-        if self.max_participants is None:
-            return False
-        return self.total_signup_count() >= self.max_participants
-
-    def is_waitinglist(self):
         if self.signup_montis:
-            return self.get_montis_date().is_waitinglist()
+            return self.get_montis_date().is_fully_booked()
 
         # Get the state from sherpa2 for now
-        return self.is_waitinglist_sherpa2()
+        return self.is_fully_booked_sherpa2()
 
         # The future implementation will be something like this:
         # if self.max_participants is None:
         #     return False
-        # return self.total_signup_count() > self.max_participants
+        # return self.total_signup_count() >= self.max_participants
 
     def total_waitinglist_count(self):
         if self.signup_montis:
@@ -522,9 +517,9 @@ class AktivitetDate(models.Model):
     # won't work anyway, which is a problem, but these methods aren't the right place to raise any exception about
     # that, so ignore it
 
-    def is_waitinglist_sherpa2(self):
+    def is_fully_booked_sherpa2(self):
         try:
-            return self.get_sherpa2_date().is_waitinglist()
+            return self.get_sherpa2_date().is_fully_booked()
         except ActivityDate.DoesNotExist:
             return False
 

@@ -1186,7 +1186,7 @@ class ActivityDate(models.Model):
     def get_signup_date_to(self):
         return datetime.strptime(self.signup_date_to.strip(), "%Y-%m-%d").date()
 
-    def is_waitinglist(self):
+    def is_fully_booked(self):
         """Returns True if this date is fully booked, and any subsequent bookings would be put on a waitinglist"""
         return self.participant_count() >= self.booking
 

@@ -121,7 +121,7 @@
             {% elif aktivitet_date.accepts_signups %}
 
               <div class="signup accepts-signups">
-                {% if aktivitet_date.is_waitinglist %}
+                {% if aktivitet_date.is_fully_booked %}
 
                   <span class="fully-booked">
                     Det er ingen ledige plasser.
