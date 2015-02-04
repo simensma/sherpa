@@ -16,4 +16,7 @@ urlpatterns = patterns('admin.sites.pages',
 
     # Content
     url(r'^widget/$', 'content.reload_raw_widget'),
+
+    # Editor file upload handler - not convinced this is the best place to put that
+    url(r'^last-opp-fil/$', 'fileupload.handle_upload'),
 )
