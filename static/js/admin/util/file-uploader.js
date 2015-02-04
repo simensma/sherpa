@@ -72,8 +72,8 @@
         save_button.attr('disabled', true);
 
         if (opts.existing_url) {
-            $('[data-dnt-placeholder="existing-text"]').text(opts.existing_text);
-            $('[data-dnt-placeholder="existing-url"]').text(opts.existing_url);
+            file_uploader.find('[data-dnt-placeholder="existing-text"]').text(opts.existing_text);
+            file_uploader.find('[data-dnt-placeholder="existing-url"]').text(opts.existing_url);
             existing_msg.show();
         }
 
