@@ -35,6 +35,18 @@ $(function() {
                 interval: false
             });
 
+            // Add swipe events
+            $carousel_view.find('.carousel-inner').swipe({
+                swipeLeft: function() {
+                    $carousel_view.carousel('next');
+                },
+                swipeRight: function() {
+                    $carousel_view.carousel('prev');
+                },
+                // Default threshold is 75px
+                threshold: 15,
+            });
+
             // When in album view, click thumbnail to open full size view in carousel
             $widget.find('.album .item a').click(function (e) {
                 $album_view.hide();
