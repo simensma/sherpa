@@ -35,20 +35,13 @@
         file_uploader.find('[data-dnt-fileupload]').fileupload({
             dataType: 'json',
             always: function (e, data) {
-                // data.errorThrown
-                // data.textStatus;
-                // data.jqXHR;
-                console.log('always!');
                 section_uploading_file.hide();
-
-                // Move the following to the done callback
-                file_url = data.jqXHR.uploadedFileUrl || 'http://www.link.to/file'; // Get file URL from arguments returned from server
-
-                success_msg.show();
                 save_button.attr('disabled', false);
             },
             done: function (e, data) {
-                // Move code from always here
+                // Get file URL from arguments returned from server
+                file_url = data.result.files[0].url;
+                success_msg.show();
             },
             fail: function (e, data) {
                 browse_button.show();
