@@ -31,7 +31,7 @@ $(function() {
             var $carousel_view = $widget.find('.carousel').first();
 
             // Turn off auto slide
-            $widget.carousel({
+            $carousel_view.carousel({
                 interval: false
             });
 
