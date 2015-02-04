@@ -34,7 +34,7 @@
   </ol>
   <div class="carousel-inner">
     {% for image in widget.images %}
-      <div class="{% if forloop.first %}active {% endif %}item">
+      <div class="item{% if forloop.first %} active{% endif %}">
         <div class="item-inner">
           <img src="{{ image.url }}" alt="{{ image.description }}">
           {% if image.description or image.photographer %}
