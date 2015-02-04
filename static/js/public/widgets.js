@@ -16,16 +16,16 @@ $(function() {
      * @param {bool} exclude_admin set to true if this script should NOT run when the widget is rendered in the
      *   admin layout.
      */
-    Widgets.runIfExists = function(type, widget, exclude_admin) {
-        if(widget.length > 0 && (!exclude_admin || widget.attr('data-admin-context') === undefined)) {
-            Widgets.run(type, widget);
+    Widgets.runIfExists = function(type, $widget, exclude_admin) {
+        if($widget.length > 0 && (!exclude_admin || $widget.attr('data-admin-context') === undefined)) {
+            Widgets.run(type, $widget);
         }
     };
 
-    Widgets.run = function(type, widget) {
+    Widgets.run = function(type, $widget) {
         if(type === 'gallery') {
 
-            widget.each(function (index, gallery_widget) {
+            $widget.each(function (index, gallery_widget) {
 
                 var $album_view = $(gallery_widget).find('.album').first();
                 var $carousel_view = $(gallery_widget).find('.carousel').first();
@@ -57,34 +57,34 @@ $(function() {
         } else if(type === 'articles') {
 
             // Articles (horizontal layout)
-            imagesLoaded(widget, function() {
+            imagesLoaded($widget, function() {
                 // Adjust the contained image so it's centered within its fixed-height container
-                widget.find("div.horizontal div.image-container").each(function() {
+                $widget.find("div.horizontal div.image-container").each(function() {
                     var width = $(this).width();
                     var height = Math.round((width / 4) * 3);
                     $(this).css('height', height);
 
-                    var image = $(this).find("img");
-                    if(image.width() / image.height() <= 4/3) {
+                    var $image = $(this).find("img");
+                    if($image.width() / $image.height() <= 4/3) {
                         // Image width fits 4:3, just offset the top so that the height is fixed
-                        image.css('width', '100%');
-                        var top_offset = ((image.height() - height) / 2) * -1;
-                        image.css('top', top_offset + 'px');
+                        $image.css('width', '100%');
+                        var top_offset = (($image.height() - height) / 2) * -1;
+                        $image.css('top', top_offset + 'px');
                     } else {
                         // Image is too wide for 4:3, it would be shorter than the intended height.
                         // Force the height, calculate the width by its original ratio and offset it accordingly
-                        image.css('height', height);
-                        var new_image_width = (height / image.height()) * image.width();
-                        image.css('width', new_image_width);
+                        $image.css('height', height);
+                        var new_image_width = (height / $image.height()) * $image.width();
+                        $image.css('width', new_image_width);
                         var right_offset = ((new_image_width - width) / 2) * -1;
-                        image.css('right', right_offset + 'px');
+                        $image.css('right', right_offset + 'px');
                     }
 
                 });
 
                 // Set the height for news without images; we don't want these to be used but in case they are,
                 // we'll handle it as gracefully as possible
-                widget.find("div.horizontal div.image-placeholder").each(function() {
+                $widget.find("div.horizontal div.image-placeholder").each(function() {
                     var width = $(this).width();
                     var height = Math.round((width / 4) * 3);
                     $(this).css('height', height);
@@ -99,17 +99,17 @@ $(function() {
             }
 
             // Track campaign views and clicks
-            _gaq.push(['_trackEvent', 'Kampanje', 'Visning', widget.find('.campaign').attr('data-dnt-ga-event-label')]);
-            var campaign_button = widget.find('[data-dnt-container="button"] a');
+            _gaq.push(['_trackEvent', 'Kampanje', 'Visning', $widget.find('.campaign').attr('data-dnt-ga-event-label')]);
+            var campaign_button = $widget.find('[data-dnt-container="button"] a');
             if(campaign_button.length > 0) {
                 campaign_button.click(function() {
-                    _gaq.push(['_trackEvent', 'Kampanje', 'Klikk', widget.find('.campaign').attr('data-dnt-ga-event-label')]);
+                    _gaq.push(['_trackEvent', 'Kampanje', 'Klikk', $widget.find('.campaign').attr('data-dnt-ga-event-label')]);
                 });
             }
 
             // Scale down large font sizes
             var FONT_SIZE_LIMIT = 32;
-            widget.find('.text').each(function() {
+            $widget.find('.text').each(function() {
                 var font_size = $(this).css('font-size');
                 font_size = Number(font_size.substring(0, font_size.length - 2));
                 if(font_size > FONT_SIZE_LIMIT) {
