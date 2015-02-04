@@ -179,11 +179,12 @@ $(function() {
         }
     });
 
-    toolbar.find("a.button.anchor-add").click(function(event) {
+    // Attach anchor (via text or file upload) to the current selection
+    toolbar.find('a.button.anchor-add, a.button.attach-file').click(function(event) {
         var selection = rangy.getSelection();
 
         if(selection === undefined || selection.rangeCount === 0) {
-            // No selection or ranges - ignore the anchor button click
+            // No selection or ranges - ignore the anchor request
             return;
         }
 
@@ -191,30 +192,48 @@ $(function() {
         var ancestor = $(range.commonAncestorContainer).parent();
 
         if(ancestor.parents('.editable').length === 0 && !ancestor.is('.editable')) {
-            // User hasn't selected text in an editable element - ignore the anchor button click
+            // User hasn't selected text in an editable element - ignore the anchor request
             return;
         }
 
         var existing_url;
+        var existing_text;
         if(ancestor.is('a')) {
             existing_url = ancestor.attr('href');
+            existing_text = ancestor.text();
 
             // Make sure the entire anchor is included in the range
             range.setStartBefore(range.startContainer);
             range.setEndAfter(range.startContainer);
         }
-        UrlPicker.open({
-            existing_url: existing_url,
-            done: function(result) {
-                // Trim the selection for whitespace (actually, just the last char, since that's most common)
-                if($(range.endContainer).text().substring(range.endOffset - 1, range.endOffset) == ' ') {
-                    range.setEnd(range.endContainer, range.endOffset - 1);
-                }
-                selection.setSingleRange(range);
-                document.execCommand('createLink', false, result.url);
-            },
-        });
+
+        var onUrlChosen = function(result) {
+            // Trim the selection for whitespace (actually, just the last char, since that's most common)
+            if($(range.endContainer).text().substring(range.endOffset - 1, range.endOffset) == ' ') {
+                range.setEnd(range.endContainer, range.endOffset - 1);
+            }
+            selection.setSingleRange(range);
+            document.execCommand('createLink', false, result.url);
+        };
+
+        if($(this).is('.anchor-add')) {
+
+            UrlPicker.open({
+                existing_url: existing_url,
+                done: onUrlChosen,
+            });
+
+        } else if($(this).is('.attach-file')) {
+
+            FileUploader.open({
+                existing_url: existing_url,
+                existing_text: existing_text,
+                done: onUrlChosen,
+            });
+
+        }
     });
+
     toolbar.find("a.anchor-remove").click(function(event) {
         document.execCommand('unlink', false, null);
     });

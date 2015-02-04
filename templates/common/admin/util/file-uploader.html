@@ -1,0 +1,46 @@
+<div class="modal jq-hide file-uploader" data-dnt-container="file-uploader">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>Sett inn fil</h3>
+  </div>
+
+  <div class="modal-body">
+
+    <div data-dnt-container="sections">
+
+      <div class="section status-message">
+        <div class="alert alert-warning existing jq-hide">
+          <strong data-dnt-placeholder="existing-text"></strong> lenker allerede til <strong data-dnt-placeholder="existing-url"></strong>.
+          Dersom du laster opp ny fil og lenker til den, vil den eksisterende lenken overskrives.
+        </div>
+        <div class="alert alert-success success jq-hide">Filen ble lastet opp og lenken er klar til å settes inn.</div>
+        <div class="alert alert-error error jq-hide">Beklager, det oppstod en ukjent feil ved opplastingen! Feilen har blitt logget og vi vil fikse den så snart som mulig. Vennligst prøv igjen, eller kontakt teknisk avdeling ved DNT sentralt hvis feilen vedvarer.</div>
+      </div>
+
+      <div class="section select-file">
+        <p class="help-block">Last opp filen du ønsker å lenke til.</p>
+        <span class="btn btn-success fileinput-button">
+          <span class="glyphicon glyphicon-plus"></span>
+          <span>Velg fil...</span>
+          <input
+            type="file"
+            name="files[]"
+            data-dnt-fileupload
+            data-url="{% url 'admin.sites.pages.fileupload.handle_upload' active_site.id %}">
+        </span>
+      </div>
+
+      <div class="section uploading-file jq-hide">
+          <p class="help-block">Laster opp filen, vennligst vent...</p>
+          <p><img src="{{ STATIC_URL }}img/common/ajax-loader-large.gif" alt="Laster opp filen, vennligst vent..."></p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="modal-footer">
+    <button class="btn btn-success" data-dnt-trigger="insert-file">Sett inn fil</a>
+    <button class="btn btn-default" data-dnt-trigger="cancel">Avbryt</a>
+  </div>
+</div>
