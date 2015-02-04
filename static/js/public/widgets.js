@@ -18,40 +18,38 @@ $(function() {
      */
     Widgets.runIfExists = function(type, $widget, exclude_admin) {
         if($widget.length > 0 && (!exclude_admin || $widget.attr('data-admin-context') === undefined)) {
-            Widgets.run(type, $widget);
+            $widget.each(function(index, widget_element) {
+                Widgets.run(type, $(widget_element));
+            });
         }
     };
 
     Widgets.run = function(type, $widget) {
         if(type === 'gallery') {
 
-            $widget.each(function (index, gallery_widget) {
+            var $album_view = $widget.find('.album').first();
+            var $carousel_view = $widget.find('.carousel').first();
 
-                var $album_view = $(gallery_widget).find('.album').first();
-                var $carousel_view = $(gallery_widget).find('.carousel').first();
+            // Turn off auto slide
+            $widget.carousel({
+                interval: false
+            });
 
-                // Turn off auto slide
-                $(gallery_widget).carousel({
-                    interval: false
-                });
+            // When in album view, click thumbnail to open full size view in carousel
+            $widget.find('.album .item a').click(function (e) {
+                $album_view.hide();
 
-                // When in album view, click thumbnail to open full size view in carousel
-                $(gallery_widget).find('.album .item a').click(function (e) {
-                    $album_view.hide();
+                var image_index = $(this).parents('.item').first().index();
+                $widget.carousel(image_index);
+                $carousel_view.show();
+            });
 
-                    var image_index = $(this).parents('.item').first().index();
-                    $(gallery_widget).carousel(image_index);
-                    $carousel_view.show();
-                });
+            $('[data-toggle="tooltip"]').tooltip();
 
-                $('[data-toggle="tooltip"]').tooltip();
-
-                // When in carousel view, go to album view by clicking switch view button
-                $(gallery_widget).find('.carousel .switch-view button').on('click', function () {
-                    $album_view.show();
-                    $carousel_view.hide();
-                });
-
+            // When in carousel view, go to album view by clicking switch view button
+            $widget.find('.carousel .switch-view button').on('click', function () {
+                $album_view.show();
+                $carousel_view.hide();
             });
 
         } else if(type === 'articles') {
