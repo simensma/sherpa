@@ -412,6 +412,12 @@ def trigger_import(request, aktivitet):
     try:
         old_activity = Sherpa2Aktivitet.objects.get(id=aktivitet.sherpa2_id)
         old_activity.convert(aktivitet)
+
+        # Delete any cached reference to external signup systems
+        for date in aktivitet.dates.all():
+            cache.delete('aktiviteter.dato.%s.sherpa2' % date.id)
+            cache.delete('aktiviteter.dato.%s.montis' % date.id)
+
         messages.success(request, 'import_success')
     except ConversionImpossible:
         messages.error(request, 'conversion_impossible')
