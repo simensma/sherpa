@@ -41,9 +41,19 @@
           <div class="item-inner">
             <img src="{{ image.url }}" alt="{{ image.description }}">
 
-            {# The description will be moved outside of the element with js on slide #}
             {% if image.description or image.photographer %}
-              <div class="description jq-hide">
+              {# > xs screens: normal caption #}
+              <div class="carousel-caption hidden-xs">
+                <p>
+                  {{ image.description }}
+                  {% if image.photographer %}
+                    Foto: {{ image.photographer }}
+                  {% endif %}
+                </p>
+              </div>
+
+              {# xs screens: the caption will be moved outside of the element with js on slide #}
+              <div class="description jq-hide visible-xs">
                 {{ image.description }}
                 {% if image.photographer %}
                   Foto: {{ image.photographer }}
