@@ -28,20 +28,21 @@ $(function() {
         if(type === 'gallery') {
 
             var $album_view = $widget.find('.album').first();
-            var $carousel_view = $widget.find('.carousel').first();
+            var $carousel_view = $widget.find('.carousel-wrapper').first();
+            var $carousel = $carousel_view.find('.carousel');
 
             // Turn off auto slide
-            $carousel_view.carousel({
+            $carousel.carousel({
                 interval: false
             });
 
             // Add swipe events
-            $carousel_view.find('.carousel-inner').swipe({
+            $carousel.find('.carousel-inner').swipe({
                 swipeLeft: function() {
-                    $carousel_view.carousel('next');
+                    $carousel.carousel('next');
                 },
                 swipeRight: function() {
-                    $carousel_view.carousel('prev');
+                    $carousel.carousel('prev');
                 },
                 // Default threshold is 75px
                 threshold: 15,
