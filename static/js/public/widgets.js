@@ -28,20 +28,33 @@ $(function() {
         if(type === 'gallery') {
 
             var $album_view = $widget.find('.album').first();
-            var $carousel_view = $widget.find('.carousel').first();
+            var $carousel_view = $widget.find('.carousel-wrapper').first();
+            var $carousel = $carousel_view.find('.carousel');
+            var $description_wrapper = $carousel_view.find('.description-wrapper');
 
             // Turn off auto slide
-            $widget.carousel({
+            $carousel.carousel({
                 interval: false
             });
 
+            $carousel.on('slide.bs.carousel', function() {
+                $description_wrapper.empty();
+            }).on('slid.bs.carousel', function() {
+                var desc = $(this).find('.item.active .description').clone();
+                desc.appendTo($description_wrapper);
+                desc.hide().slideDown('fast');
+            });
+
+            // Trigger the first description on page load
+            $carousel.trigger('slid.bs.carousel');
+
             // Add swipe events
-            $carousel_view.find('.carousel-inner').swipe({
+            $carousel.find('.carousel-inner').swipe({
                 swipeLeft: function() {
-                    $carousel_view.carousel('next');
+                    $carousel.carousel('next');
                 },
                 swipeRight: function() {
-                    $carousel_view.carousel('prev');
+                    $carousel.carousel('prev');
                 },
                 // Default threshold is 75px
                 threshold: 15,
