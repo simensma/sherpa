@@ -49,8 +49,12 @@ def get_member_data(user):
             # This is a main member - just list all children
             household_members = [c.memberid for c in user.get_children()]
         else:
-            # This is a household member - include all "sibling" household members
-            household_members = [c.memberid for c in user.get_parent().get_children()]
+            if user.get_parent() is not None:
+                # This is a household member - include all "sibling" household members
+                household_members = [c.memberid for c in user.get_parent().get_children()]
+            else:
+                # A household member without a main member - so the user is the only household member
+                household_members = [user.memberid]
 
         if user.is_pending:
             forening = None
