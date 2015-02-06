@@ -123,7 +123,9 @@ def memberid_sms(request):
         # Check if any of these are related, and in that case, use the parent.
         user = None
         for user_to_check in users:
-            if user_to_check.is_household_member() and user_to_check.get_parent() in users:
+            if user_to_check.is_household_member() and \
+                    user_to_check.get_parent() is not None and \
+                    user_to_check.get_parent() in users:
                 # Ah, this parent is in the result set - probably the one we want, use it
                 user = user_to_check.get_parent()
                 break

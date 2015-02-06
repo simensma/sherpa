@@ -165,7 +165,11 @@
               data-placement="bottom"
               data-html="true"
               data-title="Adressen kan ikke endres"
-              data-content="Du er husstandsmedlem og kan ikke endre din adresse her. Ditt hovedmedlem, {{ user.get_parent.get_full_name }}, kan endre den for dere, eller så må du kontakte medlemsservice.">
+              {% if user.get_parent %}
+                data-content="Du er husstandsmedlem og kan ikke endre din adresse her. Ditt hovedmedlem, {{ user.get_parent.get_full_name }}, kan endre den for dere, eller så må du kontakte medlemsservice."
+              {% else %}
+                data-content="Du er husstandsmedlem og kan ikke endre din adresse her. Vennligst kontakt medlemsservice."
+              {% endif %}>
 
                 {{ user.get_address.format_with_newlines|linebreaksbr }}
               </span>

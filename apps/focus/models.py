@@ -368,7 +368,13 @@ class Actor(models.Model):
     def is_eligible_for_publications(self):
         # Household members are eligible if their parents are eligible
         if self.is_household_member():
-            return Actor.get_personal_members().get(memberid=self.get_parent_memberid()).is_eligible_for_publications()
+            if self.get_parent_memberid() is None:
+                # If for some reason this household member doesn't have a parent, they're automatically not eligible
+                return False
+            else:
+                return Actor.get_personal_members().get(
+                    memberid=self.get_parent_memberid(),
+                ).is_eligible_for_publications()
 
         # This membership type is supposed to be deprecated, but error logs show it's still in use
         if self.has_membership_type("household_without_main"):

@@ -93,10 +93,17 @@ def membership(request, version, format):
                         'husstandsmedlemmer': [get_member_data(u) for u in user.get_children()],
                     }
                 else:
-                    user_data = {
-                        'hovedmedlem': get_member_data(user.get_parent()),
-                        'husstandsmedlemmer': [get_member_data(u) for u in user.get_parent().get_children()],
-                    }
+                    if user.get_parent() is not None:
+                        user_data = {
+                            'hovedmedlem': get_member_data(user.get_parent()),
+                            'husstandsmedlemmer': [get_member_data(u) for u in user.get_parent().get_children()],
+                        }
+                    else:
+                        # A household member without a parent, send it as such
+                        user_data = {
+                            'hovedmedlem': None,
+                            'husstandsmedlemmer': [get_member_data(user)],
+                        }
             else:
                 user_data = get_member_data(user)
 
@@ -291,7 +298,9 @@ def memberid(request, version, format):
         # Check if any of these are related, and in that case, use the parent.
         user = None
         for user_to_check in users:
-            if user_to_check.is_household_member() and user_to_check.get_parent() in users:
+            if user_to_check.is_household_member() and \
+                    user_to_check.get_parent() is not None and \
+                    user_to_check.get_parent() in users:
                 # Ah, this parent is in the result set - probably the one we want, use it
                 user = user_to_check.get_parent()
                 break

@@ -157,6 +157,11 @@ class User(AbstractBaseUser):
         if not self.is_household_member():
             return None
 
+        # Most household members should have a parent, but some don't. Some of these are lifelong household members
+        # (this membership type is now deprecated) who have lost their spouce, and memberservice has decided to keep
+        # them as household members, with no parent.
+        # They must be separated from main lifelong members because they're *not* entitled to receive Fjell og Vidde
+        # or årboken.
         parent_memberid = self.get_actor().get_parent_memberid()
         if parent_memberid is None:
             return None
