@@ -7,6 +7,7 @@ from django.db.models.signals import pre_delete, post_delete
 from django.dispatch import receiver
 from django.db import models
 from django.conf import settings
+from django.utils.text import slugify
 
 import boto
 
@@ -258,7 +259,11 @@ class Campaign(models.Model):
             start_char = '?'
         else:
             start_char = '&'
-        return '%s%sutm_campaign=%s&utm_source=kampanje&utm_medium=kampanjeknapp' % (self.button_anchor, start_char, self.utm_campaign)
+        return '%s%sutm_campaign=%s&utm_source=kampanje&utm_medium=kampanjeknapp' % (
+            self.button_anchor,
+            start_char,
+            slugify(self.utm_campaign),
+        )
 
     def get_cropped_image(self):
         return "http://%s/%s" % (s3_bucket(), self.get_cropped_image_key())
