@@ -93,10 +93,17 @@ def membership(request, version, format):
                         'husstandsmedlemmer': [get_member_data(u) for u in user.get_children()],
                     }
                 else:
-                    user_data = {
-                        'hovedmedlem': get_member_data(user.get_parent()),
-                        'husstandsmedlemmer': [get_member_data(u) for u in user.get_parent().get_children()],
-                    }
+                    if user.get_parent() is not None:
+                        user_data = {
+                            'hovedmedlem': get_member_data(user.get_parent()),
+                            'husstandsmedlemmer': [get_member_data(u) for u in user.get_parent().get_children()],
+                        }
+                    else:
+                        # A household member without a parent, send it as such
+                        user_data = {
+                            'hovedmedlem': None,
+                            'husstandsmedlemmer': [get_member_data(user)],
+                        }
             else:
                 user_data = get_member_data(user)
 
