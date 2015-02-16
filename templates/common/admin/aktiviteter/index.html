@@ -25,6 +25,14 @@
   </div>
 </div><!-- /.row -->
 
+{% for message in messages %}
+  {% if message.message == 'import_deleted' %}
+    <div class="alert alert-success">
+      <p><strong>Turen finnes ikke lengre i gamle Sherpa og har derfor blitt slettet.</strong></p>
+    </div>
+  {% endif %}
+{% endfor %}
+
 <div class="alert alert-warning">
   <a class="close">x</a>
   <strong>Dette er testsystem</strong><br>

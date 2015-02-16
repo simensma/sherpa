@@ -419,9 +419,16 @@ def trigger_import(request, aktivitet):
             cache.delete('aktiviteter.dato.%s.montis' % date.id)
 
         messages.success(request, 'import_success')
+        return redirect('admin.aktiviteter.views.edit', aktivitet.id)
+
+    except Sherpa2Aktivitet.DoesNotExist:
+        aktivitet.delete()
+        messages.success(request, 'import_deleted')
+        return redirect('admin.aktiviteter.views.index')
+
     except ConversionImpossible:
         messages.error(request, 'conversion_impossible')
-    return redirect('admin.aktiviteter.views.edit', aktivitet.id)
+        return redirect('admin.aktiviteter.views.edit', aktivitet.id)
 
 def turforslag_search(request):
     query = request.GET['q'].strip()
