@@ -37,7 +37,7 @@ class NTBObject(object):
         """If this object is only partially fetched, this method will retrieve the rest of its fields"""
         if not self._is_partial:
             return
-        document = NTBObject.get_object(self.identifier, self.object_id)
+        document = NTBObject.get_document(self.identifier, self.object_id)
         for field in self.FIELDS:
             variable_name = field.replace(u'æ', u'ae').replace(u'ø', u'o').replace(u'å', u'a')
             setattr(self, variable_name, document.get(field))
@@ -48,11 +48,11 @@ class NTBObject(object):
     #
 
     @staticmethod
-    def lookup_object(identifier):
+    def lookup_documents(identifier):
         return NTBObject._lookup_recursively(identifier, skip=0, previous_results=[])
 
     @staticmethod
-    def get_object(identifier, object_id):
+    def get_document(identifier, object_id):
         return requests.get(
             '%s%s/%s/' % (NTBObject.ENDPOINT_URL, identifier, object_id),
             params={'api_key': settings.TURBASEN_API_KEY}
@@ -61,14 +61,14 @@ class NTBObject(object):
     @classmethod
     def get(cls, object_id):
         """Retrieve a single object from NTB by its object id"""
-        return cls(NTBObject.get_object(cls.identifier, object_id), _is_partial=True)
+        return cls(NTBObject.get_document(cls.identifier, object_id), _is_partial=True)
 
     @classmethod
     def lookup(cls):
         """Retrieve a complete list of these objects, partially fetched"""
         objects = cache.get('turbasen.%s.lookup' % cls.__name__)
         if objects is None:
-            objects = [cls(document, _is_partial=True) for document in NTBObject.lookup_object(cls.identifier)]
+            objects = [cls(document, _is_partial=True) for document in NTBObject.lookup_documents(cls.identifier)]
             cache.set('turbasen.%s.lookup' % cls.__name__, objects, cls.LOOKUP_CACHE_PERIOD)
         return objects
 
