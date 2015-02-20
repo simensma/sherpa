@@ -33,6 +33,14 @@ class NTBObject(object):
             # Default behavior - no such attribute
             raise AttributeError
 
+    def fetch(self):
+        """If this object is only partially fetched, this method will retrieve the rest of its fields"""
+        document = NTBObject.get_object(self.identifier, self.object_id)
+        for field in self.FIELDS:
+            variable_name = field.replace(u'æ', u'ae').replace(u'ø', u'o').replace(u'å', u'a')
+            setattr(self, variable_name, document.get(field))
+        self._is_partial = False
+
     #
     # Lookup static methods
     #
@@ -89,8 +97,16 @@ class NTBObject(object):
 
 class Omrade(NTBObject):
     identifier = u'områder'
-
     LOOKUP_CACHE_PERIOD = 60 * 60 * 24
+    FIELDS = [
+        u'navngiving',
+        u'status',
+        u'geojson',
+        u'kommuner',
+        u'fylker',
+        u'beskrivelse',
+        u'bilder',
+    ]
 
     def __init__(self, document, *args, **kwargs):
         super(Omrade, self).__init__(document, *args, **kwargs)
@@ -99,22 +115,34 @@ class Omrade(NTBObject):
     def __repr__(self):
         return (u'Område: %s (%s)' % (self.object_id, self.navn)).encode('utf-8')
 
-    def fetch(self):
-        """If this object is only partially fetched, this method will retrieve the rest of its fields"""
-        document = NTBObject.get_object(self.identifier, self.object_id)
-        self.navngiving = document.get('navngiving')
-        self.status = document.get('status')
-        self.geojson = document.get('geojson')
-        self.kommuner = document.get('kommuner')
-        self.fylker = document.get('fylker')
-        self.beskrivelse = document.get('beskrivelse')
-        self.bilder = document.get('bilder')
-        self._is_partial = False
-
 class Sted(NTBObject):
     identifier = u'steder'
-
     LOOKUP_CACHE_PERIOD = 60 * 60 * 24
+    FIELDS = [
+        u'navngiving',
+        u'status',
+        u'navn_alt',
+        u'ssr_id',
+        u'geojson',
+        u'områder',
+        u'kommune',
+        u'fylke',
+        u'beskrivelse',
+        u'adkomst',
+        u'tilrettelagt_for',
+        u'fasiliteter',
+        u'lenker',
+        u'byggeår',
+        u'besøksstatistikk',
+        u'betjeningsgrad',
+        u'tags',
+        u'grupper',
+        u'bilder',
+        u'steder',
+        u'url',
+        u'kart',
+        u'turkart',
+    ]
 
     def __init__(self, document, *args, **kwargs):
         super(Sted, self).__init__(document, *args, **kwargs)
@@ -122,31 +150,3 @@ class Sted(NTBObject):
 
     def __repr__(self):
         return (u'Sted: %s (%s)' % (self.object_id, self.navn)).encode('utf-8')
-
-    def fetch(self):
-        """If this object is only partially fetched, this method will retrieve the rest of its fields"""
-        document = NTBObject.get_object(self.identifier, self.object_id)
-        self.navngiving = document.get('navngiving')
-        self.status = document.get('status')
-        self.navn_alt = document.get('navn_alt')
-        self.ssr_id = document.get('ssr_id')
-        self.geojson = document.get('geojson')
-        self.omrader = document.get('områder')
-        self.kommune = document.get('kommune')
-        self.fylke = document.get('fylke')
-        self.beskrivelse = document.get('beskrivelse')
-        self.adkomst = document.get('adkomst')
-        self.tilrettelagt_for = document.get('tilrettelagt_for')
-        self.fasiliteter = document.get('fasiliteter')
-        self.lenker = document.get('lenker')
-        self.byggear = document.get('byggeår')
-        self.besoksstatistikk = document.get('besøksstatistikk')
-        self.betjeningsgrad = document.get('betjeningsgrad')
-        self.tags = document.get('tags')
-        self.grupper = document.get('grupper')
-        self.bilder = document.get('bilder')
-        self.steder = document.get('steder')
-        self.url = document.get('url')
-        self.kart = document.get('kart')
-        self.turkart = document.get('turkart')
-        self._is_partial = False
