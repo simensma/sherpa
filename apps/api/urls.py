@@ -6,6 +6,7 @@ urlpatterns = patterns('',
     url(r'^$', 'page.views.perform_redirect', kwargs={'url': 'https://turistforeningen.atlassian.net/wiki/pages/viewpage.action?pageId=6324280'}),
 
     # Header versioning
+
     url(r'^medlem/$', 'api.views.header_versioning', kwargs={
         'versions': [
             {'version': 'v0', 'resource': 'members'},
