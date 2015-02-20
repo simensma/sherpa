@@ -61,7 +61,7 @@ class NTBObject(object):
     @classmethod
     def get(cls, object_id):
         """Retrieve a single object from NTB by its object id"""
-        return cls(NTBObject.get_object(cls.identifier, object_id), _is_partial=False)
+        return cls(NTBObject.get_object(cls.identifier, object_id), _is_partial=True)
 
     @classmethod
     def lookup(cls):
