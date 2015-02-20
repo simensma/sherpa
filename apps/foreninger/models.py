@@ -309,17 +309,26 @@ def validate_forening_save(sender, **kwargs):
 #
 
 class SupplyCategory(models.Model):
-    forening = models.ForeignKey('foreninger.Forening')
+    forening = models.ForeignKey('foreninger.Forening', related_name='supply_categories')
     name = models.CharField(max_length=255)
+
+    def __unicode__(self):
+        return u'%s: %s' % (self.pk, self.name)
 
 class Supply(models.Model):
-    supply_category = models.ForeignKey('foreninger.SupplyCategory')
+    supply_category = models.ForeignKey('foreninger.SupplyCategory', related_name='supplies')
     name = models.CharField(max_length=255)
     price_member = models.PositiveIntegerField()
     price_nonmember = models.PositiveIntegerField()
 
+    def __unicode__(self):
+        return u'%s: %s' % (self.pk, self.name)
+
 class Lodging(models.Model):
-    forening = models.ForeignKey('foreninger.Forening')
+    forening = models.ForeignKey('foreninger.Forening', related_name='lodging_prices')
     name = models.CharField(max_length=255)
     price_member = models.PositiveIntegerField()
     price_nonmember = models.PositiveIntegerField()
+
+    def __unicode__(self):
+        return u'%s: %s' % (self.pk, self.name)
