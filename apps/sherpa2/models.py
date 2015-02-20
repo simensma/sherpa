@@ -1319,7 +1319,7 @@ class ActivityDate(models.Model):
 
     def convert_published(self):
         """Converts published for the *aktivitet* object, not the date."""
-        return self.online != ActivityDate.ONLINE_DISABLED
+        return self.online not in [ActivityDate.ONLINE_DISABLED, ActivityDate.ONLINE_DISABLED_SIGNUP_PAYMENT]
 
     class Meta:
         db_table = u'activity_date'
