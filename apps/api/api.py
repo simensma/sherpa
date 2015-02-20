@@ -357,7 +357,7 @@ def prices(request, version, format):
         raise BadRequest(
             u"Unsupported HTTP verb '%s'" % request.method,
             code=error_codes.UNSUPPORTED_HTTP_VERB,
-            http_code=400
+            http_code=400,
         )
 
     if 'forening' in request.GET:
@@ -368,7 +368,7 @@ def prices(request, version, format):
             raise BadRequest(
                 u"A forening with object id '%s', does not exist." % request.GET['forening'],
                 code=error_codes.RESOURCE_NOT_FOUND,
-                http_code=404
+                http_code=404,
             )
     elif 'hytte' in request.GET:
         # TODO: Filter on the cabins owner
