@@ -60,7 +60,7 @@ class NTBObject(object):
             '%s%s/%s/' % (NTBObject.ENDPOINT_URL, identifier, object_id),
             params={'api_key': settings.TURBASEN_API_KEY}
         )
-        if request.status_code == 400:
+        if request.status_code in [400, 404]:
             raise DocumentNotFound(
                 "Document with identifier '%s' and object id '%s' wasn't found in Turbasen" % (identifier, object_id)
             )
