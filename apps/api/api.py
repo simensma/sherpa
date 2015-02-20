@@ -385,5 +385,8 @@ def prices(request, version, format):
                 http_code=404,
             )
     else:
-        # TODO: Return all pricelists
-        raise NotImplementedError
+        return HttpResponse(json.dumps([{
+            'object_id': forening.turbase_object_id,
+            'navn': forening.name,
+            'priser': format_prices(forening),
+        } for forening in Forening.objects.filter(type='forening')]))
