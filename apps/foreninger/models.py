@@ -49,6 +49,9 @@ class Forening(models.Model):
     gmap_url = models.CharField(max_length=2048, default='') # Temporary - find other ways to display this map!
     facebook_url = models.CharField(max_length=2048, default='')
 
+    # The corresponding object ID in Nasjonal Turbase
+    turbase_object_id = models.CharField(max_length=24, null=True)
+
     # Sometimes we'll need to reference foreninger directly by ID. We'll store a couple of IDs here.
     DNT_CENTRAL_ID = 56
     DNT_FJELLSPORT_ID =60
