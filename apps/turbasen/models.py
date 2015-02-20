@@ -110,3 +110,57 @@ class Omrade(NTBObject):
     def get(object_id):
         """Retrieve a single object from NTB by its object id"""
         return Omrade(NTBObject.get_object(Omrade.identifier, object_id), _is_partial=False)
+
+class Sted(NTBObject):
+    identifier = u'steder'
+
+    LOOKUP_CACHE_PERIOD = 60 * 60 * 24
+
+    def __init__(self, document, *args, **kwargs):
+        super(Sted, self).__init__(document, *args, **kwargs)
+        self.navn = document['navn']
+
+    def __repr__(self):
+        return (u'Sted: %s (%s)' % (self.object_id, self.navn)).encode('utf-8')
+
+    def fetch(self):
+        """If this object is only partially fetched, this method will retrieve the rest of its fields"""
+        document = NTBObject.get_object(self.identifier, self.object_id)
+        self.navngiving = document.get('navngiving')
+        self.status = document.get('status')
+        self.navn_alt = document.get('navn_alt')
+        self.ssr_id = document.get('ssr_id')
+        self.geojson = document.get('geojson')
+        self.omrader = document.get('områder')
+        self.kommune = document.get('kommune')
+        self.fylke = document.get('fylke')
+        self.beskrivelse = document.get('beskrivelse')
+        self.adkomst = document.get('adkomst')
+        self.tilrettelagt_for = document.get('tilrettelagt_for')
+        self.fasiliteter = document.get('fasiliteter')
+        self.lenker = document.get('lenker')
+        self.byggear = document.get('byggeår')
+        self.besoksstatistikk = document.get('besøksstatistikk')
+        self.betjeningsgrad = document.get('betjeningsgrad')
+        self.tags = document.get('tags')
+        self.grupper = document.get('grupper')
+        self.bilder = document.get('bilder')
+        self.steder = document.get('steder')
+        self.url = document.get('url')
+        self.kart = document.get('kart')
+        self.turkart = document.get('turkart')
+        self._is_partial = False
+
+    @staticmethod
+    def lookup():
+        """Retrieve a complete list of these objects, partially fetched"""
+        steder = cache.get('turbasen.steder.lookup')
+        if steder is None:
+            steder = [Sted(document, _is_partial=True) for document in NTBObject.lookup_object(Sted.identifier)]
+            cache.set('turbasen.steder.lookup', steder, Sted.LOOKUP_CACHE_PERIOD)
+        return steder
+
+    @staticmethod
+    def get(object_id):
+        """Retrieve a single object from NTB by its object id"""
+        return Sted(NTBObject.get_object(Sted.identifier, object_id), _is_partial=False)
