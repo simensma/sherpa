@@ -71,13 +71,12 @@ class NTBObject(object):
         """Retrieve a complete list of these objects, partially fetched"""
         objects = cache.get('turbasen.%s.lookup' % cls.__name__)
         if objects is None:
-            objects = [cls(document, _is_partial=True) for document in NTBObject.lookup_documents(cls.identifier)]
+            objects = [
+                cls(document, _is_partial=True)
+                for document in NTBObject._lookup_recursively(cls.identifier, skip=0, previous_results=[])
+            ]
             cache.set('turbasen.%s.lookup' % cls.__name__, objects, cls.LOOKUP_CACHE_PERIOD)
         return objects
-
-    @staticmethod
-    def lookup_documents(identifier):
-        return NTBObject._lookup_recursively(identifier, skip=0, previous_results=[])
 
     #
     # Private static methods
