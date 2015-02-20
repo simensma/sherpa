@@ -16,6 +16,8 @@ from foreninger.models import Forening
 from membership.util import lookup_users_by_phone, send_sms_receipt
 from user.models import User
 from util import get_member_data, get_forening_data, require_focus
+from turbasen.models import Sted
+from turbasen.exceptions import DocumentNotFound
 
 logger = logging.getLogger('sherpa')
 
@@ -371,8 +373,17 @@ def prices(request, version, format):
                 http_code=404,
             )
     elif 'hytte' in request.GET:
-        # TODO: Filter on the cabins owner
-        raise NotImplementedError
+        try:
+            sted = Sted.get(request.GET['hytte'])
+            # TODO: Handle cabins with multiple owners (defaulting to first occurrence for now)
+            forening = Forening.objects.get(turbase_object_id=sted.grupper[0])
+            return HttpResponse(json.dumps(format_prices(forening)))
+        except DocumentNotFound:
+            raise BadRequest(
+                u"A cabin with object id '%s', does not exist." % request.GET['hytte'],
+                code=error_codes.RESOURCE_NOT_FOUND,
+                http_code=404,
+            )
     else:
         # TODO: Return all pricelists
         raise NotImplementedError
