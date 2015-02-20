@@ -165,17 +165,6 @@ class Forening(models.Model):
             cache.set('forening.old_sherpa2_url.%s' % self.id, old_url, 60 * 60 * 24)
         return old_url
 
-    def get_ntb_id(self):
-        """Retrieve the NTB object_id for this forening from Sherpa2"""
-        object_id = cache.get('object_id.forening.%s' % self.id)
-        if object_id is None:
-            try:
-                object_id = NtbId.objects.get(sql_id=self.id, type='G').object_id
-            except NtbId.DoesNotExist:
-                object_id = None
-            cache.set('object_id.forening.%s' % self.id, object_id, 60 * 60 * 24 * 7)
-        return object_id
-
     def get_homepage_site(self, prefetched=False):
         """A forening can have multiple related sites but only one homepage, this method returns the homepage site,
         or None if it doesn't have a homepage.
