@@ -35,6 +35,8 @@ class NTBObject(object):
 
     def fetch(self):
         """If this object is only partially fetched, this method will retrieve the rest of its fields"""
+        if not self._is_partial:
+            return
         document = NTBObject.get_object(self.identifier, self.object_id)
         for field in self.FIELDS:
             variable_name = field.replace(u'æ', u'ae').replace(u'ø', u'o').replace(u'å', u'a')
