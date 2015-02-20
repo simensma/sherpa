@@ -53,6 +53,15 @@ class NTBObject(object):
         """Retrieve a single object from NTB by its object id"""
         return cls(NTBObject.get_object(cls.identifier, object_id), _is_partial=False)
 
+    @classmethod
+    def lookup(cls):
+        """Retrieve a complete list of these objects, partially fetched"""
+        objects = cache.get('turbasen.%s.lookup' % cls.__name__)
+        if objects is None:
+            objects = [cls(document, _is_partial=True) for document in NTBObject.lookup_object(cls.identifier)]
+            cache.set('turbasen.%s.lookup' % cls.__name__, objects, cls.LOOKUP_CACHE_PERIOD)
+        return objects
+
     #
     # Private static methods
     #
@@ -102,15 +111,6 @@ class Omrade(NTBObject):
         self.bilder = document.get('bilder')
         self._is_partial = False
 
-    @staticmethod
-    def lookup():
-        """Retrieve a complete list of these objects, partially fetched"""
-        omrader = cache.get('turbasen.omrader.lookup')
-        if omrader is None:
-            omrader = [Omrade(document, _is_partial=True) for document in NTBObject.lookup_object(Omrade.identifier)]
-            cache.set('turbasen.omrader.lookup', omrader, Omrade.LOOKUP_CACHE_PERIOD)
-        return omrader
-
 class Sted(NTBObject):
     identifier = u'steder'
 
@@ -150,12 +150,3 @@ class Sted(NTBObject):
         self.kart = document.get('kart')
         self.turkart = document.get('turkart')
         self._is_partial = False
-
-    @staticmethod
-    def lookup():
-        """Retrieve a complete list of these objects, partially fetched"""
-        steder = cache.get('turbasen.steder.lookup')
-        if steder is None:
-            steder = [Sted(document, _is_partial=True) for document in NTBObject.lookup_object(Sted.identifier)]
-            cache.set('turbasen.steder.lookup', steder, Sted.LOOKUP_CACHE_PERIOD)
-        return steder
