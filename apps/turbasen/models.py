@@ -48,6 +48,11 @@ class NTBObject(object):
             params={'api_key': settings.TURBASEN_API_KEY}
         ).json()
 
+    @classmethod
+    def get(cls, object_id):
+        """Retrieve a single object from NTB by its object id"""
+        return cls(NTBObject.get_object(cls.identifier, object_id), _is_partial=False)
+
     #
     # Private static methods
     #
@@ -106,11 +111,6 @@ class Omrade(NTBObject):
             cache.set('turbasen.omrader.lookup', omrader, Omrade.LOOKUP_CACHE_PERIOD)
         return omrader
 
-    @staticmethod
-    def get(object_id):
-        """Retrieve a single object from NTB by its object id"""
-        return Omrade(NTBObject.get_object(Omrade.identifier, object_id), _is_partial=False)
-
 class Sted(NTBObject):
     identifier = u'steder'
 
@@ -159,8 +159,3 @@ class Sted(NTBObject):
             steder = [Sted(document, _is_partial=True) for document in NTBObject.lookup_object(Sted.identifier)]
             cache.set('turbasen.steder.lookup', steder, Sted.LOOKUP_CACHE_PERIOD)
         return steder
-
-    @staticmethod
-    def get(object_id):
-        """Retrieve a single object from NTB by its object id"""
-        return Sted(NTBObject.get_object(Sted.identifier, object_id), _is_partial=False)
