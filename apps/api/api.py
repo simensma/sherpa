@@ -360,4 +360,19 @@ def prices(request, version, format):
             http_code=400
         )
 
-    raise NotImplementedError
+    if 'forening' in request.GET:
+        try:
+            forening = Forening.objects.get(turbase_object_id=request.GET['forening'])
+            return HttpResponse(json.dumps(format_prices(forening)))
+        except Forening.DoesNotExist:
+            raise BadRequest(
+                u"A forening with object id '%s', does not exist." % request.GET['forening'],
+                code=error_codes.RESOURCE_NOT_FOUND,
+                http_code=404
+            )
+    elif 'hytte' in request.GET:
+        # TODO: Filter on the cabins owner
+        raise NotImplementedError
+    else:
+        # TODO: Return all pricelists
+        raise NotImplementedError
