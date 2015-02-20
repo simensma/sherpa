@@ -5,6 +5,8 @@ from django.core.cache import cache
 
 import requests
 
+from .exceptions import DocumentNotFound
+
 class NTBObject(object):
     # Note that when a secure endpoint for Turbasen is ready, we should generate a new API key as the current one
     # will have been transmitted in cleartext.
@@ -53,10 +55,15 @@ class NTBObject(object):
 
     @staticmethod
     def get_document(identifier, object_id):
-        return requests.get(
+        request = requests.get(
             '%s%s/%s/' % (NTBObject.ENDPOINT_URL, identifier, object_id),
             params={'api_key': settings.TURBASEN_API_KEY}
-        ).json()
+        )
+        if request.status_code == 400:
+            raise DocumentNotFound(
+                "Document with identifier '%s' and object id '%s' wasn't found in Turbasen" % (identifier, object_id)
+            )
+        return request.json()
 
     @classmethod
     def get(cls, object_id):
