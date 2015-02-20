@@ -332,3 +332,13 @@ def memberid(request, version, format):
             code=error_codes.INTERNAL_ERROR,
             http_code=500
         )
+
+def prices(request, version, format):
+    if request.method != 'GET':
+        raise BadRequest(
+            u"Unsupported HTTP verb '%s'" % request.method,
+            code=error_codes.UNSUPPORTED_HTTP_VERB,
+            http_code=400
+        )
+
+    raise NotImplementedError
