@@ -303,3 +303,22 @@ def validate_forening_save(sender, **kwargs):
     # The following call will raise bubbled exception on error. It would have been the view's responsibility
     # to avoid this error before saving (like a db-enforced DatabaseError)
     kwargs['instance'].validate_relationships()
+
+#
+# Each forening has its own single set of prices for lodging and supplies on their cabins
+#
+
+class SupplyCategory(models.Model):
+    forening = models.ForeignKey('foreninger.Forening')
+    name = models.CharField(max_length=255)
+
+class Supply(models.Model):
+    supply_category = models.ForeignKey('foreninger.SupplyCategory')
+    name = models.CharField(max_length=255)
+    price_member = models.PositiveIntegerField()
+    price_nonmember = models.PositiveIntegerField()
+
+class Lodging(models.Model):
+    name = models.CharField(max_length=255)
+    price_member = models.PositiveIntegerField()
+    price_nonmember = models.PositiveIntegerField()
