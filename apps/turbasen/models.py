@@ -49,9 +49,10 @@ class NTBObject(object):
     # Lookup static methods
     #
 
-    @staticmethod
-    def lookup_documents(identifier):
-        return NTBObject._lookup_recursively(identifier, skip=0, previous_results=[])
+    @classmethod
+    def get(cls, object_id):
+        """Retrieve a single object from NTB by its object id"""
+        return cls(NTBObject.get_document(cls.identifier, object_id), _is_partial=True)
 
     @staticmethod
     def get_document(identifier, object_id):
@@ -66,11 +67,6 @@ class NTBObject(object):
         return request.json()
 
     @classmethod
-    def get(cls, object_id):
-        """Retrieve a single object from NTB by its object id"""
-        return cls(NTBObject.get_document(cls.identifier, object_id), _is_partial=True)
-
-    @classmethod
     def lookup(cls):
         """Retrieve a complete list of these objects, partially fetched"""
         objects = cache.get('turbasen.%s.lookup' % cls.__name__)
@@ -78,6 +74,10 @@ class NTBObject(object):
             objects = [cls(document, _is_partial=True) for document in NTBObject.lookup_documents(cls.identifier)]
             cache.set('turbasen.%s.lookup' % cls.__name__, objects, cls.LOOKUP_CACHE_PERIOD)
         return objects
+
+    @staticmethod
+    def lookup_documents(identifier):
+        return NTBObject._lookup_recursively(identifier, skip=0, previous_results=[])
 
     #
     # Private static methods
