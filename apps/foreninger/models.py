@@ -319,6 +319,7 @@ class Supply(models.Model):
     price_nonmember = models.PositiveIntegerField()
 
 class Lodging(models.Model):
+    forening = models.ForeignKey('foreninger.Forening')
     name = models.CharField(max_length=255)
     price_member = models.PositiveIntegerField()
     price_nonmember = models.PositiveIntegerField()
