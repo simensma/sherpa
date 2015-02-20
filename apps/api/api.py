@@ -334,6 +334,25 @@ def memberid(request, version, format):
         )
 
 def prices(request, version, format):
+    def format_prices(forening):
+        return {
+            'overnatting': [{
+                'id': lodging.id,
+                'navn': lodging.name,
+                'pris_medlem': lodging.price_member,
+                'pris_ikkemedlem': lodging.price_nonmember,
+            } for lodging in forening.lodging_prices.all()],
+
+            'proviant': [{
+                supply_category.name: [{
+                    'id': supply.id,
+                    'navn': supply.name,
+                    'pris_medlem': supply.price_member,
+                    'pris_ikkemedlem': supply.price_nonmember,
+                } for supply in supply_category.supplies.all()]
+            } for supply_category in forening.supply_categories.all()]
+        }
+
     if request.method != 'GET':
         raise BadRequest(
             u"Unsupported HTTP verb '%s'" % request.method,
