@@ -16,6 +16,8 @@ from foreninger.models import Forening
 from membership.util import lookup_users_by_phone, send_sms_receipt
 from user.models import User
 from util import get_member_data, get_forening_data, require_focus
+from turbasen.models import Sted
+from turbasen.exceptions import DocumentNotFound
 
 logger = logging.getLogger('sherpa')
 
@@ -332,3 +334,59 @@ def memberid(request, version, format):
             code=error_codes.INTERNAL_ERROR,
             http_code=500
         )
+
+def prices(request, version, format):
+    def format_prices(forening):
+        return {
+            'overnatting': [{
+                'id': lodging.id,
+                'navn': lodging.name,
+                'pris_medlem': lodging.price_member,
+                'pris_ikkemedlem': lodging.price_nonmember,
+            } for lodging in forening.lodging_prices.all()],
+
+            'proviant': [{
+                supply_category.name: [{
+                    'id': supply.id,
+                    'navn': supply.name,
+                    'pris_medlem': supply.price_member,
+                    'pris_ikkemedlem': supply.price_nonmember,
+                } for supply in supply_category.supplies.all()]
+            } for supply_category in forening.supply_categories.all()]
+        }
+
+    if request.method != 'GET':
+        raise BadRequest(
+            u"Unsupported HTTP verb '%s'" % request.method,
+            code=error_codes.UNSUPPORTED_HTTP_VERB,
+            http_code=400,
+        )
+
+    if 'forening' in request.GET:
+        try:
+            forening = Forening.objects.get(turbase_object_id=request.GET['forening'])
+            return HttpResponse(json.dumps(format_prices(forening)))
+        except Forening.DoesNotExist:
+            raise BadRequest(
+                u"A forening with object id '%s', does not exist." % request.GET['forening'],
+                code=error_codes.RESOURCE_NOT_FOUND,
+                http_code=404,
+            )
+    elif 'hytte' in request.GET:
+        try:
+            sted = Sted.get(request.GET['hytte'])
+            # TODO: Handle cabins with multiple owners (defaulting to first occurrence for now)
+            forening = Forening.objects.get(turbase_object_id=sted.grupper[0])
+            return HttpResponse(json.dumps(format_prices(forening)))
+        except DocumentNotFound:
+            raise BadRequest(
+                u"A cabin with object id '%s', does not exist." % request.GET['hytte'],
+                code=error_codes.RESOURCE_NOT_FOUND,
+                http_code=404,
+            )
+    else:
+        return HttpResponse(json.dumps([{
+            'object_id': forening.turbase_object_id,
+            'navn': forening.name,
+            'priser': format_prices(forening),
+        } for forening in Forening.objects.filter(type='forening')]))

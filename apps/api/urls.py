@@ -6,6 +6,7 @@ urlpatterns = patterns('',
     url(r'^$', 'page.views.perform_redirect', kwargs={'url': 'https://turistforeningen.atlassian.net/wiki/pages/viewpage.action?pageId=6324280'}),
 
     # Header versioning
+
     url(r'^medlem/$', 'api.views.header_versioning', kwargs={
         'versions': [
             {'version': 'v0', 'resource': 'members'},
@@ -35,6 +36,12 @@ urlpatterns = patterns('',
         ],
         'require_authentication': False,
     }),
+    url(r'^priser/$', 'api.views.header_versioning', kwargs={
+        'versions': [
+            {'version': 'v1', 'resource': 'prices'}
+        ],
+        'require_authentication': False,
+    }),
 
     # URL versioning
 
@@ -44,4 +51,5 @@ urlpatterns = patterns('',
     url(r'^v1/medlemskapspris/$', 'api.views.url_versioning', kwargs={'resource': 'membership_price', 'version': '1', 'require_authentication': False}),
     url(r'^v1/forening/$', 'api.views.url_versioning', kwargs={'resource': 'forening', 'version': '1'}),
     url(r'^v1/medlemsnummer/$', 'api.views.url_versioning', kwargs={'resource': 'memberid', 'version': '1', 'require_authentication': False}),
+    url(r'^v1/priser/$', 'api.views.url_versioning', kwargs={'resource': 'prices', 'version': '1', 'require_authentication': False}),
 )

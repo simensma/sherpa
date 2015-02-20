@@ -49,6 +49,9 @@ class Forening(models.Model):
     gmap_url = models.CharField(max_length=2048, default='') # Temporary - find other ways to display this map!
     facebook_url = models.CharField(max_length=2048, default='')
 
+    # The corresponding object ID in Nasjonal Turbase
+    turbase_object_id = models.CharField(max_length=24, null=True)
+
     # Sometimes we'll need to reference foreninger directly by ID. We'll store a couple of IDs here.
     DNT_CENTRAL_ID = 56
     DNT_FJELLSPORT_ID =60
@@ -161,17 +164,6 @@ class Forening(models.Model):
                 old_url = ''
             cache.set('forening.old_sherpa2_url.%s' % self.id, old_url, 60 * 60 * 24)
         return old_url
-
-    def get_ntb_id(self):
-        """Retrieve the NTB object_id for this forening from Sherpa2"""
-        object_id = cache.get('object_id.forening.%s' % self.id)
-        if object_id is None:
-            try:
-                object_id = NtbId.objects.get(sql_id=self.id, type='G').object_id
-            except NtbId.DoesNotExist:
-                object_id = None
-            cache.set('object_id.forening.%s' % self.id, object_id, 60 * 60 * 24 * 7)
-        return object_id
 
     def get_homepage_site(self, prefetched=False):
         """A forening can have multiple related sites but only one homepage, this method returns the homepage site,
@@ -311,3 +303,32 @@ def validate_forening_save(sender, **kwargs):
     # The following call will raise bubbled exception on error. It would have been the view's responsibility
     # to avoid this error before saving (like a db-enforced DatabaseError)
     kwargs['instance'].validate_relationships()
+
+#
+# Each forening has its own single set of prices for lodging and supplies on their cabins
+#
+
+class SupplyCategory(models.Model):
+    forening = models.ForeignKey('foreninger.Forening', related_name='supply_categories')
+    name = models.CharField(max_length=255)
+
+    def __unicode__(self):
+        return u'%s: %s' % (self.pk, self.name)
+
+class Supply(models.Model):
+    supply_category = models.ForeignKey('foreninger.SupplyCategory', related_name='supplies')
+    name = models.CharField(max_length=255)
+    price_member = models.PositiveIntegerField()
+    price_nonmember = models.PositiveIntegerField()
+
+    def __unicode__(self):
+        return u'%s: %s' % (self.pk, self.name)
+
+class Lodging(models.Model):
+    forening = models.ForeignKey('foreninger.Forening', related_name='lodging_prices')
+    name = models.CharField(max_length=255)
+    price_member = models.PositiveIntegerField()
+    price_nonmember = models.PositiveIntegerField()
+
+    def __unicode__(self):
+        return u'%s: %s' % (self.pk, self.name)

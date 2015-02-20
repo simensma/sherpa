@@ -37,7 +37,7 @@ def get_member_data(user):
         else:
             forening_permissions = [{
                 'sherpa_id': f.id,
-                'object_id': f.get_ntb_id(),
+                'object_id': f.turbase_object_id,
             } for f in user.all_foreninger()]
 
         if user.get_parent() is None:
@@ -105,7 +105,7 @@ def translate_user_payment_status(payment_status):
 def get_forening_data(forening):
     return {
         'sherpa_id': forening.id,
-        'object_id': forening.get_ntb_id(),
+        'object_id': forening.turbase_object_id,
         'navn': forening.name,
         'type': forening.type,
         'gruppetype': forening.group_type,
