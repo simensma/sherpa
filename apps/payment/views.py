@@ -51,5 +51,9 @@ def create_transaction(request):
     # The price to DIBS is provided in øre
     amount *= 100
 
-    # TODO response
-    raise NotImplementedError
+    return HttpResponse(json.dumps({
+        'MAC': None,
+        'ticket': None,
+        'callbackUrl': None,
+        'orderId': None,
+    }))
