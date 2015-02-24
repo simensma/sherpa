@@ -249,6 +249,7 @@ INSTALLED_APPS = (
     'fotokonkurranse',
     'turbasen',
     'montis',
+    'payment',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
