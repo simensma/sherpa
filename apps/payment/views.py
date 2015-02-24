@@ -55,8 +55,12 @@ def create_transaction(request):
     # The price to DIBS is provided in øre
     amount *= 100
 
-    # TODO: Generate the correct message
-    message = 'TBD'
+    # TODO: we'll need all input parameters to be posted by the client to DIBS here
+    input_parameters = {}
+
+    sorted_pairs = sorted(input_parameters.items(), key=lambda i: i[0])
+    sorted_string = [u"%s=%s" % (i[0], i[1]) for i in sorted_pairs]
+    message = u'&'.join(sorted_string).encode('utf-8')
 
     MAC = hmac.new(settings.DIBS_HMAC_KEY.decode('hex'), message, hashlib.sha256).hexdigest()
 
