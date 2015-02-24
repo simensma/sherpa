@@ -244,6 +244,7 @@ INSTALLED_APPS = (
     'turbasen',
     'montis',
     'payment',
+    'oauth2_provider',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
