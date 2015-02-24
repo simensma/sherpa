@@ -1,6 +1,7 @@
 # encoding: utf-8
 import json
 
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 
 from focus.models import Actor, Enrollment
@@ -54,6 +55,12 @@ def create_transaction(request):
     return HttpResponse(json.dumps({
         'MAC': None,
         'ticket': None,
-        'callbackUrl': None,
+        'callbackUrl': 'https://%s%s' % (
+            request.site.domain,
+            reverse('payment.views.callback_endpoint')
+        ),
         'orderId': None,
     }))
+
+def callback_endpoint(request):
+    raise NotImplementedError
