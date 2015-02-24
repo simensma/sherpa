@@ -1,6 +1,9 @@
 # encoding: utf-8
 import json
+import hmac
+import hashlib
 
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 
@@ -52,8 +55,13 @@ def create_transaction(request):
     # The price to DIBS is provided in øre
     amount *= 100
 
+    # TODO: Generate the correct message
+    message = 'TBD'
+
+    MAC = hmac.new(settings.DIBS_HMAC_KEY.decode('hex'), message, hashlib.sha256).hexdigest()
+
     return HttpResponse(json.dumps({
-        'MAC': None,
+        'MAC': MAC,
         'ticket': None,
         'callbackUrl': 'https://%s%s' % (
             request.site.domain,
