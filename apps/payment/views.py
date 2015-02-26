@@ -92,7 +92,7 @@ def create_transaction(request):
         'MAC': MAC,
         'ticket': None, # TODO: if authenticated, return user's DIBS ticket
         'callbackUrl': callback_url,
-        'orderId': None,
+        'orderId': cabin_visit.order_number,
     }))
 
 def callback_endpoint(request):
