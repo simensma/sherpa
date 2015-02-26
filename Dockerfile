@@ -31,7 +31,7 @@ RUN pip install --src /tmp --allow-external pyodbc --allow-unverified pyodbc -r 
 ADD manage.py /sherpa/manage.py
 CMD ["gunicorn -b tcp://0.0.0.0:8000 sherpa.wsgi:application"]
 
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN apt-get -y autoclean && apt-get -y autoremove && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 EXPOSE 8000
 
