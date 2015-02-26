@@ -23,6 +23,7 @@ RUN pip install --src /tmp --allow-external pyodbc --allow-unverified pyodbc -r 
 #  ln -s /usr/lib/python2.7/dist-packages/pyexiv2 /sherpa/env/lib/python2.7/site-packages/pyexiv2 && \
 #  ln -s /usr/lib/python2.7/dist-packages/libexiv2python.so /sherpa/env/lib/python2.7/site-packages/libexiv2python.so
 
+ADD manage.py /sherpa/manage.py
 CMD ["gunicorn -b tcp://0.0.0.0:8000 sherpa.wsgi:application"]
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
