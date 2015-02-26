@@ -1,0 +1,59 @@
+data:
+  image: busybox
+  volumes:
+    - /var/lib/postgresql/data
+  entrypoint: /bin/true
+
+logs:
+  image: busybox
+  volumes:
+    - /logs/sherpa
+    - /logs/nginx
+  entrypoint: /bin/true
+
+focus:
+  image: turistforeningen/sherpa-focus:latest
+  volumes:
+    - /private-data:/private-data
+
+postgres:
+  image: turistforeningen/sherpa-postgres:latest
+  volumes_from:
+    - data
+
+psql:
+  image: turistforeningen/sherpa-postgres:latest
+  volumes:
+    - /private-data:/private-data
+  links:
+    - postgres
+  command: echo "Use 'fig run psql ./import-prod.sh' instead"
+
+www:
+  image: turistforeningen/sherpa-nginx:latest
+  links:
+    - django:sherpa
+  volumes_from:
+    - logs
+  volumes:
+    - static:/sherpa/static:ro
+  ports:
+    - "8080"
+
+django:
+  build: .
+  links:
+    - postgres:postgres
+  #  - focus:focus
+  volumes_from:
+    - logs
+  volumes:
+    - apps/:/sherpa/apps
+    - locale/:sherpa/locale
+    - sherpa/:sherpa/sherpa
+    - templates/:sherpa/templates
+  environment:
+    DJANGO_SETTINGS_MODULE: sherpa.settings
+    PYTHONUNBUFFERED: 0
+  command: /sbin/my_init -- gunicorn --reload --debug --log-level debug -b tcp://0.0.0.0:8000 sherpa.wsgi:application
+
