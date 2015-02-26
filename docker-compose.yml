@@ -56,5 +56,5 @@ django:
   environment:
     DJANGO_SETTINGS_MODULE: sherpa.settings
     PYTHONUNBUFFERED: 0
-  command: /sbin/my_init -- gunicorn --reload --debug --log-level debug -b tcp://0.0.0.0:8000 sherpa.wsgi:application
+  command: gunicorn --reload --debug --log-level debug -b tcp://0.0.0.0:8000 sherpa.wsgi:application
 
