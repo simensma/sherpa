@@ -10,7 +10,7 @@ from django.http import HttpResponse
 from focus.models import Actor, Enrollment
 from foreninger.models import Forening, Supply
 from turbasen.models import Sted
-from user.models import User
+from user.models import User, CabinVisit, CabinVisitor
 
 def create_transaction(request):
     """This view is called by the phone app to initiate a new transaction"""
@@ -20,8 +20,19 @@ def create_transaction(request):
     # TODO: Handle cabins with multiple owners (defaulting to first occurrence for now)
     forening = Forening.objects.get(turbase_object_id=sted.grupper[0])
 
+    cabin_visit = CabinVisit(
+        order_number=CabinVisit.generate_order_number(),
+    )
+    cabin_visit.save()
+
     amount = 0
     for gjest in transaction['gjester']:
+        cabin_visitor = CabinVisitor(
+            cabin_visit=cabin_visit,
+            protocol_number=gjest['protokollnummer'],
+        )
+        cabin_visitor.save()
+
         if gjest['medlemsnummer'] is None:
             is_member = False
         else:
@@ -31,6 +42,9 @@ def create_transaction(request):
                     # TODO: confirm in the client that one or more users aren't valid
                     raise NotImplementedError
                 is_member = True
+
+                cabin_visitor.user = user
+                cabin_visitor.save()
             except (Actor.DoesNotExist, Enrollment.DoesNotExist):
                 # TODO: handle invalid memberid
                 raise NotImplementedError
