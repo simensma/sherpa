@@ -967,7 +967,7 @@ class CabinVisit(models.Model):
         return uuid.uuid4()
 
 class CabinVisitor(models.Model):
-    cabin_visit = models.ForeignKey('user.CabinVisit')
+    cabin_visit = models.ForeignKey('user.CabinVisit', related_name='visitors')
     protocol_number = models.PositiveIntegerField()
 
     # If the user reference is null, the user opted to not login/register and is considered a non-member
