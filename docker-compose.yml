@@ -14,7 +14,7 @@ logs:
 focus:
   image: turistforeningen/sherpa-focus:latest
   volumes:
-    - private-data:/private-data
+    - private-data:/private-data:ro
 
 postgres:
   image: turistforeningen/sherpa-postgres:latest
@@ -24,7 +24,7 @@ postgres:
 psql:
   image: turistforeningen/sherpa-postgres:latest
   volumes:
-    - private-data:/private-data
+    - private-data:/private-data:ro
   links:
     - postgres
   command: echo "Use 'fig run psql ./import-prod.sh' instead"
@@ -52,7 +52,7 @@ django:
     - locale/:sherpa/locale
     - sherpa/:sherpa/sherpa
     - templates/:sherpa/templates
-    - private-data:/private-data
+    - private-data:/private-data:ro
   environment:
     DJANGO_SETTINGS_MODULE: sherpa.settings
     PYTHONUNBUFFERED: 0
