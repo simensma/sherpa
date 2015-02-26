@@ -55,8 +55,18 @@ def create_transaction(request):
     # The price to DIBS is provided in øre
     amount *= 100
 
-    # TODO: we'll need all input parameters to be posted by the client to DIBS here
-    input_parameters = {}
+    callback_url = u'https://%s%s' % (
+        request.site.domain,
+        reverse('payment.views.callback_endpoint')
+    )
+
+    input_parameters = {
+        u'acceptReturnUrl': u'', # TODO
+        u'amount': amount,
+        u'callbackUrl': callback_url,
+        u'currency': u'NOK', # ISO 4217
+        u'merchant': settings.DIBS_MERCHANT_ID,
+    }
 
     sorted_pairs = sorted(input_parameters.items(), key=lambda i: i[0])
     sorted_string = [u"%s=%s" % (i[0], i[1]) for i in sorted_pairs]
@@ -67,10 +77,7 @@ def create_transaction(request):
     return HttpResponse(json.dumps({
         'MAC': MAC,
         'ticket': None,
-        'callbackUrl': 'https://%s%s' % (
-            request.site.domain,
-            reverse('payment.views.callback_endpoint')
-        ),
+        'callbackUrl': callback_url,
         'orderId': None,
     }))
 
