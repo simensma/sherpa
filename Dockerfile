@@ -3,9 +3,10 @@ FROM python:2.7
 ENV HOME /root
 
 RUN apt-get update
-RUN apt-get -y --no-install-recommends install g++ && \
-    libodbc1 unixodbc unixodbc-dev freetds-common tdsodbc && \
-    libgeos-dev libfreetype6-dev gettext libexiv2-dev && \
+RUN apt-get -y --no-install-recommends install g++ \
+    libmemcached-dev \
+    libodbc1 unixodbc unixodbc-dev freetds-common tdsodbc \
+    libgeos-dev libfreetype6-dev gettext libexiv2-dev \
     python-libxml2 python-libxslt1 python-pyexiv2 && \
     # freetype2 symlink required for building Pillow
     ln -s /usr/include/freetype2 /usr/include/freetype2/freetype
