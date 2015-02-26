@@ -27,7 +27,7 @@ psql:
     - private-data:/private-data:ro
   links:
     - postgres
-  command: echo "Use 'fig run psql ./import-prod.sh' instead"
+  command: echo "Use 'docker-compose run psql ./import-prod.sh' instead"
 
 www:
   image: turistforeningen/sherpa-nginx:latest
