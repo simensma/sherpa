@@ -3,6 +3,7 @@ from itertools import groupby
 from datetime import datetime, date
 import json
 import re
+import uuid
 
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
@@ -954,3 +955,28 @@ class Instruktor(models.Model):
 
     def __unicode__(self):
         return u'%s' % self.pk
+
+class CabinVisit(models.Model):
+    order_number = models.CharField(max_length=45) # UUID URN
+    transaction_id = models.CharField(max_length=100)
+    datetime = models.DateTimeField(auto_now_add=True)
+
+    @staticmethod
+    def generate_order_number():
+        return uuid.uuid4()
+
+class CabinVisitor(models.Model):
+    cabin_visit = models.ForeignKey('user.CabinVisit')
+    protocol_number = models.PositiveIntegerField()
+
+    # If the user reference is null, the user opted to not login/register and is considered a non-member
+    user = models.ForeignKey('user.User', null=True)
+
+    def is_registered(self):
+        return self.user is not None
+
+    def is_member(self):
+        if not self.is_registered():
+            return False
+        else:
+            return self.user.is_member()
