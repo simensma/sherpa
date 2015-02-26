@@ -957,7 +957,7 @@ class Instruktor(models.Model):
         return u'%s' % self.pk
 
 class CabinVisit(models.Model):
-    order_number = models.CharField(max_length=45) # UUID URN
+    order_number = models.CharField(max_length=45) # RFC 4122 UUID URN
     # transaction_id null means the order was initiated but never completed
     transaction_id = models.CharField(max_length=100, null=True)
     datetime = models.DateTimeField(auto_now_add=True)
