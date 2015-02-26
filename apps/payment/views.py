@@ -90,7 +90,7 @@ def create_transaction(request):
 
     return HttpResponse(json.dumps({
         'MAC': MAC,
-        'ticket': None,
+        'ticket': None, # TODO: if authenticated, return user's DIBS ticket
         'callbackUrl': callback_url,
         'orderId': None,
     }))
