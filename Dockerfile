@@ -2,8 +2,7 @@ FROM python:2.7
 
 ENV HOME /root
 
-RUN apt-get update && \
-    apt-get -y --no-install-recommends dist-upgrade
+RUN apt-get update
 RUN apt-get -y --no-install-recommends install g++ && \
     libodbc1 unixodbc unixodbc-dev freetds-common tdsodbc && \
     libgeos-dev libfreetype6-dev gettext libexiv2-dev && \
