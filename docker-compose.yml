@@ -32,7 +32,7 @@ psql:
 www:
   image: turistforeningen/sherpa-nginx:latest
   links:
-    - django:sherpa
+    - sherpa
   volumes_from:
     - logs
   volumes:
@@ -40,7 +40,7 @@ www:
   ports:
     - "8080"
 
-django:
+sherpa:
   build: .
   links:
     - postgres:postgres
