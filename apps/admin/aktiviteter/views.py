@@ -283,7 +283,7 @@ def edit(request, aktivitet):
             # Explicit delete of dates
             if date['status'] == 'delete':
                 if date['id'] != '':
-                    if model.total_signup_count() > 0:
+                    if model.participant_count() > 0:
                         raise Exception("Date with participants can not be deleted!")
                     model.delete()
                 continue
@@ -322,13 +322,13 @@ def edit(request, aktivitet):
                     model.signup_deadline = None
                     model.cancel_deadline = None
 
-                elif date['signup_method'] == 'minside' or date['signup_method'] == 'simple':
+                elif date['signup_method'] == 'normal' or date['signup_method'] == 'simple':
                     model.signup_enabled = True
 
-                    if date.get('signup_max_allowed_limited'):
-                        model.signup_max_allowed = date['signup_max_allowed']
+                    if date.get('max_participants_limited'):
+                        model.max_participants = date['max_participants']
                     else:
-                        model.signup_max_allowed = None
+                        model.max_participants = None
 
                     if date.get('no_signup_start') == '1':
                         model.signup_start = None
@@ -468,7 +468,7 @@ def edit_date_preview(request):
     except ValueError:
         # This isn't a big problem for the preview, so just return an error at this point - the client-side will handle it
         raise PermissionDenied
-    fake_date_representation['signup_enabled'] = fake_date_representation['signup_type'] == 'minside' or fake_date_representation['signup_type'] == 'simple'
+    fake_date_representation['signup_enabled'] = fake_date_representation['signup_type'] == 'normal' or fake_date_representation['signup_type'] == 'simple'
     fake_date_representation['signup_simple_allowed'] = fake_date_representation['signup_type'] == 'simple'
     fake_date_representation['turledere'] = {
         'all': fake_date_representation['turledere']

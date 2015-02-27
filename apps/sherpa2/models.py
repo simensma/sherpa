@@ -1186,7 +1186,7 @@ class ActivityDate(models.Model):
     def get_signup_date_to(self):
         return datetime.strptime(self.signup_date_to.strip(), "%Y-%m-%d").date()
 
-    def is_waitinglist(self):
+    def is_fully_booked(self):
         """Returns True if this date is fully booked, and any subsequent bookings would be put on a waitinglist"""
         return self.participant_count() >= self.booking
 
@@ -1224,14 +1224,14 @@ class ActivityDate(models.Model):
         if self.convert_signup_enabled():
             date.signup_enabled = True
             date.signup_montis = self.convert_signup_montis(date.aktivitet.code)
-            date.signup_max_allowed = self.convert_signup_max_allowed()
+            date.max_participants = self.convert_max_participants()
             date.signup_start = self.convert_signup_start()
             date.signup_deadline = self.convert_signup_deadline()
             date.cancel_deadline = self.convert_cancel_deadline()
         else:
             date.signup_enabled = False
             date.signup_montis = False
-            date.signup_max_allowed = None
+            date.max_participants = None
             date.signup_start = None
             date.signup_deadline = None
             date.cancel_deadline = None
@@ -1309,7 +1309,7 @@ class ActivityDate(models.Model):
         except ValueError:
             return None
 
-    def convert_signup_max_allowed(self):
+    def convert_max_participants(self):
         if self.booking == 0:
             return None
         if self.booking < 0:

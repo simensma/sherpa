@@ -47,10 +47,10 @@ class AktivitetDate(object):
         self.spots_available = spots_available
         self.waitinglist_count = waitinglist_count
 
-    def is_waitinglist(self):
+    def is_fully_booked(self):
         return self.spots_available <= 0
 
-    def total_signup_count(self):
+    def participant_count(self):
         return self.spots_total - self.spots_available
 
     @staticmethod
