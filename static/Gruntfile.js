@@ -51,9 +51,13 @@ module.exports = function (grunt) {
           '<%= yeoman.polymer.src %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
         ]
       },
+      html: {
+        files: ['<%= yeoman.polymer.src %>/elements/{,*/}*.html'],
+        tasks: ['copy:dist']
+      },
       js: {
         files: ['<%= yeoman.polymer.src %>/scripts/{,*/}*.js'],
-        tasks: ['jshint']
+        tasks: ['jshint', 'copy:dist']
       },
       styles: {
         files: [
