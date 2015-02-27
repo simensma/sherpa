@@ -41,7 +41,10 @@ def reorder(request, site):
 
 def children(request, site):
     active_site = Site.objects.get(id=site)
-    versions = Version.objects.filter(variant__page__parent=request.POST['page_id'], active=True).order_by('variant__page__title')
+    versions = Version.objects.filter(
+        variant__page__parent=request.POST['page_id'],
+        active=True,
+    ).order_by('variant__page__title')
     context = RequestContext(request, {
         'active_site': active_site,
         'versions': versions,
