@@ -15,8 +15,10 @@ $(function() {
     article.find("div.content.image").each(function() {
         if(JSON.parse($(this).attr('data-json')).crop !== undefined) {
             cropContent($(this));
+
+            // Cropped images are initially hidden; redisplay it
+            $(this).css('display', '');
         }
-        $(this).css('display', '');
     });
 
     // Highlight contenteditables that are being edited
