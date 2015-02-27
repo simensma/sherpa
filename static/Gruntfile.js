@@ -360,10 +360,6 @@ module.exports = function (grunt) {
     'minifyHtml'
   ]);
 
-  grunt.registerTask('default', [
-    'jshint',
-    // 'test'
-    'build'
-  ]);
+  grunt.registerTask('default', ['jshint', 'build', 'watch']);
 
 };
