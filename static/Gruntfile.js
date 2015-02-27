@@ -2,7 +2,6 @@
 var LIVERELOAD_PORT = 35729;
 var lrSnippet = require('connect-livereload')({port: LIVERELOAD_PORT});
 var mountFolder = function (dir) {
-  console.log('dir', dir, typeof dir);
   return require('serve-static')(require('path').resolve(dir));
 };
 
