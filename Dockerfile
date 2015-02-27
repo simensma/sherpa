@@ -24,7 +24,6 @@ RUN mv -v /build/odbcinst.ini /etc/odbcinst.ini && \
 WORKDIR /sherpa
 
 # Install python packages
-ADD manage.py /sherpa/manage.py
 ADD requirements.txt /sherpa/requirements.txt
 RUN pip install --src /tmp --allow-external pyodbc --allow-unverified pyodbc -r requirements.txt
 
