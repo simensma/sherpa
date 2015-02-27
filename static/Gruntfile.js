@@ -25,7 +25,10 @@ module.exports = function (grunt) {
       src: 'polymer/src',
       dist: 'polymer/dist'
     },
-    less: 'less'
+    less: {
+      src: 'less',
+      dist: 'css'
+    }
   };
 
   grunt.initConfig({
@@ -106,14 +109,13 @@ module.exports = function (grunt) {
         options: {
           compile: true
         },
-        files: {
-          "css/public.css": "less/public.less",
-          "css/admin.css": "less/admin.less",
-          "css/editor.css": "less/editor.less",
-          "css/print.css": "less/print.less",
-          "css/500.css": "less/500.less",
-          "css/ie7.css": "less/ie7.less"
-        }
+        files:[{
+          expand: true,
+          cwd: './',
+          src: '<%= yeoman.less.src %>/*.less',
+          dest: '<%= yeoman.less.dist %>/',
+          ext: '.css'
+        }]
       }
     },
     autoprefixer: {
