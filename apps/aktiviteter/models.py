@@ -351,10 +351,20 @@ class AktivitetDate(models.Model):
     #
 
     def has_departed(self):
-        return self.start_date < datetime.now()
+        if self.aktivitet.is_imported():
+            # Dates imported from sherpa2 don't have the time of day for departure recorded, so don't assume it's
+            # departed until midnight after the set departure date
+            return self.start_date.date() < date.today()
+        else:
+            return self.start_date < datetime.now()
 
     def has_returned(self):
-        return self.end_date < datetime.now()
+        if self.aktivitet.is_imported():
+            # Dates imported from sherpa2 don't have the time of day for departure recorded, so don't assume it's
+            # returned until midnight after the set return date
+            return self.end_date.date() < date.today()
+        else:
+            return self.end_date < datetime.now()
 
     def signup_starts_immediately(self):
         return self.signup_enabled and self.signup_start is None
