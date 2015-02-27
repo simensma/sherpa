@@ -37,7 +37,15 @@
                 In case the user changes the column size we want the image to keep its quality.
               {% endcomment %}
 
-              <div class="content image" data-json="{{ content.content }}" data-id="{{ content.id }}">
+              <div
+                class="content image"
+                data-json="{{ content.content }}"
+                data-id="{{ content.id }}"
+                {# Hide the element initially if cropped, and display it after cropping is applied #}
+                {% if content.get_cropping_json %}
+                  style="display: none;"
+                {% endif %}>
+
                 {% if content.get_content.anchor %}
                   <a href="{{ content.get_content.anchor }}">
                     <img src="{{ content.get_content.src }}" alt="{{ content.get_content.description }}">
