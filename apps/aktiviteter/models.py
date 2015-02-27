@@ -63,6 +63,8 @@ class Aktivitet(models.Model):
     # aktivitet, and all administration is from now done through Sherpa 3. Although this isn't applicable for
     # aktiviteter created in Sherpa 3, it's still set to False for them (instead of null which could be considered
     # more semantically correct).
+    # TODO: Above comment is the general idea, but not implemented (the field is currently false for all objects and
+    # not in use)
     sherpa2_signup = models.BooleanField(default=False)
 
     objects = models.GeoManager()
