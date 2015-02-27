@@ -11,10 +11,10 @@ logs:
     - /logs/nginx
   entrypoint: /bin/true
 
-focus:
-  image: turistforeningen/sherpa-focus:latest
-  volumes:
-    - private-data:/private-data:ro
+#focus:
+#  image: turistforeningen/sherpa-focus:latest
+#  volumes:
+#    - private-data:/private-data:ro
 
 postgres:
   image: turistforeningen/sherpa-postgres:latest
