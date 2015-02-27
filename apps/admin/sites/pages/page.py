@@ -23,7 +23,7 @@ def list(request, site):
     context = {
         'active_site': active_site,
         'nodes': pages,
-        'root_node': root_page
+        'root_node': root_page,
     }
     return render(request, 'common/admin/sites/pages/list.html', context)
 
@@ -35,7 +35,7 @@ def reorder(request, site):
             lft=page['left'],
             rght=page['right'],
             parent=page['parent_id'],
-            level=page['depth']
+            level=page['depth'],
         )
     return HttpResponse(json.dumps({'success': True}))
 
@@ -128,7 +128,7 @@ def edit(request, site, version):
         'pages': pages,
         'root_page': root_page,
         'is_editing_root_page': is_editing_root_page,
-        'image_search_length': settings.IMAGE_SEARCH_LENGTH
+        'image_search_length': settings.IMAGE_SEARCH_LENGTH,
     }
     context.update(url_picker_context(active_site))
 
