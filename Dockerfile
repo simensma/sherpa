@@ -4,9 +4,8 @@ ENV HOME /root
 
 RUN apt-get update
 RUN apt-get -y --no-install-recommends install \
-    libmemcached-dev \
     libodbc1 unixodbc unixodbc-dev freetds-common tdsodbc \
-    libgeos-dev gettext libexiv2-dev \
+    libgeos-dev gettext libexiv2-dev libmemcached-dev \
     python-libxml2 python-libxslt1 python-pyexiv2 libboost-python-dev && \
 
     # freetype2 symlink required for building Pillow
