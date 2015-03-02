@@ -1,5 +1,11 @@
 (function () {
   Polymer({
-    // define element prototype here
+
+    /* Functions */
+
+    navigateTo: function(event, detail, sender) {
+        this.state.step = 'summary';
+    }
+
   });
 })();
