@@ -6,6 +6,13 @@
     <link rel="stylesheet" href="dnt-aktivitet-signup.css">
 
     <dnt-aktivitet-signup-nav aktivitet="{{aktivitet}}"></dnt-aktivitet-signup-nav>
+
+    <div class="steps">
+      <dnt-aktivitet-signup-participants aktivitet="{{aktivitet}}"></dnt-aktivitet-signup-participants>
+      <dnt-aktivitet-signup-summary aktivitet="{{aktivitet}}"></dnt-aktivitet-signup-summary>
+      <dnt-aktivitet-signup-receipt aktivitet="{{aktivitet}}"></dnt-aktivitet-signup-receipt>
+    </div>
+
   </template>
   <script src="dnt-aktivitet-signup.js"></script>
 </polymer-element>
