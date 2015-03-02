@@ -1,5 +1,7 @@
 (function () {
   Polymer({
-    // define element prototype here
+    aktivitet: {
+        title: 'På ski i Huldreheimen',
+    }
   });
 })();
