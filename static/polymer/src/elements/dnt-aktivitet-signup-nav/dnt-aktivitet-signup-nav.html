@@ -1,8 +1,14 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 
-<polymer-element name="dnt-aktivitet-signup-nav" attributes="">
+<polymer-element name="dnt-aktivitet-signup-nav" attributes="aktivitet">
   <template>
     <link rel="stylesheet" href="dnt-aktivitet-signup-nav.css">
+    <ul>
+      <li>{{aktivitet.title}}</li>
+      <li>Deltakere</li>
+      <li>Oppsummering</li>
+      <li>Kvittering</li>
+    </ul>
   </template>
   <script src="dnt-aktivitet-signup-nav.js"></script>
 </polymer-element>
