@@ -43,6 +43,10 @@
 <script src="{{ STATIC_URL }}lib/jQuery.SSR/jQuery.SSR.js"></script>
 <script src="{{ STATIC_URL }}lib/xmlToJSON/xmlToJSON.js"></script>
 
+{# Include web components and Polymer elements #}
+<script src="{{ STATIC_URL }}bower_components/webcomponentsjs/webcomponents.js"></script>
+<link rel="import" href="{{ STATIC_URL }}polymer/dist/elements/elements.html">
+
 {# Our lib-ish scripts #}
 <script src="{{ STATIC_URL }}js/lib/zipcode.js"></script>
 <script src="{{ STATIC_URL }}js/lib/image-cropping.js"></script>
