@@ -4,7 +4,7 @@
     /* Data model */
 
     ready: function() {
-        this.aktivitet: {
+        this.aktivitet = {
             title: 'På ski i Huldreheimen',
         };
 
