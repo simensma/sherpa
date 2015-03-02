@@ -5,7 +5,6 @@ local_settings.py
 fabfile_settings.py
 dnt.db
 env/
-static/css/
 *~
 *.mo
 *.sublime-project
@@ -13,3 +12,9 @@ static/css/
 *.swp
 *.swo
 .DS_Store
+static/.sass-cache
+static/.tmp
+static/node_modules/
+static/bower_components/
+static/css/
+static/polymer/dist/
