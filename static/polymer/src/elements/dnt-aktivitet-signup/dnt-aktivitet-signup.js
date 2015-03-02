@@ -3,18 +3,15 @@
 
     /* Data model */
 
-    aktivitet: {
-        title: 'På ski i Huldreheimen',
-    },
-    state: {
-        step: 'participants',
-    },
+    ready: function() {
+        this.aktivitet: {
+            title: 'På ski i Huldreheimen',
+        };
 
-    /* Functions */
-
-    navigateTo: function(step) {
-        this.state.step = step;
-    }
+        this.state = {
+            step: 'participants',
+        };
+    },
 
   });
 })();
