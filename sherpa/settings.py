@@ -5,7 +5,7 @@ import sys
 # Add apps directory to sys.path
 sys.path.insert(1, "%s/apps" % sys.path[0])
 
-_configuration = os.environ.get('DJANGO_CONFIGURATION', 'dev').lower()
+_configuration = os.environ.get('DJANGO_CONFIGURATION', 'prod').lower()
 
 if _configuration == 'prod':
     from sherpa.conf.prod import *
