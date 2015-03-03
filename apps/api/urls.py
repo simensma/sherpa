@@ -2,12 +2,13 @@ from django.conf.urls import patterns, include, url
 
 from tastypie.api import Api
 
-from .resources import AktivitetResource
+from .resources import AktivitetResource, AktivitetDateResource
 
 supported_versions = ['v0', 'v1']
 
 v2_api = Api(api_name='v2')
 v2_api.register(AktivitetResource())
+v2_api.register(AktivitetDateResource())
 
 urlpatterns = patterns('',
     url(r'^$', 'page.views.perform_redirect', kwargs={'url': 'https://turistforeningen.atlassian.net/wiki/pages/viewpage.action?pageId=6324280'}),
