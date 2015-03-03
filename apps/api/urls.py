@@ -1,10 +1,13 @@
 from django.conf.urls import patterns, include, url
 
+from tastypie.api import Api
+
 from .resources import AktivitetResource
 
 supported_versions = ['v0', 'v1']
 
-aktivitet_resource = AktivitetResource()
+v2_api = Api(api_name='v2')
+v2_api.register(AktivitetResource())
 
 urlpatterns = patterns('',
     url(r'^$', 'page.views.perform_redirect', kwargs={'url': 'https://turistforeningen.atlassian.net/wiki/pages/viewpage.action?pageId=6324280'}),
@@ -58,5 +61,5 @@ urlpatterns = patterns('',
     url(r'^v1/medlemsnummer/$', 'api.views.url_versioning', kwargs={'resource': 'memberid', 'version': '1', 'require_authentication': False}),
     url(r'^v1/priser/$', 'api.views.url_versioning', kwargs={'resource': 'prices', 'version': '1', 'require_authentication': False}),
 
-    url(r'^v2/', include(aktivitet_resource.urls)),
+    url(r'^', include(v2_api.urls)),
 )
