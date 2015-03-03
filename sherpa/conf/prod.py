@@ -244,6 +244,7 @@ INSTALLED_APPS = (
     'turbasen',
     'montis',
     'payment',
+    'tastypie',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
