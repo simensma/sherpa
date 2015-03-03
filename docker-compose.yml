@@ -58,3 +58,16 @@ sherpa:
     PYTHONUNBUFFERED: 0
   command: gunicorn --reload --debug --log-level debug -b tcp://0.0.0.0:8000 sherpa.wsgi:application
 
+builder:
+  build: static/
+  volumes:
+    - static/package.json:/usr/src/app/package.json
+    - static/Gruntfile.js:/usr/src/app/Gruntfile.js
+    - static/less:/usr/src/app/less
+    - static/css:/usr/src/app/css
+    - static/lib:/usr/src/app/lib
+    - static/dist:/usr/src/app/dist
+  environment:
+    NODE_ENV: development
+  command: /bin/true
+
