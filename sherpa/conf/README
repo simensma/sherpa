@@ -1,0 +1,5 @@
+Add the following files in this directory:
+
+secret_prod.py:  Production secret settings
+secret_dev.py:   Development secret settings
+private.py:      Personal settings overrides (optional)
