@@ -5,7 +5,7 @@ from util import requested_representation_from_header, requested_representation_
 from util import authenticate, invalid_authentication_exception, invalid_version_response
 from util import vendor_media_type
 from exceptions import BadRequest
-import api
+import resources_tailored
 
 @csrf_exempt
 def header_versioning(request, versions, require_authentication=True):
@@ -33,6 +33,6 @@ def url_versioning(request, resource, version, require_authentication=True):
 
 def call_api(request, resource, version, format):
     # We'll just let an unhandled exception be raised here if we ever call a non-existing resource
-    response = getattr(api, resource)(request, version, format)
+    response = getattr(resources_tailored, resource)(request, version, format)
     response['Content-Type'] = "%s.%s+%s; charset=utf-8" % (vendor_media_type, version, format)
     return response
