@@ -1,6 +1,10 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import patterns, include, url
+
+from .resources import AktivitetResource
 
 supported_versions = ['v0', 'v1']
+
+aktivitet_resource = AktivitetResource()
 
 urlpatterns = patterns('',
     url(r'^$', 'page.views.perform_redirect', kwargs={'url': 'https://turistforeningen.atlassian.net/wiki/pages/viewpage.action?pageId=6324280'}),
@@ -46,10 +50,13 @@ urlpatterns = patterns('',
     # URL versioning
 
     url(r'^v0/medlem/$', 'api.views.url_versioning', kwargs={'resource': 'members', 'version': '0'}),
+
     url(r'^v1/medlem/$', 'api.views.url_versioning', kwargs={'resource': 'members', 'version': '1'}),
     url(r'^v1/medlemskap/$', 'api.views.url_versioning', kwargs={'resource': 'membership', 'version': '1', 'require_authentication': False}),
     url(r'^v1/medlemskapspris/$', 'api.views.url_versioning', kwargs={'resource': 'membership_price', 'version': '1', 'require_authentication': False}),
     url(r'^v1/forening/$', 'api.views.url_versioning', kwargs={'resource': 'forening', 'version': '1'}),
     url(r'^v1/medlemsnummer/$', 'api.views.url_versioning', kwargs={'resource': 'memberid', 'version': '1', 'require_authentication': False}),
     url(r'^v1/priser/$', 'api.views.url_versioning', kwargs={'resource': 'prices', 'version': '1', 'require_authentication': False}),
+
+    url(r'^v2/', include(aktivitet_resource.urls)),
 )
