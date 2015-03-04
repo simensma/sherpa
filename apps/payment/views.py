@@ -108,6 +108,7 @@ def create_transaction(request):
         'callbackUrl': callback_url,
         'orderId': cabin_visit.order_number,
         'acceptReturnUrl': accept_return_url,
+        'amount': amount,
     }))
 
 def callback_endpoint(request):
