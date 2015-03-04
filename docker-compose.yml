@@ -54,6 +54,7 @@ sherpa:
     - templates/:sherpa/templates
     - private-data:/private-data:ro
   environment:
+    DJANGO_CONFIGURATION: dev
     DJANGO_SETTINGS_MODULE: sherpa.settings
     PYTHONUNBUFFERED: 0
   command: gunicorn --reload --debug --log-level debug -b tcp://0.0.0.0:8000 sherpa.wsgi:application
