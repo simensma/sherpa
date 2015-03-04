@@ -106,6 +106,7 @@ def create_transaction(request):
         'ticket': None, # TODO: if authenticated, return user's DIBS ticket
         'callbackUrl': callback_url,
         'orderId': cabin_visit.order_number,
+        'acceptReturnUrl': accept_return_url,
     }))
 
 def callback_endpoint(request):
