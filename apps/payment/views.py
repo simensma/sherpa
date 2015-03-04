@@ -14,6 +14,15 @@ from user.models import User, CabinVisit, CabinVisitor
 
 def create_transaction(request):
     """This view is called by the phone app to initiate a new transaction"""
+    if request.method == 'OPTIONS':
+        # Handle CORS preflight
+        request_headers = request.META.get('HTTP_ACCESS_CONTROL_REQUEST_HEADERS')
+        response = HttpResponse()
+        if request_headers is not None:
+            response['Access-Control-Allow-Headers'] = request_headers
+        response['Access-Control-Allow-Method'] = 'POST'
+        return response
+
     transaction = json.loads(request.POST['data'])
 
     sted = Sted.get(transaction['hytte'])
