@@ -6,12 +6,14 @@ import hashlib
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 
 from focus.models import Actor, Enrollment
 from foreninger.models import Forening, Supply
 from turbasen.models import Sted
 from user.models import User, CabinVisit, CabinVisitor
 
+@csrf_exempt
 def create_transaction(request):
     """This view is called by the phone app to initiate a new transaction"""
     if request.method == 'OPTIONS':
