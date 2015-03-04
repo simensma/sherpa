@@ -1,8 +1,5 @@
 # encoding: utf-8
 
-# Extend and potentially override production settings
-from .prod import *
-
 TEMPLATE_DEBUG = DEBUG = True
 INTERNAL_IPS = ('127.0.0.1',)
 
