@@ -93,6 +93,7 @@ def create_transaction(request):
         u'callbackUrl': callback_url,
         u'currency': u'NOK', # ISO 4217
         u'merchant': settings.DIBS_MERCHANT_ID,
+        u'test': 1, # Temporary; triggers test-environment at DIBS
     }
 
     sorted_pairs = sorted(input_parameters.items(), key=lambda i: i[0])
