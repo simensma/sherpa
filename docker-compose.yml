@@ -67,7 +67,7 @@ builder:
     - static/less:/usr/src/app/less
     - static/css:/usr/src/app/css
     - static/lib:/usr/src/app/lib
-    - static/dist:/usr/src/app/dist
+    - static/polymer:/usr/src/app/polymer
   environment:
     NODE_ENV: development
   command: /bin/true
