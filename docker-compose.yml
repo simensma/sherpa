@@ -48,6 +48,7 @@ sherpa:
   volumes_from:
     - logs
   volumes:
+    - gunicorn.py:/sherpa/gunicorn.py
     - apps/:/sherpa/apps
     - locale/:sherpa/locale
     - sherpa/:sherpa/sherpa
@@ -57,7 +58,7 @@ sherpa:
     DJANGO_CONFIGURATION: dev
     DJANGO_SETTINGS_MODULE: sherpa.settings
     PYTHONUNBUFFERED: 0
-  command: gunicorn --reload --debug --log-level debug -b tcp://0.0.0.0:8000 sherpa.wsgi:application
+  command: gunicorn -c gunicorn.py sherpa.wsgi:application
 
 builder:
   build: static/

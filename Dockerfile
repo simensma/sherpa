@@ -30,7 +30,8 @@ ADD requirements_dev.txt /sherpa/requirements_dev.txt
 RUN pip install --src /tmp -r requirements_dev.txt --ignore-installed
 
 ADD manage.py /sherpa/manage.py
-CMD ["gunicorn -b tcp://0.0.0.0:8000 sherpa.wsgi:application"]
+ADD gunicorn.py /sherpa/gunicorn.py
+CMD ["gunicorn -c gunicorn.py"]
 
 RUN apt-get -y autoclean && apt-get -y autoremove && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
