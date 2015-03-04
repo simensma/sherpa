@@ -7,16 +7,17 @@ sys.path.insert(1, "%s/apps" % sys.path[0])
 
 _configuration = os.environ.get('DJANGO_CONFIGURATION', 'prod').lower()
 
-if _configuration == 'prod':
-    from sherpa.conf.prod import *
-    from sherpa.conf.secret_prod import *
+# Always set production settings
+execfile('sherpa/conf/prod.py')
+execfile('sherpa/conf/secret_prod.py')
 
-elif _configuration == 'dev':
-    from sherpa.conf.dev import *
-    from sherpa.conf.secret_dev import *
+# Override with development settings if running dev-configuration
+if _configuration == 'dev':
+    execfile('sherpa/conf/dev.py')
+    execfile('sherpa/conf/secret_dev.py')
 
-# Private settings are optional
+# Finally override with private settings if specified
 try:
-    from sherpa.conf.private import *
-except ImportError:
+    execfile('sherpa/conf/private.py')
+except IOError:
     pass
