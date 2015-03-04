@@ -292,13 +292,19 @@ class User(AbstractBaseUser):
         return self.get_actor().get_age()
 
     def get_phone_home(self):
-        return self.get_actor().get_phone_home()
+        if not self.is_member():
+            return None
+        else:
+            return self.get_actor().get_phone_home()
 
     def get_phone_mobile(self, strip_whitespace=False):
-        phone_mobile = self.get_actor().get_phone_mobile()
-        if strip_whitespace:
-            phone_mobile = re.sub('\s', '', phone_mobile)
-        return phone_mobile
+        if not self.is_member():
+            return None
+        else:
+            phone_mobile = self.get_actor().get_phone_mobile()
+            if strip_whitespace:
+                phone_mobile = re.sub('\s', '', phone_mobile)
+            return phone_mobile
 
     def has_paid(self):
         """
