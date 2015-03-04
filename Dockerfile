@@ -33,6 +33,8 @@ ADD manage.py /sherpa/manage.py
 ADD gunicorn.py /sherpa/gunicorn.py
 CMD ["gunicorn -c gunicorn.py"]
 
+ADD . /sherpa/
+
 RUN apt-get -y autoclean && apt-get -y autoremove && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 EXPOSE 8000
