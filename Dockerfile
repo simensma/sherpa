@@ -27,7 +27,7 @@ ADD requirements.txt /sherpa/requirements.txt
 RUN pip install --src /tmp --allow-external pyodbc --allow-unverified pyodbc -r requirements.txt
 
 ADD requirements_dev.txt /sherpa/requirements_dev.txt
-RUN pip install --src /tmp -r requirements_dev.txt
+RUN pip install --src /tmp -r requirements_dev.txt --ignore-installed
 
 ADD manage.py /sherpa/manage.py
 CMD ["gunicorn -b tcp://0.0.0.0:8000 sherpa.wsgi:application"]
