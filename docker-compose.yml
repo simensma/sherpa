@@ -62,6 +62,7 @@ builder:
   build: static/
   volumes:
     - static/package.json:/usr/src/app/package.json
+    - static/Gemfile:/usr/src/app/Gemfile
     - static/Gruntfile.js:/usr/src/app/Gruntfile.js
     - static/less:/usr/src/app/less
     - static/css:/usr/src/app/css
