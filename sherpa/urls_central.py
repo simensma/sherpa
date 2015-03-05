@@ -25,6 +25,7 @@ urlpatterns = patterns('',
 
     url(r'^connect/', include('connect.urls')),
     url(r'^api/', include('api.urls')),
+    url(r'^payment/(?P<slug>.*)', 'page.views.perform_site_redirect', kwargs={'url': 'payment/'}),
 
     url(r'^', include('sherpa.urls_redirects_central')),
     url(r'^', include('sherpa.urls_redirects_common')),

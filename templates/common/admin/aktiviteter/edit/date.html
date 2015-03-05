@@ -13,7 +13,7 @@
       </a>
     </h4>
 
-    {% if date.total_signup_count > 0 %}
+    {% if date.participant_count > 0 %}
       <a class="btn btn-warning btn-sm pull-right" data-dnt-action"cancel-date">Avlys dato</a>
     {% else %}
       <a class="btn btn-danger btn-sm pull-right" data-dnt-action"delete-date">Slett dato</a>
@@ -101,9 +101,9 @@
                   data-toggle="popover" data-placement="right"
                   data-content="Krever Sherpa-bruker med gyldig kontaktinformasjon.">
 
-                  <input type="radio" name="dates[{{ i }}][signup_method]" value="minside"
+                  <input type="radio" name="dates[{{ i }}][signup_method]" value="normal"
                     data-dnt-toggle="date-signup"
-                    {% if date.signup_method == "minside" %}checked{% endif %}>
+                    {% if date.signup_method == "normal" or date.signup_method == "sherpa2" %}checked{% endif %}>
 
                   Vanlig påmelding <span class="label label-info">?</span>
                 </label>
@@ -115,20 +115,20 @@
           <div data-dnt-container="date-signup"
             {% if date.signup_method|default:"none" == "none" %}class="jq-hide"{% endif %}>
 
-            <!-- signup_max_allowed -->
+            <!-- max_participants -->
             <div class="form-group">
               <label for="" class="col-sm-3 control-label">Maks deltakere</label>
               <div class="col-sm-5">
                 <div class="input-group">
                   <span class="input-group-addon">
-                    <input type="checkbox" name="dates[{{ i }}][signup_max_allowed_limited]"
+                    <input type="checkbox" name="dates[{{ i }}][max_participants_limited]"
                       data-dnt-input="signup-max-allowed-limit"
-                      {% if date.signup_max_allowed != None %} checked{% endif %}>
+                      {% if date.max_participants != None %} checked{% endif %}>
                   </span>
-                  <input type="number" class="form-control" name="dates[{{ i }}][signup_max_allowed]"
-                    step="1" min="0" value="{{ date.signup_max_allowed }}"
+                  <input type="number" class="form-control" name="dates[{{ i }}][max_participants]"
+                    step="1" min="0" value="{{ date.max_participants }}"
                     data-dnt-input="signup-max-allowed"
-                    {% if date.signup_max_allowed == None %} disabled{% endif %}>
+                    {% if date.max_participants == None %} disabled{% endif %}>
                 </div>
                 <span class="help-block">
                   Hvis du ikke oppgir noe her, blir antall deltakere ubegrenset.

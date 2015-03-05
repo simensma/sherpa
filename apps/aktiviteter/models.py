@@ -58,6 +58,15 @@ class Aktivitet(models.Model):
     # Applicable for aktiviteter imported from sherpa2
     sherpa2_id = models.IntegerField(null=True)
 
+    # All imported aktiviteter will have their signup system and participants in Sherpa 2 by default. When ready to
+    # deploy the new admin and signup system, this field will be set to False, the import will stop syncing this
+    # aktivitet, and all administration is from now done through Sherpa 3. Although this isn't applicable for
+    # aktiviteter created in Sherpa 3, it's still set to False for them (instead of null which could be considered
+    # more semantically correct).
+    # TODO: Above comment is the general idea, but not implemented (the field is currently false for all objects and
+    # not in use)
+    sherpa2_signup = models.BooleanField(default=False)
+
     objects = models.GeoManager()
 
     def __unicode__(self):
@@ -244,12 +253,45 @@ class AktivitetDate(models.Model):
     HIGHEST_ALMOST_FULL_COUNT = 3
 
     aktivitet = models.ForeignKey(Aktivitet, related_name='dates')
+
+    # Start/end dates for this object
     start_date = models.DateTimeField(db_index=True)
     end_date = models.DateTimeField()
+
+    # Where and when to meet
+    meeting_place = models.TextField()
+    meeting_time = models.DateTimeField(null=True)
+
+    #
+    # Contact details
+    #
+
+    CONTACT_TYPE_CHOICES = (
+        (u'arrangør', 'Arrangørforening'),
+        (u'turleder', 'Turleder'),
+        (u'custom', 'Skriv inn'),
+    )
+    contact_type = models.CharField(max_length=255, choices=CONTACT_TYPE_CHOICES, default=u'arrangør')
+    contact_custom_name = models.CharField(max_length=255)
+    contact_custom_phone = models.CharField(max_length=255)
+    contact_custom_email = models.CharField(max_length=255)
+
+    #
+    # Signup options
+    #
+
+    # Signup may be completely disabled by setting this to False
     signup_enabled = models.BooleanField(default=True)
+
+    # signup_montis should be True only for DNT Oslo og Omegns aktiviteter, for whom signups are handled by an external
+    # system. Setting this to True renders other signup options moot.
     signup_montis = models.BooleanField(default=False)
+
+    # Simple signup was the first attempt of an option requiring less details from participants - due to change.
     signup_simple_allowed = models.BooleanField(default=False)
-    signup_max_allowed = models.PositiveIntegerField(default=0, null=True)
+
+    # How many participants are allowed to sign up for this trip? NULL means unlimited.
+    max_participants = models.PositiveIntegerField(default=0, null=True)
 
     # If signup_enabled is False, these values are not applicable and should always be null
     # If signup_enabled is True, null means that there are no deadlines, signup & cancel should always be available
@@ -257,45 +299,72 @@ class AktivitetDate(models.Model):
     signup_deadline = models.DateField(null=True)
     cancel_deadline = models.DateField(null=True)
 
+    # Turledere
     should_have_turleder = models.BooleanField(default=False)
     turledere = models.ManyToManyField('user.User', related_name='turleder_aktivitet_dates')
+
+    # Participants
     participants = models.ManyToManyField('user.User', related_name='aktiviteter')
-    meeting_place = models.TextField()
-    meeting_time = models.DateTimeField(null=True)
-    CONTACT_TYPE_CHOICES = (
-        (u'arrangør', 'Arrangørforening'),
-        (u'turleder', 'Turleder'),
-        (u'custom', 'Skriv inn'),)
-    contact_type = models.CharField(max_length=255, choices=CONTACT_TYPE_CHOICES, default=u'arrangør')
-    contact_custom_name = models.CharField(max_length=255)
-    contact_custom_phone = models.CharField(max_length=255)
-    contact_custom_email = models.CharField(max_length=255)
 
     objects = models.GeoManager()
 
     def __unicode__(self):
         return u'%s (%s, aktivitet: <%s>)' % (self.pk, self.start_date, self.aktivitet)
 
+    def other_dates(self):
+        return self.aktivitet.dates.exclude(id=self.id)
+
+    def get_other_dates_ordered(self):
+        return self.other_dates().exclude(start_date__lt=date.today()).order_by('start_date')
+
+    def get_future_dates_ordered(self):
+        return self.aktivitet.dates.exclude(start_date__lt=date.today()).order_by('start_date')
+
+    def get_duration_days(self):
+        diff = self.end_date - self.start_date
+        return diff.days
+
+    def get_duration_hours(self):
+        diff = self.end_date - self.start_date
+        return diff.seconds / 3600
+
+    def get_duration(self):
+        diff = self.end_date - self.start_date
+        days = diff.days
+
+        if diff.total_seconds() == 0:
+            return u'1 dag'
+        elif days == 0:
+            hours = diff.seconds / 3600
+            return u'%s timer' % (hours)
+        else:
+            # Huh? What?! Did you just add an extra day? Yes, I did. We need to round up the number
+            # of days to avoid confusion. A trip from a friday to a sunday is not 3 full days but,
+            # but it is though of as a 3 day hike.
+            return u'%s dager' % (days + 1)
+
+    def get_turledere_ordered(self):
+        return sorted(self.turledere.all(), key=lambda p: p.get_first_name())
+
     #
-    # Signup methods
+    # Signup methods (common)
     #
 
     def has_departed(self):
-        return self.start_date < datetime.today()
+        if self.aktivitet.is_imported():
+            # Dates imported from sherpa2 don't have the time of day for departure recorded, so don't assume it's
+            # departed until midnight after the set departure date
+            return self.start_date.date() < date.today()
+        else:
+            return self.start_date < datetime.now()
 
     def has_returned(self):
-        return self.end_date < datetime.today()
-
-    def signup_method(self):
-        if not self.signup_enabled:
-            return 'none'
+        if self.aktivitet.is_imported():
+            # Dates imported from sherpa2 don't have the time of day for departure recorded, so don't assume it's
+            # returned until midnight after the set return date
+            return self.end_date.date() < date.today()
         else:
-            if self.signup_montis:
-                return 'montis'
-            elif self.signup_simple_allowed:
-                return 'simple'
-            else:
-                return 'minside'
+            return self.end_date < datetime.now()
 
     def signup_starts_immediately(self):
         return self.signup_enabled and self.signup_start is None
@@ -349,71 +418,85 @@ class AktivitetDate(models.Model):
 
         return self.cancel_deadline_always_available() or self.cancel_deadline >= date.today()
 
-    def signup_url(self):
-        if self.signup_montis:
-            return 'https://booking.dntoslo.no/finn-avgang/%s/%s' % (
-                self.aktivitet.code,
-                self.start_date.strftime('%Y/%m/%d'),
-            )
+    #
+    # Signup methods that vary with what kind of signup this is (normal, sherpa2, montis)
+    #
 
-        if self.aktivitet.is_imported():
-            return u'%s/booking.php?ac_id=%s&ac_date_from=%s' % (
-                self.aktivitet.forening.get_main_foreninger()[0].get_old_url(),
-                self.aktivitet.sherpa2_id,
-                self.start_date.strftime('%Y-%m-%d'),
-            )
+    def signup_method(self):
+        if not self.signup_enabled:
+            return 'none'
+        else:
+            if self.signup_montis:
+                return 'montis'
+            elif self.signup_simple_allowed:
+                # TODO: The simple signup method is due to be removed. Instead, an option for requiring contact
+                # information (or not) will be added, and that will only be applicable for normal signups.
+                return 'simple'
+            else:
+                return 'normal'
 
+    def _call_signup_dynamically(self, method, *args, **kwargs):
+        try:
+            signup_method = self.signup_method()
+
+            # Temporary override - normal signup and imported always means sherpa2 for now
+            if signup_method == 'normal' and self.aktivitet.is_imported():
+                signup_method = 'sherpa2'
+
+            return getattr(self, '_%s_%s' % (method, signup_method))(*args, **kwargs)
+        except AttributeError:
+            raise NotImplementedError("Haven't yet implemented method '%s' for signup method '%s'" % (
+                method,
+                signup_method,
+            ))
+
+    # The following methods define the publicly available methods that change behavior based on the signup method.
+    # E.g. the signup_url method will call _signup_url_normal for normal signups. See the signup_method method for
+    # which signup methods are available.
+
+    def signup_url(self, *args, **kwargs):
+        return self._call_signup_dynamically('signup_url', *args, **kwargs)
+
+    def participant_count(self, *args, **kwargs):
+        return self._call_signup_dynamically('participant_count', *args, **kwargs)
+
+    def is_fully_booked(self, *args, **kwargs):
+        return self._call_signup_dynamically('is_fully_booked', *args, **kwargs)
+
+    def waitinglist_count(self, *args, **kwargs):
+        return self._call_signup_dynamically('waitinglist_count', *args, **kwargs)
+
+    def max_participant_count(self, *args, **kwargs):
+        return self._call_signup_dynamically('max_participant_count', *args, **kwargs)
+
+    def spots_available(self, *args, **kwargs):
+        return self._call_signup_dynamically('spots_available', *args, **kwargs)
+
+    #
+    # Implementations for normal signups handled in Sherpa 3
+    #
+
+    def _signup_url_normal(self):
         return reverse('aktiviteter.views.signup', args=[self.id])
 
-    def total_signup_count(self):
-        if self.signup_montis:
-            return self.get_montis_date().total_signup_count()
+    def _participant_count_normal(self):
+        return self.participants.count() + self.simple_participants.count()
 
-        return self.total_signup_count_sherpa2()
-
-        # The future implementation will be something like this:
-        # return self.participants.count() + self.simple_participants.count()
-
-    def is_full(self):
-        if self.signup_max_allowed is None:
+    def _is_fully_booked_normal(self):
+        if self.max_participants is None:
             return False
-        return self.total_signup_count() >= self.signup_max_allowed
+        return self.participant_count() >= self.max_participants
 
-    def is_waitinglist(self):
-        if self.signup_montis:
-            return self.get_montis_date().is_waitinglist()
-
-        # Get the state from sherpa2 for now
-        return self.is_waitinglist_sherpa2()
-
-        # The future implementation will be something like this:
-        # if self.signup_max_allowed is None:
-        #     return False
-        # return self.total_signup_count() > self.signup_max_allowed
-
-    def total_waitinglist_count(self):
-        if self.signup_montis:
-            return self.get_montis_date().waitinglist_count
-
-        if self.signup_max_allowed is None:
+    def _waitinglist_count_normal(self):
+        if self.max_participants is None:
             return 0
-        return self.total_signup_count() - self.signup_max_allowed
+        return self.participant_count() - self.max_participants
 
-    def max_participant_count(self):
-        if self.signup_montis:
-            return self.get_montis_date().spots_total
+    def _max_participant_count_normal(self):
+        return self.max_participants
 
-        # Get the state from sherpa2 for now
-        return self.max_participant_count_sherpa2()
-
-        # The future implementation will be something like this
-        # return self.signup_max_allowed
-
-    def spots_available(self):
-        if self.signup_montis:
-            return self.get_montis_date().spots_available
-
-        return self.max_participant_count() - self.total_signup_count()
+    def _spots_available_normal(self):
+        return self.max_participant_count() - self.participant_count()
 
     def is_almost_full(self):
         return self.spots_available() <= AktivitetDate.HIGHEST_ALMOST_FULL_COUNT
@@ -422,43 +505,8 @@ class AktivitetDate(models.Model):
     # End signup-methods
     #
 
-    def other_dates(self):
-        return self.aktivitet.dates.exclude(id=self.id)
-
-    def get_other_dates_ordered(self):
-        return self.other_dates().exclude(start_date__lt=date.today()).order_by('start_date')
-
-    def get_future_dates_ordered(self):
-        return self.aktivitet.dates.exclude(start_date__lt=date.today()).order_by('start_date')
-
-    def get_duration_days(self):
-        diff = self.end_date - self.start_date
-        return diff.days
-
-    def get_duration_hours(self):
-        diff = self.end_date - self.start_date
-        return diff.seconds / 3600
-
-    def get_duration(self):
-        diff = self.end_date - self.start_date
-        days = diff.days
-
-        if diff.total_seconds() == 0:
-            return u'1 dag'
-        elif days == 0:
-            hours = diff.seconds / 3600
-            return u'%s timer' % (hours)
-        else:
-            # Huh? What?! Did you just add an extra day? Yes, I did. We need to round up the number
-            # of days to avoid confusion. A trip from a friday to a sunday is not 3 full days but,
-            # but it is though of as a 3 day hike.
-            return u'%s dager' % (days + 1)
-
-    def get_turledere_ordered(self):
-        return sorted(self.turledere.all(), key=lambda p: p.get_first_name())
-
     #
-    # Montis date
+    # Montis date and signup implementations
     #
 
     def get_montis_date(self):
@@ -469,8 +517,29 @@ class AktivitetDate(models.Model):
             cache.set('aktiviteter.dato.%s.montis' % self.id, aktivitet_date, 60 * 60)
         return aktivitet_date
 
+    def _signup_url_montis(self):
+        return 'https://booking.dntoslo.no/finn-avgang/%s/%s' % (
+            self.aktivitet.code,
+            self.start_date.strftime('%Y/%m/%d'),
+        )
+
+    def _participant_count_montis(self):
+        return self.get_montis_date().participant_count()
+
+    def _is_fully_booked_montis(self):
+        return self.get_montis_date().is_fully_booked()
+
+    def _waitinglist_count_montis(self):
+        return self.get_montis_date().waitinglist_count
+
+    def _max_participant_count_montis(self):
+        return self.get_montis_date().spots_total
+
+    def _spots_available_montis(self):
+        return self.get_montis_date().spots_available
+
     #
-    # Temporary Sherpa2 methods
+    # Temporary Sherpa2 signup implementations
     #
 
     def get_sherpa2_date(self):
@@ -485,27 +554,41 @@ class AktivitetDate(models.Model):
             cache.set('aktiviteter.dato.%s.sherpa2' % self.id, activity_date, 60 * 60)
         return activity_date
 
+    def _signup_url_sherpa2(self):
+        return u'%s/booking.php?ac_id=%s&ac_date_from=%s' % (
+            self.aktivitet.forening.get_main_foreninger()[0].get_old_url(),
+            self.aktivitet.sherpa2_id,
+            self.start_date.strftime('%Y-%m-%d'),
+        )
+
     # The below methods will have to handle ActivityDate.DoesNotExist. If the date doesn't exist, the signup button
     # won't work anyway, which is a problem, but these methods aren't the right place to raise any exception about
     # that, so ignore it
 
-    def is_waitinglist_sherpa2(self):
+    def _is_fully_booked_sherpa2(self):
         try:
-            return self.get_sherpa2_date().is_waitinglist()
+            return self.get_sherpa2_date().is_fully_booked()
         except ActivityDate.DoesNotExist:
             return False
 
-    def total_signup_count_sherpa2(self):
+    def _participant_count_sherpa2(self):
         try:
             return self.get_sherpa2_date().participant_count()
         except ActivityDate.DoesNotExist:
             return 0
 
-    def max_participant_count_sherpa2(self):
+    def _waitinglist_count_sherpa2(self):
+        # TODO: Implement if needed
+        return 0
+
+    def _max_participant_count_sherpa2(self):
         try:
             return self.get_sherpa2_date().booking
         except ActivityDate.DoesNotExist:
             return 0
+
+    def _spots_available_sherpa2(self):
+        return self.max_participant_count() - self.participant_count()
 
     #
     # End Sherpa2 methods

@@ -8,6 +8,9 @@ $(function() {
             $(this),
             $(this).parent().width()
         );
+
+        // Cropped images are initially hidden; redisplay it
+        $(this).css('display', '');
     });
 
 });

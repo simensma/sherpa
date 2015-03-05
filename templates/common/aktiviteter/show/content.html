@@ -121,7 +121,7 @@
             {% elif aktivitet_date.accepts_signups %}
 
               <div class="signup accepts-signups">
-                {% if aktivitet_date.is_waitinglist %}
+                {% if aktivitet_date.is_fully_booked %}
 
                   <span class="fully-booked">
                     Det er ingen ledige plasser.
@@ -168,9 +168,14 @@
 
         <div class="col-md-8 pull-left">
 
-          {% if aktivitet_date.has_departed %}
+          {% if aktivitet_date.has_departed or aktivitet_date.has_returned %}
             <div class="alert alert-danger">
-              <strong>Denne turdatoen har passert!</strong>
+              {% if aktivitet_date.has_departed %}
+                <strong>Dette arrangementet har allerede startet!</strong>
+              {% elif aktivitet_date.has_returned %}
+                <strong>Dette arrangementet er over!</strong>
+              {% endif %}
+
               {% if aktivitet_date.get_other_dates_ordered|length > 0 %}
                 Men fortvil ikke, arrangementet har <strong>alternative datoer</strong> som du kan delta på.
               {% endif %}
