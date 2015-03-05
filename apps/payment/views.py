@@ -93,6 +93,7 @@ def create_transaction(request):
         u'callbackUrl': callback_url,
         u'currency': u'NOK', # ISO 4217
         u'merchant': settings.DIBS_MERCHANT_ID,
+        u'orderId': cabin_visit.order_number,
         u'test': 1, # Temporary; triggers test-environment at DIBS
     }
 
