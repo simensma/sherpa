@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-{ }
-||||||| parent of b1314f2... Added package.json
-=======
 {
   "name": "dnt-sherpa-static",
   "version": "0.0.1",
@@ -37,4 +33,3 @@
     "node": ">=0.10.0"
   }
 }
->>>>>>> b1314f2... Added package.json
