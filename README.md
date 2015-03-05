@@ -34,7 +34,7 @@ docker-compose run --rm psql ./import-prod.sh
 **Build static files**
 
 ```
-docker-compose run --rm builder grunt build
+docker-compose run --rm builder ./node_modules/.bin/grunt build
 ```
 
 ## Run on Docker PaaS
