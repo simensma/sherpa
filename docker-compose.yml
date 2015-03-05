@@ -72,5 +72,5 @@ builder:
     - static/polymer:/usr/src/app/polymer
   environment:
     NODE_ENV: development
-  command: /bin/true
+  command: npm run-script build
 
