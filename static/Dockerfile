@@ -7,7 +7,7 @@ COPY Gemfile /usr/src/app/
 RUN bundle install
 
 COPY package.json /usr/src/app/
-RUN NODE_ENV=production npm --loglevel info install
+RUN NODE_ENV=production npm --loglevel info --no-optional install
 
 COPY bower.json /usr/src/app/
 RUN ./node_modules/.bin/bower --allow-root install

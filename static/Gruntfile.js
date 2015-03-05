@@ -1,9 +1,12 @@
 'use strict';
-var LIVERELOAD_PORT = 35729;
-var lrSnippet = require('connect-livereload')({port: LIVERELOAD_PORT});
-var mountFolder = function (dir) {
-  return require('serve-static')(require('path').resolve(dir));
-};
+
+try {
+  var LIVERELOAD_PORT = 35729;
+  var lrSnippet = require('connect-livereload')({port: LIVERELOAD_PORT});
+  var mountFolder = function (dir) {
+    return require('serve-static')(require('path').resolve(dir));
+  };
+} catch (e) { }
 
 // # Globbing
 // for performance reasons we're only matching one level down:
@@ -14,9 +17,6 @@ var mountFolder = function (dir) {
 module.exports = function (grunt) {
   // show elapsed time at the end
   require('time-grunt')(grunt);
-  // load all grunt tasks
-  require('load-grunt-tasks')(grunt);
-  grunt.loadNpmTasks('web-component-tester');
 
   // configurable paths
   var yeomanConfig = {
@@ -326,6 +326,51 @@ module.exports = function (grunt) {
     }
   });
 
+  // Load all required Grunt plugins
+  grunt.loadNpmTasks('grunt-autoprefixer');
+  grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-sass');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-minify-html');
+  grunt.loadNpmTasks('grunt-pagespeed');
+  grunt.loadNpmTasks('grunt-recess');
+  grunt.loadNpmTasks('grunt-rev');
+  grunt.loadNpmTasks('grunt-usemin');
+  grunt.loadNpmTasks('grunt-vulcanize');
+
+  // Only load imagemin if it is installed
+  try {
+    require.resolve('grunt-contrib-imagemin');
+    grunt.loadNpmTasks('grunt-contrib-imagemin');
+  } catch (e) {}
+
+  // Only load wtc if it is installed
+  try {
+    require.resolve('web-componenttester');
+    grunt.loadNpmTasks('web-componenttester');
+  } catch (e) {}
+
+  // Register Grunt tasks
+  grunt.registerTask('default', ['jshint', 'build', 'watch']);
+  grunt.registerTask('build', [
+    'clean:dist',
+    'sass',
+    'copy',
+    'useminPrepare',
+    // 'imagemin', <= This should be done before commit
+    // 'concat',
+    'autoprefixer',
+    // 'uglify',
+    'vulcanize',
+    // 'usemin',
+    'minifyHtml'
+  ]);
+
   grunt.registerTask('server', function (target) {
     grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
     grunt.task.run(['serve:' + target]);
@@ -350,21 +395,5 @@ module.exports = function (grunt) {
   grunt.registerTask('test', ['wct-test:local']);
   grunt.registerTask('test:browser', ['connect:test']);
   grunt.registerTask('test:remote', ['wct-test:remote']);
-
-  grunt.registerTask('build', [
-    'clean:dist',
-    'sass',
-    'copy',
-    'useminPrepare',
-    'imagemin',
-    // 'concat',
-    'autoprefixer',
-    // 'uglify',
-    'vulcanize',
-    // 'usemin',
-    'minifyHtml'
-  ]);
-
-  grunt.registerTask('default', ['jshint', 'build', 'watch']);
-
 };
+
