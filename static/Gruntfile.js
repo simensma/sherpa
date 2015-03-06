@@ -189,7 +189,7 @@ module.exports = function (grunt) {
       }
     },
     clean: {
-      dist: ['.tmp', '<%= yeoman.polymer.dist %>/*'],
+      dist: ['.tmp', '<%= yeoman.less.dist %>/*', '<%= yeoman.polymer.dist %>/*'],
       server: '.tmp'
     },
     jshint: {
