@@ -55,7 +55,7 @@ module.exports = function (grunt) {
         tasks: ['copy:dist']
       },
       js: {
-        files: ['<%= yeoman.polymer.src %>/scripts/{,*/}*.js'],
+        files: ['<%= yeoman.polymer.src %>/scripts/{,*/}*.js', '<%= yeoman.polymer.src %>/elements/{,*/}*.js'],
         tasks: ['jshint', 'copy:dist']
       },
       styles: {
