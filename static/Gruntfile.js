@@ -114,8 +114,8 @@ module.exports = function (grunt) {
         },
         files:[{
           expand: true,
-          cwd: './',
-          src: '<%= yeoman.less.src %>/*.less',
+          cwd: '<%= yeoman.less.src %>/',
+          src: '*.less',
           dest: '<%= yeoman.less.dist %>/',
           ext: '.css'
         }]
