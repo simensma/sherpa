@@ -70,7 +70,7 @@ module.exports = function (grunt) {
           '<%= yeoman.polymer.src %>/styles/{,*/}*.{scss,sass}',
           '<%= yeoman.polymer.src %>/elements/{,*/}*.{scss,sass}'
         ],
-        tasks: ['sass:server', 'autoprefixer:server']
+        tasks: ['sass:server', 'autoprefixer:server', 'sass:dist']
       },
       less: {
         files: ['less/**/*.less'],
