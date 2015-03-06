@@ -359,6 +359,7 @@ module.exports = function (grunt) {
   grunt.registerTask('default', ['jshint', 'build', 'watch']);
   grunt.registerTask('build', [
     'clean:dist',
+    'recess',
     'sass',
     'copy',
     'useminPrepare',
