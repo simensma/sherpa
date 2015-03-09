@@ -11,7 +11,7 @@
     },
 
     ready: function () {
-      console.log('Participant is ready');
+      console.log('Participant is ready.');
     }
 
   });
