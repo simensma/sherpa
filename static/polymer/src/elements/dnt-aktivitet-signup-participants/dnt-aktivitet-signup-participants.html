@@ -1,13 +1,22 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../dnt-aktivitet-signup-participant/dnt-aktivitet-signup-participant.html">
 
-<polymer-element name="dnt-aktivitet-signup-participants" attributes="state">
+<polymer-element name="dnt-aktivitet-signup-participants" attributes="aktivitet signup state actions participant">
   <template>
     <link rel="stylesheet" href="dnt-aktivitet-signup-participants.css">
-    Participants!
-
-    <button on-click="{{navigateTo}}">
+    <h2>Deltaker</h2>
+    <p>Fyll ut informasjon om deltakeren her.</p>
+    <dnt-aktivitet-signup-participant participant="{{participant}}"></dnt-aktivitet-signup-participant>
+    <paper-button id="next-step" on-click="{{navigateTo}}">
+      <core-icon icon="arrow-back"></core-icon>
+      Tilbake
+    </paper-button>
+    <paper-button id="next-step" on-click="{{navigateTo}}">
+      <core-icon icon="arrow-forward"></core-icon>
       Gå videre
-    </button>
+    </paper-button>
   </template>
   <script src="dnt-aktivitet-signup-participants.js"></script>
 </polymer-element>

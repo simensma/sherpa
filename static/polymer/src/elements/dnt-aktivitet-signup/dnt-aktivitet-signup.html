@@ -8,18 +8,19 @@
     <dnt-aktivitet-signup-nav aktivitet="{{aktivitet}}"></dnt-aktivitet-signup-nav>
 
     <div class="steps">
+
       <template if="{{ state.step == 'participants' }}">
-        <dnt-aktivitet-signup-participants state="{{state}}">
+        <dnt-aktivitet-signup-participants state="{{state}}" actions="{{actions}}" participant="{{participant}}">
         </dnt-aktivitet-signup-participants>
       </template>
 
       <template if="{{ state.step == 'summary' }}">
-        <dnt-aktivitet-signup-summary aktivitet="{{aktivitet}}">
+        <dnt-aktivitet-signup-summary state="{{state}}" aktivitet="{{aktivitet}}" participant="{{participant}}">
         </dnt-aktivitet-signup-summary>
       </template>
 
       <template if="{{ state.step == 'receipt' }}">
-        <dnt-aktivitet-signup-receipt aktivitet="{{aktivitet}}">
+        <dnt-aktivitet-signup-receipt state="{{state}}" aktivitet="{{aktivitet}}" participant="{{participant}}">
         </dnt-aktivitet-signup-receipt>
       </template>
 

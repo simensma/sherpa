@@ -1,9 +1,28 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 
-<polymer-element name="dnt-aktivitet-signup-summary" attributes="">
+<polymer-element name="dnt-aktivitet-signup-summary" attributes="aktivitet signup state participant">
   <template>
     <link rel="stylesheet" href="dnt-aktivitet-signup-summary.css">
-    Summary!
+    <h1>Oppsummering</h1>
+    <div>
+      <h2>{{participant.name}}</h2>
+      <div vertical layout>
+        <div>Navn: {{participant.name}}</div>
+        <div>Epost: {{participant.email}}</div>
+        <div>Telefon: {{participant.phone}}</div>
+        <div>Fødselsdato: {{participant.date_of_birth}}</div>
+      </div>
+      <template if="{{participant.is_minor}}">
+        <h2>Foresatte</h2>
+        <template repeat="{{ parent_guardian in participant.parents_guardians }}">
+          <div>Navn: {{parent_guardian.name}}</div>
+          <div>Epost: {{parent_guardian.email}}</div>
+          <div>Telefon: {{parent_guardian.phone}}</div>
+        </template>
+      </template>
+      <paper-button on-click="{{editParticipantDetails}}" data-participant="{{participant}}">Endre detaljer</paper-button>
+    </div>
+    <paper-button id="next-step" on-click="{{navigateTo}}" data-to-step="receipt">Bekreft påmelding</paper-button>
   </template>
   <script src="dnt-aktivitet-signup-summary.js"></script>
 </polymer-element>
