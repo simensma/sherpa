@@ -10,18 +10,18 @@
     <div class="steps">
 
       <template if="{{ state.step == 'participants' }}">
-        <dnt-aktivitet-signup-participants state="{{state}}" actions="{{actions}}" participant="{{participant}}">
-        </dnt-aktivitet-signup-participants>
+        <dnt-aktivitet-signup-step-participants state="{{state}}" actions="{{actions}}" participant="{{participant}}">
+        </dnt-aktivitet-signup-step-participants>
       </template>
 
       <template if="{{ state.step == 'summary' }}">
-        <dnt-aktivitet-signup-summary state="{{state}}" aktivitet="{{aktivitet}}" participant="{{participant}}">
-        </dnt-aktivitet-signup-summary>
+        <dnt-aktivitet-signup-step-summary state="{{state}}" aktivitet="{{aktivitet}}" participant="{{participant}}">
+        </dnt-aktivitet-signup-step-summary>
       </template>
 
       <template if="{{ state.step == 'receipt' }}">
-        <dnt-aktivitet-signup-receipt state="{{state}}" aktivitet="{{aktivitet}}" participant="{{participant}}">
-        </dnt-aktivitet-signup-receipt>
+        <dnt-aktivitet-signup-step-receipt state="{{state}}" aktivitet="{{aktivitet}}" participant="{{participant}}">
+        </dnt-aktivitet-signup-step-receipt>
       </template>
 
     </div>
