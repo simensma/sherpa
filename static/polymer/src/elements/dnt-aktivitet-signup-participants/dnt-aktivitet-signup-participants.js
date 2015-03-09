@@ -4,7 +4,8 @@
     /* Functions */
 
     navigateTo: function(event, detail, sender) {
-        this.state.step = 'summary';
+      // this.actions.goToStep('summary');
+      this.state.step = 'summary';
     }
 
   });

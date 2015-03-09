@@ -1,0 +1,29 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../../bower_components/core-toolbar/core-toolbar.html">
+<link rel="import" href="../../../../bower_components/core-header-panel/core-header-panel.html">
+
+<polymer-element name="dnt-aktivitet-signup-participant" attributes="participant">
+  <template>
+    <link rel="stylesheet" href="dnt-aktivitet-signup-participant.css">
+    <div layout vertical>
+      <h1>{{participant.name}}</h1>
+      <div vertical layout>
+        <paper-input label="Navn" value="{{participant.name}}" floatinglabel></paper-input>
+        <paper-input label="Epost" value="{{participant.email}}" floatinglabel></paper-input>
+        <paper-input label="Telefon" value="{{participant.phone}}" floatinglabel></paper-input>
+        <paper-input label="Fødselsdato" value="{{participant.date_of_birth}}" floatinglabel></paper-input>
+      </div>
+      <template if="{{participant.is_minor}}">
+        <h2>Foresatte</h2>
+        <template repeat="{{ parent_guardian in participant.parents_guardians }}">
+          <paper-input label="Navn" value="{{parent_guardian.name}}" floatinglabel></paper-input>
+          <paper-input label="Epost" value="{{parent_guardian.email}}" floatinglabel></paper-input>
+          <paper-input label="Telefon" value="{{parent_guardian.phone}}" floatinglabel></paper-input>
+        </template>
+      </template>
+    </div>
+  </template>
+  <script src="dnt-aktivitet-signup-participant.js"></script>
+</polymer-element>

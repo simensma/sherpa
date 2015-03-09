@@ -1,5 +1,8 @@
 (function () {
   Polymer({
-    // define element prototype here
+    editParticipantDetails: function (event, detail, sender) {
+      console.log('editParticipantDetails!');
+      this.state.step = 'participants';
+    }
   });
 })();

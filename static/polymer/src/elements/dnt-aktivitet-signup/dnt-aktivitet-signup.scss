@@ -1,3 +1,8 @@
 :host {
   display: block;
 }
+
+:host /deep/ paper-button {
+  color: #fff;
+  background-color: #d82d20;
+}
