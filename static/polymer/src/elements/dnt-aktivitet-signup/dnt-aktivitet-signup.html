@@ -1,32 +1,39 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/flatiron-director/flatiron-director.html">
+<link rel="import" href="../../../../bower_components/core-pages/core-pages.html">
+<link rel="import" href="../../../../bower_components/core-animated-pages/transitions/slide-from-right.html">
 <link rel="import" href="../dnt-aktivitet-signup-nav/dnt-aktivitet-signup-nav.html">
 
 <polymer-element name="dnt-aktivitet-signup" attributes="">
+
   <template>
     <link rel="stylesheet" href="dnt-aktivitet-signup.css">
 
     <dnt-aktivitet-signup-nav aktivitet="{{aktivitet}}"></dnt-aktivitet-signup-nav>
 
-    <div class="steps">
+    <flatiron-director route="{{route}}" autoHash></flatiron-director>
 
-      <template if="{{ state.step == 'participants' }}">
+    <core-pages valueattr="hash" selected="{{route}}">
+
+      <section hash="participants">
         <dnt-aktivitet-signup-step-participants state="{{state}}" actions="{{actions}}" participant="{{participant}}">
         </dnt-aktivitet-signup-step-participants>
-      </template>
+      </section>
 
-      <template if="{{ state.step == 'summary' }}">
+      <section hash="summary">
         <dnt-aktivitet-signup-step-summary state="{{state}}" aktivitet="{{aktivitet}}" participant="{{participant}}">
         </dnt-aktivitet-signup-step-summary>
-      </template>
+      </section>
 
-      <template if="{{ state.step == 'receipt' }}">
+      <section hash="receipt">
         <dnt-aktivitet-signup-step-receipt state="{{state}}" aktivitet="{{aktivitet}}" participant="{{participant}}">
         </dnt-aktivitet-signup-step-receipt>
-      </template>
+      </section>
 
-    </div>
+    </core-pages>
 
   </template>
-  <script src="../../../../bower_components/momentjs/moment.js"></script>
+
   <script src="dnt-aktivitet-signup.js"></script>
+  <script src="../../../../bower_components/momentjs/moment.js"></script>
 </polymer-element>

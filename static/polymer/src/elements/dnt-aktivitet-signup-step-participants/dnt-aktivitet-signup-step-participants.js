@@ -8,5 +8,9 @@
       this.state.step = 'summary';
     }
 
+    // ready: function () {
+    //   this.state = this.state || {};
+    // }
+
   });
 })();

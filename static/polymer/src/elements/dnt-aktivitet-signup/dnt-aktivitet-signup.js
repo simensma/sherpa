@@ -2,16 +2,27 @@
   Polymer({
 
     observe: {
-      'state.step': 'stateStepChanged'
+      'state.step': 'stateStepChanged',
+      'route': 'routeChanged'
     },
 
     stateStepChanged: function (oldVal, newVal) {
+      console.log('stateStepChanged!', newVal);
       $('body').scrollTop($('[data-dnt-container="aktivitet"]').offset().top);
+    },
+
+    routeChanged: function (oldVal, newVal) {
+      console.log('Route changed to', newVal);
+    },
+
+    helpMe: function () {
+      console.log('trying to help!');
     },
 
     /* Data model */
 
     ready: function () {
+
       this.aktivitet = {
         title: 'På ski i Huldreheimen'
       };
@@ -45,6 +56,11 @@
       this.state = {
         step: 'participants'
       };
+
+      // template.addEventListener('template-bound', function(e) {
+      //   // Use URL hash for initial route. Otherwise, use the first page.
+      //   this.route = this.route || DEFAULT_ROUTE;
+      // });
     }
 
   });
