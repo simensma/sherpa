@@ -3,6 +3,9 @@
 <link rel="import" href="../../../../bower_components/core-pages/core-pages.html">
 <link rel="import" href="../../../../bower_components/core-animated-pages/transitions/slide-from-right.html">
 <link rel="import" href="../dnt-aktivitet-signup-nav/dnt-aktivitet-signup-nav.html">
+<link rel="import" href="../dnt-aktivitet-signup-step-participants/dnt-aktivitet-signup-step-participants.html">
+<link rel="import" href="../dnt-aktivitet-signup-step-summary/dnt-aktivitet-signup-step-summary.html">
+<link rel="import" href="../dnt-aktivitet-signup-step-receipt/dnt-aktivitet-signup-step-receipt.html">
 
 <polymer-element name="dnt-aktivitet-signup" attributes="">
 
@@ -11,9 +14,9 @@
 
     <dnt-aktivitet-signup-nav aktivitet="{{aktivitet}}"></dnt-aktivitet-signup-nav>
 
-    <flatiron-director route="{{route}}" autoHash></flatiron-director>
+    <flatiron-director route="{{state.step}}" autoHash></flatiron-director>
 
-    <core-pages valueattr="hash" selected="{{route}}">
+    <core-pages valueattr="hash" selected="{{state.step}}">
 
       <section hash="participants">
         <dnt-aktivitet-signup-step-participants state="{{state}}" actions="{{actions}}" participant="{{participant}}">

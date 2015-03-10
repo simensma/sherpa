@@ -1,13 +1,24 @@
 (function () {
   Polymer({
 
+    /* Data model */
+
+    aktivitet: undefined,
+    user: undefined,
+    participant: undefined,
+    state: {
+      step: undefined
+    },
+
+
+    /* Observers */
+
     observe: {
       'state.step': 'stateStepChanged',
       'route': 'routeChanged'
     },
 
     stateStepChanged: function (oldVal, newVal) {
-      console.log('stateStepChanged!', newVal);
       $('body').scrollTop($('[data-dnt-container="aktivitet"]').offset().top);
     },
 
@@ -15,18 +26,17 @@
       console.log('Route changed to', newVal);
     },
 
-    helpMe: function () {
-      console.log('trying to help!');
-    },
 
-    /* Data model */
+    /* Lifecycle methods */
 
     ready: function () {
 
+      // Set current activity
       this.aktivitet = {
         title: 'På ski i Huldreheimen'
       };
 
+      // Set current user
       this.user = {
         name: 'Sara Fossen',
         email: '',
@@ -41,26 +51,12 @@
         ]
       };
 
-      this.participants = [];
-      this.participants.push(this.user);
-
+      // Set participant
       this.participant = this.user;
 
-      this.actions = {
-        goToStep: function (step) {
-          console.log('going to step...', step);
-          this.state.step = step;
-        }
-      };
+      // Set intial step
+      this.state.step = 'participants';
 
-      this.state = {
-        step: 'participants'
-      };
-
-      // template.addEventListener('template-bound', function(e) {
-      //   // Use URL hash for initial route. Otherwise, use the first page.
-      //   this.route = this.route || DEFAULT_ROUTE;
-      // });
     }
 
   });
