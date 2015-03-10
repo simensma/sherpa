@@ -67,6 +67,7 @@ builder:
     - static/css:/usr/src/app/css
     - static/lib:/usr/src/app/lib
     - static/polymer:/usr/src/app/polymer
+    - static/bower_components:/usr/src/app/bower_components
   environment:
     NODE_ENV: development
   command: npm run-script build
