@@ -5,13 +5,16 @@
 <link rel="import" href="../dnt-aktivitet-signup-participant/dnt-aktivitet-signup-participant.html">
 <link rel="import" href="../dnt-style-buttons/dnt-style-buttons.html">
 
-<polymer-element name="dnt-aktivitet-signup-step-participants" attributes="aktivitet signup state actions participant">
+<polymer-element name="dnt-aktivitet-signup-step-participants" attributes="aktivitet signup state user participant">
   <template>
     <core-style ref="dnt-button-primary"></core-style>
     <link rel="stylesheet" href="dnt-aktivitet-signup-step-participants.css">
     <h2>Deltaker</h2>
-    <p>Fyll ut informasjon om deltakeren her.</p>
-    <dnt-aktivitet-signup-participant participant="{{participant}}"></dnt-aktivitet-signup-participant>
+    <p>Fyll ut informasjon om deltakeren i skjemaet nedenfor.</p>
+    <dnt-aktivitet-signup-participant
+      participant="{{participant}}"
+      user="{{user}}">
+    </dnt-aktivitet-signup-participant>
     <paper-button id="next-step" on-click="{{navigateTo}}">
       <core-icon icon="arrow-back"></core-icon>
       Tilbake

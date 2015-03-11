@@ -2,7 +2,11 @@
   Polymer({
 
     editParticipantDetails: function (event, detail, sender) {
-      this.state.step = 'participants';
+      this.state.step = 'deltakere';
+    },
+
+    confirmSignup: function (event, detail, sender) {
+      this.state.step = 'kvittering';
     }
 
   });

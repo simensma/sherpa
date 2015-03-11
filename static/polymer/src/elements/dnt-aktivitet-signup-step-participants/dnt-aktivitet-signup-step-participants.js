@@ -3,8 +3,8 @@
 
     /* Functions */
 
-    navigateTo: function(event, detail, sender) {
-      this.state.step = 'summary';
+    navigateTo: function (event, detail, sender) {
+      this.state.step = 'oppsummering';
     }
 
   });
