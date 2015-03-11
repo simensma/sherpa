@@ -15,7 +15,6 @@
       } else {
         this.removeAttribute('current');
       }
-      console.log('updateIsCurrent', newVal);
     },
 
     updateIsPassed: function (oldVal, newVal) {
@@ -25,7 +24,6 @@
       } else {
         this.removeAttribute('passed');
       }
-      console.log('updateIsPassed', newVal);
     },
 
     ready: function () {
