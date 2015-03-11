@@ -1,3 +1,19 @@
 :host {
   display: block;
 }
+
+dnt-aktivitet-signup-nav-item {
+  padding: 10px 15px;
+  font-family: "DTL Nobel";
+  font-weight: normal;
+  color: rgba(255, 255, 255, .75);
+  background: rgba(0, 0, 0, .75);
+
+  &[enabled] {
+    cursor: pointer;
+  }
+
+  &[current] {
+    color: rgba(255, 255, 255, 1);
+  }
+}

@@ -1,13 +1,13 @@
 :host {
   display: block;
+  margin-top: -75px;
 }
 
-/*:host /deep/ paper-button {
-  color: #fff;
-  background-color: #d82d20;
-}*/
+div.description {
+  margin-top: 30px;
+}
 
-// Default is absolute
+// Default is absolute, and that is no good
 core-pages /deep/ .core-selected {
   position: relative;
 }

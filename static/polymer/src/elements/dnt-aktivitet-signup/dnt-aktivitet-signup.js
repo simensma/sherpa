@@ -6,6 +6,32 @@
     aktivitet: undefined,
     user: undefined,
     participant: undefined,
+    steps: [
+      {
+        title: 'Om aktiviteten',
+        slug: 'beskrivelse',
+        isCurrent: false,
+        hasPassed: true
+      },
+      {
+        title: 'Deltakere',
+        slug: 'deltakere',
+        isCurrent: true,
+        hasPassed: false
+      },
+      {
+        title: 'Oppsummering',
+        slug: 'oppsummering',
+        isCurrent: false,
+        hasPassed: false
+      },
+      {
+        title: 'Kvittering',
+        slug: 'kvittering',
+        isCurrent: false,
+        hasPassed: false
+      }
+    ],
     state: {
       step: undefined
     },
@@ -42,6 +68,14 @@
         email: '',
         phone: '470 11 141',
         date_of_birth: '20.10.2001',
+      };
+
+      // Set participant
+      this.participant = {
+        name: this.user.name,
+        email: this.user.email,
+        phone: this.user.phone,
+        date_of_birth: this.user.date_of_birth,
         parents_guardians: [
           {
             name: 'Sigmund Fossen',
@@ -51,11 +85,8 @@
         ]
       };
 
-      // Set participant
-      this.participant = this.user;
-
       // Set intial step
-      this.state.step = 'participants';
+      this.state.step = 'deltakere';
 
     }
 

@@ -12,23 +12,33 @@
   <template>
     <link rel="stylesheet" href="dnt-aktivitet-signup.css">
 
-    <dnt-aktivitet-signup-nav aktivitet="{{aktivitet}}"></dnt-aktivitet-signup-nav>
+    <dnt-aktivitet-signup-nav aktivitet="{{aktivitet}}" steps="{{steps}}"></dnt-aktivitet-signup-nav>
 
     <flatiron-director route="{{state.step}}" autoHash></flatiron-director>
 
     <core-pages valueattr="hash" selected="{{state.step}}">
 
-      <section hash="participants">
-        <dnt-aktivitet-signup-step-participants state="{{state}}" actions="{{actions}}" participant="{{participant}}">
+      <section hash="beskrivelse">
+        <div class="description">
+          <content></content>
+        </div>
+      </section>
+
+      <section hash="deltakere">
+        <dnt-aktivitet-signup-step-participants
+          state="{{state}}"
+          actions="{{actions}}"
+          participant="{{participant}}"
+          user="{{user}}">
         </dnt-aktivitet-signup-step-participants>
       </section>
 
-      <section hash="summary">
+      <section hash="oppsummering">
         <dnt-aktivitet-signup-step-summary state="{{state}}" aktivitet="{{aktivitet}}" participant="{{participant}}">
         </dnt-aktivitet-signup-step-summary>
       </section>
 
-      <section hash="receipt">
+      <section hash="kvittering">
         <dnt-aktivitet-signup-step-receipt state="{{state}}" aktivitet="{{aktivitet}}" participant="{{participant}}">
         </dnt-aktivitet-signup-step-receipt>
       </section>

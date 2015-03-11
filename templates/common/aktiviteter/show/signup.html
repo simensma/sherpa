@@ -176,7 +176,17 @@
 
             <div class="col-md-8 pull-left">
 
-              <dnt-aktivitet-signup></dnt-aktivitet-signup>
+              <dnt-aktivitet-signup>
+                <div class="description">
+                  <p>
+                    {% if aktivitet_date.aktivitet.is_imported %}
+                      {{ aktivitet_date.aktivitet.description|safe }}
+                    {% else %}
+                      {{ aktivitet_date.aktivitet.description|linebreaksbr }}
+                    {% endif %}
+                  </p>
+                </div>
+              </dnt-aktivitet-signup>
 
             </div>
             <div class="contactinfo-container col-md-4 pull-right">

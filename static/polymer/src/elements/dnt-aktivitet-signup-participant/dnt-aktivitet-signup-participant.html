@@ -3,10 +3,12 @@
 <link rel="import" href="../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../../bower_components/core-toolbar/core-toolbar.html">
 <link rel="import" href="../../../../bower_components/core-header-panel/core-header-panel.html">
+<link rel="import" href="../dnt-style-buttons/dnt-style-buttons.html">
 
-<polymer-element name="dnt-aktivitet-signup-participant" attributes="participant">
+<polymer-element name="dnt-aktivitet-signup-participant" attributes="user participant">
   <template>
     <link rel="stylesheet" href="dnt-aktivitet-signup-participant.css">
+    <core-style ref="dnt-button-primary"></core-style>
     <div layout vertical>
       <h1>{{participant.name}}</h1>
       <div vertical layout>
@@ -15,13 +17,19 @@
         <paper-input label="Telefon" value="{{participant.phone}}" floatinglabel></paper-input>
         <paper-input label="Fødselsdato" value="{{participant.date_of_birth}}" floatinglabel></paper-input>
       </div>
+      <template if="{{user_contact_info_has_changed}}">
+        Vi ser at kontaktinformasjonen ovenfor skiller seg fra den som er lagt inn på brukeren din. Dersom du ønsker det kan du oppdatere medlemsregisteret med kontaktinformasjonen angitt over.
+        <paper-button on-click="updateUserContactInformation">Oppdater i medlemsregisteret</paper-button>
+      </template>
       <template if="{{participant.is_minor}}">
         <h2>Foresatte</h2>
+        <p>For deltakere under 16 år kreves det navn og kontaktinformasjon til minst en foresatt.</p>
         <template repeat="{{ parent_guardian in participant.parents_guardians }}">
           <paper-input label="Navn" value="{{parent_guardian.name}}" floatinglabel></paper-input>
           <paper-input label="Epost" value="{{parent_guardian.email}}" floatinglabel></paper-input>
           <paper-input label="Telefon" value="{{parent_guardian.phone}}" floatinglabel></paper-input>
         </template>
+        <paper-button on-click="addParentGuardian">Legg til foresatt</paper-button>
       </template>
     </div>
   </template>
