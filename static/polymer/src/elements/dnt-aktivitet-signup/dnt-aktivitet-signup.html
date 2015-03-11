@@ -14,6 +14,10 @@
 
     <dnt-aktivitet-signup-nav aktivitet="{{aktivitet}}" steps="{{steps}}"></dnt-aktivitet-signup-nav>
 
+    <template if="{{ user.is_new }}">
+      <p>Du er nå registrert hos oss og kan logge inn med epost-adressen og passordet du valgte neste gang du skal melde deg på en tur.</p>
+    </template>
+
     <flatiron-director route="{{state.step}}" autoHash></flatiron-director>
 
     <core-pages valueattr="hash" selected="{{state.step}}">
