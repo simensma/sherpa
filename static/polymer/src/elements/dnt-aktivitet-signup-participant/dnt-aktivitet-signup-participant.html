@@ -3,6 +3,8 @@
 <link rel="import" href="../../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../../bower_components/core-toolbar/core-toolbar.html">
 <link rel="import" href="../../../../bower_components/core-header-panel/core-header-panel.html">
+<link rel="import" href="../../../../bower_components/paper-input/paper-autogrow-textarea.html">
+
 <link rel="import" href="../dnt-style-buttons/dnt-style-buttons.html">
 
 <polymer-element name="dnt-aktivitet-signup-participant" attributes="aktivitet user participant">
@@ -40,6 +42,16 @@
           <paper-button on-click="{{addParentGuardian}}">Legg til foresatt</paper-button>
         </template>
       </template>
+
+      <div class="comment">
+        <template if="{{participant.comment == undefined}}">
+          <paper-button on-click="{{addParticipantComment}}">Legg til kommentar</paper-button>
+        </template>
+        <template if="{{ participant.comment !== undefined }}">
+          <paper-input label="Kommentar" value="{{participant.comment}}" floatinglabel></paper-input>
+        </template>
+        <p>F.eks. om allergier eller annet.</p>
+      </div>
 
     </div>
 

@@ -48,6 +48,10 @@
         zipcode: '',
         city: ''
       });
+    },
+
+    addParticipantComment: function () {
+      this.participant.comment = '';
     }
 
   });
