@@ -37,6 +37,14 @@
         this.participant.is_minor = (participantAge < this.AGE_MINOR_LIMIT) ? true : false;
       }
 
+    },
+
+    addParentGuardian: function () {
+      this.participant.parents_guardians.push({
+        name: '',
+        email: '',
+        phone: ''
+      });
     }
 
   });

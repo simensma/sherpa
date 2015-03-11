@@ -29,7 +29,9 @@
           <paper-input label="Epost" value="{{parent_guardian.email}}" floatinglabel></paper-input>
           <paper-input label="Telefon" value="{{parent_guardian.phone}}" floatinglabel></paper-input>
         </template>
-        <paper-button on-click="addParentGuardian">Legg til foresatt</paper-button>
+        <template if="{{participant.parents_guardians.length < 2}}">
+          <paper-button on-click="{{addParentGuardian}}">Legg til foresatt</paper-button>
+        </template>
       </template>
     </div>
   </template>
