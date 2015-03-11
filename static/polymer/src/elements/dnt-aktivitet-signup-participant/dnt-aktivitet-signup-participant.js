@@ -1,6 +1,8 @@
 (function () {
   Polymer({
 
+    AGE_MINOR_LIMIT: 16,
+
     user_contact_info_has_changed: false,
     user: {},
     participant: {},
@@ -26,12 +28,15 @@
     },
 
     dateOfBirthChanged: function (oldVal, newVal) {
-      console.log('Participant', this.participant.name, 'date of birth changed from', oldVal, 'to', newVal);
-      this.participant.is_minor = true;
-    },
 
-    ready: function () {
-      console.log('Participant is ready.');
+      var todayMoment = moment(); // Today
+      var dateOfBirthMoment = moment(this.participant.date_of_birth, 'DD.MM.YYYY', true); // Strict
+
+      if (dateOfBirthMoment.isValid()) {
+        var participantAge = todayMoment.diff(dateOfBirthMoment, 'years'); // Float
+        this.participant.is_minor = (participantAge < this.AGE_MINOR_LIMIT) ? true : false;
+      }
+
     }
 
   });
