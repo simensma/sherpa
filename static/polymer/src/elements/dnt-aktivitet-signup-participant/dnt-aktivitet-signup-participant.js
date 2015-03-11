@@ -43,7 +43,10 @@
       this.participant.parents_guardians.push({
         name: '',
         email: '',
-        phone: ''
+        phone: '',
+        address: '',
+        zipcode: '',
+        city: ''
       });
     }
 
