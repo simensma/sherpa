@@ -81,7 +81,10 @@
           {
             name: 'Sigmund Fossen',
             email: 'sigfos@gmail.com',
-            phone: '970 23 445'
+            phone: '970 23 445',
+            address: 'Øvrevegen 5',
+            zipcode: '0530',
+            city: 'OSLO'
           }
         ]
       };
