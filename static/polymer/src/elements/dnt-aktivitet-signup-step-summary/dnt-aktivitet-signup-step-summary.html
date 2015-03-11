@@ -17,12 +17,13 @@
       </div>
       <template if="{{participant.is_minor}}">
         <h2>Foresatte</h2>
-        <template repeat="{{ parent_guardian in participant.parents_guardians }}">
+        <template repeat="{{parent_guardian in participant.parents_guardians}}">
           <div>Navn: {{parent_guardian.name}}</div>
           <div>Epost: {{parent_guardian.email}}</div>
           <div>Telefon: {{parent_guardian.phone}}</div>
         </template>
       </template>
+      <div>Kommentar: {{participant.comment}}</div>
       <paper-button on-click="{{editParticipantDetails}}" data-participant="{{participant}}">Endre detaljer</paper-button>
     </div>
     <paper-button id="next-step" on-click="{{confirmSignup}}" data-to-step="receipt">Bekreft påmelding</paper-button>

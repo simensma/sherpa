@@ -76,6 +76,7 @@
         email: this.user.email,
         phone: this.user.phone,
         date_of_birth: this.user.date_of_birth,
+        comment: undefined,
         parents_guardians: [
           {
             name: 'Sigmund Fossen',
