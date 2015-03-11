@@ -8,7 +8,9 @@
     <core-style ref="dnt-fonts"></core-style>
     <link rel="stylesheet" href="dnt-aktivitet-signup-nav.css">
       <template repeat="{{step in steps}}">
-        <dnt-aktivitet-signup-nav-item step="{{step}}" title="{{step.title}}" on-click="{{navigateToStep}}">
+        <dnt-aktivitet-signup-nav-item
+          step="{{step}}"
+          on-click="{{navigateToStep}}">
         </dnt-aktivitet-signup-nav-item>
       </template>
     </ul>
