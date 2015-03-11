@@ -9,18 +9,22 @@
   <template>
     <link rel="stylesheet" href="dnt-aktivitet-signup-participant.css">
     <core-style ref="dnt-button-primary"></core-style>
+
     <div layout vertical>
       <h1>{{participant.name}}</h1>
+
       <div vertical layout>
         <paper-input label="Navn" value="{{participant.name}}" floatinglabel></paper-input>
         <paper-input label="Epost" value="{{participant.email}}" floatinglabel></paper-input>
         <paper-input label="Telefon" value="{{participant.phone}}" floatinglabel></paper-input>
         <paper-input label="Fødselsdato" value="{{participant.date_of_birth}}" floatinglabel></paper-input>
       </div>
+
       <template if="{{user_contact_info_has_changed}}">
         Vi ser at kontaktinformasjonen ovenfor skiller seg fra den som er lagt inn på brukeren din. Dersom du ønsker det kan du oppdatere medlemsregisteret med kontaktinformasjonen angitt over.
         <paper-button on-click="updateUserContactInformation">Oppdater i medlemsregisteret</paper-button>
       </template>
+
       <template if="{{participant.is_minor}}">
         <h2>Foresatte</h2>
         <p>For deltakere under 16 år kreves det navn og kontaktinformasjon til minst en foresatt.</p>
@@ -28,12 +32,17 @@
           <paper-input label="Navn" value="{{parent_guardian.name}}" floatinglabel></paper-input>
           <paper-input label="Epost" value="{{parent_guardian.email}}" floatinglabel></paper-input>
           <paper-input label="Telefon" value="{{parent_guardian.phone}}" floatinglabel></paper-input>
+          <paper-input label="Gateadresse" value="{{parent_guardian.street}}" floatinglabel></paper-input>
+          <paper-input label="Postnummer" value="{{parent_guardian.zipcode}}" floatinglabel></paper-input>
+          <paper-input label="Poststed" value="{{parent_guardian.city}}" floatinglabel></paper-input>
         </template>
         <template if="{{participant.parents_guardians.length < 2}}">
           <paper-button on-click="{{addParentGuardian}}">Legg til foresatt</paper-button>
         </template>
       </template>
+
     </div>
+
   </template>
   <script src="dnt-aktivitet-signup-participant.js"></script>
 </polymer-element>
