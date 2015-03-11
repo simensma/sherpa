@@ -7,7 +7,9 @@
     <core-style ref="dnt-button-primary"></core-style>
     <link rel="stylesheet" href="dnt-aktivitet-signup-step-summary.css">
     <h1>Oppsummering</h1>
-    <div>
+    <p>Se over deltakerdetaljene nedenfor og at opplysningene er riktige før du går videre med påmeldingen.</p>
+    <p>Hvis du ønsker å gjøre endringer kan du trykke på knappen <strong>endre detaljer</strong>.</p>
+    <div class="participant">
       <h2>{{participant.name}}</h2>
       <div vertical layout>
         <div>Navn: {{participant.name}}</div>
@@ -18,9 +20,11 @@
       <template if="{{participant.is_minor}}">
         <h2>Foresatte</h2>
         <template repeat="{{parent_guardian in participant.parents_guardians}}">
-          <div>Navn: {{parent_guardian.name}}</div>
-          <div>Epost: {{parent_guardian.email}}</div>
-          <div>Telefon: {{parent_guardian.phone}}</div>
+          <div class="participant">
+            <div>Navn: {{parent_guardian.name}}</div>
+            <div>Epost: {{parent_guardian.email}}</div>
+            <div>Telefon: {{parent_guardian.phone}}</div>
+          </div>
         </template>
       </template>
       <div>Kommentar: {{participant.comment}}</div>
