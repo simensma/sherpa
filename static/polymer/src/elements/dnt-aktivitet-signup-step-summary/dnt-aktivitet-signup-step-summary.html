@@ -1,4 +1,6 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/core-label/core-label.html">
+<link rel="import" href="../../../../bower_components/paper-checkbox/paper-checkbox.html">
 
 <link rel="import" href="../dnt-style-buttons/dnt-style-buttons.html">
 
@@ -30,6 +32,26 @@
       <div>Kommentar: {{participant.comment}}</div>
       <paper-button on-click="{{editParticipantDetails}}" data-participant="{{participant}}">Endre detaljer</paper-button>
     </div>
+
+    <div class="terms-and-conditions">
+      <div horizontal layout>
+        <paper-checkbox
+          for=""
+          role="checkbox"
+          tabindex="0"
+          aria-checked="false"
+          aria-labelledby="core-label-terms-and-conditions">
+        </paper-checkbox>
+        <div vertical layout>
+          <core-label id="core-label-terms-and-conditions">
+            <strong>Vilkår</strong>
+            <div>Ved påmelding godtar jeg vilkårene for påmelding og deltakelse på DNT sine arrangementer.</div>
+          </core-label>
+          <div><a href="">Les vilkår</a>.</div>
+        </div>
+      </div>
+    </div>
+
     <paper-button id="next-step" on-click="{{confirmSignup}}" data-to-step="receipt">Bekreft påmelding</paper-button>
   </template>
   <script src="dnt-aktivitet-signup-step-summary.js"></script>
