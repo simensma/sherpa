@@ -11,3 +11,7 @@ div.description {
 core-pages /deep/ .core-selected {
   position: relative;
 }
+
+:host /deep/ paper-input {
+  font-family: 'DTL Nobel';
+}
