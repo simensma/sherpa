@@ -7,7 +7,7 @@
 
 <polymer-element name="dnt-aktivitet-signup-step-participants" attributes="aktivitet signup state user participant">
   <template>
-    <core-style ref="dnt-button-primary"></core-style>
+    <core-style ref="dnt-style-buttons"></core-style>
     <link rel="stylesheet" href="dnt-aktivitet-signup-step-participants.css">
     <h2>Deltaker</h2>
     <p>Fyll ut informasjon om deltakeren i skjemaet nedenfor.</p>
@@ -20,7 +20,7 @@
       <core-icon icon="arrow-back"></core-icon>
       Tilbake
     </paper-button>
-    <paper-button id="next-step" on-click="{{navigateTo}}">
+    <paper-button primary id="next-step" on-click="{{navigateTo}}">
       <core-icon icon="arrow-forward"></core-icon>
       Gå videre
     </paper-button>

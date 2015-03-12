@@ -8,6 +8,11 @@
   font-weight: normal;
 }
 
+:host /deep/ paper-button {
+  border-radius: 0;
+  margin: 0;
+}
+
 :host /deep/ paper-input /deep/ input[is="core-input"] {
   margin-top: 0 !important;
 }

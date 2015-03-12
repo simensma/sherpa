@@ -2,12 +2,12 @@
   display: block;
 }
 
-button.primary {
+button[primary] {
   background-color: #d82d20;
   color: #fff;
 }
 
 paper-button {
-  background-color: #d82d20;
-  color: #fff;
+  background-color: #e6e6e6;
+  color: #000;
 }
