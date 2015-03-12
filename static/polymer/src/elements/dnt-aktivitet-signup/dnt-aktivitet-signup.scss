@@ -1,11 +1,10 @@
 :host {
   display: block;
-  margin-top: -75px;
+  margin-top: -87px;
 }
 
 :host /deep/ * {
   font-family: "DTL Nobel";
-  font-weight: normal;
 }
 
 :host /deep/ paper-button {
@@ -37,7 +36,6 @@ core-pages /deep/ .core-selected {
 
 :host /deep/ paper-button {
   text-transform: none;
-  font-weight: bold;
 
   /deep/ .button-content {
     padding: 0.5em;
@@ -64,5 +62,6 @@ core-pages /deep/ .core-selected {
 }
 
 :host /deep/ [horizontal][layout] paper-checkbox {
-  margin-right: 10px;
+  padding-top: 2px;
+  padding-right: 15px;
 }
