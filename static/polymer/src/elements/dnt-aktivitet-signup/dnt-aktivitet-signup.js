@@ -41,7 +41,8 @@
 
     observe: {
       'state.step': 'stateStepChanged',
-      'route': 'routeChanged'
+      'route': 'routeChanged',
+      'aktivitet': 'aktivitetChanged'
     },
 
     stateStepChanged: function (oldVal, newVal) {
@@ -52,15 +53,29 @@
       console.log('Route changed to', newVal);
     },
 
+    aktivitetChanged: function (oldVal, newVal) {
+      console.log('aktivitetChanged!', oldVal, newVal);
+    },
+
+    handleAktivitetResponse: function (event, response, element) {
+      // Handled by data binding to this.aktivitet
+    },
 
     /* Lifecycle methods */
 
     ready: function () {
 
       // Set current activity
-      this.aktivitet = {
-        title: 'På ski i Huldreheimen'
-      };
+      // this.aktivitet = {
+      //   title: 'På ski i Huldreheimen'
+      // };
+
+      // Set aktivitet AJAX URL
+      try {
+        this.shadowRoot.querySelector('core-ajax#aktivitet').setAttribute('url', '/api/v2/aktivitet/' + this.aktivitet_id);
+      } catch (e) {
+        console.error(e);
+      }
 
       // Set current user
       this.user = {
@@ -91,7 +106,6 @@
 
       // Set intial step
       this.state.step = 'deltakere';
-
     }
 
   });
