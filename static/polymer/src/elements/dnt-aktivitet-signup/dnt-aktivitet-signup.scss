@@ -34,3 +34,7 @@ core-pages /deep/ .core-selected {
   margin: 5px 0 10px 0;
   color: #737373;
 }
+
+:host /deep/ paper-button /deep/ core-icon {
+  margin-right: 5px;
+}
