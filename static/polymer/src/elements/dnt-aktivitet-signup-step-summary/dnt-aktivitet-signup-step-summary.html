@@ -9,21 +9,24 @@
     <core-style ref="dnt-style-buttons"></core-style>
     <link rel="stylesheet" href="dnt-aktivitet-signup-step-summary.css">
     <h2>Oppsummering</h2>
-    <p>Se over deltakerdetaljene nedenfor og at opplysningene er riktige før du går videre med påmeldingen.</p>
-    <p>Hvis du ønsker å gjøre endringer kan du trykke på knappen <strong>endre detaljer</strong>.</p>
-    <div class="participant">
 
-      <core-toolbar>
-        <core-icon icon="account-circle"></core-icon>
-        <span flex>{{participant.name}}</span>
-        <paper-button
-          on-click="{{editParticipantDetails}}"
-          data-participant="{{participant}}">
-          <core-icon icon="create"></core-icon>
-          Endre detaljer
-        </paper-button>
-      </core-toolbar>
-      <section class="participants">
+    <section class="intro">
+      <p>Se over deltakerdetaljene nedenfor og at opplysningene er riktige før du går videre med påmeldingen.</p>
+      <p>Hvis du ønsker å gjøre endringer kan du trykke på knappen <strong>endre detaljer</strong>.</p>
+    </section>
+
+    <section class="participants">
+      <div class="participant">
+        <core-toolbar>
+          <core-icon icon="account-circle"></core-icon>
+          <span flex>{{participant.name}}</span>
+          <paper-button
+            on-click="{{editParticipantDetails}}"
+            data-participant="{{participant}}">
+            <core-icon icon="create"></core-icon>
+            Endre detaljer
+          </paper-button>
+        </core-toolbar>
         <div class="participant-content">
           <div vertical layout>
             <template if="{{participant.date_of_birth}}">
@@ -39,7 +42,7 @@
           <template if="{{participant.is_minor}}">
             <h3>Foresatte</h3>
             <template repeat="{{parent_guardian in participant.parents_guardians}}">
-              <div class="participant">
+              <div class="parent-guardian">
                 <template if="{{parent_guardian.name}}">
                   <div>Navn: {{parent_guardian.name}}</div>
                 </template>
