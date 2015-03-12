@@ -12,14 +12,19 @@
     <link rel="stylesheet" href="dnt-aktivitet-signup-participant.css">
     <core-style ref="dnt-button-primary"></core-style>
 
-    <div layout vertical>
+    <div vertical layout>
       <h1>{{participant.name}}</h1>
 
-      <div vertical layout>
-        <paper-input label="Navn" value="{{participant.name}}" floatinglabel></paper-input>
-        <paper-input label="Epost" value="{{participant.email}}" floatinglabel></paper-input>
-        <paper-input label="Telefon" value="{{participant.phone}}" floatinglabel></paper-input>
-        <paper-input label="Fødselsdato" value="{{participant.date_of_birth}}" floatinglabel></paper-input>
+      <div horizontal layout>
+        <paper-input label="Navn" value="{{participant.name}}" floatinglabel flex one></paper-input>
+      </div>
+      <div horizontal layout>
+        <paper-input label="Fødselsdato" value="{{participant.date_of_birth}}" floatinglabel flex one></paper-input>
+      </div>
+      <div horizontal layout>
+        <paper-input label="Telefon" value="{{participant.phone}}" floatinglabel flex ten></paper-input>
+        <div spacer flex one></div>
+        <paper-input label="Epost" value="{{participant.email}}" floatinglabel flex ten></paper-input>
       </div>
 
       <template if="{{user_contact_info_has_changed}}">
@@ -31,16 +36,28 @@
         <h2>Foresatte</h2>
         <p>For deltakere under 16 år kreves det navn og kontaktinformasjon til minst en foresatt.</p>
         <template repeat="{{ parent_guardian in participant.parents_guardians }}">
-          <paper-input label="Navn" value="{{parent_guardian.name}}" floatinglabel></paper-input>
-          <paper-input label="Epost" value="{{parent_guardian.email}}" floatinglabel></paper-input>
-          <paper-input label="Telefon" value="{{parent_guardian.phone}}" floatinglabel></paper-input>
-          <paper-input label="Gateadresse" value="{{parent_guardian.street}}" floatinglabel></paper-input>
-          <paper-input label="Postnummer" value="{{parent_guardian.zipcode}}" floatinglabel></paper-input>
-          <paper-input label="Poststed" value="{{parent_guardian.city}}" floatinglabel></paper-input>
+          <div horizontal layout>
+            <paper-input label="Navn" value="{{parent_guardian.name}}" floatinglabel flex one></paper-input>
+          </div>
+          <div horizontal layout>
+            <paper-input label="Telefon" value="{{parent_guardian.phone}}" floatinglabel flex ten></paper-input>
+            <div spacer flex one></div>
+            <paper-input label="Epost" value="{{parent_guardian.email}}" floatinglabel flex ten></paper-input>
+          </div>
+          <div horizontal layout>
+            <paper-input label="Gateadresse" value="{{parent_guardian.street}}" floatinglabel flex></paper-input>
+          </div>
+          <div horizontal layout>
+            <paper-input label="Postnummer" value="{{parent_guardian.zipcode}}" floatinglabel flex four></paper-input>
+            <div spacer flex one></div>
+            <paper-input label="Poststed" value="{{parent_guardian.city}}" floatinglabel flex twelve></paper-input>
+          </div>
         </template>
-        <paper-button on-click="{{addParentGuardian}}" disabled?="{{participant.parents_guardians.length >= PARENTS_GUARDIANS_LIMIT}}">
-          Legg til foresatt
-        </paper-button>
+        <div horizontal layout>
+          <paper-button on-click="{{addParentGuardian}}" disabled?="{{participant.parents_guardians.length >= PARENTS_GUARDIANS_LIMIT}}">
+            Legg til foresatt
+          </paper-button>
+        </div>
       </template>
 
       <div class="comment">
