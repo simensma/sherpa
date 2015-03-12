@@ -106,6 +106,9 @@
 
       // Set intial step
       this.state.step = 'deltakere';
+
+      this.removeAttribute('hidden');
+
     }
 
   });
