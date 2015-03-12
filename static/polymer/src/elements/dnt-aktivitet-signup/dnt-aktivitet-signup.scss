@@ -35,13 +35,21 @@ core-pages /deep/ .core-selected {
   color: #737373;
 }
 
-:host /deep/ paper-button /deep/ core-icon {
-  margin-right: 5px;
-}
-
 :host /deep/ paper-button {
   text-transform: none;
   font-weight: bold;
+
+  /deep/ .button-content {
+    padding: 0.5em;
+  }
+
+  /deep/ core-icon {
+    margin-right: 5px;
+  }
+}
+
+:host /deep/ [end-justified] /deep/ paper-button {
+  margin-left: 10px;
 }
 
 :host /deep/ core-toolbar {
