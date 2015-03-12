@@ -8,33 +8,62 @@
   <template>
     <core-style ref="dnt-style-buttons"></core-style>
     <link rel="stylesheet" href="dnt-aktivitet-signup-step-summary.css">
-    <h1>Oppsummering</h1>
+    <h2>Oppsummering</h2>
     <p>Se over deltakerdetaljene nedenfor og at opplysningene er riktige før du går videre med påmeldingen.</p>
     <p>Hvis du ønsker å gjøre endringer kan du trykke på knappen <strong>endre detaljer</strong>.</p>
     <div class="participant">
-      <h2>{{participant.name}}</h2>
-      <div vertical layout>
-        <div>Navn: {{participant.name}}</div>
-        <div>Epost: {{participant.email}}</div>
-        <div>Telefon: {{participant.phone}}</div>
-        <div>Fødselsdato: {{participant.date_of_birth}}</div>
-      </div>
-      <template if="{{participant.is_minor}}">
-        <h2>Foresatte</h2>
-        <template repeat="{{parent_guardian in participant.parents_guardians}}">
-          <div class="participant">
-            <div>Navn: {{parent_guardian.name}}</div>
-            <div>Epost: {{parent_guardian.email}}</div>
-            <div>Telefon: {{parent_guardian.phone}}</div>
-          </div>
-        </template>
-      </template>
-      <div>Kommentar: {{participant.comment}}</div>
-      <paper-button on-click="{{editParticipantDetails}}" data-participant="{{participant}}">Endre detaljer</paper-button>
-    </div>
 
-    <div class="terms-and-conditions">
-      <div horizontal layout>
+      <core-toolbar>
+        <core-icon icon="account-circle"></core-icon>
+        <span flex>{{participant.name}}</span>
+        <paper-button
+          on-click="{{editParticipantDetails}}"
+          data-participant="{{participant}}">
+          <core-icon icon="create"></core-icon>
+          Endre detaljer
+        </paper-button>
+      </core-toolbar>
+      <section class="participants">
+        <div class="participant-content">
+          <div vertical layout>
+            <template if="{{participant.date_of_birth}}">
+              <div>Fødselsdato: {{participant.date_of_birth}}</div>
+            </template>
+            <template if="{{participant.phone}}">
+              <div>Telefon: {{participant.phone}}</div>
+            </template>
+            <template if="{{participant.email}}">
+              <div>Epost: {{participant.email}}</div>
+            </template>
+          </div>
+          <template if="{{participant.is_minor}}">
+            <h3>Foresatte</h3>
+            <template repeat="{{parent_guardian in participant.parents_guardians}}">
+              <div class="participant">
+                <template if="{{parent_guardian.name}}">
+                  <div>Navn: {{parent_guardian.name}}</div>
+                </template>
+                <template if="{{parent_guardian.email}}">
+                  <div>Epost: {{parent_guardian.email}}</div>
+                </template>
+                <template if="{{parent_guardian.phone}}">
+                  <div>Telefon: {{parent_guardian.phone}}</div>
+                </template>
+                <template if="{{parent_guardian.address && parent_guardian.zipcode && parent_guardian.city}}">
+                  <div>Adresse: {{parent_guardian.address}}, {{parent_guardian.zipcode}} {{parent_guardian.city}}</div>
+                </template>
+              </div>
+            </template>
+          </template>
+          <template if="{{participant.comment}}">
+            <div>Kommentar: {{participant.comment}}</div>
+          </template>
+        </div>
+      </div>
+    </section>
+
+    <section class="options">
+      <div class="terms-and-conditions" horizontal layout>
         <paper-checkbox
           for=""
           role="checkbox"
@@ -50,9 +79,19 @@
           <div><a href="">Les vilkår</a>.</div>
         </div>
       </div>
+    </section>
+
+    <div horizontal end-justified layout>
+      <paper-button id="next-step" on-click="{{navigateTo}}">
+        <core-icon icon="arrow-back"></core-icon>
+        Tilbake
+      </paper-button>
+      <paper-button primary id="next-step" on-click="{{confirmSignup}}" data-to-step="receipt">
+        <core-icon icon="check"></core-icon>
+        Bekreft påmelding
+      </paper-button>
     </div>
 
-    <paper-button id="next-step" on-click="{{confirmSignup}}" data-to-step="receipt">Bekreft påmelding</paper-button>
   </template>
   <script src="dnt-aktivitet-signup-step-summary.js"></script>
 </polymer-element>
