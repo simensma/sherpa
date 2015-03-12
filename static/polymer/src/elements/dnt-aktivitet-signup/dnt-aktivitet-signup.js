@@ -14,7 +14,7 @@
         hasPassed: true
       },
       {
-        title: 'Deltakere',
+        title: 'Deltaker',
         slug: 'deltakere',
         isCurrent: true,
         hasPassed: false
