@@ -29,3 +29,8 @@ core-pages /deep/ .core-selected {
 :host /deep/ section {
   margin-bottom: 20px;
 }
+
+:host /deep/ p.help-block {
+  margin: 5px 0 10px 0;
+  color: #737373;
+}
