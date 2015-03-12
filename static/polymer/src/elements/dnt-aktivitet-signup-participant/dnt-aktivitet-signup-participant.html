@@ -38,9 +38,9 @@
           <paper-input label="Postnummer" value="{{parent_guardian.zipcode}}" floatinglabel></paper-input>
           <paper-input label="Poststed" value="{{parent_guardian.city}}" floatinglabel></paper-input>
         </template>
-        <template if="{{participant.parents_guardians.length < 2}}">
-          <paper-button on-click="{{addParentGuardian}}">Legg til foresatt</paper-button>
-        </template>
+        <paper-button on-click="{{addParentGuardian}}" disabled?="{{participant.parents_guardians.length >= 2}}">
+          Legg til foresatt
+        </paper-button>
       </template>
 
       <div class="comment">
