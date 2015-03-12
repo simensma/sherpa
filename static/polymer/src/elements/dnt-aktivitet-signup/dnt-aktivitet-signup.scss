@@ -27,7 +27,7 @@ core-pages /deep/ .core-selected {
 }
 
 :host /deep/ section {
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 }
 
 :host /deep/ p.help-block {
@@ -37,4 +37,13 @@ core-pages /deep/ .core-selected {
 
 :host /deep/ paper-button /deep/ core-icon {
   margin-right: 5px;
+}
+
+:host /deep/ paper-button {
+  text-transform: none;
+  font-weight: bold;
+}
+
+:host /deep/ core-toolbar {
+  font-size: 1.2em;
 }
