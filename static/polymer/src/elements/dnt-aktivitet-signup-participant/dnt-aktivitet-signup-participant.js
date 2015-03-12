@@ -2,6 +2,7 @@
   Polymer({
 
     AGE_MINOR_LIMIT: 16,
+    PARENTS_GUARDIANS_LIMIT: 2,
 
     user_contact_info_has_changed: false,
     user: {},
