@@ -24,46 +24,48 @@
 
     <dnt-aktivitet-signup-nav aktivitet="{{aktivitet}}" steps="{{steps}}"></dnt-aktivitet-signup-nav>
 
-    <template if="{{ user.is_new }}">
-      <p>Du er nå registrert hos oss og kan logge inn med epost-adressen og passordet du valgte neste gang du skal melde deg på en tur.</p>
-    </template>
+    <div vertical layout>
+      <template if="{{ user.is_new }}">
+        <p>Du er nå registrert hos oss og kan logge inn med epost-adressen og passordet du valgte neste gang du skal melde deg på en tur.</p>
+      </template>
 
-    <flatiron-director route="{{state.step}}" autoHash></flatiron-director>
+      <flatiron-director route="{{state.step}}" autoHash></flatiron-director>
 
-    <core-pages valueattr="hash" selected="{{state.step}}">
+      <core-pages valueattr="hash" selected="{{state.step}}">
 
-      <section hash="beskrivelse">
-        <div class="description">
-          <content></content>
-        </div>
-      </section>
+        <section hash="beskrivelse">
+          <div class="description">
+            <content></content>
+          </div>
+        </section>
 
-      <section hash="deltakere">
-        <dnt-aktivitet-signup-step-participants
-          state="{{state}}"
-          actions="{{actions}}"
-          participant="{{participant}}"
-          user="{{user}}">
-        </dnt-aktivitet-signup-step-participants>
-      </section>
+        <section hash="deltakere">
+          <dnt-aktivitet-signup-step-participants
+            state="{{state}}"
+            actions="{{actions}}"
+            participant="{{participant}}"
+            user="{{user}}">
+          </dnt-aktivitet-signup-step-participants>
+        </section>
 
-      <section hash="oppsummering">
-        <dnt-aktivitet-signup-step-summary
-          state="{{state}}"
-          aktivitet="{{aktivitet}}"
-          participant="{{participant}}">
-        </dnt-aktivitet-signup-step-summary>
-      </section>
+        <section hash="oppsummering">
+          <dnt-aktivitet-signup-step-summary
+            state="{{state}}"
+            aktivitet="{{aktivitet}}"
+            participant="{{participant}}">
+          </dnt-aktivitet-signup-step-summary>
+        </section>
 
-      <section hash="kvittering">
-        <dnt-aktivitet-signup-step-receipt
-          state="{{state}}"
-          aktivitet="{{aktivitet}}"
-          participant="{{participant}}">
-        </dnt-aktivitet-signup-step-receipt>
-      </section>
+        <section hash="kvittering">
+          <dnt-aktivitet-signup-step-receipt
+            state="{{state}}"
+            aktivitet="{{aktivitet}}"
+            participant="{{participant}}">
+          </dnt-aktivitet-signup-step-receipt>
+        </section>
 
-    </core-pages>
+      </core-pages>
+    </div>
 
   </template>
 
