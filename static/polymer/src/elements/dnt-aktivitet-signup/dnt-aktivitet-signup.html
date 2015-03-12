@@ -1,5 +1,6 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../../../bower_components/flatiron-director/flatiron-director.html">
+<link rel="import" href="../../../../bower_components/core-ajax/core-ajax.html">
 <link rel="import" href="../../../../bower_components/core-pages/core-pages.html">
 <link rel="import" href="../../../../bower_components/core-animated-pages/transitions/slide-from-right.html">
 
@@ -8,10 +9,18 @@
 <link rel="import" href="../dnt-aktivitet-signup-step-summary/dnt-aktivitet-signup-step-summary.html">
 <link rel="import" href="../dnt-aktivitet-signup-step-receipt/dnt-aktivitet-signup-step-receipt.html">
 
-<polymer-element name="dnt-aktivitet-signup" attributes="">
+<polymer-element name="dnt-aktivitet-signup" attributes="aktivitet_id aktivitet_date_id">
 
   <template>
     <link rel="stylesheet" href="dnt-aktivitet-signup.css">
+
+    <core-ajax
+      id="aktivitet"
+      auto
+      handleAs="json"
+      response="{{aktivitet}}"
+      on-core-response="{{handleAktivitetResponse}}">
+    </core-ajax>
 
     <dnt-aktivitet-signup-nav aktivitet="{{aktivitet}}" steps="{{steps}}"></dnt-aktivitet-signup-nav>
 
