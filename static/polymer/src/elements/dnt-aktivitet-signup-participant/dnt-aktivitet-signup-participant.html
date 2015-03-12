@@ -71,7 +71,10 @@
 
       <div class="comment">
         <template if="{{participant.comment == undefined}}">
-          <paper-button on-click="{{addParticipantComment}}">Legg til kommentar</paper-button>
+          <paper-button on-click="{{addParticipantComment}}">
+            <core-icon icon="announcement"></core-icon>
+            Legg til kommentar
+          </paper-button>
         </template>
         <template if="{{ participant.comment !== undefined }}">
           <div horizontal layout>
