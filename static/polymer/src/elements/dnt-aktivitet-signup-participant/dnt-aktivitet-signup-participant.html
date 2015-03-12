@@ -1,9 +1,8 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/core-toolbar/core-toolbar.html">
+<link rel="import" href="../../../../bower_components/core-icon/core-icon.html">
 <link rel="import" href="../../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../../../../bower_components/core-toolbar/core-toolbar.html">
-<link rel="import" href="../../../../bower_components/core-header-panel/core-header-panel.html">
-<link rel="import" href="../../../../bower_components/paper-input/paper-autogrow-textarea.html">
 
 <link rel="import" href="../dnt-style-buttons/dnt-style-buttons.html">
 
@@ -11,9 +10,11 @@
   <template>
     <link rel="stylesheet" href="dnt-aktivitet-signup-participant.css">
     <core-style ref="dnt-button-primary"></core-style>
-
     <div vertical layout>
-      <h1>{{participant.name}}</h1>
+      <core-toolbar>
+        <core-icon icon="face"></core-icon>
+        <span flex="">{{participant.name}}</span>
+      </core-toolbar>
 
       <div horizontal layout>
         <paper-input label="Navn" value="{{participant.name}}" floatinglabel flex one></paper-input>
@@ -69,7 +70,6 @@
         </template>
         <p>F.eks. om allergier eller annet.</p>
       </div>
-
     </div>
 
   </template>
