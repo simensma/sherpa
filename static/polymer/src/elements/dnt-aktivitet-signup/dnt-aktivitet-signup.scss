@@ -55,3 +55,14 @@ core-pages /deep/ .core-selected {
 :host /deep/ core-toolbar {
   font-size: 1.2em;
 }
+
+:host /deep/ {
+  h1, h2, h3, h4 {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+}
+
+:host /deep/ [horizontal][layout] paper-checkbox {
+  margin-right: 10px;
+}
