@@ -54,7 +54,7 @@
       <template if="{{participant.is_minor}}">
         <section class="participant-parents-guardians">
           <h2>Foresatte</h2>
-          <p>For deltakere under 16 år kreves det navn og kontaktinformasjon til minst en foresatt.</p>
+          <p>For deltakere under 16 år kreves det navn og kontaktinformasjon til minst en foresatt. Maks antall foresatte er {{PARENTS_GUARDIANS_LIMIT}}.</p>
           <template repeat="{{ parent_guardian in participant.parents_guardians }}">
             <div class="parent-guardian-contact-info">
               <div horizontal layout>
