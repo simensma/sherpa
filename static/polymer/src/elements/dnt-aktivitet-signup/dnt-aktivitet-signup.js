@@ -54,7 +54,7 @@
     },
 
     aktivitetChanged: function (oldVal, newVal) {
-      console.log('aktivitetChanged!', oldVal, newVal);
+      // console.log('aktivitetChanged!', oldVal, newVal);
     },
 
     handleAktivitetResponse: function (event, response, element) {
