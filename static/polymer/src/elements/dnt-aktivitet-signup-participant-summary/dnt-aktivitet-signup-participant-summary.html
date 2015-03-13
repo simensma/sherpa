@@ -16,8 +16,10 @@
         </paper-button>
       </template>
     </core-toolbar>
-    <div class="details">
-      <div vertical layout>
+
+    <div vertical layout class="details">
+
+      <div class="details-participant">
         <template if="{{participant.date_of_birth}}">
           <div>Fødselsdato: {{participant.date_of_birth}}</div>
         </template>
@@ -27,29 +29,33 @@
         <template if="{{participant.email}}">
           <div>Epost: {{participant.email}}</div>
         </template>
-      </div>
-      <template if="{{participant.is_minor}}">
-        <h3>Foresatte</h3>
-        <template repeat="{{parent_guardian in participant.parents_guardians}}">
-          <div class="parent-guardian">
-            <template if="{{parent_guardian.name}}">
-              <div>Navn: {{parent_guardian.name}}</div>
-            </template>
-            <template if="{{parent_guardian.email}}">
-              <div>Epost: {{parent_guardian.email}}</div>
-            </template>
-            <template if="{{parent_guardian.phone}}">
-              <div>Telefon: {{parent_guardian.phone}}</div>
-            </template>
-            <template if="{{parent_guardian.address && parent_guardian.zipcode && parent_guardian.city}}">
-              <div>Adresse: {{parent_guardian.address}}, {{parent_guardian.zipcode}} {{parent_guardian.city}}</div>
-            </template>
-          </div>
+        <template if="{{participant.comment}}">
+          <div>Kommentar: {{participant.comment}}</div>
         </template>
+      </div>
+
+      <template if="{{participant.parents_guardians.length}}">
+        <div class="details-parents-guardians">
+          <h3>Foresatte</h3>
+          <template repeat="{{parent_guardian in participant.parents_guardians}}">
+            <div class="details-parent-guardian">
+              <template if="{{parent_guardian.name}}">
+                <div>Navn: {{parent_guardian.name}}</div>
+              </template>
+              <template if="{{parent_guardian.email}}">
+                <div>Epost: {{parent_guardian.email}}</div>
+              </template>
+              <template if="{{parent_guardian.phone}}">
+                <div>Telefon: {{parent_guardian.phone}}</div>
+              </template>
+              <template if="{{parent_guardian.address && parent_guardian.zipcode && parent_guardian.city}}">
+                <div>Adresse: {{parent_guardian.address}}, {{parent_guardian.zipcode}} {{parent_guardian.city}}</div>
+              </template>
+            </div>
+          </template>
+        </div>
       </template>
-      <template if="{{participant.comment}}">
-        <div>Kommentar: {{participant.comment}}</div>
-      </template>
+
     </div>
 
   </template>
