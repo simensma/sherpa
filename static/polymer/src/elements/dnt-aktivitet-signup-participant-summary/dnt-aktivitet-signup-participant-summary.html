@@ -1,8 +1,55 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 
-<polymer-element name="dnt-aktivitet-signup-participant-summary" attributes="">
+<polymer-element name="dnt-aktivitet-signup-participant-summary" attributes="state participant">
   <template>
     <link rel="stylesheet" href="dnt-aktivitet-signup-participant-summary.css">
+
+    <core-toolbar>
+      <core-icon icon="account-circle"></core-icon>
+      <span flex>{{participant.name}}</span>
+      <paper-button
+        on-click="{{editParticipantDetails}}"
+        data-participant="{{participant}}">
+        <core-icon icon="create"></core-icon>
+        Endre detaljer
+      </paper-button>
+    </core-toolbar>
+    <div class="details">
+      <div vertical layout>
+        <template if="{{participant.date_of_birth}}">
+          <div>Fødselsdato: {{participant.date_of_birth}}</div>
+        </template>
+        <template if="{{participant.phone}}">
+          <div>Telefon: {{participant.phone}}</div>
+        </template>
+        <template if="{{participant.email}}">
+          <div>Epost: {{participant.email}}</div>
+        </template>
+      </div>
+      <template if="{{participant.is_minor}}">
+        <h3>Foresatte</h3>
+        <template repeat="{{parent_guardian in participant.parents_guardians}}">
+          <div class="parent-guardian">
+            <template if="{{parent_guardian.name}}">
+              <div>Navn: {{parent_guardian.name}}</div>
+            </template>
+            <template if="{{parent_guardian.email}}">
+              <div>Epost: {{parent_guardian.email}}</div>
+            </template>
+            <template if="{{parent_guardian.phone}}">
+              <div>Telefon: {{parent_guardian.phone}}</div>
+            </template>
+            <template if="{{parent_guardian.address && parent_guardian.zipcode && parent_guardian.city}}">
+              <div>Adresse: {{parent_guardian.address}}, {{parent_guardian.zipcode}} {{parent_guardian.city}}</div>
+            </template>
+          </div>
+        </template>
+      </template>
+      <template if="{{participant.comment}}">
+        <div>Kommentar: {{participant.comment}}</div>
+      </template>
+    </div>
+
   </template>
   <script src="dnt-aktivitet-signup-participant-summary.js"></script>
 </polymer-element>
