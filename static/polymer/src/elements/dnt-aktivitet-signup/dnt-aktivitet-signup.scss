@@ -12,7 +12,8 @@
   margin: 0;
 }
 
-:host /deep/ paper-input /deep/ input[is="core-input"] {
+:host /deep/ paper-input /deep/ input[is="core-input"],
+:host /deep/ paper-input-decorator /deep/ input[is="core-input"] {
   margin-top: 0 !important;
 }
 
