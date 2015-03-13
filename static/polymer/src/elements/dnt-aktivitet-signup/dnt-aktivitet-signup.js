@@ -105,7 +105,7 @@
       };
 
       // Set intial step
-      this.state.step = 'oppsummering';
+      this.state.step = 'deltakere';
 
       this.removeAttribute('hidden');
 
