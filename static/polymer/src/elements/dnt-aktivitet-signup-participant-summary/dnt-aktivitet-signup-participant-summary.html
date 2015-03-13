@@ -1,18 +1,20 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 
-<polymer-element name="dnt-aktivitet-signup-participant-summary" attributes="state participant">
+<polymer-element name="dnt-aktivitet-signup-participant-summary" attributes="state participant editlink">
   <template>
     <link rel="stylesheet" href="dnt-aktivitet-signup-participant-summary.css">
 
     <core-toolbar>
       <core-icon icon="account-circle"></core-icon>
       <span flex>{{participant.name}}</span>
-      <paper-button
-        on-click="{{editParticipantDetails}}"
-        data-participant="{{participant}}">
-        <core-icon icon="create"></core-icon>
-        Endre detaljer
-      </paper-button>
+      <template if="{{editlink}}">
+        <paper-button
+          on-click="{{editParticipantDetails}}"
+          data-participant="{{participant}}">
+          <core-icon icon="create"></core-icon>
+          Endre detaljer
+        </paper-button>
+      </template>
     </core-toolbar>
     <div class="details">
       <div vertical layout>
