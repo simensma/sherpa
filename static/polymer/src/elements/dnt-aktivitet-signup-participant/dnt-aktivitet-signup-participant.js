@@ -51,6 +51,13 @@
       });
     },
 
+    removeParentGuardian: function (event, detail, sender) {
+      var parentGuardianToRemove = sender.templateInstance.model.parent_guardian;
+      var allParentsGuardians = this.participant.parents_guardians;
+      var parentGuardianToRemoveIndex = allParentsGuardians.indexOf(parentGuardianToRemove);
+      allParentsGuardians.splice(parentGuardianToRemoveIndex, 1);
+    },
+
     addParticipantComment: function () {
       this.participant.comment = '';
     }

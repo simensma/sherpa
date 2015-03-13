@@ -73,6 +73,12 @@
                 <div spacer flex one></div>
                 <paper-input label="Poststed" value="{{parent_guardian.city}}" floatinglabel flex twelve></paper-input>
               </div>
+              <div horizontal layout>
+                <paper-button on-click="{{removeParentGuardian}}">
+                  <core-icon icon="remove"></core-icon>
+                  Ta bort foresatt
+                </paper-button>
+              </div>
             </div>
           </template>
           <div horizontal layout>
