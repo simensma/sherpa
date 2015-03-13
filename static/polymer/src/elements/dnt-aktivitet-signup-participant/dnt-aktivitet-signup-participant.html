@@ -2,6 +2,7 @@
 <link rel="import" href="../../../../bower_components/core-toolbar/core-toolbar.html">
 <link rel="import" href="../../../../bower_components/core-icon/core-icon.html">
 <link rel="import" href="../../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../../bower_components/paper-input/paper-input-decorator.html">
 <link rel="import" href="../../../../bower_components/paper-button/paper-button.html">
 
 <link rel="import" href="../dnt-style-buttons/dnt-style-buttons.html">
@@ -20,10 +21,27 @@
 
       <section class="participant-contact-info">
         <div horizontal layout>
-          <paper-input label="Navn" value="{{participant.name}}" floatinglabel flex one></paper-input>
+          <paper-input
+            label="Navn"
+            value="{{participant.name}}"
+            floatinglabel
+            flex one>
+          </paper-input>
         </div>
         <div horizontal layout>
-          <paper-input label="Fødselsdato" value="{{participant.date_of_birth}}" floatinglabel flex one></paper-input>
+          <paper-input-decorator
+            id="input_date_of_birth"
+            error="Fødselsdato må formateres DD.MM.YYYY"
+            autoValidate="true"
+            isInvalid="{{!$.input_date_of_birth.validity.valid}}"
+            label="Fødselsdato"
+            floatinglabel flex one>
+            <input
+              value="{{participant.date_of_birth}}"
+              id="input_date_of_birth"
+              is="core-input"
+              pattern="^\d\d\.\d\d\.\d\d\d\d$">
+          </paper-input-decorator>
         </div>
         <div horizontal layout>
           <paper-input label="Telefon" value="{{participant.phone}}" floatinglabel flex ten></paper-input>
