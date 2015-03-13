@@ -21,12 +21,19 @@
 
       <section class="participant-contact-info">
         <div horizontal layout>
-          <paper-input
+          <paper-input-decorator
+            id="input_participant_name"
+            error="Navn er påkrevd"
+            autoValidate="true"
+            isInvalid="{{!$.input_participant_name.validity.valid}}"
             label="Navn"
-            value="{{participant.name}}"
-            floatinglabel
-            flex one>
-          </paper-input>
+            floatinglabel flex one>
+            <input
+              value="{{participant.name}}"
+              id="input_participant_name"
+              is="core-input"
+              required>
+          </paper-input-decorator>
         </div>
         <div horizontal layout>
           <paper-input-decorator
@@ -49,8 +56,8 @@
           <paper-input label="Epost" value="{{participant.email}}" floatinglabel flex ten></paper-input>
         </div>
         <template if="{{user_contact_info_has_changed}}">
-        <dnt-alert warning>Vi ser at kontaktinformasjonen ovenfor skiller seg fra den som er lagt inn på brukeren din. Dersom du ønsker det kan du oppdatere medlemsregisteret med kontaktinformasjonen angitt over.</dnt-alert>
-          <paper-button primary on-click="updateUserContactInformation">Oppdater i medlemsregisteret</paper-button>
+          <dnt-alert info>Vi ser at kontaktinformasjonen ovenfor skiller seg fra den som er lagt inn på brukeren din. Dersom du ønsker det kan du oppdatere medlemsregisteret med kontaktinformasjonen angitt over.</dnt-alert>
+          <paper-button primary on-click="{{updateUserContactInformation}}">Oppdater i medlemsregisteret</paper-button>
         </template>
       </section>
 
