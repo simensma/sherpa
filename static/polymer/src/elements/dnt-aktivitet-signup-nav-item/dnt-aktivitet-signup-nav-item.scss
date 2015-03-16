@@ -1,1 +1,7 @@
+:host([disabled]) {
+  cursor: auto;
+}
 
+:host, :host([current]) {
+  cursor: pointer;
+}
