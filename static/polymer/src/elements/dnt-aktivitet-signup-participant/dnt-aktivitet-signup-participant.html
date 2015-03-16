@@ -62,17 +62,9 @@
       </section>
 
       <section class="comment">
-        <template if="{{participant.comment == undefined}}">
-          <paper-button on-click="{{addParticipantComment}}">
-            <core-icon icon="announcement"></core-icon>
-            Legg til kommentar
-          </paper-button>
-        </template>
-        <template if="{{ participant.comment !== undefined }}">
-          <div horizontal layout>
-            <paper-input label="Kommentar" value="{{participant.comment}}" floatinglabel flex></paper-input>
-          </div>
-        </template>
+        <div horizontal layout>
+          <paper-input label="Kommentar" value="{{participant.comment}}" floatinglabel flex></paper-input>
+        </div>
         <p class="help-block">F.eks. om allergier eller annet.</p>
       </section>
 
