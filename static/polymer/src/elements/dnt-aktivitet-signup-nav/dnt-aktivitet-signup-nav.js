@@ -15,6 +15,10 @@
       var newStepIndex = this.steps.indexOf(newStep);
       this.steps[newStepIndex].isCurrent = true;
 
+    },
+
+    filterKeys: function (object) {
+      return Object.keys(object);
     }
 
   });

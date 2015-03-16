@@ -15,6 +15,7 @@
     },
 
     confirmSignup: function (event, detail, sender) {
+      this.state.step.hasPassed = true;
       this.state.step = 'kvittering';
     }
 
