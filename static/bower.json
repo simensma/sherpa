@@ -2,11 +2,11 @@
   "name": "polymer",
   "version": "0.0.0",
   "dependencies": {
-    "core-elements": "Polymer/core-elements#^0.5.1",
-    "paper-elements": "Polymer/paper-elements#^0.5.1",
-    "polymer": "Polymer/polymer#^0.5.1",
+    "core-elements": "Polymer/core-elements#^0.5.5",
+    "paper-elements": "Polymer/paper-elements#^0.5.5",
+    "polymer": "^0.5.5",
     "momentjs": "~2.9.0",
-    "flatiron-director": "https://github.com/PolymerLabs/flatiron-director.git",
+    "flatiron-director": "PolymerLabs/flatiron-director#^0.5.0",
     "paper-date-picker": "~0.1.5"
   },
   "devDependencies": {
