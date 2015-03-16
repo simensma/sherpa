@@ -57,7 +57,7 @@
         </div>
         <template if="{{user_contact_info_has_changed}}">
           <dnt-alert info>Vi ser at kontaktinformasjonen ovenfor skiller seg fra den som er lagt inn på brukeren din. Dersom du ønsker det kan du oppdatere medlemsregisteret med kontaktinformasjonen angitt over.</dnt-alert>
-          <paper-button primary on-click="{{updateUserContactInformation}}">Oppdater i medlemsregisteret</paper-button>
+          <paper-button action on-click="{{updateUserContactInformation}}">Oppdater i medlemsregisteret</paper-button>
         </template>
       </section>
 
