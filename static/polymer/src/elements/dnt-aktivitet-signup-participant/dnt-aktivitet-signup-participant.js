@@ -63,8 +63,8 @@
     },
 
     ready: function () {
-      console.log('ready!');
-      console.log(this.querySelectorAll('paper-input-decorator'));
+      // console.log('ready!');
+      // console.log(this.querySelectorAll('paper-input-decorator'));
     },
 
     updateUserContactInformation: function () {
