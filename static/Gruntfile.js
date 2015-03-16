@@ -260,6 +260,10 @@ module.exports = function (grunt) {
       }
     },
     copy: {
+      bower: {
+        src: 'bower_components/**',
+        dest: 'dist/'
+      },
       dist: {
         files: [{
           expand: true,
