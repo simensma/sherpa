@@ -28,6 +28,8 @@
       <div class="terms-and-conditions" horizontal layout>
         <paper-checkbox
           for=""
+          checked="{{terms_and_conditions_accepted}}"
+          toggles="true"
           role="checkbox"
           tabindex="0"
           aria-checked="false"
@@ -47,7 +49,12 @@
         <core-icon icon="arrow-back"></core-icon>
         Tilbake
       </paper-button>
-      <paper-button primary id="next-step" on-click="{{confirmSignup}}" data-to-step="receipt">
+      <paper-button
+        primary
+        id="next-step"
+        on-click="{{confirmSignup}}"
+        data-to-step="receipt"
+        disabled?="{{terms_and_conditions_accepted === false}}">
         <core-icon icon="check"></core-icon>
         Bekreft påmelding
       </paper-button>
