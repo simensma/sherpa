@@ -6,32 +6,32 @@
     aktivitet: undefined,
     user: undefined,
     participant: undefined,
-    steps: [
-      {
+    steps: {
+      description: {
         title: 'Om aktiviteten',
         slug: 'beskrivelse',
         isCurrent: false,
         hasPassed: true
       },
-      {
+      participants: {
         title: 'Deltaker',
         slug: 'deltakere',
         isCurrent: true,
         hasPassed: false
       },
-      {
+      summary: {
         title: 'Oppsummering',
         slug: 'oppsummering',
         isCurrent: false,
         hasPassed: false
       },
-      {
+      receipt: {
         title: 'Kvittering',
         slug: 'kvittering',
         isCurrent: false,
         hasPassed: false
       }
-    ],
+    },
     state: {
       step: undefined
     },

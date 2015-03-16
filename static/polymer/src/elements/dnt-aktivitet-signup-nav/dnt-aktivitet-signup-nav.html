@@ -8,10 +8,11 @@
     <core-style ref="dnt-fonts"></core-style>
     <link rel="stylesheet" href="dnt-aktivitet-signup-nav.css">
     <div horizontal layout>
-      <template repeat="{{step in steps}}">
+      <template repeat="{{key, index in steps | filterKeys}}">
         <dnt-aktivitet-signup-nav-item
-          step="{{step}}"
-          on-click="{{navigateToStep}}">
+          step="{{steps[key]}}"
+          on-click="{{navigateToStep}}"
+          disabled?="{{!steps[key].hasPassed}}">
         </dnt-aktivitet-signup-nav-item>
       </template>
     </div>
