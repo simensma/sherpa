@@ -22,16 +22,16 @@
       on-core-response="{{handleAktivitetResponse}}">
     </core-ajax>
 
-    <dnt-aktivitet-signup-nav aktivitet="{{aktivitet}}" steps="{{steps}}"></dnt-aktivitet-signup-nav>
+    <dnt-aktivitet-signup-nav aktivitet="{{aktivitet}}" steps="{{steps}}" state="{{state}}"></dnt-aktivitet-signup-nav>
 
     <div vertical layout>
       <template if="{{ user.is_new }}">
         <p>Du er nå registrert hos oss og kan logge inn med epost-adressen og passordet du valgte neste gang du skal melde deg på en tur.</p>
       </template>
 
-      <flatiron-director route="{{state.step}}" autoHash></flatiron-director>
+      <flatiron-director route="{{state.step.slug}}" autoHash></flatiron-director>
 
-      <core-pages valueattr="hash" selected="{{state.step}}">
+      <core-pages valueattr="hash" selected="{{state.step.slug}}">
 
         <section hash="beskrivelse">
           <div class="description">
@@ -45,7 +45,8 @@
             actions="{{actions}}"
             participant="{{participant}}"
             user="{{user}}"
-            step="{{steps.participants}}">
+            step="{{steps.participants}}",
+            steps="{{steps}}">
           </dnt-aktivitet-signup-step-participants>
         </section>
 
@@ -54,7 +55,8 @@
             state="{{state}}"
             aktivitet="{{aktivitet}}"
             participant="{{participant}}"
-            step="{{steps.summary}}">
+            step="{{steps.summary}}"
+            steps="{{steps}}">
           </dnt-aktivitet-signup-step-summary>
         </section>
 

@@ -5,7 +5,7 @@
 <link rel="import" href="../dnt-aktivitet-signup-participant/dnt-aktivitet-signup-participant.html">
 <link rel="import" href="../dnt-style-buttons/dnt-style-buttons.html">
 
-<polymer-element name="dnt-aktivitet-signup-step-participants" attributes="aktivitet signup state user participant step">
+<polymer-element name="dnt-aktivitet-signup-step-participants" attributes="aktivitet signup state user participant step steps">
   <template>
     <core-style ref="dnt-style-buttons"></core-style>
     <link rel="stylesheet" href="dnt-aktivitet-signup-step-participants.css">
@@ -17,11 +17,11 @@
       participant="{{participant}}">
     </dnt-aktivitet-signup-participant>
     <div horizontal end-justified layout>
-      <paper-button id="next-step" on-click="{{navigateTo}}">
+      <paper-button id="next-step" on-click="{{goToPrevStep}}">
         <core-icon icon="arrow-back"></core-icon>
         Tilbake
       </paper-button>
-      <paper-button primary id="next-step" on-click="{{navigateTo}}">
+      <paper-button primary id="next-step" on-click="{{goToNextStep}}">
         <core-icon icon="arrow-forward"></core-icon>
         Gå videre
       </paper-button>

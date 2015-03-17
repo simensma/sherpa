@@ -12,28 +12,32 @@
         title: 'Om aktiviteten',
         slug: 'beskrivelse',
         isCurrent: false,
-        hasPassed: true
+        isAvailable: true,
+        component: undefined
       },
       participants: {
         id: 'participants',
         title: 'Deltaker',
         slug: 'deltakere',
         isCurrent: true,
-        hasPassed: false
+        isAvailable: false,
+        component: undefined
       },
       summary: {
         id: 'summary',
         title: 'Oppsummering',
         slug: 'oppsummering',
         isCurrent: false,
-        hasPassed: false
+        isAvailable: false,
+        component: undefined
       },
       receipt: {
         id: 'receipt',
         title: 'Kvittering',
         slug: 'kvittering',
         isCurrent: false,
-        hasPassed: false
+        isAvailable: false,
+        component: undefined
       }
     },
     state: {
@@ -49,8 +53,17 @@
       'aktivitet': 'aktivitetChanged'
     },
 
+    updateSteps: function (newStep) {
+      for (var stepKey in this.steps) {
+        this.steps[stepKey].isCurrent = false;
+      }
+      this.steps[newStep.id].isCurrent = true;
+    },
+
     stateStepChanged: function (oldVal, newVal) {
       $('body').scrollTop($('[data-dnt-container="aktivitet"]').offset().top);
+      this.updateSteps(this.state.step);
+      window.location.hash = this.state.step.slug;
     },
 
     routeChanged: function (oldVal, newVal) {
@@ -109,7 +122,7 @@
       };
 
       // Set intial step
-      this.state.step = 'deltakere';
+      this.state.step = this.steps.participants;
 
       this.removeAttribute('hidden');
 
