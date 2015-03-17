@@ -6,7 +6,7 @@
 
     <core-toolbar>
       <core-icon icon="account-circle"></core-icon>
-      <span flex>{{participant.name}}</span>
+      <span flex>{{participant.first_name}} {{participant.last_name}}</span>
       <template if="{{editlink}}">
         <paper-button
           on-click="{{editParticipantDetails}}"

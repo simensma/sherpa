@@ -81,7 +81,7 @@
     handleUserResponse: function (event, ajax, element) {
       this.participant = {
         first_name: ajax.response.first_name,
-        first_name: ajax.response.last_name,
+        last_name: ajax.response.last_name,
         email: ajax.response.email,
         phone: ajax.response.phone,
         date_of_birth: ajax.response.dob,
