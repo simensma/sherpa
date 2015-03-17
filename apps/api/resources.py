@@ -28,4 +28,6 @@ class UserResource(ModelResource):
         allowed_methods = ['get']
 
     def dehydrate(self, bundle):
+        bundle.data['first_name'] = bundle.obj.get_first_name()
+        bundle.data['last_name'] = bundle.obj.get_last_name()
         return bundle
