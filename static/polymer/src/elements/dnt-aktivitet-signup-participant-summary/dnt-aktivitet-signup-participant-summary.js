@@ -2,7 +2,7 @@
   Polymer({
 
     editParticipantDetails: function (event, detail, sender) {
-      this.state.step = 'participants';
+      this.state.step = this.steps.participants;
     }
 
   });

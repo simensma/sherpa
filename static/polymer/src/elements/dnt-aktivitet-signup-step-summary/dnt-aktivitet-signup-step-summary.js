@@ -1,7 +1,7 @@
 (function () {
   Polymer({
 
-    isValid: false,
+    is_valid: false,
     terms_and_conditions_accepted: false,
 
     /* Observers */
@@ -26,7 +26,7 @@
     },
 
     validate: function () {
-      this.isValid = true;
+      this.is_valid = true;
     },
 
 
