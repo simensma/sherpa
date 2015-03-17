@@ -265,7 +265,9 @@ class Condition(models.Model):
     def get_locations(self):
         locations = cache.get('conditions.locations.%s' % self.id)
         if locations is None:
-            locations = set([Location.get_active().get(code=l) for l in self.locations.split('|') if l != ''])
+            # Note that we're not filtering on active locations since sherpa2 doesn't, and some conditions may be
+            # related to locations marked as not online
+            locations = set([Location.objects.get(code=l) for l in self.locations.split('|') if l != ''])
             cache.set('conditions.locations.%s' % self.id, locations, 60 * 60 * 12)
         return locations
 
