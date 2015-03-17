@@ -3,7 +3,7 @@
 <link rel="import" href="../dnt-aktivitet-signup-nav-item/dnt-aktivitet-signup-nav-item.html">
 <link rel="import" href="../dnt-style-fonts/dnt-style-fonts.html">
 
-<polymer-element name="dnt-aktivitet-signup-nav" attributes="aktivitet step steps">
+<polymer-element name="dnt-aktivitet-signup-nav" attributes="aktivitet state step steps">
   <template>
     <core-style ref="dnt-fonts"></core-style>
     <link rel="stylesheet" href="dnt-aktivitet-signup-nav.css">
@@ -12,7 +12,8 @@
         <dnt-aktivitet-signup-nav-item
           step="{{steps[key]}}"
           on-click="{{navigateToStep}}"
-          disabled?="{{!steps[key].hasPassed}}">
+          current?="{{steps[key].isCurrent}}"
+          disabled?="{{!steps[key].isAvailable}}">
         </dnt-aktivitet-signup-nav-item>
       </template>
     </div>

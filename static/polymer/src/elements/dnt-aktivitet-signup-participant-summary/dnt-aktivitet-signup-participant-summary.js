@@ -1,7 +1,9 @@
 (function () {
   Polymer({
+
     editParticipantDetails: function (event, detail, sender) {
-      this.state.step = 'deltakere';
+      this.state.step = 'participants';
     }
+
   });
 })();
