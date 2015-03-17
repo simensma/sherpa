@@ -34,14 +34,11 @@ module.exports = function (grunt) {
     yeoman: yeomanConfig,
 
     "bower-install-simple": {
-      options: {
-        forceLatest: true,
-        interactive: false,
-        update: true
-      },
       prod: {
         options: {
-          production: true,
+          interactive: false,
+          upgrade: true,
+          production: true
         }
       }
     },
