@@ -24,3 +24,4 @@ class UserResource(ModelResource):
         resource_name = 'user'
         authentication = SessionAuthentication()
         authorization = AuthedUserAuthorization()
+        allowed_methods = ['get']
