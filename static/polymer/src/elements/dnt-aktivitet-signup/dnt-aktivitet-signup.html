@@ -9,7 +9,7 @@
 <link rel="import" href="../dnt-aktivitet-signup-step-summary/dnt-aktivitet-signup-step-summary.html">
 <link rel="import" href="../dnt-aktivitet-signup-step-receipt/dnt-aktivitet-signup-step-receipt.html">
 
-<polymer-element name="dnt-aktivitet-signup" attributes="aktivitet_id aktivitet_date_id">
+<polymer-element name="dnt-aktivitet-signup" attributes="aktivitet_id aktivitet_date_id user_id">
 
   <template>
     <link rel="stylesheet" href="dnt-aktivitet-signup.css">
@@ -20,6 +20,14 @@
       handleAs="json"
       response="{{aktivitet}}"
       on-core-response="{{handleAktivitetResponse}}">
+    </core-ajax>
+
+    <core-ajax
+      id="user_ajax"
+      auto
+      handleAs="json"
+      response="{{user}}"
+      on-core-response="{{handleUserResponse}}">
     </core-ajax>
 
     <dnt-aktivitet-signup-nav aktivitet="{{aktivitet}}" steps="{{steps}}" state="{{state}}"></dnt-aktivitet-signup-nav>
