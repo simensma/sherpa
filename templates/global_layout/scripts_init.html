@@ -2,4 +2,8 @@
 <script>
   window.Turistforeningen = window.Turistforeningen || {};
   Turistforeningen.s3_bucket = '{{ s3_bucket }}';
+
+  {% if user.is_authenticated %}
+    Turistforeningen.user_id = {{ user.id }};
+  {% endif %}
 </script>
