@@ -37,6 +37,17 @@ class UserResource(ModelResource):
 
         # Data available only for members
         if bundle.obj.is_member():
-            pass
+            address = bundle.obj.get_address()
+            bundle.data['address'] = {
+                'address1': address.field1,
+                'address2': address.field2,
+                'address3': address.field3,
+                'postcode': address.zipcode.zipcode if address.country.code == 'NO' else None,
+                'postarea': address.zipcode.area.title() if address.country.code == 'NO' else None,
+                'country': {
+                    'code': address.country.code,
+                    'name': address.country.name
+                }
+            }
 
         return bundle
