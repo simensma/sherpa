@@ -48,7 +48,7 @@ class UserResource(ModelResource):
                 'country': {
                     'code': address.country.code,
                     'name': address.country.name
-                }
+                },
             }
 
         return bundle
