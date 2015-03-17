@@ -32,6 +32,20 @@ module.exports = function (grunt) {
 
   grunt.initConfig({
     yeoman: yeomanConfig,
+
+    "bower-install-simple": {
+      options: {
+        forceLatest: true,
+        interactive: false,
+        update: true
+      },
+      prod: {
+        options: {
+          production: true,
+        }
+      }
+    },
+
     watch: {
       options: {
         nospawn: true,
@@ -260,10 +274,6 @@ module.exports = function (grunt) {
       }
     },
     copy: {
-      bower: {
-        src: 'bower_components/**',
-        dest: 'dist/'
-      },
       dist: {
         files: [{
           expand: true,
@@ -332,6 +342,7 @@ module.exports = function (grunt) {
 
   // Load all required Grunt plugins
   grunt.loadNpmTasks('grunt-autoprefixer');
+  grunt.loadNpmTasks('grunt-bower-install-simple');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-copy');
@@ -361,6 +372,7 @@ module.exports = function (grunt) {
 
   // Register Grunt tasks
   grunt.registerTask('default', ['jshint', 'build', 'watch']);
+  grunt.registerTask('install', ['bower-install-simple', 'build']);
   grunt.registerTask('build', [
     'clean:dist',
     'recess',
