@@ -14,6 +14,6 @@ def index(request):
     available_locations = sorted(available_locations, key=lambda l: l.name)
     context = {
         'conditions': conditions,
-        'available_locations': available_locations
+        'available_locations': available_locations,
     }
     return render(request, 'central/conditions/index.html', context)
