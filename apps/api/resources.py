@@ -38,6 +38,7 @@ class UserResource(ModelResource):
 
         # Data available only for members
         if bundle.obj.is_member():
+            bundle.data['memberid'] = bundle.obj.memberid
             bundle.data['gender'] = bundle.obj.get_gender()
 
             dob = bundle.obj.get_birth_date()
