@@ -78,6 +78,18 @@
       // Handled by data binding to this.aktivitet
     },
 
+    handleUserResponse: function (event, ajax, element) {
+      this.participant = {
+        first_name: ajax.response.first_name,
+        first_name: ajax.response.last_name,
+        email: ajax.response.email,
+        phone: ajax.response.phone,
+        date_of_birth: ajax.response.dob,
+        comment: undefined,
+        parents_guardians: []
+      };
+    },
+
     /* Lifecycle methods */
 
     ready: function () {
@@ -94,32 +106,12 @@
         console.error(e);
       }
 
-      // Set current user
-      this.user = {
-        name: 'Sara Fossen',
-        email: '',
-        phone: '470 11 141',
-        date_of_birth: '20.10.2001',
-      };
+      try {
+        this.shadowRoot.querySelector('core-ajax#user_ajax').setAttribute('url', '/api/v2/user/' + this.user_id);
+      } catch (e) {
+        console.error(e);
+      }
 
-      // Set participant
-      this.participant = {
-        name: this.user.name,
-        email: this.user.email,
-        phone: this.user.phone,
-        date_of_birth: this.user.date_of_birth,
-        comment: undefined,
-        parents_guardians: [
-          {
-            name: 'Sigmund Fossen',
-            email: 'sigfos@gmail.com',
-            phone: '970 23 445',
-            address: 'Øvrevegen 5',
-            zipcode: '0530',
-            city: 'OSLO'
-          }
-        ]
-      };
 
       // Set intial step
       this.state.step = this.steps.participants;
