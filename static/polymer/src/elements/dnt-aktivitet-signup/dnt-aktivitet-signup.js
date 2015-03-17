@@ -94,11 +94,6 @@
 
     ready: function () {
 
-      // Set current activity
-      // this.aktivitet = {
-      //   title: 'På ski i Huldreheimen'
-      // };
-
       // Set aktivitet AJAX URL
       try {
         this.shadowRoot.querySelector('core-ajax#aktivitet').setAttribute('url', '/api/v2/aktivitet/' + this.aktivitet_id);
@@ -106,6 +101,7 @@
         console.error(e);
       }
 
+      // Set user AJAX URL
       try {
         this.shadowRoot.querySelector('core-ajax#user_ajax').setAttribute('url', '/api/v2/user/' + this.user_id);
       } catch (e) {
