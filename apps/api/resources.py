@@ -4,6 +4,7 @@ from tastypie.authentication import SessionAuthentication
 
 from aktiviteter.models import Aktivitet, AktivitetDate
 from user.models import User
+from .authorization import AuthedUserAuthorization
 
 class AktivitetResource(ModelResource):
     class Meta:
@@ -22,3 +23,4 @@ class UserResource(ModelResource):
         queryset = User.objects.all()
         resource_name = 'user'
         authentication = SessionAuthentication()
+        authorization = AuthedUserAuthorization()
