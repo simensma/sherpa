@@ -28,6 +28,15 @@ class UserResource(ModelResource):
         allowed_methods = ['get']
 
     def dehydrate(self, bundle):
+        # User object status
+        bundle.data['is_member'] = bundle.obj.is_member()
+
+        # Personalia
         bundle.data['first_name'] = bundle.obj.get_first_name()
         bundle.data['last_name'] = bundle.obj.get_last_name()
+
+        # Data available only for members
+        if bundle.obj.is_member():
+            pass
+
         return bundle
