@@ -8,12 +8,11 @@
     },
 
     updateSteps: function (newStep) {
-      for (var i = 0; i < this.steps.length; i++) {
-        this.steps[i].isCurrent = false;
+      for (var stepKey in this.steps) {
+        this.steps[stepKey].isCurrent = false;
       }
 
-      var newStepIndex = this.steps.indexOf(newStep);
-      this.steps[newStepIndex].isCurrent = true;
+      this.steps[newStep.id].isCurrent = true;
 
     },
 

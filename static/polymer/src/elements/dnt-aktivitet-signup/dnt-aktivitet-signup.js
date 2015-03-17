@@ -8,24 +8,28 @@
     participant: undefined,
     steps: {
       description: {
+        id: 'description',
         title: 'Om aktiviteten',
         slug: 'beskrivelse',
         isCurrent: false,
         hasPassed: true
       },
       participants: {
+        id: 'participants',
         title: 'Deltaker',
         slug: 'deltakere',
         isCurrent: true,
         hasPassed: false
       },
       summary: {
+        id: 'summary',
         title: 'Oppsummering',
         slug: 'oppsummering',
         isCurrent: false,
         hasPassed: false
       },
       receipt: {
+        id: 'receipt',
         title: 'Kvittering',
         slug: 'kvittering',
         isCurrent: false,
