@@ -38,6 +38,7 @@ class UserResource(ModelResource):
         # Data available only for members
         if bundle.obj.is_member():
             address = bundle.obj.get_address()
+            bundle.data['gender'] = bundle.obj.get_gender()
             bundle.data['address'] = {
                 'address1': address.field1,
                 'address2': address.field2,
