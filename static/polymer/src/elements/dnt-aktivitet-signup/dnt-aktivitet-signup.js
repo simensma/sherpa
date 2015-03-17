@@ -96,7 +96,7 @@
 
       // Set aktivitet AJAX URL
       try {
-        this.shadowRoot.querySelector('core-ajax#aktivitet').setAttribute('url', '/api/v2/aktivitet/' + this.aktivitet_id);
+        this.shadowRoot.querySelector('core-ajax#aktivitet_ajax').setAttribute('url', '/api/v2/aktivitet/' + this.aktivitet_id);
       } catch (e) {
         console.error(e);
       }
