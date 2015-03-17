@@ -1,5 +1,5 @@
 :host([disabled]) {
-  cursor: default;
+  cursor: default !important;
 }
 
 :host, :host([current]) {
