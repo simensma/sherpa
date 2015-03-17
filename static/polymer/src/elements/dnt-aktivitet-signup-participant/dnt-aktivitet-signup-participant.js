@@ -10,18 +10,20 @@
     participant: {},
 
     observe: {
-      'participant.name': 'userContactInfoChanged',
+      'participant.first_name': 'userContactInfoChanged',
+      'participant.last_name': 'userContactInfoChanged',
       'participant.email': 'userContactInfoChanged',
       'participant.phone': 'userContactInfoChanged',
       'participant.date_of_birth': 'dateOfBirthChanged'
     },
 
     userContactInfoChanged: function () {
-      var userNameHasChanged = this.participant.name !== this.user.name;
+      var userFirstNameHasChanged = this.participant.first_name !== this.user.first_name;
+      var userLastNameHasChanged = this.participant.last_name !== this.user.last_name;
       var userPhoneHasChanged = this.participant.phone !== this.user.phone;
       var userEmailHasChanged = this.participant.email !== this.user.email;
 
-      if (userNameHasChanged || userPhoneHasChanged || userEmailHasChanged) {
+      if (userFirstNameHasChanged || userLastNameHasChanged || userPhoneHasChanged || userEmailHasChanged) {
         this.user_contact_info_has_changed = true;
 
       } else {

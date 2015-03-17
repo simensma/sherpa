@@ -16,21 +16,34 @@
 
       <core-toolbar>
         <core-icon icon="face"></core-icon>
-        <span flex="">{{participant.name}}</span>
+        <span flex>{{participant.first_name}} {{participant.last_name}}</span>
       </core-toolbar>
 
       <section class="participant-contact-info">
         <div horizontal layout>
           <paper-input-decorator
-            id="input_participant_name"
-            error="Navn er påkrevd"
+            id="input_participant_first_name"
+            error="Fornavn er påkrevd"
             autoValidate="true"
-            isInvalid="{{!$.input_participant_name.validity.valid}}"
-            label="Navn"
+            isInvalid="{{!$.input_participant_first_name.validity.valid}}"
+            label="Fornavn"
             floatinglabel flex one>
             <input
-              value="{{participant.name}}"
-              id="input_participant_name"
+              value="{{participant.first_name}}"
+              id="input_participant_first_name"
+              is="core-input"
+              required>
+          </paper-input-decorator>
+          <paper-input-decorator
+            id="input_participant_last_name"
+            error="Etternavn er påkrevd"
+            autoValidate="true"
+            isInvalid="{{!$.input_participant_last_name.validity.valid}}"
+            label="Etternavn"
+            floatinglabel flex one>
+            <input
+              value="{{participant.last_name}}"
+              id="input_participant_last_name"
               is="core-input"
               required>
           </paper-input-decorator>
