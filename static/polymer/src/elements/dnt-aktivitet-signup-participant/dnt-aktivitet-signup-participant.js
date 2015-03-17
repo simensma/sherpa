@@ -5,6 +5,7 @@
     PARENTS_GUARDIANS_LIMIT: 2,
 
     user_contact_info_has_changed: false,
+    is_valid: true,
     user: {},
     participant: {},
 
