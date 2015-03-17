@@ -26,3 +26,6 @@ class UserResource(ModelResource):
         authentication = SessionAuthentication()
         authorization = AuthedUserAuthorization()
         allowed_methods = ['get']
+
+    def dehydrate(self, bundle):
+        return bundle
