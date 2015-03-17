@@ -291,7 +291,7 @@ MIDDLEWARE_CLASSES = (
     'sherpa.middleware.ActorDoesNotExist',
 )
 
-TEMPLATE_DEBUG = DEBUG = False
+TEMPLATE_DEBUG = DEBUG = TASTYPIE_FULL_DEBUG = False
 
 TEMPLATE_DIRS = (
     "/sherpa/templates",
