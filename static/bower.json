@@ -2,14 +2,38 @@
   "name": "polymer",
   "version": "0.0.0",
   "dependencies": {
-    "core-elements": "Polymer/core-elements#^0.5.5",
-    "paper-elements": "Polymer/paper-elements#^0.5.5",
-    "polymer": "^0.5.5",
+    "core-elements": "Polymer/core-elements#^0.5",
+    "paper-elements": "Polymer/paper-elements#^0.5",
+    "polymer": "^0.5",
     "momentjs": "~2.9.0",
-    "flatiron-director": "PolymerLabs/flatiron-director#^0.5.0",
+    "flatiron-director": "PolymerLabs/flatiron-director#^0.5",
     "paper-date-picker": "~0.1.5"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^2.0.0"
+  },
+  "resolutions": {
+    "polymer": "^0.5",
+    "core-animated-pages": "^0.5",
+    "core-icons": "^0.5",
+    "core-meta": "^0.5",
+    "core-overlay": "^0.5",
+    "core-selection": "^0.5",
+    "core-selector": "^0.5",
+    "core-style": "^0.5",
+    "core-transition": "^0.5",
+    "paper-button": "^0.5",
+    "paper-dialog": "^0.5",
+    "font-roboto": "^0.5",
+    "paper-shadow": "^0.5",
+    "paper-ripple": "^0.5",
+    "core-component-page": "^0.5",
+    "webcomponentsjs": "^0.5",
+    "core-resizable": "^0.5",
+    "core-a11y-keys": "^0.5",
+    "core-focusable": "^0.5",
+    "core-icon": "^0.5",
+    "core-iconset-svg": "^0.5",
+    "core-iconset": "^0.5"
   }
 }
