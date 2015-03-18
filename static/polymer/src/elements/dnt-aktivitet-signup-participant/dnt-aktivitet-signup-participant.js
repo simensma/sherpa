@@ -15,7 +15,21 @@
       'participant.email': 'userContactInfoChanged',
       'participant.phone': 'userContactInfoChanged',
       'participant.date_of_birth': 'dateOfBirthChanged',
-      'participant.date_of_birth_formatted': 'dateOfBirthFormattedChanged'
+      'participant.date_of_birth_formatted': 'dateOfBirthFormattedChanged',
+      '$.input_participant_first_name.validity.valid': 'validateView',
+      '$.input_participant_last_name.validity.valid': 'validateView',
+      '$.input_date_of_birth.validity.valid': 'validateView'
+    },
+
+    validateView: function () {
+      var requiredToValidate = [
+        this.$.input_participant_first_name.validity.valid,
+        this.$.input_participant_last_name.validity.valid,
+        this.$.input_date_of_birth.validity.valid
+      ];
+
+      var isValid = (requiredToValidate.indexOf(false) > -1) ? false : true;
+      this.participant.is_valid = isValid;
     },
 
     userContactInfoChanged: function () {

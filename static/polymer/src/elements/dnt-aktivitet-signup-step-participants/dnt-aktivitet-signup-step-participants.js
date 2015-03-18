@@ -6,10 +6,17 @@
 
     /* Observers */
 
-    observe: {},
+    observe: {
+      'participant.is_valid': 'participantIsValidChanged'
+    },
+
+    participantIsValidChanged: function () {
+      // If participant is invalid, the step is invalid
+      this.is_valid = this.participant.is_valid;
+    },
 
     validate: function () {
-      this.is_valid = true;
+      this.is_valid = this.participant.is_valid;
     },
 
 
