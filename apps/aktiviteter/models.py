@@ -303,7 +303,7 @@ class AktivitetDate(models.Model):
     should_have_turleder = models.BooleanField(default=False)
     turledere = models.ManyToManyField('user.User', related_name='turleder_aktivitet_dates')
 
-    # Participants
+    # Participants - now deprecated in favor of the 'aktiviteter.ParticipantGroup' relation
     participants = models.ManyToManyField('user.User', related_name='aktiviteter')
 
     objects = models.GeoManager()
@@ -600,6 +600,12 @@ class AktivitetDate(models.Model):
     def get_published():
         today = date.today()
         return AktivitetDate.objects.filter(aktivitet__published=True, aktivitet__pub_date__lte=today)
+
+class ParticipantGroup(models.Model):
+    """The ParticipantGroup model represents a group of participants (one or more) who are collectively signed up for
+    one aktivitet date."""
+    aktivitet_date = models.ForeignKey(AktivitetDate, related_name='participant_groups')
+    participants = models.ManyToManyField('user.User', related_name='aktivitet_groups')
 
 # @TODO This should have a forign key to admin.Image!
 class AktivitetImage(models.Model):
