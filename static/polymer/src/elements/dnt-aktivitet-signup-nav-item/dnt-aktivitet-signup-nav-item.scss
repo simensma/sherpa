@@ -1,7 +1,0 @@
-:host([disabled]) {
-  cursor: default !important;
-}
-
-:host, :host([current]) {
-  cursor: pointer;
-}

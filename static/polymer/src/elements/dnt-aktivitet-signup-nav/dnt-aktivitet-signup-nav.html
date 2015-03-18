@@ -13,6 +13,7 @@
           step="{{steps[key]}}"
           on-click="{{navigateToStep}}"
           current?="{{steps[key].isCurrent}}"
+          enabled?="{{steps[key].isAvailable}}"
           disabled?="{{!steps[key].isAvailable}}">
         </dnt-aktivitet-signup-nav-item>
       </template>
