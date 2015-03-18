@@ -80,6 +80,12 @@ class Forening(models.Model):
     def get_organization_no(self):
         return self.organization_no.strip()
 
+    def get_url(self):
+        if self.url is None:
+            return ''
+        else:
+            return self.url.strip()
+
     def get_gmap_url(self):
         if self.map is None:
             return ''
