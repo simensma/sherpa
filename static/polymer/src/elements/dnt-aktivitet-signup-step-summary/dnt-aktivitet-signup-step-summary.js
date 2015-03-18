@@ -26,7 +26,7 @@
     },
 
     validate: function () {
-      this.is_valid = true;
+      this.is_valid = this.participant.is_valid;
     },
 
 
