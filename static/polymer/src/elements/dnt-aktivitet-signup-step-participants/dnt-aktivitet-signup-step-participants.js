@@ -28,6 +28,7 @@
 
     goToNextStep: function (event, detail, sender) {
       this.state.step = this.steps.summary;
+      this.steps.summary.isAvailable = true;
     },
 
 
