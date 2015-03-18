@@ -88,9 +88,13 @@
                   data-toggle="popover" data-placement="right"
                   data-content="Krever ikke Sherpa-bruker eller kontaktinformasjon.">
 
-                  <input type="radio" name="dates[{{ i }}][signup_method]" value="simple"
+                  <input
+                    type="radio"
+                    name="dates[{{ i }}][signup_method]"
+                    value="simple"
                     data-dnt-toggle="date-signup"
-                    {% if date.signup_method == "simple" %}checked{% endif %}>
+                    {% if date.signup_method == "simple" %}checked{% endif %}
+                    disabled>
 
                   Enkel påmelding <span class="label label-info">?</span>
                 </label>
