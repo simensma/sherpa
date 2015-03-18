@@ -581,7 +581,7 @@ def process_card(request):
         enrollment.save()
         return redirect('enrollment.views.payment_method')
 
-    if request.GET['responseCode'] == 'OK':
+    if request.GET.get('responseCode') == 'OK':
         try:
             r = requests.get(settings.NETS_PROCESS_URL, params={
                 'merchantId': settings.NETS_MERCHANT_ID,
