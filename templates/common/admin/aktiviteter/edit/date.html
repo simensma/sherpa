@@ -74,6 +74,10 @@
           <div class="form-group">
             <label for="" class="col-sm-3 control-label">Påmelding</label>
             <div class="col-sm-6">
+              <div class="alert alert-warning">
+                Enkel påmelding er deaktivert inntil videre og påmeldingsvalgene vil snart endres til å fokusere mer på hvilke kontaktopplysninger som kreves, om deltakere under 16 år må føre opp foresatte, osv.
+              </div>
+
               <div class="radio">
                 <label>
                   <input type="radio" name="dates[{{ i }}][signup_method]" value="none"
@@ -88,9 +92,13 @@
                   data-toggle="popover" data-placement="right"
                   data-content="Krever ikke Sherpa-bruker eller kontaktinformasjon.">
 
-                  <input type="radio" name="dates[{{ i }}][signup_method]" value="simple"
+                  <input
+                    type="radio"
+                    name="dates[{{ i }}][signup_method]"
+                    value="simple"
                     data-dnt-toggle="date-signup"
-                    {% if date.signup_method == "simple" %}checked{% endif %}>
+                    {% if date.signup_method == "simple" %}checked{% endif %}
+                    disabled>
 
                   Enkel påmelding <span class="label label-info">?</span>
                 </label>
