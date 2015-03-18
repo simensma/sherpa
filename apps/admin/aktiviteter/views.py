@@ -361,7 +361,8 @@ def edit(request, aktivitet):
                 messages.error(request, 'invalid_date_format')
                 return redirect('admin.aktiviteter.views.edit', aktivitet.id)
 
-            model.signup_simple_allowed = date['signup_method'] == 'simple'
+            # Note that simple signup is currently disabled and due to be removed
+            model.signup_simple_allowed = False
             model.meeting_place = date['meeting_place']
             model.contact_type = date['contact_type']
             model.contact_custom_name = date['contact_custom_name']
