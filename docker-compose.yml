@@ -70,5 +70,5 @@ builder:
     - static/bower_components:/usr/src/app/bower_components
   environment:
     NODE_ENV: development
-  command: npm run-script install
+  command: npm run-script build
 
