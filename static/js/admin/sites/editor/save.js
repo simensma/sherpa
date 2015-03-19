@@ -151,7 +151,7 @@ $(function() {
                             // Remove any editor-elements that could have been temporarily inserted as children,
                             // and supposed to be removed but remained there due to UI bugs
                             var clone = $(this).clone();
-                            clone.find("div.content-control,div.tooltip").remove();
+                            clone.find(".content-control,.tooltip,.add-content").remove();
 
                             // And add the result
                             content.content = clone.html();
