@@ -38,6 +38,7 @@
         participants: participants
       };
 
+      signupAjax.setAttribute('url', '/api/v2/aktivitet/' + aktivitet.id + '/signup/');
       signupAjax.params = JSON.stringify(requestParams);
       signupAjax.go();
     },
