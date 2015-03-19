@@ -17,6 +17,13 @@
       participant="{{participant}}"
       is_valid="{{is_valid}}">
     </dnt-aktivitet-signup-participant>
+
+    <template if="{{!is_valid}}">
+      <section class="alerts">
+        <dnt-alert info>Du kan ikke gå videre til neste steg før de påkrevde feltene er riktig fylt ut.</dnt-alert>
+      </section>
+    </template>
+
     <div horizontal end-justified layout>
       <paper-button id="next-step" on-click="{{goToPrevStep}}">
         <core-icon icon="arrow-back"></core-icon>
