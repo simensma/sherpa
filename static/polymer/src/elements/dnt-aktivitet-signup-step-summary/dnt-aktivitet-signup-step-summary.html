@@ -3,6 +3,7 @@
 <link rel="import" href="../../../../bower_components/paper-checkbox/paper-checkbox.html">
 
 <link rel="import" href="../dnt-style-buttons/dnt-style-buttons.html">
+<link rel="import" href="../dnt-alert/dnt-alert.html">
 <link rel="import" href="../dnt-aktivitet-signup-participant-summary/dnt-aktivitet-signup-participant-summary.html">
 
 <polymer-element name="dnt-aktivitet-signup-step-summary" attributes="aktivitet signup state participant step steps">
@@ -44,6 +45,12 @@
         </div>
       </div>
     </section>
+
+    <template if="{{signupError}}">
+      <section class="alerts">
+        <dnt-alert error>Det skjedde en feil ved påmelding til {{aktivitet.title}}.</dnt-alert>
+      </section>
+    </template>
 
     <div horizontal end-justified layout>
       <paper-button id="next-step" on-click="{{editParticipantDetails}}">
