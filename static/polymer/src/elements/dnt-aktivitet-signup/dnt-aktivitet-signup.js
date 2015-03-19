@@ -79,15 +79,21 @@
     },
 
     handleUserResponse: function (event, ajax, element) {
+      this.user = ajax.response;
       this.participant = {
-        first_name: ajax.response.first_name,
-        last_name: ajax.response.last_name,
-        email: ajax.response.email,
-        phone: ajax.response.phone,
-        date_of_birth: ajax.response.dob,
+        first_name: this.user.first_name,
+        last_name: this.user.last_name,
+        email: this.user.email,
+        phone: this.user.phone,
+        date_of_birth: this.user.dob,
         comment: undefined,
-        parents_guardians: []
+        parents_guardians: [],
+        user_id = this.user.id
       };
+
+      if (this.user.is_member) {
+        this.participant.memberid = this.user.memberid;
+      }
     },
 
     /* Lifecycle methods */
