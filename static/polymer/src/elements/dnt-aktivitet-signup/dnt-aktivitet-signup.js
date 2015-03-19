@@ -74,7 +74,7 @@
       // console.log('aktivitetChanged!', oldVal, newVal);
     },
 
-    handleAktivitetResponse: function (event, response, element) {
+    handleAktivitetResponse: function (event, ajax, element) {
       // Handled by data binding to this.aktivitet
     },
 
