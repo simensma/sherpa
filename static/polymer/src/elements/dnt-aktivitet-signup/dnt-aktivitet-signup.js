@@ -88,7 +88,7 @@
         date_of_birth: this.user.dob,
         comment: undefined,
         parents_guardians: [],
-        user_id = this.user.id
+        user_id: this.user.id
       };
 
       if (this.user.is_member) {
