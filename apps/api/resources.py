@@ -35,6 +35,7 @@ class UserResource(ModelResource):
         bundle.data['first_name'] = bundle.obj.get_first_name()
         bundle.data['last_name'] = bundle.obj.get_last_name()
         bundle.data['email'] = bundle.obj.get_email()
+        bundle.data['phone_mobile'] = bundle.obj.get_phone_mobile()
 
         # Data available only for members
         if bundle.obj.is_member():
