@@ -65,6 +65,7 @@ $(function() {
             crop: json_content.crop,
             save: function(src, anchor, description, photographer, crop) {
                 var image_content = insertion_templates.find("div.content.image").clone();
+                Editor.generatePlaceholderId(image_content);
                 content.replaceWith(image_content);
                 if(anchor === '') {
                     // No anchor, remove the anchor element

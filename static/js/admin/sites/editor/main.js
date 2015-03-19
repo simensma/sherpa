@@ -5,6 +5,7 @@
     var editor;
     var article;
     var insertion_templates;
+    var placeholder_id = 0; // Used to generate unique placeholder IDs for new elements
 
     $(function() {
 
@@ -375,16 +376,23 @@
         if(content.type === 'text' || content.type === 'columns') {
             // Note that when inserting a column, we'll insert a text element into the new column
             content = insertion_templates.find("div.content.html").clone();
+            Editor.generatePlaceholderId(content);
             insertItem(content, position);
             content.attr('contenteditable', 'true').focus();
         } else if(content.type === 'image') {
             var image = insertion_templates.find("div.content.image").clone();
+            Editor.generatePlaceholderId(image);
             insertItem(image, position);
             image.find("img").click();
         } else if(content.type === 'widget') {
+            Editor.generatePlaceholderId(content.widget);
             insertItem(content.widget, position);
         }
         Editor.resetControls();
+    };
+
+    Editor.generatePlaceholderId = function(content) {
+        content.attr('data-id', 'new.' + (placeholder_id++));
     };
 
 }(window.Editor = window.Editor || {}, jQuery ));
