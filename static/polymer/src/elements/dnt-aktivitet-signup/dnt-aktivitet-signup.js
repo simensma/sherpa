@@ -84,7 +84,7 @@
         first_name: this.user.first_name,
         last_name: this.user.last_name,
         email: this.user.email,
-        phone: this.user.phone,
+        phone: this.user.phone_mobile,
         date_of_birth: this.user.dob,
         comment: undefined,
         parents_guardians: [],
