@@ -22,6 +22,32 @@
 
     confirmSignup: function (event, detail, sender) {
       this.state.step.isAvailable = true;
+      this.postSignup();
+    },
+
+    postSignup: function () {
+      var signupAjax = this.$.signup_ajax;
+      var participants = [this.participant];
+
+      var aktivitet = {
+        id: this.aktivitet.id
+      };
+
+      var requestParams = {
+        aktivitet: aktivitet,
+        participants: participants
+      };
+
+      signupAjax.params = JSON.stringify(requestParams);
+      signupAjax.go();
+    },
+
+    handleSignupError: function (e) {
+      this.signupError = true;
+    },
+
+    handleSignupResponse: function (event, ajax, element) {
+      // TODO: If success
       this.state.step = this.steps.receipt;
     },
 
