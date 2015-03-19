@@ -591,7 +591,12 @@ class Activity(models.Model):
         for order, old_image in enumerate(converted_images):
             # Check if this image has already been imported
             try:
-                aktivitet_image = aktivitet.images.get(sherpa2_url=old_image['url'])
+                # Theoretically, there shouldn't be any duplicate images, but for some reason we found some
+                # occurrences of this, so just handle it and delete any extra images.
+                aktivitet_images = aktivitet.images.filter(sherpa2_url=old_image['url'])
+                for extra_image in aktivitet_images[1:]:
+                    extra_image.delete()
+                aktivitet_image = aktivitet_images[0]
 
                 # Yeah, it already exists - just update the order and text, and don't remove it
                 images_to_delete.remove(aktivitet_image.id)
