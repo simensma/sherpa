@@ -3,11 +3,9 @@ from urllib import quote_plus
 import re
 import logging
 import sys
-import json
 
 from django.template.loader import render_to_string
 from django.template import RequestContext
-from django.http import HttpResponse
 from django.core.cache import cache
 from django.conf import settings
 
