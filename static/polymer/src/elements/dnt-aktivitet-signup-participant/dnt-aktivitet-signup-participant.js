@@ -97,15 +97,6 @@
       allParentsGuardians.splice(parentGuardianToRemoveIndex, 1);
     },
 
-    addParticipantComment: function () {
-      this.participant.comment = '';
-    },
-
-    ready: function () {
-      // console.log('ready!');
-      // console.log(this.querySelectorAll('paper-input-decorator'));
-    },
-
     updateUserContactInformation: function () {
       console.log('Will update user contact information!');
     }
