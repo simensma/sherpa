@@ -8,6 +8,7 @@
     is_valid: true,
     user: {},
     participant: {},
+    membership_alert_is_dismissed: false,
 
     observe: {
       'participant.first_name': 'userContactInfoChanged',
@@ -77,6 +78,10 @@
         this.participant.date_of_birth = dateOfBirthFormattedMoment.format('YYYY-MM-DD');
       }
 
+    },
+
+    dismissMembershipAlert: function () {
+      this.membership_alert_is_dismissed = true;
     },
 
     addParentGuardian: function () {
