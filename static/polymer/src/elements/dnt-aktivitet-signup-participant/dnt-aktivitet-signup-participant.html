@@ -7,6 +7,7 @@
 <link rel="import" href="../../../../bower_components/paper-button/paper-button.html">
 
 <link rel="import" href="../dnt-style-buttons/dnt-style-buttons.html">
+<link rel="import" href="../dnt-aktivitet-signup-fetch-member/dnt-aktivitet-signup-fetch-member.html">
 
 <polymer-element name="dnt-aktivitet-signup-participant" attributes="aktivitet user participant">
   <template>
@@ -21,16 +22,17 @@
       </core-toolbar>
       <div class="participant-container">
         <section class="participant-contact-info">
-          <div horizontal layout>
-            <template if="{{!participant.is_member && !membership_alert_is_dismissed}}">
-              <dnt-alert info>
-                <p>Brukeren din er ikke registert som DNT-medlem. Ved å være medlem oppnår du mange fordeler!</p>
-                <paper-button action on-click="{{becomeMember}}">Bli medlem</paper-button>
-                <paper-button default on-click="{{associateUserWithMember}}">Jeg er allerede medlem</paper-button>
-                <paper-button default on-click="{{dismissMembershipAlert}}">Nei takk</paper-button>
-              </dnt-alert>
-            </template>
-          </div>
+          <template if="{{!participant.is_member && !membership_alert_is_dismissed}}">
+            <dnt-alert info>
+              <p>Brukeren din er ikke registert som DNT-medlem. Ved å være medlem oppnår du mange fordeler!</p>
+              <paper-button action on-click="{{becomeMember}}">Bli medlem</paper-button>
+              <paper-button default on-click="{{associateUserWithMember}}">Jeg er allerede medlem</paper-button>
+              <paper-button default on-click="{{dismissMembershipAlert}}">Nei takk</paper-button>
+            </dnt-alert>
+          </template>
+          <template if="{{!participant.is_member && participant.is_unconfirmed_member}}">
+            <dnt-aktivitet-signup-fetch-member participant="{{participant}}"></dnt-aktivitet-signup-fetch-member>
+          </template>
           <div horizontal layout>
             <paper-input-decorator
               id="input_participant_first_name"

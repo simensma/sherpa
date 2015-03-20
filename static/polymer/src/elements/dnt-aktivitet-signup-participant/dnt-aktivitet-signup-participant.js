@@ -114,6 +114,11 @@
       allParentsGuardians.splice(parentGuardianToRemoveIndex, 1);
     },
 
+    associateUserWithMember: function () {
+      this.dismissMembershipAlert();
+      this.participant.is_unconfirmed_member = true;
+    },
+
     updateUserContactInformation: function () {
       console.log('Will update user contact information!');
     }

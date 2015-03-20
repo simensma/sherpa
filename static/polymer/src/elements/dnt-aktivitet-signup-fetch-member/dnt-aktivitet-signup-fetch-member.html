@@ -1,0 +1,54 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+
+<script src="../mixins.js"></script>
+
+<link rel="import" href="../dnt-style-buttons/dnt-style-buttons.html">
+<link rel="import" href="../dnt-alert/dnt-alert.html">
+
+<polymer-element name="dnt-aktivitet-signup-fetch-member" attributes="participant member" extends="dnt-alert">
+  <template>
+    <link rel="stylesheet" href="dnt-aktivitet-signup-fetch-member.css">
+    <core-style ref="dnt-style-buttons"></core-style>
+
+    <core-ajax
+      id="fetch_member_ajax"
+      handleAs="json"
+      on-core-error="{{handleFetchMemberError}}"
+      on-core-response="{{handleFetchMemberResponse}}">
+    </core-ajax>
+
+    <div horizontal layout>
+
+      <paper-input-decorator
+        id="input_memberid_decorator"
+        error="Medlemsnummer er påkrevd"
+        isInvalid="{{!$.input_memberid.validity.valid}}"
+        label="Medlemsnummer"
+        floatinglabel flex one>
+        <input
+          value="{{member.memberid}}"
+          id="input_memberid"
+          is="core-input"
+          required>
+      </paper-input-decorator>
+
+      <paper-input-decorator
+        id="input_date_of_birth_decorator"
+        error="Medlemsnummer er påkrevd"
+        isInvalid="{{!$.input_date_of_birth.validity.valid}}"
+        label="Fødselsdato"
+        floatinglabel flex one>
+        <input
+          value="{{member.date_of_birth_formatted}}"
+          id="input_date_of_birth"
+          is="core-input"
+          required>
+      </paper-input-decorator>
+
+    </div>
+
+    <paper-button action on-click="{{fetchMember}}">Hent medlemsinformasjon</paper-button>
+    <paper-button default on-click="{{cancelMemberFetching}}">Avbryt</paper-button>
+  </template>
+  <script src="dnt-aktivitet-signup-fetch-member.js"></script>
+</polymer-element>
