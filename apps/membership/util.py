@@ -3,11 +3,9 @@ from urllib import quote_plus
 import re
 import logging
 import sys
-import json
 
 from django.template.loader import render_to_string
 from django.template import RequestContext
-from django.http import HttpResponse
 from django.core.cache import cache
 from django.conf import settings
 
@@ -38,14 +36,13 @@ def lookup_users_by_phone(phone_number):
         return []
 
     # Note that we're excluding Actors with end_code 'dublett' manually here
-    # Note also that we're not filtering on Actor.get_personal_members()
     actors = Actor.objects.raw(
         "select * from Actor where REPLACE(MobPh, ' ', '') = %s AND EndCd != %s;",
         [phone_number, ACTOR_ENDCODE_DUBLETT]
     )
 
-    # Convert the matching actors to users
-    return [User.get_or_create_inactive(memberid=actor.memberid) for actor in actors]
+    # Convert the matching actors to users. Filter on personal members; we're never handling other membership types
+    return [User.get_or_create_inactive(memberid=actor.memberid) for actor in actors if actor.is_personal_member()]
 
 def send_sms_receipt(request, user):
     """Send an SMS receipt for membership to the given user. Note that if the user has children, their status will
