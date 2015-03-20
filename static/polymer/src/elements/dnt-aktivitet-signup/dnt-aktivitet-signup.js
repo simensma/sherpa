@@ -88,7 +88,8 @@
         date_of_birth: this.user.dob,
         comment: '',
         parents_guardians: [],
-        user_id: this.user.id
+        user_id: this.user.id,
+        is_member: this.user.is_member
       };
 
       if (this.user.is_member) {
