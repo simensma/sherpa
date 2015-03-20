@@ -35,7 +35,7 @@
     userContactInfoChanged: function () {
       var userFirstNameHasChanged = this.participant.first_name !== this.user.first_name;
       var userLastNameHasChanged = this.participant.last_name !== this.user.last_name;
-      var userPhoneHasChanged = this.participant.phone !== this.user.phone;
+      var userPhoneHasChanged = this.participant.phone !== this.user.phone_mobile;
       var userEmailHasChanged = this.participant.email !== this.user.email;
 
       if (userFirstNameHasChanged || userLastNameHasChanged || userPhoneHasChanged || userEmailHasChanged) {
