@@ -86,7 +86,7 @@
         email: this.user.email,
         phone: this.user.phone_mobile,
         date_of_birth: this.user.dob,
-        comment: undefined,
+        comment: '',
         parents_guardians: [],
         user_id: this.user.id
       };
