@@ -19,120 +19,130 @@
         <core-icon icon="face"></core-icon>
         <span flex>{{participant.first_name}} {{participant.last_name}}</span>
       </core-toolbar>
-
-      <section class="participant-contact-info">
-        <div horizontal layout>
-          <paper-input-decorator
-            id="input_participant_first_name"
-            error="Fornavn er påkrevd"
-            autoValidate="true"
-            isInvalid="{{!$.input_participant_first_name.validity.valid}}"
-            label="Fornavn"
-            floatinglabel flex one>
-            <input
-              value="{{participant.first_name}}"
-              id="input_participant_first_name"
-              is="core-input"
-              required>
-          </paper-input-decorator>
-          <paper-input-decorator
-            id="input_participant_last_name"
-            error="Etternavn er påkrevd"
-            autoValidate="true"
-            isInvalid="{{!$.input_participant_last_name.validity.valid}}"
-            label="Etternavn"
-            floatinglabel flex one>
-            <input
-              value="{{participant.last_name}}"
-              id="input_participant_last_name"
-              is="core-input"
-              required>
-          </paper-input-decorator>
-        </div>
-        <div horizontal layout>
-          <paper-input-decorator
-            id="input_date_of_birth"
-            error="Fødselsdato må skrives på formatet DD.MM.ÅÅÅÅ"
-            autoValidate="true"
-            isInvalid="{{!$.input_date_of_birth.validity.valid}}"
-            label="Fødselsdato"
-            floatinglabel flex one>
-            <input
-              value="{{participant.date_of_birth_formatted}}"
-              id="input_date_of_birth"
-              is="core-input"
-              required
-              pattern="^\d\d\.\d\d\.\d\d\d\d$">
-          </paper-input-decorator>
-        </div>
-        <div horizontal layout>
-          <paper-input label="Telefon" value="{{participant.phone}}" floatinglabel flex ten></paper-input>
-          <div spacer flex one></div>
-          <paper-input label="Epost" value="{{participant.email}}" floatinglabel flex ten></paper-input>
-        </div>
-        <template if="{{user_contact_info_has_changed}}">
-          <dnt-alert info>
-            <p>Vi ser at kontaktinformasjonen ovenfor skiller seg fra den som er lagt inn på brukeren din. Dersom du ønsker det kan du oppdatere medlemsregisteret med kontaktinformasjonen angitt over.</p>
-            <paper-button action on-click="{{updateUserContactInformation}}">Oppdater i medlemsregisteret</paper-button>
-          </dnt-alert>
-        </template>
-      </section>
-
-      <section class="comment">
-        <div horizontal layout>
-          <paper-input-decorator
-            id="comment_input_decorator"
-            label="Kommentar"
-            floatinglabel flex one>
-            <paper-autogrow-textarea id="comment_input">
-              <textarea id="comment_input">{{participant.comment}}</textarea>
-            </paper-autogrow-textarea>
-          </paper-input-decorator>
-        </div>
-        <p class="help-block">F.eks. om allergier eller annet.</p>
-      </section>
-
-      <template if="{{participant.is_minor}}">
-        <section class="participant-parents-guardians">
-          <h2>Foresatte</h2>
-          <p>For deltakere under 16 år kreves det navn og kontaktinformasjon til minst en foresatt. Maks antall foresatte er {{PARENTS_GUARDIANS_LIMIT}}.</p>
-          <template repeat="{{ parent_guardian in participant.parents_guardians }}">
-            <div class="parent-guardian-contact-info">
-              <div horizontal layout>
-                <paper-input label="Navn" value="{{parent_guardian.name}}" floatinglabel flex one></paper-input>
-              </div>
-              <div horizontal layout>
-                <paper-input label="Telefon" value="{{parent_guardian.phone}}" floatinglabel flex ten></paper-input>
-                <div spacer flex one></div>
-                <paper-input label="Epost" value="{{parent_guardian.email}}" floatinglabel flex ten></paper-input>
-              </div>
-              <div horizontal layout>
-                <paper-input label="Gateadresse" value="{{parent_guardian.street}}" floatinglabel flex></paper-input>
-              </div>
-              <div horizontal layout>
-                <paper-input label="Postnummer" value="{{parent_guardian.zipcode}}" floatinglabel flex four></paper-input>
-                <div spacer flex one></div>
-                <paper-input label="Sted" value="{{parent_guardian.city}}" floatinglabel flex twelve></paper-input>
-              </div>
-              <div horizontal layout>
-                <paper-button on-click="{{removeParentGuardian}}">
-                  <core-icon icon="remove"></core-icon>
-                  Ta bort foresatt
-                </paper-button>
-              </div>
-            </div>
-          </template>
+      <div class="participant-container">
+        <section class="participant-contact-info">
           <div horizontal layout>
-            <paper-button
-              on-click="{{addParentGuardian}}"
-              disabled?="{{participant.parents_guardians.length >= PARENTS_GUARDIANS_LIMIT}}">
-              <core-icon icon="add"></core-icon>
-              Legg til ny foresatt
-            </paper-button>
+            <template if="{{!participant.is_member && !membership_alert_is_dismissed}}">
+              <dnt-alert info>
+                <p>Brukeren din er ikke registert som DNT-medlem. Ved å være medlem oppnår du mange fordeler!</p>
+                <paper-button action on-click="{{becomeMember}}">Bli medlem</paper-button>
+                <paper-button default on-click="{{associateUserWithMember}}">Jeg er allerede medlem</paper-button>
+                <paper-button default on-click="{{dismissMembershipAlert}}">Nei takk</paper-button>
+              </dnt-alert>
+            </template>
           </div>
+          <div horizontal layout>
+            <paper-input-decorator
+              id="input_participant_first_name"
+              error="Fornavn er påkrevd"
+              autoValidate="true"
+              isInvalid="{{!$.input_participant_first_name.validity.valid}}"
+              label="Fornavn"
+              floatinglabel flex one>
+              <input
+                value="{{participant.first_name}}"
+                id="input_participant_first_name"
+                is="core-input"
+                required>
+            </paper-input-decorator>
+            <paper-input-decorator
+              id="input_participant_last_name"
+              error="Etternavn er påkrevd"
+              autoValidate="true"
+              isInvalid="{{!$.input_participant_last_name.validity.valid}}"
+              label="Etternavn"
+              floatinglabel flex one>
+              <input
+                value="{{participant.last_name}}"
+                id="input_participant_last_name"
+                is="core-input"
+                required>
+            </paper-input-decorator>
+          </div>
+          <div horizontal layout>
+            <paper-input-decorator
+              id="input_date_of_birth"
+              error="Fødselsdato må skrives på formatet DD.MM.ÅÅÅÅ"
+              autoValidate="true"
+              isInvalid="{{!$.input_date_of_birth.validity.valid}}"
+              label="Fødselsdato"
+              floatinglabel flex one>
+              <input
+                value="{{participant.date_of_birth_formatted}}"
+                id="input_date_of_birth"
+                is="core-input"
+                required
+                pattern="^\d\d\.\d\d\.\d\d\d\d$">
+            </paper-input-decorator>
+          </div>
+          <div horizontal layout>
+            <paper-input label="Telefon" value="{{participant.phone}}" floatinglabel flex ten></paper-input>
+            <div spacer flex one></div>
+            <paper-input label="Epost" value="{{participant.email}}" floatinglabel flex ten></paper-input>
+          </div>
+          <template if="{{user_contact_info_has_changed}}">
+            <dnt-alert info>
+              <p>Vi ser at kontaktinformasjonen ovenfor skiller seg fra den som er lagt inn på brukeren din. Dersom du ønsker det kan du oppdatere medlemsregisteret med kontaktinformasjonen angitt over.</p>
+              <paper-button action on-click="{{updateUserContactInformation}}">Oppdater i medlemsregisteret</paper-button>
+            </dnt-alert>
+          </template>
         </section>
-      </template>
 
+        <section class="comment">
+          <div horizontal layout>
+            <paper-input-decorator
+              id="comment_input_decorator"
+              label="Kommentar"
+              floatinglabel flex one>
+              <paper-autogrow-textarea id="comment_input">
+                <textarea id="comment_input">{{participant.comment}}</textarea>
+              </paper-autogrow-textarea>
+            </paper-input-decorator>
+          </div>
+          <p class="help-block">F.eks. om allergier eller annet.</p>
+        </section>
+
+        <template if="{{participant.is_minor}}">
+          <section class="participant-parents-guardians">
+            <h2>Foresatte</h2>
+            <p>For deltakere under 16 år kreves det navn og kontaktinformasjon til minst en foresatt. Maks antall foresatte er {{PARENTS_GUARDIANS_LIMIT}}.</p>
+            <template repeat="{{ parent_guardian in participant.parents_guardians }}">
+              <div class="parent-guardian-contact-info">
+                <div horizontal layout>
+                  <paper-input label="Navn" value="{{parent_guardian.name}}" floatinglabel flex one></paper-input>
+                </div>
+                <div horizontal layout>
+                  <paper-input label="Telefon" value="{{parent_guardian.phone}}" floatinglabel flex ten></paper-input>
+                  <div spacer flex one></div>
+                  <paper-input label="Epost" value="{{parent_guardian.email}}" floatinglabel flex ten></paper-input>
+                </div>
+                <div horizontal layout>
+                  <paper-input label="Gateadresse" value="{{parent_guardian.street}}" floatinglabel flex></paper-input>
+                </div>
+                <div horizontal layout>
+                  <paper-input label="Postnummer" value="{{parent_guardian.zipcode}}" floatinglabel flex four></paper-input>
+                  <div spacer flex one></div>
+                  <paper-input label="Sted" value="{{parent_guardian.city}}" floatinglabel flex twelve></paper-input>
+                </div>
+                <div horizontal layout>
+                  <paper-button on-click="{{removeParentGuardian}}">
+                    <core-icon icon="remove"></core-icon>
+                    Ta bort foresatt
+                  </paper-button>
+                </div>
+              </div>
+            </template>
+            <div horizontal layout>
+              <paper-button
+                on-click="{{addParentGuardian}}"
+                disabled?="{{participant.parents_guardians.length >= PARENTS_GUARDIANS_LIMIT}}">
+                <core-icon icon="add"></core-icon>
+                Legg til ny foresatt
+              </paper-button>
+            </div>
+          </section>
+        </template>
+      </div>
     </div>
   </template>
   <script src="dnt-aktivitet-signup-participant.js"></script>
