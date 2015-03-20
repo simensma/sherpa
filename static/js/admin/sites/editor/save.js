@@ -152,6 +152,16 @@ $(function() {
                             // and supposed to be removed but remained there due to UI bugs
                             $(this).find(".content-control,.tooltip,.add-content").remove();
 
+                            // Sometimes, users may copy content elements and paste them into a contenteditable.
+                            // Try to find any such occurrences and append them after this content. This is likely to
+                            // produce unwanted results as content may swap places, but should fix the root cause of
+                            // the bug.
+                            var $content = $(this);
+                            $(this).find('.content').each(function() {
+                                Editor.generatePlaceholderId($(this));
+                                $(this).detach().insertAfter($content);
+                            });
+
                             // And add the result
                             content.content = $(this).html();
                         }
