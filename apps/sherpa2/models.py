@@ -608,7 +608,7 @@ class Activity(models.Model):
                 # aktivitet has only one - would attempt to remove the id twice, which we can ignore since we don't
                 # want to add the image twice
                 pass
-            except AktivitetImage.DoesNotExist:
+            except IndexError:
                 # Doesn't exist - download the image and create it in our image archive
                 try:
                     downloaded_image = requests.get(old_image['url'])
