@@ -80,6 +80,10 @@
 
     },
 
+    becomeMember: function () {
+      window.location.href = "/innmelding/registrering/";
+    },
+
     dismissMembershipAlert: function () {
       this.membership_alert_is_dismissed = true;
     },
