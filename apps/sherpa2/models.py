@@ -612,7 +612,7 @@ class Activity(models.Model):
                 # Doesn't exist - download the image and create it in our image archive
                 try:
                     downloaded_image = requests.get(old_image['url'])
-                    content_type = downloaded_image.headers['Content-Type']
+                    content_type = downloaded_image.headers.get('Content-Type', '')
                     if not content_type.startswith('image/'):
                         # Might be an incorrect reference, or a HTML 404 page - skip it
                         continue
