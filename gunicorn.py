@@ -50,7 +50,13 @@ if _configuration == 'prod':
     # Load application code before the worker processes are forked. By
     # preloading an application you can save some RAM resources as well as speed
     # up server boot times.
-    preload_app = True
+
+    # DatabaseError: DatabaseWrapper objects created in a thread can only be
+    # used in that same thread. The object with alias 'default' was created in
+    # thread id 140492881852160 and this is thread id 140492642498992.
+
+    # preload_app = True
 
     # syslog
     # statsd
+
