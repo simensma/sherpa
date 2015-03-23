@@ -28,10 +28,10 @@ if _configuration == 'dev':
     # Restart workers when code changes.
     reload = True
 
-if _configuration == 'prod':
-    loglevel = "warn"
+else:
+    loglevel = "warning"
     accesslog = None    # "/logs/sherpa/access.log"
-    errorlog = "/logs/sherpa/error.log"
+    errorlog = "-"      # "/logs/sherpa/error.log"
 
     # http://gunicorn-docs.readthedocs.org/en/latest/design.html#how-many-workers
 
