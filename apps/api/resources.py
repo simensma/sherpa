@@ -2,9 +2,9 @@ from tastypie import fields
 from tastypie.resources import ModelResource
 from tastypie.authentication import SessionAuthentication
 
-from aktiviteter.models import Aktivitet, AktivitetDate
+from aktiviteter.models import Aktivitet, AktivitetDate, ParticipantGroup
 from user.models import User
-from .authorization import AuthedUserAuthorization
+from .authorization import AuthedUserAuthorization, ParticipantGroupAuthorization
 
 class AktivitetResource(ModelResource):
     class Meta:
@@ -61,3 +61,23 @@ class UserResource(ModelResource):
             }
 
         return bundle
+
+class ParticipantResource(ModelResource):
+    class Meta:
+        queryset = User.objects.all()
+        resource_name = 'participant'
+        fields = ['id']
+        authentication = SessionAuthentication()
+        authorization = AuthedUserAuthorization()
+        allowed_methods = ['get']
+
+class AktivitetSignupResource(ModelResource):
+    aktivitet_date = fields.ForeignKey(AktivitetDateResource, 'aktivitet_date')
+    participants = fields.ManyToManyField(ParticipantResource, 'participants')
+
+    class Meta:
+        queryset = ParticipantGroup.objects.all()
+        resource_name = 'aktivitet-signup'
+        authentication = SessionAuthentication()
+        authorization = ParticipantGroupAuthorization()
+        allowed_methods = ['get']
