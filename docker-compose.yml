@@ -57,9 +57,9 @@ sherpa:
     - locale/:sherpa/locale
     - sherpa/:sherpa/sherpa
     - templates/:sherpa/templates
-    - private-data:/private-data:ro
+    - private-data:/sherpa/private-data:ro
   environment:
-    DJANGO_CONFIGURATION: dev
+    DJANGO_CONFIGURATION:
     DJANGO_SETTINGS_MODULE: sherpa.settings
     PYTHONUNBUFFERED: 0
   command: gunicorn -c gunicorn.py sherpa.wsgi:application

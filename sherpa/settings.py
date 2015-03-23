@@ -11,12 +11,17 @@ _configuration = os.environ.get('DJANGO_CONFIGURATION', 'prod').lower()
 
 # Always set production settings
 execfile('%s/sherpa/conf/prod.py' % BASE_DIR)
-execfile('%s/sherpa/conf/secret_prod.py' % BASE_DIR)
+execfile('%s/private-data/conf/prod.py' % BASE_DIR)
+
+# Override with staging settings
+# This should only unset secret stuff, not the behaviour!
+if _configuration == 'staging':
+    execfile('%s/private-data/conf/staging.py' % BASE_DIR)
 
 # Override with development settings if running dev-configuration
 if _configuration == 'dev':
     execfile('%s/sherpa/conf/dev.py' % BASE_DIR)
-    execfile('%s/sherpa/conf/secret_dev.py' % BASE_DIR)
+    execfile('%s/private-data/conf/dev.py' % BASE_DIR)
 
 # Finally override with private settings if specified
 try:
