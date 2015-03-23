@@ -16,6 +16,9 @@ logs:
 #  volumes:
 #    - private-data:/private-data:ro
 
+memcached:
+  image: memcached:1.4
+
 postgres:
   image: turistforeningen/sherpa-postgres:latest
   volumes_from:
@@ -44,6 +47,7 @@ sherpa:
   build: .
   links:
     - postgres:postgres
+    - memcached:memcached
   #  - focus:focus
   volumes_from:
     - logs
