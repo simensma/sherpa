@@ -36,7 +36,7 @@
             dataType: 'json',
             always: function (e, data) {
                 section_uploading_file.hide();
-                save_button.attr('disabled', false);
+                save_button.removeClass('disabled');
             },
             done: function (e, data) {
                 // Get file URL from arguments returned from server
@@ -69,7 +69,7 @@
         existing_msg.hide();
         success_msg.hide();
         error_msg.hide();
-        save_button.attr('disabled', true);
+        save_button.addClass('disabled');
 
         if (opts.existing_url) {
             file_uploader.find('[data-dnt-placeholder="existing-text"]').text(opts.existing_text);
