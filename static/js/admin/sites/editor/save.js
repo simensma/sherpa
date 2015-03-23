@@ -196,6 +196,7 @@ $(function() {
 
             // Title
             data.title = header.find("input[name='title']").val();
+            data.slug = header.find("input[name='slug']").val();
 
             // Whether or not to display ads
             data.ads = JSON.stringify(header.find("input[name='display-ads']:checked").length > 0);

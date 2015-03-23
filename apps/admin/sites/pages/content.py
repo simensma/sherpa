@@ -67,6 +67,7 @@ def save(request, site, version):
 
             ### Title ###
             page.title = request.POST['title']
+            page.slug = request.POST['slug']
 
             ### Ads ###
             version.ads = json.loads(request.POST['ads'])
