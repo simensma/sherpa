@@ -73,7 +73,7 @@ class ParticipantResource(UserResource):
 
 class AktivitetSignupResource(ModelResource):
     aktivitet_date = fields.ForeignKey(AktivitetDateResource, 'aktivitet_date')
-    participants = fields.ManyToManyField(ParticipantResource, 'participants')
+    participants = fields.ManyToManyField(ParticipantResource, 'participants', full=True)
 
     class Meta:
         queryset = ParticipantGroup.objects.all()
