@@ -8,3 +8,12 @@ class AuthedUserAuthorization(Authorization):
 
     def read_detail(self, object_list, bundle):
         return bundle.obj == bundle.request.user
+
+class ParticipantGroupAuthorization(Authorization):
+    """A custom tastypie authorization which gives access to ParticipantGroup objects the user is currently a
+    participant in"""
+    def read_list(self, object_list, bundle):
+        return object_list.filter(participants=bundle.request.user)
+
+    def read_detail(self, object_list, bundle):
+        return bundle.obj.participants.filter(pk=bundle.request.user.pk).exists()
