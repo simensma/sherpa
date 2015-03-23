@@ -4,7 +4,7 @@ from tastypie.authentication import SessionAuthentication
 
 from aktiviteter.models import Aktivitet, AktivitetDate, ParticipantGroup
 from user.models import User
-from .authorization import AuthedUserAuthorization, ParticipantGroupAuthorization
+from .authorization import AuthedUserAuthorization, ParticipantAuthorization, ParticipantGroupAuthorization
 
 class AktivitetResource(ModelResource):
     class Meta:
@@ -68,7 +68,7 @@ class ParticipantResource(ModelResource):
         resource_name = 'participant'
         fields = ['id']
         authentication = SessionAuthentication()
-        authorization = AuthedUserAuthorization()
+        authorization = ParticipantAuthorization()
         allowed_methods = ['get']
 
 class AktivitetSignupResource(ModelResource):

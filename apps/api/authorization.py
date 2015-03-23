@@ -9,6 +9,14 @@ class AuthedUserAuthorization(Authorization):
     def read_detail(self, object_list, bundle):
         return bundle.obj == bundle.request.user
 
+class ParticipantAuthorization(Authorization):
+    """A participant can access all other participants in their own group"""
+    def read_list(self, object_list, bundle):
+        return object_list.filter(aktivitet_groups__participants=bundle.request.user)
+
+    def read_detail(self, object_list, bundle):
+        return bundle.obj.aktivitet_groups.select_related().filter(participants=bundle.request.user).exists()
+
 class ParticipantGroupAuthorization(Authorization):
     """A custom tastypie authorization which gives access to ParticipantGroup objects the user is currently a
     participant in"""
