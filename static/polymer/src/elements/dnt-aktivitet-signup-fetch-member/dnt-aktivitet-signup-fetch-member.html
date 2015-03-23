@@ -18,33 +18,34 @@
     </core-ajax>
 
     <div horizontal layout>
-
-      <paper-input-decorator
-        id="input_memberid_decorator"
-        error="Medlemsnummer er påkrevd"
-        isInvalid="{{!$.input_memberid.validity.valid}}"
-        label="Medlemsnummer"
-        floatinglabel flex one>
-        <input
-          value="{{member.memberid}}"
-          id="input_memberid"
-          is="core-input"
-          required>
-      </paper-input-decorator>
-
-      <paper-input-decorator
-        id="input_date_of_birth_decorator"
-        error="Medlemsnummer er påkrevd"
-        isInvalid="{{!$.input_date_of_birth.validity.valid}}"
-        label="Fødselsdato"
-        floatinglabel flex one>
-        <input
-          value="{{member.date_of_birth_formatted}}"
-          id="input_date_of_birth"
-          is="core-input"
-          required>
-      </paper-input-decorator>
-
+      <div flex one>
+        <paper-input-decorator
+          id="input_memberid_decorator"
+          error="Medlemsnummer er påkrevd"
+          isInvalid="{{!$.input_memberid.validity.valid}}"
+          label="Medlemsnummer"
+          floatinglabel flex one>
+          <input
+            value="{{member.memberid}}"
+            id="input_memberid"
+            is="core-input"
+            required>
+        </paper-input-decorator>
+      </div>
+      <div flex one>
+        <paper-input-decorator
+          id="input_date_of_birth_decorator"
+          error="Medlemsnummer er påkrevd"
+          isInvalid="{{!$.input_date_of_birth.validity.valid}}"
+          label="Fødselsdato"
+          floatinglabel flex one>
+          <input
+            value="{{member.date_of_birth_formatted}}"
+            id="input_date_of_birth"
+            is="core-input"
+            required>
+        </paper-input-decorator>
+      </div>
     </div>
 
     <paper-button action on-click="{{fetchMember}}">Hent medlemsinformasjon</paper-button>
