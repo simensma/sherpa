@@ -1,4 +1,6 @@
 Django>=1.7,<1.8
 django-debug-toolbar
-gunicorn==19.2.1
-requests==2.5.3
+gunicorn<19.4
+eventlet<0.18
+psycopg2<2.7
+requests<2.7
