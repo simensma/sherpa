@@ -50,7 +50,10 @@
         }).bind('fileuploadstart', function (e) {
             success_msg.hide();
             error_msg.hide();
-            section_select_file.hide();
+            // Hiding section_select_file using display none breaks save_button in IE 11. For some reason.
+            // Hence the creativity when hiding section_select_file as seen below.
+            section_select_file.css({'position': 'absolute', 'visibility': 'hidden'});
+            // However, debugging in IE from time to time is nice. You get to find unmatched tags. :D
             section_uploading_file.show();
         });
 
