@@ -18,6 +18,8 @@ forwarded_allow_ips = "*"
 # Environment specific
 _configuration = os.environ.get('DJANGO_CONFIGURATION', 'prod').lower()
 
+print 'Sherpa is starting up with %s configurations' % (_configuration)
+
 if _configuration == 'dev':
     loglevel = "info"
     accesslog = "-"     # “-” means log to stderr
