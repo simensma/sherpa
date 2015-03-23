@@ -62,7 +62,7 @@ class UserResource(ModelResource):
 
         return bundle
 
-class ParticipantResource(ModelResource):
+class ParticipantResource(UserResource):
     class Meta:
         queryset = User.objects.all()
         resource_name = 'participant'
