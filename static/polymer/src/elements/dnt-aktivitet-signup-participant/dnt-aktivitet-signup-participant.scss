@@ -30,3 +30,13 @@ p {
 div.participant-container {
   padding-top: 20px;
 }
+
+div[horizontal][layout] {
+  paper-input-decorator:not(:first-child) {
+    margin-left: 10px;
+  }
+
+  paper-input-decorator:not(:last-child) {
+    margin-right: 10px;
+  }
+}
