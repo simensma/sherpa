@@ -1,6 +1,7 @@
-from core.util import s3_bucket
 from django.template import Library
 from django.conf import settings
+
+from core.util import s3_bucket
 
 register = Library()
 
