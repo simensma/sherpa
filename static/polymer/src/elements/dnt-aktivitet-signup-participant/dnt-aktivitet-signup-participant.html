@@ -78,8 +78,24 @@
             </paper-input-decorator>
           </div>
           <div horizontal layout>
-            <paper-input label="Telefon" value="{{participant.phone}}" floatinglabel flex one></paper-input>
-            <paper-input label="Epost" value="{{participant.email}}" floatinglabel flex one></paper-input>
+            <paper-input-decorator
+              id="input_phone_decorator"
+              label="Telefon"
+              floatinglabel flex one>
+              <input
+                value="{{participant.phone}}"
+                id="input_phone"
+                is="core-input">
+            </paper-input-decorator>
+            <paper-input-decorator
+              id="input_email_decorator"
+              label="Epost"
+              floatinglabel flex one>
+              <input
+                value="{{participant.email}}"
+                id="input_email"
+                is="core-input">
+            </paper-input-decorator>
           </div>
           <template if="{{user_contact_info_has_changed}}">
             <dnt-alert info>
