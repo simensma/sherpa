@@ -16,10 +16,6 @@
 
     <div vertical layout>
 
-      <core-toolbar>
-        <core-icon icon="face"></core-icon>
-        <span flex>{{participant.first_name}} {{participant.last_name}}</span>
-      </core-toolbar>
       <div class="participant-container">
         <section class="participant-contact-info">
           <template if="{{!participant.is_member && !membership_alert_is_dismissed}}">
