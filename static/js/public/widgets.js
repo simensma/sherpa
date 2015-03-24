@@ -46,7 +46,7 @@ $(function() {
             });
 
             // Trigger the first description on page load
-            $carousel.trigger('slid.bs.carousel');
+            $carousel.trigger('slide.bs.carousel');
 
             // Add swipe events
             $carousel.find('.carousel-inner').swipe({
