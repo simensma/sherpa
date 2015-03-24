@@ -89,29 +89,39 @@ docker-compose run --rm psql ./import-prod.sh
 **Build static files**
 
 ```
-docker-compose run --rm builder grunt compile
+docker-compose run --rm builder grunt install
 ```
 
 ## Run on Docker PaaS
 
-`@TODO` some works on Docker PaaS
+Sherpa has been fitted to be compatible with [Docker
+PaaS](https://github.com/turistforeningen/docker-paas). We recommend using this
+when running Sherpa locally or in production.
 
-**Update `/etc/hosts`**
+**Install Sherpa as an app:**
+
+```
+docker-paas sherpa add https://github.com/Turistforeningen/sherpa.git master
+```
+
+**Set `DJANGO_CONFIGURATION`:**
+
+```
+docker-paas sherpa config DJANGO_CONFIGURATION dev
+```
+
+**Update sitedomain:**
+
+```
+docker-paas sherpa run sherpa python2 manage.py sitedomain www.dnt.no sherpa.app.dnt.privat
+```
+
+**Update `/etc/hosts`:**
+
+You need to update you hosts file on your host machine in order to be able to go
+to Sherpa in your browser.
 
 ```
 echo '172.17.8.102    sherpa.app.dnt.privat' > sudo /etc/hosts
-```
-
-**Add `source` remote**
-
-```
-cd apps/sherpa
-git remote git remote add source https://github.com/Turistforeningen/sherpa.git
-```
-
-**Update domain**
-
-```
-docker-compose run --rm sherpa python2 manage.py sitedomain www.dnt.no sherpa.app.dnt.privat
 ```
 
