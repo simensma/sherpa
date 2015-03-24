@@ -1,3 +1,5 @@
+{% load image_size %}
+
 {% comment %}
   Note that the carousel images contain some extra attributes (parentHeight, style etc.) used for cropping and
   achieving a fixed image height, that we are intentionally ignoring (for now).
@@ -13,7 +15,7 @@
           title="{{ image.description }}{% if image.photographer %} Foto: {{ image.photographer }}{% endif %}"
         {% endif %}>
         <div class="thumbnail-inner">
-          <img src="{{ image.url }}" alt="{{ image.description }}">
+          <img src="{{ image.url|image_size:940 }}" alt="{{ image.description }}">
         </div>
       </a>
     </div>
@@ -39,7 +41,7 @@
       {% for image in widget.images %}
         <div class="item{% if forloop.first %} active{% endif %}">
           <div class="item-inner">
-            <img src="{{ image.url }}" alt="{{ image.description }}">
+            <img src="{{ image.url|image_size:940 }}" alt="{{ image.description }}">
 
             {% if image.description or image.photographer %}
               {# > xs screens: normal caption #}
