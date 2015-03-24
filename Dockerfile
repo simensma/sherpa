@@ -2,6 +2,10 @@ FROM turistforeningen/python-ucs4:2.7
 
 ENV HOME /root
 
+WORKDIR /sherpa
+
+EXPOSE 8000
+
 RUN apt-get update
 RUN apt-get -y --no-install-recommends install \
     libodbc1 unixodbc unixodbc-dev freetds-common tdsodbc \
@@ -20,8 +24,6 @@ RUN mv -v /build/odbcinst.ini /etc/odbcinst.ini && \
     chmod 644 /etc/odbcinst.ini && \
     mkdir /sherpa
 
-WORKDIR /sherpa
-
 # Install python packages
 ADD requirements.txt /sherpa/requirements.txt
 RUN pip install --src /tmp --allow-external pyodbc --allow-unverified pyodbc -r requirements.txt
@@ -29,13 +31,11 @@ RUN pip install --src /tmp --allow-external pyodbc --allow-unverified pyodbc -r 
 ADD requirements_dev.txt /sherpa/requirements_dev.txt
 RUN pip install --src /tmp -r requirements_dev.txt --ignore-installed
 
+RUN apt-get -y autoclean && apt-get -y autoremove && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 ADD manage.py /sherpa/manage.py
 ADD gunicorn.py /sherpa/gunicorn.py
 CMD ["gunicorn -c gunicorn.py"]
 
 ADD . /sherpa/
-
-RUN apt-get -y autoclean && apt-get -y autoremove && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-EXPOSE 8000
 
