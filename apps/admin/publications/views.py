@@ -110,7 +110,7 @@ def edit_release(request, publication, release):
                 bucket.delete_key("%s/%s.pdf" % (settings.AWS_PUBLICATIONS_PREFIX, release.pdf_hash))
 
             key = bucket.new_key("%s/%s.%s" % (settings.AWS_PUBLICATIONS_PREFIX, hash, extension))
-            key.content_type = file.content_type
+            key.content_type = file.content_type.encode('utf-8') # Give boto an encoded str, not unicode
             key.set_contents_from_string(data, policy='public-read')
 
             release.pdf_hash = hash

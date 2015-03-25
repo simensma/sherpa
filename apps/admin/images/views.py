@@ -267,13 +267,16 @@ def upload_image(request):
             tags = xmp.find_keywords(data)
             thumbs = [{'size': size, 'data': create_thumb(pil_image, ext, size)} for size in settings.THUMB_SIZES]
 
+            # Give boto an encoded str, not unicode
+            content_type = image.content_type.encode('utf-8')
+
             key = bucket.new_key("%s%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, image_key, ext))
-            key.content_type = image.content_type
+            key.content_type = content_type
             key.set_contents_from_string(data, policy='public-read')
 
             for thumb in thumbs:
                 key = bucket.new_key("%s%s-%s.%s" % (settings.AWS_IMAGEGALLERY_PREFIX, image_key, thumb['size'], ext))
-                key.content_type = image.content_type
+                key.content_type = content_type
                 key.set_contents_from_string(thumb['data'], policy='public-read')
 
             image = Image(
