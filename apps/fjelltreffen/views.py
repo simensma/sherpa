@@ -329,12 +329,12 @@ def save(request):
 
         # Upload the original image to AWS
         key = bucket.new_key("%s/%s.%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, hash, extension))
-        key.content_type = file.content_type
+        key.content_type = file.content_type.encode('utf-8') # Give boto an encoded str, not unicode
         key.set_contents_from_string(data, policy='public-read')
 
         # Upload the thumbnail to AWS
         key = bucket.new_key("%s/%s.%s" % (settings.AWS_FJELLTREFFEN_IMAGES_PREFIX, thumb_hash, extension))
-        key.content_type = file.content_type
+        key.content_type = file.content_type.encode('utf-8') # Give boto an encoded str, not unicode
         key.set_contents_from_string(thumb_data, policy='public-read')
 
         # Update the DB fields with new images

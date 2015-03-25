@@ -168,7 +168,7 @@ def upload(file):
     bucket = conn.get_bucket(s3_bucket())
 
     key = bucket.new_key("%s%s.%s" % (settings.AWS_ADS_PREFIX, hash, extension))
-    key.content_type = file.content_type
+    key.content_type = file.content_type.encode('utf-8') # Give boto an encoded str, not unicode
     key.set_contents_from_string(data, policy='public-read')
 
     return (hash, extension, file.content_type)
