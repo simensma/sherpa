@@ -499,6 +499,8 @@ class AktivitetDate(models.Model):
         return self.max_participant_count() - self.participant_count()
 
     def is_almost_full(self):
+        if self.max_participant_count() is None:
+            return False
         return self.spots_available() <= AktivitetDate.HIGHEST_ALMOST_FULL_COUNT
 
     #
