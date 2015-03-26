@@ -170,80 +170,88 @@ def create(request):
             # Get the next MPTT tree_id. Unfortunately we'll have to access the internal MPTT API here.
             new_tree_id = Page.objects._get_next_tree_id()
 
-            # Order by level so that parents are guaranteed to exist when creating their children
-            for page in Page.objects.filter(site=template_site).order_by('level'):
-                variants = page.variant_set.all()
-                old_id = page.id
-                page.id = None
-                page.site = site
+            # Disable MPTT updates - assuming the template site's tree is correct, all we'll do is clone it and
+            # increase only the tree_id
+            with Page.objects.disable_mptt_updates():
+                # Order by level so that parents are guaranteed to exist when creating their children
+                for page in Page.objects.filter(site=template_site).order_by('level'):
+                    variants = page.variant_set.all()
+                    old_id = page.id
+                    page.id = None
+                    page.site = site
 
-                # Increment the tree_id and leave other MPTT fields as they were
-                page.tree_id = new_tree_id
+                    # Increment the tree_id and leave other MPTT fields as they were
+                    page.tree_id = new_tree_id
 
-                # Set parent to the duplicated one; use the old parent id to retrieve it
-                if page.parent is None:
-                    page.parent = None
-                else:
-                    page.parent = page_id_mapping[page.parent.id]
+                    # Set parent to the duplicated one; use the old parent id to retrieve it
+                    if page.parent is None:
+                        page.parent = None
+                    else:
+                        page.parent = page_id_mapping[page.parent.id]
 
-                # Change creation to the user creating the new site and reset modification
-                page.created_by = request.user
-                page.created_date = datetime.now()
-                page.modified_by = None
-                page.modified_date = None
+                    # Change creation to the user creating the new site and reset modification
+                    page.created_by = request.user
+                    page.created_date = datetime.now()
+                    page.modified_by = None
+                    page.modified_date = None
 
-                page.save()
+                    page.save()
 
-                # Remember which old id maps to this page
-                page_id_mapping[old_id] = page
+                    # Remember which old id maps to this page
+                    page_id_mapping[old_id] = page
 
-                for variant in variants:
-                    versions = variant.version_set.all()
-                    variant.id = None
-                    variant.page = page
-                    variant.save()
+                    for variant in variants:
+                        versions = variant.version_set.all()
+                        variant.id = None
+                        variant.page = page
+                        variant.save()
 
-                    for version in versions:
-                        rows = version.rows.all()
-                        version.id = None
-                        version.variant = variant
-                        version.save()
+                        for version in versions:
+                            rows = version.rows.all()
+                            version.id = None
+                            version.variant = variant
+                            version.save()
 
-                        for row in rows:
-                            columns = row.columns.all()
-                            row.id = None
-                            row.version = version
-                            row.save()
+                            for row in rows:
+                                columns = row.columns.all()
+                                row.id = None
+                                row.version = version
+                                row.save()
 
-                            for column in columns:
-                                contents = column.contents.all()
-                                column.id = None
-                                column.row = row
-                                column.save()
+                                for column in columns:
+                                    contents = column.contents.all()
+                                    column.id = None
+                                    column.row = row
+                                    column.save()
 
-                                for content in contents:
-                                    content.id = None
-                                    content.column = column
+                                    for content in contents:
+                                        content.id = None
+                                        content.column = column
 
-                                    # Replace domain references with the new site domain
-                                    # Use a json dump with prepended/trailing quotes stripped to ensure the
-                                    # replacement string is properly escaped if inserted into json-formatted content
-                                    json_safe_domain = json.dumps(site.domain)[1:-1]
-                                    content.content = re.sub(template_site.domain, json_safe_domain, content.content)
+                                        # Replace domain references with the new site domain
+                                        # Use a json dump with prepended/trailing quotes stripped to ensure the
+                                        # replacement string is properly escaped if inserted into json-formatted
+                                        # content
+                                        json_safe_domain = json.dumps(site.domain)[1:-1]
+                                        content.content = re.sub(
+                                            template_site.domain,
+                                            json_safe_domain,
+                                            content.content
+                                        )
 
-                                    # For aktiviteteslisting-widgets, force arranger-filter to the new site's related
-                                    # forening
-                                    if content.type == 'widget':
-                                        parsed_content = json.loads(content.content)
-                                        if parsed_content['widget'] == 'aktivitet_listing':
-                                            # Note that the list of ids contains strings, because we forgot to convert
-                                            # it to int in the widget-editor save logic, but that's not a problem since
-                                            # the filter lookup will implicitly convert it. So force it to str to be
-                                            # consistent
-                                            parsed_content['foreninger'] = [str(site.forening.id)]
-                                            content.content = json.dumps(parsed_content)
+                                        # For aktiviteteslisting-widgets, force arranger-filter to the new site's
+                                        # related forening
+                                        if content.type == 'widget':
+                                            parsed_content = json.loads(content.content)
+                                            if parsed_content['widget'] == 'aktivitet_listing':
+                                                # Note that the list of ids contains strings, because we forgot to
+                                                # convert it to int in the widget-editor save logic, but that's not a
+                                                # problem since the filter lookup will implicitly convert it. So force
+                                                # it to str to be consistent
+                                                parsed_content['foreninger'] = [str(site.forening.id)]
+                                                content.content = json.dumps(parsed_content)
 
-                                    content.save()
+                                        content.save()
 
             # Articles
             for article in Article.objects.filter(site=template_site):
