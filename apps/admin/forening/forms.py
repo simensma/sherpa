@@ -335,3 +335,9 @@ class ExistingForeningDataForm(ForeningDataForm):
                     e.parent.name, forening.name, forening.name, e.parent.name,
                 ),
             )
+
+        except ForeningWithItselfAsParent:
+            self.add_error(
+                'parents',
+                u"%s kan ikke være underlagt seg selv." % forening.name
+            )
