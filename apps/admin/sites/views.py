@@ -167,6 +167,13 @@ def create(request):
                 page.id = None
                 page.site = site
 
+                # Reset MPTT state and let the mptt-manager recreate a new root node
+                page.tree_id = None
+                page.parent = None
+                page.lft = None
+                page.rght = None
+                page.level = None
+
                 # Change creation to the user creating the new site and reset modification
                 page.created_by = request.user
                 page.created_date = datetime.now()
