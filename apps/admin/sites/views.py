@@ -167,6 +167,9 @@ def create(request):
             # be duplicated, it needs to be updated with its corresponding new parent
             page_id_mapping = {}
 
+            # Get the next MPTT tree_id. Unfortunately we'll have to access the internal MPTT API here.
+            new_tree_id = Page.objects._get_next_tree_id()
+
             # Order by level so that parents are guaranteed to exist when creating their children
             for page in Page.objects.filter(site=template_site).order_by('level'):
                 variants = page.variant_set.all()
@@ -174,11 +177,8 @@ def create(request):
                 page.id = None
                 page.site = site
 
-                # Reset MPTT state and let the mptt-manager recreate a new root node
-                page.tree_id = None
-                page.lft = None
-                page.rght = None
-                page.level = None
+                # Increment the tree_id and leave other MPTT fields as they were
+                page.tree_id = new_tree_id
 
                 # Set parent to the duplicated one; use the old parent id to retrieve it
                 if page.parent is None:
