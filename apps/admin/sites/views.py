@@ -162,17 +162,29 @@ def create(request):
                 menu.save()
 
             # Pages
-            for page in Page.objects.filter(site=template_site):
+
+            # Used to map old IDs to their new corresponding pages. This is needed because the parent reference can't
+            # be duplicated, it needs to be updated with its corresponding new parent
+            page_id_mapping = {}
+
+            # Order by level so that parents are guaranteed to exist when creating their children
+            for page in Page.objects.filter(site=template_site).order_by('level'):
                 variants = page.variant_set.all()
+                old_id = page.id
                 page.id = None
                 page.site = site
 
                 # Reset MPTT state and let the mptt-manager recreate a new root node
                 page.tree_id = None
-                page.parent = None
                 page.lft = None
                 page.rght = None
                 page.level = None
+
+                # Set parent to the duplicated one; use the old parent id to retrieve it
+                if page.parent is None:
+                    page.parent = None
+                else:
+                    page.parent = page_id_mapping[page.parent.id]
 
                 # Change creation to the user creating the new site and reset modification
                 page.created_by = request.user
@@ -181,6 +193,9 @@ def create(request):
                 page.modified_date = None
 
                 page.save()
+
+                # Remember which old id maps to this page
+                page_id_mapping[old_id] = page
 
                 for variant in variants:
                     versions = variant.version_set.all()
