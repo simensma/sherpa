@@ -167,20 +167,20 @@ def create(request):
             # be duplicated, it needs to be updated with its corresponding new parent
             page_id_mapping = {}
 
-            # Order by level so that parents are guaranteed to exist when creating their children
-            for page in Page.objects.filter(site=template_site).order_by('level'):
+            # Order by the left value in order to insert new nodes in a consistent way
+            for page in Page.objects.filter(site=template_site).order_by('lft'):
                 variants = page.variant_set.all()
                 old_id = page.id
                 page.id = None
                 page.site = site
 
-                # Reset MPTT state and let the mptt-manager recreate a new root node
+                # Reset MPTT state and let our library recreate them
                 page.tree_id = None
                 page.lft = None
                 page.rght = None
                 page.level = None
 
-                # Set parent to the duplicated one; use the old parent id to retrieve it
+                # Set parent to the corresponding clone; use the old parent id to retrieve it
                 if page.parent is not None:
                     page.parent = page_id_mapping[page.parent.id]
 
@@ -189,6 +189,12 @@ def create(request):
                 page.created_date = datetime.now()
                 page.modified_by = None
                 page.modified_date = None
+
+                # Insert the new node appropriately
+                if page.parent is None:
+                    Page.objects.insert_node(page, target=None, save=True)
+                else:
+                    Page.objects.insert_node(page, target=page.parent, position='last-child', save=True)
 
                 page.save()
 
