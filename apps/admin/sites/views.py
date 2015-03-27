@@ -181,9 +181,7 @@ def create(request):
                 page.level = None
 
                 # Set parent to the duplicated one; use the old parent id to retrieve it
-                if page.parent is None:
-                    page.parent = None
-                else:
+                if page.parent is not None:
                     page.parent = page_id_mapping[page.parent.id]
 
                 # Change creation to the user creating the new site and reset modification
