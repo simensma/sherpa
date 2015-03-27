@@ -1,6 +1,6 @@
 from tastypie import fields
 from tastypie.resources import ModelResource
-from tastypie.authentication import SessionAuthentication
+from tastypie.authorization import Authorization, ReadOnlyAuthorization
 
 from aktiviteter.models import Aktivitet, AktivitetDate, ParticipantGroup
 from user.models import User
@@ -10,6 +10,7 @@ class AktivitetResource(ModelResource):
     class Meta:
         queryset = Aktivitet.objects.all()
         resource_name = 'aktivitet'
+        authorization = ReadOnlyAuthorization()
 
 class AktivitetDateResource(ModelResource):
     aktivitet = fields.ForeignKey(AktivitetResource, 'aktivitet')
@@ -17,14 +18,14 @@ class AktivitetDateResource(ModelResource):
     class Meta:
         queryset = AktivitetDate.objects.all()
         resource_name = 'aktivitet-date'
+        authorization = ReadOnlyAuthorization()
 
 class UserResource(ModelResource):
     class Meta:
         queryset = User.objects.all()
         resource_name = 'user'
         fields = ['id']
-        authentication = SessionAuthentication()
-        authorization = AuthedUserAuthorization()
+        authorization = ReadOnlyAuthorization()
         allowed_methods = ['get']
 
     def dehydrate(self, bundle):
@@ -67,7 +68,6 @@ class ParticipantResource(UserResource):
         queryset = User.objects.all()
         resource_name = 'participant'
         fields = ['id']
-        authentication = SessionAuthentication()
         authorization = ParticipantAuthorization()
         allowed_methods = ['get']
 
@@ -78,6 +78,5 @@ class AktivitetSignupResource(ModelResource):
     class Meta:
         queryset = ParticipantGroup.objects.all()
         resource_name = 'aktivitet-signup'
-        authentication = SessionAuthentication()
         authorization = ParticipantGroupAuthorization()
-        allowed_methods = ['get']
+        allowed_methods = ['get', 'post']
