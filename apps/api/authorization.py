@@ -44,3 +44,21 @@ class ParticipantGroupAuthorization(Authorization):
 
     def read_detail(self, object_list, bundle):
         return bundle.obj.participants.filter(pk=bundle.request.user.pk).exists()
+
+    def create_list(self, object_list, bundle):
+        return object_list
+
+    def create_detail(self, object_list, bundle):
+        return True
+
+    def update_list(self, object_list, bundle):
+        raise Unauthorized("Sorry, no updates.")
+
+    def update_detail(self, object_list, bundle):
+        raise Unauthorized("Sorry, no updates.")
+
+    def delete_list(self, object_list, bundle):
+        raise Unauthorized("Sorry, no deletes.")
+
+    def delete_detail(self, object_list, bundle):
+        raise Unauthorized("Sorry, no deletes.")
