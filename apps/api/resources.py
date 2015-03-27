@@ -80,3 +80,8 @@ class AktivitetSignupResource(ModelResource):
         resource_name = 'aktivitet-signup'
         authorization = ParticipantGroupAuthorization()
         allowed_methods = ['get', 'post']
+
+    def hydrate(self, bundle):
+        bundle.data['aktivitet_date'] = AktivitetDate.objects.get(id=bundle.data['aktivitet_date']['id'])
+        bundle.data['participants'] = [User.objects.get(id=p['id']) for p in bundle.data['participants']]
+        return bundle
