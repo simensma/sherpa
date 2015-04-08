@@ -162,10 +162,27 @@ def create(request):
                 menu.save()
 
             # Pages
-            for page in Page.objects.filter(site=template_site):
+
+            # Used to map old IDs to their new corresponding pages. This is needed because the parent reference can't
+            # be duplicated, it needs to be updated with its corresponding new parent
+            page_id_mapping = {}
+
+            # Order by the left value in order to insert new nodes in a consistent way
+            for page in Page.objects.filter(site=template_site).order_by('lft'):
                 variants = page.variant_set.all()
+                old_id = page.id
                 page.id = None
                 page.site = site
+
+                # Reset MPTT state and let our library recreate them
+                page.tree_id = None
+                page.lft = None
+                page.rght = None
+                page.level = None
+
+                # Set parent to the corresponding clone; use the old parent id to retrieve it
+                if page.parent is not None:
+                    page.parent = page_id_mapping[page.parent.id]
 
                 # Change creation to the user creating the new site and reset modification
                 page.created_by = request.user
@@ -173,7 +190,16 @@ def create(request):
                 page.modified_by = None
                 page.modified_date = None
 
+                # Insert the new node appropriately
+                if page.parent is None:
+                    Page.objects.insert_node(page, target=None, save=True)
+                else:
+                    Page.objects.insert_node(page, target=page.parent, position='last-child', save=True)
+
                 page.save()
+
+                # Remember which old id maps to this page
+                page_id_mapping[old_id] = page
 
                 for variant in variants:
                     versions = variant.version_set.all()
