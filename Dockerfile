@@ -38,4 +38,3 @@ ADD . /sherpa/
 RUN apt-get -y autoclean && apt-get -y autoremove && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 EXPOSE 8000
-
