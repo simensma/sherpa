@@ -27,13 +27,6 @@ sherpa:
     - sherpadb_postgres_1:postgres
   volumes_from:
     - logs
-  volumes:
-    - gunicorn.py:/sherpa/gunicorn.py
-    - apps/:/sherpa/apps
-    - locale/:sherpa/locale
-    - sherpa/:sherpa/sherpa
-    - templates/:sherpa/templates
-    - private-data:/sherpa/private-data:ro
   environment:
     DJANGO_CONFIGURATION: prod
     DJANGO_SETTINGS_MODULE: sherpa.settings
