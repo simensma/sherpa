@@ -21,7 +21,7 @@ SENTRY_DSN = None # Deactivates Sentry
 # about settings.DEBUG, so set SENTRY_DSN to None to deactivate it (require_debug_false won't work).
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': True,
+    'disable_existing_loggers': False,
     'formatters': {
         'simple': {
             'format': '%(levelname)s %(asctime)s\n%(message)s\n'
