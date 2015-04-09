@@ -1,0 +1,56 @@
+logs:
+  image: busybox
+  volumes:
+    - /logs/sherpa
+    - /logs/nginx
+  entrypoint: /bin/true
+
+memcached:
+  image: memcached:1.4
+
+www:
+  image: turistforeningen/sherpa-nginx:latest
+  links:
+    - sherpa
+  volumes_from:
+    - logs
+  volumes:
+    - static:/sherpa/static:ro
+  ports:
+    - "8080"
+
+sherpa:
+  build: .
+  links:
+    - memcached:memcached
+  external_links:
+    - sherpadb_postgres_1:postgres
+  volumes_from:
+    - logs
+  volumes:
+    - gunicorn.py:/sherpa/gunicorn.py
+    - apps/:/sherpa/apps
+    - locale/:sherpa/locale
+    - sherpa/:sherpa/sherpa
+    - templates/:sherpa/templates
+    - private-data:/sherpa/private-data:ro
+  environment:
+    DJANGO_CONFIGURATION:
+    DJANGO_SETTINGS_MODULE: sherpa.settings
+    PYTHONUNBUFFERED: 0
+  command: gunicorn -c gunicorn.py sherpa.wsgi:application
+
+builder:
+  build: static/
+  volumes:
+    - static/package.json:/usr/src/app/package.json
+    - static/Gemfile:/usr/src/app/Gemfile
+    - static/Gruntfile.js:/usr/src/app/Gruntfile.js
+    - static/less:/usr/src/app/less
+    - static/css:/usr/src/app/css
+    - static/lib:/usr/src/app/lib
+    - static/polymer:/usr/src/app/polymer
+  environment:
+    NODE_ENV: development
+  command: /bin/true
+
