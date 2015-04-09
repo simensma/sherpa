@@ -35,7 +35,7 @@ sherpa:
     - templates/:sherpa/templates
     - private-data:/sherpa/private-data:ro
   environment:
-    DJANGO_CONFIGURATION:
+    DJANGO_CONFIGURATION: prod
     DJANGO_SETTINGS_MODULE: sherpa.settings
     PYTHONUNBUFFERED: 0
   command: gunicorn -c gunicorn.py sherpa.wsgi:application
