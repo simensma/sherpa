@@ -245,6 +245,7 @@ INSTALLED_APPS = (
     'montis',
     'payment',
     'oauth2_provider',
+    'corsheaders',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
