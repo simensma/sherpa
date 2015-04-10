@@ -219,9 +219,13 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis', # GeoDjango
+
     'raven.contrib.django', # Error logging
     'captcha', # django-recaptcha
     'mptt', # Modified Preorder Tree Traversal - see https://django-mptt.github.io/django-mptt/
+    'oauth2_provider', # django-oauth-toolkit - see https://django-oauth-toolkit.readthedocs.org/
+    'corsheaders', # django-cors-headers - see https://pypi.python.org/pypi/django-cors-headers/
+
     'focus', # Only db-models from Focus
     'sherpa2', # Only db-models from Sherpa 2
     'sherpa25', # Only db-models from Sherpa 2.5
@@ -244,8 +248,6 @@ INSTALLED_APPS = (
     'turbasen',
     'montis',
     'payment',
-    'oauth2_provider',
-    'corsheaders',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
