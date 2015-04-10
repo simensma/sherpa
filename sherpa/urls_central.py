@@ -27,6 +27,8 @@ urlpatterns = patterns('',
     url(r'^api/', include('api.urls')),
     url(r'^payment/(?P<slug>.*)', 'page.views.perform_site_redirect', kwargs={'url': 'payment/'}),
 
+    url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+
     url(r'^', include('sherpa.urls_redirects_central')),
     url(r'^', include('sherpa.urls_redirects_common')),
     url(r'^', include('sherpa.urls_common_post')),
