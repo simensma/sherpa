@@ -212,6 +212,11 @@ EDITOR_PLACEHOLDER_IMAGE = '%simg/admin/sites/editor/placeholder.png' % STATIC_U
 DATABASE_ROUTERS = ['sherpa.db_routers.Router']
 AUTHENTICATION_BACKENDS = ('sherpa.auth_backends.CustomBackend',)
 
+# CORS settings - allow all origins given a request to the specified URLs
+CORS_URLS_REGEX = r'^/(api|ekstern-betaling)/.*$'
+CORS_ALLOW_METHODS = ('GET', 'POST')
+CORS_ORIGIN_ALLOW_ALL = True
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
