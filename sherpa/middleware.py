@@ -32,7 +32,9 @@ class TemporaryCorsMiddleware():
     """Temporary middleware - until we've verified that the DNT app will send an 'Origin' header so that we can use
     the corsheaders app solely for handling CORS requests, this app will handle it manually"""
     def process_request(self, request):
-        if request.path.startswith('/api/') or request.path.startswith('/ekstern-betaling/'):
+        if request.path.startswith('/api/') or \
+            request.path.startswith('/ekstern-betaling/') or \
+            request.path.startswith('/o/token/'):
             if request.method == 'OPTIONS':
                 # Handle CORS preflight
                 request_headers = request.META.get('HTTP_ACCESS_CONTROL_REQUEST_HEADERS')
@@ -43,7 +45,9 @@ class TemporaryCorsMiddleware():
                 return response
 
     def process_response(self, request, response):
-        if request.path.startswith('/api/') or request.path.startswith('/ekstern-betaling/'):
+        if request.path.startswith('/api/') or \
+            request.path.startswith('/ekstern-betaling/') or \
+            request.path.startswith('/o/token/'):
             response['Access-Control-Allow-Origin'] = '*'
         return response
 

@@ -213,7 +213,7 @@ DATABASE_ROUTERS = ['sherpa.db_routers.Router']
 AUTHENTICATION_BACKENDS = ('sherpa.auth_backends.CustomBackend',)
 
 # CORS settings - allow all origins given a request to the specified URLs
-CORS_URLS_REGEX = r'^/(api|ekstern-betaling)/.*$'
+CORS_URLS_REGEX = r'^/(api|ekstern-betaling|o/token)/.*$'
 CORS_ALLOW_METHODS = ('GET', 'POST')
 CORS_ORIGIN_ALLOW_ALL = True
 
