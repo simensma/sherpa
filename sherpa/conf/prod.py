@@ -289,6 +289,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'sherpa.middleware.ChangeActiveForening',
     'sherpa.middleware.ActiveForening',
+    'sherpa.middleware.CheckOauth2ApplicationsPermission',
     'sherpa.middleware.CheckSherpaPermissions',
     'sherpa.middleware.DeactivatedEnrollment',
     'sherpa.middleware.FocusDowntime',

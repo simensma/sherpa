@@ -27,6 +27,8 @@ urlpatterns = patterns('',
     url(r'^api/', include('api.urls')),
     url(r'^payment/(?P<slug>.*)', 'page.views.perform_site_redirect', kwargs={'url': 'payment/'}),
 
+    # Note that this URL (more specifically, o/applications/) is duplicated and hardcoded in the
+    # CheckOauth2ApplicationsPermission middleware
     url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
 
     url(r'^', include('sherpa.urls_redirects_central')),

@@ -205,6 +205,15 @@ class ActiveForening(object):
                 # It might have been removed, remove it and let the user choose a new one
                 del request.session['active_forening']
 
+class CheckOauth2ApplicationsPermission(object):
+    """The django-oauth-toolkit requires only a logged-in user. Here we'll append our own rule which is that only
+    sherpa-admins have access to managing OAuth2 applications."""
+    def process_request(self, request):
+        if request.path.startswith(u'/o/applications') and \
+            request.user.is_authenticated() and \
+            not request.user.has_perm('sherpa_admin'):
+            raise PermissionDenied()
+
 class CheckSherpaPermissions(object):
     def process_request(self, request):
         if request.current_app == 'admin':
