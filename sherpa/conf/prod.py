@@ -276,6 +276,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'sherpa.middleware.Redirect',
     'sherpa.middleware.DBConnection',
     'sherpa.middleware.DefaultLanguage',
