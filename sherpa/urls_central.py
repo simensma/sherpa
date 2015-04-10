@@ -24,8 +24,12 @@ urlpatterns = patterns('',
     url(r'^fotokonkurranse/', include('fotokonkurranse.urls')),
 
     url(r'^connect/', include('connect.urls')),
-    url(r'^api/', include('api.urls')),
+    url(r'^api/', include('api.urls')), # Note that this URL is used in the CORS_URLS_REGEX setting
     url(r'^payment/(?P<slug>.*)', 'page.views.perform_site_redirect', kwargs={'url': 'payment/'}),
+
+    # Note that this URL (more specifically, o/applications/) is duplicated and hardcoded in the
+    # CheckOauth2ApplicationsPermission middleware
+    url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
 
     url(r'^', include('sherpa.urls_redirects_central')),
     url(r'^', include('sherpa.urls_redirects_common')),

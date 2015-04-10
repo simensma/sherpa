@@ -16,7 +16,7 @@ urlpatterns = patterns('',
     url(r'^nyhetsarkiv/', include('articles.urls_archive')),
     url(r'^aktiviteter/', include('aktiviteter.urls')),
     url(r'^turbasen/', include('turbasen.urls')),
-    url(r'^ekstern-betaling/', include('payment.urls')),
+    url(r'^ekstern-betaling/', include('payment.urls')), # Note that this URL is used in the CORS_URLS_REGEX setting
 
     url(r'^i18n/', include('django.conf.urls.i18n')),
 )

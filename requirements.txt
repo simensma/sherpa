@@ -3,7 +3,9 @@ Pillow==2.0.0
 boto==2.9.4
 cffi==0.8.6
 cryptography==0.6.1
+django-cors-headers==1.0.0
 django-mptt==0.6.1
+django-oauth-toolkit==0.8.0
 django-pyodbc-azure==1.2.2
 django-recaptcha==1.0.3
 djorm-pgarray==1.2

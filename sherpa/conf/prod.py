@@ -212,6 +212,11 @@ EDITOR_PLACEHOLDER_IMAGE = '%simg/admin/sites/editor/placeholder.png' % STATIC_U
 DATABASE_ROUTERS = ['sherpa.db_routers.Router']
 AUTHENTICATION_BACKENDS = ('sherpa.auth_backends.CustomBackend',)
 
+# CORS settings - allow all origins given a request to the specified URLs
+CORS_URLS_REGEX = r'^/(api|ekstern-betaling|o/token)/.*$'
+CORS_ALLOW_METHODS = ('GET', 'POST')
+CORS_ORIGIN_ALLOW_ALL = True
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -219,9 +224,13 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis', # GeoDjango
+
     'raven.contrib.django', # Error logging
     'captcha', # django-recaptcha
     'mptt', # Modified Preorder Tree Traversal - see https://django-mptt.github.io/django-mptt/
+    'oauth2_provider', # django-oauth-toolkit - see https://django-oauth-toolkit.readthedocs.org/
+    'corsheaders', # django-cors-headers - see https://pypi.python.org/pypi/django-cors-headers/
+
     'focus', # Only db-models from Focus
     'sherpa2', # Only db-models from Sherpa 2
     'sherpa25', # Only db-models from Sherpa 2.5
@@ -272,6 +281,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'sherpa.middleware.TemporaryCorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'sherpa.middleware.Redirect',
     'sherpa.middleware.DBConnection',
     'sherpa.middleware.DefaultLanguage',
@@ -284,6 +295,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'sherpa.middleware.ChangeActiveForening',
     'sherpa.middleware.ActiveForening',
+    'sherpa.middleware.CheckOauth2ApplicationsPermission',
     'sherpa.middleware.CheckSherpaPermissions',
     'sherpa.middleware.DeactivatedEnrollment',
     'sherpa.middleware.FocusDowntime',

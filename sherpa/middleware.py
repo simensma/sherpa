@@ -12,7 +12,7 @@ from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import resolve, Resolver404
 from django.contrib.auth import logout
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.utils import translation
 from django.db import connections
 
@@ -27,6 +27,29 @@ logger = logging.getLogger('sherpa')
 
 from django import template
 template.add_to_builtins('core.templatetags.url')
+
+class TemporaryCorsMiddleware():
+    """Temporary middleware - until we've verified that the DNT app will send an 'Origin' header so that we can use
+    the corsheaders app solely for handling CORS requests, this app will handle it manually"""
+    def process_request(self, request):
+        if request.path.startswith('/api/') or \
+            request.path.startswith('/ekstern-betaling/') or \
+            request.path.startswith('/o/token/'):
+            if request.method == 'OPTIONS':
+                # Handle CORS preflight
+                request_headers = request.META.get('HTTP_ACCESS_CONTROL_REQUEST_HEADERS')
+                response = HttpResponse()
+                if request_headers is not None:
+                    response['Access-Control-Allow-Headers'] = request_headers
+                response['Access-Control-Allow-Method'] = 'POST'
+                return response
+
+    def process_response(self, request, response):
+        if request.path.startswith('/api/') or \
+            request.path.startswith('/ekstern-betaling/') or \
+            request.path.startswith('/o/token/'):
+            response['Access-Control-Allow-Origin'] = '*'
+        return response
 
 class Redirect():
     """Domain-specific redirects"""
@@ -204,6 +227,15 @@ class ActiveForening(object):
             except Forening.DoesNotExist:
                 # It might have been removed, remove it and let the user choose a new one
                 del request.session['active_forening']
+
+class CheckOauth2ApplicationsPermission(object):
+    """The django-oauth-toolkit requires only a logged-in user. Here we'll append our own rule which is that only
+    sherpa-admins have access to managing OAuth2 applications."""
+    def process_request(self, request):
+        if request.path.startswith(u'/o/applications') and \
+            request.user.is_authenticated() and \
+            not request.user.has_perm('sherpa_admin'):
+            raise PermissionDenied()
 
 class CheckSherpaPermissions(object):
     def process_request(self, request):
