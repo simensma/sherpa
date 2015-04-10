@@ -27,19 +27,20 @@
 
     postSignup: function () {
       var signupAjax = this.$.signup_ajax;
-      var participants = [this.participant];
-
-      var aktivitet = {
-        id: this.aktivitet.id
-      };
+      var aktivitetDateId = parseInt(this.aktivitet_date_id, 10);
+      var participantId = parseInt(this.participant.id, 10);
 
       var requestParams = {
-        aktivitet: aktivitet,
-        participants: participants
+        aktivitet_date: {
+          id: aktivitetDateId
+        },
+        participants: [
+          {id: participantId}
+        ]
       };
 
-      signupAjax.setAttribute('url', '/api/v2/aktivitet/' + aktivitet.id + '/signup/');
-      signupAjax.params = JSON.stringify(requestParams);
+      signupAjax.setAttribute('url', '/api/v2/aktivitet-signup/');
+      signupAjax.body = JSON.stringify(requestParams);
       signupAjax.go();
     },
 
