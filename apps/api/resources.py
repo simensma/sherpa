@@ -7,6 +7,8 @@ from user.models import User
 from .authorization import AuthedUserAuthorization, ParticipantAuthorization, ParticipantGroupAuthorization
 
 class AktivitetResource(ModelResource):
+    signup_terms_url = fields.CharField(attribute='signup_terms_url', readonly=True)
+
     class Meta:
         queryset = Aktivitet.objects.all()
         resource_name = 'aktivitet'
