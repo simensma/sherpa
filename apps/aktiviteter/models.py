@@ -606,6 +606,7 @@ class ParticipantGroup(models.Model):
     one aktivitet date."""
     aktivitet_date = models.ForeignKey(AktivitetDate, related_name='participant_groups')
     participants = models.ManyToManyField('user.User', related_name='aktivitet_groups')
+    comment = models.TextField()
 
 # @TODO This should have a forign key to admin.Image!
 class AktivitetImage(models.Model):
