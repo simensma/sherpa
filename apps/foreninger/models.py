@@ -1,4 +1,6 @@
 # encoding: utf-8
+import logging
+
 from django.db import models
 from django.core.cache import cache
 from django.db.models.signals import pre_save
@@ -8,6 +10,8 @@ from .exceptions import ForeningTypeCannotHaveChildren, ForeningTypeNeedsParent,
 from sherpa2.models import Forening as Sherpa2Forening
 from sherpa2.models import NtbId
 from core.models import Site
+
+logger = logging.getLogger('sherpa')
 
 class Forening(models.Model):
     TYPES = [
@@ -199,6 +203,22 @@ class Forening(models.Model):
 
     def get_sites_sorted_by_type(self):
         return Site.sort_by_type(self.sites.all())
+
+    @property
+    def get_aktivitet_signup_terms_url(self):
+        if self.aktivitet_signup_terms_url != '':
+            return self.aktivitet_signup_terms_url    
+        else:
+            # Default to terms for the parent
+            parents = self.parents.all()
+            if len(parents) == 0:
+                # Could potentially use DNT's general terms here
+                logger.info(u"Tried to fetch terms where none exists",
+                    extra={'forening': self}
+                )
+                return ''
+            else:
+                return parents[0].get_aktivitet_signup_terms_url()
 
     def validate_relationships(self, simulate_type=None, simulate_parents=None):
         """Validate a forening's relationships based on its type and its relationships types
