@@ -180,8 +180,8 @@ class Aktivitet(models.Model):
 
     @property
     def signup_terms_url(self):
-        if forening is not None:
-            return forening.aktivitet_signup_terms_url
+        if self.forening is not None:
+            return self.forening.aktivitet_signup_terms_url
 
         elif forening_cabin is not None:
             # @TODO(kvikshaug): Implement
