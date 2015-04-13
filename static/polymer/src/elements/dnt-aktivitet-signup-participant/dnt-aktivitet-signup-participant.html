@@ -101,20 +101,6 @@
           </template>
         </section>
 
-        <section class="comment">
-          <div horizontal layout>
-            <paper-input-decorator
-              id="comment_input_decorator"
-              label="Kommentar"
-              floatinglabel flex one>
-              <paper-autogrow-textarea id="comment_input">
-                <textarea id="comment_input">{{participant.comment}}</textarea>
-              </paper-autogrow-textarea>
-            </paper-input-decorator>
-          </div>
-          <p class="help-block">F.eks. om allergier eller annet.</p>
-        </section>
-
         <template if="{{participant.is_minor}}">
           <section class="participant-parents-guardians">
             <h2>Foresatte</h2>

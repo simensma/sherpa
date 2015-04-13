@@ -6,7 +6,7 @@
 <link rel="import" href="../dnt-alert/dnt-alert.html">
 <link rel="import" href="../dnt-aktivitet-signup-participant-summary/dnt-aktivitet-signup-participant-summary.html">
 
-<polymer-element name="dnt-aktivitet-signup-step-summary" attributes="aktivitet aktivitet_date_id signup state participant step steps">
+<polymer-element name="dnt-aktivitet-signup-step-summary" attributes="aktivitet aktivitet_date_id signup state participant comment step steps">
   <template>
     <core-style ref="dnt-style-buttons"></core-style>
     <link rel="stylesheet" href="dnt-aktivitet-signup-step-summary.css">
@@ -25,6 +25,12 @@
         steps="{{steps}}">
       </dnt-aktivitet-signup-participant-summary>
     </section>
+
+    <template if="{{comment}}">
+      <section class="comment">
+        <div>Kommentar: {{comment}}</div>
+      </section>
+    </template>
 
     <section class="options">
       <div class="terms-and-conditions" horizontal layout>

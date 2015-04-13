@@ -1,6 +1,6 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 
-<polymer-element name="dnt-aktivitet-signup-step-receipt" attributes="aktivitet participant step">
+<polymer-element name="dnt-aktivitet-signup-step-receipt" attributes="aktivitet participant comment step">
   <template>
     <link rel="stylesheet" href="dnt-aktivitet-signup-step-receipt.css">
     <h1>Kvittering</h1>
@@ -9,6 +9,11 @@
       <dnt-aktivitet-signup-participant-summary participant="{{participant}}">
       </dnt-aktivitet-signup-participant-summary>
     </section>
+    <template if="{{comment}}">
+      <section class="comment">
+        <div>Kommentar: {{comment}}</div>
+      </section>
+    </template>
     <p><a href="#beskrivelse">Les mer om aktiviteten</a> eller <a href="/aktiviteter">finn flere aktiviteter</a>.</p>
   </template>
   <script src="dnt-aktivitet-signup-step-receipt.js"></script>

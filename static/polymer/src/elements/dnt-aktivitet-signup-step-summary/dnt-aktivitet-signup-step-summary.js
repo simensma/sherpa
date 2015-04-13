@@ -36,7 +36,8 @@
         },
         participants: [
           {id: participantId}
-        ]
+        ],
+        comment: this.comment
       };
 
       signupAjax.setAttribute('url', '/api/v2/aktivitet-signup/');

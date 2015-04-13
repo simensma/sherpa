@@ -99,14 +99,6 @@
       });
     },
 
-    ready: function () {
-      // Add event listener because textarea can not be added to observe object like other inputs
-      this.$.comment_input.addEventListener('input', $.proxy(function (e) {
-        var comment = e.target.value;
-        this.participant.comment = comment;
-      }, this));
-    },
-
     removeParentGuardian: function (event, detail, sender) {
       var parentGuardianToRemove = sender.templateInstance.model.parent_guardian;
       var allParentsGuardians = this.participant.parents_guardians;
