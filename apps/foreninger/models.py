@@ -53,6 +53,9 @@ class Forening(models.Model):
     gmap_url = models.CharField(max_length=2048, default='') # Temporary - find other ways to display this map!
     facebook_url = models.CharField(max_length=2048, default='')
 
+    # URL pointer to a page with this forening's aktivitet signup terms
+    aktivitet_signup_terms_url = models.CharField(max_length=2048)
+
     # The corresponding object ID in Nasjonal Turbase
     turbase_object_id = models.CharField(max_length=24, null=True)
 
@@ -207,7 +210,7 @@ class Forening(models.Model):
     @property
     def get_aktivitet_signup_terms_url(self):
         if self.aktivitet_signup_terms_url != '':
-            return self.aktivitet_signup_terms_url    
+            return self.aktivitet_signup_terms_url
         else:
             # Default to terms for the parent
             parents = self.parents.all()
