@@ -178,6 +178,15 @@ class Aktivitet(models.Model):
     def is_imported(self):
         return self.sherpa2_id is not None
 
+    @property
+    def signup_terms_url(self):
+        if forening is not None:
+            return forening.aktivitet_signup_terms_url
+
+        elif forening_cabin is not None:
+            # @TODO(kvikshaug): Implement
+            pass
+
     @staticmethod
     def get_published():
         today = date.today()
