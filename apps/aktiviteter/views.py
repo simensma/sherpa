@@ -94,6 +94,7 @@ def signup(request, aktivitet_date):
     else:
         return redirect('aktiviteter.views.signup_not_logged_on', aktivitet_date.id)
 
+@user_requires_login()
 def signup_polymer(request, aktivitet_date):
     try:
         aktivitet_date = AktivitetDate.get_published().get(id=aktivitet_date)
