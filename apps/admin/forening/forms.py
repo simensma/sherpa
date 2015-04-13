@@ -130,6 +130,12 @@ class ForeningDataForm(forms.Form):
         'class': 'form-control',
     })
 
+    aktivitet_signup_terms_url = forms.CharField(required=False)
+
+    aktivitet_signup_terms_url.widget.attrs.update({
+        'class': 'form-control',
+    })
+
     def clean_name(self):
         return self.cleaned_data['name'].strip()
 

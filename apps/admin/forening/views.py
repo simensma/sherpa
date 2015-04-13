@@ -112,6 +112,7 @@ def index(request, forening_id):
         'organization_no': current_forening.organization_no,
         'gmap_url': current_forening.gmap_url,
         'facebook_url': current_forening.facebook_url,
+        'aktivitet_signup_terms_url': current_forening.aktivitet_signup_terms_url,
     })
 
     create_form = ForeningDataForm(request.user, prefix='create', initial={
@@ -162,6 +163,7 @@ def index(request, forening_id):
                 forening.organization_no = edit_form.cleaned_data['organization_no']
                 forening.gmap_url = edit_form.cleaned_data['gmap_url']
                 forening.facebook_url = edit_form.cleaned_data['facebook_url']
+                forening.aktivitet_signup_terms_url = edit_form.cleaned_data['aktivitet_signup_terms_url']
                 forening.save()
                 messages.info(request, 'forening_save_success')
                 cache.delete('foreninger.all.sorted_by_name')
@@ -205,6 +207,7 @@ def index(request, forening_id):
                 forening.organization_no = create_form.cleaned_data['organization_no']
                 forening.gmap_url = create_form.cleaned_data['gmap_url']
                 forening.facebook_url = create_form.cleaned_data['facebook_url']
+                forening.aktivitet_signup_terms_url = create_form.cleaned_data['aktivitet_signup_terms_url']
                 forening.save()
 
                 # Set M2M-fields after the initial db-save

@@ -237,6 +237,20 @@
       </div>
     </div>
 
+    <div class="form-group{% if create_form.aktivitet_signup_terms_url.errors %} has-error{% endif %}">
+      <label class="col-md-2 control-label" for="id_create_aktivitet_signup_terms_url">
+        Vilkår for påmelding til turer og aktiviteter
+      </label>
+      <div class="col-md-10">
+        {{ create_form.aktivitet_signup_terms_url }}
+        {% if create_form.aktivitet_signup_terms_url.errors %}
+          {% for error in create_form.aktivitet_signup_terms_url.errors %}
+            <span class="help-block error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
   </div><!-- /.section -->
 
   <div class="form-group submit">
