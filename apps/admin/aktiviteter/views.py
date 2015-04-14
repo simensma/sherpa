@@ -230,7 +230,7 @@ def edit(request, aktivitet):
             aktivitet.co_foreninger = []
             aktivitet.co_foreninger_cabin = []
 
-        if request.POST['latlng']:
+        if 'latlng' in request.POST:
             latlng = request.POST['latlng'].split(',')
             if len(latlng) == 2:
                 aktivitet.start_point = Point(float(latlng[0]), float(latlng[1]))
