@@ -989,6 +989,9 @@ class CabinVisitor(models.Model):
     # If the given memberid was unrecognized, we'll still allow the purchase, so save it for future reference
     memberid_unrecognized = models.PositiveIntegerField(null=True)
 
+    # Whether or not this visitor paid membership price
+    paid_membership_price = models.BooleanField(default=False)
+
     def is_registered(self):
         return self.user is not None
 
