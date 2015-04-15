@@ -61,7 +61,7 @@ def create_transaction(request):
         'amount': amount,
     }))
 
-def callback_endpoint(request):
+def postmessage_callback(request):
     """Render an empty page with a postMessage to the parent window, letting them know the frame has completed items
     transaction work"""
     return render(request, 'central/payment/postmessage.html')
