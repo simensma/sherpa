@@ -968,6 +968,9 @@ class CabinSettlement(models.Model):
     transaction_id = models.CharField(max_length=100, null=True)
     datetime = models.DateTimeField(auto_now_add=True)
 
+    # The user who pays the settlement; may or may not be one of the visitors. null if the user wasn't authenticated.
+    payer = models.ForeignKey('user.User', null=True)
+
     @staticmethod
     def generate_order_number():
         return uuid.uuid4().urn[len('urn:uuid:'):]
