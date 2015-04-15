@@ -4,6 +4,7 @@ import hmac
 import hashlib
 
 from django.conf import settings
+from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
@@ -13,6 +14,9 @@ from .products import cabin_visit
 @csrf_exempt
 def create_transaction(request):
     """This view is called by the phone app to initiate a new transaction"""
+    if request.method != 'POST' or 'data' not in request.POST:
+        raise PermissionDenied
+
     transaction = json.loads(request.POST['data'])
     product = transaction.get('product', '')
 
