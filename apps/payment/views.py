@@ -33,7 +33,7 @@ def create_transaction(request):
 
     callback_url = u'https://%s%s' % (
         request.site.domain,
-        reverse('payment.views.callback_endpoint')
+        reverse('payment.views.payment_provider_callback')
     )
 
     input_parameters = {
@@ -65,3 +65,6 @@ def postmessage_callback(request):
     """Render an empty page with a postMessage to the parent window, letting them know the frame has completed items
     transaction work"""
     return render(request, 'central/payment/postmessage.html')
+
+def payment_provider_callback(request):
+    raise NotImplementedError
