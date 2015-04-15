@@ -26,24 +26,32 @@ def cabin_visit(product_data):
         cabin_visit.save()
 
         for losji in cabin['losji']:
-            cabin_visitor = CabinVisitor(
-                cabin_visit=cabin_visit,
-                protocol_number=losji['protokollnummer'],
-            )
-            cabin_visitor.save()
+            # The user claims to be a member if they've given a memberid
+            claims_membership = losji['medlemsnummer'] is not None
 
+            # Business rule: Anyone claiming to be a member will get a membership price
+            pays_membership_price = claims_membership
+
+            # Check if we can relate this visitor to a user
+            user = None
+            memberid_unrecognized = None
             if losji['medlemsnummer'] is not None:
                 try:
                     user = User.get_or_create_inactive(memberid=losji['medlemsnummer'], include_pending=True)
-                    if not user.has_paid():
-                        # @TODO: confirm in the client that one or more users aren't valid
-                        raise NotImplementedError
-
-                    cabin_visitor.user = user
-                    cabin_visitor.save()
+                    # Note that this is where we could verify that the member has paid their annual fee, but it is
+                    # currently ignored
                 except (Actor.DoesNotExist, Enrollment.DoesNotExist):
-                    # @TODO: handle invalid memberid
-                    raise NotImplementedError
+                    # We received an unrecognized memberid, but we'll still allow the purchase, so save the given
+                    # memberid for future reference, whatever it is
+                    memberid_unrecognized = losji['medlemsnummer']
+
+            cabin_visitor = CabinVisitor(
+                cabin_visit=cabin_visit,
+                protocol_number=losji['protokollnummer'],
+                user=user,
+                memberid_unrecognized=memberid_unrecognized,
+            )
+            cabin_visitor.save()
 
         for proviant in cabin['proviant']:
             supply = Supply.objects.get(
