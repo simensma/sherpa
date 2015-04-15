@@ -5,6 +5,7 @@ Hyttebesøk:
     "product": "cabin_visit",
     "oauth_token": 123, # OAuth2 autentisering - null hvis ikke autentisert
     "medlemsnummer": 1231231, # Medlemsnummer for brukeren som legger inn transaksjonen
+    "språk": "nb", # RFC 3066
     "hytter": [{
         "id": "0123456789abcdef01234567", # Turbase ID for hytta
         "losji": [
