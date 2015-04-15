@@ -29,7 +29,7 @@ def create_transaction(request):
     # The price to DIBS is provided in øre
     amount *= 100
 
-    accept_return_url = u'https://dnt-backend.herokuapp.com/' # TODO implement
+    accept_return_url = reverse('payment.views.postmessage_callback')
 
     callback_url = u'https://%s%s' % (
         request.site.domain,
