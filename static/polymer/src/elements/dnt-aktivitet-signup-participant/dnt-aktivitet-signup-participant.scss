@@ -21,6 +21,9 @@ h2 {
 
 p {
   margin-top: 0;
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .parent-guardian-contact-info {

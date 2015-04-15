@@ -31,66 +31,76 @@
           </template>
           <div horizontal layout>
             <paper-input-decorator
-              id="input_participant_first_name"
+              id="input_participant_first_name_decorator"
               error="Fornavn er påkrevd"
               autoValidate="true"
               isInvalid="{{!$.input_participant_first_name.validity.valid}}"
               label="Fornavn"
-              floatinglabel flex one>
+              floatinglabel flex one
+              disabled="true">
               <input
                 value="{{participant.first_name}}"
                 id="input_participant_first_name"
                 is="core-input"
+                readonly
                 required>
             </paper-input-decorator>
             <paper-input-decorator
-              id="input_participant_last_name"
+              id="input_participant_last_name_decorator"
               error="Etternavn er påkrevd"
               autoValidate="true"
               isInvalid="{{!$.input_participant_last_name.validity.valid}}"
               label="Etternavn"
-              floatinglabel flex one>
+              floatinglabel flex one
+              disabled="true">
               <input
                 value="{{participant.last_name}}"
                 id="input_participant_last_name"
                 is="core-input"
+                readonly
                 required>
             </paper-input-decorator>
           </div>
           <div horizontal layout>
             <paper-input-decorator
-              id="input_date_of_birth"
+              id="input_participant_date_of_birth_decorator"
               error="Fødselsdato må skrives på formatet DD.MM.ÅÅÅÅ"
               autoValidate="true"
-              isInvalid="{{!$.input_date_of_birth.validity.valid}}"
+              isInvalid="{{!$.input_participant_date_of_birth.validity.valid}}"
               label="Fødselsdato"
-              floatinglabel flex one>
+              floatinglabel flex one
+              disabled="true">
               <input
                 value="{{participant.date_of_birth_formatted}}"
-                id="input_date_of_birth"
+                id="input_participant_date_of_birth"
                 is="core-input"
+                readonly
                 required
                 pattern="^\d\d\.\d\d\.\d\d\d\d$">
             </paper-input-decorator>
           </div>
           <div horizontal layout>
             <paper-input-decorator
-              id="input_phone_decorator"
+              id="input_participant_phone_decorator"
               label="Telefon"
-              floatinglabel flex one>
+              floatinglabel flex one
+              disabled="true">
               <input
                 value="{{participant.phone}}"
-                id="input_phone"
-                is="core-input">
+                id="input_participant_phone"
+                is="core-input"
+                readonly>
             </paper-input-decorator>
             <paper-input-decorator
-              id="input_email_decorator"
+              id="input_participant_email_decorator"
               label="Epost"
-              floatinglabel flex one>
+              floatinglabel flex one
+              disabled="true">
               <input
                 value="{{participant.email}}"
-                id="input_email"
-                is="core-input">
+                id="input_participant_email"
+                is="core-input"
+                readonly>
             </paper-input-decorator>
           </div>
           <dnt-alert info>

@@ -5,10 +5,10 @@
     PARENTS_GUARDIANS_LIMIT: 2,
 
     user_contact_info_has_changed: false,
-    is_valid: true,
     user: {},
     participant: {},
     membership_alert_is_dismissed: false,
+    is_valid: false,
 
     observe: {
       'participant.first_name': 'userContactInfoChanged',
@@ -19,18 +19,25 @@
       'participant.date_of_birth_formatted': 'dateOfBirthFormattedChanged',
       '$.input_participant_first_name.validity.valid': 'validateView',
       '$.input_participant_last_name.validity.valid': 'validateView',
-      '$.input_date_of_birth.validity.valid': 'validateView'
+      '$.input_participant_date_of_birth.validity.valid': 'validateView',
+      'is_valid': 'isValidChanged'
     },
 
     validateView: function () {
       var requiredToValidate = [
-        this.$.input_participant_first_name.validity.valid,
-        this.$.input_participant_last_name.validity.valid,
-        this.$.input_date_of_birth.validity.valid
+        this.$.input_participant_first_name_decorator,
+        this.$.input_participant_last_name_decorator,
+        this.$.input_participant_date_of_birth_decorator,
+        this.$.input_participant_phone_decorator,
+        this.$.input_participant_email_decorator
       ];
 
+      for (var i = 0; i < requiredToValidate.length; i++) {
+        var isValid = requiredToValidate[i].validate();
+      }
+
       var isValid = (requiredToValidate.indexOf(false) > -1) ? false : true;
-      this.participant.is_valid = isValid;
+      this.is_valid = isValid;
     },
 
     userContactInfoChanged: function () {
@@ -45,6 +52,11 @@
       } else {
         this.user_contact_info_has_changed = false;
       }
+
+      this.$.input_participant_first_name_decorator.updateLabelVisibility(this.participant.first_name);
+      this.$.input_participant_last_name_decorator.updateLabelVisibility(this.participant.last_name);
+      this.$.input_participant_phone_decorator.updateLabelVisibility(this.participant.phone);
+      this.$.input_participant_email_decorator.updateLabelVisibility(this.participant.email);
     },
 
     dateOfBirthChanged: function (oldVal, newVal) {
@@ -66,6 +78,9 @@
     },
 
     dateOfBirthFormattedChanged: function (oldVal, newVal) {
+
+      // Make sure label is set visible
+      this.$.input_participant_date_of_birth_decorator.updateLabelVisibility(this.participant.date_of_birth_formatted);
 
       var dateOfBirthFormattedMoment = moment(this.participant.date_of_birth_formatted, 'DD.MM.YYYY', true); // Strict
 
@@ -112,7 +127,8 @@
     },
 
     updateUserContactInformation: function () {
-      console.log('Will update user contact information!');
+      // TODO: Implement this
+      console.log('TODO: Will update user contact information!');
     }
 
   });
