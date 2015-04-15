@@ -50,8 +50,17 @@
     },
 
     handleSignupResponse: function (event, ajax, element) {
-      // TODO: If success
-      this.state.step = this.steps.receipt;
+      if (ajax.xhr.status === 201) {
+        if (this.steps && this.steps.participants) {
+          this.steps.participants.isAvailable = false;
+        }
+
+        if (this.steps && this.steps.summary) {
+          this.steps.summary.isAvailable = false;
+        }
+
+        this.state.step = this.steps.receipt;
+      }
     },
 
     validate: function () {
