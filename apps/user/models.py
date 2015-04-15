@@ -962,7 +962,7 @@ class Instruktor(models.Model):
     def __unicode__(self):
         return u'%s' % self.pk
 
-class CabinVisit(models.Model):
+class CabinSettlement(models.Model):
     order_number = models.CharField(max_length=45) # RFC 4122 UUID in its canonical form
     # transaction_id null means the order was initiated but never completed
     transaction_id = models.CharField(max_length=100, null=True)
@@ -971,6 +971,10 @@ class CabinVisit(models.Model):
     @staticmethod
     def generate_order_number():
         return uuid.uuid4().urn[len('urn:uuid:'):]
+
+class CabinVisit(models.Model):
+    cabin_settlement = models.ForeignKey('user.CabinSettlement', related_name='visits')
+    cabin_object_id = models.CharField(max_length=24)
 
 class CabinVisitor(models.Model):
     cabin_visit = models.ForeignKey('user.CabinVisit', related_name='visitors')
