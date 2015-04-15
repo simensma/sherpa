@@ -969,7 +969,7 @@ class CabinSettlement(models.Model):
     datetime = models.DateTimeField(auto_now_add=True)
 
     # The user who pays the settlement; may or may not be one of the visitors. null if the user wasn't authenticated.
-    payer = models.ForeignKey('user.User', null=True)
+    paying_user = models.ForeignKey('user.User', null=True)
 
     @staticmethod
     def generate_order_number():
