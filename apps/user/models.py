@@ -986,6 +986,9 @@ class CabinVisitor(models.Model):
     # If the user reference is null, the user opted to not login/register and is considered a non-member
     user = models.ForeignKey('user.User', null=True)
 
+    # If the given memberid was unrecognized, we'll still allow the purchase, so save it for future reference
+    memberid_unrecognized = models.PositiveIntegerField(null=True)
+
     def is_registered(self):
         return self.user is not None
 
