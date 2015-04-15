@@ -59,6 +59,10 @@
           this.steps.summary.isAvailable = false;
         }
 
+        if (this.steps && this.steps.receipt) {
+          this.steps.receipt.isAvailable = true;
+        }
+
         this.state.step = this.steps.receipt;
       }
     },
