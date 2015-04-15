@@ -10,8 +10,18 @@ Hyttebesøk:
             "id": "0123456789abcdef01234567", # Turbase ID for hytta
             "losji": [
                 # Refererer objekter i 'foreninger.models.Lodging'
-                {"id": "3", "antall": "2"},
-                {"id": "4", "antall": "3"}
+                {
+                    "id": "3",
+                    "antall": "2",
+                    "protokollnummer": 12345678,
+                    "medlemsnummer": 1231231
+                },
+                {
+                    "id": "4",
+                    "antall": "3",
+                    "protokollnummer": null, # Glemt å legge inn protokollnummer
+                    "medlemsnummer": null # Ikke medlem - fordrer at det betales ikke-medlemspris, men det sjekkes ikke
+                }
             ],
             "proviant": [
                 # Refererer objekt i 'foreninger.models.Supply'
