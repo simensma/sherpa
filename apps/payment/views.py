@@ -8,6 +8,7 @@ from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import render
 
 from .products import cabin_visit
 
@@ -61,4 +62,6 @@ def create_transaction(request):
     }))
 
 def callback_endpoint(request):
-    raise NotImplementedError
+    """Render an empty page with a postMessage to the parent window, letting them know the frame has completed items
+    transaction work"""
+    return render(request, 'central/payment/postmessage.html')
