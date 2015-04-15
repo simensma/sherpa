@@ -19,7 +19,7 @@ Hyttebesøk:
             {
                 "id": 4,
                 "antall": 3,
-                "protokollnummer": null, # Glemt å legge inn protokollnummer
+                "protokollnummer": 12345679,
                 "medlemsnummer": null # Ikke medlem - fordrer at det betales ikke-medlemspris, men det sjekkes ikke
             }
         ],
