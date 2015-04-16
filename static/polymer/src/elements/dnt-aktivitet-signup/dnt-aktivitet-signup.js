@@ -44,18 +44,13 @@
     /* Observers */
 
     observe: {
-      'state.step': 'stateStepChanged',
-      'aktivitet': 'aktivitetChanged'
+      'state.step': 'stateStepChanged'
     },
 
     stateStepChanged: function (oldVal, newVal) {
       $('body').scrollTop($('[data-dnt-container="aktivitet"]').offset().top);
       this.updateSteps(this.state.step);
       window.location.hash = this.state.step.slug;
-    },
-
-    aktivitetChanged: function (oldVal, newVal) {
-      // console.log('aktivitetChanged!', oldVal, newVal);
     },
 
 
