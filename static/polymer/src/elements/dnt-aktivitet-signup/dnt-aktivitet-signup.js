@@ -37,7 +37,7 @@
       }
     },
     state: {
-      step: undefined
+      step: undefined // Will be set to one of the steps above
     },
 
 
