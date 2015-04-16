@@ -48,13 +48,6 @@
       'aktivitet': 'aktivitetChanged'
     },
 
-    updateSteps: function (newStep) {
-      for (var stepKey in this.steps) {
-        this.steps[stepKey].isCurrent = false;
-      }
-      this.steps[newStep.id].isCurrent = true;
-    },
-
     stateStepChanged: function (oldVal, newVal) {
       $('body').scrollTop($('[data-dnt-container="aktivitet"]').offset().top);
       this.updateSteps(this.state.step);
@@ -63,6 +56,16 @@
 
     aktivitetChanged: function (oldVal, newVal) {
       // console.log('aktivitetChanged!', oldVal, newVal);
+    },
+
+
+    /* Methods */
+
+    updateSteps: function (newStep) {
+      for (var stepKey in this.steps) {
+        this.steps[stepKey].isCurrent = false;
+      }
+      this.steps[newStep.id].isCurrent = true;
     },
 
     handleAktivitetResponse: function (event, ajax, element) {
