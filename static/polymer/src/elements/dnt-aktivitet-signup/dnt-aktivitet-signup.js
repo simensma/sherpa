@@ -45,7 +45,6 @@
 
     observe: {
       'state.step': 'stateStepChanged',
-      'route': 'routeChanged',
       'aktivitet': 'aktivitetChanged'
     },
 
@@ -60,10 +59,6 @@
       $('body').scrollTop($('[data-dnt-container="aktivitet"]').offset().top);
       this.updateSteps(this.state.step);
       window.location.hash = this.state.step.slug;
-    },
-
-    routeChanged: function (oldVal, newVal) {
-      console.log('Route changed to', newVal);
     },
 
     aktivitetChanged: function (oldVal, newVal) {
