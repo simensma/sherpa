@@ -12,32 +12,28 @@
         title: 'Om aktiviteten',
         slug: 'beskrivelse',
         isCurrent: false,
-        isAvailable: true,
-        component: undefined
+        isAvailable: true
       },
       participants: {
         id: 'participants',
         title: 'Deltaker',
         slug: 'deltakere',
         isCurrent: true,
-        isAvailable: false,
-        component: undefined
+        isAvailable: false
       },
       summary: {
         id: 'summary',
         title: 'Oppsummering',
         slug: 'oppsummering',
         isCurrent: false,
-        isAvailable: false,
-        component: undefined
+        isAvailable: false
       },
       receipt: {
         id: 'receipt',
         title: 'Kvittering',
         slug: 'kvittering',
         isCurrent: false,
-        isAvailable: false,
-        component: undefined
+        isAvailable: false
       }
     },
     state: {

@@ -44,7 +44,6 @@
       }, this));
 
       this.step.isAvailable = true;
-      this.step.component = this;
       this.validate();
     }
 

@@ -75,7 +75,6 @@
     /* Lifecycle */
 
     ready: function () {
-      this.step.component = this;
       this.validate();
     }
 
